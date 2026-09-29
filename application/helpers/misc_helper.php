@@ -3,12 +3,44 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
+ * Determine whether local development should skip Google reCAPTCHA.
+ *
+ * @return boolean
+ */
+function is_local_recaptcha_bypass_enabled()
+{
+    $hosts = [];
+
+    foreach (['HTTP_HOST', 'SERVER_NAME'] as $serverKey) {
+        if (!empty($_SERVER[$serverKey])) {
+            $host = parse_url('http://' . $_SERVER[$serverKey], PHP_URL_HOST);
+            if ($host) {
+                $hosts[] = trim($host, '[]');
+            }
+        }
+    }
+
+    if (defined('APP_BASE_URL')) {
+        $host = parse_url(APP_BASE_URL, PHP_URL_HOST);
+        if ($host) {
+            $hosts[] = trim($host, '[]');
+        }
+    }
+
+    return count(array_intersect(array_unique($hosts), ['localhost', '127.0.0.1', '::1'])) > 0;
+}
+
+/**
  * Check whether recaptcha should be shown
  *
  * @return boolean
  */
 function show_recaptcha()
 {
+    if (is_local_recaptcha_bypass_enabled()) {
+        return false;
+    }
+
     if (get_option('recaptcha_secret_key') == '' || get_option('recaptcha_site_key') == '') {
         return false;
     }

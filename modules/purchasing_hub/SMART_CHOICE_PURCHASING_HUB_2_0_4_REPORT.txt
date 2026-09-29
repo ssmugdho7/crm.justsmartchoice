@@ -1,0 +1,41 @@
+Purchasing Hub v2.0.4 Repair Report
+
+Purpose:
+- Repair route/view conflicts caused by renaming the original purchase module to purchasing_hub.
+- Stop Perfex from trying to load dashboard widget views from the old purchase module namespace.
+- Keep purchasing data safe and avoid destructive uninstall behavior.
+
+Main fixes:
+1. Dashboard widget path changed:
+   Old: purchase/purchase_widget
+   New: purchasing_hub/purchase_widget
+
+2. Dashboard JavaScript view loading changed:
+   Old: purchase/purchase_dashboard_js
+   New: purchasing_hub/purchase_dashboard_js
+
+3. Version updated:
+   Purchasing Hub v2.0.4
+
+4. Migration added:
+   204_version_204.php
+
+5. All active migrations include safe down() methods.
+
+6. No purchasing tables are dropped.
+   This module does not automatically delete folders, uploads, purchase records, vendors, purchase orders, or invoices during uninstall.
+
+Install:
+1. Delete or rename the old modules/purchasing_hub folder.
+2. Upload the new purchasing_hub folder.
+3. Run Modules > Purchasing Hub > Upgrade Database.
+4. Clear application/cache except index.html and .htaccess if present.
+5. Press Ctrl + F5.
+
+Important:
+Do not keep duplicate old module folders named purchase and purchasing_hub active at the same time unless the old purchase module is intentionally still installed.
+
+
+Additional PHP 8.5 compatibility:
+- Updated legacy PHPExcel string-offset syntax from curly braces to square brackets.
+- PHP syntax check passed for all PHP files in the module after repair.

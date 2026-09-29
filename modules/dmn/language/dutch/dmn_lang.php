@@ -1,0 +1,49 @@
+<?php
+$lang['dmns']                                             = 'Mind maps';
+$lang['dmn']                                              = 'Mind Map';
+$lang['dmn_create_new']                                   = 'Maak nieuw';
+$lang['dmn_edit']                                         = 'Bewerk';
+$lang['dmn_delete']                                       = 'Verwijderen';
+$lang['dmn_title']                                        = 'Titel';
+$lang['dmn_desc']                                         = 'Omschrijving';
+$lang['dmn_staff']										  = 'Gemaakt door';
+$lang['dmn_search']										  = 'Zoek Mind Map';
+$lang['dmn_group']								          = 'Groep';
+$lang['dmn_groups']								          = 'Groepen';
+$lang['edit_dmn_group']								      = 'Groep bewerken';
+$lang['new_dmn_group']								      = 'Nieuwe groep';
+$lang['dmn_group_add_edit_name']						  = 'Naam';
+$lang['dmn_group_add_edit_description']					  = 'Omschrijving';
+$lang['dmn_switch_to_grid_view']						  = 'Schakel over naar Grid';
+$lang['dmn_switch_to_list_view']						  = 'Schakel over naar lijst';
+$lang['dmn_assigned_to_me']								  = 'Mijn dmn';
+$lang['dmn_filter_staff']								  = 'Personeel';
+$lang['dmn_filter_group']								  = 'Groep';
+$lang['dmn_info']								          = 'dmn Info';
+$lang['dmn_staff']								          = 'Personeel';
+$lang['dmn_view']								          = 'Visie';
+$lang['dmn_not_found']								      = 'dmn niet gevonden';
+$lang['preview_dmn']								      = 'Voorbeeld dmn bekijken';
+$lang['dmn_settings_name']								  = 'dmn';
+$lang['new_dmn_group']								      = 'Nieuwe groep';
+$lang['dmn_created_at']									  = 'Gemaakt bij';
+$lang['dmn_enable_group_option']                          = 'Sta niet-admin personeel toe om een groep aan te maken in dmn creëren / bewerken gebied?  ';
+//client project view language
+
+$lang['clients_dmn_tittle']									= 'Title';
+$lang['clients_dmn_description']							= 'Description';
+$lang['clients_dmn_staff']									= 'Staff';
+$lang['clients_dmn_group']									= 'Group';
+$lang['clients_dmn_created_at']								= 'Created At';
+
+$lang['properties']									 	  	= 'Edit Details';
+$lang['edit_canvas']									 	= 'Edit Canvas';
+$lang['action_btn_dropdown']								= 'Action';
+$lang['delete']												= 'Delete';
+$lang['share_via_email']									= 'Share via email';
+$lang['print_svg']											= 'Download SVG';
+$lang['window_print']										= 'Print';
+$lang['rating']												= 'Rating';
+$lang['add_email']											= 'Add Email';
+$lang['save']												= 'Save';
+$lang['close']												= 'Close';

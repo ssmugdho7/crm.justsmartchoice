@@ -1,0 +1,21 @@
+SMART CHOICE PRCHAT 2.2.7
+Release date: 2026-07-23
+Target: Perfex CRM 3.4.1 / PHP 8.5+
+
+CRITICAL REPAIR
+- Restored the missing callsChannel.bind('call-offer', ...) opening statement in the full chat view.
+- Restored the missing callsChannel.bind('call-offer', ...) opening statement in the floating/toggled chat view.
+- The missing statements caused the entire browser script to fail parsing, which froze Staff, Clients, Groups, search, conversation selection, typing, sending, AI composer context, and voice-to-text conversation detection.
+
+UPGRADE AND CACHE
+- Module version is now 2.2.7 internally and in the module header.
+- Added sequential migration 227_version_227.php.
+- Module JavaScript and CSS now use the module release version for cache busting instead of the unchanged Perfex core version.
+
+PRESERVED
+- Existing messages and conversations.
+- Staff, client, and group chat.
+- AI message improvement.
+- Microphone and voice-to-text.
+- Voice/video call functionality.
+- Uploads, attachments, media, settings, permissions, and database data.

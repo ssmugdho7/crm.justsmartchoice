@@ -1,0 +1,9 @@
+Smart Choice Training Manual v1.2.9
+
+- Renamed Training Articles submenu to Articles and added a newspaper icon.
+- Added editable cover-image support for manuals.
+- Redesigned admin manual cards with Smart Choice colors and responsive layouts.
+- Rebuilt the customer Training Library with portal navigation, footer, branded cards, and a centered empty state.
+- Added five comprehensive customer training manuals and cover images through migration 129.
+- Added complete English and Spanish language keys.
+- Preserved all existing manuals, articles, settings, permissions, and uploads.

@@ -1,0 +1,23 @@
+Smart Choice Contractors USA / Harold Cabrera - Video Library Manager 1.0.4
+
+Install/upgrade notes:
+1. Upload/replace the video_library module folder.
+2. In Perfex CRM, go to Setup > Modules > Video Library Manager > Upgrade Database if available.
+3. If Perfex does not run migrations, run the SQL below manually in phpMyAdmin:
+
+ALTER TABLE `tblupload_video` ADD COLUMN `rel_id` INT(11) NULL DEFAULT NULL AFTER `description`;
+ALTER TABLE `tblupload_video` ADD COLUMN `rel_type` VARCHAR(100) NOT NULL DEFAULT 'project' AFTER `rel_id`;
+ALTER TABLE `tblupload_video` ADD COLUMN `created_by` INT(11) NULL DEFAULT NULL AFTER `rel_type`;
+ALTER TABLE `tblupload_video` ADD COLUMN `uploaded_by` INT(11) NULL DEFAULT NULL AFTER `created_by`;
+ALTER TABLE `tblupload_video` MODIFY `upload_type` ENUM('file','link','s3') NOT NULL DEFAULT 'file';
+UPDATE `tbloptions` SET `value` = 'no' WHERE `name` IN ('is_vl_s3','is_vl_google_drive');
+
+If MySQL says Duplicate column name, skip that specific line and continue.
+
+New features:
+- Better module name, author, and description.
+- Local upload remains default.
+- S3 and Google Drive stay disabled unless configured.
+- Video owner/uploader field added to add/edit video form.
+- Owner/uploader staff card shown on video grid with staff profile image.
+- Settings added for storage mode, default related type, show uploader card, and default owner.

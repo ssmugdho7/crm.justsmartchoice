@@ -1,0 +1,1 @@
+Smart Choice CRM Enterprise Core v3.1.2. Upload this folder to modules/smart_choice_core_upgrade and activate/upgrade from Perfex CRM Modules. This package does not bypass Perfex licensing; it adds Smart Choice settings, theme, reports, embedded module folders, and health checks.

@@ -1,0 +1,68 @@
+.wrap-client-feedback {
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.wrap-client-feedback h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.table th {
+    background: #f7f7f7;
+    text-align: left;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.badge-feedback-pending {
+    background-color: #ffc107;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 3px;
+}
+
+.badge-feedback-submitted {
+    background-color: #28a745;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 3px;
+}
+
+.card {
+    border-radius: 20px;
+}
+
+.card-header {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.star-rating i {
+    font-size: 2rem;
+    cursor: pointer;
+    color: #ddd;
+    transition: color 0.3s ease-in-out;
+}
+
+.star-rating i.text-warning {
+    color: #ffc107;
+}
+
+.btn-group-toggle label {
+    padding: 12px;
+    font-size: 1.2rem;
+    border-radius: 5px;
+}
+
+textarea {
+    resize: none;
+    border-radius: 5px;
+}

@@ -1,0 +1,9 @@
+Smart Choice CRM 4.1.1
+
+Targeted repair only:
+- Prevent global money formatter from altering Settings, API keys, secrets, tokens, or gateway credentials.
+- Stripe publishable key remains exact text.
+- Stripe secret key is masked by default with Show/Hide control.
+- Stripe Checkout redirects to the hosted Checkout Session URL, with legacy redirect fallback.
+- Missing language keys are humanized instead of displaying raw underscore keys in the UI.
+- Existing payment logic, invoice totals, discounts, AI code, modules, uploads, and saved credentials are preserved.

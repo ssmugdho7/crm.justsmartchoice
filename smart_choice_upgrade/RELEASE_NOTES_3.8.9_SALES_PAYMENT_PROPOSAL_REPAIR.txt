@@ -1,0 +1,15 @@
+SMART CHOICE CRM 3.8.9
+
+Repairs only:
+- Restores proposal item preview rendering.
+- Repairs proposal status selector markup.
+- Saves proposal discount reason in the correct field.
+- Recalculates subtotal, total, discount, optional items, adjustment, and down payment while editing.
+- Synchronizes contract total, amount due now, and remaining balance before submission.
+- Preserves all existing records, modules, settings, uploads, and API values.
+
+Upgrade:
+1. Back up database and files.
+2. Upload the CRM files without deleting modules or uploads.
+3. Open the CRM upgrade screen and run migration 389.
+4. Clear application cache and OPcache.

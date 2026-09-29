@@ -1,0 +1,7 @@
+Debug Mode v2.0.3
+
+Fixed:
+- Removed the migrations folder completely to stop duplicate migration version 200.
+- Database setup is handled by install.php and admin_init.
+- Upgrade Database is not required for this version.
+- Settings appear under Setup -> Settings -> Debug Mode.

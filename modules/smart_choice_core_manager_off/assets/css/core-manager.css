@@ -1,0 +1,11 @@
+/* Smart Choice global visual governance. Scoped rules prevent modules from creating nested scrollbars. */
+#header .navbar-brand img,.navbar-brand img{max-height:95%!important;height:calc(var(--sc-logo-height,95) * 1%)!important;width:auto!important;object-fit:contain!important}
+.table-responsive{overflow-x:auto;overflow-y:visible}
+.table-responsive .table-responsive{overflow:visible!important}
+.dataTables_wrapper .dataTables_scroll,.dataTables_wrapper .dataTables_scrollBody{max-width:100%}
+.dataTables_wrapper .dataTables_scrollBody .dataTables_scrollBody{overflow:visible!important}
+table.dataTable td,table.dataTable th{vertical-align:middle}
+table.dataTable td:not(.text-right):not(.text-center){text-align:left}
+.sc-money:before{content:var(--sc-currency-prefix,'$')}
+#side-menu,#setup-menu-wrapper{background:var(--sc-menu-bg,#0f3f5f)}
+#side-menu a,#setup-menu-wrapper a{color:var(--sc-menu-text,#fff)}

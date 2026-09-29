@@ -1,0 +1,11 @@
+<?php $this->load->view('stripe_hub/_header'); ?>
+<div class="panel_s"><div class="panel-body"><div class="stripe-hub-title"><h4><?= _l('stripe_hub_dashboard'); ?></h4><span class="label label-info">v<?= e(STRIPE_HUB_VERSION); ?></span></div>
+<div class="row">
+<div class="col-md-4"><div class="stripe-hub-card"><div class="text-muted"><?= _l('stripe_hub_account'); ?></div><div class="h4"><?= $account ? e($account->id) : '-'; ?></div><div><?= $account ? e($account->business_profile->name ?? $account->settings->dashboard->display_name ?? '') : ''; ?></div></div></div>
+<div class="col-md-4"><div class="stripe-hub-card"><div class="text-muted"><?= _l('stripe_hub_environment'); ?></div><div class="h4"><?= $account ? (!empty($account->charges_enabled) ? _l('stripe_hub_enabled') : _l('stripe_hub_attention')) : '-'; ?></div><div><?= _l('stripe_hub_charges'); ?>: <?= $account ? (!empty($account->charges_enabled) ? _l('yes') : _l('no')) : '-'; ?></div></div></div>
+<div class="col-md-4"><div class="stripe-hub-card"><div class="text-muted"><?= _l('stripe_hub_available_balance'); ?></div><div class="h4"><?php if ($balance && !empty($balance->available)) { foreach ($balance->available as $b) echo e(strtoupper($b->currency).' '.number_format($b->amount/100,2)).'<br>'; } else echo '-'; ?></div></div></div>
+</div>
+<?php if (staff_can('create','stripe_hub') || is_admin()) { ?><hr><a class="btn btn-primary" href="<?= admin_url('invoices/list_invoices'); ?>"><i class="fa fa-file-invoice"></i> <?= _l('stripe_hub_open_invoices'); ?></a> <a class="btn btn-default" href="<?= admin_url('stripe_hub/links'); ?>"><i class="fa fa-link"></i> <?= _l('stripe_hub_create_payment_link'); ?></a><?php } ?>
+</div></div>
+<div class="panel_s"><div class="panel-body"><h4><?= _l('stripe_hub_recent_activity'); ?></h4><div class="table-responsive"><table class="table dt-table"><thead><tr><th><?= _l('stripe_hub_date'); ?></th><th><?= _l('stripe_hub_action'); ?></th><th><?= _l('stripe_hub_object'); ?></th><th><?= _l('stripe_hub_status'); ?></th></tr></thead><tbody><?php foreach($actions as $a){ ?><tr><td><?= e($a['datecreated']); ?></td><td><?= e($a['action_type']); ?></td><td><?= e($a['stripe_object_id']); ?></td><td><?= e($a['status']); ?></td></tr><?php } ?></tbody></table></div></div></div>
+<?php $this->load->view('stripe_hub/_footer'); ?>

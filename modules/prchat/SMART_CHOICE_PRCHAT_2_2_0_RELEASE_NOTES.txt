@@ -1,0 +1,9 @@
+Smart Choice PRChat 2.2.0
+
+- Internal staff chat messages are saved using the authenticated staff ID and validated recipient ID.
+- Pusher failures no longer hide or roll back messages already stored in MySQL.
+- Added Twilio employee SMS action and searchable SMS Log with queued/sent/failed status.
+- Added migration 220 and fresh-install schema for tblprchat_sms_log.
+- PRChat AI Assist now reuses the CRM core AI key, model, and compatible API base URL when module-specific values are empty.
+- Preserved Pusher real-time chat, staff voice calls, and staff video calls.
+- Added SMS action to full and floating chat headers.

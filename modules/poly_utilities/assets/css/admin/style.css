@@ -1,0 +1,713 @@
+/* ================ Common ================ */
+.poly-hide-sidebar #header {
+    z-index: 988
+}
+
+.poly-hide-sidebar #menu.sidebar {
+    z-index: 988
+}
+
+.poly-hide-sidebar #setup-menu-wrapper {
+    z-index: 989
+}
+
+.disabled {
+    color: #999;
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Mobile opti */
+@media (max-width: 768px) {
+
+    .hide-menu,
+    .poly-toggle-menu {
+        padding: 18px 8px;
+    }
+
+    #search_input {
+        max-width: 11rem;
+        padding-left: 0.3rem;
+        padding-right: 0.3rem
+    }
+
+    input,
+    select,
+    textarea,
+    .CodeMirror-sizer {
+        font-size: 16px !important
+    }
+}
+
+#add_new_todo_item textarea {
+    height: 60vh !important
+}
+
+.poly_utilities_quick_access_menu .dropdown-menu,
+.navbar-nav>li>.dropdown-menu,
+.ui-widget-default,
+.ui-state-highlight,
+body.poly-hide-sidebar #menu li a [class$="menu-text"],
+.poly-label,
+.poly-checkbox,
+.poly-checkbox-module,
+.poly-widgets-area .header,
+.poly-widget-description,
+.poly-widget-after-avatar,
+.poly-avaible-widgets .header {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Fix error displaying project details page on mobile. */
+.app.admin.project.mobile .project-heading .tw-flex {
+    display: table;
+    margin: 0px auto
+}
+
+.app.admin.project.mobile .project-heading .tw-max-w-sm {
+    max-width: 21rem;
+}
+
+/* Mobile opti */
+/* Icons */
+.poly-utilties-list-icons {
+    width: 200px;
+    height: 200px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.poly-utilities-list-icon {
+    overflow: auto;
+}
+
+.poly-utilities-input-icon,
+.poly-utilities-icons {
+    display: none
+}
+
+.poly-popover-icons .popover-body {
+    padding: 0;
+}
+
+.poly-popover-icons i {
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.poly-popover-icons .icon {
+    padding: 0px
+}
+
+.poly-popover-icons .icon .wrap {
+    display: inline-block;
+    padding: 3px;
+    border: 1px solid #888888;
+    margin: 3px;
+    border-radius: 3px;
+}
+
+.poly-utilties-list-icons .icon .wrap:hover {
+    background-color: #f0f0f0;
+}
+
+/* Icons */
+.project-overview-left {
+    position: relative;
+}
+
+.sticky {
+    position: fixed;
+    display: block !important
+}
+
+.poly-cursor,
+.delete,
+.remove,
+.submit {
+    cursor: pointer;
+}
+
+.poly-icon {
+    font-size: 16px
+}
+
+.poly-hide {
+    display: none
+}
+
+.poly-absolute {
+    position: absolute
+}
+
+.hr {
+    margin: 0px
+}
+
+.poly-right-0 {
+    right: 0px
+}
+
+.poly-top-0 {
+    top: 0px
+}
+
+.poly-bottom-0 {
+    bottom: 0px
+}
+
+.swal2-close:focus {
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.poly-help-message {
+    color: #888888;
+    font-size: 13px
+}
+
+/* ================ END Common ================ */
+
+/* ================ Admin menu ================ */
+.sub-menu-item-poly_utilities_scripts_add_extend,
+.sub-menu-item-poly_utilities_styles_add_extend,
+.sub-menu-item-poly_utilities_shortcut_menu_add_extend {
+    display: none !important
+}
+
+/* ================ END Admin menu ================ */
+
+/* ================ Utilities class ================ */
+#header.sticky {
+    width: -webkit-fill-available;
+    position: fixed;
+    top: 0px
+}
+
+.poly-block,
+.poly-block-client {
+    position: relative
+}
+
+.poly-copy,
+.poly-table-icon {
+    cursor: pointer;
+    position: absolute;
+    right: -16px;
+}
+
+.poly-table-icon i.clients {
+    color: #0e7116
+}
+
+/* ================ END Utilities class ================ */
+
+/* ================ Quick Access Menu ================ */
+.panel-poly-quick-access-menu {
+    margin: 0px;
+    padding: 0px
+}
+
+.poly-utilities-list-icon .icon {
+    margin-right: 3px
+}
+
+.poly-utilities-heading {
+    border-bottom: 1px solid #e2e2e2;
+    padding-bottom: 4px;
+}
+
+.poly_utilities_quick_access_menu,
+.poly_utilities_quick_access_menu .menu-items {
+    display: inline-flex;
+}
+
+.poly_utilities_quick_access_menu {
+    position: relative
+}
+
+.poly_utilities_quick_access_menu .menu-items {
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 10px;
+    font-size: 18px;
+}
+
+.poly_utilities_quick_access_menu .dropdown-menu {
+    margin-top: 0px;
+    min-width: 234px;
+}
+
+.poly_utilities_quick_access_menu_manage .menu-options {
+    margin-bottom: 20px
+}
+
+.poly_utilities_quick_access_menu_manage .action-icon {
+    position: absolute;
+    top: 2px
+}
+
+.poly-bold {
+    font-weight: 700;
+}
+
+.poly-quick-access-shortcut-key {
+    color: #8d8d8d
+}
+
+ul.nav.metis-menu li:hover {
+    .poly-quick-access-menu-pin {
+        display: block
+    }
+}
+
+ul.nav.metis-menu li li:hover {
+    .poly-quick-access-menu-pin-sub {
+        display: block
+    }
+}
+
+.poly-quick-access-menu-pin,
+.poly-quick-access-menu-pin-sub {
+    cursor: pointer;
+    display: none
+}
+
+.poly-quick-pin {
+    position: absolute;
+    top: 0px;
+    right: 0px
+}
+
+.poly-quick-pin .ico-pin {
+    color: #fff;
+    transform: rotate(45deg);
+}
+
+.poly-utilities-access-menu-pin-modal-content .swal2-html-container {
+    text-align: left
+}
+
+/* ================ END Quick Access Menu ================ */
+
+/* ================ Table of Contents ================ */
+.poly-table .header {
+    background: #e6e6e6;
+    font-weight: 700;
+}
+
+.poly-table,
+.poly-table .poly-table-of-content {
+    width: 224px;
+}
+
+.poly-table {
+    position: fixed;
+    right: 0;
+    z-index: 9999;
+    background: #f4f4f4;
+    border: 2px solid #e5e5e5;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.poly-table .header {
+    position: fixed;
+    top: 0px;
+    display: block;
+    width: 100%;
+    border-bottom: 1px solid #ccc;
+    padding: 4px 8px;
+}
+
+.poly-table .poly-table-of-content {
+    padding: 4px 8px;
+    padding-top: 30px
+}
+
+.poly-table-of-content .item {
+    cursor: pointer;
+}
+
+.poly-table-of-content .item.hh2 {
+    margin-left: 0px;
+    font-weight: 700;
+}
+
+.poly-table-of-content .item.hh3 {
+    margin-left: 10px;
+    font-weight: 500;
+}
+
+.poly-table-of-content .item.hh4 {
+    margin-left: 15px;
+    font-weight: 400;
+}
+
+.poly-table-of-content .item.hh5 {
+    margin-left: 20px;
+    font-weight: 300;
+}
+
+/* ================ END Table of Contents ================ */
+
+/* ================ Data Table Filters ================ */
+.panel-table-full table tr td {
+    text-align: left !important
+}
+
+.poly-label,
+.poly-checkbox,
+.poly-checkbox-module {
+    cursor: pointer;
+}
+
+.poly-label span {
+    margin-left: 2px;
+    position: relative;
+    top: -2px;
+    font-weight: 400 !important;
+}
+
+.poly-utilities-filter {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center
+}
+
+.poly-utilities-filter.relative {
+    display: list-item
+}
+
+.poly-item-filter {
+    display: inline-block;
+    margin-right: 8px;
+    position: relative;
+    cursor: pointer
+}
+
+.poly-utilities-filter-modal .poly-item-filter {
+    display: table
+}
+
+/* ================ END Data Table Filters ================ */
+
+/* ================ Modal icons ================ */
+.poly-utilities-icons-modal-container .preview {
+    margin-bottom: 13px
+}
+
+/* ================ END Modal icons ================ */
+
+/* ================ AIO Supports ================ */
+.poly-field-template {
+    margin-bottom: 14px
+}
+
+.poly-aio-handle-sortable,
+.poly-aio-handle-delete {
+    position: relative;
+    top: 28px;
+    padding: 0px 6px;
+    display: inline-flex
+}
+
+/* ================ END AIO Supports ================ */
+
+/* ================ Modules ================ */
+.poly-utilities-modules {
+    position: absolute;
+    left: 0px
+}
+
+.poly_aio_supports_content {
+    color: #000;
+    font-weight: 600
+}
+
+/* ================ END Modules ================ */
+
+/* ================ Menu ================ */
+.poly-sidebar-search {
+    opacity: 0.6;
+    width: 100%;
+    border-radius: 3px !important;
+    padding: 2px 6px
+}
+
+.poly-favicon .poly-favicon-thumb {
+    width: 22px
+}
+
+.poly-favicon {
+    position: absolute;
+    top: -10px;
+    right: -6px;
+}
+
+.poly-toggle-menu {
+    /* Replace for toggle menu .hide-menu*/
+    padding: 18px 14px 18px 14px;
+    font-size: 14px;
+    float: left;
+    color: #475569;
+    cursor: pointer;
+    line-height: 27px;
+}
+
+[dir="rtl"] .poly-toggle-menu {
+    float: right;
+    margin-left: 15px;
+    padding-left: 15px;
+}
+
+.poly-toggle-menu:hover {
+    opacity: 0.7;
+}
+
+.poly-hide-sidebar #side-menu li:first-child a {
+    padding: 0px;
+}
+
+.poly-hide-sidebar #logo {
+    display: block
+}
+
+.poly-hide-sidebar #side-menu li:first-child img {
+    width: 40px
+}
+
+.poly-hide-sidebar .sidebar li a {
+    padding: 13px
+}
+
+.poly-hide-sidebar #logo img.favicon-collapsed,
+.poly-show-sidebar #logo img.img-responsive {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.poly-show-sidebar .sidebar,
+.poly-show-sidebar #wrapper,
+.poly-hide-sidebar .sidebar,
+.poly-hide-sidebar #wrapper,
+.poly-show-sidebar #header,
+.poly-hide-sidebar #header {
+    transition: all .5s ease 0s
+}
+
+.poly-hide-sidebar #logo img.favicon-collapsed.fadeIn,
+.poly-show-sidebar #logo img.img-responsive.fadeIn {
+    opacity: 1;
+}
+
+.poly-hide-sidebar #menu {
+    width: 50px !important;
+}
+
+.poly-hide-sidebar #menu .tw-mt-\[63px\] {
+    margin-top: 0px
+}
+
+.poly-hide-sidebar .sidebar .poly-sidebar-search {
+    display: none
+}
+
+.poly-hide-sidebar ul#side-menu li a {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    text-align: center
+}
+
+.poly-hide-sidebar ul#side-menu li a i {
+    margin: 0px !important;
+    float: none !important;
+}
+
+.poly-hide-sidebar .sidebar ul#side-menu li .nav-second-level a .menu-icon {
+    margin: revert !important;
+}
+
+.poly-hide-sidebar .sidebar ul#side-menu li .nav-second-level li a,
+.poly-hide-sidebar .sidebar ul#side-menu li .nav-second-level li.active a {
+    padding: 10px !important;
+}
+
+.sidebar li .nav-second-level li.active a {
+    border-radius: 4px;
+}
+
+.poly-hide-sidebar .sidebar li .nav-second-level li.active a {
+    margin: 4px 0px !important
+}
+
+body.poly-show-sidebar #wrapper {
+    margin-left: 230px;
+}
+
+body.poly-hide-sidebar #header {
+    margin-left: 50px;
+}
+
+body.poly-hide-sidebar:not(.show-sidebar) #menu {
+    margin-left: 0px;
+}
+
+body.page-small.show-sidebar #menu {
+    height: fit-content;
+    /* Fixed z-index button vs menu */
+}
+
+.poly-hide-sidebar .btn-bottom-toolbar {
+    z-index: 990 !important;
+}
+
+@media (max-width: 768px) {
+    body.page-small.show-sidebar .btn-bottom-toolbar {
+        left: initial;
+    }
+}
+
+body.poly-hide-sidebar:not(.show-sidebar) #menu {
+    height: max-content
+}
+
+.poly-hide-sidebar #menu {
+    width: 56px !important;
+}
+
+body.poly-hide-sidebar #header,
+body.poly-hide-sidebar:not(.show-sidebar) #wrapper {
+    margin-left: 56px !important
+}
+
+body.poly-hide-sidebar #menu li a [class$="menu-text"] {
+    position: absolute;
+    opacity: 0;
+    width: max-content;
+    top: -20px;
+    left: calc(100% + 8px);
+    z-index: 3;
+    background: #fff;
+    color: #202020;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    padding: 8px 13px;
+    border-radius: 4px;
+    font-weight: 400;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+body.poly-hide-sidebar #menu li a:hover [class$="menu-text"] {
+    opacity: 1;
+    pointer-events: auto;
+    transition: all 0.4s ease;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+body.poly-show-sidebar #menu li,
+body.poly-hide-sidebar #menu li {
+    opacity: 1;
+    transition: opacity 0.4s;
+}
+
+.poly-show-sidebar #menu .arrow.pleft5,
+.poly-show-sidebar #menu .poly-tour-guide,
+.poly-show-sidebar #menu #logo img.img-responsive,
+.poly-hide-sidebar #menu .favicon-collapsed,
+.poly-hide-sidebar #menu .pinned_project i {
+    display: block
+}
+
+.poly-show-sidebar #menu .pinned_project i,
+.poly-show-sidebar #menu img.favicon-collapsed,
+.poly-hide-sidebar #menu #logo img.img-responsive,
+.poly-hide-sidebar #menu .arrow.pleft5 {
+    display: none
+}
+
+/* ================ END Menu ================ */
+
+/* ================ Widgets ================ */
+.poly-widgets-area p {
+    margin: 0 0 4px
+}
+
+.poly-widget-list {
+    list-style-type: none;
+    border: 1px dashed #ccc !important;
+    padding: 4px
+}
+
+.poly-widget-list li {
+    cursor: pointer;
+    margin-bottom: 5px;
+    font-size: 1.2em;
+    line-height: 1.2em;
+    padding: 4px 6px
+}
+
+.ui-widget-default {
+    background: #f6f7f7;
+    min-height: 1.2em
+}
+
+.ui-widget-default,
+.ui-state-highlight {
+    color: #1d2327;
+    margin: 0;
+    padding: 10px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    border: 1px solid #ccc
+}
+
+/* Widget: Image */
+.poly-widget-image-add {
+    border: 1px dashed #ccc;
+    color: #ccc;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+}
+
+/* Widget: Image */
+
+/* Widgets area display */
+.poly-widgets-area {
+    border: 1px solid #ccc;
+    padding: 4px;
+    margin-bottom: 6px;
+    background: #fff;
+}
+
+.poly-widgets-area .widget .header,
+.poly-avaible-widgets .header {
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer
+}
+
+.poly-widget-description {
+    font-size: 13px
+}
+/* Widgets area display */
+
+/* Widgets display */
+.poly-utilities-widget-after-topbar {
+    padding: 10px
+}
+/* Widgets display */
+/* ================ END Widgets ================ */

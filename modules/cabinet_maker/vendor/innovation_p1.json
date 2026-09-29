@@ -1,0 +1,1402 @@
+[
+  {
+    "sku": "9\" DRAWER SLIDES",
+    "name": "9\" DRAWER SLIDES",
+    "core": 18.0,
+    "slim": 18.0,
+    "luxe": 18.0
+  },
+  {
+    "sku": "FDB30",
+    "name": "FDB30",
+    "core": 214.0,
+    "slim": 235.0,
+    "luxe": 427.0
+  },
+  {
+    "sku": "W1542",
+    "name": "W1542",
+    "core": 131.0,
+    "slim": 144.0,
+    "luxe": 262.0
+  },
+  {
+    "sku": "WDC243612",
+    "name": "WDC243612",
+    "core": 257.0,
+    "slim": 284.0,
+    "luxe": 514.0
+  },
+  {
+    "sku": "12\" DRAWER SLIDES",
+    "name": "12\" DRAWER SLIDES",
+    "core": 18.0,
+    "slim": 18.0,
+    "luxe": 18.0
+  },
+  {
+    "sku": "FDB33",
+    "name": "FDB33",
+    "core": 227.0,
+    "slim": 249.0,
+    "luxe": 453.0
+  },
+  {
+    "sku": "W1818",
+    "name": "W1818",
+    "core": 93.0,
+    "slim": 103.0,
+    "luxe": 186.0
+  },
+  {
+    "sku": "WDC244212",
+    "name": "WDC244212",
+    "core": 285.0,
+    "slim": 314.0,
+    "luxe": 570.0
+  },
+  {
+    "sku": "15\" DRAWER SLIDES",
+    "name": "15\" DRAWER SLIDES",
+    "core": 21.0,
+    "slim": 21.0,
+    "luxe": 21.0
+  },
+  {
+    "sku": "FDB36",
+    "name": "FDB36",
+    "core": 238.0,
+    "slim": 262.0,
+    "luxe": 475.0
+  },
+  {
+    "sku": "W1830",
+    "name": "W1830",
+    "core": 115.0,
+    "slim": 126.0,
+    "luxe": 229.0
+  },
+  {
+    "sku": "WDCG243012",
+    "name": "WDCG243012",
+    "core": 52.0,
+    "slim": 57.0,
+    "luxe": 103.0
+  },
+  {
+    "sku": "18\" DRAWER SLIDES",
+    "name": "18\" DRAWER SLIDES",
+    "core": 24.0,
+    "slim": 24.0,
+    "luxe": 24.0
+  },
+  {
+    "sku": "FILLER 3X96",
+    "name": "FILLER 3X96",
+    "core": 43.0,
+    "slim": 43.0,
+    "luxe": 85.0
+  },
+  {
+    "sku": "W1836",
+    "name": "W1836",
+    "core": 128.0,
+    "slim": 141.0,
+    "luxe": 255.0
+  },
+  {
+    "sku": "WDCG243612",
+    "name": "WDCG243612",
+    "core": 55.0,
+    "slim": 60.0,
+    "luxe": 109.0
+  },
+  {
+    "sku": "21\" DRAWER SLIDES",
+    "name": "21\" DRAWER SLIDES",
+    "core": 24.0,
+    "slim": 24.0,
+    "luxe": 24.0
+  },
+  {
+    "sku": "FILLER 6X96",
+    "name": "FILLER 6X96",
+    "core": 85.0,
+    "slim": 85.0,
+    "luxe": 169.0
+  },
+  {
+    "sku": "W1842",
+    "name": "W1842",
+    "core": 137.0,
+    "slim": 152.0,
+    "luxe": 274.0
+  },
+  {
+    "sku": "WDCG244212",
+    "name": "WDCG244212",
+    "core": 60.0,
+    "slim": 67.0,
+    "luxe": 120.0
+  },
+  {
+    "sku": "2DB30",
+    "name": "2DB30",
+    "core": 284.0,
+    "slim": 312.0,
+    "luxe": 567.0
+  },
+  {
+    "sku": "FLAT PANEL 28X96",
+    "name": "FLAT PANEL 28X96",
+    "core": 73.0,
+    "slim": 73.0,
+    "luxe": 145.0
+  },
+  {
+    "sku": "W2118",
+    "name": "W2118",
+    "core": 98.0,
+    "slim": 108.0,
+    "luxe": 196.0
+  },
+  {
+    "sku": "WDD30",
+    "name": "WDD30",
+    "core": 55.0,
+    "slim": 60.0,
+    "luxe": 109.0
+  },
+  {
+    "sku": "2DB33",
+    "name": "2DB33",
+    "core": 301.0,
+    "slim": 332.0,
+    "luxe": 602.0
+  },
+  {
+    "sku": "FSB36",
+    "name": "FSB36",
+    "core": 209.0,
+    "slim": 230.0,
+    "luxe": 418.0
+  },
+  {
+    "sku": "W2130",
+    "name": "W2130",
+    "core": 123.0,
+    "slim": 135.0,
+    "luxe": 245.0
+  },
+  {
+    "sku": "WDD36",
+    "name": "WDD36",
+    "core": 60.0,
+    "slim": 67.0,
+    "luxe": 120.0
+  },
+  {
+    "sku": "2DB36",
+    "name": "2DB36",
+    "core": 315.0,
+    "slim": 346.0,
+    "luxe": 629.0
+  },
+  {
+    "sku": "GH30",
+    "name": "GH30",
+    "core": 39.0,
+    "slim": 43.0,
+    "luxe": 77.0
+  },
+  {
+    "sku": "W2136",
+    "name": "W2136",
+    "core": 136.0,
+    "slim": 150.0,
+    "luxe": 272.0
+  },
+  {
+    "sku": "WDD42",
+    "name": "WDD42",
+    "core": 66.0,
+    "slim": 73.0,
+    "luxe": 132.0
+  },
+  {
+    "sku": "ACM2.5",
+    "name": "ACM2.5",
+    "core": 54.0,
+    "slim": 54.0,
+    "luxe": 107.0
+  },
+  {
+    "sku": "ICM8",
+    "name": "ICM8",
+    "core": 18.0,
+    "slim": 18.0,
+    "luxe": 36.0
+  },
+  {
+    "sku": "W2142",
+    "name": "W2142",
+    "core": 145.0,
+    "slim": 159.0,
+    "luxe": 289.0
+  },
+  {
+    "sku": "WEOS0930",
+    "name": "WEOS0930",
+    "core": 79.0,
+    "slim": 79.0,
+    "luxe": 158.0
+  },
+  {
+    "sku": "ANGLEMOLDING",
+    "name": "ANGLEMOLDING",
+    "core": 18.0,
+    "slim": 18.0,
+    "luxe": 36.0
+  },
+  {
+    "sku": "LZS33",
+    "name": "LZS33",
+    "core": 288.0,
+    "slim": 317.0,
+    "luxe": 576.0
+  },
+  {
+    "sku": "W2412",
+    "name": "W2412",
+    "core": 91.0,
+    "slim": 100.0,
+    "luxe": 182.0
+  },
+  {
+    "sku": "WEOS0936",
+    "name": "WEOS0936",
+    "core": 86.0,
+    "slim": 86.0,
+    "luxe": 171.0
+  },
+  {
+    "sku": "B12",
+    "name": "B12",
+    "core": 128.0,
+    "slim": 141.0,
+    "luxe": 255.0
+  },
+  {
+    "sku": "LZS3612",
+    "name": "LZS3612",
+    "core": 310.0,
+    "slim": 341.0,
+    "luxe": 619.0
+  },
+  {
+    "sku": "W2415",
+    "name": "W2415",
+    "core": 102.0,
+    "slim": 113.0,
+    "luxe": 204.0
+  },
+  {
+    "sku": "WEOS0942",
+    "name": "WEOS0942",
+    "core": 99.0,
+    "slim": 99.0,
+    "luxe": 198.0
+  },
+  {
+    "sku": "B15",
+    "name": "B15",
+    "core": 146.0,
+    "slim": 161.0,
+    "luxe": 291.0
+  },
+  {
+    "sku": "OVD338427",
+    "name": "OVD338427",
+    "core": 537.0,
+    "slim": 591.0,
+    "luxe": 1074.0
+  },
+  {
+    "sku": "W2418",
+    "name": "W2418",
+    "core": 114.0,
+    "slim": 125.0,
+    "luxe": 228.0
+  },
+  {
+    "sku": "WF3 30",
+    "name": "WF3 30",
+    "core": 15.0,
+    "slim": 15.0,
+    "luxe": 29.0
+  },
+  {
+    "sku": "B18",
+    "name": "B18",
+    "core": 153.0,
+    "slim": 169.0,
+    "luxe": 306.0
+  },
+  {
+    "sku": "OVD339027",
+    "name": "OVD339027",
+    "core": 559.0,
+    "slim": 615.0,
+    "luxe": 1117.0
+  },
+  {
+    "sku": "W2424",
+    "name": "W2424",
+    "core": 127.0,
+    "slim": 140.0,
+    "luxe": 254.0
+  },
+  {
+    "sku": "WF3 36",
+    "name": "WF3 36",
+    "core": 17.0,
+    "slim": 17.0,
+    "luxe": 33.0
+  },
+  {
+    "sku": "B21",
+    "name": "B21",
+    "core": 167.0,
+    "slim": 184.0,
+    "luxe": 334.0
+  },
+  {
+    "sku": "OVD339627",
+    "name": "OVD339627",
+    "core": 582.0,
+    "slim": 641.0,
+    "luxe": 1164.0
+  },
+  {
+    "sku": "W2430",
+    "name": "W2430",
+    "core": 142.0,
+    "slim": 156.0,
+    "luxe": 283.0
+  },
+  {
+    "sku": "WF3 42",
+    "name": "WF3 42",
+    "core": 19.0,
+    "slim": 19.0,
+    "luxe": 38.0
+  },
+  {
+    "sku": "B24",
+    "name": "B24",
+    "core": 190.0,
+    "slim": 209.0,
+    "luxe": 380.0
+  },
+  {
+    "sku": "PAINT",
+    "name": "PAINT",
+    "core": 30.0,
+    "slim": 30.0,
+    "luxe": 30.0
+  },
+  {
+    "sku": "W2436",
+    "name": "W2436",
+    "core": 162.0,
+    "slim": 178.0,
+    "luxe": 323.0
+  },
+  {
+    "sku": "WF6 42",
+    "name": "WF6 42",
+    "core": 37.0,
+    "slim": 37.0,
+    "luxe": 74.0
+  },
+  {
+    "sku": "B27",
+    "name": "B27",
+    "core": 206.0,
+    "slim": 227.0,
+    "luxe": 412.0
+  },
+  {
+    "sku": "QUARTER DOOR",
+    "name": "QUARTER DOOR",
+    "core": 10.0,
+    "slim": 10.0,
+    "luxe": 10.0
+  },
+  {
+    "sku": "W2442",
+    "name": "W2442",
+    "core": 177.0,
+    "slim": 195.0,
+    "luxe": 354.0
+  },
+  {
+    "sku": "WG1230",
+    "name": "WG1230",
+    "core": 36.0,
+    "slim": 39.0,
+    "luxe": 71.0
+  },
+  {
+    "sku": "B30",
+    "name": "B30",
+    "core": 214.0,
+    "slim": 235.0,
+    "luxe": 427.0
+  },
+  {
+    "sku": "RH36",
+    "name": "RH36",
+    "core": 621.0,
+    "slim": 621.0,
+    "luxe": 1242.0
+  },
+  {
+    "sku": "W2718",
+    "name": "W2718",
+    "core": 118.0,
+    "slim": 130.0,
+    "luxe": 235.0
+  },
+  {
+    "sku": "WG1236",
+    "name": "WG1236",
+    "core": 39.0,
+    "slim": 43.0,
+    "luxe": 77.0
+  },
+  {
+    "sku": "B33",
+    "name": "B33",
+    "core": 227.0,
+    "slim": 249.0,
+    "luxe": 453.0
+  },
+  {
+    "sku": "RRP27(1.5)",
+    "name": "RRP27(1.5)",
+    "core": 90.0,
+    "slim": 90.0,
+    "luxe": 180.0
+  },
+  {
+    "sku": "W2730",
+    "name": "W2730",
+    "core": 147.0,
+    "slim": 162.0,
+    "luxe": 293.0
+  },
+  {
+    "sku": "WG1242",
+    "name": "WG1242",
+    "core": 44.0,
+    "slim": 48.0,
+    "luxe": 87.0
+  },
+  {
+    "sku": "B36",
+    "name": "B36",
+    "core": 238.0,
+    "slim": 262.0,
+    "luxe": 475.0
+  },
+  {
+    "sku": "SAMPLE DOOR",
+    "name": "SAMPLE DOOR",
+    "core": 20.0,
+    "slim": 22.0,
+    "luxe": 20.0
+  },
+  {
+    "sku": "W2736",
+    "name": "W2736",
+    "core": 168.0,
+    "slim": 185.0,
+    "luxe": 336.0
+  },
+  {
+    "sku": "WG1530",
+    "name": "WG1530",
+    "core": 40.0,
+    "slim": 45.0,
+    "luxe": 80.0
+  },
+  {
+    "sku": "B39",
+    "name": "B39",
+    "core": 257.0,
+    "slim": 284.0,
+    "luxe": 514.0
+  },
+  {
+    "sku": "SB30",
+    "name": "SB30",
+    "core": 188.0,
+    "slim": 207.0,
+    "luxe": 376.0
+  },
+  {
+    "sku": "W2742",
+    "name": "W2742",
+    "core": 186.0,
+    "slim": 205.0,
+    "luxe": 372.0
+  },
+  {
+    "sku": "WG1536",
+    "name": "WG1536",
+    "core": 48.0,
+    "slim": 54.0,
+    "luxe": 96.0
+  },
+  {
+    "sku": "B42",
+    "name": "B42",
+    "core": 280.0,
+    "slim": 308.0,
+    "luxe": 559.0
+  },
+  {
+    "sku": "SB36",
+    "name": "SB36",
+    "core": 209.0,
+    "slim": 230.0,
+    "luxe": 418.0
+  },
+  {
+    "sku": "W3012",
+    "name": "W3012",
+    "core": 112.0,
+    "slim": 123.0,
+    "luxe": 223.0
+  },
+  {
+    "sku": "WG1542",
+    "name": "WG1542",
+    "core": 53.0,
+    "slim": 58.0,
+    "luxe": 105.0
+  },
+  {
+    "sku": "BASEMOLDING",
+    "name": "BASEMOLDING",
+    "core": 59.0,
+    "slim": 59.0,
+    "luxe": 118.0
+  },
+  {
+    "sku": "SCRIBEMOLDING",
+    "name": "SCRIBEMOLDING",
+    "core": 18.0,
+    "slim": 18.0,
+    "luxe": 36.0
+  },
+  {
+    "sku": "W3015",
+    "name": "W3015",
+    "core": 121.0,
+    "slim": 133.0,
+    "luxe": 242.0
+  },
+  {
+    "sku": "WG1830",
+    "name": "WG1830",
+    "core": 47.0,
+    "slim": 52.0,
+    "luxe": 94.0
+  },
+  {
+    "sku": "BBC33-9",
+    "name": "BBC33-9",
+    "core": 209.0,
+    "slim": 230.0,
+    "luxe": 418.0
+  },
+  {
+    "sku": "SHOEMOLDING",
+    "name": "SHOEMOLDING",
+    "core": 18.0,
+    "slim": 18.0,
+    "luxe": 36.0
+  },
+  {
+    "sku": "W3018",
+    "name": "W3018",
+    "core": 133.0,
+    "slim": 146.0,
+    "luxe": 266.0
+  },
+  {
+    "sku": "WG1836",
+    "name": "WG1836",
+    "core": 54.0,
+    "slim": 59.0,
+    "luxe": 107.0
+  },
+  {
+    "sku": "BDD24",
+    "name": "BDD24",
+    "core": 75.0,
+    "slim": 83.0,
+    "luxe": 150.0
+  },
+  {
+    "sku": "SIDE PANEL 36X96",
+    "name": "SIDE PANEL 36X96",
+    "core": 123.0,
+    "slim": 123.0,
+    "luxe": 245.0
+  },
+  {
+    "sku": "W3024",
+    "name": "W3024",
+    "core": 145.0,
+    "slim": 159.0,
+    "luxe": 289.0
+  },
+  {
+    "sku": "WG1842",
+    "name": "WG1842",
+    "core": 58.0,
+    "slim": 64.0,
+    "luxe": 115.0
+  },
+  {
+    "sku": "BES09",
+    "name": "BES09",
+    "core": 104.0,
+    "slim": 104.0,
+    "luxe": 208.0
+  },
+  {
+    "sku": "SKIN PANEL 36X96",
+    "name": "SKIN PANEL 36X96",
+    "core": 73.0,
+    "slim": 73.0,
+    "luxe": 146.0
+  },
+  {
+    "sku": "W3030",
+    "name": "W3030",
+    "core": 159.0,
+    "slim": 175.0,
+    "luxe": 317.0
+  },
+  {
+    "sku": "WMC3018",
+    "name": "WMC3018",
+    "core": 107.0,
+    "slim": 107.0,
+    "luxe": 213.0
+  },
+  {
+    "sku": "BF3",
+    "name": "BF3",
+    "core": 17.0,
+    "slim": 17.0,
+    "luxe": 33.0
+  },
+  {
+    "sku": "SP09",
+    "name": "SP09",
+    "core": 134.0,
+    "slim": 148.0,
+    "luxe": 268.0
+  },
+  {
+    "sku": "W3036",
+    "name": "W3036",
+    "core": 177.0,
+    "slim": 195.0,
+    "luxe": 354.0
+  },
+  {
+    "sku": "WP188427",
+    "name": "WP188427",
+    "core": 399.0,
+    "slim": 438.0,
+    "luxe": 797.0
+  },
+  {
+    "sku": "BF6",
+    "name": "BF6",
+    "core": 32.0,
+    "slim": 32.0,
+    "luxe": 64.0
+  },
+  {
+    "sku": "SP2436",
+    "name": "SP2436",
+    "core": 38.0,
+    "slim": 38.0,
+    "luxe": 76.0
+  },
+  {
+    "sku": "W3042",
+    "name": "W3042",
+    "core": 194.0,
+    "slim": 213.0,
+    "luxe": 387.0
+  },
+  {
+    "sku": "WP189027",
+    "name": "WP189027",
+    "core": 441.0,
+    "slim": 485.0,
+    "luxe": 881.0
+  },
+  {
+    "sku": "BMC30",
+    "name": "BMC30",
+    "core": 284.0,
+    "slim": 312.0,
+    "luxe": 567.0
+  },
+  {
+    "sku": "TK8",
+    "name": "TK8",
+    "core": 19.0,
+    "slim": 19.0,
+    "luxe": 38.0
+  },
+  {
+    "sku": "W3312",
+    "name": "W3312",
+    "core": 117.0,
+    "slim": 128.0,
+    "luxe": 233.0
+  },
+  {
+    "sku": "WP189627",
+    "name": "WP189627",
+    "core": 460.0,
+    "slim": 506.0,
+    "luxe": 920.0
+  },
+  {
+    "sku": "BWBKT18",
+    "name": "BWBKT18",
+    "core": 224.0,
+    "slim": 247.0,
+    "luxe": 448.0
+  },
+  {
+    "sku": "TLR8",
+    "name": "TLR8",
+    "core": 43.0,
+    "slim": 43.0,
+    "luxe": 85.0
+  },
+  {
+    "sku": "W3315",
+    "name": "W3315",
+    "core": 128.0,
+    "slim": 142.0,
+    "luxe": 256.0
+  },
+  {
+    "sku": "WP248427",
+    "name": "WP248427",
+    "core": 466.0,
+    "slim": 513.0,
+    "luxe": 932.0
+  },
+  {
+    "sku": "CCM8",
+    "name": "CCM8",
+    "core": 73.0,
+    "slim": 73.0,
+    "luxe": 146.0
+  },
+  {
+    "sku": "TOUCHUP KIT",
+    "name": "TOUCHUP KIT",
+    "core": 15.0,
+    "slim": 15.0,
+    "luxe": 15.0
+  },
+  {
+    "sku": "W3318",
+    "name": "W3318",
+    "core": 139.0,
+    "slim": 154.0,
+    "luxe": 278.0
+  },
+  {
+    "sku": "WP249027",
+    "name": "WP249027",
+    "core": 481.0,
+    "slim": 529.0,
+    "luxe": 961.0
+  },
+  {
+    "sku": "CL156012",
+    "name": "CL156012",
+    "core": 190.0,
+    "slim": 209.0,
+    "luxe": 380.0
+  },
+  {
+    "sku": "VAN24",
+    "name": "VAN24",
+    "core": 159.0,
+    "slim": 175.0,
+    "luxe": 317.0
+  },
+  {
+    "sku": "W3324",
+    "name": "W3324",
+    "core": 154.0,
+    "slim": 169.0,
+    "luxe": 307.0
+  },
+  {
+    "sku": "WP249627",
+    "name": "WP249627",
+    "core": 502.0,
+    "slim": 552.0,
+    "luxe": 1004.0
+  },
+  {
+    "sku": "CORBEL 8X12",
+    "name": "CORBEL 8X12",
+    "core": 29.0,
+    "slim": 29.0,
+    "luxe": 58.0
+  },
+  {
+    "sku": "VAN30",
+    "name": "VAN30",
+    "core": 190.0,
+    "slim": 209.0,
+    "luxe": 380.0
+  },
+  {
+    "sku": "W3330",
+    "name": "W3330",
+    "core": 168.0,
+    "slim": 185.0,
+    "luxe": 336.0
+  },
+  {
+    "sku": "WP308427",
+    "name": "WP308427",
+    "core": 601.0,
+    "slim": 662.0,
+    "luxe": 1202.0
+  },
+  {
+    "sku": "DB12",
+    "name": "DB12",
+    "core": 195.0,
+    "slim": 214.0,
+    "luxe": 389.0
+  },
+  {
+    "sku": "VAN36DL",
+    "name": "VAN36DL",
+    "core": 234.0,
+    "slim": 257.0,
+    "luxe": 984.0
+  },
+  {
+    "sku": "W3336",
+    "name": "W3336",
+    "core": 183.0,
+    "slim": 201.0,
+    "luxe": 365.0
+  },
+  {
+    "sku": "WP309027",
+    "name": "WP309027",
+    "core": 620.0,
+    "slim": 682.0,
+    "luxe": 1239.0
+  },
+  {
+    "sku": "DB15",
+    "name": "DB15",
+    "core": 205.0,
+    "slim": 226.0,
+    "luxe": 410.0
+  },
+  {
+    "sku": "VAN36DR",
+    "name": "VAN36DR",
+    "core": 234.0,
+    "slim": 257.0,
+    "luxe": 984.0
+  },
+  {
+    "sku": "W3342",
+    "name": "W3342",
+    "core": 201.0,
+    "slim": 221.0,
+    "luxe": 401.0
+  },
+  {
+    "sku": "WP309627",
+    "name": "WP309627",
+    "core": 638.0,
+    "slim": 703.0,
+    "luxe": 1276.0
+  },
+  {
+    "sku": "DB18",
+    "name": "DB18",
+    "core": 217.0,
+    "slim": 239.0,
+    "luxe": 434.0
+  },
+  {
+    "sku": "VAN48D-6",
+    "name": "VAN48D-6",
+    "core": 395.0,
+    "slim": 435.0,
+    "luxe": 790.0
+  },
+  {
+    "sku": "W3612",
+    "name": "W3612",
+    "core": 128.0,
+    "slim": 142.0,
+    "luxe": 256.0
+  },
+  {
+    "sku": "WRC3018",
+    "name": "WRC3018",
+    "core": 107.0,
+    "slim": 107.0,
+    "luxe": 213.0
+  },
+  {
+    "sku": "DB21",
+    "name": "DB21",
+    "core": 230.0,
+    "slim": 253.0,
+    "luxe": 459.0
+  },
+  {
+    "sku": "VDB12",
+    "name": "VDB12",
+    "core": 179.0,
+    "slim": 197.0,
+    "luxe": 358.0
+  },
+  {
+    "sku": "W361227",
+    "name": "W361227",
+    "core": 142.0,
+    "slim": 156.0,
+    "luxe": 283.0
+  },
+  {
+    "sku": "PULLOUT TRAY 18\"",
+    "name": "PULLOUT TRAY 18\"",
+    "core": 38.0,
+    "slim": 38.0,
+    "luxe": 38.0
+  },
+  {
+    "sku": "DB24",
+    "name": "DB24",
+    "core": 253.0,
+    "slim": 278.0,
+    "luxe": 505.0
+  },
+  {
+    "sku": "VDB15",
+    "name": "VDB15",
+    "core": 190.0,
+    "slim": 209.0,
+    "luxe": 380.0
+  },
+  {
+    "sku": "W3615",
+    "name": "W3615",
+    "core": 140.0,
+    "slim": 154.0,
+    "luxe": 279.0
+  },
+  {
+    "sku": "PULLOUT TRAY 24\"",
+    "name": "PULLOUT TRAY 24\"",
+    "core": 46.0,
+    "slim": 46.0,
+    "luxe": 46.0
+  },
+  {
+    "sku": "DB27",
+    "name": "DB27",
+    "core": 274.0,
+    "slim": 302.0,
+    "luxe": 548.0
+  },
+  {
+    "sku": "VDB18",
+    "name": "VDB18",
+    "core": 201.0,
+    "slim": 221.0,
+    "luxe": 401.0
+  },
+  {
+    "sku": "W361527",
+    "name": "W361527",
+    "core": 160.0,
+    "slim": 176.0,
+    "luxe": 319.0
+  },
+  {
+    "sku": "PULLOUT TRAY 30\"",
+    "name": "PULLOUT TRAY 30\"",
+    "core": 59.0,
+    "slim": 59.0,
+    "luxe": 59.0
+  },
+  {
+    "sku": "DB30",
+    "name": "DB30",
+    "core": 284.0,
+    "slim": 312.0,
+    "luxe": 567.0
+  },
+  {
+    "sku": "VDB24",
+    "name": "VDB24",
+    "core": 234.0,
+    "slim": 257.0,
+    "luxe": 467.0
+  },
+  {
+    "sku": "W3618",
+    "name": "W3618",
+    "core": 160.0,
+    "slim": 176.0,
+    "luxe": 319.0
+  },
+  {
+    "sku": "PULLOUT TRAY 36\"",
+    "name": "PULLOUT TRAY 36\"",
+    "core": 71.0,
+    "slim": 71.0,
+    "luxe": 71.0
+  },
+  {
+    "sku": "DB33",
+    "name": "DB33",
+    "core": 301.0,
+    "slim": 332.0,
+    "luxe": 602.0
+  },
+  {
+    "sku": "VSB36",
+    "name": "VSB36",
+    "core": 199.0,
+    "slim": 219.0,
+    "luxe": 398.0
+  },
+  {
+    "sku": "W361827",
+    "name": "W361827",
+    "core": 178.0,
+    "slim": 196.0,
+    "luxe": 356.0
+  },
+  {
+    "sku": "PULLOUT TRAY BWBKT15",
+    "name": "PULLOUT TRAY BWBKT15",
+    "core": 63.0,
+    "slim": 63.0,
+    "luxe": 63.0
+  },
+  {
+    "sku": "DB36",
+    "name": "DB36",
+    "core": 315.0,
+    "slim": 346.0,
+    "luxe": 629.0
+  },
+  {
+    "sku": "W0930",
+    "name": "W0930",
+    "core": 72.0,
+    "slim": 79.0,
+    "luxe": 143.0
+  },
+  {
+    "sku": "W3624",
+    "name": "W3624",
+    "core": 175.0,
+    "slim": 193.0,
+    "luxe": 350.0
+  },
+  {
+    "sku": "PULLOUT TRAY BWBKT18",
+    "name": "PULLOUT TRAY BWBKT18",
+    "core": 63.0,
+    "slim": 63.0,
+    "luxe": 63.0
+  },
+  {
+    "sku": "DLS 4X4X36",
+    "name": "DLS 4X4X36",
+    "core": 108.0,
+    "slim": 108.0,
+    "luxe": 215.0
+  },
+  {
+    "sku": "W0936",
+    "name": "W0936",
+    "core": 83.0,
+    "slim": 92.0,
+    "luxe": 166.0
+  },
+  {
+    "sku": "W362427",
+    "name": "W362427",
+    "core": 192.0,
+    "slim": 212.0,
+    "luxe": 384.0
+  },
+  {
+    "sku": "PULLOUT TRAY BWBKT21",
+    "name": "PULLOUT TRAY BWBKT21",
+    "core": 63.0,
+    "slim": 63.0,
+    "luxe": 63.0
+  },
+  {
+    "sku": "DSK2421",
+    "name": "DSK2421",
+    "core": 179.0,
+    "slim": 197.0,
+    "luxe": 358.0
+  },
+  {
+    "sku": "W0942",
+    "name": "W0942",
+    "core": 101.0,
+    "slim": 112.0,
+    "luxe": 202.0
+  },
+  {
+    "sku": "W3630",
+    "name": "W3630",
+    "core": 194.0,
+    "slim": 213.0,
+    "luxe": 387.0
+  },
+  {
+    "sku": "SAMPLE DOOR PACK (2025)",
+    "name": "SAMPLE DOOR PACK (2025)",
+    "core": 100.0,
+    "slim": 100.0,
+    "luxe": 100.0
+  },
+  {
+    "sku": "DSK3021",
+    "name": "DSK3021",
+    "core": 179.0,
+    "slim": 197.0,
+    "luxe": 358.0
+  },
+  {
+    "sku": "W1218",
+    "name": "W1218",
+    "core": 74.0,
+    "slim": 81.0,
+    "luxe": 147.0
+  },
+  {
+    "sku": "W3636",
+    "name": "W3636",
+    "core": 209.0,
+    "slim": 230.0,
+    "luxe": 418.0
+  },
+  {
+    "sku": "TRASH CAN",
+    "name": "TRASH CAN",
+    "core": 16.0,
+    "slim": 16.0,
+    "luxe": 16.0
+  },
+  {
+    "sku": "DWP3",
+    "name": "DWP3",
+    "core": 46.0,
+    "slim": 46.0,
+    "luxe": 92.0
+  },
+  {
+    "sku": "W1230",
+    "name": "W1230",
+    "core": 92.0,
+    "slim": 101.0,
+    "luxe": 183.0
+  },
+  {
+    "sku": "W3642",
+    "name": "W3642",
+    "core": 236.0,
+    "slim": 260.0,
+    "luxe": 472.0
+  },
+  {
+    "sku": "WN FS3012",
+    "name": "WN FS3012",
+    "core": 70.0,
+    "slim": 70.0,
+    "luxe": 70.0
+  },
+  {
+    "sku": "FDB09",
+    "name": "FDB09",
+    "core": 123.0,
+    "slim": 135.0,
+    "luxe": 245.0
+  },
+  {
+    "sku": "W1236",
+    "name": "W1236",
+    "core": 106.0,
+    "slim": 117.0,
+    "luxe": 211.0
+  },
+  {
+    "sku": "WBC2730",
+    "name": "WBC2730",
+    "core": 136.0,
+    "slim": 150.0,
+    "luxe": 271.0
+  },
+  {
+    "sku": "WN FS3612",
+    "name": "WN FS3612",
+    "core": 86.0,
+    "slim": 86.0,
+    "luxe": 86.0
+  },
+  {
+    "sku": "FDB18",
+    "name": "FDB18",
+    "core": 153.0,
+    "slim": 169.0,
+    "luxe": 306.0
+  },
+  {
+    "sku": "W1242",
+    "name": "W1242",
+    "core": 123.0,
+    "slim": 135.0,
+    "luxe": 245.0
+  },
+  {
+    "sku": "WBC2736",
+    "name": "WBC2736",
+    "core": 156.0,
+    "slim": 172.0,
+    "luxe": 311.0
+  },
+  {
+    "sku": "WN FS4812",
+    "name": "WN FS4812",
+    "core": 100.0,
+    "slim": 100.0,
+    "luxe": 100.0
+  },
+  {
+    "sku": "FDB21",
+    "name": "FDB21",
+    "core": 167.0,
+    "slim": 184.0,
+    "luxe": 334.0
+  },
+  {
+    "sku": "W1518",
+    "name": "W1518",
+    "core": 82.0,
+    "slim": 90.0,
+    "luxe": 163.0
+  },
+  {
+    "sku": "WBC2742",
+    "name": "WBC2742",
+    "core": 172.0,
+    "slim": 190.0,
+    "luxe": 344.0
+  },
+  {
+    "sku": "WO FS3012",
+    "name": "WO FS3012",
+    "core": 70.0,
+    "slim": 70.0,
+    "luxe": 70.0
+  },
+  {
+    "sku": "FDB24",
+    "name": "FDB24",
+    "core": 190.0,
+    "slim": 209.0,
+    "luxe": 380.0
+  },
+  {
+    "sku": "W1530",
+    "name": "W1530",
+    "core": 101.0,
+    "slim": 112.0,
+    "luxe": 202.0
+  },
+  {
+    "sku": "WDC241812",
+    "name": "WDC241812",
+    "core": 179.0,
+    "slim": 197.0,
+    "luxe": 357.0
+  },
+  {
+    "sku": "WO FS3612",
+    "name": "WO FS3612",
+    "core": 86.0,
+    "slim": 86.0,
+    "luxe": 86.0
+  },
+  {
+    "sku": "FDB27",
+    "name": "FDB27",
+    "core": 206.0,
+    "slim": 227.0,
+    "luxe": 412.0
+  },
+  {
+    "sku": "W1536",
+    "name": "W1536",
+    "core": 114.0,
+    "slim": 125.0,
+    "luxe": 228.0
+  },
+  {
+    "sku": "WDC243012",
+    "name": "WDC243012",
+    "core": 242.0,
+    "slim": 266.0,
+    "luxe": 483.0
+  },
+  {
+    "sku": "WO FS4812",
+    "name": "WO FS4812",
+    "core": 100.0,
+    "slim": 100.0,
+    "luxe": 100.0
+  }
+]

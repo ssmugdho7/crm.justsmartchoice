@@ -1,0 +1,1 @@
+Smart Choice Office Theme v1.4.4: restored working settings controls, forced white hamburger menu bars in admin/client/mobile, compacted buttons/arrows/calendar/timesheet/modules buttons, cleaned nested scrollbars, fixed client login/register button sizing and terms link color, restyled development notice, improved staff tables and commission table polish.

@@ -1,0 +1,16 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); $this->load->view('usi_smartchoice_seo/partials/top'); ?>
+<div class="panel_s"><div class="panel-body">
+<h4 class="no-margin">Project Handoff</h4><hr>
+<div class="tw-flex tw-flex-wrap tw-gap-2 mtop10 mbot15">
+<a href="<?php echo admin_url('usi_smartchoice_seo/project_handoff'); ?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> New Handoff</a>
+<a href="<?php echo admin_url('usi_smartchoice_seo/sample_header/project_handoffs'); ?>" class="btn btn-default btn-sm"><i class="fa fa-download"></i> Sample Header</a>
+<a href="<?php echo admin_url('usi_smartchoice_seo/export/project_handoffs'); ?>" class="btn btn-default btn-sm"><i class="fa fa-file-excel-o"></i> Export</a>
+<a href="<?php echo admin_url('usi_smartchoice_seo/project_handoffs'); ?>" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i> Reload</a>
+</div>
+<form method="get" class="well well-sm"><div class="row"><div class="col-md-4"><input name="search" class="form-control" placeholder="Search handoff, project, notes" value="<?php echo html_escape($filters['search'] ?? ''); ?>"></div><div class="col-md-3"><select name="handoff_status" class="form-control"><option value="">All Statuses</option><?php foreach(['draft','ready_for_project','tasks_created','on_hold','completed'] as $st){ ?><option value="<?php echo $st; ?>" <?php echo (($filters['handoff_status'] ?? '')===$st?'selected':''); ?>><?php echo ucwords(str_replace('_',' ',$st)); ?></option><?php } ?></select></div><div class="col-md-2"><button class="btn btn-default btn-sm btn-block">Filter</button></div></div></form>
+<?php echo form_open(admin_url('usi_smartchoice_seo/mass_delete_project_handoffs')); ?>
+<div class="table-responsive"><table class="table table-striped table-condensed sc-compact-table"><thead><tr><th><input type="checkbox" onclick="$('.sc-row').prop('checked', this.checked);"></th><th>Title</th><th>Project</th><th>Status</th><th>Assigned</th><th>Due</th><th>Updated</th><th class="text-center">Actions</th></tr></thead><tbody>
+<?php foreach($handoffs as $row){ ?><tr><td><input class="sc-row" type="checkbox" name="ids[]" value="<?php echo (int)$row['id']; ?>"></td><td><?php echo html_escape($row['handoff_title']); ?></td><td><?php echo html_escape($row['project_name']); ?></td><td><?php echo html_escape(ucwords(str_replace('_',' ', $row['handoff_status']))); ?></td><td><?php echo (int)$row['assigned_staff_id']; ?></td><td><?php echo html_escape($row['due_date']); ?></td><td><?php echo html_escape($row['updated_at']); ?></td><td class="text-center"><a class="btn btn-default btn-xs" href="<?php echo admin_url('usi_smartchoice_seo/view_project_handoff/'.(int)$row['id']); ?>">View</a> <a class="btn btn-default btn-xs" href="<?php echo admin_url('usi_smartchoice_seo/project_handoff/'.(int)$row['id']); ?>">Edit</a> <a class="btn btn-danger btn-xs _delete" href="<?php echo admin_url('usi_smartchoice_seo/delete_project_handoff/'.(int)$row['id']); ?>">Delete</a></td></tr><?php } ?>
+<?php if(empty($handoffs)){ ?><tr><td colspan="8" class="text-center text-muted">No project handoffs found.</td></tr><?php } ?>
+</tbody></table></div><button class="btn btn-danger btn-sm" type="submit"><i class="fa fa-trash"></i> Mass Delete</button><?php echo form_close(); ?>
+</div></div>

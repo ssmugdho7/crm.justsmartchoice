@@ -1,0 +1,8 @@
+Smart Choice Links 1.2.7
+
+- Left star opens only Administration Links.
+- Right star opens only Setup Links.
+- Legacy links saved as Both are assigned to one side using URL/category detection instead of being duplicated.
+- Added explicit data-scl-side identifiers to both star buttons.
+- Enforced exactly one body-level dropdown portal and one visible panel.
+- Preserved hover labels, Setup search, saved links, permissions, and link opening behavior.

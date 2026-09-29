@@ -1,0 +1,21 @@
+<?php
+$lang["pt_module_title"] = "Plantillas de Proyecto";
+$lang["pt_project_template"] = "Plantilla de Proyecto";
+$lang["pt_project_template_lower"] = "plantilla de proyecto";
+$lang["pt_edit_project_template"] = "Editar Plantilla de Proyecto";
+$lang["pt_delete_project_template"] = "Eliminar Plantilla de Proyecto";
+$lang["pt_copy_project_template"] = "Copiar Plantilla de Proyecto";
+$lang["pt_project_template_description"] = "Descripción";
+$lang["pt_new_project_template"] = "Nueva Plantilla de Proyecto";
+$lang["failed_to_copy_project_template"] = "No se pudo copiar la plantilla de proyecto";
+$lang["pt_project_template_copied_successfully"] = "Plantilla de proyecto copiada exitosamente";
+$lang["pt_project_from_template"] = "proyecto de plantilla";
+$lang["pt_new_project_from_template"] = "Crear Proyecto Desde Plantilla";
+$lang["pt_select_project_template"] = "Seleccionar Plantilla de Proyecto";
+$lang["pt_project_template_not_found"] = "Plantilla de proyecto no encontrada";
+$lang["pt_duration_text"] = "Duración del Plazo (En Días)";
+$lang["pt_milestone_start_date"] = "Días para comenzar después de la fecha de inicio del proyecto";
+$lang["pt_milestone_due_date"] = "Fecha de vencimiento en días";
+$lang["permission_create_milestones"] = "Crear Hitos";
+$lang["permission_edit_milestones"] = "Editar Hitos";
+$lang["permission_delete_milestones"] = "Eliminar Hitos";

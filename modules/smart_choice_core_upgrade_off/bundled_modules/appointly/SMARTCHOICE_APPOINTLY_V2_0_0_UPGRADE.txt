@@ -1,0 +1,15 @@
+Appointly Smart Choice Upgrade
+Version: 2.0.0
+Author: Smart Choice Contractors USA / Harold Cabrera
+
+Description:
+Appointly helps Smart Choice Contractors USA manage appointment booking, public scheduling forms, staff calendars, customer booking requests, appointment notifications, and CRM scheduling workflows inside Perfex CRM. The module is updated for PHP 8.5 target compatibility, Perfex CRM 3.4.1 usage, safe database upgrades, clean labels, and a polished Smart Choice experience for public booking pages and internal appointment management.
+
+Included:
+- PHP 8.5 target compatibility pass.
+- Perfex CRM 3.4.1 target compatibility.
+- Safe migrations 100-200.
+- Public form logo forced to 110px wide by 38px high.
+- Smart Choice UI styling.
+- English and Spanish language labels.
+- Long module description.

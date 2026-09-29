@@ -1,0 +1,312 @@
+<resources>
+    <string name="app_name" translatable="true">Perfex App</string>
+    <string name="tab_dashboard" translatable="true">Dashboard</string>
+    <string name="tab_customers" translatable="false">Customers</string>
+    <string name="tab_projects" translatable="false">Projects</string>
+    <string name="tab_tasks" translatable="false">Tasks</string>
+    <string name="tab_support" translatable="false">Support</string>
+    <string name="tab_leads" translatable="false">Leads</string>
+    <string name="tab_profile" translatable="false">Profile</string>
+    <string name="tab_task" translatable="false">Task</string>
+    <string name="tab_reminders" translatable="false">Reminders</string>
+    <string name="tab_notes" translatable="false">Notes</string>
+    <string name="tab_activity_log" translatable="false">Activity Log</string>
+    <string name="tab_contacts" translatable="false">Contacts</string>
+    <string name="tab_invoices" translatable="false">Invoices</string>
+    <string name="tab_proposals" translatable="false">Proposals</string>
+    <string name="not_started" translatable="false">Not Started</string>
+    <string name="waiting_feedback" translatable="false">Awaiting Feedback</string>
+    <string name="testing" translatable="false">Testing</string>
+    <string name="in_progress" translatable="false">In Progress</string>
+    <string name="complete" translatable="false">Complete</string>
+    <string name="low_priority" translatable="false">Low</string>
+    <string name="medium_priority" translatable="false">Medium</string>
+    <string name="high_priority" translatable="false">High</string>
+    <string name="urgent_priority" translatable="false">Urgent</string>
+    <string name="related_to_search" translatable="false">Search</string>
+    <string name="related_to_lead" translatable="false">Lead</string>
+    <string name="related_to_customer" translatable="false">Customer</string>
+    <string name="days" translatable="false">Day(s)</string>
+    <string name="weeks" translatable="false">Week(s)</string>
+    <string name="months" translatable="false">Month(s)</string>
+    <string name="years" translatable="false">Year(s)</string>
+    <string name="one_week" translatable="false">1 Week</string>
+    <string name="two_weeks" translatable="false">2 Weeks</string>
+    <string name="one_month" translatable="false">1 Month</string>
+    <string name="two_months" translatable="false">2 Months</string>
+    <string name="three_months" translatable="false">3 Months</string>
+    <string name="six_months" translatable="false">6 Months</string>
+    <string name="one_year" translatable="false">1 Year</string>
+    <string name="custom_repeat" translatable="false">Custom</string>
+    <string name="company_name" translatable="false">Company Name</string>
+    <string name="start_timer" translatable="false">Start Timer</string>
+    <string name="recurring" translatable="false">Recurring</string>
+    <string name="stop_timer" translatable="false">Stop Timer</string>
+    <string name="add_lead" translatable="false">Add Lead</string>
+    <string name="add_reminder" translatable="false">Add Reminder</string>
+    <string name="add_notes" translatable="false">Add Notes</string>
+    <string name="field_required" translatable="false">This field is required</string>
+    <string name="contacted_today" translatable="false">Contacted Today</string>
+    <string name="first_name" translatable="false">First Name</string>
+    <string name="last_name" translatable="false">Last Name</string>
+    <string name="send_set_password_email" translatable="false">Send SET password email</string>
+    <string name="do_not_send_welcome_email" translatable="false">Do not send welcome email</string>
+    <string name="related_to_type" translatable="false">Related To</string>
+    <string name="hourly_rate" translatable="false">Hourly Rate</string>
+    <string name="due_date" translatable="false">Due Date</string>
+    <string name="helper_source" translatable="false">Please Select Source</string>
+    <string name="helper_assigned" translatable="false">Assign a staff</string>
+    <string name="zero" translatable="false">0</string>
+    <string name="search_here" translatable="false">Search</string>
+    <string name="add_customer" translatable="false">Add Customer</string>
+    <string name="date" translatable="false">Date</string>
+    <string name="start_date_and_end_date" translatable="false">%s - %s</string>
+    <string name="call_duration_with_date" translatable="false">%s %s:%s:%s</string>
+    <string name="add" translatable="false">Add</string>
+    <string name="delete" translatable="false">Delete</string>
+    <string name="start_date" translatable="false">Start Date</string>
+    <string name="update" translatable="false">Update</string>
+    <string name="profile" translatable="false">Profile</string>
+    <string name="address" translatable="false">Address</string>
+    <string name="choose_file" translatable="false">Choose File</string>
+    <string name="channel_name" translatable="false">Importing Notification</string>
+    <string name="channel_description" translatable="false">This notification will show whenever you get any notification on the CRM</string>
+    <string name="welcome_to_perfex_crm" translatable="false">Welcome to perfex CRM</string>
+    <string name="login" translatable="false">Login</string>
+    <string name="good" translatable="false">Good</string>
+    <string name="morning" translatable="false">Morning</string>
+    <string name="email" translatable="false">Email</string>
+    <string name="password" translatable="false">Password</string>
+    <string name="sign_in" translatable="false">Sign in</string>
+    <string name="forgot_password" translatable="false">Forgot Password</string>
+    <string name="settings" translatable="false">Settings</string>
+    <string name="logout" translatable="false">Logout</string>
+    <string name="notification" translatable="false">Notification</string>
+    <string name="notifications" translatable="false">Notifications</string>
+    <string name="add_leads" translatable="false">Add Lead</string>
+    <string name="total_0" translatable="false">Total: 0</string>
+    <string name="filtered_0" translatable="false">Filtered: 0</string>
+    <string name="total_count" translatable="false">Total: %d</string>
+    <string name="total_filtered" translatable="false">Filtered: %d</string>
+    <string name="dial_call" translatable="false">Dial Call</string>
+    <string name="customer_image" translatable="false">Customer Image</string>
+    <string name="edit" translatable="false">Edit</string>
+    <string name="back_btn" translatable="false">Back</string>
+    <string name="convert" translatable="false">Convert</string>
+    <string name="task_title" translatable="false">#%s - %s</string>
+    <string name="name_text" translatable="false">Name</string>
+    <string name="position_text" translatable="false">Position</string>
+    <string name="email_address" translatable="false">Email</string>
+    <string name="website_text" translatable="false">Website</string>
+    <string name="phone_text" translatable="false">PhoneNumber</string>
+    <string name="lead_value_text" translatable="false">LeadValue</string>
+    <string name="company_text" translatable="false">Company</string>
+    <string name="address_text" translatable="false">Address</string>
+    <string name="city_text" translatable="false">City</string>
+    <string name="state_text" translatable="false">State</string>
+    <string name="country_text" translatable="false">Country</string>
+    <string name="zip_code_text" translatable="false">Zip Code</string>
+    <string name="description_text" translatable="false">Description</string>
+    <string name="general_information" translatable="false">General Information</string>
+    <string name="status_text" translatable="false">Status</string>
+    <string name="source_text" translatable="false">Source</string>
+    <string name="default_language_text" translatable="false">Default Language</string>
+    <string name="assigned" translatable="false">Assigned</string>
+    <string name="created" translatable="false">Created</string>
+    <string name="last_contact" translatable="false">Last Contact</string>
+    <string name="public_text" translatable="false">Public</string>
+    <string name="lead_information" translatable="false">Lead Information</string>
+    <string name="yes" translatable="false">Yes</string>
+    <string name="no" translatable="false">No</string>
+    <string name="add_task" translatable="false">Add Task</string>
+    <string name="please_select_priority" translatable="false">Please select priority</string>
+    <string name="subject" translatable="false">Please enter subject</string>
+    <string name="repeat_every" translatable="false">Repeat Every</string>
+    <string name="billable" translatable="false">Billable</string>
+    <string name="not_billable" translatable="false">Not Billable</string>
+    <string name="total_cycles" translatable="false">Total Cycles(0) for infinite</string>
+    <string name="repeat_every_custom_count" translatable="false">Enter Count</string>
+    <string name="description" translatable="false">Please enter description</string>
+    <string name="date_time_string" translatable="false">%s-%s-%s</string>
+    <string name="lead_touched" translatable="false">I got in touch with this lead</string>
+    <string name="select_date" translatable="false">Please select date</string>
+    <string name="save" translatable="false">Save</string>
+    <string name="close" translatable="false">Close</string>
+    <string name="data_with_title" translatable="false">%s: %s</string>
+    <string name="send_email_for_reminder" translatable="false">Send email for reminder</string>
+    <string name="notified" translatable="false">Notified: %s</string>
+    <string name="set_date" translatable="false">Select Date</string>
+    <string name="add_log" translatable="false">Add Log</string>
+    <string name="convert_to_customer" translatable="false">Convert To Customer</string>
+    <string name="position" translatable="false">Position</string>
+    <string name="company" translatable="false">Company Name</string>
+    <string name="phone" translatable="false">PhoneNumber</string>
+    <string name="website" translatable="false">Website</string>
+    <string name="city" translatable="false">City</string>
+    <string name="state" translatable="false">State</string>
+    <string name="helper_country" translatable="false">Please select Country</string>
+    <string name="zip_code" translatable="false">Zip Code</string>
+    <string name="helper_status" translatable="false">Please Select Status</string>
+    <string name="lead_value" translatable="false">Lead Value</string>
+    <string name="is_public" translatable="false">Is Public</string>
+    <string name="no_internet" translatable="false">Internet not available</string>
+    <string name="customer_details" translatable="false">Customer Details</string>
+    <string name="vat_number" translatable="false">Vat Number</string>
+    <string name="billing_address" translatable="false">Billing Address</string>
+    <string name="sameAsCustomerInfo" translatable="false">Copy from customer</string>
+    <string name="street" translatable="false">Street</string>
+    <string name="shipping_address" translatable="false">Shipping</string>
+    <string name="sameAsBillingAddress" translatable="false">Copy from billing info</string>
+    <string name="save_and_create_contact" translatable="false"><![CDATA[Save & Create Contact]]></string>
+    <string name="select_groups" translatable="false">Select groups</string>
+    <string name="groups" translatable="false">Groups</string>
+    <string name="currency" translatable="false">Currency</string>
+    <string name="billing" translatable="false">Billing</string>
+    <string name="shipping" translatable="false">Shipping</string>
+    <string name="add_contact" translatable="false">Add Contact</string>
+    <string name="primary_contact" translatable="false">Primary Contact</string>
+    <string name="do_not_set_welcome_email" translatable="false">Do not send welcome email</string>
+    <string name="permissions" translatable="false">Permissions</string>
+    <string name="email_notifications" translatable="false">Email Notifications</string>
+    <string name="estimate" translatable="false">Estimate</string>
+    <string name="credit_note" translatable="false">Credit Note</string>
+    <string name="tickets" translatable="false">Tickets</string>
+    <string name="contract" translatable="false">Contract</string>
+    <string name="finished" translatable="false">Finished</string>
+    <string name="not_finished" translatable="false">Not Finished</string>
+    <string name="add_support" translatable="false">Add Support</string>
+    <string name="view_public_form" translatable="false">View Public Form</string>
+    <string name="not_available" translatable="false">N/A</string>
+    <string name="status_open" translatable="false">Open</string>
+    <string name="status_in_progress" translatable="false">In Progress</string>
+    <string name="status_answered" translatable="false">Answered</string>
+    <string name="status_on_hold" translatable="false">On Hold</string>
+    <string name="closed" translatable="false">Closed</string>
+    <string name="add_ticket" translatable="false">Add Ticket</string>
+    <string name="helper_contact" translatable="false">Please select contact</string>
+    <string name="name" translatable="false">Name</string>
+    <string name="please_select_department" translatable="false">Please select department</string>
+    <string name="cc" translatable="false">Enter CC</string>
+    <string name="ticket_body" translatable="false">Ticket Body</string>
+    <string name="predefined_replies" translatable="false">Predefined Replies</string>
+    <string name="knowledge_base_link" translatable="false">KnowledgeBase Link</string>
+    <string name="ticket_without_contact" translatable="false">Ticket Without Contact</string>
+    <string name="select_service" translatable="false">Select Service</string>
+    <string name="edit_ticket" translatable="false">Edit Ticket</string>
+    <string name="converted_leads" translatable="false">Converted Leads</string>
+    <string name="add_reply" translatable="false">Add Reply</string>
+    <string name="reply" translatable="false">Reply</string>
+    <string name="tasks_not_finished" translatable="false">Tasks Not finished</string>
+    <string name="open_tickets" translatable="false">Open Tickets</string>
+    <string name="active_customers" translatable="false">Active Customers</string>
+    <string name="active_contacts" translatable="false">Active Contacts</string>
+    <string name="high_priority_tickets" translatable="false">High Priority Tickets</string>
+    <string name="low_priority_tickets" translatable="false">Low Priority Tickets</string>
+    <string name="mid_priority_tickets" translatable="false">Mid Priority Tickets</string>
+    <string name="tickets_without_contact" translatable="false">Tickets Without Contact</string>
+    <string name="inactive_contacts" translatable="false">InActive Contacts</string>
+    <string name="dashboard_stats" translatable="false">%s/%s</string>
+    <string name="mark_as_read" translatable="false">Mark as read</string>
+    <string name="sales" translatable="false">Sales</string>
+    <string name="title_activity_sales" translatable="false">SalesActivity</string>
+    <string name="home" translatable="false">Home</string>
+    <string name="tab_items" translatable="false">Items</string>
+    <string name="add_proposals" translatable="false">Add Proposal</string>
+    <string name="tab_discussion" translatable="false">Discussion</string>
+    <string name="subtotal" translatable="false">SubTotal</string>
+    <string name="discount" translatable="false">Discount</string>
+    <string name="tax" translatable="false">Tax</string>
+    <string name="adjustment" translatable="false">Adjustment</string>
+    <string name="total" translatable="false">Total</string>
+    <string name="staff_image" translatable="false">Staff Image</string>
+    <string name="add_proposal" translatable="false">Add Proposal</string>
+    <string name="status_declined" translatable="false">Declined</string>
+    <string name="status_accepted" translatable="false">Accepted</string>
+    <string name="status_sent" translatable="false">Sent</string>
+    <string name="status_revised" translatable="false">Revised</string>
+    <string name="status_draft" translatable="false">Draft</string>
+    <string name="open_till" translatable="false">Open Till</string>
+    <string name="allow_comments" translatable="false">Allow Comments</string>
+    <string name="status" translatable="false">Status</string>
+    <string name="to" translatable="false">To</string>
+    <string name="search_leads" translatable="false">Search Leads</string>
+    <string name="search_customers" translatable="false">Search Customers</string>
+    <string name="qty" translatable="false">Qty</string>
+    <string name="hours" translatable="false">Hours</string>
+    <string name="qty_by_hours" translatable="false">Qty/Hours</string>
+    <string name="show_quantity_as" translatable="false">Show quantity as</string>
+    <string name="item" translatable="false">Item</string>
+    <string name="long_description" translatable="false">Long Description</string>
+    <string name="rate" translatable="false">Rate</string>
+    <string name="remove" translatable="false">Remove</string>
+    <string name="Sub_total_0" translatable="false">SubTota: 0</string>
+    <string name="select_taxes" translatable="false">Select Taxes</string>
+    <string name="select_language" translatable="false">Select Language</string>
+    <string name="english_lang" translatable="false">English</string>
+    <string name="hindi_lang" translatable="false">हिंदी</string>
+    <string name="bengali_lang" translatable="false">বাংলা</string>
+    <string name="german_lang" translatable="false">Deutsche</string>
+    <string name="portuguese_lang" translatable="false">Português</string>
+    <string name="russian_lang" translatable="false">русский</string>
+    <string name="discount_type" translatable="false">Discount Type</string>
+    <string name="adjustment_amount" translatable="false">Adjustment</string>
+    <string name="percentage_symbol">%</string>
+    <string name="fixed_amount" translatable="false">Fixed Amount</string>
+    <string name="item_added" translatable="false">Item Added</string>
+    <string name="discount_mode" translatable="false">Mode</string>
+    <string name="no_discount" translatable="false">No Discount</string>
+    <string name="before_tax" translatable="false">Before Tax</string>
+    <string name="after_tax" translatable="false">After Tax</string>
+    <string name="save_and_send" translatable="false"><![CDATA[Save & Send]]></string>
+    <string name="tab_estimates" translatable="false">Estimates</string>
+    <string name="task_info" translatable="false">Task Info</string>
+    <string name="attachments" translatable="false">Attachments</string>
+    <string name="comments" translatable="false">Comments</string>
+    <string name="priority" translatable="false">Priority</string>
+    <string name="billable_amount" translatable="false">Billable Amount</string>
+    <string name="total_logged_time" translatable="false">Total Logged Time</string>
+    <string name="my_logged_time" translatable="false">My Logged Time</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="checklist_items" translatable="false">Checklist Items</string>
+    <string name="followers" translatable="false">Followers</string>
+    <string name="assignees" translatable="false">Assignees</string>
+    <string name="select_assignees" translatable="false">Select Assignees</string>
+    <string name="select_followers" translatable="false">Select Followers</string>
+    <string name="add_attachments" translatable="false">Add Attachment</string>
+    <string name="add_comment" translatable="false">Add Comment</string>
+    <string name="confirm_deletion" translatable="false">Are you sure you want to Delete?</string>
+    <string name="add_checklist" translatable="false">Add Checklist</string>
+    <string name="completed_by" translatable="false">Completed by %s</string>
+    <string name="assigned_to" translatable="false">Assigned to %s</string>
+    <string name="comment_added" translatable="false">Comment Added</string>
+    <string name="no_staff_available" translatable="false">No Staff available</string>
+    <string name="select_staff" translatable="false">Select Staff</string>
+    <string name="add_invoice">Invoice</string>
+    <string name="tab_info">Info</string>
+    <string name="more">More</string>
+    <string name="ship_to">Ship To</string>
+    <string name="bill_to">Bill To</string>
+    <string name="view_invoice_as_customer">View as customer</string>
+    <string name="create_credit_note">Create Credit Note</string>
+    <string name="copy_invoice">Copy invoice</string>
+    <string name="mark_as_sent">Mark as sent</string>
+    <string name="add_payment">Add Payment</string>
+    <string name="total_paid">Total Paid</string>
+    <string name="amount_due">Amount Due</string>
+    <string name="confirm_mark_as_sent">Are you sure you want to mark this invoice as sent?</string>
+    <string name="customer">Customer</string>
+    <string name="invoice_number">Invoice Number</string>
+    <string name="prevent_sending_overdue_reminders_for_this_invoice">Prevent sending overdue reminders for this invoice</string>
+    <string name="sale_agent">Sale Agent</string>
+    <string name="admin_note">Admin note</string>
+    <string name="client_note">Client note</string>
+    <string name="terms_and_conditions"><![CDATA[Terms & Conditions]]></string>
+    <string name="payment_mode">Payment Mode</string>
+    <string name="every_1_month">Every 1 month</string>
+    <string name="every_x_month">Every %s months</string>
+    <string name="show_shipping_address_in_invoice">Show shipping details in invoice</string>
+    <string name="confirm_logout">Are you sure you wanted to logout?</string>
+    <string name="nav_open">Open</string>
+    <string name="nav_close">Close</string>
+    <string name="custom_fields">Custom Fields</string>
+</resources>

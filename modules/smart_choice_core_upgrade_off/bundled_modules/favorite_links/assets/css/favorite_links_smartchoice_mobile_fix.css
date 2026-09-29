@@ -1,0 +1,56 @@
+/* Smart Choice Favorite Links v2.0.2 */
+.favorite-links-search-row{
+  display:flex!important;
+  align-items:center!important;
+  gap:6px!important;
+  width:100%!important;
+}
+.favorite-links-search-row input{
+  flex:1 1 auto!important;
+  min-width:0!important;
+}
+.favorite-links-search-row .favorite-links-nav{
+  display:inline-flex!important;
+  align-items:center!important;
+  margin:0!important;
+  padding:0!important;
+  list-style:none!important;
+}
+.favorite-links-star-action{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:38px!important;
+  height:38px!important;
+  min-width:38px!important;
+  margin-left:6px!important;
+  position:relative!important;
+  top:auto!important;
+  right:auto!important;
+  bottom:auto!important;
+  left:auto!important;
+  float:none!important;
+  transform:none!important;
+  z-index:20!important;
+  border-radius:10px!important;
+}
+.favorite-links-star-action i.far.fa-star.fa-lg{
+  line-height:1!important;
+  vertical-align:middle!important;
+}
+.favorite-links-dropdown-menu{
+  border-radius:12px!important;
+  box-shadow:0 12px 32px rgba(15,23,42,.18)!important;
+}
+.favorite-links-menu-item{position:relative;padding-right:42px!important;}
+.perfex-menu-actions{position:absolute;top:7px;right:10px;display:none;}
+.favorite-links-menu-item:hover .perfex-menu-actions{display:block;}
+.perfex-menu-hotkey{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-weight:bold;color:#666;}
+.favorite-links-menu-item:hover .perfex-menu-hotkey{display:none;}
+.perfex-menu-actions a{margin-left:5px;text-decoration:none;color:#888;}
+.perfex-menu-actions a:hover{color:#000;}
+@media(max-width:768px){
+  .favorite-links-star-action{margin:0 0 0 6px!important;}
+}
+.favorite-links-card,.favorite-link-card,.panel_s.favorite-links-panel{border-radius:18px!important;box-shadow:0 12px 32px rgba(15,23,42,.10)!important;border:1px solid rgba(249,115,22,.18)!important;overflow:hidden;}
+.favorite-links-header,.favorite-link-header{background:linear-gradient(135deg,#f97316,#2563eb);color:#fff;border-radius:18px;padding:18px 22px;margin-bottom:18px;}

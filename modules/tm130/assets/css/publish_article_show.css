@@ -1,0 +1,40 @@
+img.training_manual-mindmap-thumb-content{
+    display: block;
+    margin: auto;
+    max-width: 100%;
+    height: auto;
+}
+
+/* Smart Choice Training Manual v1.1.2 fixes */
+.training_manual-author-thumbnail,
+.training-manual-creator-photo,
+.training-manual-author-photo,
+.training_manual-author-detail img {
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+    min-height: 46px !important;
+    object-fit: cover !important;
+    border-radius: 10px !important;
+    box-shadow: 0 5px 14px rgba(15, 23, 42, .18) !important;
+    border: 2px solid #ffffff !important;
+}
+.training-manual-translate-bar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 12px 0 18px;
+}
+.training-manual-translate-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 13px;
+    border-radius: 9px;
+    background: linear-gradient(135deg, #0f75bc, #169179);
+    color: #fff !important;
+    font-weight: 700;
+    text-decoration: none !important;
+    box-shadow: 0 8px 20px rgba(15,117,188,.25);
+}
+.training-manual-translate-btn:hover { opacity:.92; color:#fff !important; }

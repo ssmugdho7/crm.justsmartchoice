@@ -1,0 +1,10 @@
+{
+  "module": "smart_choice_core_manager",
+  "version": "1.0.0",
+  "database_tables": [
+    "tblsc_core_audit"
+  ],
+  "core_files_modified": [],
+  "global_css": true,
+  "uninstall_deletes_business_data": false
+}

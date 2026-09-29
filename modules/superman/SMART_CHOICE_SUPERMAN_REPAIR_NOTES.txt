@@ -1,0 +1,9 @@
+Smart Choice Superman v1.2.1 Repair Notes
+
+Fixed Setup/Settings URL by adding /admin/superman/settings and changing all module buttons/menu links to that working route.
+Kept Setup menu registration, now pointing to the module settings page.
+Cleaned visible labels: no underscores, title-case display, clean action links.
+Added English and Spanish language files in both nested and compatibility locations.
+Added internal navigation across Control Center, Merge Fields, Health Check, and Settings.
+Verified all migrations have up() and down().
+Validated PHP syntax for all PHP files.

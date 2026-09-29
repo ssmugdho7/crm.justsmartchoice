@@ -1,0 +1,3 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<div class="form-group"><label>Client Portal Status</label><select name="settings[smart_choice_client_portal_enabled]" class="selectpicker" data-width="100%"><option value="1" <?= get_option('smart_choice_client_portal_enabled') !== '0' ? 'selected' : ''; ?>>Activated</option><option value="0" <?= get_option('smart_choice_client_portal_enabled') === '0' ? 'selected' : ''; ?>>Deactivated</option></select></div>
+<p><a href="<?= admin_url('smart_choice_core_upgrade/toggle_client_portal'); ?>" class="btn btn-default btn-sm"><i class="fa fa-power-off"></i> Activate Or Deactivate Client Portal</a></p>

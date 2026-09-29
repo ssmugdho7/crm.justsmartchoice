@@ -1,0 +1,20 @@
+Webhooks Smart Choice Upgrade
+Version: 2.0.0
+Author: Smart Choice Contractors USA / Harold Cabrera
+
+Description:
+Webhooks helps Smart Choice Contractors USA connect Perfex CRM with outside systems by sending event-based data from leads, customers, projects, estimates, invoices, payments, tickets, contracts, and other CRM activity to external automation tools, websites, integrations, and reporting systems.
+
+Migration rule used:
+Existing migration versions found: [126, 125, 130, 127, 123, 120, 124, 121, 122, 110]
+Added only one new migration: 131_smartchoice_webhooks_upgrade.php
+
+Included:
+- PHP 8.5 target compatibility.
+- Perfex CRM 3.4.1 target compatibility.
+- No dummy migration chain.
+- English and Spanish labels.
+- Smart Choice UI styling.
+- Long module description.
+- Clean visible labels.
+- Basic webhook options: enabled, logs, retry failed, timeout.

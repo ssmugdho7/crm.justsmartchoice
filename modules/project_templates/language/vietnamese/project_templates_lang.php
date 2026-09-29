@@ -1,0 +1,21 @@
+<?php
+$lang["pt_module_title"] = "Mẫu Dự Án";
+$lang["pt_project_template"] = "Mẫu Dự Án";
+$lang["pt_project_template_lower"] = "mẫu dự án";
+$lang["pt_edit_project_template"] = "Chỉnh Sửa Mẫu Dự Án";
+$lang["pt_delete_project_template"] = "Xóa Mẫu Dự Án";
+$lang["pt_copy_project_template"] = "Sao Chép Mẫu Dự Án";
+$lang["pt_project_template_description"] = "Mô Tả";
+$lang["pt_new_project_template"] = "Mẫu Dự Án Mới";
+$lang["failed_to_copy_project_template"] = "Sao chép mẫu dự án không thành công";
+$lang["pt_project_template_copied_successfully"] = "Mẫu dự án đã được sao chép thành công";
+$lang["pt_project_from_template"] = "dự án từ mẫu";
+$lang["pt_new_project_from_template"] = "Tạo Dự Án Từ Mẫu";
+$lang["pt_select_project_template"] = "Chọn Mẫu Dự Án";
+$lang["pt_project_template_not_found"] = "Không tìm thấy mẫu dự án";
+$lang["pt_duration_text"] = "Thời Gian Hạn (Trong Ngày)";
+$lang["pt_milestone_start_date"] = "Số Ngày Bắt Đầu Sau Ngày Bắt Đầu Dự Án";
+$lang["pt_milestone_due_date"] = "Thời Gian Hạn (Ngày)";
+$lang["permission_create_milestones"] = "Tạo Cột Mốc";
+$lang["permission_edit_milestones"] = "Chỉnh Sửa Cột Mốc";
+$lang["permission_delete_milestones"] = "Xóa Cột Mốc";

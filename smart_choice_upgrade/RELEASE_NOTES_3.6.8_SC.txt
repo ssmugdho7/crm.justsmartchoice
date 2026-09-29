@@ -1,0 +1,7 @@
+Smart Choice CRM Core 3.6.8 SC
+- Preserves working invoice item table, invoice delete action, calculator, API settings, clocks, and prior migrations.
+- Adds a dedicated AI Integration settings page at /admin/settings?group=ai and preserves existing database keys.
+- Adds Florida Eastern time to the live world-clock popup.
+- Adds Payment and Discount Summary after Terms and Conditions while retaining totals-table values.
+- Replaces the active Perfex and Smart Choice client knowledge-base category templates with branded responsive cards.
+- Advances the database migration target to 368.

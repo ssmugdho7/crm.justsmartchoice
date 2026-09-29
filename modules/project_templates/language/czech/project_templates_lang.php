@@ -1,0 +1,21 @@
+<?php
+$lang["pt_module_title"] = "Šablony Projektů";
+$lang["pt_project_template"] = "Šablona Projektu";
+$lang["pt_project_template_lower"] = "šablona projektu";
+$lang["pt_edit_project_template"] = "Upravit Šablonu Projektu";
+$lang["pt_delete_project_template"] = "Smazat Šablonu Projektu";
+$lang["pt_copy_project_template"] = "Kopírovat Šablonu Projektu";
+$lang["pt_project_template_description"] = "Popis";
+$lang["pt_new_project_template"] = "Nová Šablona Projektu";
+$lang["failed_to_copy_project_template"] = "Nepodařilo se zkopírovat šablonu projektu";
+$lang["pt_project_template_copied_successfully"] = "Šablona projektu byla úspěšně zkopírována";
+$lang["pt_project_from_template"] = "projekt z šablony";
+$lang["pt_new_project_from_template"] = "Vytvořit Projekt ze Šablony";
+$lang["pt_select_project_template"] = "Vybrat Šablonu Projektu";
+$lang["pt_project_template_not_found"] = "Šablona projektu nebyla nalezena";
+$lang["pt_duration_text"] = "Doba trvání do data splatnosti (v dnech)";
+$lang["pt_milestone_start_date"] = "Dny k zahájení po datu zahájení projektu";
+$lang["pt_milestone_due_date"] = "Splatné za dny";
+$lang["permission_create_milestones"] = "Vytvořit Milníky";
+$lang["permission_edit_milestones"] = "Upravit Milníky";
+$lang["permission_delete_milestones"] = "Smazat Milníky";

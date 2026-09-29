@@ -1,0 +1,4 @@
+Smart Choice Links 1.2.4
+- Moves hover labels into a body-level portal so the CRM header cannot clip them.
+- Moves the clickable links panel into a body-level portal so Bootstrap and header overflow cannot hide it.
+- Preserves left/right star placement, Setup search, saved links, and link opening modes.

@@ -1,0 +1,21 @@
+<?php
+$lang["pt_module_title"] = "Projektmallar";
+$lang["pt_project_template"] = "Projektmall";
+$lang["pt_project_template_lower"] = "projektmall";
+$lang["pt_edit_project_template"] = "Redigera Projektmall";
+$lang["pt_delete_project_template"] = "Ta Bort Projektmall";
+$lang["pt_copy_project_template"] = "Kopiera Projektmall";
+$lang["pt_project_template_description"] = "Beskrivning";
+$lang["pt_new_project_template"] = "Ny Projektmall";
+$lang["failed_to_copy_project_template"] = "Misslyckades med att kopiera projektmall";
+$lang["pt_project_template_copied_successfully"] = "Projektmall kopierad framgångsrikt";
+$lang["pt_project_from_template"] = "projekt från mall";
+$lang["pt_new_project_from_template"] = "Skapa Projekt Från Mall";
+$lang["pt_select_project_template"] = "Välj Projektmall";
+$lang["pt_project_template_not_found"] = "Projektmall inte hittad";
+$lang["pt_duration_text"] = "Förfallodatums Varaktighet (I Dagar)";
+$lang["pt_milestone_start_date"] = "Dagar till att starta efter projektets startdatum";
+$lang["pt_milestone_due_date"] = "Förfallodatum i dagar";
+$lang["permission_create_milestones"] = "Skapa Milstolpar";
+$lang["permission_edit_milestones"] = "Redigera Milstolpar";
+$lang["permission_delete_milestones"] = "Ta Bort Milstolpar";

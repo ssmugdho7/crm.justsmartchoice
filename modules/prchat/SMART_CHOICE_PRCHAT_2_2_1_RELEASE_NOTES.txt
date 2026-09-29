@@ -1,0 +1,8 @@
+Smart Choice PRChat 2.2.1
+
+- Fixes voice-to-text and AI-improved messages not sending because the composer was cleared before the native send handler read it.
+- Adds real Twilio Voice bridge mode for staff phone calls.
+- Keeps internal Pusher/WebRTC calls for browser voice and video.
+- Adds browser incoming-call notification and ringtone reinforcement.
+- Preserves all AI settings and behavior from 2.2.0.
+- Adds migration 221.

@@ -1,0 +1,10 @@
+Smart Choice Links v1.1.4
+
+Fixes:
+- Main menu and Setup menu search now opens the matching parent section and keeps all submenus visible.
+- Searching for a module/page no longer hides the related module pages/options.
+- Added link opening modes: Same Tab, New Tab, New Window, Popup Window.
+- Same Tab is the default CRM behavior.
+- Added default opening behavior setting.
+- Added migration 114_version_114.php.
+- Preserved standard Perfex module structure, language structure, and migration structure.

@@ -1,0 +1,21 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<?php init_head(); ?>
+<div id="wrapper"><div class="content"><div class="google-meet-wrap smart-choice-normalized-module gm-help">
+  <div class="google-meet-header"><div><h1><i class="fa fa-question-circle"></i> Google Meet Help</h1><p>Complete operating guide for scheduling meetings, assigning participants, customer access, notifications, Google API configuration, and troubleshooting.</p></div></div>
+  <?php $this->load->view('google_meet/_nav'); ?>
+  <div class="gm-instruction-banner">
+    <h3><i class="fa fa-video-camera"></i> Purpose of this module</h3>
+    <p>Google Meet connects CRM meeting records with staff members and customer contacts. Staff can create and manage meetings from the administration area. Customers must sign in to the CRM and can see only meetings assigned to their own contact record. The module does not publish customer meeting lists to the public.</p>
+  </div>
+  <div class="gm-help-grid">
+    <div class="gm-help-card"><h3><span>1</span> Add a Meeting to a Customer</h3><p>Open <strong>Google Meet &gt; New Meeting</strong>. Enter the meeting name, date, start time, duration, description, and the final shared Google Meet link. In the <strong>Customer Contacts</strong> field, search for and select the exact customer contact who should receive the meeting. You may also assign responsible employees. Save the meeting. The selected customer will then see it under <strong>Meetings &gt; Google Meet</strong> after signing in to the customer portal. If the customer is not selected in Customer Contacts, the meeting will not appear in that customer account.</p></div>
+    <div class="gm-help-card"><h3><span>2</span> Google Meet Link Creation</h3><p>When Google Calendar API use is enabled and the saved OAuth access token is valid, the module requests a Google Calendar event with conference data. The returned Google Meet link is stored with the CRM meeting. Existing credentials are preserved during upgrades and are never overwritten by migrations.</p></div>
+    <div class="gm-help-card"><h3><span>3</span> Staff Permissions</h3><p>Assign permissions under the CRM role configuration in this order: <strong>View Own</strong>, <strong>View(Permission Global)</strong>, <strong>Create</strong>, <strong>Edit</strong>, <strong>Delete</strong>, and <strong>View All Templates</strong>. Staff members should receive only the access required for their responsibilities.</p></div>
+    <div class="gm-help-card"><h3><span>4</span> Customer Portal Access</h3><p>The <strong>Meetings</strong> navigation item appears only for authenticated customer contacts. It uses the camera icon with a smaller <strong>Google Meet</strong> subtitle. A contact can open only meetings assigned to that contact. Logged-out visitors are sent to the normal customer login page.</p></div>
+    <div class="gm-help-card"><h3><span>5</span> No Scheduled Meeting</h3><p>When a logged-in customer has no assigned meeting, the portal displays a clear message explaining that no meeting is currently scheduled. Once staff assign a meeting to that contact, the meeting date, time, status, details, and join button appear automatically.</p></div>
+    <div class="gm-help-card"><h3><span>6</span> Notifications</h3><p><strong>Email</strong> uses the CRM mail system and native templates. <strong>CRM notifications</strong> create alerts for staff. <strong>Popup and browser sound</strong> can provide immediate on-screen notice. <strong>Twilio/SMS</strong> uses available CRM SMS infrastructure when correctly configured.</p></div>
+    <div class="gm-help-card"><h3><span>7</span> Recording and AI Notes</h3><p>Google Meet recording depends on Google Workspace permissions and account policy. The module stores recording links and AI-summary preferences without changing the external Google account or overwriting existing AI configuration.</p></div>
+    <div class="gm-help-card"><h3><span>8</span> Testing and Troubleshooting</h3><p>Open <strong>Health</strong> and review every check. Use <strong>Fix Issues</strong> only for repairable module conditions, then run <strong>Test Notifications</strong>. Confirm that the meeting is assigned to the correct contact before testing the customer portal.</p></div>
+  </div>
+</div></div></div>
+<?php init_tail(); ?>

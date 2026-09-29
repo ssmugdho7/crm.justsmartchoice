@@ -1,0 +1,17 @@
+Smart Choice Links v1.1.1
+
+Emergency repair release.
+
+Fixed:
+- Removed the v1.1.0 auto-opening/lockup behavior.
+- Removed command palette auto overlay behavior.
+- Restored stable star click behavior.
+- Kept left and right star menus.
+- Kept orange settings gear button in popup header.
+- Added compact adjustable popup appearance settings.
+- Popup width, row height, padding, icon size, font size, radius, and animation speed are configurable.
+- Rows stay on one line with title left and category right.
+- Settings save supports both standard Perfex options and module settings array.
+- Fixed duplicate visible_to_roles create-table definition.
+- Migration 111 added.
+- PHP 8.5 syntax check passed.

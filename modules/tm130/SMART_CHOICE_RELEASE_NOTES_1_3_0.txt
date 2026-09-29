@@ -1,0 +1,8 @@
+Training Manual 1.3.0
+- Restores original admin books and articles layout.
+- Preserves all existing books and database content.
+- Adds logged-in customer article route to eliminate 404 errors.
+- Adds complete customer portal header, navigation, footer, responsive article view, and centered empty state.
+- Uses orange and gold Smart Choice styling with restrained green/blue usage.
+- Keeps Articles menu name and icon.
+- Makes seeded customer guides available through the original module structure.

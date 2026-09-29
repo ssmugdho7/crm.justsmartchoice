@@ -1,0 +1,20 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed');
+
+$lang['sendin'] = 'Sendin';
+$lang['sendin_menu'] = 'Sendin';
+$lang['sendin_settings'] = 'Sendin Settings';
+$lang['sendin_health'] = 'Health';
+$lang['sendin_help'] = 'Help';
+$lang['settings'] = 'Settings';
+$lang['health'] = 'Health';
+$lang['help'] = 'Help';
+$lang['create'] = 'Create';
+$lang['edit'] = 'Edit';
+$lang['delete'] = 'Delete';
+$lang['view'] = 'View';
+$lang['view_own'] = 'View Own';
+$lang['view_global'] = 'View Global';
+$lang['import'] = 'Import';
+$lang['export'] = 'Export';
+$lang['sample_header'] = 'Sample Header';
+$lang['mass_delete'] = 'Mass Delete';

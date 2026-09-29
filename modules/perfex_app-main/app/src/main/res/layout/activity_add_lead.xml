@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/rootLayout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".leads.presentation.add_lead.AddLeadActivity"
+    android:background="@color/themeColorPrimary"
+    android:orientation="vertical">
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.Main">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/themeColorPrimary"
+            app:titleTextColor="@color/white"
+            app:subtitleTextColor="@color/white"
+            app:collapseIcon="@color/white"
+            app:popupTheme="@style/Theme.Main">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:id="@+id/toolbarBack"
+                    android:layout_weight="0.20"
+                    android:layout_gravity="center"
+                    android:backgroundTint="@color/white"
+                    android:background="@drawable/ic_baseline_arrow_back_24"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/back_btn" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:id="@+id/toolbarText"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:id="@+id/toolbarUpdate"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.7"
+                    android:text="@string/add"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/white"
+                    android:contentDescription="@string/back_btn" />
+            </LinearLayout>
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_margin="5dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="4dp"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            style="@android:style/Widget.Holo.ProgressBar.Large"
+            android:id="@+id/progressBar"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:visibility="gone"
+            />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    app:startIconDrawable="@drawable/ic_baseline_view_array_24"
+                    >
+                    <AutoCompleteTextView
+                        android:id="@+id/status"
+                        android:hint="@string/helper_status"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    app:startIconDrawable="@drawable/ic_baseline_source_24"
+                    android:paddingBottom="10dp"
+                    >
+                    <AutoCompleteTextView
+                        android:id="@+id/source"
+                        android:hint="@string/helper_source"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="20dp"
+                    app:startIconDrawable="@drawable/ic_baseline_group_24"
+                    >
+                    <AutoCompleteTextView
+                        android:id="@+id/assigned"
+                        android:hint="@string/helper_assigned"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/name"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/name_text"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="30"
+                    app:endIconMode="clear_text"
+                    app:startIconContentDescription="@string/name_text"
+                    app:startIconDrawable="@drawable/ic_baseline_person_outline_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/position"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/position"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="20"
+                    app:endIconMode="clear_text"
+                    app:startIconContentDescription="@string/position"
+                    app:startIconDrawable="@drawable/ic_baseline_developer_board_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/email"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/email"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="40"
+                    app:endIconMode="clear_text"
+                    app:startIconContentDescription="@string/email"
+                    app:startIconDrawable="@drawable/ic_baseline_mail_outline_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/website"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/website"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="20"
+                    app:endIconMode="clear_text"
+                    app:startIconContentDescription="@string/website"
+                    app:startIconDrawable="@drawable/ic_baseline_web_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textUri" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/phone"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/phone"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="20"
+                    app:endIconMode="clear_text"
+                    app:startIconContentDescription="@string/phone"
+                    app:startIconDrawable="@drawable/ic_baseline_phone_iphone_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="phone" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/lead_value"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/lead_value"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="20"
+                    app:prefixText="$"
+                    app:endIconMode="clear_text"
+                    app:startIconContentDescription="@string/lead_value"
+                    app:startIconDrawable="@drawable/ic_baseline_monetization_on_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberSigned" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/company"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/company"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="100"
+                    app:endIconMode="clear_text"
+                    app:startIconContentDescription="@string/company"
+                    app:startIconDrawable="@drawable/ic_baseline_work_outline_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/address"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/address"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="100"
+                    app:endIconMode="clear_text"
+                    app:startIconContentDescription="@string/address"
+                    app:startIconDrawable="@drawable/ic_baseline_edit_location_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/city"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/city"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="20"
+                    app:endIconMode="clear_text"
+                    app:startIconContentDescription="@string/city"
+                    app:startIconDrawable="@drawable/ic_baseline_edit_location_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/state"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/state"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="20"
+                    app:endIconMode="clear_text"
+                    app:startIconContentDescription="@string/state"
+                    app:startIconDrawable="@drawable/ic_baseline_edit_location_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="20dp"
+                    app:startIconDrawable="@drawable/ic_baseline_edit_location_24"
+                    >
+                    <AutoCompleteTextView
+                        android:hint="@string/helper_country"
+                        android:id="@+id/country"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:labelFor="@id/country" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/zip_code"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/zip_code"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="20"
+                    app:endIconMode="clear_text"
+                    app:startIconContentDescription="@string/zip_code"
+                    app:startIconDrawable="@drawable/ic_baseline_my_location_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberSigned" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/description"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/description"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="200"
+                    app:endIconMode="clear_text"
+                    app:startIconContentDescription="@string/description"
+                    app:startIconDrawable="@drawable/ic_baseline_sticky_note_2_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textMultiLine" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+                <CheckBox
+                    android:id="@+id/contacted_today"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:checked="true"
+                    app:buttonTint="@color/themeColorPrimary"
+                    android:text="@string/contacted_today"/>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:text="@string/set_date"
+                    android:id="@+id/last_contact"
+                    android:visibility="gone"
+                    android:padding="13dp"
+                    android:layout_marginBottom="15dp"
+                    android:drawablePadding="5dp"
+                    android:background="@drawable/border"
+                    android:drawableStart="@drawable/ic_baseline_edit_calendar_24"
+                    android:layout_height="wrap_content" />
+
+                <CheckBox
+                    android:id="@+id/isPublic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:checked="false"
+                    app:buttonTint="@color/themeColorPrimary"
+                    android:text="@string/is_public"/>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:visibility="gone"
+                    android:orientation="vertical"
+                    android:id="@+id/customFieldsRootView"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/lightGrey" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:textSize="16sp"
+                        android:text="@string/custom_fields"
+                        android:textStyle="bold"
+                        android:layout_height="wrap_content" />
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:id="@+id/customFieldsParentView"
+                        android:orientation="vertical"
+                        android:layout_height="wrap_content" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </LinearLayout>
+        </ScrollView>
+
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>

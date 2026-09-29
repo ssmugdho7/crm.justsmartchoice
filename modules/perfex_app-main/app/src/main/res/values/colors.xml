@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="colorGrey">#9f9f9f</color>
+    <color name="lightGrey">#E5E7E9</color>
+
+    <color name="Gray">#736F6E</color>
+    <color name="BattleshipGray">#848482</color>
+    <color name="GrayCloud">#B6B6B4</color>
+    <color name="GrayGoose">#D1D0CE</color>
+    <color name="MetallicSilver">#BCC6CC</color>
+    <color name="LightSlateGray">#6D7B8D</color>
+    <color name="ButterflyBlue">#38ACEC</color>
+    <color name="DarkBlue">#1E79AC</color>
+    <color name="BlueAngel">#B7CEEC</color>
+    <color name="CoralBlue">#AFDCEC</color>
+    <color name="DarkTurquoise">#3B9C9C</color>
+    <color name="BeetleGreen">#4C787E</color>
+    <color name="ForestGreen">#4E9258</color>
+    <color name="GreenOnion">#6AA121</color>
+    <color name="CloverGreen">#3EA055</color>
+    <color name="GreenSnake">#6CBB3C</color>
+    <color name="GreenApple">#4CC417</color>
+    <color name="KellyGreen">#4CC552</color>
+    <color name="Green">#00FF00</color>
+    <color name="HarvestGold">#EDE275</color>
+    <color name="Yellow">#FFFF00</color>
+    <color name="Beer">#FBB117</color>
+    <color name="RedDirt">#7F5217</color>
+    <color name="OrangeSalmon">#C47451</color>
+    <color name="ShockingOrange">#E55B3C</color>
+    <color name="Red">#FF0000</color>
+    <color name="FerrariRed">#F70D1A</color>
+    <color name="BlushRed">#E56E94</color>
+    <color name="MilkWhite">#FEFCFF</color>
+    <color name="White">#FFFFFF</color>
+
+    <!--  Theme colors   -->
+    <color name="themeColorPrimary">#626f80</color>
+    <color name="themeColorSecondary">#51647c</color>
+
+    <!-- Here you can add color of your choice  -->
+    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">#fff</color>
+
+    <color name="shark">#202124</color>
+    <color name="shark_light">#2E2F32</color>
+    <color name="athens_gray">#e8e9ec</color>
+    <color name="tonys_pink">#e49085</color>
+    <color name="don_juan">#594645</color>
+    <color name="shuttle_gray">#606367</color>
+    <color name="mako">#3d4043</color>
+</resources>

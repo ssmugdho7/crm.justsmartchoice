@@ -1,0 +1,14 @@
+Smart Module Manager v1.0.5
+
+Repair Summary:
+- Rebuilt migration sequence from 1 through 105 to prevent Perfex migration gap and missing version failures.
+- Version updated to 1.0.5.
+- All migrations include up() and down().
+- Keep this as a module ZIP only. Upload through Setup > Modules.
+- Delete the old elite_download_modules folder before installing this module.
+
+Folder:
+public_html/crm.justsmartchoice/modules/smart_module_manager/
+
+Old folder to remove:
+public_html/crm.justsmartchoice/modules/elite_download_modules/

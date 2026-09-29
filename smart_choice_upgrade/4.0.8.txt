@@ -1,0 +1,9 @@
+Smart Choice CRM 4.0.8
+
+Targeted existing-sales-document save repair.
+
+- Fixed HTTP 500 when editing existing invoices/estimates/proposals after the 4.0.7 external-link feature was added.
+- External link inputs are now AJAX-only and are not submitted as database columns with the sales document form.
+- Added server-side compatibility stripping for legacy/cached sc_inline_title_* and sc_inline_url_* fields.
+- No payment, discount, down-payment, credit, additional-charge, AI, API, attachment, module, or unrelated behavior changed.
+- Non-destructive migration 408 updates only the Smart Choice build/version options.

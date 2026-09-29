@@ -1,0 +1,30 @@
+Smart Choice Office Theme v1.4.5
+
+Purpose:
+- Rebuilt the correct module, perfex_office_theme, as the CRM-wide visual control layer.
+- Added settings controls for the issues reported in the CRM header, mobile navigation, dropdowns, tables, client login button, and gradient text rules.
+
+Included fixes:
+- White hamburger button and SVG line override for admin/mobile header.
+- Company logo height control for the top navigation bar.
+- Admin top bar height control.
+- Mobile top bar height control.
+- Hamburger icon size control.
+- Green/blue gradient text rule: white text by default, black on hover.
+- Cleaner dropdown menus with one visible scrollbar.
+- Bootstrap select dropdown height control.
+- Full Name and Email table width controls to prevent name overflow.
+- Smaller and nicer client login button height control.
+- Live visual preview on the settings page.
+- Saved design profile / rollback textarea.
+- Buttons for Preview, Save Current Profile, Apply Profile, and Load Sleek Default.
+
+Settings location:
+- Setup > Settings > Smart Choice Office Theme
+- Setup > Settings > Office Theme Health / Verification
+
+Install path:
+- public_html/crm.justsmartchoice.com/modules/perfex_office_theme/
+
+Notes:
+- Facebook, Telegram, LinkedIn, and Instagram database columns/forms must be added in the supplier module if they are missing there. This theme module can control layout and visibility style globally, but it should not create supplier data fields inside another module.

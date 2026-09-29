@@ -1,0 +1,14 @@
+Smart Choice CRM 4.0.3
+
+Targeted final upgrade from 4.0.2.
+- Preserves all payment, discount, AI, attachment, module, and existing business logic.
+- Repairs proposal table row density without changing estimate/invoice behavior.
+- Adds configurable CRM appearance colors and admin/customer login backgrounds.
+- Adds five dashboard widgets.
+- Extends staff profile with Instagram, TikTok, banking, employment, supervisor/team and emergency contact fields.
+- Adds database-backed configurable Smart Choice Team Time clocks.
+- Improves mobile/iPhone top search, menus, tables and touch targets.
+- Keeps item selector plus button inline and selector wide.
+
+Migration: 403_version_403.php (upgrade-only, non-destructive).
+Backup database and files before deployment.

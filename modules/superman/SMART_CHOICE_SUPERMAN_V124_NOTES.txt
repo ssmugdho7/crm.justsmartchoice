@@ -1,0 +1,10 @@
+Smart Choice Superman v1.2.4
+
+Fix included:
+- Added no-op bridge migrations for missing sequence numbers from 101 through 859.
+- This prevents recurring Perfex migration gap errors near 850, 840, 830, 820, etc.
+- Every bridge migration includes up() and down().
+- Module version set to 1.2.4.
+
+Reason:
+This Superman package had migration files numbered by tens and later high version migration files. Perfex migration logic on this CRM expects a contiguous migration path once high version numbers exist. Missing intermediate files caused sequential gap errors.

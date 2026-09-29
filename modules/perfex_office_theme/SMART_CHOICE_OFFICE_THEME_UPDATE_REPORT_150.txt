@@ -1,0 +1,9 @@
+Smart Choice Office Theme v1.5.0
+
+Updated:
+- Staff table spacing improved: larger photo/name/action zones; smaller email, role, and active columns.
+- Removed visible table column resize handles by disabling browser header resize.
+- Client desktop header cleaned: logo left, menu centered, login/right menu last, no desktop hamburger/toggle line.
+- Client mobile header rebuilt with working pancake menu styling and responsive dropdown behavior.
+- Mobile client pages forced to full-width responsive layout with better sizing.
+- Kept Smart Choice branding colors across navigation, menus, tables, and hover states.

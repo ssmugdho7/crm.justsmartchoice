@@ -1,0 +1,21 @@
+<?php
+$lang["pt_module_title"] = "Modelli di Progetto";
+$lang["pt_project_template"] = "Modello di Progetto";
+$lang["pt_project_template_lower"] = "modello di progetto";
+$lang["pt_edit_project_template"] = "Modifica Modello di Progetto";
+$lang["pt_delete_project_template"] = "Elimina Modello di Progetto";
+$lang["pt_copy_project_template"] = "Copia Modello di Progetto";
+$lang["pt_project_template_description"] = "Descrizione";
+$lang["pt_new_project_template"] = "Nuovo Modello di Progetto";
+$lang["failed_to_copy_project_template"] = "Impossibile copiare il modello di progetto";
+$lang["pt_project_template_copied_successfully"] = "Modello di progetto copiato con successo";
+$lang["pt_project_from_template"] = "progetto da modello";
+$lang["pt_new_project_from_template"] = "Crea Progetto Dal Modello";
+$lang["pt_select_project_template"] = "Seleziona Modello di Progetto";
+$lang["pt_project_template_not_found"] = "Modello di progetto non trovato";
+$lang["pt_duration_text"] = "Durata Scadenza (In Giorni)";
+$lang["pt_milestone_start_date"] = "Giorni per iniziare dopo la data di inizio del progetto";
+$lang["pt_milestone_due_date"] = "Scadenza in giorni";
+$lang["permission_create_milestones"] = "Crea Traguardi";
+$lang["permission_edit_milestones"] = "Modifica Traguardi";
+$lang["permission_delete_milestones"] = "Elimina Traguardi";

@@ -1,0 +1,1 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); function scce_install(){ foreach(['scce_webhooks'=>'[]','scce_custom_js_admin'=>'','scce_custom_js_client'=>'','smart_choice_pdf_signature_scale_percent'=>'100'] as $k=>$v){add_option($k,$v);} }

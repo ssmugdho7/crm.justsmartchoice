@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mainCardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:backgroundTint="@color/MilkWhite"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="15dp">
+
+    <com.skydoves.androidribbon.ShimmerRibbonView
+        android:id="@+id/clientRibbon"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:alpha="0.8"
+        app:shimmer_base_alpha="1.0"
+        app:shimmer_highlight_alpha="0.5"
+        app:shimmer_ribbon_background_color="@color/GreenSnake"
+        app:shimmer_ribbon_padding_bottom="3dp"
+        app:shimmer_ribbon_padding_top="3dp"
+        app:shimmer_ribbon_rotation="45"
+        app:shimmer_ribbon_textColor="@android:color/black"
+        app:shimmer_ribbon_textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/subject"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/to"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/openTill"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

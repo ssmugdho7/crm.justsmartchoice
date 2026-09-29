@@ -1,0 +1,20 @@
+Smart Choice Office Theme v1.4.3
+
+Added:
+- Theme settings table for global polish controls.
+- Hamburger menu line color setting.
+- Development environment notice color settings.
+- Slim button control.
+- Slim dashboard/calendar/progress bar control.
+- Nested scrollbar cleanup control.
+- Customer portal login button width control.
+- White text enforcement on gradient/colored buttons.
+- Smaller rounded buttons across CRM.
+- Cleaner progress bars for invoice/leads overview.
+- Smaller calendar/timesheet navigation controls.
+- Better menu arrow alignment.
+- Better payment chart containers.
+- Customer portal login button hover behavior.
+- Migration 143.
+
+PHP syntax should be checked after install.

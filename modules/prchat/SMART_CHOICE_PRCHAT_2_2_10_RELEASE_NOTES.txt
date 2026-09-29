@@ -1,0 +1,35 @@
+Smart Choice PRChat 2.2.10
+Upgrade Path Stabilization
+
+Scope
+- Preserve every working PRChat 2.2.9 feature.
+- Repair only the module upgrade/loading path.
+
+Repair
+- Migration 229 is now a true no-op compatibility migration.
+- Added sequential migration 230 as a code-only release marker.
+- Neither migration executes install.php, performs schema scans, creates tables,
+  seeds data, changes permissions, or writes provider/API configuration.
+
+Preserved
+- Voice-to-text continuous dictation repair.
+- AI Improve and AI/provider configuration.
+- Message deletion for both parties under the PRChat Delete permission.
+- Dedicated Delete Groups permission and right-click group deletion.
+- Group photo add/change/remove behavior.
+- Floating chat maximize behavior.
+- Staff/client/group chat, uploads, SMS, calls, Pusher, chatbot, media, settings.
+- Existing database data, messages, groups, uploads, API keys, Base URL,
+  organization values, Twilio credentials, and all provider settings.
+
+Deployment
+1. Back up the database and modules/prchat/ directory.
+2. Upload this complete prchat folder over modules/prchat/.
+3. Open Setup > Modules and run the normal PRChat upgrade.
+4. Confirm the module advances through migrations 229 and 230.
+5. Clear application cache while preserving .htaccess and index.html.
+6. Reset OPcache if available.
+
+Rollback
+- Restore the database backup and prior modules/prchat/ directory.
+- Do not delete PRChat tables or uploads.

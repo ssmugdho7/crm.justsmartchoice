@@ -1,0 +1,7 @@
+Telegram CRM Connect
+Version: 2.0.0
+Author: Smart Choice Contractors USA / Harold Cabrera
+
+Telegram CRM Connect links Perfex CRM with Telegram for lead alerts, project updates, payment notifications, support ticket alerts, permits, inspections, document uploads, daily reports, weekly reports, automatic project folder creation, and management reporting. The module lets approved Telegram users interact with CRM records through secure commands while routing project notifications to project-specific Telegram groups when available.
+
+Safe migrations 100-200 included to avoid error 200.

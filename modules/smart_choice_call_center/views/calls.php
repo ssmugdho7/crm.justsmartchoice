@@ -1,0 +1,2 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); init_head(); ?>
+<div id="wrapper"><div class="content sccc-app"><div class="sccc-page-head"><div><h3><?= _l('sccc_calls') ?></h3><p class="text-muted"><?= _l('sccc_calls_subtitle') ?></p></div></div><div class="sccc-card"><?php $this->load->view('smart_choice_call_center/partials_calls',['calls'=>$calls]);?></div></div></div><?php init_tail(); ?>

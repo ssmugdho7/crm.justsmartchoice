@@ -1,0 +1,2 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<div class="panel_s"><div class="panel-body"><h4>Smart Choice Update Center</h4><p>Current Smart Choice enterprise version: <strong><?php echo html_escape(get_option('smart_choice_enterprise_current_version') ?: '3.1.2'); ?></strong></p><p>Use Smart Choice Core > Update Center for package history and health checks.</p><a href="<?php echo admin_url('smart_choice_core_upgrade/update_center'); ?>" class="btn btn-info btn-sm">Open Update Center</a></div></div>

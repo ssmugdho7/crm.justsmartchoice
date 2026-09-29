@@ -1,0 +1,32 @@
+Smart Choice Branded Mails v1.0.1
+
+Purpose:
+- Applies Smart Choice corporate email branding only when emails are sent.
+- Does not merge English and Spanish inside the email template editor.
+- Adds an admin cleanup tool to split old bilingual English template records into separate English and Spanish rows.
+
+Install:
+1. Back up:
+   /application/libraries/mails/App_mail_template.php
+   /application/controllers/admin/Smart_choice_email_cleanup.php if it already exists.
+
+2. Upload this ZIP to your CRM root:
+   /public_html/crm.justsmartchoice/
+
+3. Extract it there so the files land at:
+   /application/libraries/mails/App_mail_template.php
+   /application/controllers/admin/Smart_choice_email_cleanup.php
+
+4. Clear CRM cache and browser cache.
+
+5. Open this preview URL as an admin:
+   /admin/smart_choice_email_cleanup/preview
+
+6. If the listed templates are correct, click Apply Cleanup.
+
+7. Re-open Setup > Email Templates. English editor should contain English only. Spanish editor should contain Spanish only.
+
+Important:
+- This package does not change Perfex's global email header/footer settings.
+- The wrapper is added at send time, not stored in the email template editor.
+- The cleanup tool makes backup copies of old bilingual message bodies in /application/cache/ before updating records.

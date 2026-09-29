@@ -1,0 +1,49 @@
+<?php
+$lang['vl_video_library']                           = 'Perpustakaan Video';
+$lang['vl_menu']                          			= 'Perpustakaan Video';
+$lang['vl_videos_submenu']                          = 'Video';
+$lang['vl_categories_submenu']                      = 'Kategori';
+$lang['vl_add_video']                      = 'Tambahkan video';
+$lang['vl_edit_video']                      = 'Edit Video';
+$lang['vl_video_title']                      = 'Judul';
+$lang['vl_video_file']                      = 'Video';
+$lang['vl_video_description']                      = 'Keterangan';
+$lang['vl_video_cate']                      = 'Kategori';
+$lang['vl_video_not_deleted']                      = 'Video tidak dihapus!';
+$lang['vl_video_deleted']                      = 'Video dihapus!';
+$lang['new_video_library_added_alert']                      = 'Video ditambahkan!';
+$lang['new_video_library_added_failed_alert']                      = 'Penambahan video gagal!';
+$lang['vl_projects']                      = 'Terkait dengan Proyek';
+$lang['video_library']                           = 'Perpustakaan Video';
+$lang['vl_add_category']                      = 'Tambahkan kategori';
+## version 101
+$lang['vl_driveurl_placeholder']          = 'Redirect uri Contoh: https://domain_anda/admin/video_library/uploadFileGoogleDrive';
+$lang['vl_drivesecret_placeholder']          = 'Masukkan kunci rahasia drive Anda';
+$lang['vl_ask_for_upload_gdrive']          = 'Apakah Anda ingin mengunggah file Anda di Google Drive?';
+$lang['vl_input_yes']                      = 'Ya';
+$lang['vl_input_no']                      = 'Tidak';
+$lang['vl_client_id_placeholder']         = 'Masukkan ID Klien Anda';
+$lang['vl_client_id']                      = 'ID Klien';
+$lang['vl_client_secret']                  = 'Rahasia Klien';
+$lang['vl_client_uri']                     = 'Arahkan ulang URI';
+$lang['vl_client_heading']                     = 'Masukkan Kredensial Google Drive';
+$lang['vl_ask_for_upload_file']                     = 'Apa yang ingin Anda unggah?';
+$lang['vl_input_option1']                     = 'File Video';
+$lang['vl_input_option2']                     = 'URL Video';
+$lang['vl_link_url']                     = 'URL';
+$lang['vl_credentials']                     = 'Kredensial Anda Berhasil diperbarui';
+
+//version 103
+$lang['customer_permission_video_library'] = 'Perpustakaan Video';
+$lang['vl_s3_heading'] = 'Bucket Amazon S3';
+$lang['vl_ask_for_upload_s3'] = 'Apakah Anda ingin mengunggah file Anda ke bucket S3?';
+$lang['vl_s3_bucket'] = 'Bucket S3';
+$lang['vl_s3_region'] = 'Wilayah S3';
+$lang['vl_s3_user'] = 'Pengguna S3';
+$lang['vl_s3_access_key'] = 'Kunci Akses S3';
+$lang['vl_s3_secret_key'] = 'Kunci Rahasia S3';
+$lang['vl_s3_secret_key_plceholder'] = 'Masukkan Kunci Rahasia';
+$lang['vl_s3_access_key_plceholder'] = 'Masukkan Kunci Akses';
+$lang['vl_s3_user_plceholder'] = 'Masukkan Pengguna';
+$lang['vl_s3_region_plceholder'] = 'Masukkan Wilayah';
+$lang['vl_s3_bucket_placeholder'] = 'Masukkan Bucket';

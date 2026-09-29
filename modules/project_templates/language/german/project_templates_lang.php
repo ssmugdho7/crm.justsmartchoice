@@ -1,0 +1,21 @@
+<?php
+$lang["pt_module_title"] = "Projektvorlagen";
+$lang["pt_project_template"] = "Projektvorlage";
+$lang["pt_project_template_lower"] = "projektvorlage";
+$lang["pt_edit_project_template"] = "Projektvorlage Bearbeiten";
+$lang["pt_delete_project_template"] = "Projektvorlage Löschen";
+$lang["pt_copy_project_template"] = "Projektvorlage Kopieren";
+$lang["pt_project_template_description"] = "Beschreibung";
+$lang["pt_new_project_template"] = "Neue Projektvorlage";
+$lang["failed_to_copy_project_template"] = "Kopieren der Projektvorlage fehlgeschlagen";
+$lang["pt_project_template_copied_successfully"] = "Projektvorlage erfolgreich kopiert";
+$lang["pt_project_from_template"] = "Projekt aus Vorlage";
+$lang["pt_new_project_from_template"] = "Projekt aus Vorlage Erstellen";
+$lang["pt_select_project_template"] = "Projektvorlage Auswählen";
+$lang["pt_project_template_not_found"] = "Projektvorlage nicht gefunden";
+$lang["pt_duration_text"] = "Fälligkeitsdauer (In Tagen)";
+$lang["pt_milestone_start_date"] = "Tage bis zum Beginn nach Projektstartdatum";
+$lang["pt_milestone_due_date"] = "Fällig in Tagen";
+$lang["permission_create_milestones"] = "Meilensteine Erstellen";
+$lang["permission_edit_milestones"] = "Meilensteine Bearbeiten";
+$lang["permission_delete_milestones"] = "Meilensteine Löschen";

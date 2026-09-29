@@ -1,0 +1,86 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.Main" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/themeColorPrimary</item>
+        <item name="colorPrimaryVariant">@color/themeColorSecondary</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/themeColorPrimary</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorOnSecondary">@color/BlueAngel</item>
+
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">@color/themeColorSecondary</item>
+        <item name="android:textColor">@color/Gray</item>
+        <item name="android:textColorPrimary">@color/colorGrey</item>
+        <!-- Customize your theme here. -->
+
+        <item name="android:windowContentTransitions">true</item>
+        <item name="colorControlHighlight">@color/shark_light</item>
+        <item name="colorControlNormal">@color/athens_gray</item>
+
+        <item name="android:windowBackground">@color/shark_light</item>
+        <item name="android:listDivider">@color/shuttle_gray</item>
+
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+    </style>
+
+
+    <style name="SimpleTabText" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="Theme.MoneyManager.AppBarOverlay.TabbedTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="tabIndicatorColor">@color/white</item>
+        <item name="textAllCaps">true</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Theme.AppCompat.NoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="LoginTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="boxStrokeColor">@color/white</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="hintTextColor">@color/white</item>
+    </style>
+
+    <style name="DatePickerTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/themeColorPrimary</item>
+    </style>
+
+    <style name="circleImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="Theme.Main.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@color/themeColorPrimary</item>
+    </style>
+
+    <style name="Widget.NavigationView.RippleEffect" parent="">
+        <item name="android:colorControlHighlight">@android:color/transparent</item>
+    </style>
+
+    <style name="NavigationTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="drawerNavigationShape" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">0dp</item>
+        <item name="cornerSizeTopRight">30dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+        <item name="cornerSizeBottomLeft">30dp</item>
+    </style>
+</resources>

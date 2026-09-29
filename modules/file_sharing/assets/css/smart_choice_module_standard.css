@@ -1,0 +1,15 @@
+/* Smart Choice module normalization */
+:root{--sc-green:#169179;--sc-green-dark:#0e6f5b;--sc-blue:#2CAADF;--sc-orange:#F59E0B;--sc-black:#111827;--sc-gray:#4b5563;--sc-light:#f8fafc;--sc-border:#d1d5db;--sc-muted:#eef7f4;--sc-danger:#dc2626;--sc-white:#fff;}
+.smart-choice-normalized-module .btn,.btn.smart-choice-btn,.smart-choice-module-toolbar .btn{min-height:28px!important;height:28px!important;padding:4px 9px!important;font-size:12px!important;line-height:18px!important;border-radius:6px!important;background-image:none!important;box-shadow:none!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:4px!important;}
+.smart-choice-normalized-module .btn-primary{background:var(--sc-green)!important;border-color:var(--sc-green-dark)!important;color:#fff!important;}
+.smart-choice-normalized-module .btn-info{background:var(--sc-blue)!important;border-color:var(--sc-blue)!important;color:#fff!important;}
+.smart-choice-normalized-module .btn-warning{background:var(--sc-orange)!important;border-color:var(--sc-orange)!important;color:#111827!important;}
+.smart-choice-normalized-module .btn-danger{background:var(--sc-danger)!important;border-color:var(--sc-danger)!important;color:#fff!important;}
+.smart-choice-normalized-module .table-responsive,.smart-choice-normalized-module .dataTables_wrapper{max-width:100%!important;overflow-x:hidden!important;}
+.smart-choice-normalized-module table.table{width:100%!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;}
+.smart-choice-normalized-module table.table th,.smart-choice-normalized-module table.table td{font-size:12px!important;line-height:1.25!important;padding:6px 7px!important;vertical-align:middle!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}
+.smart-choice-normalized-module table.table th:first-child,.smart-choice-normalized-module table.table td:first-child{width:34px!important;max-width:44px!important;text-align:center!important;}
+.smart-choice-normalized-module .dt-buttons,.smart-choice-normalized-module .dataTables_length,.smart-choice-normalized-module .dataTables_filter{display:inline-flex!important;align-items:center!important;gap:6px!important;margin-bottom:8px!important;}
+.smart-choice-normalized-module .dataTables_filter input{height:28px!important;font-size:12px!important;}
+.smart-choice-normalized-module .label,.smart-choice-normalized-module .badge{background-image:none!important;border-radius:12px!important;padding:4px 7px!important;font-size:11px!important;}
+@media(max-width:767px){.smart-choice-normalized-module table.table th,.smart-choice-normalized-module table.table td{font-size:11px!important;padding:5px!important}.smart-choice-normalized-module .btn{height:27px!important;padding:3px 7px!important}}

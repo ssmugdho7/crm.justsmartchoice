@@ -1,0 +1,6 @@
+Smart Choice PRChat 2.1.7
+- AI Improve endpoint fixed with server-generated controller URL and CI3/HMVC route aliases.
+- Voice-to-text changed to continuous recognition with a 6.5-second silence grace period and automatic restart, up to two minutes per session.
+- Staff list ordered by most recent direct conversation, with never-contacted staff following alphabetically.
+- Existing WebRTC call signaling retained; call endpoint compatibility and diagnostics preserved.
+- Migration 217 and cache-busting module version included.

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mainCardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:backgroundTint="@color/MilkWhite"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="15dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:baselineAligned="false"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <LinearLayout
+            android:id="@+id/customer_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:padding="3dp">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/staffImage"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="10dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerInside"
+                app:shapeAppearanceOverlay="@style/circleImageView" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/markAsRead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mark_as_read"
+                app:backgroundTint="@color/themeColorPrimary"
+                android:textColor="@color/white" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

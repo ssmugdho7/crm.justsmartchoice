@@ -1,0 +1,144 @@
+:root{--sc-blue:#1f3c88;--sc-green:#169179;--sc-orange:#d96b00;--sc-light:#f4f8fb;--sc-border:#d8e2ea}
+#header,#header .navbar{background:linear-gradient(90deg,var(--sc-blue),#2459a9)!important}
+#side-menu,.sidebar{background:#16366f!important}
+#side-menu li a{color:#f8fbff!important}
+#side-menu li.active>a,#side-menu li>a:hover{background:rgba(22,145,121,.22)!important;border-left:3px solid var(--sc-orange)!important}
+.table-responsive{overflow-x:auto!important;overflow-y:visible!important;-webkit-overflow-scrolling:touch}
+.dataTables_wrapper .table-responsive .table-responsive{overflow:visible!important}
+.dataTables_wrapper{width:100%!important;overflow:visible!important}
+table.dataTable{width:100%!important;table-layout:auto!important}
+table.dataTable th,table.dataTable td{vertical-align:middle!important;white-space:normal!important;word-break:normal!important}
+.dataTables_wrapper .row{margin-left:-5px!important;margin-right:-5px!important}
+.dt-buttons,.dataTables_length,.dataTables_filter{margin-bottom:8px!important}
+.btn,.dt-button{border-radius:6px!important;min-height:32px!important;padding:5px 10px!important;line-height:1.25!important}
+.btn-dt-reload{display:inline-flex!important;align-items:center!important}
+@media(max-width:767px){.btn,.dt-button{min-height:40px!important;padding:8px 12px!important}.dataTables_wrapper .dt-buttons{display:flex!important;flex-wrap:wrap!important;gap:5px!important}.dataTables_filter input{width:100%!important}.table-responsive{border:0!important}}
+
+/* v1.0.1 */
+#header{background:linear-gradient(90deg,#168dde 0%,#39a9ee 42%,#f36c0a 100%)!important;height:72px!important}.table-responsive>.table-responsive{overflow:visible!important}.table-responsive{max-width:100%!important}.dataTables_wrapper{overflow:visible!important}.dataTables_scrollBody{overflow-x:auto!important;overflow-y:auto!important}.dataTables_scrollHead,.dataTables_scrollBody{width:100%!important}.btn{border-radius:7px!important}
+
+/* v1.0.2 */
+#aside .sidebar-user-profile{margin-top:0!important}.sc-html-toggle{display:flex;align-items:center;gap:6px;margin:4px 0 6px;font-size:11.5px;color:#52606d}.sc-html-toggle input{margin:0}.sc-html-toggle label{margin:0;font-weight:500;cursor:pointer}.sc-html-toggle i{color:#168dde}.sc-logo-spec{max-width:760px}.sc-module-filterbar::-webkit-scrollbar{height:4px}.sc-module-filterbar::-webkit-scrollbar-thumb{background:#bcccdc;border-radius:4px}
+
+/* Smart Choice Core Upgrade v1.0.3 */
+#header #logo{height:57px!important;min-width:185px!important;display:flex!important;align-items:center!important;padding:3px 8px!important;overflow:visible!important}
+#header #logo a{display:flex!important;height:100%!important;align-items:center!important;overflow:visible!important}
+#header #logo img{height:48px!important;max-height:48px!important;width:auto!important;max-width:190px!important;object-fit:contain!important;margin:0!important;display:block!important}
+#menu.sidebar{padding-top:0!important;margin-top:0!important}
+#menu .sidebar-user-profile{margin-top:6px!important;padding-top:0!important}
+#menu .sidebar-user-profile .profile{margin-top:0!important}
+#menu .sc-profile-avatar img,#menu img.staff-profile-image-small{display:block!important;width:42px!important;height:42px!important;min-width:42px!important;object-fit:cover!important;border-radius:50%!important}
+.sc-module-tools-single-row{width:100%!important;flex-wrap:nowrap!important;overflow-x:auto!important;white-space:nowrap!important}
+.sc-module-tools-single-row #sc_module_search{min-width:180px!important;width:220px!important;height:27px!important;font-size:11px!important}
+@media(max-width:768px){#header #logo{min-width:120px!important}#header #logo img{height:42px!important;max-height:42px!important;max-width:135px!important}#menu .sidebar-user-profile{margin-top:4px!important}}
+
+/* Smart Choice CRM 4.3.5 - targeted table/modal compatibility */
+.dataTables_wrapper{max-width:100%!important;min-width:0!important}
+.dataTables_wrapper .table-responsive{max-width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch}
+.table-estimates,.table-proposals{font-size:11.5px!important;width:100%!important}
+.table-estimates th,.table-estimates td,.table-proposals th,.table-proposals td{font-size:11.5px!important;padding:6px 7px!important;line-height:1.25!important;vertical-align:middle!important}
+.table-estimates td,.table-proposals td{white-space:normal!important;word-break:normal!important}
+.table-estimates .row-options,.table-proposals .row-options{font-size:10.5px!important;white-space:normal!important}
+.table-estimates .sc-table-cell-ellipsis,.table-proposals .sc-table-cell-ellipsis,.sc-proposal-cell-clamp{display:block!important;max-width:260px!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
+.proposal-convert-modal{padding-top:72px!important}
+.proposal-convert-modal .modal-dialog{margin-top:12px!important;margin-bottom:20px!important;width:calc(100% - 30px)!important;max-width:1320px!important}
+.proposal-convert-modal .modal-content{max-height:calc(100vh - 100px)!important;overflow:hidden!important}
+.proposal-convert-modal .modal-header{position:relative!important;z-index:3!important;min-height:50px!important;padding:14px 18px!important;background:#fff!important}
+.proposal-convert-modal .modal-header .close{position:absolute!important;right:16px!important;top:12px!important;margin:0!important;z-index:4!important}
+.proposal-convert-modal .modal-title{display:block!important;margin:0!important;padding-right:40px!important;line-height:22px!important}
+.proposal-convert-modal .modal-body{max-height:calc(100vh - 210px)!important;overflow:auto!important;-webkit-overflow-scrolling:touch}
+.sc-admin-attachment-card{padding:7px!important;min-height:0!important}
+.sc-admin-attachment-image-link{display:flex!important;align-items:center!important;justify-content:center!important;height:105px!important;background:#f8fafc!important}
+.sc-admin-attachment-image-link img{width:auto!important;max-width:100%!important;height:auto!important;max-height:96px!important;object-fit:contain!important}
+.sc-admin-attachment-generic{height:96px!important}
+@media(max-width:767px){
+ .proposal-convert-modal{padding-top:62px!important}
+ .proposal-convert-modal .modal-dialog{width:calc(100% - 16px)!important;margin:8px!important}
+ .proposal-convert-modal .modal-content{max-height:calc(100vh - 78px)!important}
+ .proposal-convert-modal .modal-body{max-height:calc(100vh - 190px)!important;padding:10px!important}
+ .table-estimates,.table-proposals{font-size:11px!important}
+ .table-estimates th,.table-estimates td,.table-proposals th,.table-proposals td{font-size:11px!important;padding:5px!important}
+}
+
+/* Smart Choice Core v1.0.5 - Header logo and staff profile */
+#header .navbar-brand,
+.admin-navbar .navbar-brand,
+.navbar-header .navbar-brand {
+    min-width: 170px !important;
+    height: 64px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 4px 12px !important;
+    overflow: visible !important;
+}
+#header .navbar-brand img,
+.admin-navbar .navbar-brand img,
+.navbar-header .navbar-brand img,
+#logo img,
+.navbar-brand .img-responsive {
+    width: auto !important;
+    height: 56px !important;
+    max-height: 56px !important;
+    max-width: 165px !important;
+    object-fit: contain !important;
+    object-position: left center !important;
+    display: block !important;
+}
+#menu .sidebar-user-profile,
+#menu .staff-profile,
+#side-menu .staff-profile,
+.sidebar-user-profile {
+    margin-top: 8px !important;
+    padding-top: 8px !important;
+    min-height: 66px !important;
+}
+.sidebar-user-profile img,
+#menu .staff-profile-image,
+#side-menu .staff-profile-image,
+.staff-profile-image-small {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+}
+.sidebar-user-profile .staff-profile-info,
+.sidebar-user-profile .profile-info {
+    min-width: 0 !important;
+    overflow: hidden !important;
+}
+.sidebar-user-profile .staff-email,
+.sidebar-user-profile .profile-email {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    display: block !important;
+    max-width: 160px !important;
+}
+
+/* Smart Choice Core v1.0.6 */
+#header #logo{height:68px!important;min-width:230px!important;max-width:260px!important;padding:2px 10px!important;overflow:visible!important}
+#header #logo>a{height:64px!important;width:100%!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;overflow:visible!important}
+#header #logo img{height:62px!important;max-height:62px!important;width:auto!important;max-width:235px!important;object-fit:contain!important;display:block!important}
+#menu .sidebar-user-profile{margin-top:9px!important;margin-bottom:4px!important}
+#menu .sidebar-user-profile .profile{min-height:62px!important;display:block!important}
+#menu .sidebar-user-profile img.staff-profile-image-small{width:46px!important;height:46px!important;min-width:46px!important;object-fit:cover!important;border-radius:50%!important}
+.accounting-template .table.items thead th,.accounting-template .table.items tbody td{vertical-align:middle!important}
+.accounting-template .table.items input.form-control,.accounting-template .table.items textarea.form-control,.accounting-template .table.items .bootstrap-select>.dropdown-toggle{min-height:38px!important;height:38px!important;line-height:1.35!important}
+.accounting-template .table.items textarea.form-control{height:54px!important;resize:vertical!important}
+.accounting-template .table.items td{padding-top:8px!important;padding-bottom:8px!important}
+.sc-sales-meta-panel{border:1px solid #dce6ef;border-radius:8px;background:#f8fbfd;padding:12px;margin:12px 0;display:grid;grid-template-columns:repeat(3,minmax(180px,1fr));gap:10px}
+.sc-sales-meta-panel label{font-size:12px;font-weight:600;color:#34495e;margin-bottom:4px}
+.sc-total-summary{border-radius:8px;background:#eef8f4;border:1px solid #b7dfcf;padding:10px;margin-top:8px}
+.sc-dashboard-card{border:1px solid #e2e8f0;border-radius:9px;background:#fff;box-shadow:0 5px 14px rgba(31,60,136,.08);padding:14px;margin-bottom:15px}
+.sc-dashboard-progress{height:14px;border-radius:9px;overflow:hidden;background:#edf2f7;box-shadow:inset 0 1px 3px rgba(0,0,0,.08)}
+.sc-dashboard-progress>span{display:block;height:100%;background:linear-gradient(90deg,#169179,#2ca8ff);box-shadow:0 2px 7px rgba(22,145,121,.35)}
+.sc-ticket-scroll{max-height:340px!important;overflow:auto!important}
+@media(max-width:767px){#header #logo{min-width:150px!important;max-width:175px!important}#header #logo img{height:52px!important;max-height:52px!important;max-width:165px!important}.sc-sales-meta-panel{grid-template-columns:1fr!important}}
+
+/* Smart Choice CRM v1.0.10 */
+body{--sc-primary:#0077cc;--sc-secondary:#00a651;--sc-accent:#f96302}
+#header{background:linear-gradient(90deg,#0077cc 0%,#2ca8ff 58%,#f96302 100%)!important}
+.table-clients{min-width:1180px!important;width:100%!important;table-layout:auto!important}
+.table-clients th,.table-clients td{white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important;vertical-align:middle!important}
+.table-clients td:last-child,.table-clients th:last-child{min-width:145px!important}

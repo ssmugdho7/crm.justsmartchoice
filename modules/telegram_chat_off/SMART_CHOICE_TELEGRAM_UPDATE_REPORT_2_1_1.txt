@@ -1,0 +1,5 @@
+Telegram Chat 2.1.1
+- Removed invalid config/migration.php that overrode Perfex core migration settings.
+- Added standard Perfex module migration 211_version_211.php.
+- Updated module version to 2.1.1.
+- Retains PHP 8.5 Telegram Bot API compatibility fixes and Online Links page.

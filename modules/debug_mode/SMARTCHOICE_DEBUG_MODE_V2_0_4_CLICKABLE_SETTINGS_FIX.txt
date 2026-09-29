@@ -1,0 +1,9 @@
+Debug Mode v2.0.4
+
+Fixed:
+- Setup → Settings → Debug Mode registration improved.
+- Added settings_tabs filter compatibility.
+- Added Setup menu fallback link.
+- Added standalone fallback settings page at /admin/debug_mode/settings.
+- No Upgrade Database required.
+- No migrations folder.

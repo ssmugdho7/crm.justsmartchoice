@@ -1,0 +1,10 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); init_head(); ?>
+<div id="wrapper"><div class="content"><div class="row"><div class="col-md-12">
+<div class="panel_s notes-task-view"><div class="panel-body">
+<div class="tw-flex tw-justify-between tw-items-start tw-flex-wrap tw-gap-3">
+<div><h3 class="tw-mt-0 tw-mb-2"><?php echo html_escape($title); ?></h3><span class="label" style="background:<?php echo html_escape($source['color']); ?>"><?php echo html_escape($source['name']); ?></span> <span class="label" style="background:<?php echo html_escape($type['color']); ?>"><?php echo html_escape($type['name']); ?></span></div>
+<div><a href="<?php echo admin_url('notes/note'); ?>" class="btn btn-default"><i class="fa fa-arrow-left"></i> <?php echo _l('back'); ?></a><?php if(is_admin()||staff_can('edit','note_manage')){ ?> <a href="<?php echo admin_url('notes/notes/edit/'.(int)$note->id); ?>" class="btn btn-primary"><i class="fa fa-pencil"></i> <?php echo _l('edit'); ?></a><?php } ?></div>
+</div><hr>
+<div class="row"><div class="col-md-8"><div class="notes-description task-single-col-left"><?php echo $note->description; ?></div></div><div class="col-md-4"><div class="task-info"><p><strong><?php echo _l('tasks_dt_name'); ?>:</strong><br><?php echo $relation; ?></p><p><strong><?php echo _l('notes_priority'); ?>:</strong> <?php echo html_escape(ucfirst($note->priority ?? 'medium')); ?></p><p><strong><?php echo _l('clients_notes_table_addedfrom_heading'); ?>:</strong> <?php echo html_escape(get_staff_full_name((int)$note->addedfrom)); ?></p><p><strong><?php echo _l('clients_notes_table_dateadded_heading'); ?>:</strong> <?php echo html_escape(_dt($note->dateadded)); ?></p><p><strong><?php echo _l('notes_attachment'); ?>:</strong><br><?php echo $attachment; ?></p></div></div></div>
+</div></div></div></div></div></div>
+<?php init_tail(); ?><style>.notes-task-view{border-top:3px solid #3598DB}.notes-description{font-size:14px;line-height:1.6}.task-info{background:#f8fafc;border:1px solid #e5e7eb;border-radius:6px;padding:16px}</style></body></html>

@@ -1,0 +1,19 @@
+Smart Choice CRM 4.0.4 - Targeted UI Repair
+
+Baseline: 4.0.3 complete CRM.
+Migration: 404_version_404.php (upgrade-only, non-destructive).
+
+Targeted changes only:
+- Team clock manager now opens reliably and retains add/remove/save functionality.
+- Payments menu receives a compatible Font Awesome credit-card icon.
+- Sales item selector and green add-item button remain on one line across proposals, estimates, and invoices.
+- Estimate/proposal/invoice custom status plus button aligns with its status selector.
+- Invoice billable-task selector has a visible label and correctly aligned help/dropdown controls.
+- Proposal register rows are normalized to compact invoice/estimate-style heights.
+- Proposal register includes a compact attachments indicator/thumbnail.
+- Proposal edit screen shows already-uploaded proposal files.
+
+Explicitly unchanged:
+- Payment calculations, down payments, fixed/percentage discounts, credits, additional charges.
+- AI providers, API keys, AI code, prompts, models, base URLs, organizations.
+- Existing database data, modules, uploads, permissions, settings, customer portal features, and unrelated CRM behavior.

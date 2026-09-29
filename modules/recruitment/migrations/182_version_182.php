@@ -1,0 +1,12 @@
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+class Migration_Version_182 extends App_module_migration
+{
+ public function up(){ $CI=&get_instance(); $candidate=db_prefix().'rec_candidate';
+  if($CI->db->table_exists($candidate)){ foreach(['signature_ip'=>'VARCHAR(64) NULL','signature_datetime'=>'DATETIME NULL','signature_user_agent'=>'TEXT NULL','skill_test_token'=>'VARCHAR(64) NULL','skill_test_score'=>'DECIMAL(5,2) NULL','skill_test_completed_at'=>'DATETIME NULL'] as $c=>$d){ if(!$CI->db->field_exists($c,$candidate)){$CI->db->query('ALTER TABLE `'.$candidate.'` ADD `'.$c.'` '.$d);}}}
+  $table=db_prefix().'rec_candidate_skill_tests'; if(!$CI->db->table_exists($table)){$CI->db->query('CREATE TABLE `'.$table.'` (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,`candidate_id` INT NOT NULL,`token` VARCHAR(64) NOT NULL,`answers` LONGTEXT NULL,`score` DECIMAL(5,2) NOT NULL DEFAULT 0,`correct_answers` INT NOT NULL DEFAULT 0,`total_questions` INT NOT NULL DEFAULT 0,`ip_address` VARCHAR(64) NULL,`user_agent` TEXT NULL,`submitted_at` DATETIME NULL,PRIMARY KEY (`id`),UNIQUE KEY `token` (`token`),KEY `candidate_id` (`candidate_id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');}
+  foreach(['recruitment_skill_test_email'=>'employees@justasmartchoice.com','recruitment_skill_test_enabled'=>'1','smart_choice_recruitment_w4_url'=>'https://www.irs.gov/pub/irs-pdf/fw4.pdf','recruitment_portal_primary_color'=>'#F28C28','recruitment_portal_secondary_color'=>'#169179','recruitment_portal_dark_color'=>'#0E6F5B'] as $k=>$v){if(get_option($k)===false)add_option($k,$v);}
+  $this->install_template(); }
+ private function install_template(){ if(!function_exists('create_email_template'))return; $CI=&get_instance();$t=db_prefix().'emailtemplates';if(!$CI->db->table_exists($t))return; if(!$CI->db->where('slug','recruitment-skill-test-internal')->where('language','english')->get($t)->row()){create_email_template('Construction skills test completed by {candidate_name}. Score: {test_score}. Review: {candidate_link}','<p>{logo_image_with_url}</p><p><strong>{candidate_name}</strong> completed the construction skills test.</p><p>Position: {position}<br>Score: <strong>{test_score}</strong><br>Correct answers: {correct_answers} of {total_questions}<br>IP: {test_ip}<br>Completed: {test_datetime}</p><p><a href="{candidate_link}">Open Candidate Profile</a></p><p>{email_signature}</p>','recruitment_skill_test_internal','Recruitment Skills Test Result','recruitment-skill-test-internal');}}
+ public function down(){}
+}

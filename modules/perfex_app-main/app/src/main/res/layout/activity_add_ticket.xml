@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/themeColorPrimary"
+    android:orientation="vertical"
+    tools:context=".support.presentation.add.AddTicketActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.Main">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/themeColorPrimary"
+            app:collapseIcon="@color/white"
+            app:popupTheme="@style/Theme.Main"
+            app:subtitleTextColor="@color/white"
+            app:titleTextColor="@color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <ImageView
+                    android:id="@+id/toolbarBack"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.20"
+                    android:background="@drawable/ic_baseline_arrow_back_24"
+                    android:backgroundTint="@color/white"
+                    android:contentDescription="@string/back_btn" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/toolbarText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/toolbarAddBtn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.7"
+                    android:backgroundTint="@color/white"
+                    android:contentDescription="@string/back_btn"
+                    android:text="@string/add"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="4dp">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@android:style/Widget.Holo.ProgressBar.Large"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:visibility="gone" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <CheckBox
+                    android:id="@+id/ticketWithoutContact"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ticket_without_contact"
+                    app:buttonTint="@color/themeColorPrimary" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/subject"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/subject"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="30"
+                    app:endIconMode="clear_text"
+                    app:startIconContentDescription="@string/subject"
+                    app:startIconDrawable="@drawable/ic_baseline_person_outline_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/contactTextInputLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    app:startIconDrawable="@drawable/ic_baseline_view_array_24">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/contact"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/helper_contact"
+                        android:inputType="none" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/name"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/name"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="30"
+                    app:endIconMode="clear_text"
+                    app:startIconContentDescription="@string/name"
+                    app:startIconDrawable="@drawable/ic_baseline_person_outline_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:focusable="false"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/email"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/email"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="30"
+                    app:endIconMode="clear_text"
+                    app:startIconContentDescription="@string/email"
+                    app:startIconDrawable="@drawable/ic_baseline_email_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:focusable="false"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    app:startIconDrawable="@drawable/ic_baseline_source_24">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/department"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/please_select_department"
+                        android:inputType="none" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/cc"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/cc"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="30"
+                    app:endIconMode="clear_text"
+                    app:startIconContentDescription="@string/cc"
+                    app:startIconDrawable="@drawable/ic_baseline_email_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="20dp"
+                    app:startIconDrawable="@drawable/ic_baseline_group_24">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/assigned"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/helper_assigned"
+                        android:inputType="none" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="20dp"
+                    app:startIconDrawable="@drawable/ic_baseline_edit_location_24">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/priority"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/please_select_priority"
+                        android:inputType="none"
+                        android:labelFor="@id/priority" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="20dp"
+                    app:startIconDrawable="@drawable/ic_baseline_edit_location_24">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/service"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/select_service"
+                        android:inputType="none"
+                        android:labelFor="@id/service" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <View
+                    android:background="@color/GrayCloud"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:text="@string/ticket_body"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="20dp"
+                    app:startIconDrawable="@drawable/ic_baseline_edit_location_24">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/predefinedReplies"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/predefined_replies"
+                        android:inputType="none"
+                        android:labelFor="@id/predefinedReplies" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="20dp"
+                    app:startIconDrawable="@drawable/ic_baseline_edit_location_24">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/knowledgeBaseLink"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/knowledge_base_link"
+                        android:inputType="none"
+                        android:labelFor="@id/knowledgeBaseLink" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/description"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/description"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="200"
+                    app:endIconMode="clear_text"
+                    app:startIconContentDescription="@string/description"
+                    app:startIconDrawable="@drawable/ic_baseline_sticky_note_2_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textMultiLine" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>

@@ -1,0 +1,1 @@
+Version 1.8.2: native settings section, Smart Choice portal redesign, mobile Apply visibility, signature pad with IP/time, post-application construction skills test, native email template result delivery, official IRS W-4 link.

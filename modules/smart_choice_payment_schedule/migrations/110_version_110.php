@@ -1,0 +1,1 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); class Migration_Version_110 extends App_module_migration { public function up(){ require_once module_dir_path('smart_choice_payment_schedule','install.php'); scps_install_schema(); update_option('scps_version','1.1.0'); } public function down(){} }

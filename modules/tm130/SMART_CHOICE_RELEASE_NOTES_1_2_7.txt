@@ -1,0 +1,9 @@
+Smart Choice Training Manual v1.2.7
+
+- Replaced Customer Videos with Customer Books.
+- Added a per-book Customer Area visibility option.
+- Added a customer portal Customer Books page containing published articles from approved books.
+- Fixed creator changes so author_id and created_by are synchronized.
+- Fixed article cards to display author_fullname/creator_name instead of Unknown Creator.
+- Standardized permissions in this exact order: View Own, View (Global), Create, Edit, Delete, View All Templates.
+- Added migration 127 without deleting existing books, articles, assignments, or bookmarks.

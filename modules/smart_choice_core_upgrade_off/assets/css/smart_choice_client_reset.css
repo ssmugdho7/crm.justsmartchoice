@@ -1,0 +1,17 @@
+/* Smart Choice v3.4.9: return client portal header/navigation close to native Perfex behavior. */
+body.customers, body.clients{overflow-x:hidden;}
+body.customers .navbar, body.clients .navbar{min-height:50px!important;background:#fff!important;border-bottom:1px solid #e5e7eb!important;box-shadow:none!important;}
+body.customers .navbar-brand, body.clients .navbar-brand{height:50px!important;padding:8px 15px!important;display:flex!important;align-items:center!important;}
+body.customers .navbar-brand img, body.clients .navbar-brand img{max-height:34px!important;width:auto!important;object-fit:contain!important;}
+body.customers .navbar-nav>li>a, body.clients .navbar-nav>li>a{line-height:20px!important;padding-top:15px!important;padding-bottom:15px!important;color:#333!important;background:transparent!important;}
+body.customers .navbar-nav>li>a:hover, body.clients .navbar-nav>li>a:hover{background:#f5f5f5!important;color:#0077CC!important;}
+@media(max-width:767px){
+ body.customers .navbar-collapse, body.clients .navbar-collapse{background:#fff!important;border-top:1px solid #e5e7eb!important;}
+ body.customers .navbar-toggle, body.clients .navbar-toggle{border-color:#ddd!important;background:#fff!important;}
+ body.customers .navbar-toggle .icon-bar, body.clients .navbar-toggle .icon-bar{background:#333!important;}
+ body.customers .navbar-nav>li>a, body.clients .navbar-nav>li>a{font-size:15px!important;padding:12px 16px!important;}
+}
+/* Client knowledge base upgraded cards without changing header */
+body.customers .kb-search, body.customers .knowledge-base-search{border-radius:12px!important;border:1px solid #d9e2ec!important;box-shadow:0 6px 20px rgba(0,119,204,.08)!important;}
+body.customers .kb-category, body.customers .knowledge-base-category, body.customers .panel_s{border-radius:14px!important;border:1px solid #d9e2ec!important;box-shadow:0 8px 25px rgba(17,17,17,.05)!important;overflow:hidden!important;}
+body.customers .panel_s .panel-heading{background:#EAF7FF!important;border-bottom:2px solid #2CA8FF!important;color:#111!important;font-weight:700!important;}

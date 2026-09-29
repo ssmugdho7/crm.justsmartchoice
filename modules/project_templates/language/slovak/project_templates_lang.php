@@ -1,0 +1,21 @@
+<?php
+$lang["pt_module_title"] = "Šablóny Projektov";
+$lang["pt_project_template"] = "Šablóna Projektu";
+$lang["pt_project_template_lower"] = "šablóna projektu";
+$lang["pt_edit_project_template"] = "Upraviť Šablónu Projektu";
+$lang["pt_delete_project_template"] = "Odstrániť Šablónu Projektu";
+$lang["pt_copy_project_template"] = "Kopírovať Šablónu Projektu";
+$lang["pt_project_template_description"] = "Popis";
+$lang["pt_new_project_template"] = "Nová Šablóna Projektu";
+$lang["failed_to_copy_project_template"] = "Nepodarilo sa skopírovať šablónu projektu";
+$lang["pt_project_template_copied_successfully"] = "Šablóna projektu bola úspešne skopírovaná";
+$lang["pt_project_from_template"] = "projekt z šablóny";
+$lang["pt_new_project_from_template"] = "Vytvoriť Projekt Z Šablóny";
+$lang["pt_select_project_template"] = "Vybrať Šablónu Projektu";
+$lang["pt_project_template_not_found"] = "Šablóna projektu nebola nájdená";
+$lang["pt_duration_text"] = "Trvanie Termínu (V Dňoch)";
+$lang["pt_milestone_start_date"] = "Dni na začatie po dátume začiatku projektu";
+$lang["pt_milestone_due_date"] = "Termín v dňoch";
+$lang["permission_create_milestones"] = "Vytvoriť Míľniky";
+$lang["permission_edit_milestones"] = "Upraviť Míľniky";
+$lang["permission_delete_milestones"] = "Odstrániť Míľniky";

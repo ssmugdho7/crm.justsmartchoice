@@ -1,0 +1,15 @@
+Smart Choice CRM 4.2.8 targeted repair release
+Baseline: crmmain_4.2.7.zip
+Policy: preserve all existing 4.2.7 functionality and change only requested items.
+- Staff supervisor/manager selector now receives active staff records and supports search.
+- Team is a support department drop-down.
+- Staff Email label changed through language files to Company's Email and remains required.
+- Global phone-like inputs are normalized/validated as +1 (###) #### ###.
+- Staff permissions area receives additional bottom working space so the save controls remain visible.
+- Proposal table tags are constrained so tags cannot increase row height.
+- Customer proposal information card is moved to the top of the right column.
+- Service appointment action added to public estimates/proposals/invoices using the existing appointments route.
+- Media view malformed wrapper closings repaired without replacing elFinder.
+- Setup menu has additional bottom space and aligned profile image/name/email hover treatment.
+- Client/session default lifetime increased to 30 days and regeneration reduced to avoid tab-switch logout churn.
+- Sequential migration advanced from 427 to 428; no destructive schema operations.

@@ -1,0 +1,10 @@
+{
+    "name": "perfex/prchat-module",
+    "description": "Perfex CRM Powerful Chat with AI",
+    "type": "module",
+    "require": {
+        "inspector-apm/neuron-ai": "1.17.6",
+        "smalot/pdfparser": "^2.12",
+        "phpoffice/phpspreadsheet": "^1.29"
+    }
+}

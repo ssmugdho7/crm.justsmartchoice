@@ -1,0 +1,7 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<?php init_head(); ?>
+<div id="wrapper"><div id="sc-enterprise-app"><div class="content">
+<div class="sc-enterprise-header"><div><h1><?php echo html_escape($title); ?></h1><p><?php echo _l('enterprise_audit_log_description'); ?></p></div><div class="sc-toolbar"><a href="<?php echo current_url(); ?>" class="btn btn-default btn-sm"><i class="fa-solid fa-rotate"></i> <?php echo _l('reload'); ?></a><a href="<?php echo admin_url('smart_choice_enterprise_core/export_audit'); ?>" class="btn btn-info btn-sm"><i class="fa-solid fa-file-export"></i> <?php echo _l('export'); ?></a></div></div>
+
+<div class="panel_s"><div class="panel-body"><div class="table-responsive"><table class="table table-striped sc-enterprise-table"><thead><tr><th>ID</th><th><?php echo _l('enterprise_action'); ?></th><th><?php echo _l('enterprise_entity'); ?></th><th><?php echo _l('staff'); ?></th><th><?php echo _l('enterprise_ip_address'); ?></th><th><?php echo _l('date_created'); ?></th></tr></thead><tbody><?php foreach($rows as$r){?><tr><td><?php echo (int)$r['id']; ?></td><td><?php echo html_escape($r['action']); ?></td><td><?php echo html_escape(trim($r['entity_type'].' '.$r['entity_id'])); ?></td><td><?php echo html_escape($r['staff_id']); ?></td><td><?php echo html_escape($r['ip_address']); ?></td><td><?php echo html_escape($r['created_at']); ?></td></tr><?php } ?></tbody></table></div></div></div>
+</div></div></div><?php init_tail(); ?>

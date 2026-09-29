@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="true">পারফেক্স অ্যাপ</string>
+    <string name="tab_dashboard" translatable="true">ড্যাশবোর্ড</string>
+    <string name="tab_customers" translatable="false">গ্রাহকদের</string>
+    <string name="tab_projects" translatable="false">প্রকল্প</string>
+    <string name="tab_tasks" translatable="false">কাজ</string>
+    <string name="tab_support" translatable="false">সমর্থন</string>
+    <string name="tab_leads" translatable="false">নেতৃত্ব দেয়</string>
+    <string name="tab_profile" translatable="false">প্রোফাইল</string>
+    <string name="tab_task" translatable="false">টাস্ক</string>
+    <string name="tab_reminders" translatable="false">অনুস্মারক</string>
+    <string name="tab_notes" translatable="false">মন্তব্য</string>
+    <string name="tab_activity_log" translatable="false">কার্য বিবরণ</string>
+    <string name="tab_contacts" translatable="false">পরিচিতি</string>
+    <string name="tab_invoices" translatable="false">চালান</string>
+    <string name="tab_proposals" translatable="false">প্রস্তাব</string>
+    <string name="not_started" translatable="false">শুরু না</string>
+    <string name="waiting_feedback" translatable="false">প্রতিক্রিয়ার অপেক্ষায়</string>
+    <string name="testing" translatable="false">পরীক্ষামূলক</string>
+    <string name="in_progress" translatable="false">চলমান</string>
+    <string name="complete" translatable="false">সম্পূর্ণ</string>
+    <string name="low_priority" translatable="false">কম</string>
+    <string name="medium_priority" translatable="false">মধ্যম</string>
+    <string name="high_priority" translatable="false">উচ্চ</string>
+    <string name="urgent_priority" translatable="false">জরুরী</string>
+    <string name="related_to_search" translatable="false">অনুসন্ধান করুন</string>
+    <string name="related_to_lead" translatable="false">সীসা</string>
+    <string name="related_to_customer" translatable="false">ক্রেতা</string>
+    <string name="days" translatable="false">দিন</string>
+    <string name="weeks" translatable="false">সপ্তাহ</string>
+    <string name="months" translatable="false">মাস</string>
+    <string name="years" translatable="false">বছর</string>
+    <string name="one_week" translatable="false">1 সপ্তাহ</string>
+    <string name="two_weeks" translatable="false">২ সপ্তাহ</string>
+    <string name="one_month" translatable="false">1 মাস</string>
+    <string name="two_months" translatable="false">2 মাস</string>
+    <string name="three_months" translatable="false">3 মাস</string>
+    <string name="six_months" translatable="false">6 মাস</string>
+    <string name="one_year" translatable="false">1 বছর</string>
+    <string name="custom_repeat" translatable="false">কাস্টম</string>
+    <string name="company_name" translatable="false">কোমপানির নাম</string>
+    <string name="start_timer" translatable="false">টাইমার শুরু করুন</string>
+    <string name="recurring" translatable="false">পুনরাবৃত্ত</string>
+    <string name="stop_timer" translatable="false">টাইমার বন্ধ করুন</string>
+    <string name="add_lead" translatable="false">লিড যোগ করুন</string>
+    <string name="add_reminder" translatable="false">অনুস্মারক যোগ করুন</string>
+    <string name="add_notes" translatable="false">নোট যোগ করুন</string>
+    <string name="field_required" translatable="false">ঘরটি অবশ্যই পূরণ করতে হবে</string>
+    <string name="contacted_today" translatable="false">আজ যোগাযোগ</string>
+    <string name="first_name" translatable="false">নামের প্রথম অংশ</string>
+    <string name="last_name" translatable="false">নামের শেষাংশ</string>
+    <string name="send_set_password_email" translatable="false">SET পাসওয়ার্ড ইমেল পাঠান</string>
+    <string name="do_not_send_welcome_email" translatable="false">স্বাগত ইমেল পাঠাবেন না</string>
+    <string name="related_to_type" translatable="false">সম্পর্কিত</string>
+    <string name="hourly_rate" translatable="false">প্রতি ঘণ্টার মূল্য</string>
+    <string name="due_date" translatable="false">নির্দিষ্ট তারিখ</string>
+    <string name="helper_source" translatable="false">উত্স নির্বাচন করুন</string>
+    <string name="helper_assigned" translatable="false">একজন কর্মী নিয়োগ করুন</string>
+    <string name="zero" translatable="false">0</string>
+    <string name="search_here" translatable="false">অনুসন্ধান করুন</string>
+    <string name="add_customer" translatable="false">গ্রাহক যোগ করুন</string>
+    <string name="date" translatable="false">তারিখ</string>
+    <string name="start_date_and_end_date" translatable="false">%s - %s</string>
+    <string name="call_duration_with_date" translatable="false">%s %s:%s:%s</string>
+    <string name="add" translatable="false">যোগ করুন</string>
+    <string name="delete" translatable="false">মুছে ফেলা</string>
+    <string name="start_date" translatable="false">শুরুর তারিখ</string>
+    <string name="update" translatable="false">হালনাগাদ</string>
+    <string name="profile" translatable="false">প্রোফাইল</string>
+    <string name="address" translatable="false">ঠিকানা</string>
+    <string name="choose_file" translatable="false">ফাইল পছন্দ কর</string>
+    <string name="channel_name" translatable="false">আমদানি বিজ্ঞপ্তি</string>
+    <string name="channel_description" translatable="false">আপনি যখনই CRM-এ কোনো বিজ্ঞপ্তি পাবেন তখনই এই বিজ্ঞপ্তিটি দেখাবে</string>
+    <string name="welcome_to_perfex_crm" translatable="false">পারফেক্স সিআরএম-এ স্বাগতম</string>
+    <string name="login" translatable="false">প্রবেশ করুন</string>
+    <string name="good" translatable="false">ভাল</string>
+    <string name="morning" translatable="false">সকাল</string>
+    <string name="email" translatable="false">ইমেইল</string>
+    <string name="password" translatable="false">পাসওয়ার্ড</string>
+    <string name="sign_in" translatable="false">সাইন ইন করুন</string>
+    <string name="forgot_password" translatable="false">পাসওয়ার্ড ভুলে গেছেন</string>
+    <string name="settings" translatable="false">সেটিংস</string>
+    <string name="logout" translatable="false">প্রস্থান</string>
+    <string name="notification" translatable="false">বিজ্ঞপ্তি</string>
+    <string name="notifications" translatable="false">বিজ্ঞপ্তি</string>
+    <string name="add_leads" translatable="false">লিড যোগ করুন</string>
+    <string name="total_0" translatable="false">মোট: 0</string>
+    <string name="filtered_0" translatable="false">ফিল্টার করা: 0</string>
+    <string name="total_count" translatable="false">মোট: %d</string>
+    <string name="total_filtered" translatable="false">ফিল্টার করা হয়েছে: %d</string>
+    <string name="dial_call" translatable="false">কল ডায়াল করুন</string>
+    <string name="customer_image" translatable="false">গ্রাহক ইমেজ</string>
+    <string name="edit" translatable="false">সম্পাদনা করুন</string>
+    <string name="back_btn" translatable="false">পেছনে</string>
+    <string name="convert" translatable="false">রূপান্তর করুন</string>
+    <string name="task_title" translatable="false">#%s - %s</string>
+    <string name="name_text" translatable="false">নাম</string>
+    <string name="position_text" translatable="false">অবস্থান</string>
+    <string name="email_address" translatable="false">"ইমেইল</string>
+    <string name="website_text" translatable="false">ওয়েবসাইট</string>
+    <string name="phone_text" translatable="false">ফোন নম্বর</string>
+    <string name="lead_value_text" translatable="false">LeadValue</string>
+    <string name="company_text" translatable="false">প্রতিষ্ঠান</string>
+    <string name="address_text" translatable="false">ঠিকানা</string>
+    <string name="city_text" translatable="false">শহর</string>
+    <string name="state_text" translatable="false">রাষ্ট্র</string>
+    <string name="country_text" translatable="false">দেশ</string>
+    <string name="zip_code_text" translatable="false">জিপ কোড</string>
+    <string name="description_text" translatable="false">বর্ণনা</string>
+    <string name="general_information" translatable="false">সাধারণ জ্ঞাতব্য</string>
+    <string name="status_text" translatable="false">স্ট্যাটাস</string>
+    <string name="source_text" translatable="false">সূত্র</string>
+    <string name="default_language_text" translatable="false">নির্ধারিত ভাষা</string>
+    <string name="assigned" translatable="false">বরাদ্দ করা হয়েছে</string>
+    <string name="created" translatable="false">তৈরি হয়েছে</string>
+    <string name="last_contact" translatable="false">শেষ যোগাযোগ</string>
+    <string name="public_text" translatable="false">পাবলিক</string>
+    <string name="lead_information" translatable="false">সীসা তথ্য</string>
+    <string name="yes" translatable="false">হ্যাঁ</string>
+    <string name="no" translatable="false">না</string>
+    <string name="add_task" translatable="false">টাস্ক যোগ করুন</string>
+    <string name="please_select_priority" translatable="false">অনুগ্রহ করে অগ্রাধিকার নির্বাচন করুন</string>
+    <string name="subject" translatable="false">বিষয় লিখুন দয়া করে</string>
+    <string name="repeat_every" translatable="false">প্রতি পুনরাবৃত্তি</string>
+    <string name="billable" translatable="false">বিলযোগ্য</string>
+    <string name="not_billable" translatable="false">বিলযোগ্য নয়</string>
+    <string name="total_cycles" translatable="false">অসীমের জন্য মোট চক্র(0)</string>
+    <string name="repeat_every_custom_count" translatable="false">কাউন্ট লিখুন</string>
+    <string name="description" translatable="false">বিবরণ লিখুন দয়া করে</string>
+    <string name="date_time_string" translatable="false">%s-%s-%s</string>
+    <string name="lead_touched" translatable="false">আমি এই লিডের সাথে যোগাযোগ করেছি</string>
+    <string name="select_date" translatable="false">তারিখ নির্বাচন করুন</string>
+    <string name="save" translatable="false">সংরক্ষণ</string>
+    <string name="close" translatable="false">বন্ধ</string>
+    <string name="data_with_title" translatable="false">%s: %s</string>
+    <string name="send_email_for_reminder" translatable="false">অনুস্মারক জন্য ইমেল পাঠান</string>
+    <string name="notified" translatable="false">বিজ্ঞপ্তি: %s</string>
+    <string name="set_date" translatable="false">তারিখ নির্বাচন করুন</string>
+    <string name="add_log" translatable="false">লগ যোগ করুন</string>
+    <string name="convert_to_customer" translatable="false">গ্রাহকে রূপান্তর করুন</string>
+    <string name="position" translatable="false">অবস্থান</string>
+    <string name="company" translatable="false">কোমপানির নাম</string>
+    <string name="phone" translatable="false">ফোন নম্বর</string>
+    <string name="website" translatable="false">ওয়েবসাইট</string>
+    <string name="city" translatable="false">শহর</string>
+    <string name="state" translatable="false">রাষ্ট্র</string>
+    <string name="helper_country" translatable="false">দেশ নির্বাচন করুন</string>
+    <string name="zip_code" translatable="false">জিপ কোড</string>
+    <string name="helper_status" translatable="false">স্থিতি নির্বাচন করুন</string>
+    <string name="lead_value" translatable="false">সীসা মান</string>
+    <string name="is_public" translatable="false">পাবলিক হয়</string>
+    <string name="no_internet" translatable="false">ইন্টারনেট উপলব্ধ নেই</string>
+    <string name="customer_details" translatable="false">গ্রাহক বিবরণ</string>
+    <string name="vat_number" translatable="false">ভ্যাট নম্বর</string>
+    <string name="billing_address" translatable="false">বিলিং ঠিকানা</string>
+    <string name="sameAsCustomerInfo" translatable="false">গ্রাহকের কাছ থেকে কপি</string>
+    <string name="street" translatable="false">রাস্তা</string>
+    <string name="shipping_address" translatable="false">পাঠানো</string>
+    <string name="sameAsBillingAddress" translatable="false">বিলিং তথ্য থেকে কপি</string>
+    <string name="save_and_create_contact" translatable="false">সংরক্ষণ করুন এবং যোগাযোগ তৈরি করুন</string>
+    <string name="select_groups" translatable="false">গ্রুপ নির্বাচন করুন</string>
+    <string name="groups" translatable="false">গোষ্ঠী</string>
+    <string name="currency" translatable="false">মুদ্রা</string>
+    <string name="billing" translatable="false">বিলিং</string>
+    <string name="shipping" translatable="false">পাঠানো</string>
+    <string name="add_contact" translatable="false">পরিচিতি যোগ করুন</string>
+    <string name="primary_contact" translatable="false">প্রাথমিক যোগাযোগ</string>
+    <string name="do_not_set_welcome_email" translatable="false">স্বাগত ইমেল পাঠাবেন না</string>
+    <string name="permissions" translatable="false">অনুমতি</string>
+    <string name="email_notifications" translatable="false">ইমেল বিজ্ঞপ্তি</string>
+    <string name="estimate" translatable="false">অনুমান</string>
+    <string name="credit_note" translatable="false">ক্রেডিট নোট</string>
+    <string name="tickets" translatable="false">টিকিট</string>
+    <string name="contract" translatable="false">চুক্তি</string>
+    <string name="finished" translatable="false">সমাপ্ত</string>
+    <string name="not_finished" translatable="false">সম্পুন্ন না</string>
+    <string name="add_support" translatable="false">সমর্থন যোগ করুন</string>
+    <string name="view_public_form" translatable="false">পাবলিক ফর্ম দেখুন</string>
+    <string name="not_available" translatable="false">N/A</string>
+    <string name="status_open" translatable="false">খোলা</string>
+    <string name="status_in_progress" translatable="false">চলমান</string>
+    <string name="status_answered" translatable="false">উত্তর দিয়েছেন</string>
+    <string name="status_on_hold" translatable="false">স্হগিত</string>
+    <string name="closed" translatable="false">বন্ধ</string>
+    <string name="add_ticket" translatable="false">টিকিট যোগ করুন</string>
+    <string name="helper_contact" translatable="false">যোগাযোগ নির্বাচন করুন</string>
+    <string name="name" translatable="false">নাম</string>
+    <string name="please_select_department" translatable="false">বিভাগ নির্বাচন করুন</string>
+    <string name="cc" translatable="false">CC লিখুন</string>
+    <string name="ticket_body" translatable="false">টিকিট বডি</string>
+    <string name="predefined_replies" translatable="false">পূর্বনির্ধারিত উত্তর</string>
+    <string name="knowledge_base_link" translatable="false">নলেজবেস লিঙ্ক</string>
+    <string name="ticket_without_contact" translatable="false">যোগাযোগ ছাড়া টিকিট</string>
+    <string name="select_service" translatable="false">পরিষেবা নির্বাচন করুন</string>
+    <string name="edit_ticket" translatable="false">টিকিট সম্পাদনা করুন</string>
+    <string name="converted_leads" translatable="false">রূপান্তরিত লিড</string>
+    <string name="add_reply" translatable="false">উত্তর যোগ করুন</string>
+    <string name="reply" translatable="false">উত্তর দিন</string>
+    <string name="tasks_not_finished" translatable="false">কাজ শেষ হয়নি</string>
+    <string name="open_tickets" translatable="false">টিকিট খুলুন</string>
+    <string name="active_customers" translatable="false">সক্রিয় গ্রাহকরা</string>
+    <string name="active_contacts" translatable="false">সক্রিয় পরিচিতি</string>
+    <string name="high_priority_tickets" translatable="false">উচ্চ অগ্রাধিকার টিকিট</string>
+    <string name="low_priority_tickets" translatable="false">কম অগ্রাধিকার টিকিট</string>
+    <string name="mid_priority_tickets" translatable="false">মধ্য অগ্রাধিকার টিকিট</string>
+    <string name="tickets_without_contact" translatable="false">যোগাযোগ ছাড়া টিকিট</string>
+    <string name="inactive_contacts" translatable="false">নিষ্ক্রিয় পরিচিতি</string>
+    <string name="dashboard_stats" translatable="false">%s/%s</string>
+    <string name="mark_as_read" translatable="false">পঠিত হিসেবে চিহ্নিত করুন</string>
+    <string name="sales" translatable="false">বিক্রয়</string>
+    <string name="title_activity_sales" translatable="false">বিক্রয় কার্যকলাপ</string>
+    <string name="home" translatable="false">বাড়ি</string>
+    <string name="tab_items" translatable="false">আইটেম</string>
+    <string name="add_proposals" translatable="false">প্রস্তাব যোগ করুন</string>
+    <string name="tab_discussion" translatable="false">আলোচনা</string>
+    <string name="subtotal" translatable="false">সাবটোটাল</string>
+    <string name="discount" translatable="false">ছাড়</string>
+    <string name="tax" translatable="false">ট্যাক্স</string>
+    <string name="adjustment" translatable="false">সামঞ্জস্য</string>
+    <string name="total" translatable="false">মোট</string>
+    <string name="staff_image" translatable="false">স্টাফ ইমেজ</string>
+    <string name="add_proposal" translatable="false">প্রস্তাব যোগ করুন</string>
+    <string name="status_declined" translatable="false">অস্বীকার করেছে</string>
+    <string name="status_accepted" translatable="false">গৃহীত</string>
+    <string name="status_sent" translatable="false">পাঠানো হয়েছে</string>
+    <string name="status_revised" translatable="false">সংশোধিত</string>
+    <string name="status_draft" translatable="false">খসড়া</string>
+    <string name="open_till" translatable="false">পর্যন্ত খুলুন</string>
+    <string name="allow_comments" translatable="false">মন্তব্য করার অনুমতি দিন</string>
+    <string name="status" translatable="false">স্ট্যাটাস</string>
+    <string name="to" translatable="false">প্রতি</string>
+    <string name="search_leads" translatable="false">অনুসন্ধান লিড</string>
+    <string name="search_customers" translatable="false">গ্রাহকদের অনুসন্ধান করুন</string>
+    <string name="qty" translatable="false">পরিমাণ</string>
+    <string name="hours" translatable="false">ঘন্টার</string>
+    <string name="qty_by_hours" translatable="false">পরিমাণ/ঘণ্টা</string>
+    <string name="show_quantity_as" translatable="false">হিসাবে পরিমাণ দেখান</string>
+    <string name="item" translatable="false">আইটেম</string>
+    <string name="long_description" translatable="false">দীর্ঘ বিবরণ</string>
+    <string name="rate" translatable="false">হার</string>
+    <string name="remove" translatable="false">অপসারণ</string>
+    <string name="Sub_total_0" translatable="false">উপটোটা: ০</string>
+    <string name="select_taxes" translatable="false">ট্যাক্স নির্বাচন করুন</string>
+    <string name="select_language" translatable="false">ভাষা নির্বাচন কর</string>
+    <string name="english_lang" translatable="false">ইংরেজি</string>
+    <string name="hindi_lang" translatable="false">হিন্দি</string>
+    <string name="bengali_lang" translatable="false">বাংলা</string>
+    <string name="german_lang" translatable="false">ডয়েচে</string>
+    <string name="portuguese_lang" translatable="false">পর্তুগিজ</string>
+    <string name="russian_lang" translatable="false">রাশিয়ান</string>
+    <string name="discount_type" translatable="false">ডিসকাউন্ট টাইপ</string>
+    <string name="adjustment_amount" translatable="false">সামঞ্জস্য</string>
+    <string name="percentage_symbol">%</string>
+    <string name="my_logged_time">আমার লগ করা সময়</string>
+    <string name="hello_blank_fragment">হ্যালো ফাঁকা টুকরা</string>
+    <string name="checklist_items">চেকলিস্ট আইটেম</string>
+    <string name="followers">অনুসারী</string>
+    <string name="assignees">বরাদ্দকৃতরা</string>
+    <string name="select_assignees">অ্যাসাইনি নির্বাচন করুন</string>
+    <string name="select_followers">অনুসরণকারী নির্বাচন করুন</string>
+    <string name="add_attachments">সংযুক্তি যোগ</string>
+    <string name="add_comment">মন্তব্য যোগ করুন</string>
+    <string name="confirm_deletion">আপনি মুছে ফেলতে চান</string>
+    <string name="add_checklist">চেকলিস্ট যোগ করুন</string>
+    <string name="completed_by">%s দ্বারা সম্পন্ন</string>
+    <string name="assigned_to">%s কে বরাদ্দ করা হয়েছে</string>
+    <string name="comment_added">মন্তব্য যোগ করা হয়েছে</string>
+</resources>

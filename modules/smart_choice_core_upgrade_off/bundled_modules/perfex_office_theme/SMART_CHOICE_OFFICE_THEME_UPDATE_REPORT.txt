@@ -1,0 +1,11 @@
+Smart Choice Office Theme v1.4.2
+
+Changes:
+- Client portal top bar changed to orange gradient based on provided sample image.
+- Client logo made larger, aligned left, with no background/cell/decoration.
+- Logo hover only scales slightly and keeps transparent background.
+- Client portal menu buttons remain white/clean over orange gradient.
+- Client estimate Sent status changed to light purple with white text.
+- Admin side top bar color was not changed in this patch.
+- Version updated to 1.4.2.
+- Migration 142 added.

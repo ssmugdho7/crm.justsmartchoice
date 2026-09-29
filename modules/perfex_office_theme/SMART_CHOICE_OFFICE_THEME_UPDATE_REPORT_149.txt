@@ -1,0 +1,16 @@
+Smart Choice Office Theme v1.4.9
+
+Fixes included:
+- Settings and Health buttons now use direct module pages instead of broken settings group links.
+- Added direct routes for /admin/perfex_office_theme/settings and /admin/perfex_office_theme/health.
+- Removed table resize handles and lock/reset bars.
+- Tables are now compact, clean, and auto-fit with horizontal scroll only when needed.
+- Staff table spacing was adjusted so employee images are not clipped.
+- Admin header logo height increased.
+- Client portal top navigation receives Smart Choice blue/light-blue/orange gradient background.
+- Login remains the right-side navigation item on desktop layouts.
+- Product quantity fields are compact.
+- Login/register/language controls are full-width and aligned.
+- Knowledge Base article/category cards were upgraded with branded, premium styling.
+- CRM success/error/info/warning notices use Smart Choice brand styling.
+- Branding palette enforced: green, dark green, orange, yellow, blue, light blue, white, light gray, dark gray, black.

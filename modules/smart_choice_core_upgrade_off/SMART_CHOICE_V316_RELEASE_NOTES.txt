@@ -1,0 +1,28 @@
+Smart Choice Core Upgrade v3.1.6
+
+This package is a module-upgrade package intended to be uploaded to:
+public_html/crm.justsmartchoice/modules/smart_choice_core_upgrade/
+
+Primary fixes included:
+- Appointly safe activation wrapper to prevent activation 500 caused by install exceptions.
+- Appointly email template PHP syntax repair.
+- Embedded modules added: Smartsource Subcontractors, Sales Commission, Automation Manager, Telegram Chat, PR Chat.
+- Preserved prior embedded modules from v3.1.5.
+- Global Office Theme fixes retained.
+- Dropdown repair for double/triple nested select scrollbars.
+- Staff/customers/support table width and alignment CSS.
+- Generic table checkbox injection for mass action controls.
+- Generic client-side Export and Sample Header fallback where native buttons are missing.
+- Import button opens a CSV file picker and preview notice when a module endpoint is not available.
+- Smart Choice Links star button placed on both sides of top search.
+- Module duplicate quality badge hidden on module list page.
+- Category Menu retained and expanded with default categories.
+- Smart Choice Field Connector visible labels cleaned by language/global fallback.
+- Staff profile extra fields added: Employee ID, Server ID, Server Login, Server Password, SSN Number, Date Of Birth, Training Level, Staff Type, Department Type.
+- AI Voice Agent settings added for Twilio/OpenAI/Appointly/Lead workflows.
+- Telegram settings added for bot token, webhook, default chat/channel, and notification categories.
+- How To Use button added to module pages.
+- PHP 8.5 syntax checks passed for core upgrade files and the repaired Appointly helper.
+
+Research note:
+The AI voice-agent design follows current Twilio Voice Media Streams + OpenAI Realtime patterns: Twilio receives the call, streams audio to a websocket bridge, the OpenAI agent handles real-time conversation and tool calls, and the CRM endpoints create leads, appointments, calendar entries, and notifications.

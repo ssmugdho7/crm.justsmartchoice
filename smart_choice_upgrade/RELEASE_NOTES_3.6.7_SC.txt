@@ -1,0 +1,9 @@
+Smart Choice CRM Core 3.6.7 SC
+- Preserves all 3.6.6 repairs.
+- Adds Florida Eastern time to clock popup.
+- Restores AI provider/API settings and recovers existing keys from legacy database option names without overwriting a current key.
+- Changes invoice total label to Down Payment Total to Pay when payment percentage is below 100%.
+- Redesigns client knowledge-base category index for desktop, tablet and mobile.
+- Hides duplicate Setup/menu search inputs while retaining the primary search field.
+- Replaces Favorites click handler to prevent duplicate click/flash behavior.
+- Adds unique sequential migration 367.

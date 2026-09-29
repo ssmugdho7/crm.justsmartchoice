@@ -1,0 +1,2 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<p><a href="<?= admin_url('smart_choice_core_upgrade/error_report'); ?>" class="btn btn-default btn-sm"><i class="fa fa-bug"></i> Open System Error Report</a> <a href="<?= admin_url('smart_choice_core_upgrade/file_inventory'); ?>" class="btn btn-default btn-sm"><i class="fa fa-folder-tree"></i> Open CRM File Inventory</a></p>

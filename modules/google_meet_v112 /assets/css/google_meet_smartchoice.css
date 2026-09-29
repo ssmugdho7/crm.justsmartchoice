@@ -1,0 +1,66 @@
+
+.google-meet-header{background: var(--sc-green, #169179);color:#fff;padding:22px 26px;border-radius:20px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 16px 40px rgba(15,23,42,.18);margin-bottom:20px}
+.google-meet-header h1{margin:0;font-weight:800;color:#fff}
+.google-meet-card{border-radius:18px!important;border:1px solid rgba(249,115,22,.18)!important;box-shadow:0 12px 32px rgba(15,23,42,.10)!important;overflow:hidden}
+.google-meet-card .panel-body{padding:22px}
+.google-meet-settings-heading{background: var(--sc-green, #169179);color:#fff;border-radius:16px;padding:16px 18px;margin-bottom:18px}
+.google-meet-settings-heading h4{color:#fff;font-weight:800;margin-top:0}.google-meet-settings-heading p{color:rgba(255,255,255,.90);margin-bottom:0}
+.gm-comments{display:block}.gm-comment-box{background:#f8f9fb;border-left:4px solid #FAD807;border-radius:10px;padding:14px 16px;margin-bottom:12px;box-shadow:0 4px 14px rgba(0,0,0,.08)}.gm-comment-box small{display:block;color:#777;margin-top:3px}.gm-comment-box p{margin:8px 0 0}.google-meet-header p{color:#555}.google-meet-card .table td{vertical-align:middle}.gm-side-card{background:#fff;border-radius:12px;padding:18px;box-shadow:0 8px 24px rgba(0,0,0,.12);border-top:4px solid #FAD807}
+
+/* Smart Choice Google Meet v1.0.7 compact navigation, reports, and mobile-friendly join controls */
+.gm-nav-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:-6px 0 16px 0;background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:8px;box-shadow:0 5px 18px rgba(15,23,42,.06)}
+.gm-nav-tabs .btn{border-radius:8px!important;padding:5px 9px!important;font-size:12px!important;line-height:1.3!important;white-space:nowrap}
+.google-meet-header{padding:14px 18px!important;border-radius:14px!important;margin-bottom:12px!important}
+.google-meet-header h1{font-size:21px!important;line-height:1.2!important}
+.google-meet-header p{margin:4px 0 0!important;color:rgba(255,255,255,.9)!important;font-size:12px!important}
+.google-meet-card{border-radius:12px!important}.google-meet-card .panel-body{padding:14px!important}
+.gm-table-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px}.gm-table-toolbar .btn{padding:4px 8px!important;font-size:12px!important;border-radius:7px!important}.gm-table-toolbar .gm-table-search{max-width:260px;height:30px;font-size:12px}
+.gm-compact-table{font-size:12px!important}.gm-compact-table>thead>tr>th,.gm-compact-table>tbody>tr>td{padding:6px 7px!important;vertical-align:middle!important}.gm-compact-table .btn-xs{padding:3px 7px!important;font-size:11px!important;border-radius:6px!important}.gm-nowrap{white-space:nowrap}.gm-actions{white-space:nowrap}.gm-meeting-cell{max-width:260px}.gm-meeting-cell strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.gm-meeting-cell small{display:block;max-height:16px;overflow:hidden;color:#64748b}.gm-smalltext{max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.gm-badge{display:inline-block;border-radius:999px;padding:2px 7px;font-size:11px;font-weight:700}.gm-badge-blue{background:#dbeafe;color:#1e40af}.gm-badge-green{background:#dcfce7;color:#166534}.gm-badge-red{background:#fee2e2;color:#991b1b}.gm-stat{display:flex;align-items:center;justify-content:space-between;padding:12px 16px!important}.gm-stat span{font-size:12px;color:#64748b;font-weight:700}.gm-stat strong{font-size:24px;color:#111827}.gm-filter-row .form-group{margin-bottom:8px}.gm-filter-row label{font-size:12px}.gm-checkbox-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 16px}.gm-help h3{font-size:16px;color:#0f766e;border-left:4px solid #f97316;padding-left:8px;margin-top:8px}.gm-help p,.gm-help li{font-size:13px}.gm-side-card{padding:14px!important;border-radius:10px!important}.gm-side-card h4{font-size:15px;margin-top:0}.gm-form-panel .form-group{margin-bottom:10px}.gm-form-panel label{font-size:12px;font-weight:700}.gm-form-panel .bootstrap-select .dropdown-toggle,.gm-form-panel .form-control{min-height:32px!important;font-size:12px!important}.gm-form-panel textarea.form-control{min-height:70px!important}.gm-side-card .btn{padding:6px 9px!important;font-size:12px!important;border-radius:7px!important}
+@media(max-width:768px){.gm-table-toolbar{align-items:stretch}.gm-table-toolbar .gm-table-search{max-width:100%;width:100%}.gm-checkbox-grid{grid-template-columns:1fr}.google-meet-header{display:block}.gm-nav-tabs{overflow-x:auto;flex-wrap:nowrap}.gm-nav-tabs .btn{flex:0 0 auto}.gm-meeting-cell{max-width:160px}}
+
+/* Smart Choice Google Meet v1.0.9 polish */
+.google-meet-wrap.smart-choice-normalized-module .table-responsive{overflow-x:hidden!important;max-width:100%!important;}
+.google-meet-wrap.smart-choice-normalized-module table{table-layout:fixed!important;width:100%!important;max-width:100%!important;}
+.google-meet-wrap.smart-choice-normalized-module th,.google-meet-wrap.smart-choice-normalized-module td{vertical-align:middle!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}
+.google-meet-wrap .google-meet-header{background:#169179!important;color:#fff!important;}
+.google-meet-wrap .google-meet-header .btn{background:#fff!important;color:#111827!important;border-color:#d1d5db!important;}
+.google-meet-wrap .gm-table-toolbar{background:#f8fafc;border:1px solid #d1d5db;border-radius:10px;padding:8px;}
+.google-meet-wrap .gm-table-toolbar .btn,.google-meet-wrap .btn-sm,.google-meet-wrap .btn-xs{height:28px!important;min-height:28px!important;padding:4px 9px!important;font-size:12px!important;border-radius:6px!important;line-height:18px!important;}
+.google-meet-wrap .gm-meeting-cell strong{display:block!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}
+.google-meet-wrap .gm-meeting-cell small{display:block!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;color:#64748b!important;}
+.google-meet-wrap .gm-actions{white-space:nowrap!important;}
+.google-meet-wrap .gm-badge{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-width:62px!important;height:22px!important;border-radius:999px!important;background-image:none!important;}
+.google-meet-wrap .gm-badge-blue{background:#dbeafe!important;color:#1e40af!important;}
+.google-meet-wrap .gm-badge-green{background:#dcfce7!important;color:#166534!important;}
+.google-meet-wrap .gm-badge-red{background:#fee2e2!important;color:#991b1b!important;}
+.google-meet-wrap .gm-help h3{margin-top:18px!important;}
+.google-meet-wrap .gm-card{min-height:72px!important;}
+@media(max-width:768px){.google-meet-wrap.smart-choice-normalized-module table{table-layout:auto!important}.google-meet-wrap.smart-choice-normalized-module .table-responsive{overflow-x:auto!important}.google-meet-wrap .google-meet-header{display:block!important}.google-meet-wrap .google-meet-header .btn{margin-top:8px!important}}
+
+/* Smart Choice Google Meet v1.1.1 final polish */
+.google-meet-wrap .gm-stat,
+.google-meet-wrap .panel_s.google-meet-card .gm-stat{
+  border-radius:14px!important;
+  border:1px solid #d1d5db!important;
+  background:#ffffff!important;
+  box-shadow:0 10px 24px rgba(17,24,39,.12)!important;
+}
+.google-meet-wrap .gm-health-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+.google-meet-wrap .gm-health-box{background:#fff;border:1px solid #d1d5db;border-radius:14px;padding:14px;box-shadow:0 8px 20px rgba(17,24,39,.08)}
+.google-meet-wrap .gm-health-top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:8px}
+.google-meet-wrap .gm-health-top strong{font-size:13px;color:#111827;white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
+.google-meet-wrap .gm-health-box p{font-size:12px;color:#4b5563;margin:0;line-height:1.45;white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
+.google-meet-wrap .gm-health-filter{max-width:170px;height:30px;font-size:12px}
+.google-meet-wrap .gm-help-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.google-meet-wrap .gm-help-card{background:#fff;border:1px solid #d1d5db;border-radius:16px;padding:16px;box-shadow:0 10px 25px rgba(17,24,39,.08)}
+.google-meet-wrap .gm-help-card h3{display:flex;align-items:center;gap:8px;border:0!important;margin:0 0 8px!important;padding:0!important;color:#0e6f5b!important;font-size:15px!important}
+.google-meet-wrap .gm-help-card h3 span{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:999px;background:#169179;color:#fff;font-size:12px}
+.google-meet-wrap .gm-help-card p{font-size:13px;line-height:1.5;color:#4b5563;margin:0;white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
+.google-meet-wrap .gm-meet-modal .modal-content{border-radius:14px;overflow:hidden}
+.google-meet-wrap .gm-meet-modal .modal-header{background:#169179;color:#fff}.google-meet-wrap .gm-meet-modal .modal-title{color:#fff}
+.google-meet-wrap .gm-modal-link-box{display:flex;gap:12px;align-items:center;background:#eef7f4;border:1px solid #d1d5db;border-radius:12px;padding:14px;margin:12px 0}
+.google-meet-wrap .gm-modal-link-box>i{font-size:30px;color:#169179}.google-meet-wrap .gm-modal-link-box a{display:block;color:#0e6f5b;font-weight:700;word-break:break-all}.google-meet-wrap .gm-modal-meta{font-size:12px;color:#4b5563}
+.google-meet-wrap .gm-hero{background:#fff!important;border:1px solid #d1d5db!important;border-radius:14px!important;padding:14px 18px!important;margin-bottom:12px!important;box-shadow:0 8px 20px rgba(17,24,39,.08)!important}
+.google-meet-wrap .gm-hero h1{margin:0!important;font-size:22px!important;color:#111827!important}.google-meet-wrap .gm-hero p{font-size:12px!important;color:#4b5563!important;margin:5px 0 0!important}
+@media(max-width:768px){.google-meet-wrap .gm-health-grid,.google-meet-wrap .gm-help-grid{grid-template-columns:1fr}.google-meet-wrap .gm-health-top{display:block}.google-meet-wrap .gm-health-top .gm-badge{margin-top:8px}}
+.gm-meet-modal .modal-content{border-radius:14px!important;overflow:hidden!important}.gm-meet-modal .modal-header{background:#169179!important;color:#fff!important}.gm-meet-modal .modal-title{color:#fff!important}.gm-modal-link-box{display:flex;gap:12px;align-items:center;background:#eef7f4;border:1px solid #d1d5db;border-radius:12px;padding:14px;margin:12px 0}.gm-modal-link-box>i{font-size:30px;color:#169179}.gm-modal-link-box a{display:block;color:#0e6f5b;font-weight:700;word-break:break-all}.gm-modal-meta{font-size:12px;color:#4b5563}

@@ -1,0 +1,22 @@
+{
+    "name": "ankabit/tour-guide",
+    "description": "Tour gudie core",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "TourGuide\\": "src/"
+        },
+        "files": [
+            "src/common.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "Ankabit Technologies",
+            "email": "hammed@ankabit.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.2"
+    }
+}

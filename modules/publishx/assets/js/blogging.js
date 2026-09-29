@@ -1,0 +1,1 @@
+document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.publishx-scope input[name=post_title]').forEach(function(i){i.addEventListener('blur',function(){var s=document.querySelector('#post_slug');if(s&&!s.value)s.value=i.value.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');});});});

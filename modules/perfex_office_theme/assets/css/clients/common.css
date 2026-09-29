@@ -1,0 +1,264 @@
+body .navbar a.navbar-brand {
+    padding: 23px 0 5px 0;
+}
+
+.btn-primary, .available_time_info.hwp {
+    background-color: #5d78ff;
+}
+
+body #wrapper .btn-primary,
+body .btn-pfxcbsubmit {
+    background-color: #5d78ff;
+}
+
+body .btn-pfxcbsubmit:focus,
+body .btn-pfxcbsubmit:active,
+body .btn-pfxcbsubmit:hover,
+body #wrapper .btn-primary.active.focus,
+body #wrapper .btn-primary.active:focus,
+body #wrapper .btn-primary.active:hover,
+body #wrapper .btn-primary:active.focus,
+body #wrapper .btn-primary:active:focus,
+body #wrapper .btn-primary:active:hover,
+body #wrapper .open > .dropdown-toggle.btn-primary.focus,
+body #wrapper .open > .dropdown-toggle.btn-primary:focus,
+body #wrapper .open > .dropdown-toggle.btn-primary:hover {
+    color: #fff;
+    background-color: #4c66e7;
+}
+
+body:not(.customers_login) .navbar-default .navbar-nav > li.customers-nav-item-profile > a {
+    background: transparent;
+}
+
+body:not(.customers_login) .navbar-default .navbar-nav > li.customers-nav-item-profile > a:active,
+body:not(.customers_login) .navbar-default .navbar-nav > li.customers-nav-item-profile > a:focus,
+body:not(.customers_login) .navbar-default .navbar-nav > li.customers-nav-item-profile > a:hover {
+    background: transparent !important;
+}
+
+/* Smart Choice v1.3.9 Common Client Overrides */
+body.customers_login nav{background:linear-gradient(135deg,#0057b8,#169179)!important;}
+.btn-primary,.available_time_info.hwp,body #wrapper .btn-primary,body .btn-pfxcbsubmit{background-color:#0057b8!important;border-color:#0057b8!important;}
+body .btn-pfxcbsubmit:hover,body #wrapper .btn-primary:hover{background-color:#169179!important;border-color:#169179!important;}
+body .navbar a.navbar-brand,body .navbar a.navbar-brand:hover,body .navbar a.navbar-brand:focus{background:transparent!important;box-shadow:none!important;filter:none!important;}
+
+
+/* Smart Choice Client Unified v1.4.0 */
+:root{--sc-website-green:#169179;--sc-website-blue:#0057b8;--sc-website-navy:#123b63;--sc-website-light-blue:#eaf4ff;}
+body.customers .navbar,body.customers .navbar-default,body.customers .customers-nav,body.customers_login nav{background:linear-gradient(135deg,var(--sc-website-blue),var(--sc-website-green))!important;box-shadow:0 8px 24px rgba(0,87,184,.12)!important;}
+body.customers .navbar a.navbar-brand,body.customers .navbar a.navbar-brand:hover,body.customers .navbar a.navbar-brand:focus,body.customers_login .navbar a.navbar-brand,body.customers_login .navbar a.navbar-brand:hover,body.customers_login .navbar a.navbar-brand:focus{background:transparent!important;box-shadow:none!important;filter:none!important;}
+body.customers .navbar a:hover,body.customers .navbar a:focus,body.customers .navbar-nav>li>a:hover,body.customers .navbar-nav>li>a:focus{background:rgba(234,244,255,.92)!important;color:var(--sc-website-blue)!important;border-radius:10px!important;box-shadow:0 8px 18px rgba(0,87,184,.10)!important;}
+body.customers .navbar a i,body.customers .customers-nav a i{color:var(--sc-website-blue)!important;}
+body.customers .nav-tabs>li>a,body.customers .list-status a,body.customers .item-group-tabs a{border:none!important;background:transparent!important;box-shadow:none!important;border-radius:0!important;}
+body.customers .nav-tabs>li.active>a,body.customers .nav-tabs>li>a:hover,body.customers .list-status a.active{color:var(--sc-website-blue)!important;border-bottom:2px solid var(--sc-website-blue)!important;background:transparent!important;}
+body.customers .btn-primary,body.customers .btn-info,body .btn-pfxcbsubmit{background:linear-gradient(135deg,var(--sc-website-blue),var(--sc-website-green))!important;border-color:var(--sc-website-blue)!important;color:#fff!important;box-shadow:0 8px 18px rgba(0,87,184,.14)!important;}
+@media(max-width:768px){body.customers .navbar-nav>li>a{display:block!important;text-align:left!important;margin:4px 0!important;}}
+
+
+/* Smart Choice Client Common Polish v1.4.1 */
+:root{--sc-website-green:#169179;--sc-website-blue:#0057b8;--sc-website-navy:#123b63;--sc-website-light-blue:#eaf4ff;--sc-website-orange:#f47c20;}
+body.customers .navbar a.navbar-brand,
+body.customers .navbar a.navbar-brand:hover,
+body.customers .navbar a.navbar-brand:focus,
+body.customers_login .navbar a.navbar-brand,
+body.customers_login .navbar a.navbar-brand:hover,
+body.customers_login .navbar a.navbar-brand:focus,
+body.customers .navbar-brand,
+body.customers_login .navbar-brand{background:transparent!important;box-shadow:none!important;border:0!important;outline:0!important;padding-left:0!important;padding-right:0!important;filter:none!important;}
+body.customers .navbar-brand img,
+body.customers_login .navbar-brand img{background:transparent!important;box-shadow:none!important;border:0!important;filter:none!important;}
+body.customers .navbar,body.customers .navbar-default,body.customers .customers-nav,body.customers_login nav{background:linear-gradient(135deg,var(--sc-website-blue),var(--sc-website-green))!important;box-shadow:0 8px 24px rgba(0,87,184,.12)!important;}
+body.customers .navbar a:hover,body.customers .navbar a:focus,body.customers .navbar-nav>li>a:hover,body.customers .navbar-nav>li>a:focus{background:rgba(234,244,255,.90)!important;color:var(--sc-website-blue)!important;border-radius:10px!important;box-shadow:0 8px 18px rgba(0,87,184,.10)!important;}
+body.customers .nav-tabs>li>a,body.customers .list-status a,body.customers .item-group-tabs a,body.customers .shop-tabs a,body.customers .online-shopping-tabs a{border:none!important;background:transparent!important;box-shadow:none!important;border-radius:0!important;}
+body.customers .nav-tabs>li.active>a,body.customers .nav-tabs>li>a:hover,body.customers .list-status a.active{color:var(--sc-website-blue)!important;border-bottom:2px solid var(--sc-website-blue)!important;background:transparent!important;}
+body.customers .btn:not(.btn-success):not(.btn-danger):not(.btn-warning):not([href*="register"]):not([href*="login"]),
+body.customers .btn-primary,body.customers .btn-info{background:linear-gradient(135deg,var(--sc-website-blue),var(--sc-website-green))!important;border-color:var(--sc-website-blue)!important;color:#fff!important;box-shadow:0 8px 18px rgba(0,87,184,.12)!important;}
+body.customers .btn[href*="register"],body.customers .btn[href*="login"],body.customers_login .btn-primary{box-shadow:0 8px 18px rgba(0,87,184,.16)!important;}
+@media(max-width:768px){body.customers .navbar-nav>li>a{display:block!important;text-align:left!important;margin:4px 0!important;}body.customers .navbar-collapse{max-height:none!important;}}
+
+
+/* Smart Choice Client Portal Header v1.4.2 - orange gradient, left logo, clean hover */
+:root{
+  --sc-client-orange-dark:#f25a4c;
+  --sc-client-orange-mid:#ef7f2d;
+  --sc-client-orange-light:#f0a20f;
+  --sc-website-navy:#123b63;
+  --sc-website-blue:#0057b8;
+  --sc-website-light-blue:#eaf4ff;
+  --sc-estimate-sent-purple:#b98af5;
+}
+
+body.customers .navbar,
+body.customers .navbar-default,
+body.customers .customers-nav,
+body.customers_login nav{
+  background:linear-gradient(90deg,var(--sc-client-orange-dark) 0%, var(--sc-client-orange-mid) 52%, var(--sc-client-orange-light) 100%)!important;
+  border:0!important;
+  box-shadow:0 8px 22px rgba(242,90,76,.18)!important;
+}
+
+body.customers .navbar-header,
+body.customers_login .navbar-header{
+  display:flex!important;
+  align-items:center!important;
+  min-height:64px!important;
+}
+
+body.customers .navbar-brand,
+body.customers .navbar a.navbar-brand,
+body.customers_login .navbar-brand,
+body.customers_login .navbar a.navbar-brand{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  float:left!important;
+  min-height:64px!important;
+  height:auto!important;
+  padding:6px 18px 6px 0!important;
+  margin-left:0!important;
+  margin-right:16px!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  outline:0!important;
+  filter:none!important;
+  text-decoration:none!important;
+}
+
+body.customers .navbar-brand img,
+body.customers .navbar a.navbar-brand img,
+body.customers_login .navbar-brand img,
+body.customers_login .navbar a.navbar-brand img{
+  display:block!important;
+  max-width:178px!important;
+  max-height:54px!important;
+  width:auto!important;
+  height:auto!important;
+  object-fit:contain!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:0 6px 14px rgba(18,59,99,.16)!important;
+  border-radius:0!important;
+  padding:0!important;
+  filter:none!important;
+  transition:transform .18s ease, box-shadow .18s ease!important;
+}
+
+body.customers .navbar-brand:hover,
+body.customers .navbar a.navbar-brand:hover,
+body.customers .navbar-brand:focus,
+body.customers .navbar a.navbar-brand:focus,
+body.customers_login .navbar-brand:hover,
+body.customers_login .navbar a.navbar-brand:hover,
+body.customers_login .navbar-brand:focus,
+body.customers_login .navbar a.navbar-brand:focus{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  outline:0!important;
+}
+
+body.customers .navbar-brand:hover img,
+body.customers .navbar a.navbar-brand:hover img,
+body.customers_login .navbar-brand:hover img,
+body.customers_login .navbar a.navbar-brand:hover img{
+  transform:scale(1.035)!important;
+  box-shadow:0 8px 18px rgba(18,59,99,.20)!important;
+  background:transparent!important;
+}
+
+body.customers .navbar-default .navbar-nav>li>a,
+body.customers .navbar a:not(.navbar-brand),
+body.customers .customers-nav a:not(.navbar-brand){
+  color:#fff!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  border-radius:0!important;
+  font-weight:700!important;
+  text-shadow:0 1px 8px rgba(0,0,0,.12)!important;
+}
+
+body.customers .navbar-default .navbar-nav>li>a:hover,
+body.customers .navbar-default .navbar-nav>li>a:focus,
+body.customers .navbar-default .navbar-nav>.open>a,
+body.customers .navbar-default .navbar-nav>.open>a:hover,
+body.customers .navbar-default .navbar-nav>.active>a,
+body.customers .navbar a:not(.navbar-brand):hover,
+body.customers .navbar a:not(.navbar-brand):focus,
+body.customers .customers-nav a:not(.navbar-brand):hover,
+body.customers .customers-nav a:not(.navbar-brand):focus{
+  color:var(--sc-website-light-blue)!important;
+  background:rgba(255,255,255,.12)!important;
+  border-radius:10px!important;
+  box-shadow:0 6px 14px rgba(18,59,99,.10)!important;
+}
+
+body.customers .navbar-default .navbar-nav>li>a i,
+body.customers .navbar a:not(.navbar-brand) i,
+body.customers .customers-nav a:not(.navbar-brand) i{
+  color:#fff!important;
+}
+
+/* Client estimate Sent status: light purple background with white letters */
+body.customers .estimate-status-2,
+body.customers span.estimate-status-2,
+body.customers .label.estimate-status-2,
+body.customers .label-status.estimate-status-2,
+body.customers span[class*="estimate-status-2"]{
+  background:var(--sc-estimate-sent-purple)!important;
+  color:#ffffff!important;
+  border:1px solid rgba(185,138,245,.55)!important;
+  border-radius:8px!important;
+  box-shadow:0 5px 12px rgba(185,138,245,.24)!important;
+  font-weight:700!important;
+}
+
+@media(max-width:991px){
+  body.customers .navbar-header,
+  body.customers_login .navbar-header{
+    width:100%!important;
+    min-height:68px!important;
+  }
+  body.customers .navbar-brand,
+  body.customers .navbar a.navbar-brand,
+  body.customers_login .navbar-brand,
+  body.customers_login .navbar a.navbar-brand{
+    min-height:68px!important;
+    margin-right:10px!important;
+  }
+  body.customers .navbar-brand img,
+  body.customers .navbar a.navbar-brand img,
+  body.customers_login .navbar-brand img,
+  body.customers_login .navbar a.navbar-brand img{
+    max-width:160px!important;
+    max-height:52px!important;
+  }
+}
+
+@media(max-width:768px){
+  body.customers .navbar-header,
+  body.customers_login .navbar-header{
+    justify-content:space-between!important;
+  }
+  body.customers .navbar-brand,
+  body.customers .navbar a.navbar-brand,
+  body.customers_login .navbar-brand,
+  body.customers_login .navbar a.navbar-brand{
+    float:none!important;
+    padding-left:0!important;
+    padding-right:10px!important;
+  }
+  body.customers .navbar-brand img,
+  body.customers .navbar a.navbar-brand img,
+  body.customers_login .navbar-brand img,
+  body.customers_login .navbar a.navbar-brand img{
+    max-width:150px!important;
+    max-height:50px!important;
+  }
+  body.customers .navbar-nav>li>a{
+    background:transparent!important;
+    color:#fff!important;
+  }
+}

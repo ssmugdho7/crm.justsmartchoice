@@ -1,0 +1,11 @@
+Recruitment Management 1.8.10 - Digital Signature Fix
+
+Scope: public Recruitment Application Form digital signature only.
+
+Changed:
+- views/forms/smart_choice_job_application.php
+- assets/js/smart_choice_signature_pad.js (new)
+- assets/css/smart_choice_job_application.css (signature canvas interaction rules only)
+- recruitment.php (version/revision bump so the replacement is recognized and browser cache is invalidated)
+
+The signature pad now supports Pointer Events (mouse/touch/pen) with legacy mouse/touch fallback, captures PNG data into the existing signature field, preserves Clear Signature and form reset, and leaves controller/database handling unchanged.

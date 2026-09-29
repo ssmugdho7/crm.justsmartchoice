@@ -1,0 +1,23 @@
+Smart Choice Manage Custom Statuses v1.0.7
+
+Changes included:
+- Added visibility control for project statuses and task statuses.
+- Each status can now be set to Admin Only, Client Only, or Whole CRM.
+- Client portal status lists now only show statuses marked Client Only or Whole CRM.
+- Admin area status lists now show statuses marked Admin Only or Whole CRM.
+- Existing custom statuses default to Admin Only to reduce long customer portal status lists.
+- Existing default CRM statuses default to Whole CRM except internal/completed-style statuses that are set to Admin Only in fresh installs.
+- Added Visibility column to the status table.
+- Added Visibility field to the add/edit status modal.
+- Added top navigation tabs for Project Statuses and Task Statuses.
+- Added menu icons and cleaned menu labels.
+- Added View Own permission registration while preserving View Global, Create, Edit, and Delete.
+- Updated author to Smart Choice Contractors USA / Harold Cabrera.
+- Upgraded version to 1.0.7.
+- Added migration 107_version_107.php.
+- Added missing base migration 100_version_100.php to keep the migration sequence complete.
+- Preserved existing records and added the new column safely.
+- PHP 8.5 syntax checked.
+
+Upload location:
+public_html/crm.justsmartchoice/modules/si_custom_status/

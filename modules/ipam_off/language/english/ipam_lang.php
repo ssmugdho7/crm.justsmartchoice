@@ -1,0 +1,20 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed');
+
+$lang['ipam'] = 'Ipam';
+$lang['ipam_menu'] = 'Ipam';
+$lang['ipam_settings'] = 'Ipam Settings';
+$lang['ipam_health'] = 'Health';
+$lang['ipam_help'] = 'Help';
+$lang['settings'] = 'Settings';
+$lang['health'] = 'Health';
+$lang['help'] = 'Help';
+$lang['create'] = 'Create';
+$lang['edit'] = 'Edit';
+$lang['delete'] = 'Delete';
+$lang['view'] = 'View';
+$lang['view_own'] = 'View Own';
+$lang['view_global'] = 'View Global';
+$lang['import'] = 'Import';
+$lang['export'] = 'Export';
+$lang['sample_header'] = 'Sample Header';
+$lang['mass_delete'] = 'Mass Delete';

@@ -1,0 +1,14 @@
+SMART CHOICE PRCHAT 2.2.8 - FINAL VOICE/MAXIMIZE REPAIR
+
+Repair scope only:
+- Voice-to-text now accumulates finalized speech instead of replacing earlier dictated text after pauses.
+- Dictation remains in the message composer until the user sends or manually clears it.
+- Employee floating chat windows now include a maximize button that opens the same employee conversation in the full PRChat dashboard.
+- Existing phone, video, minimize, close, chat, AI, uploads, settings, permissions, API keys, and data are preserved.
+- Migration 228 is non-destructive and updates module build/version metadata only.
+
+Migration loader repair:
+- Migration 228 no longer executes the complete install.php during an upgrade.
+- The 2.2.8 migration now performs version metadata updates only, matching the
+  JavaScript/UI-only scope of this release.
+- No tables, messages, settings, credentials, uploads, or user data are altered.

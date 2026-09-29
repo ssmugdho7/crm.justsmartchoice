@@ -1,0 +1,21 @@
+<?php
+$lang["pt_module_title"] = "Modelos de Projeto";
+$lang["pt_project_template"] = "Modelo de Projeto";
+$lang["pt_project_template_lower"] = "modelo de projeto";
+$lang["pt_edit_project_template"] = "Editar Modelo de Projeto";
+$lang["pt_delete_project_template"] = "Excluir Modelo de Projeto";
+$lang["pt_copy_project_template"] = "Copiar Modelo de Projeto";
+$lang["pt_project_template_description"] = "Descrição";
+$lang["pt_new_project_template"] = "Novo Modelo de Projeto";
+$lang["failed_to_copy_project_template"] = "Falha ao copiar o modelo de projeto";
+$lang["pt_project_template_copied_successfully"] = "Modelo de projeto copiado com sucesso";
+$lang["pt_project_from_template"] = "projeto do modelo";
+$lang["pt_new_project_from_template"] = "Criar Projeto do Modelo";
+$lang["pt_select_project_template"] = "Selecionar Modelo de Projeto";
+$lang["pt_project_template_not_found"] = "Modelo de projeto não encontrado";
+$lang["pt_duration_text"] = "Duração do Prazo (Em Dias)";
+$lang["pt_milestone_start_date"] = "Dias para começar após a data de início do projeto";
+$lang["pt_milestone_due_date"] = "Prazo em dias";
+$lang["permission_create_milestones"] = "Criar Marcos";
+$lang["permission_edit_milestones"] = "Editar Marcos";
+$lang["permission_delete_milestones"] = "Excluir Marcos";

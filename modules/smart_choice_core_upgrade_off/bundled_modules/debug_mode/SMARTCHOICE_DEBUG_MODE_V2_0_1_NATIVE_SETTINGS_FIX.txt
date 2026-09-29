@@ -1,0 +1,10 @@
+Debug Mode Smart Choice Upgrade
+Version: 2.0.1
+Author: Smart Choice Contractors USA / Harold Cabrera
+
+Fixed:
+- Debug Mode settings now appear under native Perfex Setup → Settings.
+- Removed standalone sidebar settings page behavior.
+- /admin/debug_mode/settings redirects to /admin/settings?group=debug_mode.
+- Added migration 201.
+- Keeps PHP 8.5 and Perfex CRM 3.4.1 target compatibility.

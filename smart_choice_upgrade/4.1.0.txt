@@ -1,0 +1,11 @@
+Smart Choice CRM 4.1.0
+
+Targeted repair only:
+- Preserves CRM 4.0.9 invoice editing, pricing and discount behavior.
+- Preserves existing Stripe API keys and native Stripe gateway implementation.
+- Preselects Stripe on customer invoices when Stripe is an allowed online gateway.
+- Top Pay Now launches the Stripe payment submission instead of stopping on an empty payment-mode selection.
+- Protects allowed payment modes from accidental clearing by cached/legacy invoice edit forms.
+- Restores staff controls to mark unpaid invoices as Draft, Open, or Overdue without allowing manual Paid/Partially Paid status forgery.
+- No payment calculation, discount, down-payment, AI, attachment, module, table, or unrelated feature changes.
+- Code-only migration 410; no schema/data modifications.

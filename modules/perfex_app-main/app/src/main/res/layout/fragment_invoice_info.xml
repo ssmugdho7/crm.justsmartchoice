@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".sales.presentation.invoices.presentation.details.tabs.info.InvoiceInfoFragment">
+
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="6">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/statusChip"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="3.6"
+                android:backgroundTint="@color/ForestGreen"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white" />
+
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/edit"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/ic_baseline_edit_24"
+                    android:backgroundTint="@color/themeColorPrimary"
+                    android:contentDescription="@string/add_customer" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/pdf"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/baseline_picture_as_pdf_24"
+                    android:backgroundTint="@color/themeColorPrimary"
+                    android:contentDescription="@string/add_customer" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/send_mail"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/ic_baseline_mail_outline_24"
+                    android:backgroundTint="@color/themeColorPrimary"
+                    android:contentDescription="@string/add_customer" />
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/menu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.6"
+                android:src="@drawable/baseline_menu_24"
+                android:tint="@color/Gray" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/themeColorPrimary" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@android:style/Widget.Holo.ProgressBar.Large"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:visibility="gone" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/invoiceNumber"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/DarkBlue"
+                        android:textStyle="bold" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:text="@string/bill_to" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/companyInformation"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/black" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/billTo"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@id/address"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/black" />
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:gravity="end"
+                            android:text="@string/ship_to" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/shipTo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:gravity="end" />
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/invoiceDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:textColor="@color/black" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/dueDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:textColor="@color/black" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <View
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/GrayCloud" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="4">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:gravity="center"
+                        android:text="@string/item"
+                        android:textStyle="bold"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:gravity="center"
+                        android:text="@string/qty"
+                        android:textStyle="bold"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:gravity="center"
+                        android:text="@string/rate"
+                        android:textStyle="bold"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:gravity="center"
+                        android:text="@string/total"
+                        android:textStyle="bold"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"/>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:padding="10dp"
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="3">
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_weight="1.5"
+                            android:layout_height="0dp" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="@string/subtotal"
+                            android:textStyle="bold"
+                            android:layout_height="wrap_content" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="0dp"
+                            android:id="@+id/subTotalAmount"
+                            android:text="@string/zero"
+                            android:layout_weight="0.5"
+                            android:layout_height="wrap_content" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_margin="10dp"
+                        android:background="@color/GrayCloud" />
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="3">
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_weight="1.5"
+                            android:layout_height="0dp" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="@string/total"
+                            android:textStyle="bold"
+                            android:layout_height="wrap_content" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="0dp"
+                            android:id="@+id/totalAmount"
+                            android:text="@string/zero"
+                            android:layout_weight="0.5"
+                            android:layout_height="wrap_content" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_margin="10dp"
+                        android:background="@color/GrayCloud" />
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="3">
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_weight="1.5"
+                            android:layout_height="0dp" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="@string/total_paid"
+                            android:textStyle="bold"
+                            android:layout_height="wrap_content" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="0dp"
+                            android:id="@+id/totalPaid"
+                            android:text="@string/zero"
+                            android:layout_weight="0.5"
+                            android:layout_height="wrap_content" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_margin="10dp"
+                        android:background="@color/GrayCloud" />
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="3">
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_weight="1.5"
+                            android:layout_height="0dp" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="@string/amount_due"
+                            android:textStyle="bold"
+                            android:layout_height="wrap_content" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="0dp"
+                            android:id="@+id/amountDue"
+                            android:text="@string/zero"
+                            android:layout_weight="0.5"
+                            android:layout_height="wrap_content" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</FrameLayout>

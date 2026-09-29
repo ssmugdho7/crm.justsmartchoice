@@ -1,0 +1,1 @@
+(function(){'use strict';document.addEventListener('DOMContentLoaded',function(){var textareas=document.querySelectorAll('textarea[name="script_text"]');for(var i=0;i<textareas.length;i++){textareas[i].addEventListener('input',function(){var words=this.value.trim().split(/\s+/).filter(Boolean).length;this.setAttribute('title',words+' words');});}});}());

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation for Import Tasks Module</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Archivo&family=Roboto&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #fff;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Archivo', sans-serif;
+        }
+
+        * {
+            font-size: 16px;
+            line-height: 1.5;
+            letter-spacing: 0.02em;
+            box-sizing: border-box;
+        }
+
+        .main--wrapper {
+            margin: 0 auto;
+            width: 100%;
+            max-width: 860px;
+        }
+
+        .normal-link {
+            color: black;
+            text-decoration: none;
+        }
+
+        .header--wrapper {
+            width: 100%;
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+            align-tracks: center;
+            background-color: #fff;
+            border-bottom: 1px solid #cfcfcf;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+            margin: 25px auto;
+            border: #cfcfcf 1px solid;
+        }
+
+        h1 {
+            font-size: 36px;
+            line-height: 1.4;
+            font-weight: 700;
+        }
+
+        h2,
+        h3 {
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: 0.03em;
+            font-weight: 700;
+            margin-top: 40px;
+        }
+
+        li {
+            margin: 15px auto;
+        }
+
+        .m-15-a {
+            margin: 15px auto
+        }
+
+        .m-a {
+            margin-left: auto;
+            margin-right: auto
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .clog {
+            color: #333333;
+            font-size: 15px;
+        }
+
+        .clog strong {
+            color: #333333;
+            font-size: 15px;
+        }
+
+        @media screen and (max-width: 756px) {
+            body {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .header--wrapper {
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header--wrapper">
+        <h1>Import Tasks module for Perfex CRM</h1>
+    </div>
+
+    <main class="main--wrapper">
+        <section>
+            <h2>Table of contents</h2>
+            <ul>
+                <li class="m-15-a"> <a href="#introduction">Introduction </a></li>
+                <li class="m-15-a"> <a href="#instalation">Instalation </a></li>
+                <li class="m-15-a"> <a href="#how-to-use">How to use </a></li>
+                <li class="m-15-a"> <a href="#changelog">Changelog</a></li>
+            </ul>
+            </ul>
+            </ul>
+
+        </section>
+
+        <section id="introduction">
+            <a href="#introduction" class="normal-link">
+                <h3>Introduction</h3>
+            </a>
+            <p>
+                Module adds "Import Tasks" menu subtab in Utilities tab.
+                In this tab you can view history of imports, dowload sample import file and make new import.
+            </p>
+            <p>
+                For each import you must set columns:
+            <ul>
+                <li>Name</li>
+                <li>Description</li>
+                <li>Priority</li>
+                <li>Dateadded</li>
+                <li>Startdate</li>
+                <li>Duedate</li>
+                <li>Datefinished</li>
+                <li>Addedfrom</li>
+                <li>Is added from contact</li>
+                <li>Status</li>
+                <li>Recurring type</li>
+                <li>Repeat every</li>
+                <li>Recurring</li>
+                <li>Is recurring from</li>
+                <li>Cycles</li>
+                <li>Total cycles</li>
+                <li>Custom recurring</li>
+                <li>Last recurring date</li>
+                <li>Rel id</li>
+                <li>Rel type</li>
+                <li>Is public</li>
+                <li>Billable</li>
+                <li>Billed</li>
+                <li>Invoice id</li>
+                <li>Hourly rate</li>
+                <li>Milestone</li>
+                <li>Kanban order</li>
+                <li>Milestone order</li>
+                <li>Visible to client</li>
+                <li>Deadline notified</li>
+            </ul>
+            Optional columns:
+            <ul>
+                <li>Attachments</li>
+                <li>Tags</li>
+                <li>Checklist items</li>
+                <li>Cf ...</li>
+            </ul>
+            </p>
+        </section>
+
+        <section id="instalation">
+            <a href="#instalation" class="normal-link">
+                <h3>Installation</h3>
+            </a>
+            <ol>
+                <li>
+                    Extract your downloaded file contents. You will notice a folder called
+                    "documentation" and a new zip
+                    file, called <b>upload.zip</b>. Since "documentation" folder contains this
+                    readme file and helpful
+                    instructions that are not needed in your Perfex CRM's installation, we will
+                    focus on the
+                    <b>upload.zip</b>
+                    file.
+                    <a href="assets/screen1.png"  rel="noopener nofollow">
+                        <img src="assets/screen1.png" alt="Screen showing folder structure of downloaded zip">
+                    </a>
+                </li>
+
+                <li>
+                    File <b>upload.zip</b> contains the module files (in a module format) that you
+                    upload in Perfex
+                    CRM's
+                    Modules
+                    installation section. Extract this folder (no contents of this folder, but only
+                    this zip).
+                    <a href="assets/screen2.png"  rel="noopener nofollow">
+                        <img src="assets/screen2.png" alt="Screen showing zip with module files">
+                    </a>
+                </li>
+                <li>
+                    Go to your Perfex CRM's Admin area and select the following menu item: <b> SETUP
+                        > MODULES </b>
+                    <div class="flex">
+                        <a href="assets/screen3.png"  rel="noopener nofollow" class="m-a">
+                            <img src="assets/screen3.png" alt="Screen showing where to find setup tab">
+                        </a>
+                        <a href="assets/screen4.png"  rel="noopener nofollow" class="m-a">
+                            <img src="assets/screen4.png" alt="Screen showing where to find modules tab">
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    Select the extracted <b>upload.zip</b> at Module installation selection prompt
+                    and press
+                    <b>INSTALL</b>
+                    <a href="assets/screen5.png"  rel="noopener nofollow">
+                        <img src="assets/screen5.png" alt="Screen showing how to upload module">
+                    </a>
+                </li>
+                <li>
+                    Find the newly installed module and press <b>ACTIVATE</b>.
+                    <a href="assets/screen6.png"  rel="noopener nofollow">
+                        <img src="assets/screen6.png" alt="Screen showing how to activate module">
+                    </a>
+                </li>
+                <li>
+                    You will be told that module is successfully activated.
+                    On the setting menu you will see "Import Tasks" tab in the Utilities tab.
+
+                    That's it! You are now ready to start using the module.
+
+                </li>
+            </ol>
+        </section>
+
+        <section id="how-to-use">
+
+            <a href="#how-to-use" class="normal-link">
+                <h3>How to use this module</h3>
+            </a>
+
+            <ol>
+
+                <li>
+                    Go to the <b>Utilities -> Import Tasks</b> tab
+                    <a href="assets/screen7.png"  rel="noopener nofollow">
+                        <img src="assets/screen7.png" alt="Screen showing where to find 'IMPORT TASKS' tab ">
+                    </a>
+                </li>
+                <li>
+                    Here you see all of your tasks imports
+                    <a href="assets/screen8.png"  rel="noopener nofollow">
+                        <img src="assets/screen8.png" alt="Screen showing 'TASKS IMPORT HISTORY' tab ">
+                    </a>
+                </li>
+                <li>
+                    In order to make new import click <b>NEW IMPORT</b> button<br>
+
+                    Rules for proper import:
+
+                    <ul>
+                        <li>Your CSV data should be in the format below. The first line of your CSV file should be the
+                            column headers as in the table example. Also make sure that your file encoding is UTF-8 to
+                            avoid unnecessary encoding problems.</li>
+                        <li>If the column you are trying to import is date make sure that is formatted in format
+                            <b>Y-m-d (2022-09-22)</b>.
+                        </li>
+                        <li>The "Name" column is required and must contain the name of the task.</li>
+                        <li>The "Description" column is required and contains the description of the task. Can be empty
+                            or HTML code.</li>
+                        <li>The "Priority" column can be name of priority or id.</li>
+                        <li>The "Dateadded" column contain date and time of task addition.</li>
+                        <li>The "Startdate" column contain date of task start.</li>
+                        <li>The "Duedate" column contain due date of task.</li>
+                        <li>The "Datefinished" column contain date and time of finish.</li>
+                        <li>In the "Addedfrom" column, put the employee's id or email address, and when in the "Is added
+                            from contact" column the value is 1, then in the "Addedfrom" column, put contact's
+                            (customer's) id or email.</li>
+                        <li>The "Status" column can be name of status or id.</li>
+                        <li>The "Recurring type" column - this column can take one of the values ​​(day, week, month,
+                            year).</li>
+                        <li>The "Repeat every" column contains an integer (the number of units from the "Recurring type"
+                            column to repeat the job).</li>
+                        <li>The "Recurring" column with a value of 0 means repetition is off or 1 is on.</li>
+                        <li>The "Is recurring from" column - integer means repeating from the selected unit.</li>
+                        <li>The "Cycles" column - means the number of repetitions (cycles).</li>
+                        <li>The "Total cycles" column means the number of cycles performed - 0 means an infinite number
+                            of cycles.</li>
+                        <li>The "Custom recurring" column is marked 1 if the task is to be repeated at non-standard
+                            intervals.</li>
+                        <li>The "Last recurring date" column holds the last recurring date of the job.</li>
+                        <li>5. The "Rel id" column indicates the related customer or other model selected in the Rel
+                            type field.</li>
+                        <li>The "Rel type" column indicates the related model (possible values ​​"project", "invoice",
+                            "customer", "estimate", "contract", "ticket", "expense", "lead", "proposal").</li>
+                        <li>6. The "Is public" column - Whether the task should be visible to all employees or only to
+                            assignees, creator and administrators.</li>
+                        <li>The "Billable" column - determines whether the task can be factored.</li>
+                        <li>The "Billed" column - specifies whether an invoice for the task has been issued.</li>
+                        <li>The "Invoice id" column - indicates the invoice ID, if it was issued.</li>
+                        <li>The "Hourly rate" column - stores the individual hourly rate per task.</li>
+                        <li>The "Milestone" column - milestone identifier.</li>
+                        <li>The "Kanban order" column - location on the kanabana.</li>
+                        <li>The "Milestone order" column - location on milestones.</li>
+                        <li>The "Visible to client" column - determines whether the task should be visible to the
+                            client.</li>
+                        <li>The "Deadline notified" column - indicates whether a notification about the end of the task
+                            deadline has been sent.</li>
+                        <li>The "Attachments" column - Indicates comma separated URLs with attachments to the task.</li>
+                        <li>The "Tags" column - contains tags separated by commas.</li>
+                        <li>The "Checklist items" column - contains points from the checklist separated by commas.</li>
+                        <li>The "Cf ..." columns - all columns beginning with "Cf" contain values ​​for Custom Fields.
+                        </li>
+                        <li>After the tag "Cf" you should put the id or the name of a custom field.</li>
+                    </ul>
+                    <br>
+                    Then click <b>"Import"</b> button
+                    <a href="assets/screen9.png"  rel="noopener nofollow">
+                        <img src="assets/screen9.png" alt="Screen showing 'ADD TASK STATUSES' popup ">
+                    </a>
+                </li>
+            </ol>
+
+
+        </section>
+
+        <section id="changelog">
+            <a href="#changelog" class="normal-link">
+                <h3>Changelog</h3>
+            </a>
+            <p>
+                Version 1.0.1 (22.09.2022 r.)
+            </p>
+            <p class="clog">
+                - [NEW] From now on you can <strong>import attachments</strong><br>
+                - [NEW] From now on you can <strong>import tags</strong><br>
+                - [NEW] From now on you can <strong>Checklist items</strong><br>
+                - [NEW] From now on you can <strong>Custom fields</strong><br>
+                - [NEW] From now on you can <strong>select priority by name</strong> in Priority column<br>
+                - [NEW] From now on you can <strong>select user by email</strong> in Addedfrom column<br>
+                - [NEW] From now on you can <strong>select status by name</strong> in Status column<br>
+            </p>
+            <p>
+                Version 1.0.0 (04.06.2022 r.)
+            </p>
+            <p class="clog">
+                - Initial Release<br />
+            </p>
+
+
+    </main>
+    <footer>
+        <hr>
+        &copy Image Design 2022
+    </footer>
+
+
+</body>
+
+</html>

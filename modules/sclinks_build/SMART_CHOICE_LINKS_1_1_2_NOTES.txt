@@ -1,0 +1,8 @@
+Smart Choice Links v1.1.2
+- Fixed stars appearing but not opening popup menus.
+- Fixed links not showing inside left/right stars after settings save.
+- Rendered hidden link source before JavaScript loads.
+- Added robust click handler without auto-open behavior.
+- Added main menu, setup menu, and settings search boxes.
+- Added settings route aliases to prevent 404 from older buttons.
+- Added active shortcut fallback if all links are disabled or missing.

@@ -1,0 +1,7 @@
+PRChat 2.1.3
+- Icon-only Voice to Text and Improve with AI controls.
+- Fixed AI endpoint routing and non-JSON error handling.
+- Clears composer after successful send actions and Enter sends.
+- Internal staff calls no longer show a false missing-phone warning.
+- Uses phone data attributes when available.
+- Removed unsafe global CSS reset that could affect CRM tables and sales forms.

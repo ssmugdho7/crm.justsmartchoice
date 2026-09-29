@@ -1,0 +1,16 @@
+Smart Choice CRM 4.0.7
+Targeted final repair only.
+
+Changes:
+- Prevent duplicate Dropbox chooser buttons when lead/sales views initialize more than once.
+- Added up to four saved external links for proposals, estimates, invoices, credit notes, and payments.
+- Added customer-visible related links for proposals, estimates, invoices, and payment records; credit-note/payment PDF links are included when present.
+- Added inline image/PDF preview behavior so supported sales attachments open in-browser/new-tab instead of forcing download.
+- Added explicit Open in New Tab controls for PDF attachments.
+- Added English/Spanish translation control to customer proposal, estimate, and invoice views using an external Google Translate view of the public document URL.
+- Added non-destructive migration 407 for the sales links table.
+
+Not changed:
+- Payment calculations, discounts, down payments, credits, additional charges, totals.
+- AI code, providers, keys, models, URLs, or organizations.
+- Existing modules, uploads, permissions, records, clocks, menus, table settings, or unrelated features.

@@ -1,0 +1,9 @@
+Smart Choice CRM 4.2.9 targeted repair release
+Baseline: crmmain_4.2.8_mediafixed.zip
+Policy: preserve all unrelated CRM functionality and data.
+- Utilities > Media no longer loads a second jQuery instance through RequireJS.
+- Utilities > Media uses the CRM jQuery plus local jQuery UI/elFinder assets, restoring the native file-manager layout and toolbar.
+- TinyMCE image/media browser uses the same conflict-free elFinder loader.
+- Smart Choice header observer now safely checks ensureIcons before calling it, eliminating the repeated media console exception without changing menu behavior.
+- Smart Choice Call Center upgraded from 1.0.0 to 1.0.1 with sequential migration 101 and non-destructive database verification.
+- Core migration advanced from 428 to 429; no destructive schema changes.

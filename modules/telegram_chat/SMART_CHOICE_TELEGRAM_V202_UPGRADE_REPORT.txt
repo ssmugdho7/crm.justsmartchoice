@@ -1,0 +1,25 @@
+SMART CHOICE TELEGRAM CHAT 2.0.2
+
+Primary improvements:
+- Full standard permissions: View (Own), View (Global), Create, Edit, Delete.
+- English and Spanish flat language files.
+- Continuous migration 201 -> 202.
+- PHP 8.5 compatibility repair for legacy Telegram Bot API library.
+- Appointly appointment monitoring through scheduled scans and compatible hooks.
+- New appointment, status-change, cancellation/reschedule-state monitoring.
+- Manual Scan Now control and appointment monitor page.
+- Bot profile controls for name, description, short description, and commands.
+- Secure webhook installer, remover, and status display.
+- Public webhook receiver protected with Telegram secret token.
+- CRM commands for appointments, leads, projects, invoices, overdue tasks, store, and support.
+- Online Links page for Telegram Web, BotFather, the configured bot, Bot API, Mini Apps, and Payments.
+- Store, Mini App, support, privacy, and terms URL settings.
+- Message Center and incoming update synchronization.
+- Health Check with Telegram and Appointly readiness.
+- Smart Choice responsive desktop, tablet, Android, and iPhone interface.
+
+Appointment notifications:
+The module scans the Appointly appointments table after cron runs and can also be scanned manually. It sends a Telegram notice for new appointments and for changes to appointment status, date, time, cancellation notes, or rescheduling state.
+
+Webhook URL:
+Open Telegram Chat -> Bot Profile after installation and click Install Webhook.

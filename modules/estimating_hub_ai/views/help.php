@@ -1,0 +1,17 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); init_head(); ?>
+<div id="wrapper"><div class="content"><div class="panel_s"><div class="panel-body">
+<div class="ehai-page-head"><div><h4><i class="fa fa-question-circle"></i> Estimating Hub AI Help Guide</h4><p>Smart Choice Construction Intelligence Engine guide for estimating, cost learning, camera intake, and public material price collection.</p></div><a href="<?php echo admin_url('estimating_hub_ai/health'); ?>" class="btn btn-success btn-xs"><i class="fa fa-heartbeat"></i> Health Check</a></div>
+<?php $this->load->view('estimating_hub_ai/partials/nav',['nav'=>$nav]); ?>
+<div class="row">
+<div class="col-md-6"><div class="scie-card"><h4>1. What This Module Does</h4><p>Estimating Hub AI stores Tampa Bay cost items, reads existing CRM estimates, invoices, and proposals, receives public material price data from the collector app, and builds better estimate drafts over time.</p><ul><li>Cost Database is the source of truth.</li><li>Material Price Collector receives Home Depot and Homewyse public page records.</li><li>Camera Estimator stores jobsite photos for future AI review.</li><li>Training Documents stores estimating SOPs and manuals.</li></ul></div></div>
+<div class="col-md-6"><div class="scie-card"><h4>2. Material Price Collector</h4><p>The Python collector runs outside the public website folder. It reads a CSV list of public URLs or saved SKUs, respects safe request delays, and posts structured records into this module.</p><p><strong>CRM Endpoint:</strong><br><code><?php echo site_url('admin/estimating_hub_ai/collector_api'); ?></code></p><p><strong>Token:</strong> copy it from Settings and paste it into the collector <code>config.json</code>.</p></div></div>
+</div>
+<div class="row">
+<div class="col-md-6"><div class="scie-card"><h4>3. Home Depot Workflow</h4><p>Use direct public product URLs or manually maintained SKU lists. The collector tries to read title, brand, price, model number, image, URL, ZIP code, and timestamp. It does not use your Home Depot password and does not bypass login pages.</p><p>For private Pro Xtra orders, use Home Depot official Pro integrations or export this module's Pro Desk list.</p></div></div>
+<div class="col-md-6"><div class="scie-card"><h4>4. Homewyse Workflow</h4><p>Homewyse is used as a public estimating reference. The collector can store cost-page titles and visible cost ranges from public pages you provide. Use it as a guide, not as guaranteed pricing.</p><p>Every record imported from Homewyse is marked with source and URL so estimators can verify it.</p></div></div>
+</div>
+<div class="row">
+<div class="col-md-6"><div class="scie-card"><h4>5. Safe Collection Rules</h4><ul><li>No credential scraping.</li><li>No checkout/cart/order scraping.</li><li>No aggressive request loops.</li><li>Use a delay of 8 to 20 seconds.</li><li>Only collect public data needed for estimating.</li><li>Keep source URL and timestamp for every record.</li></ul></div></div>
+<div class="col-md-6"><div class="scie-card"><h4>6. Recommended Estimating Workflow</h4><ol><li>Import or collect materials.</li><li>Sync CRM estimate, invoice, and proposal line items.</li><li>Review Cost Database.</li><li>Create AI estimate draft.</li><li>Verify quantities and pricing manually.</li><li>Export material list to Purchasing Hub or Pro Desk workflow.</li></ol></div></div>
+</div>
+</div></div></div></div><?php init_tail(); ?>

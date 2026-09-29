@@ -1,0 +1,20 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed');
+
+$lang['si_todo'] = 'Si Todo';
+$lang['si_todo_menu'] = 'Si Todo';
+$lang['si_todo_settings'] = 'Configuración de Si Todo';
+$lang['si_todo_health'] = 'Salud';
+$lang['si_todo_help'] = 'Ayuda';
+$lang['settings'] = 'Configuración';
+$lang['health'] = 'Salud';
+$lang['help'] = 'Ayuda';
+$lang['create'] = 'Crear';
+$lang['edit'] = 'Editar';
+$lang['delete'] = 'Eliminar';
+$lang['view'] = 'Ver';
+$lang['view_own'] = 'Ver Propio';
+$lang['view_global'] = 'Ver Global';
+$lang['import'] = 'Importar';
+$lang['export'] = 'Exportar';
+$lang['sample_header'] = 'Encabezado de Muestra';
+$lang['mass_delete'] = 'Eliminar en Masa';

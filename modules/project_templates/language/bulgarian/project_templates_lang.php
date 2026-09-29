@@ -1,0 +1,21 @@
+<?php
+$lang["pt_module_title"] = "Проектни Шаблони";
+$lang["pt_project_template"] = "Проектен Шаблон";
+$lang["pt_project_template_lower"] = "проектен шаблон";
+$lang["pt_edit_project_template"] = "Редактиране на Проектен Шаблон";
+$lang["pt_delete_project_template"] = "Изтриване на Проектен Шаблон";
+$lang["pt_copy_project_template"] = "Копиране на Проектен Шаблон";
+$lang["pt_project_template_description"] = "Описание";
+$lang["pt_new_project_template"] = "Нов Проектен Шаблон";
+$lang["failed_to_copy_project_template"] = "Неуспешно копиране на проектен шаблон";
+$lang["pt_project_template_copied_successfully"] = "Проектният шаблон беше успешно копиран";
+$lang["pt_project_from_template"] = "проект от шаблон";
+$lang["pt_new_project_from_template"] = "Създаване на проект от шаблон";
+$lang["pt_select_project_template"] = "Изберете Проектен Шаблон";
+$lang["pt_project_template_not_found"] = "Проектният шаблон не беше намерен";
+$lang["pt_duration_text"] = "Срок на изтичане (в дни)";
+$lang["pt_milestone_start_date"] = "Дни до започване след началната дата на проекта";
+$lang["pt_milestone_due_date"] = "Срок в дни";
+$lang["permission_create_milestones"] = "Създаване на Етапи";
+$lang["permission_edit_milestones"] = "Редактиране на Етапи";
+$lang["permission_delete_milestones"] = "Изтриване на Етапи";

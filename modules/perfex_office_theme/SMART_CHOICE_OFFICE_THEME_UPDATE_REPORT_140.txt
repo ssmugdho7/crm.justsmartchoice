@@ -1,0 +1,14 @@
+Smart Choice Office Theme v1.4.0
+
+Fixed:
+- Settings link 404 by changing to Perfex 3.4.x compatible direct settings sections.
+- Added separate Health / Verification settings section.
+- Client portal top bar now matches admin blue/green gradient.
+- Removed purple hover/logo color behavior with stronger overrides.
+- Removed boxed look from client tabs/status links.
+- Changed admin menu arrows/carets to navy blue.
+- Dashboard cards, overview bars, widgets, tables, and progress bars are slimmer with lighter shadows.
+- Orange component/badge styling changed to navy/blue where requested.
+- Settings page visual cards centered and gradient changed to blue/green.
+- Version updated to 1.4.0.
+- Migration 140 updates existing color options safely.

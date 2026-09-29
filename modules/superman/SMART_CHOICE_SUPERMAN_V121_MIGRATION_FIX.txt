@@ -1,0 +1,14 @@
+Smart Choice Superman v1.2.1 Migration Fix
+Author: Smart Choice Contractors USA / Harold Cabrera
+Website: https://justsmartchoice.com/
+
+Fix included:
+- Added missing migrations/121_version_121.php.
+- Migration class: Migration_Version_121.
+- Includes both up() and down() methods.
+- Preserves existing data.
+- Added duplicate compatible language-file paths for English and Spanish.
+
+Reason:
+Perfex CRM maps module version 1.2.1 to migration version 121. The prior package had version 1.2.1 but did not include 121_version_121.php, causing:
+"No migration could be found with the version number: 121."

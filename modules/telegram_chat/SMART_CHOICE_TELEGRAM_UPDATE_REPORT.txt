@@ -1,0 +1,11 @@
+Telegram Chat Smart Choice v2.0.1
+
+Purpose:
+- Fix migration rollback/down() errors caused by installing a package with a lower version than the existing Telegram Chat 2.0.0 record.
+- Preserve working Telegram bot/token behavior.
+- Keep Message Center, Health Checker, Help/Training, and notification extensions.
+
+Important install instruction:
+- Upload over modules/telegram_chat/.
+- If old migration errors continue, delete only old files inside modules/telegram_chat/migrations/ and upload this package again so only 197, 198, 199, 200, and 201 migration files remain.
+- Do not delete Telegram database tables.

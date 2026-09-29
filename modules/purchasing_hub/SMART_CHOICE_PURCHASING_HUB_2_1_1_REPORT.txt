@@ -1,0 +1,1 @@
+Purchasing Hub 2.1.1 repaired: safe upgrade migration 211, module metadata quality rating, working settings/health/help links, mini navigation, refresh buttons, import/sample CSV for items/vendors/purchase orders/accounts payable/vendor quotes/contracts, and live report links.

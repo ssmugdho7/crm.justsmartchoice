@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".sales.presentation.proposals.manage.ManageProposalsFragment">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/side_nav_bar"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/total_records"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:text="@string/total_0"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/filtered_records"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:text="@string/filtered_0"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+        </LinearLayout>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/search_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:autofillHints="Hi"
+                android:drawableEnd="@drawable/ic_baseline_search_24"
+                android:hint="@string/search_here"
+                android:inputType="textFilter"
+                android:padding="15dp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@android:style/Widget.Holo.ProgressBar.Large"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:visibility="gone" />
+
+        <include layout="@layout/no_data_found" />
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="3dp">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/usersList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/addProposalsFAB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="20dp"
+        android:backgroundTint="@color/themeColorPrimary"
+        android:contentDescription="@string/add_proposals"
+        android:text="@string/add_proposals"
+        android:textColor="@color/white"
+        app:icon="@drawable/ic_baseline_add_circle_outline_24"
+        app:iconTint="@color/white" />
+
+</FrameLayout>

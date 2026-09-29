@@ -1,0 +1,87 @@
+.debug-mode-card {
+    border-radius: 18px !important;
+    border: 1px solid rgba(22,145,121,.18) !important;
+    box-shadow: 0 12px 32px rgba(15,23,42,.10) !important;
+    overflow: hidden;
+}
+.debug-mode-card .panel-body { padding: 22px; }
+.debug-mode-settings-heading,
+.debug-mode-hero {
+    background: linear-gradient(135deg, #169179, #0057b8);
+    color: #fff;
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 12px 28px rgba(0,0,0,.12);
+}
+.debug-mode-settings-heading h4,
+.debug-mode-hero h1 { color: #fff; font-weight: 800; margin-top: 0; }
+.debug-mode-settings-heading .text-muted,
+.debug-mode-hero p { color: rgba(255,255,255,.92) !important; margin-bottom: 0; }
+.debug-mode-actions-grid,
+.debug-mode-grid,
+.debug-mode-help-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-bottom: 18px;
+}
+.debug-mode-btn { border-radius: 9px !important; font-weight: 700; }
+.debug-mode-page .btn { border-radius: 8px; font-weight: 700; }
+.debug-mode-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+.debug-mode-status-pill {
+    background: #f5f7f8;
+    color: #263238;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+.debug-mode-status-pill.active { background: #f47c20; color: #fff; }
+.debug-mode-tile {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    border-top: 5px solid #f47c20;
+    box-shadow: 0 10px 28px rgba(0,0,0,.11);
+}
+.debug-mode-tile h3 { margin-top: 0; color: #169179; font-weight: 800; }
+.debug-mode-tile p { color: #555; min-height: 42px; }
+.debug-mode-help-grid > div {
+    background: #f5f7f8;
+    border-left: 5px solid #f47c20;
+    border-radius: 12px;
+    padding: 15px;
+}
+.debug-mode-help-grid strong { color: #169179; }
+.debug-mode-card table thead th {
+    background: #169179 !important;
+    color: #fff !important;
+}
+.debug-mode-card code {
+    white-space: normal;
+    color: #263238;
+    background: #eaf4ff;
+}
+body.debug-mode-active:before {
+    content: 'Debug Mode Active';
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 9999;
+    background: #169179;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-weight: 800;
+    box-shadow: 0 10px 28px rgba(0,0,0,.18);
+}
+@media(max-width: 768px){
+    .debug-mode-hero { display: block; }
+    .debug-mode-status-pill { display: inline-block; margin-top: 12px; }
+}

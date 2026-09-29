@@ -1,0 +1,14 @@
+Smart Choice CRM Core 3.6.9 SC
+
+Migration: 369_version_369.php
+Database target: 369
+
+Repairs:
+- Estimate and proposal discounts use the native Perfex totals calculation and persist correctly.
+- Estimate and proposal partial/down-payment percentage fields mirror the working invoice behavior.
+- Contract total, amount due now, remaining balance, and discount reason are preserved in document metadata.
+- Customer invoice, estimate, proposal, and contract pages include an Attachments navigation button and customer-visible multi-file list.
+- Existing native multi-attachment upload/storage is retained; no duplicate attachment tables were introduced.
+- Invoice email sending normalizes recipients, CC, PDF selection, and statement date ranges and catches PHP 8 Throwable failures with CRM logging.
+- Invoice delete redirect and last-document restrictions repaired.
+- No CRM files, uploads, settings, API keys, sales documents, or attachment records are removed.

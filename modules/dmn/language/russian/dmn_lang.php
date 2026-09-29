@@ -1,0 +1,49 @@
+<?php
+$lang['dmns']                                             = 'Карты разума';
+$lang['dmn']                                              = 'Карта разума';
+$lang['dmn_create_new']                                   = 'Создать новый';
+$lang['dmn_edit']                                         = 'редактировать';
+$lang['dmn_delete']                                       = 'Удалить';
+$lang['dmn_title']                                        = 'заглавие';
+$lang['dmn_desc']                                         = 'Описание';
+$lang['dmn_staff']										  = 'Создано';
+$lang['dmn_search']										  = 'Поиск Mind Map';
+$lang['dmn_group']								          = 'группа';
+$lang['dmn_groups']								          = 'группы';
+$lang['edit_dmn_group']								      = 'Редактировать группу';
+$lang['new_dmn_group']								      = 'Новая группа';
+$lang['dmn_group_add_edit_name']						  = 'название';
+$lang['dmn_group_add_edit_description']					  = 'Описание';
+$lang['dmn_switch_to_grid_view']						  = 'Переключиться на сетку';
+$lang['dmn_switch_to_list_view']						  = 'Переключиться на список';
+$lang['dmn_assigned_to_me']								  = 'Моя карта разума';
+$lang['dmn_filter_staff']								  = 'Штат сотрудников';
+$lang['dmn_filter_group']								  = 'группа';
+$lang['dmn_info']								          = 'Информация о dmn';
+$lang['dmn_staff']								          = 'Штат сотрудников';
+$lang['dmn_view']								          = 'Посмотреть';
+$lang['dmn_not_found']								      = 'dmn не найден';
+$lang['preview_dmn']								      = 'Предварительный просмотр dmn';
+$lang['dmn_settings_name']								  = 'Карта разума';
+$lang['new_dmn_group']								      = 'Новая группа';
+$lang['dmn_created_at']									  = 'Создано на';
+$lang['dmn_enable_group_option']                          = 'Разрешить сотрудникам без прав администратора создавать группы в области создания и редактирования dmn?  ';
+//client project view language
+
+$lang['clients_dmn_tittle']								  = 'Title';
+$lang['clients_dmn_description']						  = 'Description';
+$lang['clients_dmn_staff']								  = 'Staff';
+$lang['clients_dmn_group']								  = 'Group';
+$lang['clients_dmn_created_at']							  = 'Created At';
+
+$lang['properties']									 	  	= 'Edit Details';
+$lang['edit_canvas']									 	= 'Edit Canvas';
+$lang['action_btn_dropdown']								= 'Action';
+$lang['delete']												= 'Delete';
+$lang['share_via_email']									= 'Share via email';
+$lang['print_svg']											= 'Print SVG';
+$lang['window_print']										= 'Print';
+$lang['rating']												= 'Rating';
+$lang['add_email']											= 'Add Email';
+$lang['save']												= 'Save';
+$lang['close']												= 'Close';

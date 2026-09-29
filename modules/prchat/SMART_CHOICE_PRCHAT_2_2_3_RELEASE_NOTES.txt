@@ -1,0 +1,10 @@
+PRChat 2.2.3
+
+- Fixed the permanent "Connecting to chat..." overlay.
+- Chat bootstrap now completes from the database contact request, not Pusher subscriptions.
+- Added a 12-second safety watchdog so real-time connectivity can never cover the working UI indefinitely.
+- Staff contacts endpoint now returns clean JSON with server-side error logging.
+- Corrected handling for installations with exactly one available chat contact.
+- Registered Chat Settings using the same native Perfex settings-section structure as Appointly.
+- Added migration 223 to repair existing schema/options idempotently and advance the module version.
+- Existing messages, settings, uploads, API credentials, and unrelated features are preserved.

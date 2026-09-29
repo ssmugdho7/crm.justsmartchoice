@@ -1,0 +1,10 @@
+Smart Choice PRChat 2.1.8
+
+- Restored the original working staff, group, and client loading flow.
+- Removed the undefined recent-conversation method that caused the users endpoint HTTP 500.
+- Orders staff by the already-loaded latest message timestamp without extra database calls.
+- Routes client unread polling to the existing Prchat_Controller unread action.
+- Adds compatibility alias for the legacy client unread URL.
+- Sets a valid placeholder image before a conversation is selected.
+- Extends voice-to-text silence tolerance to 8 seconds and session duration to 3 minutes.
+- Uses the exact server-generated AI Improve endpoint.

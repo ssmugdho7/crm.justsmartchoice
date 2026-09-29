@@ -1,0 +1,16 @@
+Purchasing Hub v2.0.6 Repair Report
+
+Fixed:
+- Updated module version to 2.0.6.
+- Removed raw underscore labels from the front end using language overrides and a safe front-end label cleanup script.
+- Main menu now displays Purchasing Hub.
+- Renamed purchasing workflow labels to American business terminology.
+- Purchase invoices are labeled Accounts Payable to avoid confusion with customer invoices/accounts receivable.
+- Vendor quotes, vendor credits, purchase orders, and purchasing reports labels improved.
+- Added missing Purchasing Hub language file coverage.
+- Added menu href to parent Purchasing Hub menu.
+- Added Smart Choice style polishing to tables, buttons, modals, and headers.
+
+Notes:
+- The dashboard warning shown from si_todo_widget.php belongs to the SI Todo module, not Purchasing Hub.
+- If pages still redirect to Dashboard, check staff permissions for Purchasing Hub, especially Reports, Vendors, Vendor Items, Items, and Accounts Payable.

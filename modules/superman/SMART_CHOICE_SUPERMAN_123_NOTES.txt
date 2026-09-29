@@ -1,0 +1,7 @@
+Smart Choice Superman v1.2.3
+
+Fixes included:
+- Added bridge migrations 841 through 849 to repair the migration gap near version 840.
+- Added migration 123 to match module version 1.2.3.
+- All bridge migrations include both up() and down() methods.
+- No data is dropped or changed by the bridge migrations.

@@ -1,0 +1,8 @@
+Smart Choice Links 1.2.6
+
+- Fixes the top-bar star click behavior at the root event level.
+- Uses one capture-phase mousedown handler to avoid Bootstrap double toggles.
+- Uses the server-rendered panel template with a live-star fallback.
+- Removes every hidden dropdown class from the visible portal copy.
+- Adds definitive display/visibility/pointer-event rules to the body-level panel.
+- Preserves hover labels, star placement, Setup search, saved links, settings, and permissions.

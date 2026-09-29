@@ -1,0 +1,15 @@
+Sales Agent - Smart Choice Contractors v1.6.1
+
+Fixes included:
+- Database migration error 160 repaired.
+- Added migration shims 107 through 159.
+- Added robust 160 and 161 migration files.
+- Module revision moved to 161 so Perfex has a clean upgrade target.
+- Patched installer table checks to use db_prefix() consistently for module tables.
+- Commission tables use normal indexes only, no foreign keys, to reduce MySQL errno 150/170 conflicts.
+- Author updated to Smart Choice Contractors.
+
+Install:
+1. Upload this ZIP in Perfex > Setup > Modules.
+2. Click Upgrade Database.
+3. If Perfex cache is enabled, clear cache and reload the Modules page.

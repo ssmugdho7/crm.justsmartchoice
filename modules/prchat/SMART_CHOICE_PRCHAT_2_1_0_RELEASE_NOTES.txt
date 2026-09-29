@@ -1,0 +1,9 @@
+Smart Choice Messaging v2.1.0
+
+- Prevents chat CSS from changing native CRM tables.
+- Moves Health Check and Project Media into Setup > Settings > CRM Chat.
+- Adds View Own, View Global, Create, Edit, and Delete permissions.
+- Allows administrators and roles with Edit permission to manage all groups and group avatars.
+- Group photos are restricted to the circular group icon and never used as a page background.
+- Adds confirmation before deleting a group for every member.
+- Preserves existing messages, groups, files, media, calls, and chatbot data.

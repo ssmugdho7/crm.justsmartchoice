@@ -1,0 +1,21 @@
+<?php
+$lang["pt_module_title"] = "Șabloane de Proiect";
+$lang["pt_project_template"] = "Șablon de Proiect";
+$lang["pt_project_template_lower"] = "șablon de proiect";
+$lang["pt_edit_project_template"] = "Modifică Șablonul de Proiect";
+$lang["pt_delete_project_template"] = "Șterge Șablonul de Proiect";
+$lang["pt_copy_project_template"] = "Copiază Șablonul de Proiect";
+$lang["pt_project_template_description"] = "Descriere";
+$lang["pt_new_project_template"] = "Nou Șablon de Proiect";
+$lang["failed_to_copy_project_template"] = "Eșec la copierea șablonului de proiect";
+$lang["pt_project_template_copied_successfully"] = "Șablonul de proiect a fost copiat cu succes";
+$lang["pt_project_from_template"] = "proiect din șablon";
+$lang["pt_new_project_from_template"] = "Creează Proiect din Șablon";
+$lang["pt_select_project_template"] = "Selectează Șablonul de Proiect";
+$lang["pt_project_template_not_found"] = "Șablonul de proiect nu a fost găsit";
+$lang["pt_duration_text"] = "Durata Termenului (În Zile)";
+$lang["pt_milestone_start_date"] = "Zile pentru a începe după data de început a proiectului";
+$lang["pt_milestone_due_date"] = "Termen în zile";
+$lang["permission_create_milestones"] = "Creează Etape";
+$lang["permission_edit_milestones"] = "Editează Etape";
+$lang["permission_delete_milestones"] = "Șterge Etape";

@@ -1,0 +1,21 @@
+<?php
+$lang["pt_module_title"] = "Plantilles de Projecte";
+$lang["pt_project_template"] = "Plantilla de Projecte";
+$lang["pt_project_template_lower"] = "plantilla de projecte";
+$lang["pt_edit_project_template"] = "Editar Plantilla de Projecte";
+$lang["pt_delete_project_template"] = "Eliminar Plantilla de Projecte";
+$lang["pt_copy_project_template"] = "Copiar Plantilla de Projecte";
+$lang["pt_project_template_description"] = "Descripció";
+$lang["pt_new_project_template"] = "Nova Plantilla de Projecte";
+$lang["failed_to_copy_project_template"] = "No s'ha pogut copiar la plantilla de projecte";
+$lang["pt_project_template_copied_successfully"] = "Plantilla de projecte copiada amb èxit";
+$lang["pt_project_from_template"] = "projecte de plantilla";
+$lang["pt_new_project_from_template"] = "Crear Projecte des de Plantilla";
+$lang["pt_select_project_template"] = "Seleccionar Plantilla de Projecte";
+$lang["pt_project_template_not_found"] = "Plantilla de projecte no trobada";
+$lang["pt_duration_text"] = "Durada de la Data de Venciment (En Dies)";
+$lang["pt_milestone_start_date"] = "Dies per començar després de la data d'inici del projecte";
+$lang["pt_milestone_due_date"] = "Venciment en dies";
+$lang["permission_create_milestones"] = "Crear Fites";
+$lang["permission_edit_milestones"] = "Editar Fites";
+$lang["permission_delete_milestones"] = "Eliminar Fites";

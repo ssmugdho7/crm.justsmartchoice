@@ -1,0 +1,49 @@
+<?php
+$lang['dmns']                                             = 'نقشه های ذهن';
+$lang['dmn']                                              = 'نقشه ذهنی';
+$lang['dmn_create_new']                                   = 'ایجاد جدید';
+$lang['dmn_edit']                                         = 'ویرایش کنید';
+$lang['dmn_delete']                                       = 'حذف';
+$lang['dmn_title']                                        = 'عنوان';
+$lang['dmn_desc']                                         = 'شرح';
+$lang['dmn_staff']										  = 'خلق شده توسط';
+$lang['dmn_search']										  = 'نقشه ذهن را جستجو کنید';
+$lang['dmn_group']								          = 'گروه';
+$lang['dmn_groups']								          = 'گروه ها';
+$lang['edit_dmn_group']								      = 'ویرایش گروه';
+$lang['new_dmn_group']								      = 'گروه جدید';
+$lang['dmn_group_add_edit_name']						  = 'نام';
+$lang['dmn_group_add_edit_description']					  = 'شرح';
+$lang['dmn_switch_to_grid_view']						  = 'به شبکه تغییر دهید';
+$lang['dmn_switch_to_list_view']						  = 'تغییر به لیست';
+$lang['dmn_assigned_to_me']								  = 'dmn من';
+$lang['dmn_filter_staff']								  = 'کارمندان';
+$lang['dmn_filter_group']								  = 'گروه';
+$lang['dmn_info']								          = 'اطلاعات dmn';
+$lang['dmn_staff']								          = 'کارمندان';
+$lang['dmn_view']								          = 'چشم انداز';
+$lang['dmn_not_found']								      = 'نقشه ذهن یافت نشد';
+$lang['preview_dmn']								      = 'پیش نمایش dmn';
+$lang['dmn_settings_name']								  = 'نقشه ذهنی';
+$lang['new_dmn_group']								      = 'گروه جدید';
+$lang['dmn_created_at']									  = 'ایجاد شده در';
+$lang['dmn_enable_group_option']                          = 'به کارمندان غیر اداری اجازه داده می شود تا گروهی را در dmn ایجاد و ویرایش کنند؟  ';
+//client project view language
+
+$lang['clients_dmn_tittle']								   = 'Title';
+$lang['clients_dmn_description']						   = 'Description';
+$lang['clients_dmn_staff']								   = 'Staff';
+$lang['clients_dmn_group']								   = 'Group';
+$lang['clients_dmn_created_at']							   = 'Created At';
+
+$lang['properties']									 	  	= 'Edit Details';
+$lang['edit_canvas']									 	= 'Edit Canvas';
+$lang['action_btn_dropdown']								= 'Action';
+$lang['delete']												= 'Delete';
+$lang['share_via_email']									= 'Share via email';
+$lang['print_svg']											= 'Download SVG';
+$lang['window_print']										= 'Print';
+$lang['rating']												= 'Rating';
+$lang['add_email']											= 'Add Email';
+$lang['save']												= 'Save';
+$lang['close']												= 'Close';

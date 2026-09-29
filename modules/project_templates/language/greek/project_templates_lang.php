@@ -1,0 +1,21 @@
+<?php
+$lang["pt_module_title"] = "Πρότυπα Έργων";
+$lang["pt_project_template"] = "Πρότυπο Έργου";
+$lang["pt_project_template_lower"] = "πρότυπο έργου";
+$lang["pt_edit_project_template"] = "Επεξεργασία Προτύπου Έργου";
+$lang["pt_delete_project_template"] = "Διαγραφή Προτύπου Έργου";
+$lang["pt_copy_project_template"] = "Αντιγραφή Προτύπου Έργου";
+$lang["pt_project_template_description"] = "Περιγραφή";
+$lang["pt_new_project_template"] = "Νέο Πρότυπο Έργου";
+$lang["failed_to_copy_project_template"] = "Αποτυχία αντιγραφής προτύπου έργου";
+$lang["pt_project_template_copied_successfully"] = "Το πρότυπο έργου αντιγράφηκε με επιτυχία";
+$lang["pt_project_from_template"] = "έργο από πρότυπο";
+$lang["pt_new_project_from_template"] = "Δημιουργία Έργου Από Πρότυπο";
+$lang["pt_select_project_template"] = "Επιλογή Προτύπου Έργου";
+$lang["pt_project_template_not_found"] = "Το πρότυπο έργου δεν βρέθηκε";
+$lang["pt_duration_text"] = "Διάρκεια Προθεσμίας (Σε Ημέρες)";
+$lang["pt_milestone_start_date"] = "Ημέρες για έναρξη μετά την ημερομηνία έναρξης του έργου";
+$lang["pt_milestone_due_date"] = "Προθεσμία σε ημέρες";
+$lang["permission_create_milestones"] = "Δημιουργία Σημείων Ορόσημου";
+$lang["permission_edit_milestones"] = "Επεξεργασία Σημείων Ορόσημου";
+$lang["permission_delete_milestones"] = "Διαγραφή Σημείων Ορόσημου";

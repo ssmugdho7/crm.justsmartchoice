@@ -1,0 +1,7 @@
+/* Smart Choice module normalization */
+:root{--sc-green:#169179;--sc-green-dark:#0e6f5b;--sc-black:#111827;--sc-gray:#4b5563;--sc-light:#f8fafc;--sc-border:#d1d5db;--sc-muted:#eef7f4;}
+.btn,.btn-sm,.btn-default,.btn-primary{background-image:none!important;border-radius:4px!important;text-align:center!important;line-height:1.2!important;}
+.btn-sm,.btn-xs{padding:5px 9px!important;font-size:12px!important;}
+.table-responsive{max-width:100%!important;overflow-x:auto;}
+.table th,.table td{vertical-align:middle!important;}
+.label,.badge{background-image:none!important;border-radius:4px!important;}

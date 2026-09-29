@@ -1,0 +1,25 @@
+html, body, #canvas {
+margin-top: 20px;
+}
+.bjs-powered-by
+{
+display:none!important; 
+}
+.djs-palette {
+display: none !important;
+}
+.djs-overlay-container
+{
+position: absolute; width: 0px; height: 0px; transform-origin: left top; transform: matrix(1, 0, 0, 1, -21, -27);
+}
+.dmn-definitions{display: none;}
+#canvas:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #fbfbfb00;
+    z-index: 99;
+  }

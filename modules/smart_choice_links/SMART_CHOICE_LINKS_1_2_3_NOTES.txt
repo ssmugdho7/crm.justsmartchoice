@@ -1,0 +1,6 @@
+Smart Choice Links 1.2.3
+
+- Replaced bubbling-only star click handling with a native capture-phase handler.
+- Added a forced-open panel state that cannot be immediately closed by Perfex or Bootstrap navigation handlers.
+- Restored hover/focus labels beneath both stars using CSS and JavaScript.
+- Preserved left/right star placement, Setup menu search, saved links, permissions, and link opening modes.

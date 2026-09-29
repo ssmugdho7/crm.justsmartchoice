@@ -1,0 +1,5 @@
+(function(){'use strict';var c=window.SmartChoiceCore||{};var r=document.documentElement;r.style.setProperty('--sc-logo-height',String(c.logoHeight||95));r.style.setProperty('--sc-menu-bg',c.menuColor||'#0f3f5f');r.style.setProperty('--sc-menu-text',c.menuText||'#fff');r.style.setProperty('--sc-currency-prefix',JSON.stringify(c.currencyPrefix||'$'));
+function collapseNestedScrollbars(){document.querySelectorAll('.table-responsive .table-responsive').forEach(function(el){el.classList.remove('table-responsive');});}
+document.addEventListener('DOMContentLoaded',function(){collapseNestedScrollbars();setTimeout(collapseNestedScrollbars,800);var money=document.querySelectorAll('input[data-type="currency"],input[name*="amount"],input[name*="total"]');money.forEach(function(i){i.setAttribute('inputmode','decimal');});});
+window.addEventListener('load',collapseNestedScrollbars);
+})();

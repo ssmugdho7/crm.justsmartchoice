@@ -1,0 +1,20 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed');
+
+$lang['swissqrbill'] = 'Swissqrbill';
+$lang['swissqrbill_menu'] = 'Swissqrbill';
+$lang['swissqrbill_settings'] = 'Swissqrbill Settings';
+$lang['swissqrbill_health'] = 'Health';
+$lang['swissqrbill_help'] = 'Help';
+$lang['settings'] = 'Settings';
+$lang['health'] = 'Health';
+$lang['help'] = 'Help';
+$lang['create'] = 'Create';
+$lang['edit'] = 'Edit';
+$lang['delete'] = 'Delete';
+$lang['view'] = 'View';
+$lang['view_own'] = 'View Own';
+$lang['view_global'] = 'View Global';
+$lang['import'] = 'Import';
+$lang['export'] = 'Export';
+$lang['sample_header'] = 'Sample Header';
+$lang['mass_delete'] = 'Mass Delete';

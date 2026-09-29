@@ -1,0 +1,8 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); init_head(); ?>
+<div id="wrapper"><div class="content sccc-app"><div class="sccc-page-head"><div><h3><?= _l('sccc_dashboard'); ?></h3><p class="text-muted"><?= _l('sccc_dashboard_subtitle'); ?></p></div></div>
+<div class="row sccc-metrics">
+<?php foreach([['phone','sccc_total_calls',$stats['total']],['phone-volume','sccc_calls_today',$stats['today']],['circle-check','sccc_answered',$stats['answered']],['bullseye','sccc_successful',$stats['successful']],['user-plus','sccc_leads_created',$stats['leads']]] as $m){ ?><div class="col-md-2 col-sm-4"><div class="sccc-card metric"><i class="fa-solid fa-<?= $m[0] ?>"></i><strong><?= (int)$m[2] ?></strong><span><?= _l($m[1]) ?></span></div></div><?php } ?>
+</div>
+<div class="row"><div class="col-md-8"><div class="sccc-card"><h4><?= _l('sccc_recent_calls') ?></h4><?php $this->load->view('smart_choice_call_center/partials_calls',['calls'=>$calls]);?></div></div><div class="col-md-4"><div class="sccc-card"><h4><?= _l('sccc_live_operations') ?></h4><canvas id="scccCallChart" height="220"></canvas><div class="sccc-live-status"><span class="label label-success"><?= _l('sccc_ready') ?></span> <?= _l('sccc_dashboard_live_help') ?></div></div></div></div>
+<script>window.scccChartData=<?= json_encode([$stats['answered'],max(0,$stats['total']-$stats['answered']),$stats['successful']]) ?>;</script>
+</div></div><?php init_tail(); ?>

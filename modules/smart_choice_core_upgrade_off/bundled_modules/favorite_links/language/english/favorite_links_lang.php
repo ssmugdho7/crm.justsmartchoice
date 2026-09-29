@@ -1,0 +1,30 @@
+<?php
+
+$lang['perfex_menu_link_text'] = 'Favorite Links';
+$lang['pml_add_new_link'] = 'Add New Link';
+$lang['pml_success'] = 'Saved successfully';
+$lang['pml_title'] = 'Title';
+$lang['pml_link'] = 'Link';
+$lang['pml_rels'] = 'Relationship';
+$lang['pml_target'] = 'Open In';
+$lang['pml_hotkeys'] = 'Hotkey Letter';
+$lang['pml_hotkey_numbers'] = 'Hotkey Number';
+$lang['pml_order'] = 'Order';
+$lang['favorite_links'] = 'Favorite Links';
+$lang['favorite_link'] = 'Favorite Link';
+$lang['new_favorite_link'] = 'New Favorite Link';
+$lang['edit_favorite_link'] = 'Edit Favorite Link';
+$lang['favorite_links_settings'] = 'Favorite Links Settings';
+$lang['favorite_links_enabled'] = 'Enable Favorite Links';
+$lang['favorite_links_show_star_near_search'] = 'Show star beside CRM search bar';
+$lang['favorite_links_open_new_tab'] = 'Open links in new tab';
+$lang['favorite_links_enable_hotkeys'] = 'Enable keyboard hotkeys';
+$lang['favorite_links_default_target'] = 'Default link target';
+$lang['link_name'] = 'Link Name';
+$lang['link_url'] = 'Link URL';
+$lang['category'] = 'Category';
+$lang['open_new_tab'] = 'Open in New Tab';
+$lang['created_by'] = 'Created By';
+$lang['active'] = 'Active';
+$lang['inactive'] = 'Inactive';
+$lang['no_entries_found'] = 'No entries found';

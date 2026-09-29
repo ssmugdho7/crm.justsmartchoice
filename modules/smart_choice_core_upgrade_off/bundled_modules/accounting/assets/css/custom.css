@@ -1,0 +1,178 @@
+
+.check-card {
+  border: 1px solid #c0c0c0;
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 25px;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  height: 386px;
+  width: 890px;
+  margin: 0 auto;
+  position: relative;
+}
+.check-card .address{
+  text-transform: uppercase;
+  font-size: 15px;
+  font-family: Tahoma;
+}
+
+.check-card .bank-name{
+  text-transform: uppercase;
+  font-size: 15px;
+  font-family: Tahoma;
+}
+
+.check-card .address h4, .check-card .bank-name h4{
+ font-weight: bold;
+}
+.check-card .date-input{
+  margin-top: 40px;
+  width: 100%;
+}
+.frcard{
+
+  justify-content: center;
+}
+.signature{
+  margin-top: 33px; 
+}
+.card-number{
+  font-family: 'MicrFont';
+  letter-spacing: 2px;
+  font-weight: 600;
+  font-size: 25px;
+}
+
+.check-border-bottom{
+  border-bottom: 1px solid #000;
+}
+.money_text {
+  height: 15px;
+}
+
+.accounting.checks #small-table.col-md-3 .dataTables_wrapper .row:nth-child(2) .col-md-7,
+.accounting.checks #small-table.col-md-3 .dataTables_wrapper .row:nth-child(2) .col-md-5,
+.accounting.checks #small-table.col-md-3 .dataTables_wrapper .row:nth-child(2) .col-md-5 .dataTables_filter label,
+.accounting.checks #small-table.col-md-3 .dataTables_wrapper .row:nth-child(2) .col-md-5 .dataTables_filter .input-group,
+.accounting.checks #small-table.col-md-3 .dataTables_wrapper .row:nth-child(2) .col-md-5 .dataTables_filter .input-group input[type="search"]
+{
+  width: 100% !important;
+}
+.check-font-style1{
+  font-family: fantasy;
+}
+
+.img_void_check_style{
+    z-index: 10000;
+    position: absolute;
+    margin-top: 80px;
+    margin-left: 300px;
+}
+
+img {
+  max-width: 100%;
+}
+
+.template-box label {
+  font-weight: 600;
+  font-size: 2rem;
+  margin-left: 10px;
+}
+
+.align-items-center {
+  -ms-flex-align: center!important;
+  align-items: center!important;
+}
+.justify-content-center {
+  -ms-flex-pack: center!important;
+  justify-content: center!important;
+}
+.d-flex {
+  display: -ms-flexbox!important;
+  display: flex!important;
+}
+
+.dflexy {
+  display: -webkit-flex!important;
+  display: -ms-flexbox!important;
+  display: flex!important;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.px-10{
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.ip_style {
+    display: none;
+    width: 1px;
+    height: 1px;
+    border: 0px;
+}
+
+.signature-pad--body {
+    border-radius: 4px;
+    position: relative;
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    border: 1px solid #c0cbda;
+}
+
+.img_style {
+    width: 150px;
+    height: 50px;
+}
+
+.text-wrap {
+  word-break: break-word !important;
+}
+
+.width-250{
+  width: 250px;
+}
+
+.acc-text-info{
+  color: #31708f !important;
+}
+
+.acc-text-success{
+  color: #3c763d !important;
+}
+.bill-card{
+  height: 349px !important;
+}
+
+/* Smart Choice compact accounting UI patch v1.4.2 */
+#setup-menu-wrapper .module-description, .modules .module-description, .module-desc { font-size: 13px !important; line-height: 1.45 !important; }
+.smart-choice-quality-stars, .smart-choice-quality-stars .fa { font-size: 13px !important; color: #f59e0b; letter-spacing: 1px; }
+.smart-choice-compact-page .btn, body.admin #wrapper .content .panel_s .btn { padding: 3px 8px !important; font-size: 11px !important; line-height: 1.4 !important; border-radius: 3px !important; }
+.smart-choice-table-actions, .dataTables_length .smart-choice-table-actions { display:inline-flex; gap:4px; align-items:center; margin-left:8px; vertical-align:middle; flex-wrap:wrap; }
+.smart-choice-table-actions .btn { padding:2px 7px !important; font-size:10.5px !important; line-height:1.35 !important; }
+.smart-choice-filter-panel { margin: 8px 0 12px; padding: 10px; background:#f8fafc; border:1px solid #e5e7eb; border-radius:4px; }
+.smart-choice-flow { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+.smart-choice-flow div { padding:10px 12px; border:1px solid #dbe3ef; border-radius:6px; background:#fff; font-weight:600; }
+.smart-choice-budget-buttons .btn { margin-right:8px !important; min-width:72px; }
+.quickbooks-small-note { font-size:12px; color:#64748b; }
+.smart-choice-page-header{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+/* Smart Choice Accounting Hub compact controls and filters */
+.smart-choice-compact-page .btn,
+.smart-choice-table-actions .btn,
+.accounting-hub-backup-page .btn,
+body .btn.btn-xs {
+  padding: 3px 7px !important;
+  font-size: 11px !important;
+  line-height: 1.3 !important;
+  border-radius: 3px !important;
+}
+.smart-choice-table-actions{display:inline-flex;gap:4px;align-items:center;margin-left:8px;vertical-align:middle;flex-wrap:wrap;}
+.smart-choice-table-actions .btn{margin:0!important;white-space:nowrap;}
+.dataTables_length{display:flex!important;align-items:center;gap:6px;flex-wrap:wrap;}
+.dataTables_filter input{height:28px!important;font-size:12px!important;padding:3px 7px!important;max-width:220px;}
+table.dataTable thead tr.smart-choice-column-filters th{padding:3px!important;}
+table.dataTable thead tr.smart-choice-column-filters input,
+table.dataTable thead tr.smart-choice-column-filters select{width:100%;height:26px;font-size:11px;padding:2px 5px;box-sizing:border-box;}
+.accounting-hub-backup-page code{font-size:11px;white-space:normal;word-break:break-word;}

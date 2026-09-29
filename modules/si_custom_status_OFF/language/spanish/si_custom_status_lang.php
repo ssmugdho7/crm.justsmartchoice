@@ -1,0 +1,23 @@
+<?php
+$lang['si_custom_status'] = 'Administrar Estados Personalizados';
+$lang['si_custom_status_setup_menu'] = 'Estados Personalizados';
+$lang['si_custom_status_project_statuses_menu'] = 'Estados de Proyectos';
+$lang['si_custom_status_task_statuses_menu'] = 'Estados de Tareas';
+$lang['si_custom_statuses'] = 'Estados Personalizados';
+$lang['si_custom_status_new_status'] = 'Agregar Nuevo Estado';
+$lang['si_custom_status_default_status'] = 'Estado Predeterminado';
+$lang['si_custom_status_status_add_edit_order'] = 'Orden';
+$lang['si_custom_status_status_color'] = 'Color';
+$lang['si_custom_status_status_add_edit_name'] = 'Nombre del Estado';
+$lang['si_custom_status_status_table_total'] = 'Total %s';
+$lang['si_custom_status_status_filter_default'] = 'Predeterminado en el Filtro';
+$lang['si_custom_status_message'] = 'Administre qué estados de %s estarán disponibles para administradores y cuáles serán visibles en el portal del cliente.';
+$lang['si_custom_status_edit_default_status_info'] = 'Permitir editar los estados predeterminados de %s';
+$lang['si_custom_status_default_active_info'] = 'Puede desactivar este estado predeterminado solo cuando el total de registros %s sea 0 para este estado';
+$lang['si_custom_status_default_status_name'] = 'Deje el nombre del estado en blanco para usar el nombre predeterminado del CRM';
+$lang['si_custom_status_error_in_update'] = 'No se pudo actualizar la configuración del estado.';
+$lang['si_custom_status_visibility_scope'] = 'Visibilidad';
+$lang['si_custom_status_visibility_admin'] = 'Solo Administración';
+$lang['si_custom_status_visibility_client'] = 'Solo Cliente';
+$lang['si_custom_status_visibility_all'] = 'Todo el CRM';
+$lang['si_custom_status_visibility_help'] = 'Use Todo el CRM para estados que deben aparecer en administración y portal del cliente. Use Solo Administración para ocultar estados internos al cliente. Use Solo Cliente para estados visibles al cliente.';

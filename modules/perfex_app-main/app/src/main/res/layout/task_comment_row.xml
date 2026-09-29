@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="2">
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/comment"
+            android:padding="8dp"
+            android:layout_width="0dp"
+            android:layout_weight="1.5"
+            android:layout_height="wrap_content" />
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:padding="5dp"
+            android:orientation="horizontal">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:id="@+id/iconEdit"
+                android:src="@drawable/ic_baseline_edit_24"
+                android:tint="@color/themeColorSecondary"
+                android:layout_height="wrap_content" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:id="@+id/iconClose"
+                android:src="@drawable/baseline_close_24"
+                android:tint="@color/Red"
+                android:layout_height="wrap_content" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+    <androidx.recyclerview.widget.RecyclerView
+        android:visibility="gone"
+        android:id="@+id/attachmentRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_margin="10dp"
+        android:background="@color/themeColorSecondary"
+        android:layout_height="1dp" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

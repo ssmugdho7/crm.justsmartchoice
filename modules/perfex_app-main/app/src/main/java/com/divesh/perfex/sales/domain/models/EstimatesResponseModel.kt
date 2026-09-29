@@ -1,0 +1,75 @@
+package com.divesh.perfex.sales.domain.models
+
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+data class EstimatesResponseModel(
+    val estimates: List<Estimate>,
+    val message: String,
+    val status: Int
+): Parcelable {
+    @Parcelize
+    data class Estimate(
+        val acceptance_date: String?,
+        val acceptance_email: String?,
+        val acceptance_firstname: String?,
+        val acceptance_ip: String?,
+        val acceptance_lastname: String?,
+        val addedfrom: Int,
+        val adjustment: Int,
+        val adminnote: String?,
+        val billing_city: String,
+        val billing_country: String?,
+        val billing_state: String,
+        val billing_street: String?,
+        val billing_zip: Int,
+        val clientid: Int,
+        val clientnote: String?,
+        val currency: Int,
+        val currency_name: String,
+        val currencyid: Int,
+        val date: String,
+        val datecreated: String,
+        val datesend: String?,
+        val decimal_separator: String,
+        val deleted_customer_name: String?,
+        val discount_percent: Int,
+        val discount_total: Int,
+        val discount_type: String?,
+        val expirydate: String,
+        val hash: String,
+        val id: Int,
+        val include_shipping: Int,
+        val invoiced_date: String?,
+        val invoiceid: String?,
+        val is_expiry_notified: Int,
+        val isdefault: Int,
+        val name: String,
+        val number: Int,
+        val number_format: Int,
+        val pipeline_order: Int,
+        val placement: String,
+        val prefix: String,
+        val project_id: Int,
+        val reference_no: String,
+        val sale_agent: Int,
+        val sent: Int,
+        val shipping_city: String,
+        val shipping_country: String?,
+        val shipping_state: String,
+        val shipping_street: Double,
+        val shipping_zip: Double,
+        val short_link: String?,
+        val show_quantity_as: Int,
+        val show_shipping_on_estimate: Int,
+        val signature: String?,
+        val status: Int,
+        val subtotal: Int,
+        val symbol: String,
+        val terms: String?,
+        val thousand_separator: String,
+        val total: Int,
+        val total_tax: Int
+    ): Parcelable
+}

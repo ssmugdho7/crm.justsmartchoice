@@ -1,0 +1,2 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<!doctype html><html><head><meta charset="utf-8"><title><?php echo html_escape($title); ?></title><style>body{font-family:Arial,sans-serif;background:#f5f5f5;margin:0;padding:30px}.doc{max-width:900px;margin:auto;background:#fff;padding:35px;border-radius:10px;box-shadow:0 5px 24px rgba(0,0,0,.12)}</style></head><body><div class="doc"><?php $this->load->view('purchasing_hub/document_pdf', ['type'=>$type,'row'=>$row,'title'=>$title]); ?></div></body></html>

@@ -1,0 +1,43 @@
+{
+    "packages": [
+        {
+            "name": "ankabit/tour-guide",
+            "version": "dev-main",
+            "version_normalized": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "/Users/Aramics/Projects/web/TurnSaas/tour-guide/core/dist/TourGuide",
+                "reference": "f80b76bd9fbf274c23f3050830f45f6c0c85e5f0"
+            },
+            "require": {
+                "php": ">=7.2"
+            },
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "TourGuide\\": "src/",
+                    "TourGuide\\Http\\Controllers\\": "src/Http/Controllers"
+                },
+                "files": [
+                    "src/common.php"
+                ]
+            },
+            "authors": [
+                {
+                    "name": "Ankabit Technologies",
+                    "email": "hammed@ankabit.com"
+                }
+            ],
+            "description": "Tour gudie core",
+            "transport-options": {
+                "relative": false
+            },
+            "install-path": "../ankabit/tour-guide"
+        }
+    ],
+    "dev": true,
+    "dev-package-names": [
+        "ankabit/tour-guide"
+    ]
+}

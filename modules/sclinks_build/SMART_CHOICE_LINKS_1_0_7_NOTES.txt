@@ -1,0 +1,15 @@
+Smart Choice Links v1.0.7
+
+Changes:
+- Top manager header made narrower with more rounded corners.
+- Main table width reduced and row spacing tightened.
+- Table header changed from dark/black to Smart Choice green with white text for better readability.
+- Star dropdown popup made smaller.
+- Link category moved inline to the right of the link title inside the popup.
+- Add/Edit modal made smaller and tighter.
+
+Install:
+1. Replace modules/smart_choice_links/
+2. Run Upgrade Database for Smart Choice Links.
+3. Clear application/cache except index.html.
+4. Ctrl + F5.

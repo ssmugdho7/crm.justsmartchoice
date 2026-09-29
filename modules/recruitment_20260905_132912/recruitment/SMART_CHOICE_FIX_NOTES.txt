@@ -1,0 +1,9 @@
+Smart Choice Contractors build 1.7.2
+
+Fixes included:
+- Removed activation/token redirects that sent admin tabs back to dashboard.
+- Added migration shims 170/171/172 for Perfex Upgrade Database errors.
+- Public application forms now render usable default fields if form builder data is empty or corrupted.
+- Added resume/certification upload field to the public application form.
+- Improved mobile-friendly hiring application page.
+- PHP 8.5-safe metadata and helper cleanup.

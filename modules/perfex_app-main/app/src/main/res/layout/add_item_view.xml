@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:backgroundTint="@color/white"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="4dp">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        >
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/description"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/description"
+            app:counterEnabled="true"
+            app:counterMaxLength="200"
+            app:endIconMode="clear_text"
+            app:startIconContentDescription="@string/description"
+            app:startIconDrawable="@drawable/ic_baseline_sticky_note_2_24">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/longDescription"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/long_description"
+            app:counterEnabled="true"
+            app:counterMaxLength="2000"
+            app:endIconMode="clear_text"
+            app:startIconContentDescription="@string/long_description"
+            app:startIconDrawable="@drawable/ic_baseline_sticky_note_2_24">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/qty"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/qty"
+            app:counterEnabled="true"
+            app:counterMaxLength="2"
+            app:endIconMode="clear_text"
+            app:startIconContentDescription="@string/qty"
+            app:startIconDrawable="@drawable/ic_baseline_add_shopping_cart_24">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberSigned" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/rate"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/rate"
+            app:counterEnabled="true"
+            app:counterMaxLength="8"
+            app:endIconMode="clear_text"
+            app:startIconContentDescription="@string/rate"
+            app:startIconDrawable="@drawable/ic_baseline_monetization_on_24">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberSigned" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tax"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/editbox_background"
+            android:drawablePadding="16dp"
+            android:hint="@string/select_taxes"
+            android:padding="17dp"
+            android:layout_marginBottom="10dp"
+            app:drawableRightCompat="@android:drawable/arrow_down_float"
+            android:drawableTint="@color/Gray"
+            app:drawableTint="@color/Gray"
+            app:drawableStartCompat="@drawable/ic_baseline_call_split_24" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:text="@string/Sub_total_0"
+            android:textStyle="bold"
+            android:id="@+id/totalAmount"
+            android:textSize="18sp"
+            android:padding="10dp"
+            android:layout_height="wrap_content" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:weightSum="2"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/setBtn"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/back_btn"
+                android:text="@string/add"
+                app:iconTint="@color/white"
+                app:icon="@drawable/ic_baseline_check_circle_outline_24"
+                android:textColor="@color/white" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/removeBtn"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/back_btn"
+                android:text="@string/remove"
+                android:textColor="@color/white" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</com.google.android.material.card.MaterialCardView>

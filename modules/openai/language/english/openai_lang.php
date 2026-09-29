@@ -1,0 +1,20 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed');
+
+$lang['openai'] = 'Openai';
+$lang['openai_menu'] = 'Openai';
+$lang['openai_settings'] = 'Openai Settings';
+$lang['openai_health'] = 'Health';
+$lang['openai_help'] = 'Help';
+$lang['settings'] = 'Settings';
+$lang['health'] = 'Health';
+$lang['help'] = 'Help';
+$lang['create'] = 'Create';
+$lang['edit'] = 'Edit';
+$lang['delete'] = 'Delete';
+$lang['view'] = 'View';
+$lang['view_own'] = 'View Own';
+$lang['view_global'] = 'View Global';
+$lang['import'] = 'Import';
+$lang['export'] = 'Export';
+$lang['sample_header'] = 'Sample Header';
+$lang['mass_delete'] = 'Mass Delete';

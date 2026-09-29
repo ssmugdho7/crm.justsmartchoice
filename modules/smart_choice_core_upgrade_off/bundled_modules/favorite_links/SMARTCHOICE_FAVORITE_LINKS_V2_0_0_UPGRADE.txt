@@ -1,0 +1,22 @@
+Favorite Links Smart Choice Upgrade
+Version: 2.0.1
+Author / Creator: Smart Choice Contractors USA / Herol Cabrera
+Website: https://www.justsmartchoice.com
+
+Description: Favorite Links helps Smart Choice Contractors USA manage important CRM shortcuts, bookmarked pages, vendor resources, project references, supplier websites, and frequently used business links inside Perfex CRM. This upgrade fixes the mobile favorite star placement beside the search bar while preserving the original module structure.
+
+Migration rule used:
+Existing migration versions found: none
+Added only one new migration: 001_smartchoice_favorite_links_upgrade.php
+
+Included:
+- PHP 8.5 target compatibility.
+- Perfex CRM 3.4.1 target compatibility.
+- No dummy migration chain.
+- Database update support.
+- Safe uninstall file.
+- Activation validation references removed.
+- English and Spanish labels.
+- Smart Choice UI styling.
+- Long module description.
+- Existing module structure preserved.

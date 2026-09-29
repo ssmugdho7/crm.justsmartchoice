@@ -1,0 +1,1 @@
+Cabinet Maker 1.2.9: professional labels, door styles, finish selectors, improved 2D/3D door rendering, Smart Choice styling, import/sample/reload controls, dashboard delivery view, Go Up button, and safer database repair diagnostics.

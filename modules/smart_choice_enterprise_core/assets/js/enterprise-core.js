@@ -1,0 +1,1 @@
+(function($){'use strict';$(function(){var app=$('#sc-enterprise-app');if(!app.length)return;app.on('click','[data-sc-copy]',function(){var value=$(this).attr('data-sc-copy')||'';if(navigator.clipboard){navigator.clipboard.writeText(value);} });});})(jQuery);

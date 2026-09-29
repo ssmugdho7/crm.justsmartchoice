@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="true">Приложение Перфекс</string>
+    <string name="tab_dashboard" translatable="true">Приборная панель</string>
+    <string name="tab_customers" translatable="false">Клиенты</string>
+    <string name="tab_projects" translatable="false">Проекты</string>
+    <string name="tab_tasks" translatable="false">Задания</string>
+    <string name="tab_support" translatable="false">Поддерживать</string>
+    <string name="tab_leads" translatable="false">Ведет</string>
+    <string name="tab_profile" translatable="false">Профиль</string>
+    <string name="tab_task" translatable="false">Задача</string>
+    <string name="tab_reminders" translatable="false">Напоминания</string>
+    <string name="tab_notes" translatable="false">Ноты</string>
+    <string name="tab_activity_log" translatable="false">Журнал активности</string>
+    <string name="tab_contacts" translatable="false">Контакты</string>
+    <string name="tab_invoices" translatable="false">Счета</string>
+    <string name="tab_proposals" translatable="false">Предложения</string>
+    <string name="not_started" translatable="false">Не начато</string>
+    <string name="waiting_feedback" translatable="false">В ожидании обратной связи</string>
+    <string name="testing" translatable="false">Тестирование</string>
+    <string name="in_progress" translatable="false">В ходе выполнения</string>
+    <string name="complete" translatable="false">Полный</string>
+    <string name="low_priority" translatable="false">Низкий</string>
+    <string name="medium_priority" translatable="false">Середина</string>
+    <string name="high_priority" translatable="false">Высокий</string>
+    <string name="urgent_priority" translatable="false">Срочный</string>
+    <string name="related_to_search" translatable="false">Поиск</string>
+    <string name="related_to_lead" translatable="false">Свинец</string>
+    <string name="related_to_customer" translatable="false">Покупатель</string>
+    <string name="days" translatable="false">День (дни)</string>
+    <string name="weeks" translatable="false">Неделя(ы)</string>
+    <string name="months" translatable="false">Месяцы</string>
+    <string name="years" translatable="false">Годы</string>
+    <string name="one_week" translatable="false">1 неделя</string>
+    <string name="two_weeks" translatable="false">2 недели</string>
+    <string name="one_month" translatable="false">1 месяц</string>
+    <string name="two_months" translatable="false">2 месяца</string>
+    <string name="three_months" translatable="false">3 месяца</string>
+    <string name="six_months" translatable="false">6 месяцев</string>
+    <string name="one_year" translatable="false">1 год</string>
+    <string name="custom_repeat" translatable="false">Обычай</string>
+    <string name="company_name" translatable="false">Название организации</string>
+    <string name="start_timer" translatable="false">Запуск таймера</string>
+    <string name="recurring" translatable="false">Повторяющийся</string>
+    <string name="stop_timer" translatable="false">Остановить таймер</string>
+    <string name="add_lead" translatable="false">Добавить интерес</string>
+    <string name="add_reminder" translatable="false">Добавить напоминание</string>
+    <string name="add_notes" translatable="false">Добавить примечания</string>
+    <string name="field_required" translatable="false">Это поле обязательно к заполнению</string>
+    <string name="contacted_today" translatable="false">Связались сегодня</string>
+    <string name="first_name" translatable="false">Имя</string>
+    <string name="last_name" translatable="false">Фамилия</string>
+    <string name="send_set_password_email" translatable="false">Отправить пароль SET по электронной почте</string>
+    <string name="do_not_send_welcome_email" translatable="false">Не отправлять приветственное письмо</string>
+    <string name="related_to_type" translatable="false">Относится к</string>
+    <string name="hourly_rate" translatable="false">Почасовая ставка</string>
+    <string name="due_date" translatable="false">Срок</string>
+    <string name="helper_source" translatable="false">Пожалуйста, выберите источник</string>
+    <string name="helper_assigned" translatable="false">Назначить персонал</string>
+    <string name="zero" translatable="false">0</string>
+    <string name="search_here" translatable="false">Поиск</string>
+    <string name="add_customer" translatable="false">Добавить клиента</string>
+    <string name="date" translatable="false">Дата</string>
+    <string name="start_date_and_end_date" translatable="false">%s - %s</string>
+    <string name="call_duration_with_date" translatable="false">%s %s:%s:%s</string>
+    <string name="add" translatable="false">Добавлять</string>
+    <string name="delete" translatable="false">Удалить</string>
+    <string name="start_date" translatable="false">Дата начала</string>
+    <string name="update" translatable="false">Обновлять</string>
+    <string name="profile" translatable="false">Профиль</string>
+    <string name="address" translatable="false">Адрес</string>
+    <string name="choose_file" translatable="false">Выбрать файл</string>
+    <string name="channel_name" translatable="false">Импорт уведомления</string>
+    <string name="channel_description" translatable="false">Это уведомление будет отображаться всякий раз, когда вы получаете какое-либо уведомление в CRM.</string>
+    <string name="welcome_to_perfex_crm" translatable="false">Добро пожаловать в Перфекс CRM</string>
+    <string name="login" translatable="false">Авторизоваться</string>
+    <string name="good" translatable="false">Хороший</string>
+    <string name="morning" translatable="false">Утро</string>
+    <string name="email" translatable="false">Эл. адрес</string>
+    <string name="password" translatable="false">Пароль</string>
+    <string name="sign_in" translatable="false">Войти</string>
+    <string name="forgot_password" translatable="false">Забыли пароль</string>
+    <string name="settings" translatable="false">Настройки</string>
+    <string name="logout" translatable="false">Выйти</string>
+    <string name="notification" translatable="false">Уведомление</string>
+    <string name="notifications" translatable="false">Уведомления</string>
+    <string name="add_leads" translatable="false">Добавить интерес</string>
+    <string name="total_0" translatable="false">Всего: 0</string>
+    <string name="filtered_0" translatable="false">Отфильтровано: 0</string>
+    <string name="total_count" translatable="false">Итого: %d</string>
+    <string name="total_filtered" translatable="false">Отфильтровано: %d</string>
+    <string name="dial_call" translatable="false">Набрать номер</string>
+    <string name="customer_image" translatable="false">Изображение клиента</string>
+    <string name="edit" translatable="false">Редактировать</string>
+    <string name="back_btn" translatable="false">Назад</string>
+    <string name="convert" translatable="false">Конвертировать</string>
+    <string name="task_title" translatable="false">#%s - %s</string>
+    <string name="name_text" translatable="false">Имя</string>
+    <string name="position_text" translatable="false">Должность</string>
+    <string name="email_address" translatable="false">"Эл. адрес</string>
+    <string name="website_text" translatable="false">Интернет сайт</string>
+    <string name="phone_text" translatable="false">Номер телефона</string>
+    <string name="lead_value_text" translatable="false">LeadValue</string>
+    <string name="company_text" translatable="false">Компания</string>
+    <string name="address_text" translatable="false">Адрес</string>
+    <string name="city_text" translatable="false">Город</string>
+    <string name="state_text" translatable="false">Состояние</string>
+    <string name="country_text" translatable="false">Страна</string>
+    <string name="zip_code_text" translatable="false">Индекс</string>
+    <string name="description_text" translatable="false">Описание</string>
+    <string name="general_information" translatable="false">Основная информация</string>
+    <string name="status_text" translatable="false">Положение дел</string>
+    <string name="source_text" translatable="false">Источник</string>
+    <string name="default_language_text" translatable="false">Язык по умолчанию</string>
+    <string name="assigned" translatable="false">Назначенный</string>
+    <string name="created" translatable="false">Созданный</string>
+    <string name="last_contact" translatable="false">Последний контакт</string>
+    <string name="public_text" translatable="false">Общественный</string>
+    <string name="lead_information" translatable="false">Информация о лиде</string>
+    <string name="yes" translatable="false">Да</string>
+    <string name="no" translatable="false">Нет</string>
+    <string name="add_task" translatable="false">Добавить задачу</string>
+    <string name="please_select_priority" translatable="false">Выберите приоритет</string>
+    <string name="subject" translatable="false">Пожалуйста, введите тему</string>
+    <string name="repeat_every" translatable="false">Повторять каждые</string>
+    <string name="billable" translatable="false">Оплачиваемый</string>
+    <string name="not_billable" translatable="false">Не подлежит оплате</string>
+    <string name="total_cycles" translatable="false">Всего циклов (0) для бесконечности</string>
+    <string name="repeat_every_custom_count" translatable="false">Введите количество</string>
+    <string name="description" translatable="false">Пожалуйста, введите описание</string>
+    <string name="date_time_string" translatable="false">%с-%s-%s</string>
+    <string name="lead_touched" translatable="false">Я связался с этим лидом</string>
+    <string name="select_date" translatable="false">Пожалуйста, выберите дату</string>
+    <string name="save" translatable="false">Сохранить</string>
+    <string name="close" translatable="false">Закрывать</string>
+    <string name="data_with_title" translatable="false">#%s - %s</string>
+    <string name="send_email_for_reminder" translatable="false">Отправить письмо для напоминания</string>
+    <string name="notified" translatable="false">Уведомлено: %s</string>
+    <string name="set_date" translatable="false">Выберите дату</string>
+    <string name="add_log" translatable="false">Добавить журнал</string>
+    <string name="convert_to_customer" translatable="false">Преобразовать в клиента</string>
+    <string name="position" translatable="false">Должность</string>
+    <string name="company" translatable="false">Название организации</string>
+    <string name="phone" translatable="false">Номер телефона</string>
+    <string name="website" translatable="false">Интернет сайт</string>
+    <string name="city" translatable="false">Город</string>
+    <string name="state" translatable="false">Состояние</string>
+    <string name="helper_country" translatable="false">Пожалуйста, выберите страну</string>
+    <string name="zip_code" translatable="false">Индекс</string>
+    <string name="helper_status" translatable="false">Пожалуйста, выберите статус</string>
+    <string name="lead_value" translatable="false">Ценность лида</string>
+    <string name="is_public" translatable="false">Является общедоступным</string>
+    <string name="no_internet" translatable="false">Интернет недоступен</string>
+    <string name="customer_details" translatable="false">Сведения о клиенте</string>
+    <string name="vat_number" translatable="false">Номер НДС</string>
+    <string name="billing_address" translatable="false">Платежный адрес</string>
+    <string name="sameAsCustomerInfo" translatable="false">Копия от клиента</string>
+    <string name="street" translatable="false">Улица</string>
+    <string name="shipping_address" translatable="false">Перевозки</string>
+    <string name="sameAsBillingAddress" translatable="false">Скопировать из платежной информации</string>
+    <string name="save_and_create_contact" translatable="false">Сохранить и создать контакт</string>
+    <string name="select_groups" translatable="false">Выбрать группы</string>
+    <string name="groups" translatable="false">Группы</string>
+    <string name="currency" translatable="false">Валюта</string>
+    <string name="billing" translatable="false">Выставление счетов</string>
+    <string name="shipping" translatable="false">Перевозки</string>
+    <string name="add_contact" translatable="false">Добавить контакт</string>
+    <string name="primary_contact" translatable="false">Важный контакт</string>
+    <string name="do_not_set_welcome_email" translatable="false">Не отправлять приветственное письмо</string>
+    <string name="permissions" translatable="false">Разрешения</string>
+    <string name="email_notifications" translatable="false">Уведомления по электронной почте</string>
+    <string name="estimate" translatable="false">Оценить</string>
+    <string name="credit_note" translatable="false">Кредитная нота</string>
+    <string name="tickets" translatable="false">Билеты</string>
+    <string name="contract" translatable="false">Договор</string>
+    <string name="finished" translatable="false">Законченный</string>
+    <string name="not_finished" translatable="false">Не закончено</string>
+    <string name="add_support" translatable="false">Добавить поддержку</string>
+    <string name="view_public_form" translatable="false">Посмотреть общедоступную форму</string>
+    <string name="not_available" translatable="false">Н/Д</string>
+    <string name="status_open" translatable="false">Открыть</string>
+    <string name="status_in_progress" translatable="false">В ходе выполнения</string>
+    <string name="status_answered" translatable="false">Ответил</string>
+    <string name="status_on_hold" translatable="false">На удерживании</string>
+    <string name="closed" translatable="false">Закрыто</string>
+    <string name="add_ticket" translatable="false">Добавить билет</string>
+    <string name="helper_contact" translatable="false">Пожалуйста, выберите контакт</string>
+    <string name="name" translatable="false">Имя</string>
+    <string name="please_select_department" translatable="false">Пожалуйста, выберите отдел</string>
+    <string name="cc" translatable="false">Введите копию</string>
+    <string name="ticket_body" translatable="false">Тело билета</string>
+    <string name="predefined_replies" translatable="false">Предопределенные ответы</string>
+    <string name="knowledge_base_link" translatable="false">Ссылка на базу знаний</string>
+    <string name="ticket_without_contact" translatable="false">Билет без контакта</string>
+    <string name="select_service" translatable="false">Выберите услугу</string>
+    <string name="edit_ticket" translatable="false">Редактировать билет</string>
+    <string name="converted_leads" translatable="false">Преобразованные лиды</string>
+    <string name="add_reply" translatable="false">Добавить ответ</string>
+    <string name="reply" translatable="false">Отвечать</string>
+    <string name="tasks_not_finished" translatable="false">Задачи Не завершены</string>
+    <string name="open_tickets" translatable="false">Открытые билеты</string>
+    <string name="active_customers" translatable="false">Активные клиенты</string>
+    <string name="active_contacts" translatable="false">Активные контакты</string>
+    <string name="high_priority_tickets" translatable="false">Билеты с высоким приоритетом</string>
+    <string name="low_priority_tickets" translatable="false">Билеты с низким приоритетом</string>
+    <string name="mid_priority_tickets" translatable="false">Билеты со средним приоритетом</string>
+    <string name="tickets_without_contact" translatable="false">Билеты без контакта</string>
+    <string name="inactive_contacts" translatable="false">Неактивные контакты</string>
+    <string name="dashboard_stats" translatable="false">#%s - %s</string>
+    <string name="mark_as_read" translatable="false">пометить, как прочитанное</string>
+    <string name="sales" translatable="false">Продажи</string>
+    <string name="title_activity_sales" translatable="false">ПродажиАктивность</string>
+    <string name="home" translatable="false">Дом</string>
+    <string name="tab_items" translatable="false">Предметы</string>
+    <string name="add_proposals" translatable="false">Добавить предложение</string>
+    <string name="tab_discussion" translatable="false">Обсуждение</string>
+    <string name="subtotal" translatable="false">Промежуточный итог</string>
+    <string name="discount" translatable="false">Скидка</string>
+    <string name="tax" translatable="false">налог</string>
+    <string name="adjustment" translatable="false">Корректирование</string>
+    <string name="total" translatable="false">Общее</string>
+    <string name="staff_image" translatable="false">Изображение персонала</string>
+    <string name="add_proposal" translatable="false">Добавить предложение</string>
+    <string name="status_declined" translatable="false">Отклоненный</string>
+    <string name="status_accepted" translatable="false">Принято</string>
+    <string name="status_sent" translatable="false">Отправил</string>
+    <string name="status_revised" translatable="false">Пересмотрено</string>
+    <string name="status_draft" translatable="false">Проект</string>
+    <string name="open_till" translatable="false">Открыть до</string>
+    <string name="allow_comments" translatable="false">Разрешить комментарии</string>
+    <string name="status" translatable="false">Положение дел</string>
+    <string name="to" translatable="false">К</string>
+    <string name="search_leads" translatable="false">Поиск потенциальных клиентов</string>
+    <string name="search_customers" translatable="false">Поиск клиентов</string>
+    <string name="qty" translatable="false">Кол-во</string>
+    <string name="hours" translatable="false">Часы</string>
+    <string name="qty_by_hours" translatable="false">Кол-во/часы</string>
+    <string name="show_quantity_as" translatable="false">Показать количество как</string>
+    <string name="item" translatable="false">Предмет</string>
+    <string name="long_description" translatable="false">длинное описание</string>
+    <string name="rate" translatable="false">Показатель</string>
+    <string name="remove" translatable="false">Удалять</string>
+    <string name="Sub_total_0" translatable="false">Итого: 0</string>
+    <string name="select_taxes" translatable="false">Выберите налоги</string>
+    <string name="select_language" translatable="false">Выбрать язык</string>
+    <string name="english_lang" translatable="false">Английский</string>
+    <string name="hindi_lang" translatable="false">हिंदी</string>
+    <string name="bengali_lang" translatable="false">বাংলা</string>
+    <string name="german_lang" translatable="false">немецкий</string>
+    <string name="portuguese_lang" translatable="false">португальский</string>
+    <string name="russian_lang" translatable="false">русский</string>
+    <string name="discount_type" translatable="false">Тип скидки</string>
+    <string name="adjustment_amount" translatable="false">Корректирование</string>
+    <string name="percentage_symbol">%</string>
+    <string name="my_logged_time">Мое зарегистрированное время</string>
+    <string name="hello_blank_fragment">Привет пустой фрагмент</string>
+    <string name="checklist_items">Пункты контрольного списка</string>
+    <string name="followers">Последователи</string>
+    <string name="assignees">Правопреемники</string>
+    <string name="select_assignees">Выберите исполнителей</string>
+    <string name="select_followers">Выберите подписчиков</string>
+    <string name="add_attachments">Добавить приложение</string>
+    <string name="add_comment">Добавить комментарий</string>
+    <string name="confirm_deletion">Вы уверены, что хотите удалить</string>
+    <string name="add_checklist">Добавить контрольный список</string>
+    <string name="completed_by">авершено %s</string>
+    <string name="assigned_to">Назначено %s</string>
+    <string name="comment_added">Комментарий добавлен</string>
+</resources>

@@ -1,0 +1,18 @@
+Smart Choice Links v1.0.6
+
+Changes:
+- Button label changed to "Add a Link".
+- Link manager table made more compact.
+- Table header styled with rounded corners.
+- Add/Edit modal made smaller and tighter.
+- Category field moved beside title.
+- Added drag-and-drop ordering in the main link table.
+- Added link text color setting.
+- Added optional light text shadow setting.
+- Dropdown link titles now respect custom color and shadow.
+
+Install:
+1. Replace modules/smart_choice_links/ with this folder.
+2. Go to Modules > Smart Choice Links > Upgrade Database.
+3. Clear application/cache except index.html.
+4. Press Ctrl + F5.

@@ -1,0 +1,8 @@
+
+.google-meet-header{background:linear-gradient(135deg,#f97316,#2563eb);color:#fff;padding:22px 26px;border-radius:20px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 16px 40px rgba(15,23,42,.18);margin-bottom:20px}
+.google-meet-header h1{margin:0;font-weight:800;color:#fff}
+.google-meet-card{border-radius:18px!important;border:1px solid rgba(249,115,22,.18)!important;box-shadow:0 12px 32px rgba(15,23,42,.10)!important;overflow:hidden}
+.google-meet-card .panel-body{padding:22px}
+.google-meet-settings-heading{background:linear-gradient(135deg,#f97316,#2563eb);color:#fff;border-radius:16px;padding:16px 18px;margin-bottom:18px}
+.google-meet-settings-heading h4{color:#fff;font-weight:800;margin-top:0}.google-meet-settings-heading p{color:rgba(255,255,255,.90);margin-bottom:0}
+.gm-comments{display:block}.gm-comment-box{background:#f8f9fb;border-left:4px solid #FAD807;border-radius:10px;padding:14px 16px;margin-bottom:12px;box-shadow:0 4px 14px rgba(0,0,0,.08)}.gm-comment-box small{display:block;color:#777;margin-top:3px}.gm-comment-box p{margin:8px 0 0}.google-meet-header p{color:#555}.google-meet-card .table td{vertical-align:middle}.gm-side-card{background:#fff;border-radius:12px;padding:18px;box-shadow:0 8px 24px rgba(0,0,0,.12);border-top:4px solid #FAD807}

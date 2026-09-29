@@ -1,0 +1,13 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<?php init_head(); ?>
+<div id="wrapper"><div class="content smart-choice-links-page"><div class="row"><div class="col-md-12">
+<div class="scl-hero panel_s"><div class="panel-body"><div class="scl-hero-flex"><div><h3><i class="fa fa-book"></i> <?php echo _l('smart_choice_links_how_to_use'); ?></h3><p><?php echo _l('smart_choice_links_help_intro'); ?></p></div><div class="scl-hero-actions"><a href="<?php echo admin_url('smart_choice_links'); ?>" class="btn btn-default btn-sm"><i class="fa fa-list"></i> <?php echo _l('smart_choice_links_manage'); ?></a><a href="<?php echo admin_url('smart_choice_links/settings'); ?>" class="btn btn-default btn-sm"><i class="fa fa-cog"></i> <?php echo _l('settings'); ?></a></div></div></div></div>
+<div class="scl-module-tabs"><a href="<?php echo admin_url('smart_choice_links'); ?>"><i class="fa fa-list"></i> <?php echo _l('smart_choice_links_manage'); ?></a><a href="<?php echo admin_url('smart_choice_links/settings'); ?>"><i class="fa fa-cog"></i> <?php echo _l('smart_choice_links_settings'); ?></a><a href="<?php echo admin_url('smart_choice_links/help'); ?>" class="active"><i class="fa fa-question-circle"></i> <?php echo _l('smart_choice_links_how_to_use'); ?></a><a href="<?php echo admin_url('smart_choice_links/health'); ?>"><i class="fa fa-heartbeat"></i> <?php echo _l('smart_choice_links_health_check'); ?></a></div>
+<div class="row">
+<div class="col-md-6"><div class="scl-guide-card"><h4><i class="fa fa-star"></i> Two Star System</h4><p>The left star should hold daily work links such as Dashboard, Customers, Leads, Estimates, Invoices, Projects, Tasks, and Calendar. The right star should hold administration, settings, reports, vendors, Home Depot, training, and tools.</p></div></div>
+<div class="col-md-6"><div class="scl-guide-card"><h4><i class="fa fa-sliders-h"></i> Popup Appearance</h4><p>Open Settings to control popup width, row height, icon size, font size, padding, rounded corners, and animation speed. This keeps the menus narrow and prevents bulky windows.</p></div></div>
+<div class="col-md-6"><div class="scl-guide-card"><h4><i class="fa fa-search"></i> Menu Search</h4><p>The module can add search boxes above the main sidebar and setup sidebar. Type a word like Sales, Projects, Reports, or Settings to filter the menu without scrolling through every module.</p></div></div>
+<div class="col-md-6"><div class="scl-guide-card"><h4><i class="fa fa-keyboard-o"></i> Command Palette</h4><p>Use the command palette to jump to common CRM pages faster. This feature is designed for large Smart Choice CRM installs with many modules.</p></div></div>
+</div>
+</div></div></div></div>
+<?php init_tail(); ?>

@@ -1,0 +1,21 @@
+<?php
+$lang["pt_module_title"] = "Project Templates";
+$lang["pt_project_template"] = "Project Template";
+$lang["pt_project_template_lower"] = "project template";
+$lang["pt_edit_project_template"] = "Edit Project Template";
+$lang["pt_delete_project_template"] = "Delete Project Template";
+$lang["pt_copy_project_template"] = "Copy Project Template";
+$lang["pt_project_template_description"] = "Description";
+$lang["pt_new_project_template"] = "New Project Template";
+$lang["failed_to_copy_project_template"] = "Failed to copy project template";
+$lang["pt_project_template_copied_successfully"] = "Project template copied successfully";
+$lang["pt_project_from_template"] = "project from template";
+$lang["pt_new_project_from_template"] = "Create Project From Template";
+$lang["pt_select_project_template"] = "Select Project Template";
+$lang["pt_project_template_not_found"] = "Project template not found";
+$lang["pt_duration_text"] = "Due Date Duration (In Days)";
+$lang["pt_milestone_start_date"] = "Days to start after project start date";
+$lang["pt_milestone_due_date"] = "Due in days";
+$lang["permission_create_milestones"] = "Create Milestones";
+$lang["permission_edit_milestones"] = "Edit Milestones";
+$lang["permission_delete_milestones"] = "Delete Milestones";

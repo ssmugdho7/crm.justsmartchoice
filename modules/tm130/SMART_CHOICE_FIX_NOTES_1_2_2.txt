@@ -1,0 +1,13 @@
+Training Manual v1.2.2 Fix Notes
+
+Fixed:
+- Change Creator modal now passes the correct article ID to the controller.
+- Creator change updates both author_id and created_by so the article card shows the selected creator after save.
+- Added migration 122_version_122.php to confirm creator/bookmark fields exist and backfill created_by.
+- Article cards now use a strict flex grid: three cards per row on desktop, equal card heights, equal spacing, and clean last row behavior.
+- Card action buttons are forced onto one line with compact button sizing.
+- Bookmark button now uses the same class/data attributes expected by JavaScript and performs the AJAX bookmark action.
+- Clone button now calls a real clone_article controller action and model method, creates a copy, keeps it unpublished, and redirects to edit the cloned article.
+- Mass action checkbox name corrected to match the mass delete controller input.
+- Module version updated to 1.2.2.
+- PHP syntax validated across all module PHP files.

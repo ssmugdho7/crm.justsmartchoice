@@ -1,0 +1,8 @@
+Smart Choice PRChat 2.2.2
+
+Repair scope only:
+- Staff/contact table now renders from the database without waiting for Pusher.
+- Missing, blocked, delayed, or misconfigured Pusher no longer stops page JavaScript.
+- Full chat page and users endpoint no longer redirect before database bootstrap.
+- Added migration 222 so Perfex detects and runs the module upgrade.
+- No schema, messages, uploads, settings, API keys, AI configuration, or unrelated UI changed.

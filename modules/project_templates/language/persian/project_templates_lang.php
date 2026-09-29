@@ -1,0 +1,21 @@
+<?php
+$lang["pt_module_title"] = "قالب‌های پروژه";
+$lang["pt_project_template"] = "قالب پروژه";
+$lang["pt_project_template_lower"] = "قالب پروژه";
+$lang["pt_edit_project_template"] = "ویرایش قالب پروژه";
+$lang["pt_delete_project_template"] = "حذف قالب پروژه";
+$lang["pt_copy_project_template"] = "کپی قالب پروژه";
+$lang["pt_project_template_description"] = "توضیحات";
+$lang["pt_new_project_template"] = "قالب پروژه جدید";
+$lang["failed_to_copy_project_template"] = "کپی قالب پروژه شکست خورد";
+$lang["pt_project_template_copied_successfully"] = "قالب پروژه با موفقیت کپی شد";
+$lang["pt_project_from_template"] = "پروژه از قالب";
+$lang["pt_new_project_from_template"] = "ایجاد پروژه از قالب";
+$lang["pt_select_project_template"] = "انتخاب قالب پروژه";
+$lang["pt_project_template_not_found"] = "قالب پروژه پیدا نشد";
+$lang["pt_duration_text"] = "مدت زمان مهلت (به روز)";
+$lang["pt_milestone_start_date"] = "روزهایی برای شروع بعد از تاریخ شروع پروژه";
+$lang["pt_milestone_due_date"] = "مهلت به روز";
+$lang["permission_create_milestones"] = "ایجاد نقاط عطف";
+$lang["permission_edit_milestones"] = "ویرایش نقاط عطف";
+$lang["permission_delete_milestones"] = "حذف نقاط عطف";

@@ -1,0 +1,35 @@
+Smart Choice Core Upgrade v3.1.4 — Full Module Package
+Quality ★★★★★
+Creator: Harold Cabrera
+Author: Smart Choice Contractors USA / Harold Cabrera
+
+This package is meant to be uploaded as the smart_choice_core_upgrade module and upgraded from Setup > Modules.
+
+Included bundled module folders copied during migration 314:
+- Accounting Hub
+- Purchasing Hub
+- Sales Hub
+- Smart Choice Office Stream / Chat
+- Training Manual
+- Custom PDF
+- Google Meet
+- Favorite Links
+- Video Library
+- Smart Choice Field Connector
+- Smart Choice To Do
+- Smart Choice Merge Fields
+
+Global rules staged/applied:
+- Smart Choice CRM 3.1.4 — Quality ★★★★★ global badge under top bar.
+- Eastern Time (US & Canada) label and America/New_York PHP timezone.
+- English and Spanish support standard.
+- Clean visible labels, no underscores.
+- Parent menu and submenu icons standard.
+- Setup settings for Smart Choice Admin Settings, Embedded Modules, and Update Center.
+- Category Menu with permissions.
+- Reports links under native CRM Reports.
+- Table toolbar helper with compact Import, Sample Header, Export, Reload, and Mass Action buttons where safe.
+- View Own, View Global, Create, Edit, Delete permission standard.
+- QuickBooks Desktop Enterprise IIF workflow rule for Accounting/Purchasing/Sales reports.
+
+Important: this upgrade does not remove or bypass Perfex license validation. Test in staging first.

@@ -1,0 +1,22 @@
+Smart Choice Contractors USA / Harold Cabrera
+Recruitment Module Portal Refresh v1.7.3
+
+Changes made:
+- Preserved original recruitment module workflow and database structure.
+- Updated module metadata author/description/version.
+- Improved recruitment portal layout to match Smart Choice Contractors USA styling.
+- Added yellow/black/white brand palette, shadows, rounded cards, and mobile responsiveness.
+- Fixed job card height/overflow so job titles and descriptions are readable and scroll/display correctly.
+- Added Smart Choice logo fallback in the recruitment portal navigation.
+- Added company logo fallback for broken/missing PNG/JPG company logos.
+- Improved public job detail page logo handling.
+- Left existing settings workflow unchanged because the module settings were already working.
+
+After upload:
+1. Replace the existing modules/recruitment folder.
+2. Clear application/cache except index.html.
+3. Press Ctrl+F5.
+4. Open recruitment portal and test job list, job detail, and apply buttons.
+
+Recommended portal URL:
+https://crm.justsmartchoice.com/recruitment/recruitment_portal

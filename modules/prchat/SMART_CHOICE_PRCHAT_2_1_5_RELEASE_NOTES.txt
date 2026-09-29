@@ -1,0 +1,8 @@
+PRChat 2.1.5
+- Hard-aborts speech recognition before sending and invalidates late browser speech events.
+- Clears dictated drafts after Send/Enter without restoring earlier text.
+- Uses the direct Perfex HMVC AI controller URL with compatibility routes.
+- Preserves shared Pusher call handlers so incoming Accept/Decline controls remain available.
+- Reads phone data from the active contact element itself.
+- Internal staff WebRTC calls no longer require a telephone number.
+- All changes remain scoped to PRChat.

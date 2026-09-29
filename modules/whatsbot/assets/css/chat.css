@@ -1,0 +1,104 @@
+[v-cloak] {
+    display: none;
+}
+
+.custom-border {
+    border-bottom: 1px solid #e0e6ed;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #eef0f4;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #a1a3a7;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #a1a3a7;
+}
+
+.mainsidebar-class {
+    display: none;
+}
+
+.mainsidebar-badge {
+    display: block;
+}
+
+.side-chat .dele-icn {
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    pointer-events: none;
+}
+
+.side-chat:hover .dele-icn {
+    opacity: 1;
+    pointer-events: auto;
+
+}
+
+@media (min-width: 1280px) {
+    .mainsidebar-class {
+        display: block;
+        /* xl:block */
+    }
+}
+
+@media (max-width: 650px) {
+    .mainsidebar-badge {
+        display: none;
+        /* xl:block */
+    }
+}
+
+.chat-bg-image {
+    background-image: url('../images/bg.png');
+    max-height: 100vh;
+}
+
+#emoji-picker-container {
+    position: absolute;
+    top: -435px;
+    left: 50px;
+}
+
+.bg-light-mode {
+    background-image: url('../images/bg.png')
+}
+
+.dark .bg-dark-mode {
+    background-image: url('../images/bg_dark.png')
+}
+
+
+@media (max-width: 650px) {
+    #emoji-picker-container {
+        position: absolute;
+        top: -435px;
+        left: 2px;
+    }
+
+    .mobile-canned {
+        position: absolute;
+        width: 300px;
+        left: 22px;
+        overflow-x: hidden;
+    }
+
+    .chat-bg-image {
+        max-height: 100vh;
+    }
+
+    .mobile-view {
+        overflow-y: auto;
+        height: 100vh;
+    }
+}

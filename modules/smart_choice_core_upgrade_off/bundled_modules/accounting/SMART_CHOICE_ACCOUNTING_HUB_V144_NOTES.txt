@@ -1,0 +1,14 @@
+Smart Choice Accounting Hub v1.4.4
+Author: Smart Choice Contractors USA / Harold Cabrera
+Quality: ★★★★★
+Last Modified: 2026-06-30
+
+Changes:
+- Added Finance Setup Sync for Perfex taxes, currencies, expense categories, and payment modes.
+- Added QuickBooks Desktop Enterprise IIF export/sample support for payment modes, expense categories, taxes, and currencies.
+- Added Setup > Accounting Hub Settings > Backup And Safe Mode.
+- Added backup create, backup check, restore backup, backup path display, Safe Mode, and database health check.
+- Added Accounting Hub Finance Reports entry under the CRM native Reports menu.
+- Added compact table controls and column filters across Accounting Hub tables.
+- Added compact Import, Sample Header, Refresh, Mass Activate, Mass Deactivate, and Mass Delete buttons beside table length/export controls.
+- Added migration 144 with non-destructive database additions.

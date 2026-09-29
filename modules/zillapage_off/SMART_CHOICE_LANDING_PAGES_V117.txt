@@ -1,0 +1,7 @@
+Smart Choice Landing Pages / Zillapage v1.1.7
+
+Upgrade-safe migration: 117_version_117.php
+Permissions: View Own, View Global, Create, Edit, Delete
+Features: four global design presets, reset, template CSV import/export/sample header, 50 Facebook campaign templates, stable thumbnails, social image/video/carousel presentation, overlay text, appointment button, tracking settings, English and Spanish labels.
+
+Install under modules/zillapage and run Upgrade Database.

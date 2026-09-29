@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".sales.presentation.proposals.view.proposal_items.ManageProposalItemsFragment">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@android:style/Widget.Holo.ProgressBar.Large"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:visibility="gone" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="2"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_height="0dp">
+                <include layout="@layout/no_data_found" />
+
+                <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                    android:id="@+id/swipeRefresh"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="3dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/usersList"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:padding="5dp"
+                android:layout_height="0dp">
+
+                <View
+                    android:layout_margin="5dp"
+                    android:background="@color/GrayCloud"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="@string/subtotal"
+                            android:textStyle="bold"
+                            android:layout_height="wrap_content" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="0dp"
+                            android:id="@+id/subTotalAmount"
+                            android:text="@string/zero"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="@string/discount"
+                            android:textStyle="bold"
+                            android:layout_height="wrap_content" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="0dp"
+                            android:id="@+id/discount"
+                            android:text="@string/zero"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="@string/tax"
+                            android:textStyle="bold"
+                            android:layout_height="wrap_content" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="0dp"
+                            android:id="@+id/tax"
+                            android:text="@string/zero"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="@string/adjustment"
+                            android:textStyle="bold"
+                            android:layout_height="wrap_content" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="0dp"
+                            android:id="@+id/adjustment"
+                            android:text="@string/zero"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="@string/total"
+                            android:textStyle="bold"
+                            android:layout_height="wrap_content" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="0dp"
+                            android:id="@+id/total"
+                            android:text="@string/zero"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/companyTitle"
+                    android:textStyle="bold"
+                    android:layout_height="wrap_content" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/companyAddress"
+                    android:layout_height="wrap_content" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/companyPhone"
+                    android:layout_height="wrap_content" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/companyEmail"
+                    android:layout_height="wrap_content" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</FrameLayout>

@@ -1,0 +1,20 @@
+{
+  "module": "google_analytics",
+  "version": "2.0.0",
+  "core_files_modified": [],
+  "database_tables_created": [
+    "tblga_websites",
+    "tblga_report_cache",
+    "tblga_audit_log"
+  ],
+  "core_tables_modified": [],
+  "global_css": false,
+  "global_javascript": false,
+  "hooks": [
+    "admin_init",
+    "app_admin_head",
+    "app_admin_footer",
+    "app_customers_footer"
+  ],
+  "uninstall_deletes_data": false
+}

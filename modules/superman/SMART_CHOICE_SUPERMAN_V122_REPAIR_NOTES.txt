@@ -1,0 +1,10 @@
+Smart Choice Superman v1.2.2 Repair Notes
+
+Fixed Settings page full admin interface.
+Removed Control Center and Health Check from module manager action links.
+Added Refresh and Find More buttons to Merge Fields.
+Added Preview button for visual canvas and saved combinations.
+Added supported fields for Subcontractor Contracts, Sales Hub, Sales Contracts, Purchasing, Bills, and Purchase Orders.
+Added migration 122 and bridge migrations 851-859 to resolve migration sequence gap near 850.
+Kept English and Spanish language files only.
+PHP syntax checked.

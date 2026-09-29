@@ -1,0 +1,21 @@
+<?php
+$lang["pt_module_title"] = "Project Templates";
+$lang["pt_project_template"] = "Project Template";
+$lang["pt_project_template_lower"] = "project template";
+$lang["pt_edit_project_template"] = "Project Template Bewerken";
+$lang["pt_delete_project_template"] = "Project Template Verwijderen";
+$lang["pt_copy_project_template"] = "Project Template Kopiëren";
+$lang["pt_project_template_description"] = "Beschrijving";
+$lang["pt_new_project_template"] = "Nieuwe Project Template";
+$lang["failed_to_copy_project_template"] = "Het kopiëren van de projecttemplate is mislukt";
+$lang["pt_project_template_copied_successfully"] = "Projecttemplate succesvol gekopieerd";
+$lang["pt_project_from_template"] = "project van template";
+$lang["pt_new_project_from_template"] = "Nieuw Project Maken Vanuit Template";
+$lang["pt_select_project_template"] = "Selecteer Project Template";
+$lang["pt_project_template_not_found"] = "Projecttemplate niet gevonden";
+$lang["pt_duration_text"] = "Vervaldatum Duur (In Dagen)";
+$lang["pt_milestone_start_date"] = "Dagen tot start na de projectstartdatum";
+$lang["pt_milestone_due_date"] = "Vervaldatum in dagen";
+$lang["permission_create_milestones"] = "Milestones Aanmaken";
+$lang["permission_edit_milestones"] = "Milestones Bewerken";
+$lang["permission_delete_milestones"] = "Milestones Verwijderen";

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_view_invoice_as_customer"
+        android:orderInCategory="1"
+        android:title="@string/view_invoice_as_customer"
+        app:showAsAction="never" />
+    <item
+        android:visible="false"
+        android:id="@+id/action_create_credit_note"
+        android:orderInCategory="2"
+        android:title="@string/create_credit_note"
+        app:showAsAction="never" />
+    <item
+        android:visible="false"
+        android:id="@+id/action_add_attachment"
+        android:orderInCategory="3"
+        android:title="@string/add_attachments"
+        app:showAsAction="never" />
+    <item
+        android:visible="false"
+        android:id="@+id/action_copy_invoice"
+        android:orderInCategory="4"
+        android:title="@string/copy_invoice"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_mark_as_sent"
+        android:orderInCategory="5"
+        android:title="@string/mark_as_sent"
+        app:showAsAction="never" />
+    <item
+        android:visible="false"
+        android:id="@+id/action_delete"
+        android:orderInCategory="6"
+        android:title="@string/delete"
+        app:showAsAction="never" />
+    <item
+        android:visible="false"
+        android:id="@+id/action_add_payment"
+        android:orderInCategory="7"
+        android:title="@string/add_payment"
+        app:showAsAction="never" />
+</menu>

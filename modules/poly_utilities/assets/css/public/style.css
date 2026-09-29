@@ -1,0 +1,311 @@
+/* ================ Common ================ */
+.cursor,
+.item-roles-label,
+.item-roles-property {
+    cursor: pointer
+}
+
+.not-selectable {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.poly-utilities-icons-modal {
+    height: 200px !important;
+    overflow-x: hidden;
+}
+
+.poly-utilities-icons-modal .icon {
+    display: inline-block;
+    padding: 8px;
+    cursor: pointer;
+}
+
+.poly-utilities-icons-modal .icon .wrap {
+    padding: 6px;
+}
+
+.poly-utilities-aio-icon-select {
+    width: 36px;
+    height: 34px;
+    padding: 5px;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+}
+
+/* ================ END Common ================ */
+
+/* ================ Operation functions ================ */
+.poly-scroll-to-top {
+    position: fixed;
+    right: 10px;
+    bottom: 30px;
+    z-index: 99999;
+    font-size: 28px;
+    cursor: pointer;
+    display: none
+}
+
+/* ================ END Operation functions ================ */
+
+/* ================ AIO Supports ================ */
+.poly-utilities-widgets .support {
+    position: fixed;
+    right: 10px;
+    bottom: 60px;
+    cursor: pointer;
+    z-index: 987
+}
+
+@keyframes rotateScale {
+    0% {
+        transform: rotate(0deg) scale(0);
+    }
+
+    100% {
+        transform: rotate(360deg) scale(1);
+    }
+}
+
+.poly-utilities-widgets .support .prompt {
+
+    position: absolute;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    color: #6c6c6c;
+    font-size: 13px;
+    line-height: 20px;
+    width: auto;
+    bottom: 10px;
+    right: 60px;
+    white-space: nowrap;
+    padding: 13px 28px 13px;
+    background: #FFFFFF;
+    box-shadow: 0 0px 0 0 rgba(0, 0, 0, 0.37), 0 10px 50px 0 rgba(0, 0, 0, 0.37);
+    background-repeat: no-repeat;
+    background-position: center;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    border-radius: 15px;
+    -webkit-transform-origin: 80% 105%;
+    -ms-transform-origin: 80% 105%;
+    transform-origin: 80% 105%;
+    -webkit-transform: scale(0);
+    -ms-transform: scale(0);
+    transform: scale(0);
+    -webkit-transition: ease-out 0.12s all;
+    -o-transition: ease-out 0.12s all;
+    transition: ease-out 0.12s all;
+    z-index: 10000;
+}
+
+.poly-utilities-widgets .support .prompt .prompt-content {
+    position: relative
+}
+
+.poly-utilities-widgets .support .prompt .prompt-content span {
+    display: none;
+}
+
+.poly-utilities-widgets .support .prompt.show {
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+}
+
+.poly-utilities-widgets .support .prompt:before {
+    border-right: 8px solid transparent;
+    border-top: 8px solid transparent;
+    border-left: 8px solid #FFF;
+    border-bottom: 8px solid transparent;
+    bottom: 16px;
+    right: -15px;
+
+    position: absolute;
+    left: auto;
+    display: inline-block !important;
+    content: '';
+}
+
+.poly-utilities-widgets .support .prompt .prompt-close {
+    position: absolute;
+    left: 8px;
+    top: 12px;
+    cursor: pointer;
+    z-index: 100;
+    height: 14px;
+    width: 14px;
+    padding: 2px;
+}
+
+.poly-utilities-widgets .support.show {
+    display: block;
+}
+
+.poly-utilities-widgets .support .button {
+    font-size: 28px;
+    margin: 12px 0px;
+    width: 48px;
+    height: 48px;
+    right: 0;
+    background-color: #0092ff;
+    color: #fff;
+    border-radius: 50%;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    text-align: center;
+    display: flex !important;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.poly-utilities-widgets .support .button .active,
+.poly-utilities-widgets .support .button .deactive {
+    position: absolute;
+    animation: rotateScale 0.3s ease-in-out;
+}
+
+.poly-utilities-widgets .support .button.show .active {
+    display: none;
+}
+
+.poly-utilities-widgets .support .button.show .deactive {
+    display: revert;
+}
+
+.poly-utilities-widgets .support .button .active {
+    display: revert;
+}
+
+.poly-utilities-widgets .support .button .deactive {
+    display: none;
+}
+
+.poly-utilities-widgets .support .line {
+    background: #FFFFFF;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.2);
+    width: 300px;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: fixed;
+    bottom: 130px;
+    right: 10px;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+    padding: 10px 0;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    border-radius: 7px;
+    z-index: 999999;
+    transform: scale(1);
+    display: none;
+}
+
+.poly-utilities-widgets .support .line li:hover {
+    background: #f8f8f8
+}
+
+.poly-utilities-widgets .support .line .icon {
+    width: 48px;
+    display: inline-flex
+}
+
+.poly-utilities-widgets .support .line ul li {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    text-decoration: none;
+    padding: 8px 10px 8px 10px
+}
+
+.poly-utilities-widgets .support .line ul li a {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    text-decoration: none;
+    gap: 16px
+}
+
+.poly-utilities-widgets .support .line ul {
+    margin-top: 3px
+}
+
+.poly-utilities-widgets .support .line .close {
+    position: absolute;
+    right: 4px;
+    top: 4px
+}
+
+.poly-utilities-widgets .support .line::before {
+    position: absolute;
+    bottom: -8px;
+    right: 32px;
+    left: auto;
+    border-right: 8px solid transparent;
+    border-top: 8px solid #FFFFFF;
+    border-left: 8px solid transparent;
+    content: ' ';
+}
+
+/* ================ END AIO Supports ================ */
+
+/* ================ Widgets ================ */
+.poly-widgets-area-region {
+    border: 1px dashed #ccc;
+    padding: 4px;
+    text-align: center
+}
+
+.poly-widgets-block {
+    display: block;
+    padding: 4px
+}
+
+.poly-widget-after-avatar {
+    position: absolute;
+    bottom: -4px;
+    font-size: 10px;
+    text-align: center;
+    display: inline-block;
+    width: 100%
+}
+
+/* ================ END Widgets ================ */

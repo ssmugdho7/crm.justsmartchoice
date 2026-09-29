@@ -1,0 +1,11 @@
+application/config/database.php
+application/config/app-config.php
+uploads/
+application/logs/
+application/cache/
+temp/
+*.zip
+*.sql
+error_log
+.user.ini
+.DS_Store

@@ -1,0 +1,7 @@
+MASTER CRM FIX
+
+Use Setup → Master CRM Fix to create segmented backups.
+Maximum pack size: 480 MB.
+Existing archives can be excluded and are listed in a report.
+Backups are stored in public_html/CRM MASTER BACKUP.
+Restore packages through cPanel or SSH, not from the running CRM.

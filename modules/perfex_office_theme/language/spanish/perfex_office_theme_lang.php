@@ -1,0 +1,20 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed');
+
+$lang['perfex_office_theme'] = 'Perfex Office Theme';
+$lang['perfex_office_theme_menu'] = 'Perfex Office Theme';
+$lang['perfex_office_theme_settings'] = 'Configuración de Perfex Office Theme';
+$lang['perfex_office_theme_health'] = 'Salud';
+$lang['perfex_office_theme_help'] = 'Ayuda';
+$lang['settings'] = 'Configuración';
+$lang['health'] = 'Salud';
+$lang['help'] = 'Ayuda';
+$lang['create'] = 'Crear';
+$lang['edit'] = 'Editar';
+$lang['delete'] = 'Eliminar';
+$lang['view'] = 'Ver';
+$lang['view_own'] = 'Ver Propio';
+$lang['view_global'] = 'Ver Global';
+$lang['import'] = 'Importar';
+$lang['export'] = 'Exportar';
+$lang['sample_header'] = 'Encabezado de Muestra';
+$lang['mass_delete'] = 'Eliminar en Masa';

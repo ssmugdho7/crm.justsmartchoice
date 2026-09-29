@@ -1,0 +1,31 @@
+SMART CHOICE CRM CORE 3.7.0 SC
+
+BACKUP
+1. Export the complete MySQL database.
+2. Archive the existing CRM directory, including uploads, modules, application/config, and .htaccess.
+
+INSTALL
+1. Upload and extract this package over the CRM root.
+2. Do not delete uploads, modules, or application/config/app-config.php.
+3. Sign in as administrator.
+4. Run the required database upgrade when prompted. Target migration: 370.
+5. Clear application/cache except .htaccess and index.html.
+6. Reset PHP OPcache from hosting control panel or restart PHP-FPM when available.
+
+VERIFY
+1. Confirm Setup/System Info reports Smart Choice build 3.7.0 SC and migration 370.
+2. Create an invoice, estimate, and proposal with standard and optional items.
+3. Open each customer view and select/deselect optional items; totals must recalculate.
+4. Add percent/fixed discount, discount reason, and down-payment percentage.
+5. Upload multiple files and confirm they appear in the Attachments section.
+6. Send each document with PDF, selected attachments, CC, and statement where available.
+7. Verify staff roles with Delete can delete eligible invoices, estimates, proposals, and contracts.
+8. Record one test payment and confirm one customer receipt and one staff notification cycle.
+
+ROLLBACK
+1. Restore the CRM file backup.
+2. Restore the database backup.
+3. Clear application/cache and reset OPcache.
+
+DATA SAFETY
+Migration 370 is upgrade-only and does not drop populated tables or columns.

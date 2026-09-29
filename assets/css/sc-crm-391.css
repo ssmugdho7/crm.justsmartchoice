@@ -1,0 +1,572 @@
+/* Smart Choice CRM 3.9.6 transaction and navigation repair */
+html,body{max-width:100%;overflow-x:hidden}body{padding-top:57px}#header{position:fixed!important;top:0;left:0;right:0;z-index:10040}#side-menu{position:fixed!important;top:57px;bottom:0;overflow-y:auto!important;overscroll-behavior:contain}#wrapper{min-height:calc(100vh - 57px)}#wrapper,.content,.container-fluid,.panel_s,.panel-body{max-width:100%}.admin #wrapper{overflow-y:auto}
+textarea[name="address"],textarea[name$="[address]"]{min-height:38px!important;height:38px!important;resize:vertical}.bootstrap-select .dropdown-menu.inner{max-height:320px!important;overflow-y:auto!important}.bootstrap-select .dropdown-menu{overflow:visible!important}
+._transaction_form table.items td,._transaction_form table.items th{vertical-align:top!important}.accounting-template table.items th:nth-child(3),.accounting-template table.items td:nth-child(3){width:76px!important}.accounting-template table.items th:nth-child(4),.accounting-template table.items td:nth-child(4){width:125px!important}.accounting-template table.items th.taxrate,.accounting-template table.items td.taxrate{width:105px!important}.accounting-template table.items input.form-control,.accounting-template table.items .bootstrap-select>.dropdown-toggle{min-height:36px}.accounting-template .table-responsive{overflow-x:auto!important;overflow-y:visible!important}.accounting-template table.items input[name*="[unit]"]{min-width:110px}
+.sc-native-status-wrap{display:flex;gap:6px;align-items:flex-end}.sc-native-status-wrap>.form-group{flex:1;margin-bottom:0}.sc-native-status-add{height:36px;min-width:38px;padding:7px 10px}.smart-choice-contract-total,.smart-choice-down-payment-total,.smart-choice-remaining-balance{font-weight:700}
+@media(max-width:767px){body{padding-top:52px;overflow-x:hidden!important}#header{height:52px}.admin #side-menu{left:-280px!important;top:52px!important;width:270px!important;z-index:10050!important;transition:left .2s ease}.admin.mobile-menu-open #side-menu,.admin #side-menu.mobile-open{left:0!important}#wrapper{margin-left:0!important;width:100%!important}.content{padding:10px!important}.table-responsive{overflow-x:auto!important;max-width:100vw}.bootstrap-select{max-width:100%!important}.navbar-form,.top-search{max-width:100%!important}.quick-create-menu .dropdown-menu{left:auto!important;right:0!important}.accounting-template table.items{min-width:900px}.sc-native-status-wrap{align-items:stretch}.sc-native-status-add{height:auto}.content{overflow-x:hidden}}
+
+/* Smart Choice CRM 3.9.6 header, navigation, PEI and attachment repair */
+@media (min-width: 769px){
+  body{padding-top:68px!important;overflow:hidden!important}
+  #header{height:68px!important;position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:10050!important}
+  #menu.sidebar{position:fixed!important;top:68px!important;bottom:0!important;left:0!important;height:auto!important;overflow:hidden!important}
+  #menu .sidebar-user-profile{position:sticky!important;top:0!important;z-index:4!important;background:#fff!important;padding:8px!important;margin:0!important;border-bottom:1px solid #e5e7eb!important}
+  #menu #side-menu{position:absolute!important;top:82px!important;bottom:0!important;left:0!important;right:0!important;overflow-y:auto!important;overflow-x:hidden!important;padding-bottom:40px!important}
+  #wrapper{height:calc(100vh - 68px)!important;overflow-y:auto!important;overflow-x:hidden!important;margin-top:0!important}
+}
+.sc-admin-pdf-preview{border:1px solid #d1d5db;border-radius:6px;overflow:hidden;background:#f8fafc;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.accounting-template table.items th.qty,.accounting-template table.items td.qty{width:150px!important;min-width:150px!important}
+.accounting-template table.items td.qty>input[data-quantity],.accounting-template table.items td.qty>input[name="quantity"]{display:inline-block!important;width:62px!important;vertical-align:top!important}
+.accounting-template table.items td.qty>input[name$="[unit]"],.accounting-template table.items td.qty>input[name="unit"]{display:inline-block!important;width:82px!important;margin-top:0!important;vertical-align:top!important;border:1px solid #d1d5db!important;background:#fff!important}
+.accounting-template table.items td.rate,.accounting-template table.items th.rate{width:105px!important;min-width:105px!important}
+.accounting-template table.items td.taxrate,.accounting-template table.items th.taxrate{width:90px!important;min-width:90px!important}
+.accounting-template .items-select-wrapper{width:calc(100% - 42px)!important;display:inline-block!important}
+.accounting-template .input-group-select>.input-group-btn{width:42px!important;vertical-align:top!important}
+.sc-payment-input-group{max-width:240px;margin-left:auto}.sc-payment-mode-wrap{width:96px!important}.sc-payment-mode-wrap select{height:34px!important;width:96px!important}
+.smart-choice-down-payment-row .smart-choice-down-payment-help{font-size:11px;color:#6b7280}
+@media(max-width:767px){#header .navbar-right{display:flex!important;align-items:center!important}.accounting-template table.items{min-width:1050px!important}.sc-admin-pdf-preview object{height:320px!important}}
+
+/* Smart Choice CRM 3.9.7 final PEI/sidebar alignment */
+@media (min-width:769px){
+ #menu.sidebar{overflow:hidden!important}
+ #menu .sidebar-user-profile{position:absolute!important;top:8px!important;left:6px!important;right:7px!important;height:66px!important;z-index:8!important}
+ #menu #side-menu{top:82px!important;bottom:0!important;padding-top:44px!important;padding-bottom:140px!important;overflow-y:auto!important;overscroll-behavior:contain!important}
+ #menu #side-menu>li:has(input[type="search"]),#menu #side-menu .menu-search,#menu #side-menu .sidebar-search{position:sticky!important;top:-44px!important;z-index:7!important;background:#f9f9f9!important;padding:6px 0!important}
+}
+.accounting-template table.items th.description,.accounting-template table.items td.description{min-width:155px!important;width:18%!important}
+.accounting-template table.items th.long_description,.accounting-template table.items td.long_description{min-width:260px!important;width:34%!important}
+.accounting-template table.items th.qty,.accounting-template table.items td.qty{width:165px!important;min-width:165px!important;white-space:nowrap!important}
+.accounting-template table.items td.qty>input[data-quantity],.accounting-template table.items td.qty>input[name="quantity"]{width:54px!important}
+.accounting-template table.items .sc-unit-select{display:inline-block!important;width:104px!important;margin-left:5px!important;vertical-align:top!important;height:36px!important}
+.accounting-template table.items td.rate,.accounting-template table.items th.rate{width:92px!important;min-width:92px!important}
+.accounting-template table.items td.taxrate,.accounting-template table.items th.taxrate{width:82px!important;min-width:82px!important}
+.accounting-template table.items th:last-child,.accounting-template table.items td:last-child{width:42px!important;min-width:42px!important}
+.smart-choice-down-payment-row .input-group{max-width:280px;margin-left:auto}
+#discount-total input{min-width:110px!important}
+@media(max-width:767px){#menu #side-menu{padding-bottom:120px!important}.accounting-template table.items{min-width:980px!important}}
+
+/* Smart Choice 3.9.9 PEI item-grid repair */
+.accounting-template table.items{table-layout:fixed;width:100%}
+.accounting-template table.items th.description,
+.accounting-template table.items td.description{width:24%!important}
+.accounting-template table.items th.long_description,
+.accounting-template table.items td.long_description{width:31%!important}
+.accounting-template table.items th.qty,
+.accounting-template table.items td.qty{width:15%!important;white-space:nowrap}
+.accounting-template table.items th.rate,
+.accounting-template table.items td.rate{width:11%!important}
+.accounting-template table.items th.taxrate,
+.accounting-template table.items td.taxrate{width:9%!important}
+.accounting-template table.items th.amount,
+.accounting-template table.items td.amount{width:8%!important}
+.accounting-template table.items th:last-child,
+.accounting-template table.items td:last-child{width:42px!important}
+.accounting-template table.items td.qty{display:flex;gap:6px;align-items:flex-start}
+.accounting-template table.items td.qty [data-quantity]{width:58px!important;min-width:58px!important}
+.accounting-template table.items .sc-unit-select{display:block!important;flex:1 1 auto!important;width:auto!important;min-width:105px!important;margin:0!important;height:36px!important}
+.accounting-template table.items td.rate input{min-width:82px}
+.accounting-template table.items td.taxrate .bootstrap-select{min-width:72px!important;width:100%!important}
+.accounting-template .sc-payment-input-group .sc-down-payment-value{min-width:125px}
+@media(max-width:767px){
+ .accounting-template .table-responsive{overflow-x:auto!important;-webkit-overflow-scrolling:touch}
+ .accounting-template table.items{min-width:900px}
+}
+
+/* Smart Choice CRM 4.0.0 PEI alignment and public optional controls */
+.accounting-template table.items{table-layout:fixed!important;width:100%!important}
+.accounting-template table.items th.drag-column,
+.accounting-template table.items td.dragger{width:2%!important;min-width:24px!important}
+.accounting-template table.items th.description,
+.accounting-template table.items td.description{width:23%!important;min-width:230px!important}
+.accounting-template table.items th.long_description,
+.accounting-template table.items td.long_description{width:31%!important;min-width:300px!important}
+.accounting-template table.items th.qty,
+.accounting-template table.items td.qty{width:14%!important;min-width:150px!important;white-space:nowrap!important}
+.accounting-template table.items td.qty{display:table-cell!important}
+.accounting-template table.items td.qty>[data-quantity]{display:inline-block!important;width:52px!important;min-width:52px!important;vertical-align:top!important}
+.accounting-template table.items td.qty>.sc-unit-select{display:inline-block!important;width:92px!important;min-width:92px!important;margin:0 0 0 5px!important;vertical-align:top!important;height:36px!important}
+.accounting-template table.items th.rate,
+.accounting-template table.items td.rate{width:9%!important;min-width:88px!important}
+.accounting-template table.items th.taxrate,
+.accounting-template table.items td.taxrate{width:9%!important;min-width:88px!important}
+.accounting-template table.items th.amount,
+.accounting-template table.items td.amount{width:8%!important;min-width:85px!important}
+.accounting-template table.items th:last-child,
+.accounting-template table.items td:last-child{width:4%!important;min-width:44px!important}
+.accounting-template table.items td.description textarea,
+.accounting-template table.items td.long_description textarea{width:100%!important;min-width:0!important;resize:vertical!important}
+.accounting-template table.items td.rate input{width:100%!important;min-width:0!important}
+.accounting-template table.items td.taxrate .bootstrap-select{width:100%!important;min-width:0!important}
+.sc-payment-input-group{max-width:310px!important;margin-left:auto!important}
+.sc-payment-input-group .sc-down-payment-value{min-width:155px!important}
+.sc-payment-input-group .sc-payment-mode-wrap{width:120px!important}
+.sc-payment-input-group .sc-down-payment-mode{width:120px!important;height:36px!important}
+.sc-public-optional-heading,.sc-public-optional-cell{min-width:145px!important;text-align:left!important;vertical-align:middle!important}
+.sc-public-optional{margin:0!important;white-space:nowrap!important}
+.sc-public-optional label{font-weight:600!important;color:#0E6F5B!important;padding-left:25px!important;white-space:nowrap!important}
+.sc-public-required{opacity:.65}
+@media(max-width:767px){
+ .accounting-template table.items{min-width:1040px!important}
+ .sc-public-optional-heading,.sc-public-optional-cell{min-width:130px!important}
+}
+
+/* Smart Choice CRM 4.0.1 targeted sales-document repair */
+.accounting-template .items-wrapper{width:100%!important;max-width:none!important}
+.accounting-template .items-wrapper .input-group{width:100%!important}
+.accounting-template .items-select-wrapper{width:calc(100% - 42px)!important;max-width:none!important}
+.accounting-template #item_select+.dropdown-toggle,
+.accounting-template .items-select-wrapper .bootstrap-select{width:100%!important;max-width:none!important}
+.accounting-template .show_quantity_as_wrapper{padding-left:8%!important}
+.accounting-template table.items th.description,
+.accounting-template table.items td.description{width:17%!important;min-width:180px!important}
+.accounting-template table.items th.long_description,
+.accounting-template table.items td.long_description{width:39%!important;min-width:360px!important}
+.accounting-template table.items th.qty,
+.accounting-template table.items td.qty{width:14%!important;min-width:150px!important}
+.accounting-template table.items th.rate,
+.accounting-template table.items td.rate{width:7%!important;min-width:76px!important}
+.accounting-template table.items th.taxrate,
+.accounting-template table.items td.taxrate{width:6%!important;min-width:70px!important}
+.accounting-template table.items th.amount,
+.accounting-template table.items td.amount{width:8%!important;min-width:82px!important}
+.accounting-template #discount_area>td:first-child{border-left:4px solid #3598DB!important;background:#f3f9fd!important}
+.accounting-template #discount_area .row{display:flex!important;align-items:center!important}
+.accounting-template #discount_area .form-group{margin-bottom:0!important}
+.accounting-template #discount_area .bootstrap-select{margin-bottom:0!important}
+.accounting-template tr#subtotal{background:#f7fafc!important}
+.accounting-template tr.smart-choice-down-payment-row,
+.accounting-template tr#smart-choice-partial-payment-row{background:#fff7ed!important;border-left:4px solid #F28C28!important}
+.accounting-template td.smart-choice-down-payment-total{color:#F28C28!important;font-size:15px!important}
+.accounting-template td.smart-choice-remaining-balance{color:#0E6F5B!important;font-weight:700!important}
+.accounting-template td.smart-choice-contract-total{color:#169179!important;font-weight:700!important}
+.accounting-template tr:has(td.total){background:#ecfdf5!important;border-left:4px solid #169179!important}
+.accounting-template td.total{color:#169179!important;font-size:16px!important;font-weight:700!important}
+@media(max-width:767px){
+ .accounting-template .show_quantity_as_wrapper{padding-left:15px!important}
+ .accounting-template #discount_area .row{display:block!important}
+ .accounting-template table.items{min-width:1100px!important}
+}
+
+
+/* Smart Choice CRM 4.0.2 targeted sales/menu repair */
+.accounting-template .items-wrapper.input-group-select,
+.accounting-template .items-wrapper .input-group.input-group-select{display:table!important;width:100%!important}
+.accounting-template .items-select-wrapper{display:table-cell!important;width:100%!important;padding:0!important}
+.accounting-template .items-select-wrapper>.bootstrap-select{width:100%!important;display:block!important}
+.accounting-template .input-group-select>.input-group-btn{display:table-cell!important;width:40px!important;padding:0!important}
+.accounting-template .input-group-select>.input-group-btn>.btn{width:40px!important;height:36px!important;border-radius:0 4px 4px 0!important}
+.accounting-template .sc-add-sales-item{background:#169179!important;border-color:#0E6F5B!important;color:#fff!important}
+.accounting-template .sc-add-sales-item:hover{background:#0E6F5B!important;color:#fff!important}
+.accounting-template table.items{table-layout:fixed!important;width:100%!important}
+.accounting-template table.items th.description,.accounting-template table.items td.description{width:14%!important;min-width:110px!important}
+.accounting-template table.items th.long_description,.accounting-template table.items td.long_description{width:auto!important;min-width:300px!important}
+.accounting-template table.items th.qty,.accounting-template table.items td.qty{width:142px!important;min-width:142px!important}
+.accounting-template table.items td.qty>input[data-quantity],.accounting-template table.items td.qty>input[name="quantity"]{width:48px!important}
+.accounting-template table.items .sc-unit-select{width:84px!important;margin-left:4px!important}
+.accounting-template table.items td.rate,.accounting-template table.items th.rate{width:72px!important;min-width:72px!important}
+.accounting-template table.items td.taxrate,.accounting-template table.items th.taxrate{width:58px!important;min-width:58px!important}
+.accounting-template table.items td.taxrate .bootstrap-select,.accounting-template table.items td.taxrate .dropdown-toggle{width:58px!important;min-width:58px!important;padding-left:5px!important;padding-right:16px!important}
+.accounting-template table.items th:last-child,.accounting-template table.items td:last-child{width:34px!important;min-width:34px!important}
+.accounting-template .form-group-select-task_select{margin-left:10%!important}
+.table-estimates tbody tr,.table-proposals tbody tr{height:auto!important;min-height:0!important}
+.table-estimates tbody td,.table-proposals tbody td{height:auto!important;min-height:0!important;padding-top:8px!important;padding-bottom:8px!important;vertical-align:middle!important}
+.table-estimates tbody tr.child,.table-proposals tbody tr.child{height:auto!important}
+#menu .sidebar-user-profile .sc-profile-avatar img,.sc-setup-profile-card img{width:42px!important;height:42px!important;object-fit:contain!important;object-position:center!important;border-radius:50%!important;background:#fff!important}
+#menu .sidebar-user-profile .tw-w-\[140px\]{width:130px!important}
+#menu .sidebar-user-profile span.tw-text-xs,.sc-setup-profile-card .tw-text-xs{font-size:10px!important;line-height:1.15!important;max-width:130px!important}
+.sc-primary-setup-search{display:block!important;position:sticky!important;top:0!important;z-index:20!important;background:#fff!important;padding:8px 10px!important;border-bottom:1px solid #e5e7eb!important}
+.sc-setup-search-wrap{position:relative!important}.sc-setup-search-wrap>i{position:absolute;left:12px;top:11px;color:#3598DB;z-index:2}.sc-setup-search-wrap input{display:block!important;width:100%!important;padding-left:34px!important;height:36px!important}
+@media(max-width:767px){.accounting-template table.items{min-width:900px!important}.accounting-template .form-group-select-task_select{margin-left:0!important}}
+
+/* Smart Choice CRM 4.0.3 final targeted layout correction */
+.accounting-template .items-wrapper.input-group-select{display:flex!important;width:100%!important;align-items:stretch!important}
+.accounting-template .items-select-wrapper{display:block!important;flex:1 1 auto!important;width:auto!important;max-width:none!important}
+.accounting-template .items-select-wrapper>.bootstrap-select{width:100%!important}
+.accounting-template .input-group-select>.input-group-btn{display:block!important;flex:0 0 42px!important;width:42px!important}
+.accounting-template .input-group-select>.input-group-btn>.btn{width:42px!important;height:100%!important;min-height:36px!important}
+.accounting-template table.items{table-layout:fixed!important;width:100%!important}
+.accounting-template table.items th.drag-column,.accounting-template table.items td.dragger{width:24px!important;min-width:24px!important;max-width:24px!important;padding-left:4px!important;padding-right:4px!important}
+.accounting-template table.items th.description,.accounting-template table.items td.description{width:18%!important;min-width:145px!important}
+.accounting-template table.items th.long_description,.accounting-template table.items td.long_description{width:auto!important;min-width:360px!important}
+.accounting-template table.items th.qty,.accounting-template table.items td.qty{width:140px!important;min-width:140px!important;white-space:nowrap!important}
+.accounting-template table.items td.qty{display:table-cell!important}
+.accounting-template table.items td.qty>[data-quantity]{display:inline-block!important;width:48px!important;min-width:48px!important;vertical-align:top!important}
+.accounting-template table.items td.qty>.sc-unit-select{display:inline-block!important;width:82px!important;min-width:82px!important;margin-left:4px!important;vertical-align:top!important}
+.accounting-template table.items th.rate,.accounting-template table.items td.rate{width:68px!important;min-width:68px!important;max-width:68px!important}
+.accounting-template table.items th.taxrate,.accounting-template table.items td.taxrate{width:64px!important;min-width:64px!important;max-width:64px!important}
+.accounting-template table.items td.rate input{width:100%!important;min-width:0!important;padding-left:6px!important;padding-right:6px!important}
+.accounting-template table.items td.taxrate .bootstrap-select,.accounting-template table.items td.taxrate .dropdown-toggle{width:100%!important;min-width:0!important;padding-left:5px!important;padding-right:15px!important}
+.accounting-template table.items th.amount,.accounting-template table.items td.amount{width:92px!important;min-width:92px!important}
+.accounting-template table.items th.item-actions,.accounting-template table.items td.item-actions,.accounting-template table.items th:last-child,.accounting-template table.items td:last-child{width:46px!important;min-width:46px!important;max-width:46px!important;padding-left:4px!important;padding-right:4px!important;overflow:visible!important}
+.accounting-template table.items td:last-child .btn{float:none!important;margin:0 auto!important;display:block!important}
+.accounting-template .show_quantity_as_wrapper{padding-left:15px!important}
+.accounting-template .form-group-select-task_select{margin-left:0!important;width:100%!important}
+.accounting-template .form-group-select-task_select .input-group{width:100%!important;display:table!important}
+.accounting-template .form-group-select-task_select .bootstrap-select{width:100%!important}
+.accounting-template .form-group-select-task_select .input-group-addon{width:38px!important;min-width:38px!important}
+/* Keep totals functional but remove the extra decorative payment styling. */
+.accounting-template #discount_area>td:first-child,.accounting-template tr#subtotal,.accounting-template tr.smart-choice-down-payment-row,.accounting-template tr#smart-choice-partial-payment-row,.accounting-template tr:has(td.total){background:transparent!important;border-left:0!important}
+.accounting-template td.smart-choice-down-payment-total,.accounting-template td.smart-choice-remaining-balance,.accounting-template td.smart-choice-contract-total,.accounting-template td.total{color:inherit!important;font-size:inherit!important}
+/* Match estimate/proposal registers to the compact invoice register. */
+table.table-estimates,table.table-proposals{table-layout:auto!important}
+table.table-estimates tbody tr,table.table-proposals tbody tr{display:table-row!important;height:auto!important;min-height:0!important;max-height:none!important}
+table.table-estimates tbody td,table.table-proposals tbody td{display:table-cell!important;height:auto!important;min-height:0!important;max-height:none!important;padding:7px 10px!important;line-height:1.35!important;vertical-align:middle!important;white-space:normal!important}
+table.table-estimates tbody td p,table.table-proposals tbody td p{margin:0!important}
+table.table-estimates tbody tr.child,table.table-proposals tbody tr.child{display:none!important}
+/* Setup sidebar: full profile image, smaller email, persistent search below profile. */
+#setup-menu-wrapper #setup-menu{margin-top:0!important;padding-top:0!important}
+#setup-menu-wrapper .sc-setup-profile-card{margin:0!important;padding:8px 0 4px!important;border-top:0!important}
+#setup-menu-wrapper .sc-setup-profile-card>a{margin-top:0!important;border-top:0!important}
+#setup-menu-wrapper .sc-setup-profile-card img{width:44px!important;height:44px!important;object-fit:contain!important;object-position:center!important}
+#setup-menu-wrapper .sc-setup-profile-card .tw-text-xs{font-size:7px!important;line-height:1.05!important;max-width:118px!important}
+#setup-menu-wrapper .sc-primary-setup-search{display:list-item!important;position:sticky!important;top:0!important;z-index:50!important;background:#fff!important;padding:7px 10px!important;margin:0!important;border-top:0!important;border-bottom:1px solid #e5e7eb!important}
+#setup-menu-wrapper #sc-setup-menu-search{display:block!important;visibility:visible!important;opacity:1!important;width:100%!important;height:36px!important}
+@media(max-width:1100px){.accounting-template table.items{min-width:980px!important}}
+
+
+/* Smart Choice CRM 4.0.1 targeted proposal/search repair */
+.accounting-template.proposal table.items thead th.description,.accounting-template.proposal table.items tbody td.description{width:17%!important;min-width:150px!important}
+.accounting-template.proposal table.items thead th.long_description,.accounting-template.proposal table.items tbody td.long_description{width:31%!important;min-width:240px!important}
+.accounting-template.proposal table.items thead th.rate,.accounting-template.proposal table.items tbody td.rate{width:11%!important;min-width:105px!important}
+.accounting-template.proposal table.items thead th.taxrate,.accounting-template.proposal table.items tbody td.taxrate{width:13%!important;min-width:125px!important}
+.accounting-template.proposal table.items td.taxrate .bootstrap-select,.accounting-template.proposal table.items td.taxrate .bootstrap-select>.dropdown-toggle{width:100%!important;min-width:115px!important}
+.accounting-template.proposal table.items td.taxrate .bootstrap-select .caret{right:9px!important}
+.accounting-template.proposal table.items td.rate input{min-width:95px!important}
+
+table.table-proposals tbody tr,table.table-estimates tbody tr{height:42px!important;min-height:42px!important;max-height:42px!important}
+table.table-proposals tbody td,table.table-estimates tbody td{height:42px!important;max-height:42px!important;padding:6px 9px!important;line-height:20px!important;vertical-align:middle!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+table.table-proposals tbody td .tags-label,table.table-estimates tbody td .tags-label{display:inline-block!important;margin:0 2px!important;max-height:22px!important}
+table.table-proposals tbody tr.child,table.table-estimates tbody tr.child{display:none!important}
+
+
+
+
+/* Smart Choice CRM 4.0.3 final UI/mobile/staff repair */
+.sc-sales-item-select-row>.input-group{display:flex!important;width:100%!important}.sc-sales-item-select-row .items-select-wrapper{flex:1 1 auto!important;width:auto!important;min-width:0!important}.sc-sales-item-select-row .bootstrap-select,.sc-sales-item-select-row .bootstrap-select>.dropdown-toggle{width:100%!important}.sc-sales-item-select-row .input-group-btn{width:40px!important;flex:0 0 40px!important}.sc-sales-item-select-row .sc-add-sales-item{height:38px!important;display:flex!important;align-items:center!important;justify-content:center!important}
+/* Proposal list uses the same compact natural DataTable row behavior as estimates/invoices, with no synthetic fixed row box. */
+table.table-proposals tbody tr{display:table-row!important;height:auto!important;min-height:0!important;max-height:none!important}table.table-proposals tbody td{display:table-cell!important;height:auto!important;min-height:0!important;max-height:none!important;padding:8px 10px!important;line-height:1.35!important;vertical-align:middle!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}table.table-proposals tbody tr.child{display:none!important}
+@media(max-width:767px){
+ body.page-small #header{position:sticky!important;top:0!important;z-index:1050!important}#header .navbar{min-height:52px!important}#header #top_search{position:fixed!important;left:8px!important;right:8px!important;top:56px!important;max-width:none!important;width:auto!important;z-index:1090!important;background:#fff!important;border-radius:10px!important;box-shadow:0 8px 30px rgba(15,23,42,.2)!important;padding:6px!important}#header #top_search input{height:42px!important;font-size:16px!important;padding-left:40px!important}#header #search_results{max-height:70vh!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important}.search-results.dropdown-menu{position:static!important;float:none!important;width:100%!important;max-width:none!important;display:block!important}.search-results li a{min-height:44px!important;padding:11px 12px!important;white-space:normal!important;touch-action:manipulation!important}.search-results .dropdown-header{padding:9px 12px!important;font-weight:700!important}
+ #side-menu a,#setup-menu a{min-height:44px!important;display:flex!important;align-items:center!important}.btn,.dropdown-toggle,.bootstrap-select>.dropdown-toggle{min-height:40px!important}.dropdown-menu>li>a{padding-top:10px!important;padding-bottom:10px!important}.content{padding:12px 8px!important}.panel-body{padding:12px!important}.table-responsive{overflow-x:auto!important;-webkit-overflow-scrolling:touch!important}.dataTables_wrapper .row{margin-left:0!important;margin-right:0!important}.dataTables_filter,.dataTables_length{width:100%!important;text-align:left!important;margin:4px 0!important}.dataTables_filter input{width:100%!important;margin-left:0!important;height:40px!important}.dt-buttons{display:flex!important;flex-wrap:wrap!important;gap:4px!important}.dt-buttons .btn{margin:0!important}.pagination>li>a{min-width:40px!important;min-height:40px!important;display:flex!important;align-items:center!important;justify-content:center!important}
+ .accounting-template table.items{min-width:900px!important}.sc-sales-item-select-row{width:100%!important}.sc-sales-item-select-row>.input-group{width:100%!important}.bootstrap-select .dropdown-menu{max-width:calc(100vw - 20px)!important}.bootstrap-select .dropdown-menu li a{white-space:normal!important}
+}
+@media(max-width:390px){#header #top_search{left:4px!important;right:4px!important}.content{padding:8px 4px!important}.panel-body{padding:10px!important}}
+
+
+/* Smart Choice CRM 4.0.4 targeted final layout fixes. */
+.sc-sales-item-select-row{width:100%!important}
+.sc-sales-item-inline{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:stretch!important;width:100%!important;gap:0!important}
+.sc-sales-item-inline .sc-sales-item-select-cell{display:block!important;flex:1 1 auto!important;width:auto!important;min-width:0!important;max-width:none!important;padding:0!important}
+.sc-sales-item-inline .sc-sales-item-select-cell>.bootstrap-select,.sc-sales-item-inline .sc-sales-item-select-cell>.bootstrap-select>.dropdown-toggle{display:block!important;width:100%!important;max-width:none!important}
+.sc-sales-item-inline .sc-sales-item-add-cell{display:flex!important;flex:0 0 42px!important;width:42px!important;max-width:42px!important;padding:0!important;align-items:stretch!important}
+.sc-sales-item-inline .sc-add-sales-item{display:flex!important;width:42px!important;min-width:42px!important;height:36px!important;min-height:36px!important;padding:0!important;align-items:center!important;justify-content:center!important;border-radius:0 4px 4px 0!important}
+.sc-sales-item-inline .bootstrap-select>.dropdown-toggle{border-top-right-radius:0!important;border-bottom-right-radius:0!important}
+
+/* Keep the custom status selector and plus button on one line. */
+.sc-native-status-wrap{display:flex!important;flex-direction:row!important;align-items:flex-end!important;flex-wrap:nowrap!important;width:100%!important;gap:0!important}
+.sc-native-status-wrap>.form-group{display:block!important;flex:1 1 auto!important;width:auto!important;min-width:0!important;margin-bottom:15px!important}
+.sc-native-status-wrap>.sc-native-status-add{display:flex!important;flex:0 0 40px!important;width:40px!important;height:36px!important;margin:0 0 15px 0!important;padding:0!important;align-items:center!important;justify-content:center!important;border-radius:0 4px 4px 0!important}
+.sc-native-status-wrap>.form-group .bootstrap-select>.dropdown-toggle{border-top-right-radius:0!important;border-bottom-right-radius:0!important}
+
+/* Invoice billable-task selector: named field, normal dropdown arrow, help on the right. */
+.sc-invoice-bill-tasks-column .form-group-select-task_select{margin-left:0!important;width:100%!important}
+.sc-invoice-bill-tasks-column .sc-bill-tasks-input-group{display:flex!important;flex-wrap:nowrap!important;width:100%!important}
+.sc-invoice-bill-tasks-column .sc-bill-tasks-input-group>.bootstrap-select{display:block!important;flex:1 1 auto!important;width:auto!important;min-width:0!important}
+.sc-invoice-bill-tasks-column .sc-bill-tasks-input-group>.bootstrap-select>.dropdown-toggle{width:100%!important}
+.sc-invoice-bill-tasks-column .input-group-addon-bill-tasks-help{display:flex!important;flex:0 0 38px!important;width:38px!important;align-items:center!important;justify-content:center!important;border-left:0!important}
+.sc-invoice-bill-tasks-column .bootstrap-select .caret{right:12px!important;left:auto!important}
+
+/* Proposal register must remain compact like estimates/invoices, including long tags/statuses. */
+table.table-proposals{table-layout:fixed!important;width:100%!important}
+table.table-proposals tbody tr:not(.child){display:table-row!important;height:44px!important;min-height:44px!important;max-height:44px!important}
+table.table-proposals tbody td{height:44px!important;min-height:44px!important;max-height:44px!important;padding:4px 8px!important;line-height:18px!important;vertical-align:middle!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+table.table-proposals tbody td>*:not(.row-options){max-height:34px!important;overflow:hidden!important;text-overflow:ellipsis!important}
+table.table-proposals tbody td .row-options{height:16px!important;line-height:16px!important;margin-top:0!important;white-space:nowrap!important;overflow:hidden!important}
+table.table-proposals tbody tr.child{display:none!important;height:0!important;min-height:0!important;max-height:0!important}
+.sc-proposal-list-file{display:inline-flex!important;align-items:center!important;gap:5px!important;height:30px!important;max-height:30px!important;vertical-align:middle!important}
+.sc-proposal-list-file img{display:block!important;width:30px!important;height:30px!important;max-width:30px!important;object-fit:cover!important;border-radius:4px!important;border:1px solid #e5e7eb!important}
+.sc-proposal-list-file-icon i{font-size:18px!important}
+
+.sc-proposal-edit-attachments{border-top:1px solid #e5e7eb!important}
+.sc-proposal-edit-file{margin-bottom:10px!important}
+.sc-proposal-edit-file-link{display:flex!important;align-items:center!important;gap:8px!important;min-height:54px!important;padding:7px!important;border:1px solid #e5e7eb!important;border-radius:6px!important;background:#fff!important;overflow:hidden!important}
+.sc-proposal-edit-file-link img{width:42px!important;height:42px!important;min-width:42px!important;object-fit:cover!important;border-radius:4px!important}
+.sc-proposal-edit-file-icon{display:flex!important;width:42px!important;height:42px!important;min-width:42px!important;align-items:center!important;justify-content:center!important;background:#f8fafc!important;border-radius:4px!important;font-size:20px!important}
+.sc-proposal-edit-file-name{overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+
+/* Guarantee a visible Payments icon even with stale/customized sidebar definitions. */
+#side-menu a[href*="/payments"]>i,#side-menu a[href$="payments"]>i{display:inline-block!important;color:var(--sc-menu-icon-color,#169179)!important;min-width:18px!important}
+
+@media(max-width:767px){
+ .sc-sales-item-inline{display:flex!important;flex-wrap:nowrap!important}
+ .sc-native-status-wrap{display:flex!important;flex-wrap:nowrap!important}
+ .sc-invoice-bill-tasks-column{width:100%!important;float:none!important;clear:both!important;margin-top:10px!important}
+ .sc-proposal-edit-file{width:100%!important;float:none!important}
+}
+
+
+/* Smart Choice CRM 4.0.5 native sales register controls. */
+table.table-proposals{table-layout:auto!important;width:100%!important}
+table.table-proposals tbody tr:not(.child){display:table-row!important;height:auto!important;min-height:0!important;max-height:none!important}
+table.table-proposals tbody td{display:table-cell!important;height:auto!important;min-height:0!important;max-height:none!important;padding:8px 10px!important;line-height:1.35!important;vertical-align:middle!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+table.table-proposals tbody td>*:not(.row-options){max-height:none!important}
+table.table-proposals tbody td .row-options{height:auto!important;line-height:normal!important;margin-top:3px!important}
+table.table-proposals tbody tr.child{display:table-row!important;height:auto!important;min-height:0!important;max-height:none!important}
+.sc-proposal-list-file{display:none!important}
+.sc-sales-table-config-note{font-size:12px;color:#64748b;margin-top:6px}
+.sc-sales-column-row{display:grid;grid-template-columns:minmax(180px,1fr) 110px 140px;gap:12px;align-items:center;padding:8px 0;border-bottom:1px solid #eef2f7}
+.sc-sales-column-row:last-child{border-bottom:0}.sc-sales-column-row input[type=number]{max-width:120px}
+@media(max-width:767px){.sc-sales-column-row{grid-template-columns:1fr 90px 100px;gap:6px}.sc-sales-column-row label{font-size:12px}}
+
+/* Smart Choice CRM 4.0.6 - targeted item selector alignment only */
+.accounting-template .sc-sales-item-inline .bootstrap-select > .dropdown-toggle {
+    height:36px!important;
+    min-height:36px!important;
+    display:flex!important;
+    align-items:center!important;
+    padding-top:0!important;
+    padding-bottom:0!important;
+}
+.accounting-template .sc-sales-item-inline .bootstrap-select > .dropdown-toggle .filter-option {
+    height:34px!important;
+    display:flex!important;
+    align-items:center!important;
+    line-height:normal!important;
+}
+.accounting-template .sc-sales-item-inline .bootstrap-select > .dropdown-toggle .filter-option-inner {
+    width:100%!important;
+    height:34px!important;
+    display:flex!important;
+    align-items:center!important;
+}
+.accounting-template .sc-sales-item-inline .bootstrap-select > .dropdown-toggle .filter-option-inner-inner {
+    width:100%!important;
+    display:block!important;
+    line-height:34px!important;
+    min-height:34px!important;
+    padding:0!important;
+    margin:0!important;
+}
+
+/* Smart Choice CRM 4.1.7 proposal register: use the same natural DataTables row model as Estimates/Invoices. */
+.table-proposals{width:100%!important;border-collapse:collapse!important}
+.table-proposals tbody tr{height:auto!important;min-height:0!important;max-height:none!important}
+.table-proposals tbody td{height:auto!important;min-height:0!important;max-height:none!important;padding:8px 10px!important;line-height:20px!important;vertical-align:middle!important}
+.table-proposals tbody td .row-options{margin-top:2px!important;line-height:16px!important}
+.table-proposals tbody tr.child{display:none!important}
+.table-proposals td .label,.table-proposals td .tag{white-space:nowrap!important}
+.sc-admin-attachment-card{border:1px solid #e5e7eb;border-radius:8px;padding:10px;background:#fff;box-shadow:0 1px 2px rgba(15,23,42,.04);overflow:hidden}
+.sc-admin-attachment-title{display:flex;gap:7px;align-items:center;font-weight:600;margin-bottom:8px;min-width:0}
+.sc-admin-attachment-title span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sc-admin-attachment-image-link{display:block;background:#f8fafc;border-radius:6px;overflow:hidden}
+.sc-admin-attachment-image-link img{display:block;width:100%;height:220px;object-fit:contain;background:#f8fafc}
+.sc-admin-pdf-preview{display:block;width:100%;height:360px;border:1px solid #e2e8f0;border-radius:6px;background:#f8fafc}
+.sc-admin-attachment-generic{display:flex;height:180px;align-items:center;justify-content:center;background:#f8fafc;border-radius:6px}
+@media(max-width:767px){.sc-admin-pdf-preview{height:300px}.sc-admin-attachment-image-link img{height:190px}}
+
+
+/* Smart Choice CRM 4.1.8 final native sales/UI repair */
+.sc-sales-item-inline,.accounting-template .items-wrapper.input-group-select{display:flex!important;align-items:stretch!important;width:100%!important}
+.sc-sales-item-inline .items-select-wrapper,.accounting-template .items-wrapper .items-select-wrapper{flex:1 1 auto!important;min-width:0!important}
+.sc-sales-item-inline .bootstrap-select,.sc-sales-item-inline .bootstrap-select>.dropdown-toggle{width:100%!important;height:36px!important;min-height:36px!important}
+.sc-sales-item-inline .bootstrap-select>.dropdown-toggle{display:flex!important;align-items:center!important;padding-top:0!important;padding-bottom:0!important}
+.sc-sales-item-inline .filter-option,.sc-sales-item-inline .filter-option-inner,.sc-sales-item-inline .filter-option-inner-inner{height:34px!important;line-height:34px!important;min-height:34px!important;display:block!important;padding-top:0!important;padding-bottom:0!important}
+.sc-sales-item-inline>.input-group-btn{flex:0 0 42px!important;width:42px!important}
+.sc-sales-item-inline>.input-group-btn>.btn{height:36px!important;width:42px!important;padding:0!important;display:flex!important;align-items:center!important;justify-content:center!important}
+.sc-native-status-wrap{display:flex!important;align-items:flex-end!important;gap:6px!important;width:100%!important;flex-wrap:nowrap!important}
+.sc-native-status-wrap>.bootstrap-select,.sc-native-status-wrap>.form-group{flex:1 1 auto!important;min-width:0!important;margin-bottom:0!important}
+.sc-native-status-wrap>.sc-native-status-add{flex:0 0 38px!important;width:38px!important;height:36px!important;padding:0!important;display:flex!important;align-items:center!important;justify-content:center!important}
+.table-proposals{width:100%!important;border-collapse:collapse!important;table-layout:auto!important}
+.table-proposals tbody tr:not(.child){display:table-row!important;height:auto!important;min-height:0!important;max-height:none!important}
+.table-proposals tbody td{display:table-cell!important;height:auto!important;min-height:0!important;max-height:none!important;padding:8px 10px!important;line-height:20px!important;vertical-align:middle!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+.table-proposals tbody tr.child{display:none!important;height:0!important;padding:0!important;margin:0!important}
+.table-proposals .sc-table-cell-ellipsis{display:block!important;max-width:220px!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+.sc-customer-sales-actions{display:flex!important;flex-wrap:wrap!important;gap:6px!important;align-items:center!important}.sc-customer-sales-actions>.btn,.sc-customer-sales-actions>form>.btn{min-width:105px!important;height:36px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important}
+@media(max-width:767px){.sc-customer-sales-actions{width:100%!important}.sc-customer-sales-actions>.btn,.sc-customer-sales-actions>form{flex:1 1 46%!important}.sc-customer-sales-actions>form>.btn{width:100%!important}.table-responsive{overflow-x:auto!important;-webkit-overflow-scrolling:touch!important}}
+
+
+/* Smart Choice CRM 4.1.9 final reconciliation overrides */
+#header{display:block!important;visibility:visible!important;opacity:1!important;min-height:57px!important}
+#header nav,#header #logo,#header #top_search,#header .navbar-nav{visibility:visible!important;opacity:1!important}
+.sc-native-status-wrap{display:flex!important;align-items:center!important;gap:0!important;width:100%!important}
+.sc-native-status-wrap>.bootstrap-select{flex:1 1 auto!important;width:auto!important;margin:0!important}
+.sc-native-status-wrap>.bootstrap-select>.dropdown-toggle{height:36px!important;border-radius:4px 0 0 4px!important}
+.sc-native-status-wrap>.sc-native-status-add{flex:0 0 40px!important;width:40px!important;height:36px!important;margin:0!important;border-radius:0 4px 4px 0!important;align-self:center!important}
+.accounting-template .items-wrapper.input-group-select,.accounting-template .sc-sales-item-inline{margin-left:0!important;padding-left:0!important;width:100%!important}
+.accounting-template table.items{table-layout:fixed!important;width:100%!important;margin-left:0!important}
+.accounting-template table.items th.drag-column,.accounting-template table.items td.dragger{width:20px!important;min-width:20px!important;max-width:20px!important;padding-left:0!important;padding-right:2px!important}
+.accounting-template table.items th.description,.accounting-template table.items td.description{width:17%!important;min-width:150px!important}
+.accounting-template table.items th.long_description,.accounting-template table.items td.long_description{width:42%!important;min-width:360px!important}
+.accounting-template table.items th.qty,.accounting-template table.items td.qty{width:132px!important;min-width:132px!important}
+.accounting-template table.items th.rate,.accounting-template table.items td.rate{width:88px!important;min-width:88px!important}
+.accounting-template table.items th.taxrate,.accounting-template table.items td.taxrate{width:64px!important;min-width:64px!important;max-width:64px!important}
+.accounting-template table.items td.taxrate .bootstrap-select,.accounting-template table.items td.taxrate .dropdown-toggle{width:64px!important;min-width:64px!important;max-width:64px!important;padding-left:5px!important;padding-right:18px!important}
+.accounting-template table.items td.taxrate .filter-option-inner-inner{overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+.accounting-template table.items th.amount,.accounting-template table.items td.amount{width:92px!important;min-width:92px!important}
+.accounting-template table.items th:last-child,.accounting-template table.items td:last-child{width:42px!important;min-width:42px!important}
+.table-proposals tbody tr:not(.child){height:44px!important;min-height:44px!important;max-height:44px!important}
+.table-proposals tbody td{height:44px!important;max-height:44px!important;padding:5px 8px!important;line-height:18px!important;vertical-align:middle!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+.table-proposals tbody td .row-options{height:15px!important;line-height:15px!important;margin-top:1px!important;overflow:hidden!important;white-space:nowrap!important}
+.table-proposals tbody tr.child{display:none!important;height:0!important;min-height:0!important;max-height:0!important}
+.sc-sales-customer-summary-panel{margin-top:12px!important;margin-bottom:12px!important}.sc-sales-customer-summary-panel strong{display:block;color:#374151;margin-bottom:3px}.sc-sales-customer-summary-panel [data-sc-summary]{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:767px){.accounting-template table.items{min-width:1000px!important}.sc-sales-customer-summary-panel .col-sm-6{margin-bottom:10px}}
+
+#setup-menu-wrapper .sc-primary-setup-search{display:none!important}
+
+/* Smart Choice CRM 4.2.1 - final native invoice editor alignment */
+.accounting-template.invoice .s_table{margin-left:0!important;margin-right:0!important;width:100%!important}
+.accounting-template.invoice table.invoice-items-table{table-layout:fixed!important;width:100%!important;margin-left:0!important}
+.accounting-template.invoice table.invoice-items-table th.drag-column,
+.accounting-template.invoice table.invoice-items-table td.dragger{width:2%!important;min-width:18px!important;max-width:24px!important;padding-left:2px!important;padding-right:2px!important}
+.accounting-template.invoice table.invoice-items-table th.description,
+.accounting-template.invoice table.invoice-items-table td.description{width:22%!important}
+.accounting-template.invoice table.invoice-items-table th.long_description,
+.accounting-template.invoice table.invoice-items-table td.long_description{width:35%!important}
+.accounting-template.invoice table.invoice-items-table th.qty,
+.accounting-template.invoice table.invoice-items-table td.qty{width:9%!important}
+.accounting-template.invoice table.invoice-items-table th.rate,
+.accounting-template.invoice table.invoice-items-table td.rate{width:10%!important;min-width:86px!important}
+.accounting-template.invoice table.invoice-items-table th.taxrate,
+.accounting-template.invoice table.invoice-items-table td.taxrate{width:7%!important;min-width:72px!important}
+.accounting-template.invoice table.invoice-items-table th.amount,
+.accounting-template.invoice table.invoice-items-table td.amount{width:10%!important;min-width:82px!important}
+.accounting-template.invoice table.invoice-items-table th:last-child,
+.accounting-template.invoice table.invoice-items-table td.item-actions,
+.accounting-template.invoice table.invoice-items-table tbody tr.item>td:last-child{width:5%!important;min-width:44px!important;max-width:54px!important}
+.accounting-template.invoice table.invoice-items-table textarea{width:100%!important;resize:vertical!important}
+.accounting-template.invoice table.invoice-items-table td.taxrate .bootstrap-select,
+.accounting-template.invoice table.invoice-items-table td.taxrate .bootstrap-select>.dropdown-toggle{width:100%!important;min-width:68px!important}
+.accounting-template.invoice table.invoice-items-table td.taxrate .bootstrap-select .filter-option small{display:none!important}
+.accounting-template.invoice table.invoice-items-table td.taxrate .bootstrap-select .caret{right:7px!important}
+.accounting-template.invoice .sc-sales-item-inline .bootstrap-select>.dropdown-toggle{display:flex!important;align-items:center!important;height:36px!important;min-height:36px!important;padding-top:0!important;padding-bottom:0!important}
+.accounting-template.invoice .sc-sales-item-inline .bootstrap-select>.dropdown-toggle .filter-option{display:flex!important;align-items:center!important;height:34px!important;line-height:34px!important}
+.accounting-template.invoice .sc-invoice-bill-tasks-column .form-group-select-task_select{display:flex!important;align-items:center!important;gap:8px!important;margin:0!important;padding-top:0!important}
+.accounting-template.invoice .sc-invoice-bill-tasks-column .form-group-select-task_select>label{flex:0 0 auto!important;margin:0!important;white-space:nowrap!important}
+.accounting-template.invoice .sc-invoice-bill-tasks-column .sc-bill-tasks-input-group{flex:1 1 auto!important;min-width:0!important;margin:0!important}
+.accounting-template.invoice .sc-invoice-bill-tasks-column .sc-bill-tasks-input-group>.bootstrap-select>.dropdown-toggle{height:36px!important;min-height:36px!important;display:flex!important;align-items:center!important}
+.accounting-template.invoice .sc-invoice-bill-tasks-column .input-group-addon-bill-tasks-help{height:36px!important;min-height:36px!important}
+.accounting-template.invoice .sc-invoice-customer-edit-card{margin-bottom:15px!important}
+.accounting-template.invoice .sc-invoice-customer-edit-card .form-group{margin-bottom:10px!important}
+@media(max-width:991px){
+ .accounting-template.invoice table.invoice-items-table{min-width:920px!important}
+ .accounting-template.invoice .sc-invoice-bill-tasks-column .form-group-select-task_select{display:block!important}
+ .accounting-template.invoice .sc-invoice-bill-tasks-column .form-group-select-task_select>label{display:block!important;margin-bottom:5px!important}
+}
+/* Smart Choice 4.2.3: keep Proposal register visually compact like Estimates/Invoices. */
+.table-proposals tbody tr:not(.child){height:auto!important;min-height:0!important;max-height:none!important;display:table-row!important}
+.table-proposals tbody tr.child{display:none!important;height:0!important;min-height:0!important;max-height:0!important}
+.table-proposals tbody td{height:auto!important;min-height:0!important;max-height:none!important;padding-top:8px!important;padding-bottom:8px!important;vertical-align:middle!important;line-height:1.35!important}
+.table-proposals tbody td .row-options{margin-top:2px!important;margin-bottom:0!important;line-height:1.2!important}
+.table-proposals .sc-table-cell-ellipsis{display:block!important;max-width:240px!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+
+/* 4.2.4 task modal close control: keep it below the fixed CRM header. */
+#_task_modal .close, #task-modal .task-m-close, .task-modal-single .task-m-close{position:relative!important;z-index:10050!important;margin-top:64px!important;pointer-events:auto!important}
+@media(max-width:768px){#_task_modal .close,#task-modal .task-m-close,.task-modal-single .task-m-close{margin-top:58px!important}}
+/* Setup menu has one global search in the CRM header only. */
+#setup-menu-wrapper .sc-primary-setup-search,#setup-menu .sc-primary-setup-search,#sc-setup-menu-search{display:none!important}
+
+
+/* ===== Smart Choice CRM 4.2.5 targeted final UI overrides ===== */
+/* Proposal register: use the same compact continuous DataTable behavior as Estimates/Invoices. */
+table.table-proposals{table-layout:auto!important;width:100%!important;border-collapse:collapse!important}
+table.table-proposals tbody tr:not(.child){display:table-row!important;height:auto!important;min-height:0!important;max-height:none!important}
+table.table-proposals tbody tr.child{display:none!important;height:0!important;min-height:0!important;max-height:0!important;padding:0!important;margin:0!important}
+table.table-proposals tbody td{display:table-cell!important;height:auto!important;min-height:0!important;max-height:none!important;padding:7px 10px!important;line-height:20px!important;vertical-align:middle!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+table.table-proposals tbody td .row-options{height:auto!important;max-height:18px!important;line-height:16px!important;margin:2px 0 0!important;white-space:nowrap!important;overflow:hidden!important}
+table.table-proposals .sc-proposal-list-file{display:none!important}
+
+/* Status selector and green add-status button are always horizontally aligned. */
+.sc-native-status-wrap{display:flex!important;align-items:stretch!important;gap:6px!important;width:100%!important}
+.sc-native-status-wrap>.bootstrap-select,.sc-native-status-wrap>select{flex:1 1 auto!important;width:1%!important;min-width:0!important;margin:0!important}
+.sc-native-status-wrap>.bootstrap-select>.dropdown-toggle{height:36px!important;display:flex!important;align-items:center!important}
+.sc-native-status-add{flex:0 0 38px!important;width:38px!important;height:36px!important;margin:0!important;display:inline-flex!important;align-items:center!important;justify-content:center!important}
+
+/* Invoice items: prevent Quantity/Unit from colliding with Rate without changing calculations. */
+.accounting-template.invoice table.invoice-items-table{table-layout:fixed!important;width:100%!important;margin-left:0!important}
+.accounting-template.invoice table.invoice-items-table th.description,.accounting-template.invoice table.invoice-items-table td.description{width:16%!important;min-width:130px!important}
+.accounting-template.invoice table.invoice-items-table th.long_description,.accounting-template.invoice table.invoice-items-table td.long_description{width:36%!important;min-width:300px!important}
+.accounting-template.invoice table.invoice-items-table th.qty,.accounting-template.invoice table.invoice-items-table td.qty{width:96px!important;min-width:96px!important;max-width:96px!important;padding-left:4px!important;padding-right:4px!important}
+.accounting-template.invoice table.invoice-items-table td.qty input[data-quantity]{width:100%!important;min-width:0!important;box-sizing:border-box!important}
+.accounting-template.invoice table.invoice-items-table td.qty input[name*="[unit]"]{width:52px!important;min-width:52px!important;max-width:52px!important;margin:5px 0 0 auto!important;padding-left:5px!important;padding-right:5px!important;box-sizing:border-box!important}
+.accounting-template.invoice table.invoice-items-table th.rate,.accounting-template.invoice table.invoice-items-table td.rate{width:96px!important;min-width:96px!important;max-width:96px!important}
+.accounting-template.invoice table.invoice-items-table td.rate input{width:100%!important;min-width:0!important;box-sizing:border-box!important}
+.accounting-template.invoice table.invoice-items-table th.taxrate,.accounting-template.invoice table.invoice-items-table td.taxrate{width:64px!important;min-width:64px!important;max-width:64px!important}
+
+/* Customer info cards stay compact in the header area. */
+.sc-sales-customer-summary-panel{margin-top:8px!important;margin-bottom:12px!important}.sc-sales-customer-summary-panel .panel-body{padding:12px!important}
+
+/* Mobile: search is compact until focused, leaving hamburger/menu/header controls visible. */
+@media(max-width:767px){
+  #header{position:sticky!important;top:0!important;z-index:1050!important}
+  #header #top_search{position:relative!important;left:auto!important;right:auto!important;top:auto!important;width:44px!important;max-width:44px!important;min-width:44px!important;flex:0 0 44px!important;padding:0!important;background:transparent!important;box-shadow:none!important;border-radius:0!important;z-index:1060!important;overflow:visible!important}
+  #header #top_search #search_input{width:44px!important;max-width:44px!important;height:38px!important;padding-left:35px!important;padding-right:4px!important;color:transparent!important;cursor:pointer!important;background:#f3f4f6!important;transition:width .18s ease,max-width .18s ease,color .18s ease!important}
+  #header #top_search:focus-within{position:fixed!important;left:52px!important;right:58px!important;top:7px!important;width:auto!important;max-width:none!important;min-width:0!important;z-index:11000!important}
+  #header #top_search:focus-within #search_input{width:100%!important;max-width:none!important;color:#111827!important;padding-right:38px!important;background:#fff!important;box-shadow:0 6px 22px rgba(15,23,42,.18)!important}
+  #header #top_search:focus-within #search_results,#header #top_search:focus-within #search-history{position:absolute!important;top:42px!important;left:0!important;right:0!important;max-height:70vh!important;overflow-y:auto!important;background:#fff!important;z-index:11010!important}
+  .sc-mobile-search-close{display:none!important;position:absolute!important;right:5px!important;top:5px!important;width:30px!important;height:30px!important;border:0!important;border-radius:50%!important;background:#eef2f7!important;color:#475569!important;z-index:11020!important}
+  #header #top_search:focus-within .sc-mobile-search-close{display:inline-flex!important;align-items:center!important;justify-content:center!important}
+  #header .hide-menu{position:relative!important;z-index:11030!important}
+  .accounting-template .table-responsive{overflow-x:auto!important;-webkit-overflow-scrolling:touch!important}
+}
+@media(min-width:768px){.sc-mobile-search-close{display:none!important}}
+\n\n/* ===== Smart Choice CRM 4.2.6 targeted sales consistency repair ===== */\n/* Proposal, Estimate and Invoice item tables use the same geometry as the working Proposal editor. */\n.accounting-template.proposal table.items,\n.accounting-template.estimate table.items,\n.accounting-template.invoice table.items{table-layout:fixed!important;width:100%!important;margin-left:0!important}\n.accounting-template.proposal table.items th.drag-column,.accounting-template.proposal table.items td.dragger,\n.accounting-template.estimate table.items th.drag-column,.accounting-template.estimate table.items td.dragger,\n.accounting-template.invoice table.items th.drag-column,.accounting-template.invoice table.items td.dragger{width:20px!important;min-width:20px!important;max-width:20px!important;padding-left:0!important;padding-right:2px!important}\n.accounting-template.proposal table.items th.description,.accounting-template.proposal table.items td.description,\n.accounting-template.estimate table.items th.description,.accounting-template.estimate table.items td.description,\n.accounting-template.invoice table.items th.description,.accounting-template.invoice table.items td.description{width:17%!important;min-width:150px!important}\n.accounting-template.proposal table.items th.long_description,.accounting-template.proposal table.items td.long_description,\n.accounting-template.estimate table.items th.long_description,.accounting-template.estimate table.items td.long_description,\n.accounting-template.invoice table.items th.long_description,.accounting-template.invoice table.items td.long_description{width:42%!important;min-width:360px!important}\n.accounting-template.proposal table.items th.qty,.accounting-template.proposal table.items td.qty,\n.accounting-template.estimate table.items th.qty,.accounting-template.estimate table.items td.qty,\n.accounting-template.invoice table.items th.qty,.accounting-template.invoice table.items td.qty{width:132px!important;min-width:132px!important;max-width:132px!important}\n.accounting-template.proposal table.items td.qty input[data-quantity],.accounting-template.estimate table.items td.qty input[data-quantity],.accounting-template.invoice table.items td.qty input[data-quantity]{width:100%!important;min-width:0!important}\n.accounting-template.proposal table.items td.qty .sc-unit-input,.accounting-template.estimate table.items td.qty .sc-unit-input,.accounting-template.invoice table.items td.qty .sc-unit-input{width:100%!important;min-width:0!important;max-width:none!important;margin:5px 0 0!important}\n.accounting-template.proposal table.items th.rate,.accounting-template.proposal table.items td.rate,\n.accounting-template.estimate table.items th.rate,.accounting-template.estimate table.items td.rate,\n.accounting-template.invoice table.items th.rate,.accounting-template.invoice table.items td.rate{width:88px!important;min-width:88px!important;max-width:88px!important}\n.accounting-template.proposal table.items th.taxrate,.accounting-template.proposal table.items td.taxrate,\n.accounting-template.estimate table.items th.taxrate,.accounting-template.estimate table.items td.taxrate,\n.accounting-template.invoice table.items th.taxrate,.accounting-template.invoice table.items td.taxrate{width:64px!important;min-width:64px!important;max-width:64px!important}\n.accounting-template.proposal table.items td.taxrate .bootstrap-select,.accounting-template.estimate table.items td.taxrate .bootstrap-select,.accounting-template.invoice table.items td.taxrate .bootstrap-select{width:64px!important;min-width:64px!important;max-width:64px!important}\n.accounting-template.proposal table.items th.amount,.accounting-template.proposal table.items td.amount,\n.accounting-template.estimate table.items th.amount,.accounting-template.estimate table.items td.amount,\n.accounting-template.invoice table.items th.amount,.accounting-template.invoice table.items td.amount{width:92px!important;min-width:92px!important;max-width:92px!important}\n.accounting-template.proposal table.items th:last-child,.accounting-template.proposal table.items td:last-child,\n.accounting-template.estimate table.items th:last-child,.accounting-template.estimate table.items td:last-child,\n.accounting-template.invoice table.items th:last-child,.accounting-template.invoice table.items td:last-child{width:42px!important;min-width:42px!important;max-width:42px!important}\n.accounting-template.proposal table.items textarea,.accounting-template.estimate table.items textarea,.accounting-template.invoice table.items textarea,\n.accounting-template.proposal table.items input,.accounting-template.estimate table.items input,.accounting-template.invoice table.items input{box-sizing:border-box!important}\n\n/* Native proposal register with a hard visual clamp only around cell contents. */\ntable.table-proposals tbody tr:not(.child){height:48px!important;min-height:48px!important;max-height:48px!important}\ntable.table-proposals tbody td{height:48px!important;min-height:48px!important;max-height:48px!important;padding:5px 10px!important;vertical-align:middle!important}\ntable.table-proposals tbody tr.child{display:none!important;height:0!important;padding:0!important;margin:0!important}\n.sc-proposal-cell-clamp{display:block!important;max-height:38px!important;line-height:18px!important;overflow:hidden!important;white-space:nowrap!important;text-overflow:ellipsis!important;margin:0!important;padding:0!important}\n.sc-proposal-cell-clamp .row-options{display:block!important;height:16px!important;line-height:16px!important;margin:1px 0 0!important;overflow:hidden!important;white-space:nowrap!important}\n.sc-proposal-cell-clamp img,.sc-proposal-cell-clamp iframe,.sc-proposal-cell-clamp object{max-height:24px!important;max-width:80px!important}\n\n.sc-proposal-customer-edit-card,.sc-sales-customer-summary-panel,.sc-invoice-customer-edit-card{margin-top:10px!important;margin-bottom:12px!important}\n.sc-proposal-customer-edit-card .panel-body{padding:12px!important}\n\n/* Reliable attachment preview canvas in admin and customer views. */\n.sc-admin-pdf-preview,.smart-choice-pdf-preview iframe{display:block!important;width:100%!important;height:520px!important;min-height:520px!important;border:1px solid #dbeafe!important;border-radius:8px!important;background:#fff!important}\n.smart-choice-attachment-preview iframe{display:block!important;width:100%!important;min-height:520px!important;border:1px solid #dbeafe!important;border-radius:8px!important;background:#fff!important}\n.sc-admin-image-preview img,.smart-choice-attachment-preview img{display:block!important;max-width:100%!important;height:auto!important;max-height:620px!important;object-fit:contain!important;margin:8px auto!important}\n@media(max-width:767px){\n .accounting-template.proposal table.items,.accounting-template.estimate table.items,.accounting-template.invoice table.items{min-width:1000px!important}\n .sc-admin-pdf-preview,.smart-choice-pdf-preview iframe,.smart-choice-attachment-preview iframe{height:380px!important;min-height:380px!important}\n}\n
+/* Smart Choice 4.2.7 Setup sidebar final repair */
+#setup-menu-wrapper{padding-bottom:90px!important;overflow-y:auto!important;overflow-x:hidden!important;}
+#setup-menu{padding-bottom:90px!important;}
+#setup-menu-wrapper .sc-primary-setup-search{display:list-item!important;position:sticky!important;top:0!important;z-index:60!important;background:#f9fafb!important;padding:8px 10px!important;margin:0 0 8px!important;border-bottom:1px solid #e5e7eb!important;}
+#setup-menu-wrapper #sc-setup-menu-search{display:block!important;visibility:visible!important;opacity:1!important;width:100%!important;height:36px!important;}
+#setup-menu .nav-second-level .sc-primary-setup-search,#setup-menu .nav-second-level input[id*="setup-menu-search"],#setup-menu .nav-second-level input[placeholder*="Setup"]{display:none!important;}
+#setup-menu .sc-setup-profile-card>a{display:flex!important;align-items:center!important;gap:10px!important;background:#1f2937!important;color:#fff!important;}
+#setup-menu .sc-setup-profile-card img{width:44px!important;height:44px!important;object-fit:cover!important;flex:0 0 44px!important;}
+#setup-menu .sc-setup-profile-card .tw-font-semibold{color:#fff!important;font-size:13px!important;line-height:1.25!important;}
+#setup-menu .sc-setup-profile-card .tw-text-xs{color:#fff!important;opacity:.9!important;font-size:10px!important;line-height:1.2!important;display:block!important;margin-top:2px!important;max-width:145px!important;}
+
+
+/* Smart Choice CRM 4.2.8 targeted UI repairs. */
+#staff_permissions{padding-bottom:110px!important;min-height:640px!important}
+#staff_permissions .table-responsive{padding-bottom:36px!important}
+#setup-menu-wrapper #setup-menu{padding-bottom:72px!important}
+#setup-menu-wrapper .sc-setup-profile-card>a{display:flex!important;align-items:center!important;flex-direction:row!important}
+#setup-menu-wrapper .sc-setup-profile-card>a>span:first-child{flex:0 0 auto!important}
+#setup-menu-wrapper .sc-setup-profile-card>a>span:last-child{display:block!important;min-width:0!important}
+#setup-menu-wrapper .sc-setup-profile-card>a>span:last-child>span:last-child{color:#111827!important}
+#setup-menu-wrapper .sc-setup-profile-card>a:hover>span:last-child>span:last-child{color:#fff!important}
+table.table-proposals{table-layout:fixed!important;width:100%!important}
+table.table-proposals tbody tr:not(.child){height:44px!important;min-height:44px!important;max-height:44px!important}
+table.table-proposals tbody td{height:44px!important;min-height:44px!important;max-height:44px!important;vertical-align:middle!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+table.table-proposals tbody td .tags-labels{display:block!important;max-height:24px!important;overflow:hidden!important;white-space:nowrap!important}
+table.table-proposals tbody td .tags-labels .label-tag{display:inline-block!important;max-width:105px!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;vertical-align:middle!important}
+.sc-proposal-customer-edit-card{margin-top:0!important}
+@media(min-width:992px){.sc-proposal-customer-edit-card{order:-10}}
+
+/* Smart Choice 4.3.0 targeted layout repairs */
+.sc-qty-unit-inline{display:flex;align-items:center;gap:5px;width:100%;min-width:122px}
+.sc-qty-unit-inline input[data-quantity]{flex:0 0 52px;width:52px!important;min-width:52px!important}
+.sc-qty-unit-inline .sc-unit-input{flex:1 1 70px;width:auto!important;min-width:64px!important;margin-top:0!important}
+table.table-invoices tbody td,table.table-invoices tbody th{padding-top:7px!important;padding-bottom:7px!important;vertical-align:middle!important}
+table.table-invoices tbody tr{height:auto!important;min-height:38px!important}
+@media(max-width:767px){
+ html,body{width:100%!important;max-width:100%!important;overflow-x:hidden!important}
+ body.page-small #menu{display:block!important;position:fixed!important;left:0!important;top:0!important;bottom:0!important;width:min(86vw,280px)!important;max-width:280px!important;height:100vh!important;margin-left:0!important;transform:translateX(-105%);transition:transform .22s ease!important;z-index:12010!important;visibility:visible!important;overflow-y:auto!important;overflow-x:hidden!important;background:#fff!important}
+ body.page-small.show-sidebar #menu{transform:translateX(0)!important;margin-left:0!important}
+ body.page-small #menu #side-menu{position:relative!important;left:0!important;width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important;transform:none!important}
+ body.page-small #wrapper,body.page-small.show-sidebar #wrapper{margin-left:0!important;width:100%!important;max-width:100%!important;min-width:0!important;transform:none!important;overflow-x:hidden!important}
+ body.page-small.show-sidebar:after{content:"";position:fixed;inset:0;background:rgba(15,23,42,.42);z-index:12000;pointer-events:auto}
+ body.page-small.show-sidebar #menu{z-index:12020!important}
+ .content,.panel_s,.panel-body,.row{max-width:100%!important;min-width:0!important}
+ .table-responsive{max-width:100%!important;width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch}
+ img,video,canvas,iframe{max-width:100%}
+}
+
+
+/* Smart Choice CRM 4.3.4 final targeted sales UI repair */
+/* Invoice DataTable rows match the compact estimate/proposal geometry. */
+table.table-invoices.dataTable tbody tr,table.table-invoices tbody tr{height:44px!important;min-height:44px!important;max-height:44px!important}
+table.table-invoices.dataTable tbody td,table.table-invoices tbody td{height:44px!important;min-height:44px!important;max-height:44px!important;padding:5px 8px!important;line-height:18px!important;vertical-align:middle!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+table.table-invoices tbody td .row-options{height:16px!important;line-height:16px!important;margin:1px 0 0!important;white-space:nowrap!important;overflow:hidden!important}
+/* Keep the Proposal Allow Comments control the same native switch size everywhere. */
+body.admin.proposals .onoffswitch,form#proposal-form .onoffswitch{position:relative!important;width:50px!important;min-width:50px!important;max-width:50px!important;height:28px!important;display:inline-block!important;overflow:hidden!important;vertical-align:middle!important}
+body.admin.proposals .onoffswitch-label,form#proposal-form .onoffswitch-label{display:block!important;width:50px!important;min-width:50px!important;max-width:50px!important;height:28px!important;min-height:28px!important;max-height:28px!important;position:absolute!important;inset:0!important;margin:0!important;padding:0!important;overflow:hidden!important;border-radius:16px!important}
+body.admin.proposals .onoffswitch-checkbox,form#proposal-form .onoffswitch-checkbox{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important}
+.sc-proposal-public-items{width:100%!important;overflow-x:auto!important}
+.sc-proposal-public-client-note,.sc-proposal-public-terms{border-top:1px solid #e5e7eb;padding-top:18px}

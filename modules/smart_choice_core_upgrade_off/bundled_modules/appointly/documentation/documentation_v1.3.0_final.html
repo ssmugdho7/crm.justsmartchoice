@@ -1,0 +1,2245 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="description" content="Perfex CRM" />
+    <meta
+      name="viewport"
+      content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>
+      Appointly v1.3.0 - Complete Appointments Management for Perfex CRM -
+      Documentation
+    </title>
+    <link
+      href="http://fonts.googleapis.com/css?family=Raleway:700,300"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+      /* Dropdown Menu Styles */
+      .menu-section {
+        margin: 10px 0;
+      }
+
+      .menu-section-header {
+        cursor: pointer;
+        padding: 8px 15px;
+        background: #f5f5f5;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-weight: bold;
+        color: #333;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background-color 0.3s ease;
+      }
+
+      .menu-section-header:hover {
+        background: #e9e9e9;
+      }
+
+      .menu-section-header.active {
+        background: #1a1b31;
+        color: white;
+      }
+
+      .dropdown-arrow {
+        transition: transform 0.3s ease;
+        font-size: 12px;
+      }
+
+      .dropdown-arrow.rotated {
+        transform: rotate(180deg);
+      }
+
+      .menu-section-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        background: #fafafa;
+        border-left: 3px solid #1a1b31;
+        margin-left: 10px;
+      }
+
+      .menu-section-content.expanded {
+        max-height: 500px;
+        padding: 10px 0;
+      }
+
+      .menu-section-content li {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .menu-section-content a {
+        display: block;
+        padding: 5px 20px;
+        color: #555;
+        text-decoration: none;
+        font-weight: normal;
+        transition: all 0.2s ease;
+      }
+
+      .menu-section-content a:hover {
+        background: #e9e9e9;
+        color: #1a1b31;
+        padding-left: 25px;
+      }
+
+      .docs-nav {
+        padding: 0;
+      }
+
+      .docs-nav > li {
+        margin: 0;
+        padding: 0;
+      }
+
+      .separator {
+        height: 1px;
+        background: #ddd;
+        margin: 20px 0;
+        border: none;
+      }
+
+      .idev-section {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 2px solid #1a1b31;
+      }
+
+      .idev-section a {
+        display: block;
+        padding: 10px 15px;
+        background: #1a1b31;
+        color: white;
+        text-align: center;
+        border-radius: 4px;
+        font-weight: bold;
+        text-decoration: none;
+      }
+
+      .idev-section a:hover {
+        background: #2a2b41;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <div class="container">
+        <h2 class="docs-header">Appointly v1.3.0 - Complete Documentation</h2>
+        <p class="docs-subheader">
+          Professional Appointments Management for Perfex CRM
+        </p>
+      </div>
+    </header>
+    <div class="container">
+      <ul class="docs-nav" id="menu-left">
+        <li class="menu-section">
+          <div
+            class="menu-section-header"
+            onclick="toggleSection('getting-started')"
+          >
+            <span>Getting Started</span>
+            <span class="dropdown-arrow">▼</span>
+          </div>
+          <ul class="menu-section-content" id="getting-started">
+            <li><a href="#intro">Introduction</a></li>
+            <li><a href="#whats-new">What's New in v1.3.0</a></li>
+            <li><a href="#installation">Installation & Upgrade</a></li>
+            <li><a href="#requirements">Requirements</a></li>
+          </ul>
+        </li>
+
+        <li class="menu-section">
+          <div
+            class="menu-section-header"
+            onclick="toggleSection('core-features')"
+          >
+            <span>Core Features</span>
+            <span class="dropdown-arrow">▼</span>
+          </div>
+          <ul class="menu-section-content" id="core-features">
+            <li><a href="#services-management">Services Management</a></li>
+            <li><a href="#appointments-system">Appointments System</a></li>
+            <li><a href="#analytics-dashboard">Analytics Dashboard</a></li>
+            <li><a href="#calendar-integration">Calendar Integration</a></li>
+            <li><a href="#external-booking">External Booking Form</a></li>
+          </ul>
+        </li>
+
+        <li class="menu-section">
+          <div
+            class="menu-section-header"
+            onclick="toggleSection('advanced-features')"
+          >
+            <span>Advanced Features</span>
+            <span class="dropdown-arrow">▼</span>
+          </div>
+          <ul class="menu-section-content" id="advanced-features">
+            <li><a href="#google-calendar">Google Calendar API</a></li>
+            <li><a href="#outlook-calendar">Outlook Calendar API</a></li>
+            <li><a href="#notifications">Email & SMS Notifications</a></li>
+            <li><a href="#staff-management">Staff & Permissions</a></li>
+            <li><a href="#custom-fields">Custom Fields</a></li>
+          </ul>
+        </li>
+
+        <li class="menu-section">
+          <div
+            class="menu-section-header"
+            onclick="toggleSection('configuration')"
+          >
+            <span>Configuration</span>
+            <span class="dropdown-arrow">▼</span>
+          </div>
+          <ul class="menu-section-content" id="configuration">
+            <li><a href="#settings">Settings & Configuration</a></li>
+            <li><a href="#working-hours">Working Hours Setup</a></li>
+            <li><a href="#troubleshooting">Troubleshooting</a></li>
+          </ul>
+        </li>
+
+        <li class="menu-section">
+          <div class="menu-section-header" onclick="toggleSection('reference')">
+            <span>Reference</span>
+            <span class="dropdown-arrow">▼</span>
+          </div>
+          <ul class="menu-section-content" id="reference">
+            <li><a href="#changelog">Changelog</a></li>
+            <li><a href="#support">Support</a></li>
+          </ul>
+        </li>
+
+        <li class="idev-section">
+          <a target="_blank" href="https://idevalex.com"
+            >More Modules by iDev</a
+          >
+        </li>
+      </ul>
+
+      <div class="docs-content">
+        <h2>Getting Started</h2>
+
+        <h3 id="intro">Introduction to Appointly v1.3.0</h3>
+        <p>
+          <strong>Appointly v1.3.0</strong> represents a complete architectural
+          overhaul of the popular appointments module for
+          <a
+            href="https://codecanyon.net/item/perfex-powerful-open-source-crm/14013737"
+            ><strong>Perfex CRM</strong></a
+          >. This major release introduces a professional services management
+          system, advanced analytics dashboard, enhanced calendar integration,
+          and a completely modernized user interface.
+        </p>
+
+        <h4>Perfect for Professional Service Businesses</h4>
+        <p>
+          Whether you're running a consulting firm, medical practice, salon,
+          legal office, or any service-based business, Appointly v1.3.0 provides
+          enterprise-grade appointment management with:
+        </p>
+
+        <ul>
+          <li>
+            <strong>Complete Services Architecture</strong> - Define unlimited
+            services with pricing, duration, and staff assignments
+          </li>
+          <li>
+            <strong>Advanced Analytics</strong> - Comprehensive reporting and
+            business intelligence dashboard
+          </li>
+          <li>
+            <strong>Enhanced Calendar Integration</strong> - Beautiful tooltips,
+            status indicators, and seamless calendar sync
+          </li>
+          <li>
+            <strong>Professional External Forms</strong> - Embeddable booking
+            forms with modern UI and loading states
+          </li>
+          <li>
+            <strong>Staff Management System</strong> - Granular permissions,
+            working hours, and availability management
+          </li>
+          <li>
+            <strong>Multi-Calendar Sync</strong> - Google Calendar and Outlook
+            integration with real-time synchronization
+          </li>
+        </ul>
+
+        <h3 id="whats-new">What's New in Version 1.3.0</h3>
+        <div class="alert alert-success">
+          <h4>Major Architectural Overhaul</h4>
+          <p>
+            Version 1.3.0 is a complete rewrite that transforms Appointly from a
+            simple appointment booking tool into a comprehensive business
+            management platform.
+          </p>
+        </div>
+
+        <h4>New Services Management System</h4>
+        <ul>
+          <li>
+            <strong>Service Definitions</strong> - Create unlimited services
+            with custom pricing, duration, and descriptions
+          </li>
+          <li>
+            <strong>Staff Assignments</strong> - Assign specific staff members
+            to services with primary provider designation
+          </li>
+          <li>
+            <strong>Buffer Times</strong> - Configure before/after appointment
+            buffers for preparation and cleanup
+          </li>
+          <li>
+            <strong>Color Coding</strong> - Visual organization with
+            customizable service colors
+          </li>
+          <li>
+            <strong>Availability Control</strong> - Set specific working hours
+            per service
+          </li>
+          <li>
+            <strong>Usage Tracking</strong> - Prevent deletion of services
+            currently in use
+          </li>
+        </ul>
+
+        <h4>Advanced Analytics Dashboard</h4>
+        <ul>
+          <li>
+            <strong>Real-time Statistics</strong> - Total, completed, and
+            cancelled appointment metrics
+          </li>
+          <li>
+            <strong>Performance Charts</strong> - Monthly trends and appointment
+            distribution graphs
+          </li>
+          <li>
+            <strong>Staff Performance</strong> - Individual staff completion
+            rates and statistics
+          </li>
+          <li>
+            <strong>Service Popularity</strong> - Most booked services and
+            revenue analysis
+          </li>
+          <li>
+            <strong>Date Range Filtering</strong> - Custom date ranges with
+            preset options (today, this week, month, year)
+          </li>
+          <li>
+            <strong>Export Capabilities</strong> - PDF, Excel, and CSV export
+            functionality
+          </li>
+        </ul>
+
+        <h4>Enhanced Calendar Integration</h4>
+        <ul>
+          <li>
+            <strong>Interactive Tooltips</strong> - Beautiful hover tooltips
+            showing detailed appointment information
+          </li>
+          <li>
+            <strong>Status Indicators</strong> - Color-coded status badges and
+            visual indicators
+          </li>
+          <li>
+            <strong>Provider Information</strong> - Staff details and contact
+            information in tooltips
+          </li>
+          <li>
+            <strong>Google Meet Links</strong> - Direct access to video
+            conference links
+          </li>
+          <li>
+            <strong>Mobile Responsive</strong> - Optimized tooltip design for
+            mobile devices
+          </li>
+          <li>
+            <strong>Real-time Updates</strong> - Live calendar synchronization
+          </li>
+        </ul>
+
+        <h4>Professional External Booking</h4>
+        <ul>
+          <li>
+            <strong>Modern UI Design</strong> - Clean, professional booking
+            interface
+          </li>
+          <li>
+            <strong>Loading States</strong> - Centered loading spinners with
+            proper visual feedback
+          </li>
+          <li>
+            <strong>Service Selection</strong> - Clients can choose from
+            available services
+          </li>
+          <li>
+            <strong>Provider Choice</strong> - Select preferred staff members
+          </li>
+          <li>
+            <strong>Real-time Availability</strong> - Dynamic time slot
+            availability based on service duration
+          </li>
+          <li>
+            <strong>Mobile Optimized</strong> - Responsive design for all
+            devices
+          </li>
+        </ul>
+
+        <h4>Enhanced Administration</h4>
+        <ul>
+          <li>
+            <strong>Modular Architecture</strong> - Organized controllers,
+            models, and views
+          </li>
+          <li>
+            <strong>Advanced Permissions</strong> - Granular staff permission
+            system
+          </li>
+          <li>
+            <strong>Working Hours Management</strong> - Company-wide and
+            individual staff schedules
+          </li>
+          <li>
+            <strong>Debug System</strong> - Comprehensive logging and
+            troubleshooting tools
+          </li>
+          <li>
+            <strong>Performance Optimization</strong> - Improved database
+            queries and caching
+          </li>
+        </ul>
+
+        <h3 id="installation">Installation & Upgrade Guide</h3>
+
+        <div class="alert alert-warning">
+          <h4>Important: Version 1.3.0 Upgrade Notice</h4>
+          <p>
+            <strong
+              >This is a major version upgrade that includes database schema
+              changes and architectural modifications.</strong
+            >
+            Please backup your database and files before upgrading.
+          </p>
+        </div>
+
+        <h4>Fresh Installation (Recommended)</h4>
+        <ol>
+          <li>Download the latest Appointly v1.3.0 package from CodeCanyon</li>
+          <li>Extract the <code>appointly.zip</code> file from the download</li>
+          <li>
+            Navigate to <strong>Setup → Modules</strong> in your Perfex CRM
+            admin panel
+          </li>
+          <li>
+            Upload the <code>appointly.zip</code> file and click
+            <strong>Install</strong>
+          </li>
+          <li>Click <strong>Activate</strong> to enable the module</li>
+          <li>
+            If prompted, click <strong>Upgrade Database</strong> to apply schema
+            changes
+          </li>
+          <li>Clear your browser cache (Ctrl+F5 on Windows, Cmd+R on Mac)</li>
+        </ol>
+
+        <h4>Upgrading from Previous Versions</h4>
+        <ol>
+          <li>
+            <strong>Backup Everything</strong> - Create full database and file
+            backups
+          </li>
+          <li>Deactivate the current Appointly module</li>
+          <li>Replace the module files with the new v1.3.0 files</li>
+          <li>Reactivate the module</li>
+          <li>Run database upgrade when prompted</li>
+          <li>
+            Review and update your settings in
+            <strong>Setup → Settings → Appointly</strong>
+          </li>
+          <li>Test all functionality thoroughly</li>
+        </ol>
+
+        <h4>Manual Installation</h4>
+        <ol>
+          <li>
+            Extract <code>appointly.zip</code> to your server's
+            <code>modules/</code> directory
+          </li>
+          <li>
+            Ensure the folder structure is
+            <code>modules/appointly/[module files]</code>
+          </li>
+          <li>
+            Set proper file permissions (755 for directories, 644 for files)
+          </li>
+          <li>Navigate to your Perfex CRM admin panel</li>
+          <li>Go to <strong>Setup → Modules</strong> and activate Appointly</li>
+          <li>Complete the database upgrade process</li>
+        </ol>
+
+        <div class="alert alert-info" style="padding: 10px 20px">
+          <h4>Post-Installation Steps</h4>
+          <ul>
+            <li>
+              Configure your services in <strong>Appointly → Services</strong>
+            </li>
+            <li>
+              Set up staff working hours in
+              <strong>Appointly → Staff Working Hours</strong>
+            </li>
+            <li>
+              Configure notification templates in
+              <strong>Setup → Email Templates</strong>
+            </li>
+            <li>Test the external booking form functionality</li>
+            <li>Set up Google Calendar or Outlook integration if needed</li>
+          </ul>
+        </div>
+
+        <h3 id="requirements">System Requirements</h3>
+
+        <h4>Minimum Requirements</h4>
+        <ul>
+          <li><strong>Perfex CRM:</strong> Version 3.0.0 or higher</li>
+          <li>
+            <strong>PHP:</strong> Version 7.4 or higher (PHP 8.2 recommended)
+          </li>
+          <li><strong>MySQL:</strong> Version 5.7 or higher</li>
+          <li><strong>Web Server:</strong> Apache 2.4+ or Nginx 1.18+</li>
+          <li><strong>Memory:</strong> 256MB minimum (512MB recommended)</li>
+        </ul>
+
+        <h4>Required PHP Extensions</h4>
+        <ul>
+          <li>cURL (for API integrations)</li>
+          <li>JSON (for data processing)</li>
+          <li>OpenSSL (for secure connections)</li>
+          <li>PDO MySQL (for database operations)</li>
+          <li>GD or ImageMagick (for image processing)</li>
+        </ul>
+
+        <h4>Optional Requirements</h4>
+        <ul>
+          <li>
+            <strong>Cron Jobs:</strong> Required for automated reminders and
+            recurring appointments
+          </li>
+          <li>
+            <strong>SMS Gateway:</strong> For SMS notifications (Twilio, etc.)
+          </li>
+          <li>
+            <strong>Email Server:</strong> SMTP configuration for email
+            notifications
+          </li>
+          <li>
+            <strong>SSL Certificate:</strong> Recommended for external booking
+            forms
+          </li>
+        </ul>
+
+        <div class="alert alert-warning">
+          <h4>Important Notes</h4>
+          <ul>
+            <li>
+              <strong>Cron Job Setup:</strong> Essential for reminder
+              notifications.
+              <a href="https://help.perfexcrm.com/setup-cron-job/"
+                >Setup Guide</a
+              >
+            </li>
+            <li>
+              <strong>SMS Configuration:</strong> Required for SMS
+              notifications.
+              <a href="https://help.perfexcrm.com/sms-provider/"
+                >SMS Setup Guide</a
+              >
+            </li>
+            <li>
+              <strong>Browser Cache:</strong> Always clear browser cache after
+              installation or updates
+            </li>
+          </ul>
+        </div>
+
+        <h2>Core Features</h2>
+
+        <h3 id="services-management">Services Management System</h3>
+        <p>
+          The Services Management System is the foundation of Appointly v1.3.0,
+          allowing you to define and manage all the services your business
+          offers.
+        </p>
+
+        <h4>Creating and Managing Services</h4>
+        <p>
+          Navigate to <strong>Appointly → Services</strong> to access the
+          services management interface.
+        </p>
+
+        <h5>Service Configuration Options</h5>
+        <ul>
+          <li>
+            <strong>Basic Information</strong>
+            <ul>
+              <li>Service Name - The display name for your service</li>
+              <li>Description - Detailed service description for clients</li>
+              <li>
+                Duration - Service length in minutes (15, 30, 45, 60, 90, 120,
+                etc.)
+              </li>
+              <li>Price - Service cost (supports multiple currencies)</li>
+              <li>Color - Visual identifier for calendar display</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Staff Assignment</strong>
+            <ul>
+              <li>
+                Assigned Staff Members - Select who can provide this service
+              </li>
+              <li>Primary Provider - Designate a default staff member</li>
+              <li>
+                Provider Permissions - Control who can modify service
+                assignments
+              </li>
+            </ul>
+          </li>
+          <li>
+            <strong>Scheduling Options</strong>
+            <ul>
+              <li>Buffer Before - Preparation time before appointments</li>
+              <li>Buffer After - Cleanup time after appointments</li>
+              <li>Working Hours - Service-specific availability windows</li>
+              <li>
+                Booking Restrictions - Advance booking limits and restrictions
+              </li>
+            </ul>
+          </li>
+          <li>
+            <strong>Status Control</strong>
+            <ul>
+              <li>
+                Active/Inactive Status - Enable or disable service booking
+              </li>
+              <li>
+                Usage Protection - Prevent deletion of services with existing
+                appointments
+              </li>
+            </ul>
+          </li>
+        </ul>
+
+        <h4>Pre-configured Services</h4>
+        <p>
+          Appointly v1.3.0 includes three sample services to get you started:
+        </p>
+        <ul>
+          <li>
+            <strong>Initial Consultation</strong> - 30-minute introductory
+            meeting
+          </li>
+          <li>
+            <strong>Business Strategy Session</strong> - 60-minute planning
+            session
+          </li>
+          <li>
+            <strong>Project Review Meeting</strong> - 45-minute progress review
+          </li>
+        </ul>
+
+        <h4>Service Management Features</h4>
+        <ul>
+          <li>
+            <strong>Bulk Operations</strong> - Enable/disable multiple services
+            at once
+          </li>
+          <li>
+            <strong>Usage Tracking</strong> - View which services are most
+            popular
+          </li>
+          <li>
+            <strong>Revenue Analysis</strong> - Track income by service type
+          </li>
+          <li>
+            <strong>Staff Workload</strong> - Monitor staff assignment
+            distribution
+          </li>
+          <li>
+            <strong>Availability Optimization</strong> - Identify scheduling
+            conflicts and gaps
+          </li>
+        </ul>
+
+        <h3 id="appointments-system">Appointments System</h3>
+        <p>
+          The core appointment management system has been completely redesigned
+          for efficiency and user experience.
+        </p>
+
+        <h4>Appointment Types</h4>
+        <ul>
+          <li>
+            <strong>Internal Appointments</strong> - Created by staff for
+            existing contacts or leads
+          </li>
+          <li>
+            <strong>External Appointments</strong> - Booked by clients through
+            the external form
+          </li>
+          <li>
+            <strong>Recurring Appointments</strong> - Automatically repeated
+            appointments
+          </li>
+          <li>
+            <strong>Group Appointments</strong> - Multiple attendees for the
+            same service
+          </li>
+        </ul>
+
+        <h4>Appointment Statuses</h4>
+        <ul>
+          <li>
+            <strong>Pending</strong> - Awaiting approval (yellow indicator)
+          </li>
+          <li>
+            <strong>Approved</strong> - Confirmed appointment (green indicator)
+          </li>
+          <li>
+            <strong>In Progress</strong> - Currently active appointment (blue
+            indicator)
+          </li>
+          <li>
+            <strong>Completed</strong> - Finished appointment (gray indicator)
+          </li>
+          <li>
+            <strong>Cancelled</strong> - Cancelled appointment (red indicator)
+          </li>
+          <li>
+            <strong>No Show</strong> - Client didn't attend (orange indicator)
+          </li>
+        </ul>
+
+        <h4>Advanced Appointment Features</h4>
+        <ul>
+          <li>
+            <strong>Multi-Staff Assignments</strong> - Assign multiple staff
+            members to one appointment
+          </li>
+          <li>
+            <strong>Service Integration</strong> - Automatic duration and
+            pricing from service definitions
+          </li>
+          <li>
+            <strong>Buffer Time Management</strong> - Automatic scheduling gaps
+            for preparation
+          </li>
+          <li>
+            <strong>Conflict Detection</strong> - Prevent double-booking and
+            scheduling conflicts
+          </li>
+          <li>
+            <strong>Custom Fields</strong> - Collect additional information
+            specific to your business
+          </li>
+          <li>
+            <strong>File Attachments</strong> - Attach documents and files to
+            appointments
+          </li>
+          <li>
+            <strong>Notes and Comments</strong> - Internal notes and
+            client-visible comments
+          </li>
+          <li>
+            <strong>Feedback System</strong> - Post-appointment rating and
+            feedback collection
+          </li>
+        </ul>
+
+        <h3 id="analytics-dashboard">Analytics Dashboard</h3>
+        <p>
+          The new Analytics Dashboard provides comprehensive business
+          intelligence for your appointment-based business.
+        </p>
+
+        <h4>Key Performance Indicators (KPIs)</h4>
+        <ul>
+          <li>
+            <strong>Total Appointments</strong> - Overall appointment volume
+          </li>
+          <li>
+            <strong>Completion Rate</strong> - Percentage of completed vs.
+            scheduled appointments
+          </li>
+          <li>
+            <strong>Cancellation Rate</strong> - Percentage of cancelled
+            appointments
+          </li>
+          <li>
+            <strong>Revenue Metrics</strong> - Total revenue and average
+            appointment value
+          </li>
+          <li>
+            <strong>Staff Utilization</strong> - Individual staff performance
+            and workload
+          </li>
+          <li>
+            <strong>Service Popularity</strong> - Most and least booked services
+          </li>
+        </ul>
+
+        <h4>Visual Analytics</h4>
+        <ul>
+          <li>
+            <strong>Monthly Trends</strong> - Line charts showing appointment
+            trends over time
+          </li>
+          <li>
+            <strong>Service Distribution</strong> - Pie charts showing service
+            booking percentages
+          </li>
+          <li>
+            <strong>Staff Performance</strong> - Bar charts comparing staff
+            metrics
+          </li>
+          <li>
+            <strong>Revenue Analysis</strong> - Financial performance tracking
+          </li>
+          <li>
+            <strong>Time-based Analysis</strong> - Peak hours and day-of-week
+            patterns
+          </li>
+        </ul>
+
+        <h4>Filtering and Date Ranges</h4>
+        <ul>
+          <li>
+            <strong>Quick Filters</strong> - Today, This Week, This Month, This
+            Year
+          </li>
+          <li>
+            <strong>Custom Date Ranges</strong> - Select any start and end date
+          </li>
+          <li>
+            <strong>Comparison Periods</strong> - Compare current vs. previous
+            periods
+          </li>
+          <li>
+            <strong>Staff Filtering</strong> - View metrics for specific staff
+            members
+          </li>
+          <li>
+            <strong>Service Filtering</strong> - Analyze performance by service
+            type
+          </li>
+        </ul>
+
+        <h4>Export and Reporting</h4>
+        <ul>
+          <li><strong>PDF Reports</strong> - Professional formatted reports</li>
+          <li>
+            <strong>Excel Export</strong> - Detailed data for further analysis
+          </li>
+          <li><strong>CSV Export</strong> - Raw data for external tools</li>
+          <li>
+            <strong>Scheduled Reports</strong> - Automated report generation and
+            delivery
+          </li>
+          <li>
+            <strong>Custom Report Builder</strong> - Create tailored reports for
+            your needs
+          </li>
+        </ul>
+
+        <h3 id="calendar-integration">Enhanced Calendar Integration</h3>
+        <p>
+          Version 1.3.0 introduces a completely redesigned calendar experience
+          with interactive tooltips and enhanced visual indicators.
+        </p>
+
+        <h4>Interactive Calendar Tooltips</h4>
+        <p>
+          Beautiful hover tooltips provide instant access to appointment details
+          without leaving the calendar view:
+        </p>
+        <ul>
+          <li>
+            <strong>Appointment Information</strong>
+            <ul>
+              <li>Appointment title and description</li>
+              <li>Date, time, and duration</li>
+              <li>Service type and pricing</li>
+              <li>Status with color-coded indicators</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Provider Details</strong>
+            <ul>
+              <li>Primary provider name and contact</li>
+              <li>All assigned staff members</li>
+              <li>Provider availability status</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Client Information</strong>
+            <ul>
+              <li>Client name and contact details</li>
+              <li>Appointment source (internal/external)</li>
+              <li>Special notes and requirements</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Quick Actions</strong>
+            <ul>
+              <li>Direct links to Google Meet sessions</li>
+              <li>Location information and maps</li>
+              <li>One-click appointment editing</li>
+              <li>Status change options</li>
+            </ul>
+          </li>
+        </ul>
+
+        <h4>Visual Status Indicators</h4>
+        <ul>
+          <li>
+            <strong>Color-Coded Events</strong> - Each appointment status has a
+            distinct color
+          </li>
+          <li>
+            <strong>Service Colors</strong> - Services display in their
+            configured colors
+          </li>
+          <li>
+            <strong>Priority Indicators</strong> - High-priority appointments
+            are highlighted
+          </li>
+          <li>
+            <strong>Conflict Warnings</strong> - Visual alerts for scheduling
+            conflicts
+          </li>
+          <li>
+            <strong>Buffer Time Display</strong> - Visual representation of
+            preparation time
+          </li>
+        </ul>
+
+        <h4>Mobile-Responsive Design</h4>
+        <ul>
+          <li>
+            <strong>Touch-Optimized</strong> - Tooltips work perfectly on mobile
+            devices
+          </li>
+          <li>
+            <strong>Responsive Layout</strong> - Calendar adapts to all screen
+            sizes
+          </li>
+          <li>
+            <strong>Gesture Support</strong> - Swipe navigation and touch
+            interactions
+          </li>
+          <li>
+            <strong>Fast Loading</strong> - Optimized for mobile network speeds
+          </li>
+        </ul>
+
+        <h3 id="external-booking">External Booking Form</h3>
+        <p>
+          The external booking form has been completely redesigned with a
+          modern, professional interface and enhanced user experience.
+        </p>
+
+        <h4>Modern User Interface</h4>
+        <ul>
+          <li>
+            <strong>Clean Design</strong> - Professional, distraction-free
+            booking interface
+          </li>
+          <li>
+            <strong>Step-by-Step Process</strong> - Guided booking flow with
+            clear progress indicators
+          </li>
+          <li>
+            <strong>Loading States</strong> - Centered loading spinners with
+            proper visual feedback
+          </li>
+          <li>
+            <strong>Error Handling</strong> - Clear error messages and
+            validation feedback
+          </li>
+          <li>
+            <strong>Success Confirmations</strong> - Professional booking
+            confirmation screens
+          </li>
+        </ul>
+
+        <h4>Enhanced Booking Flow</h4>
+        <ol>
+          <li>
+            <strong>Service Selection</strong>
+            <ul>
+              <li>Browse available services with descriptions and pricing</li>
+              <li>View service duration and requirements</li>
+              <li>See real-time availability</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Provider Choice</strong>
+            <ul>
+              <li>Select from available staff members</li>
+              <li>View provider profiles and specialties</li>
+              <li>See provider availability calendars</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Date and Time Selection</strong>
+            <ul>
+              <li>Interactive calendar with available slots</li>
+              <li>Real-time availability updates</li>
+              <li>Buffer time consideration</li>
+              <li>Timezone handling</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Contact Information</strong>
+            <ul>
+              <li>Client details collection</li>
+              <li>Custom field support</li>
+              <li>Special requirements and notes</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Confirmation</strong>
+            <ul>
+              <li>Booking summary review</li>
+              <li>Terms and conditions acceptance</li>
+              <li>Final confirmation and receipt</li>
+            </ul>
+          </li>
+        </ol>
+
+        <h4>Embedding Options</h4>
+        <ul>
+          <li>
+            <strong>iFrame Embedding</strong> - Easy integration into any
+            website
+          </li>
+          <li><strong>Direct Links</strong> - Standalone booking pages</li>
+          <li><strong>Widget Integration</strong> - Compact booking widgets</li>
+          <li><strong>API Integration</strong> - Custom integration options</li>
+        </ul>
+
+        <h4>Customization Options</h4>
+        <ul>
+          <li><strong>Branding</strong> - Custom logos, colors, and styling</li>
+          <li>
+            <strong>Custom Fields</strong> - Collect business-specific
+            information
+          </li>
+          <li>
+            <strong>Language Support</strong> - Multi-language booking forms
+          </li>
+          <li>
+            <strong>Terms and Conditions</strong> - Custom legal text and
+            agreements
+          </li>
+          <li>
+            <strong>Notification Preferences</strong> - Client communication
+            preferences
+          </li>
+        </ul>
+
+        <h2>Advanced Features</h2>
+
+        <h3 id="google-calendar">Google Calendar Integration</h3>
+        <p>
+          Seamless two-way synchronization with Google Calendar for real-time
+          availability management.
+        </p>
+
+        <h4>Step-by-Step Google Calendar Setup</h4>
+
+        <h5>Step 1: Create Google Cloud Project</h5>
+        <ol>
+          <li>
+            Go to
+            <a href="https://console.cloud.google.com/" target="_blank"
+              >Google Cloud Console</a
+            >
+          </li>
+          <li>Click <strong>"Select a project"</strong> dropdown at the top</li>
+          <li>Click <strong>"New Project"</strong></li>
+          <li>Enter project name (e.g., "Appointly Calendar Integration")</li>
+          <li>Click <strong>"Create"</strong></li>
+          <li>Wait for project creation and select your new project</li>
+        </ol>
+        <img
+          src="images/google/select_project.png"
+          alt="Select Google Cloud Project"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+        <img
+          src="images/google/project_name_desc.png"
+          alt="Create New Project"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+
+        <h5>Step 2: Enable Google Calendar API</h5>
+        <ol>
+          <li>
+            In the Google Cloud Console, go to
+            <strong>APIs & Services → Library</strong>
+          </li>
+          <li>Search for "Google Calendar API"</li>
+          <li>Click on <strong>"Google Calendar API"</strong></li>
+          <li>Click <strong>"Enable"</strong></li>
+          <li>Wait for the API to be enabled</li>
+        </ol>
+        <img
+          src="images/google/enable_apis.png"
+          alt="Enable APIs & Services"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+        <img
+          src="images/google/search_api.png"
+          alt="Search Google Calendar API"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+        <img
+          src="images/google/enable_api.png"
+          alt="Enable Google Calendar API"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+
+        <h5>Step 3: Configure OAuth Consent Screen</h5>
+        <ol>
+          <li>Go to <strong>APIs & Services → OAuth consent screen</strong></li>
+          <li>
+            Select <strong>"External"</strong> user type (unless you have Google
+            Workspace)
+          </li>
+          <li>Click <strong>"Create"</strong></li>
+          <li>
+            Fill in required fields:
+            <ul>
+              <li>
+                <strong>App name:</strong> Your business name (e.g., "Appointly
+                Calendar")
+              </li>
+              <li><strong>User support email:</strong> Your support email</li>
+              <li>
+                <strong>Developer contact information:</strong> Your email
+              </li>
+            </ul>
+          </li>
+          <li>Click <strong>"Save and Continue"</strong></li>
+        </ol>
+        <img
+          src="images/google/consent_screen.png"
+          alt="OAuth Consent Screen"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+        <img
+          src="images/google/oauthscreen.png"
+          alt="Configure OAuth Consent Screen"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+
+        <h5>Step 4: Add Required Scopes</h5>
+        <ol>
+          <li>On Scopes page, click <strong>"Add or Remove Scopes"</strong></li>
+          <li>
+            Add these scopes:
+            <ul>
+              <li><code>https://www.googleapis.com/auth/calendar</code></li>
+              <li>
+                <code>https://www.googleapis.com/auth/calendar.events</code>
+              </li>
+            </ul>
+          </li>
+          <li>
+            Click <strong>"Update"</strong> then
+            <strong>"Save and Continue"</strong>
+          </li>
+        </ol>
+        <img
+          src="images/google/updated_docs/scopes.png"
+          alt="Add Required Scopes"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+
+        <h5>Step 5: Add Test Users (Optional)</h5>
+        <ol>
+          <li>Add test users if needed for development</li>
+          <li>Click <strong>"Save and Continue"</strong></li>
+        </ol>
+        <img
+          src="images/google/updated_docs/Testusers.png"
+          alt="Add Test Users"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+
+        <h5>Step 6: Create OAuth 2.0 Credentials</h5>
+        <ol>
+          <li>Go to <strong>APIs & Services → Credentials</strong></li>
+          <li>
+            Click <strong>"+ Create Credentials"</strong> →
+            <strong>"OAuth client ID"</strong>
+          </li>
+          <li>Select <strong>"Web application"</strong></li>
+          <li>Enter name: "Appointly Web Client"</li>
+        </ol>
+        <img
+          src="images/google/create_credentials.png"
+          alt="Create Credentials"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+        <img
+          src="images/google/oauth_client_id.png"
+          alt="OAuth Client ID"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+
+        <h5>Step 7: Configure Authorized URIs</h5>
+        <ol>
+          <li>
+            Add Authorized JavaScript origins:
+            <ul>
+              <li>
+                <code>https://your-actual-domain.com</code> (replace with your
+                actual domain)
+              </li>
+            </ul>
+          </li>
+          <li>
+            Add Authorized redirect URIs:
+            <ul>
+              <li>
+                <code
+                  >https://your-actual-domain.com/appointly/google/auth/oauth</code
+                >
+              </li>
+            </ul>
+          </li>
+          <li>Click <strong>"Create"</strong></li>
+        </ol>
+        <img
+          src="images/google/updated_docs/authorized_uris_creation.png"
+          alt="Configure Authorized URIs"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+        <img
+          src="images/google/updated_docs/authorized_uris_creation1.png"
+          alt="Add Redirect URIs"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+        <img
+          src="images/google/updated_docs/redirect_uri.png"
+          alt="Redirect URI Configuration"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+
+        <h5>Step 8: Copy Credentials</h5>
+        <ol>
+          <li>
+            Copy the <strong>Client ID</strong> and
+            <strong>Client Secret</strong>
+          </li>
+          <li>
+            Keep these credentials secure - you'll need them for Appointly
+            configuration
+          </li>
+        </ol>
+        <img
+          src="images/google/copy_credentials.png"
+          alt="Copy OAuth Credentials"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+
+        <h5>Step 9: Publish Your App (For Production)</h5>
+        <ol>
+          <li>Go back to <strong>OAuth consent screen</strong></li>
+          <li>
+            Click <strong>"Publish App"</strong> when ready for production
+          </li>
+          <li>For testing, you can keep it in testing mode</li>
+        </ol>
+        <img
+          src="images/google/updated_docs/publish_app.png"
+          alt="Publish App"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+        <img
+          src="images/google/updated_docs/back2dashboard.png"
+          alt="Back to Dashboard"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+
+        <h5>Step 10: Configure Appointly Settings</h5>
+        <ol>
+          <li>
+            In Perfex CRM, go to <strong>Setup → Settings → Appointly</strong>
+          </li>
+          <li>
+            Navigate to <strong>"Google Calendar Integration"</strong> tab
+          </li>
+          <li>Enter your <strong>Google Client ID</strong></li>
+          <li>Enter your <strong>Google Client Secret</strong></li>
+          <li>
+            Set <strong>Redirect URI</strong> to your actual domain:
+            <code
+              >https://your-actual-domain.com/appointly/google/auth/oauth</code
+            >
+          </li>
+          <li>Enable <strong>"Google Calendar Sync"</strong></li>
+          <li>Click <strong>"Save Settings"</strong></li>
+        </ol>
+
+        <h5>Step 11: Connect Staff Calendars</h5>
+        <ol>
+          <li>Go to <strong>Appointly → Staff Working Hours</strong></li>
+          <li>
+            For each staff member, click
+            <strong>"Connect Google Calendar"</strong>
+          </li>
+          <li>Staff will be redirected to Google for authorization</li>
+          <li>After authorization, calendar sync will be active</li>
+          <li>Test by creating an appointment and checking Google Calendar</li>
+        </ol>
+
+        <div class="alert alert-warning">
+          <h4>Important Notes</h4>
+          <ul>
+            <li>
+              <strong>Replace placeholder URLs:</strong> Always use your actual
+              domain instead of "your-actual-domain.com"
+            </li>
+            <li>
+              <strong>HTTPS Required:</strong> Google requires HTTPS for
+              production OAuth callbacks
+            </li>
+            <li>
+              <strong>Correct Callback URL:</strong> Must be exactly
+              <code>https://yourdomain.com/appointly/google/auth/oauth</code>
+            </li>
+            <li>
+              <strong>Testing Mode:</strong> Apps in testing mode work with up
+              to 100 test users
+            </li>
+            <li>
+              <strong>Verification:</strong> Production apps may require Google
+              verification for sensitive scopes
+            </li>
+          </ul>
+        </div>
+
+        <div class="alert alert-info" style="padding: 10px 20px">
+          <h4>Google Calendar Tips</h4>
+          <ul>
+            <li><strong>Testing:</strong> Use a test Google account first</li>
+            <li>
+              <strong>Multiple Calendars:</strong> Staff can choose which
+              calendar to sync
+            </li>
+            <li>
+              <strong>Busy Time:</strong> Existing Google events will block
+              appointment slots
+            </li>
+            <li>
+              <strong>Meet Links:</strong> Enable "Auto-create Google Meet" in
+              settings
+            </li>
+          </ul>
+        </div>
+
+        <h4>Integration Features</h4>
+        <ul>
+          <li>
+            <strong>Two-Way Sync</strong> - Appointments sync both directions
+          </li>
+          <li>
+            <strong>Real-Time Updates</strong> - Instant availability updates
+          </li>
+          <li>
+            <strong>Busy Time Detection</strong> - Automatic conflict prevention
+          </li>
+          <li>
+            <strong>Multiple Calendars</strong> - Support for multiple Google
+            calendars
+          </li>
+          <li>
+            <strong>Event Details</strong> - Full appointment information in
+            Google Calendar
+          </li>
+          <li>
+            <strong>Attendee Management</strong> - Automatic attendee
+            invitations
+          </li>
+        </ul>
+
+        <h4>Google Meet Integration</h4>
+        <ul>
+          <li>
+            <strong>Automatic Meeting Creation</strong> - Generate Google Meet
+            links for appointments
+          </li>
+          <li>
+            <strong>Email Invitations</strong> - Send meeting invites to all
+            participants
+          </li>
+          <li>
+            <strong>Calendar Integration</strong> - Meet links appear in
+            calendar events
+          </li>
+          <li>
+            <strong>Mobile Support</strong> - Meet links work on all devices
+          </li>
+        </ul>
+
+        <h3 id="outlook-calendar">Outlook Calendar Integration</h3>
+        <p>
+          Professional integration with Microsoft Outlook and Office 365
+          calendars.
+        </p>
+
+        <h4>Step-by-Step Outlook Calendar Setup</h4>
+
+        <h5>Step 1: Access Azure Portal</h5>
+        <ol>
+          <li>
+            Go to
+            <a href="https://portal.azure.com/" target="_blank">Azure Portal</a>
+          </li>
+          <li>
+            Sign in with your Microsoft account (Office 365 admin account
+            preferred)
+          </li>
+          <li>Navigate to <strong>Azure Active Directory</strong></li>
+        </ol>
+        <img
+          src="images/outlook/1-Azure-Active-Directory.png"
+          alt="Azure Active Directory"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+
+        <h5>Step 2: Register New Application</h5>
+        <ol>
+          <li>Click <strong>App registrations</strong> in the left menu</li>
+          <li>Click <strong>"+ New registration"</strong></li>
+        </ol>
+        <img
+          src="images/outlook/2-App-Registration.png"
+          alt="App Registration"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+        <img
+          src="images/outlook/3-Register-New-Application.png"
+          alt="Register New Application"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+
+        <h5>Step 3: Configure Application Details</h5>
+        <ol>
+          <li>
+            Fill in application details:
+            <ul>
+              <li><strong>Name:</strong> "Appointly Calendar Integration"</li>
+              <li>
+                <strong>Supported account types:</strong> "Accounts in any
+                organizational directory and personal Microsoft accounts"
+              </li>
+              <li>
+                <strong>Redirect URI:</strong> Web -
+                <code
+                  >https://your-actual-domain.com/admin/appointly/appointments</code
+                >
+              </li>
+            </ul>
+          </li>
+          <li>Click <strong>"Register"</strong></li>
+        </ol>
+        <img
+          src="images/outlook/3-1-Register-New-Application.png"
+          alt="Configure Application"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+
+        <h5>Step 4: Copy Application ID</h5>
+        <ol>
+          <li>
+            Copy the <strong>Application (client) ID</strong> from the Overview
+            page
+          </li>
+          <li>Save this ID - you'll need it for Appointly configuration</li>
+        </ol>
+        <img
+          src="images/outlook/6-Overview.png"
+          alt="Application Overview"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+        <img
+          src="images/outlook/7-App-Client-ID.png"
+          alt="Copy Client ID"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+
+        <h5>Step 5: Create Client Secret</h5>
+        <ol>
+          <li>
+            In your app registration, go to
+            <strong>Certificates & secrets</strong>
+          </li>
+          <li>Click <strong>"+ New client secret"</strong></li>
+          <li>Enter description: "Appointly Client Secret"</li>
+          <li>Set expiration: "24 months" (recommended)</li>
+          <li>Click <strong>"Add"</strong></li>
+          <li>
+            Copy the <strong>Value</strong> (client secret) immediately - it
+            won't be shown again
+          </li>
+        </ol>
+
+        <h5>Step 6: Configure API Permissions</h5>
+        <ol>
+          <li>Go to <strong>API permissions</strong></li>
+          <li>Click <strong>"+ Add a permission"</strong></li>
+          <li>Select <strong>"Microsoft Graph"</strong></li>
+          <li>Choose <strong>"Delegated permissions"</strong></li>
+        </ol>
+        <img
+          src="images/outlook/5-Add-Permissions.png"
+          alt="Add API Permissions"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+        <img
+          src="images/outlook/5-1-Delegated-Permissions.png"
+          alt="Select Delegated Permissions"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+
+        <h5>Step 7: Add Required Permissions</h5>
+        <ol>
+          <li>
+            Add these permissions:
+            <ul>
+              <li>
+                <code>Calendars.ReadWrite</code> - Read and write user calendars
+              </li>
+              <li>
+                <code>Calendars.ReadWrite.Shared</code> - Read and write shared
+                calendars
+              </li>
+              <li><code>User.Read</code> - Sign in and read user profile</li>
+              <li><code>offline_access</code> - Maintain access to data</li>
+            </ul>
+          </li>
+          <li>Click <strong>"Add permissions"</strong></li>
+          <li>
+            Click <strong>"Grant admin consent"</strong> (if you're admin)
+          </li>
+        </ol>
+        <img
+          src="images/outlook/5-2-Save-Permissions.png"
+          alt="Save Permissions"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+
+        <h5>Step 8: Configure Authentication Platform</h5>
+        <ol>
+          <li>Go to <strong>Authentication</strong></li>
+          <li>Click <strong>"Add a platform"</strong></li>
+          <li>Select <strong>"Web"</strong></li>
+          <li>
+            Add Redirect URI:
+            <code
+              >https://your-actual-domain.com/admin/appointly/appointments</code
+            >
+          </li>
+          <li>
+            Under <strong>Implicit grant and hybrid flows</strong>, check:
+            <ul>
+              <li><strong>Access tokens</strong></li>
+              <li><strong>ID tokens</strong></li>
+            </ul>
+          </li>
+          <li>Click <strong>"Save"</strong></li>
+        </ol>
+        <img
+          src="images/outlook/4-Add-Platform-and-Configure.png"
+          alt="Add Platform"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+        <img
+          src="images/outlook/4-1-Configure-Web.png"
+          alt="Configure Web Platform"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+
+        <h5>Step 9: Configure Appointly Settings</h5>
+        <ol>
+          <li>
+            In Perfex CRM, go to <strong>Setup → Settings → Appointly</strong>
+          </li>
+          <li>
+            Navigate to <strong>"Outlook Calendar Integration"</strong> tab
+          </li>
+          <li>Enter your <strong>Azure Application ID</strong> (Client ID)</li>
+          <li>
+            <strong>Note:</strong> Outlook integration uses popup
+            authentication, so no client secret is needed in Appointly settings
+          </li>
+          <li>Click <strong>"Save Settings"</strong></li>
+        </ol>
+
+        <h5>Step 10: Connect Staff Calendars</h5>
+        <ol>
+          <li>Go to <strong>Appointly → Staff Working Hours</strong></li>
+          <li>
+            For each staff member, click
+            <strong>"Connect Outlook Calendar"</strong>
+          </li>
+          <li>A popup will appear for Microsoft authentication</li>
+          <li>Staff will sign in with their Office 365/Outlook account</li>
+          <li>After authorization, calendar sync will be active</li>
+          <li>Test by creating an appointment and checking Outlook Calendar</li>
+        </ol>
+        <img
+          src="images/outlook/OutlookVerifyApp.png"
+          alt="Verify Outlook App"
+          style="max-width: 100%; margin: 20px 0; border: 1px solid #ddd"
+        />
+
+        <div class="alert alert-warning">
+          <h4>Outlook Setup Notes</h4>
+          <ul>
+            <li>
+              <strong>Replace placeholder URLs:</strong> Always use your actual
+              domain instead of "your-actual-domain.com"
+            </li>
+            <li>
+              <strong>Correct Redirect URI:</strong> Must be exactly
+              <code>https://yourdomain.com/admin/appointly/appointments</code>
+            </li>
+            <li>
+              <strong>Popup Authentication:</strong> Outlook uses popup-based
+              authentication, not traditional OAuth callbacks
+            </li>
+            <li>
+              <strong>Admin Consent:</strong> Some organizations require admin
+              approval for app permissions
+            </li>
+            <li>
+              <strong>Tenant Restrictions:</strong> Check with IT if calendar
+              sync doesn't work
+            </li>
+            <li>
+              <strong>Personal vs Business:</strong> Works with both personal
+              Outlook.com and Office 365 accounts
+            </li>
+            <li>
+              <strong>Multiple Accounts:</strong> Each staff member connects
+              their own calendar
+            </li>
+          </ul>
+        </div>
+
+        <h4>Outlook Features</h4>
+        <ul>
+          <li>
+            <strong>Calendar Synchronization</strong> - Bi-directional calendar
+            sync
+          </li>
+          <li>
+            <strong>Availability Checking</strong> - Real-time busy time
+            detection
+          </li>
+          <li>
+            <strong>Meeting Invitations</strong> - Automatic Outlook meeting
+            invites
+          </li>
+          <li>
+            <strong>Office 365 Integration</strong> - Full Office 365 ecosystem
+            support
+          </li>
+          <li>
+            <strong>Teams Integration</strong> - Microsoft Teams meeting links
+          </li>
+        </ul>
+
+        <h3 id="notifications">Email & SMS Notifications</h3>
+        <p>
+          Comprehensive notification system for keeping clients and staff
+          informed.
+        </p>
+
+        <h4>Email Templates</h4>
+        <ul>
+          <li>
+            <strong>Appointment Confirmation</strong> - Sent when appointment is
+            approved
+          </li>
+          <li>
+            <strong>Appointment Reminder</strong> - Configurable reminder timing
+          </li>
+          <li>
+            <strong>Appointment Updated</strong> - Sent when appointment details
+            change
+          </li>
+          <li>
+            <strong>Appointment Cancelled</strong> - Cancellation notifications
+          </li>
+          <li>
+            <strong>Feedback Request</strong> - Post-appointment feedback
+            collection
+          </li>
+          <li>
+            <strong>Staff Notifications</strong> - Internal staff communications
+          </li>
+        </ul>
+
+        <h4>SMS Notifications</h4>
+        <ul>
+          <li>
+            <strong>Appointment Reminders</strong> - SMS reminders before
+            appointments
+          </li>
+          <li>
+            <strong>Status Updates</strong> - SMS notifications for status
+            changes
+          </li>
+          <li>
+            <strong>Confirmation Messages</strong> - Booking confirmations via
+            SMS
+          </li>
+          <li><strong>Custom Messages</strong> - Personalized SMS content</li>
+        </ul>
+
+        <h4>Notification Triggers</h4>
+        <ul>
+          <li>
+            <strong>Appointment Created</strong> - New appointment notifications
+          </li>
+          <li>
+            <strong>Appointment Approved</strong> - Approval confirmations
+          </li>
+          <li><strong>Appointment Modified</strong> - Change notifications</li>
+          <li><strong>Appointment Cancelled</strong> - Cancellation alerts</li>
+          <li>
+            <strong>Reminder Timing</strong> - Configurable reminder schedules
+          </li>
+          <li>
+            <strong>Feedback Requests</strong> - Post-appointment follow-ups
+          </li>
+        </ul>
+
+        <h3 id="staff-management">Staff & Permissions Management</h3>
+        <p>
+          Granular permission system and staff management for appointment
+          operations.
+        </p>
+
+        <h4>Permission Levels</h4>
+        <ul>
+          <li><strong>View</strong> - View appointments and related data</li>
+          <li><strong>Create</strong> - Create new appointments</li>
+          <li><strong>Edit</strong> - Modify existing appointments</li>
+          <li><strong>Delete</strong> - Remove appointments</li>
+          <li><strong>Approve</strong> - Approve pending appointments</li>
+          <li><strong>View Reports</strong> - Access analytics dashboard</li>
+        </ul>
+
+        <h4>Staff Features</h4>
+        <ul>
+          <li>
+            <strong>Individual Calendars</strong> - Personal appointment
+            calendars
+          </li>
+          <li>
+            <strong>Working Hours</strong> - Custom availability schedules
+          </li>
+          <li>
+            <strong>Service Assignments</strong> - Specific service
+            authorizations
+          </li>
+          <li>
+            <strong>Notification Preferences</strong> - Customizable alert
+            settings
+          </li>
+          <li>
+            <strong>Performance Tracking</strong> - Individual performance
+            metrics
+          </li>
+        </ul>
+
+        <h3 id="custom-fields">Custom Fields System</h3>
+        <p>
+          Flexible custom field system for collecting business-specific
+          information.
+        </p>
+
+        <h4>Field Types</h4>
+        <ul>
+          <li><strong>Text Fields</strong> - Single-line text input</li>
+          <li><strong>Textarea</strong> - Multi-line text areas</li>
+          <li><strong>Select Dropdown</strong> - Predefined option lists</li>
+          <li><strong>Checkboxes</strong> - Multiple selection options</li>
+          <li><strong>Date Fields</strong> - Date picker inputs</li>
+          <li><strong>Number Fields</strong> - Numeric input validation</li>
+        </ul>
+
+        <h4>Custom Field Features</h4>
+        <ul>
+          <li><strong>Required Fields</strong> - Mandatory field validation</li>
+          <li>
+            <strong>Conditional Logic</strong> - Show/hide fields based on
+            conditions
+          </li>
+          <li>
+            <strong>External Form Integration</strong> - Custom fields in
+            booking forms
+          </li>
+          <li>
+            <strong>Reporting Integration</strong> - Custom fields in reports
+            and exports
+          </li>
+          <li><strong>API Access</strong> - Custom field data via API</li>
+        </ul>
+
+        <h2>Configuration</h2>
+
+        <h3 id="settings">Settings & Configuration</h3>
+        <p>
+          Comprehensive settings system for customizing Appointly to your
+          business needs.
+        </p>
+
+        <h4>General Settings</h4>
+        <ul>
+          <li><strong>Business Hours</strong> - Default operating hours</li>
+          <li>
+            <strong>Booking Restrictions</strong> - Advance booking limits
+          </li>
+          <li><strong>Time Zone</strong> - Default time zone settings</li>
+          <li>
+            <strong>Date Formats</strong> - Localized date and time formats
+          </li>
+          <li>
+            <strong>Currency Settings</strong> - Pricing and payment currency
+          </li>
+        </ul>
+
+        <h4>Booking Settings</h4>
+        <ul>
+          <li>
+            <strong>Auto-Approval</strong> - Automatic appointment approval
+          </li>
+          <li>
+            <strong>Buffer Times</strong> - Default preparation and cleanup
+            times
+          </li>
+          <li>
+            <strong>Cancellation Policy</strong> - Cancellation rules and timing
+          </li>
+          <li>
+            <strong>Reschedule Options</strong> - Client reschedule permissions
+          </li>
+          <li>
+            <strong>No-Show Handling</strong> - Automatic no-show processing
+          </li>
+        </ul>
+
+        <h4>Notification Settings</h4>
+        <ul>
+          <li>
+            <strong>Email Configuration</strong> - SMTP settings and templates
+          </li>
+          <li>
+            <strong>SMS Configuration</strong> - SMS gateway and templates
+          </li>
+          <li><strong>Reminder Timing</strong> - Default reminder schedules</li>
+          <li>
+            <strong>Notification Recipients</strong> - Who receives what
+            notifications
+          </li>
+        </ul>
+
+        <h3 id="working-hours">Working Hours Setup</h3>
+        <p>
+          Flexible working hours configuration for company-wide and individual
+          staff schedules.
+        </p>
+
+        <h4>Company Schedule</h4>
+        <ul>
+          <li>
+            <strong>Business Hours</strong> - Default operating hours for all
+            services
+          </li>
+          <li>
+            <strong>Holiday Management</strong> - Company holidays and closures
+          </li>
+          <li>
+            <strong>Break Times</strong> - Lunch breaks and other unavailable
+            periods
+          </li>
+          <li>
+            <strong>Seasonal Hours</strong> - Different hours for different
+            seasons
+          </li>
+        </ul>
+
+        <h4>Individual Staff Schedules</h4>
+        <ul>
+          <li>
+            <strong>Personal Hours</strong> - Individual staff availability
+          </li>
+          <li>
+            <strong>Part-Time Schedules</strong> - Flexible working arrangements
+          </li>
+          <li>
+            <strong>Vacation Management</strong> - Time-off and vacation
+            scheduling
+          </li>
+          <li>
+            <strong>Override Options</strong> - Temporary schedule changes
+          </li>
+        </ul>
+
+        <h3 id="troubleshooting">Troubleshooting Guide</h3>
+        <p>Common issues and solutions for Appointly v1.3.0.</p>
+
+        <h4>Installation Issues</h4>
+        <ul>
+          <li>
+            <strong>Database Upgrade Failures</strong> - Check database
+            permissions and backup
+          </li>
+          <li>
+            <strong>File Permission Errors</strong> - Ensure proper file
+            permissions (755/644)
+          </li>
+          <li>
+            <strong>Module Activation Issues</strong> - Clear cache and check
+            PHP error logs
+          </li>
+          <li>
+            <strong>Missing Dependencies</strong> - Verify PHP extensions and
+            Perfex CRM version
+          </li>
+        </ul>
+
+        <h4>Calendar Integration Issues</h4>
+        <ul>
+          <li>
+            <strong>Google Calendar Sync</strong> - Verify OAuth credentials and
+            API permissions
+          </li>
+          <li>
+            <strong>Outlook Integration</strong> - Check Azure app registration
+            and permissions
+          </li>
+          <li>
+            <strong>Tooltip Display</strong> - Clear browser cache and check
+            JavaScript console
+          </li>
+          <li>
+            <strong>Mobile Responsiveness</strong> - Test on different devices
+            and browsers
+          </li>
+        </ul>
+
+        <h4>Booking Form Issues</h4>
+        <ul>
+          <li>
+            <strong>Loading Spinners</strong> - Check network connectivity and
+            server response
+          </li>
+          <li>
+            <strong>Service Selection</strong> - Verify service configuration
+            and availability
+          </li>
+          <li>
+            <strong>Time Slot Availability</strong> - Check staff schedules and
+            buffer times
+          </li>
+          <li>
+            <strong>Form Submission</strong> - Review server logs and email
+            configuration
+          </li>
+        </ul>
+
+        <h4>Performance Optimization</h4>
+        <ul>
+          <li>
+            <strong>Database Optimization</strong> - Regular database
+            maintenance and indexing
+          </li>
+          <li>
+            <strong>Cache Management</strong> - Implement proper caching
+            strategies
+          </li>
+          <li>
+            <strong>Asset Loading</strong> - Optimize CSS and JavaScript loading
+          </li>
+          <li>
+            <strong>Server Resources</strong> - Monitor memory and CPU usage
+          </li>
+        </ul>
+
+        <h3 id="changelog">Version 1.3.0 Changelog</h3>
+        <p><strong>Release Date:</strong> January 15, 2025</p>
+
+        <h4>Major Features</h4>
+        <ul>
+          <li>
+            <strong>Complete Architectural Overhaul</strong> - Rebuilt from the
+            ground up with modern architecture
+          </li>
+          <li>
+            <strong>Services Management System</strong> - Comprehensive service
+            definition and management
+          </li>
+          <li>
+            <strong>Advanced Analytics Dashboard</strong> - Business
+            intelligence and reporting platform
+          </li>
+          <li>
+            <strong>Enhanced Calendar Integration</strong> - Interactive
+            tooltips and visual indicators
+          </li>
+          <li>
+            <strong>Professional External Forms</strong> - Modern booking
+            interface with loading states
+          </li>
+          <li>
+            <strong>Staff Management System</strong> - Granular permissions and
+            working hours
+          </li>
+        </ul>
+
+        <h4>Technical Improvements</h4>
+        <ul>
+          <li>
+            <strong>Modular Architecture</strong> - Organized controllers,
+            models, and views
+          </li>
+          <li>
+            <strong>Performance Optimization</strong> - Improved database
+            queries and caching
+          </li>
+          <li>
+            <strong>Mobile Responsiveness</strong> - Enhanced mobile experience
+            across all features
+          </li>
+          <li>
+            <strong>Debug System</strong> - Comprehensive logging and
+            troubleshooting tools
+          </li>
+          <li>
+            <strong>Security Enhancements</strong> - Improved security measures
+            and validation
+          </li>
+        </ul>
+
+        <h4>User Experience</h4>
+        <ul>
+          <li>
+            <strong>Modern UI Design</strong> - Clean, professional interface
+            design
+          </li>
+          <li>
+            <strong>Interactive Elements</strong> - Enhanced user interactions
+            and feedback
+          </li>
+          <li>
+            <strong>Loading States</strong> - Proper visual feedback during
+            operations
+          </li>
+          <li>
+            <strong>Error Handling</strong> - Improved error messages and
+            validation
+          </li>
+          <li>
+            <strong>Accessibility</strong> - Better accessibility compliance
+          </li>
+        </ul>
+
+        <h4>Integration Enhancements</h4>
+        <ul>
+          <li>
+            <strong>Google Calendar API</strong> - Enhanced synchronization and
+            Meet integration
+          </li>
+          <li>
+            <strong>Outlook Calendar API</strong> - Improved Office 365
+            integration
+          </li>
+          <li>
+            <strong>Email Templates</strong> - Redesigned notification templates
+          </li>
+          <li>
+            <strong>SMS Integration</strong> - Enhanced SMS notification system
+          </li>
+          <li>
+            <strong>API Improvements</strong> - Better API endpoints and
+            documentation
+          </li>
+        </ul>
+
+        <h3 id="support">Support & Resources</h3>
+
+        <h4>Getting Help</h4>
+        <ul>
+          <li>
+            <strong>Documentation</strong> - This comprehensive guide covers all
+            features
+          </li>
+          <li>
+            <strong>Video Tutorials</strong> - Step-by-step video guides (coming
+            soon)
+          </li>
+          <li>
+            <strong>Community Forum</strong> - Connect with other users and
+            share tips
+          </li>
+          <li>
+            <strong>Email Support</strong> - Direct support via
+            support@idevalex.com
+          </li>
+        </ul>
+
+        <h4>Additional Resources</h4>
+        <ul>
+          <li>
+            <strong>Feature Requests</strong> - Submit ideas for future versions
+          </li>
+          <li>
+            <strong>Bug Reports</strong> - Report issues for quick resolution
+          </li>
+          <li>
+            <strong>Custom Development</strong> - Professional customization
+            services
+          </li>
+          <li>
+            <strong>Training Services</strong> - Staff training and onboarding
+            assistance
+          </li>
+        </ul>
+
+        <h4>Stay Updated</h4>
+        <ul>
+          <li><strong>Newsletter</strong> - Subscribe for updates and tips</li>
+          <li>
+            <strong>Social Media</strong> - Follow @idevalex for announcements
+          </li>
+          <li>
+            <strong>Release Notes</strong> - Stay informed about new features
+          </li>
+          <li>
+            <strong>Roadmap</strong> - See what's coming in future versions
+          </li>
+        </ul>
+
+        <div class="alert alert-success">
+          <h4>Thank You for Choosing Appointly v1.3.0!</h4>
+          <p>
+            We've put tremendous effort into making this the most comprehensive
+            appointment management solution for Perfex CRM. Your feedback and
+            suggestions help us continue improving the platform.
+          </p>
+          <p>
+            <strong>Need help?</strong> Contact us at
+            <a href="mailto:support@idevalex.com">support@idevalex.com</a>
+          </p>
+        </div>
+
+        <footer>
+          <div class="container">
+            <p>&copy; <span id="currentDate"></span> - All Rights Reserved</p>
+            <a href="https://idevalex.com"
+              >iDev - Professional Perfex CRM Modules</a
+            >
+          </div>
+        </footer>
+
+        <script>
+          var currentDate = new Date();
+          document.getElementById("currentDate").innerHTML =
+            currentDate.getFullYear();
+        </script>
+
+        <script>
+          // Toggleable dropdown menu functionality
+          function toggleSection(sectionId) {
+            const content = document.getElementById(sectionId);
+            const header = content.previousElementSibling;
+            const arrow = header.querySelector(".dropdown-arrow");
+
+            // Toggle the expanded class
+            content.classList.toggle("expanded");
+
+            // Toggle the active class on header
+            header.classList.toggle("active");
+
+            // Rotate the arrow
+            arrow.classList.toggle("rotated");
+          }
+
+          // Auto-expand section based on current hash
+          function autoExpandSection() {
+            const hash = window.location.hash;
+            if (!hash) return;
+
+            // Find which section contains the current hash
+            const targetElement = document.querySelector(hash);
+            if (!targetElement) return;
+
+            // Find the corresponding menu link
+            const menuLink = document.querySelector(`a[href="${hash}"]`);
+            if (!menuLink) return;
+
+            // Find the parent section
+            const parentSection = menuLink.closest(".menu-section-content");
+            if (!parentSection) return;
+
+            // Expand the parent section
+            const sectionId = parentSection.id;
+            const header = parentSection.previousElementSibling;
+            const arrow = header.querySelector(".dropdown-arrow");
+
+            parentSection.classList.add("expanded");
+            header.classList.add("active");
+            arrow.classList.add("rotated");
+          }
+
+          // Initialize on page load
+          document.addEventListener("DOMContentLoaded", function () {
+            autoExpandSection();
+
+            // Also handle hash changes
+            window.addEventListener("hashchange", autoExpandSection);
+          });
+
+          // Smooth scrolling for anchor links
+          document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+            anchor.addEventListener("click", function (e) {
+              e.preventDefault();
+              const target = document.querySelector(this.getAttribute("href"));
+              if (target) {
+                target.scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                });
+              }
+            });
+          });
+        </script>
+      </div>
+    </div>
+  </body>
+</html>

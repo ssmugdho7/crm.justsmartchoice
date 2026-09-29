@@ -1,0 +1,21 @@
+<?php
+$lang["pt_module_title"] = "Template Proyek";
+$lang["pt_project_template"] = "Template Proyek";
+$lang["pt_project_template_lower"] = "template proyek";
+$lang["pt_edit_project_template"] = "Edit Template Proyek";
+$lang["pt_delete_project_template"] = "Hapus Template Proyek";
+$lang["pt_copy_project_template"] = "Salin Template Proyek";
+$lang["pt_project_template_description"] = "Deskripsi";
+$lang["pt_new_project_template"] = "Template Proyek Baru";
+$lang["failed_to_copy_project_template"] = "Gagal menyalin template proyek";
+$lang["pt_project_template_copied_successfully"] = "Template proyek berhasil disalin";
+$lang["pt_project_from_template"] = "proyek dari template";
+$lang["pt_new_project_from_template"] = "Buat Proyek Dari Template";
+$lang["pt_select_project_template"] = "Pilih Template Proyek";
+$lang["pt_project_template_not_found"] = "Template proyek tidak ditemukan";
+$lang["pt_duration_text"] = "Durasi Tenggat Waktu (Dalam Hari)";
+$lang["pt_milestone_start_date"] = "Hari untuk memulai setelah tanggal mulai proyek";
+$lang["pt_milestone_due_date"] = "Jatuh Tempo dalam hari";
+$lang["permission_create_milestones"] = "Buat Tonggak";
+$lang["permission_edit_milestones"] = "Edit Tonggak";
+$lang["permission_delete_milestones"] = "Hapus Tonggak";

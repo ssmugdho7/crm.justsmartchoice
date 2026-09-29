@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LinearLayout android:baselineAligned="false"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        android:baselineAligned="false"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        android:weightSum="2">
+
+        <LinearLayout
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/itemName"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/itemDescription"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_height="wrap_content">
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/rate"
+                    android:layout_weight="0.7"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.6"
+                    android:text="X"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_height="wrap_content" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/qty"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_weight="0.7"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tax"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/amount"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+    <View
+        android:background="@color/GrayCloud"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+</LinearLayout>

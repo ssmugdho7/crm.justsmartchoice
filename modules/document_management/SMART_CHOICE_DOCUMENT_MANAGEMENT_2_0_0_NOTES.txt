@@ -1,0 +1,29 @@
+Smart Choice Document Management 2.0.0
+
+Install:
+1. Replace modules/document_management/ with this folder.
+2. Go to Setup > Modules > Document Management > Upgrade Database.
+3. Clear application/cache except index.html.
+4. Press Ctrl + F5.
+
+Updated:
+- Module description changed from Portuguese to English.
+- Author changed to Smart Choice Contractors USA / Harold Cabrera.
+- Version updated to 2.0.0.
+- English and Spanish module language folders retained.
+- Other module language folders removed.
+- Smart Choice settings section added.
+- Health Checker added.
+- Help Guide added.
+- Module action links added: Settings, Health Checker, Help Guide, five-star badge.
+- Migration 200 added.
+- Smart Choice compact UI CSS added.
+
+Preserved:
+- Existing uploads and documents.
+- Existing database table creation logic.
+- Required third-party runtime libraries.
+- Existing controller/model workflows.
+
+Important:
+Do not delete document tables. This module stores existing document records in the CRM database and files under modules/document_management/uploads/.

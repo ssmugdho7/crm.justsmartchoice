@@ -1,0 +1,6 @@
+1.2.6 - Native first-level Settings view + complete Payroll Hub appearance/table/menu configuration; migration 126.
+1.2.5 - Smart Choice Settings click/right-panel hard fix; inline dependency-free bridge; Payroll Hub Settings menu; migration 125.
+1.2.4 - Native Smart Choice Settings href/right-panel integration repair; migration 124.
+26_03_2024:
+-Payslip: Payslip download ZIP, fix error of employee without Employee ID number, when exporting pay slip, no pay slip PDF file will be created
+1.2.3 - Smart Choice CRM Settings Bridge repair, right-panel fallback, dark-green Payroll Hub menu branding, migration 123.

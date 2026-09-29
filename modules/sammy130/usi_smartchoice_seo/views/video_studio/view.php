@@ -1,0 +1,10 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); init_head(); ?>
+<div id="wrapper"><div class="content"><div class="panel_s"><div class="panel-body"><?php $this->load->view('usi_smartchoice_seo/partials/top'); ?>
+<h4><i class="fa fa-video-camera"></i> <?php echo html_escape($video['title'] ?? 'Video'); ?></h4>
+<div class="sc-card-grid"><div class="sc-card"><strong>Status</strong><br><?php echo html_escape($video['status'] ?? ''); ?></div><div class="sc-card"><strong>Purpose</strong><br><?php echo html_escape($video['video_purpose'] ?? ''); ?></div><div class="sc-card"><strong>Language</strong><br><?php echo html_escape($video['language'] ?? ''); ?></div></div>
+<h4>Script</h4><div class="well"><?php echo nl2br(html_escape($video['script_text'] ?? '')); ?></div>
+<h4>Text Layers</h4><table class="table table-condensed sc-table"><thead><tr><th>Text</th><th>Start</th><th>Duration</th><th>Animation</th><th>Position</th></tr></thead><tbody><?php foreach ($layers as $layer) { ?><tr><td><?php echo html_escape($layer['layer_text']); ?></td><td><?php echo html_escape($layer['start_second']); ?></td><td><?php echo html_escape($layer['duration_second']); ?></td><td><?php echo html_escape($layer['animation_type']); ?></td><td><?php echo html_escape($layer['position_name']); ?></td></tr><?php } ?></tbody></table>
+<h4>Embed Code</h4><textarea class="form-control" rows="3" readonly><?php echo html_escape($video['embed_code'] ?? ''); ?></textarea>
+<h4>AI Notes</h4><div class="well"><?php echo nl2br(html_escape($video['ai_notes'] ?? '')); ?></div>
+<a class="btn btn-success btn-sm" href="<?php echo admin_url('usi_smartchoice_seo/run_video_preview/' . (int)($video['id'] ?? 0)); ?>">Prepare Video API Job</a> <a class="btn btn-default btn-sm" href="<?php echo admin_url('usi_smartchoice_seo/video_project/' . (int)($video['id'] ?? 0)); ?>">Edit</a> <a class="btn btn-default btn-sm" href="<?php echo admin_url('usi_smartchoice_seo/video_studio'); ?>">Back</a>
+</div></div></div></div><?php init_tail(); ?>

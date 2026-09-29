@@ -1,0 +1,9 @@
+Smart Choice CRM 4.0.5
+
+Targeted changes only:
+- Proposal register restored to native DataTable content and native row behavior.
+- Custom proposal attachment thumbnails/count removed from the main proposal register.
+- Scope of Work custom-field column excluded from the proposal register.
+- Appearance & Mobile settings now control native column visibility and preferred width for Proposals, Estimates and Invoices.
+- Sequential upgrade-only migration 405 added.
+- Payment, discount, AI, attachment handling, modules and unrelated CRM logic were not modified.

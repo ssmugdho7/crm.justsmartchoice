@@ -1,0 +1,1 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?><div class="alert alert-info">This settings group is reserved for the installed module. The module should register its own controls here. No core table is modified by this placeholder.</div>

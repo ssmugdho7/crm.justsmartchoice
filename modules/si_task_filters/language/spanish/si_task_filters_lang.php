@@ -1,0 +1,20 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed');
+
+$lang['si_task_filters'] = 'Si Task Filters';
+$lang['si_task_filters_menu'] = 'Si Task Filters';
+$lang['si_task_filters_settings'] = 'Configuración de Si Task Filters';
+$lang['si_task_filters_health'] = 'Salud';
+$lang['si_task_filters_help'] = 'Ayuda';
+$lang['settings'] = 'Configuración';
+$lang['health'] = 'Salud';
+$lang['help'] = 'Ayuda';
+$lang['create'] = 'Crear';
+$lang['edit'] = 'Editar';
+$lang['delete'] = 'Eliminar';
+$lang['view'] = 'Ver';
+$lang['view_own'] = 'Ver Propio';
+$lang['view_global'] = 'Ver Global';
+$lang['import'] = 'Importar';
+$lang['export'] = 'Exportar';
+$lang['sample_header'] = 'Encabezado de Muestra';
+$lang['mass_delete'] = 'Eliminar en Masa';

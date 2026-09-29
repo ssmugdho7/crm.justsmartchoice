@@ -1,0 +1,23 @@
+Smart Choice Accounting Hub v1.4.3
+Author: Smart Choice Contractors USA / Harold Cabrera
+Quality: ★★★★★
+Last Modified: 2026-06-30
+
+Changes in this build:
+- Visible module name changed to Accounting Hub while preserving folder/constant compatibility as accounting.
+- Added Accounting Hub Settings under the CRM Setup menu.
+- Added Hub Integrations settings tab.
+- Added toggles: Is The Purchase Hub Module Installed? Yes/No, Is The Sales Hub Module Installed? Yes/No, and QuickBooks Desktop Enterprise IIF enabled.
+- Added safe module detection for purchasing_hub and sales_center.
+- Added conditional readers for Purchase Hub tables if installed.
+- Added conditional readers for Sales Hub tables if installed.
+- Added QuickBooks Desktop Enterprise IIF exports for Purchase Hub Purchase Orders, Purchase Hub Bills, and Sales Hub Transactions.
+- Added QuickBooks sample IIF headers for Purchase Orders and Sales Hub transactions.
+- Added integration status cards to the QuickBooks Desktop page.
+- Added migration 143 with integration log table and non-destructive options.
+- Preserved migration sequence 101 through 143.
+
+Important:
+- The physical folder remains modules/accounting to avoid breaking the original Accounting module routes, constants, hooks, and stored module records.
+- The installed module name shown in Perfex is Accounting Hub.
+- QuickBooks Desktop Enterprise integration is based on IIF import/export files, not QuickBooks Online API.

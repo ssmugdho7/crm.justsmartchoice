@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/rootLayout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".customers.presentation.view_customer.ViewCustomerActivity"
+    android:background="@color/themeColorPrimary"
+    android:orientation="vertical">
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.MoneyManager.AppBarOverlay.TabbedTheme">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/Widget.AppCompat.PopupMenu.Overflow" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:id="@+id/toolbarBack"
+                    android:layout_weight="0.20"
+                    android:layout_gravity="center"
+                    android:background="@drawable/ic_baseline_arrow_back_24"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/back_btn" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="0dp"
+                    android:layout_weight="2.8"
+                    android:id="@+id/toolbarText"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:background="@color/themeColorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tabIndicator="@drawable/google_tab_indicator"
+            app:tabIndicatorAnimationMode="elastic"
+            app:tabIndicatorColor="@color/white"
+            app:tabIndicatorFullWidth="true"
+            app:tabIndicatorHeight="3dp"
+            app:tabMode="scrollable"
+            app:tabSelectedTextColor="@color/white"
+            app:tabTextColor="@color/lightGrey"
+            app:tabTextAppearance="@style/SimpleTabText" />
+    </com.google.android.material.appbar.AppBarLayout>
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_margin="5dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="4dp"
+        android:layout_height="match_parent">
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>

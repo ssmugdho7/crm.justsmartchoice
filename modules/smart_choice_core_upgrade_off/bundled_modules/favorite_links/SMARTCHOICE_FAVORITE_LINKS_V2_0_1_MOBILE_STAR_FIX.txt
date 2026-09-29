@@ -1,0 +1,30 @@
+Favorite Links Smart Choice Upgrade
+Version: 2.0.1
+Author: Smart Choice Contractors USA / Harold Cabrera
+Website: https://www.justsmartchoice.com
+
+Primary fix:
+- Fixed <i class="far fa-star fa-lg"></i> placement.
+- Star is forced to stay at the top beside the search bar, including mobile screens.
+- Added CSS and JavaScript safeguards so it does not fall to the bottom corner.
+
+Migration rule:
+Existing migration versions found: [1]
+Added only one migration: 002_smartchoice_mobile_star_fix.php
+
+Controllers:
+- controllers/Favorite_links.php
+
+Models:
+- none detected
+
+Views:
+- views/menu_detail.php
+
+Detected functions:
+- favorite_links.php: `favorite_links_smartchoice_assets()`
+- controllers/Favorite_links.php: `__construct()`
+- controllers/Favorite_links.php: `menu_detail()`
+- controllers/Favorite_links.php: `save()`
+- controllers/Favorite_links.php: `delete()`
+- migrations/001_smartchoice_favorite_links_upgrade.php: `up()`

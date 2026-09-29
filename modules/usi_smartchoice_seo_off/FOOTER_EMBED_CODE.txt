@@ -1,0 +1,6 @@
+The module injects Sammy AI automatically through the Perfex app_admin_footer hook. No core edit is required.
+
+Manual fallback code for the global admin footer:
+<?php hooks()->do_action('app_admin_footer'); ?>
+
+Do not paste duplicate widget markup if the module is active.

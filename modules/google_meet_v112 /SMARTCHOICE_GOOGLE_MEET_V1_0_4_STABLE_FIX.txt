@@ -1,0 +1,9 @@
+Google Meet v1.0.4
+
+Fixed:
+- CRM freezing issue by rebuilding module bootstrap cleanly.
+- Database setup is idempotent through install.php.
+- Upgrade Database has one safe migration 104.
+- Settings page works from /admin/google_meet/settings.
+- Create Meeting saves and redirects instead of opening blank page.
+- Google Meet labels fixed.

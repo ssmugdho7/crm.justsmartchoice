@@ -1,0 +1,92 @@
+.bjs-powered-by{
+  display: none !important;
+}
+#canvas{
+  height: 500px;
+  width: 100%;
+}
+#top-panel{
+ display: none;
+}
+#dmn_content{
+  display: none !important;
+}
+#pagination{
+  margin-top: 10px;
+}   
+#dmn_content, #dmnxml { visibility: hidden; }
+.dmn-definitions { display: none; }
+.like_canvas span {
+  padding: 4px;
+  font-size: 13px;
+}
+span.like_canvas {
+  margin: 5px;
+}
+.dislike_canvas span {
+  padding: 4px;
+  font-size: 13px;
+}
+span.dislike_canvas {
+  margin: 5px;
+}
+.like_canvas i {
+  cursor: pointer;
+}
+.dislike_canvas i {
+  cursor: pointer;
+}
+.m_bt{margin-top: 10px !important;
+    position: relative;
+    top: 6px;
+    font-weight: 500;
+    font-size: 18px;}
+.m_bt i{    font-size: 23px;}
+.m_bt span{    font-size: 20px;}
+@media print {
+  #dmn-comments, #membersContent, .colorHolder, .dmn_print_property, .djs-palette, #header, ._buttons, .color_confi_btn, .navbar-right{
+    display:none;
+  }
+  #canvas  {
+    display: block;
+  }
+  #menu
+{
+  display: none;
+}
+.btn-bottom-toolbar
+{
+  display: none;
+}
+.no-margin
+{
+  display: none;
+}
+.panel_s .panel-body {
+border: none;
+}
+.hr-panel-heading {
+display: none;
+  }
+  #wrapper
+  {
+    margin: 0;
+  }
+  .bjs-container
+  {
+    margin-top: -100px;
+    margin-left: -90px;
+  }
+}
+@media(max-width:767px) {
+  .text-center-c{text-align: center !important}
+}
+@media (min-width:320px) and (max-width:479px) {
+}
+@media (max-width:736px) and (orientation:landscape) {
+}
+@media (min-width:980px) and (max-width:1199px) {
+}
+@media (min-width:1200px) and (max-width:1399px) {
+}
+    

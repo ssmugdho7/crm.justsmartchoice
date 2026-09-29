@@ -1,0 +1,587 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".sales.presentation.invoices.presentation.add.AddInvoiceActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.Main">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/themeColorPrimary"
+            app:collapseIcon="@color/white"
+            app:popupTheme="@style/Theme.Main"
+            app:subtitleTextColor="@color/white"
+            app:titleTextColor="@color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <ImageView
+                    android:id="@+id/toolbarBack"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.20"
+                    android:background="@drawable/ic_baseline_arrow_back_24"
+                    android:backgroundTint="@color/white"
+                    android:contentDescription="@string/back_btn" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="2.80"
+                    android:gravity="end"
+                    android:orientation="horizontal"
+                    android:padding="4dp">
+
+                    <Button
+                        android:id="@+id/save"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="4dp"
+                        android:backgroundTint="@color/white"
+                        android:contentDescription="@string/save"
+                        android:text="@string/save"
+                        android:textColor="@color/black" />
+
+                    <Button
+                        android:id="@+id/saveAndSend"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="4dp"
+                        android:backgroundTint="@color/white"
+                        android:contentDescription="@string/save_and_send"
+                        android:text="@string/save_and_send"
+                        android:textColor="@color/black" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </LinearLayout>
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@android:style/Widget.Holo.ProgressBar.Large"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:backgroundTint="@color/white"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="4dp">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        app:startIconDrawable="@drawable/ic_baseline_business_24">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/customer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/customer"
+                            android:inputType="none" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/billTo"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:drawableStart="@drawable/ic_baseline_edit_24"
+                            android:padding="10dp"
+                            android:text="@string/bill_to" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/shipTo"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:drawableStart="@drawable/ic_baseline_edit_24"
+                            android:padding="10dp"
+                            android:text="@string/ship_to" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/invoiceNumber"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/invoice_number"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="40"
+                        app:endIconMode="clear_text"
+                        app:prefixText="INV-"
+                        app:startIconContentDescription="@string/invoice_number"
+                        app:startIconDrawable="@drawable/baseline_picture_as_pdf_24">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberSigned" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/invoiceDate"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginBottom="15dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/border"
+                            android:drawableStart="@drawable/ic_baseline_edit_calendar_24"
+                            android:drawablePadding="5dp"
+                            android:padding="13dp"
+                            android:hint="@string/date" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/dueDate"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginBottom="15dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/border"
+                            android:drawableStart="@drawable/ic_baseline_edit_calendar_24"
+                            android:drawablePadding="5dp"
+                            android:padding="13dp"
+                            android:hint="@string/due_date" />
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/preventSendingOverdueInvoice"
+                        android:layout_width="wrap_content"
+                        android:text="@string/prevent_sending_overdue_reminders_for_this_invoice"
+                        android:layout_height="wrap_content"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/paymentModes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:background="@drawable/border"
+                        android:drawableStart="@drawable/ic_baseline_monetization_on_24"
+                        android:drawablePadding="5dp"
+                        android:padding="13dp"
+                        android:text="@string/payment_mode" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        app:startIconDrawable="@drawable/ic_baseline_monetization_on_24">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/currency"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/currency"
+                            android:inputType="none" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="20dp"
+                        app:startIconDrawable="@drawable/ic_baseline_group_24">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/saleAgent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/sale_agent"
+                            android:inputType="none" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        app:startIconDrawable="@drawable/baseline_picture_as_pdf_24">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/recurringInvoice"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/recurring"
+                            android:inputType="none" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/discount_type_layout"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        app:startIconDrawable="@drawable/ic_baseline_monetization_on_24">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/discountType"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/discount_type"
+                            android:inputType="none" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/adminNote"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/admin_note"
+                        app:counterEnabled="true"
+                        app:endIconMode="clear_text"
+                        app:startIconContentDescription="@string/admin_note"
+                        app:startIconDrawable="@drawable/ic_baseline_edit_location_24">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textMultiLine" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:backgroundTint="@color/white"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="4dp">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/show_quantity_as" />
+
+                    <RadioGroup
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checkedButton="@id/radioQtyByHours"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.radiobutton.MaterialRadioButton
+                            android:id="@+id/radioQty"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/qty" />
+
+                        <com.google.android.material.radiobutton.MaterialRadioButton
+                            android:id="@+id/radioHours"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/hours" />
+
+                        <com.google.android.material.radiobutton.MaterialRadioButton
+                            android:id="@+id/radioQtyByHours"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/qty_by_hours" />
+
+                    </RadioGroup>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/itemLayout"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:startIconDrawable="@drawable/baseline_notes_24">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/item"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/item"
+                            android:inputType="none" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </com.google.android.material.card.MaterialCardView>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/dynamicItemsView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:orientation="vertical" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:backgroundTint="@color/white"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="4dp">
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:weightSum="2">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/discountAmount"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.8"
+                                android:hint="@string/discount"
+                                app:endIconMode="clear_text"
+                                app:startIconContentDescription="@string/discount"
+                                app:startIconDrawable="@drawable/ic_baseline_monetization_on_24">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="text" />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1.2"
+                                app:startIconDrawable="@drawable/ic_baseline_monetization_on_24">
+
+                                <AutoCompleteTextView
+                                    android:id="@+id/discountMode"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="@string/discount_mode"
+                                    android:inputType="none" />
+                            </com.google.android.material.textfield.TextInputLayout>
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/adjustmentAmount"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/adjustment_amount"
+                            app:endIconMode="clear_text"
+                            app:startIconContentDescription="@string/adjustment_amount"
+                            app:startIconDrawable="@drawable/ic_baseline_monetization_on_24">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="text" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/clientNote"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/client_note"
+                            app:counterEnabled="true"
+                            app:endIconMode="clear_text"
+                            app:startIconContentDescription="@string/client_note"
+                            app:startIconDrawable="@drawable/baseline_notes_24">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textMultiLine" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/termsAndConditions"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/terms_and_conditions"
+                            app:counterEnabled="true"
+                            app:endIconMode="clear_text"
+                            app:startIconContentDescription="@string/terms_and_conditions"
+                            app:startIconDrawable="@drawable/ic_baseline_edit_location_24">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textMultiLine" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <TableLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="10dp"
+                            android:gravity="center"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp">
+
+                            <TableRow
+                                android:background="@color/themeColorPrimary"
+                                android:padding="10dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/subtotal"
+                                    android:textColor="@color/white" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/tax"
+                                    android:textColor="@color/white" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/discount"
+                                    android:textColor="@color/white" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/adjustment"
+                                    android:textColor="@color/white" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/total"
+                                    android:textColor="@color/white" />
+                            </TableRow>
+
+                            <TableRow
+                                android:background="#F0F7F7"
+                                android:padding="5dp">
+
+                                <TextView
+                                    android:id="@+id/subTotalAmount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/zero"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:id="@+id/taxAmount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/zero"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:id="@+id/discountAmountCalculated"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/zero"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:id="@+id/adjustment"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/zero"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:id="@+id/totalAmount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/zero"
+                                    android:textAlignment="center" />
+                            </TableRow>
+                        </TableLayout>
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+                </com.google.android.material.card.MaterialCardView>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.core.widget.NestedScrollView>
+</androidx.appcompat.widget.LinearLayoutCompat>

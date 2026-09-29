@@ -1,0 +1,1 @@
+Version 2.0.4 fixes blank page after submitting reminder_new by sanitizing posted fields, allowing internal self/staff reminders without customer/lead, and redirecting safely with alerts.

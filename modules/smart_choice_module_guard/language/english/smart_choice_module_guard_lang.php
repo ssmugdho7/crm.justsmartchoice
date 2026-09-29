@@ -1,0 +1,20 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed');
+
+$lang['smart_choice_module_guard'] = 'Smart Choice Module Guard';
+$lang['smart_choice_module_guard_menu'] = 'Smart Choice Module Guard';
+$lang['smart_choice_module_guard_settings'] = 'Smart Choice Module Guard Settings';
+$lang['smart_choice_module_guard_health'] = 'Health';
+$lang['smart_choice_module_guard_help'] = 'Help';
+$lang['settings'] = 'Settings';
+$lang['health'] = 'Health';
+$lang['help'] = 'Help';
+$lang['create'] = 'Create';
+$lang['edit'] = 'Edit';
+$lang['delete'] = 'Delete';
+$lang['view'] = 'View';
+$lang['view_own'] = 'View Own';
+$lang['view_global'] = 'View Global';
+$lang['import'] = 'Import';
+$lang['export'] = 'Export';
+$lang['sample_header'] = 'Sample Header';
+$lang['mass_delete'] = 'Mass Delete';

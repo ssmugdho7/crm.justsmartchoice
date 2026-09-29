@@ -1,0 +1,21 @@
+<?php
+$lang["pt_module_title"] = "Proje Şablonları";
+$lang["pt_project_template"] = "Proje Şablonu";
+$lang["pt_project_template_lower"] = "proje şablonu";
+$lang["pt_edit_project_template"] = "Proje Şablonunu Düzenle";
+$lang["pt_delete_project_template"] = "Proje Şablonunu Sil";
+$lang["pt_copy_project_template"] = "Proje Şablonunu Kopyala";
+$lang["pt_project_template_description"] = "Açıklama";
+$lang["pt_new_project_template"] = "Yeni Proje Şablonu";
+$lang["failed_to_copy_project_template"] = "Proje şablonunu kopyalama başarısız";
+$lang["pt_project_template_copied_successfully"] = "Proje şablonu başarıyla kopyalandı";
+$lang["pt_project_from_template"] = "şablondan proje";
+$lang["pt_new_project_from_template"] = "Şablondan Proje Oluştur";
+$lang["pt_select_project_template"] = "Proje Şablonu Seç";
+$lang["pt_project_template_not_found"] = "Proje şablonu bulunamadı";
+$lang["pt_duration_text"] = "Son Tarih Süresi (Gün Cinsinden)";
+$lang["pt_milestone_start_date"] = "Projeye Başlangıç Tarihinden Sonra Başlama Günleri";
+$lang["pt_milestone_due_date"] = "Son Tarih (Gün)";
+$lang["permission_create_milestones"] = "Kilometre Taşları Oluştur";
+$lang["permission_edit_milestones"] = "Kilometre Taşlarını Düzenle";
+$lang["permission_delete_milestones"] = "Kilometre Taşlarını Sil";

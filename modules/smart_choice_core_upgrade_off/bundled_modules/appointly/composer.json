@@ -1,0 +1,18 @@
+{
+  "require": {
+    "google/apiclient": "^v2.15.0"
+  },
+  "scripts": {
+    "pre-autoload-dump": "Google\\Task\\Composer::cleanup"
+  },
+  "extra": {
+    "google/apiclient-services": [
+      "Calendar"
+    ]
+  },
+  "autoload": {
+    "psr-4": {
+      "AppointlyAppTraits\\": "modules/appointly/traits/"
+    }
+  }
+}

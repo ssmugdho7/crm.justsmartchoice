@@ -1,0 +1,2 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed');
+class Migration_Version_364 extends CI_Migration { public function up() { update_option('smart_choice_crm_build','3.6.4 SC'); update_option('smart_choice_core_upgrade_applied','364'); update_option('smart_choice_invoice_items_repaired','1'); update_option('smart_choice_tools_calculator_enabled','1'); update_option('smart_choice_header_clock_popup_enabled','1'); } public function down() {} }

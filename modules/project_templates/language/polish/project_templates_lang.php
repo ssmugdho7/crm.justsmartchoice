@@ -1,0 +1,21 @@
+<?php
+$lang["pt_module_title"] = "Szablony Projektów";
+$lang["pt_project_template"] = "Szablon Projektu";
+$lang["pt_project_template_lower"] = "szablon projektu";
+$lang["pt_edit_project_template"] = "Edytuj Szablon Projektu";
+$lang["pt_delete_project_template"] = "Usuń Szablon Projektu";
+$lang["pt_copy_project_template"] = "Kopiuj Szablon Projektu";
+$lang["pt_project_template_description"] = "Opis";
+$lang["pt_new_project_template"] = "Nowy Szablon Projektu";
+$lang["failed_to_copy_project_template"] = "Nie udało się skopiować szablonu projektu";
+$lang["pt_project_template_copied_successfully"] = "Szablon projektu został pomyślnie skopiowany";
+$lang["pt_project_from_template"] = "projekt z szablonu";
+$lang["pt_new_project_from_template"] = "Utwórz Projekt Z Szablonu";
+$lang["pt_select_project_template"] = "Wybierz Szablon Projektu";
+$lang["pt_project_template_not_found"] = "Szablon projektu nie został znaleziony";
+$lang["pt_duration_text"] = "Czas trwania terminu (w dniach)";
+$lang["pt_milestone_start_date"] = "Dni do rozpoczęcia po dacie rozpoczęcia projektu";
+$lang["pt_milestone_due_date"] = "Termin w dniach";
+$lang["permission_create_milestones"] = "Twórz Kamienie Milowe";
+$lang["permission_edit_milestones"] = "Edytuj Kamienie Milowe";
+$lang["permission_delete_milestones"] = "Usuń Kamienie Milowe";

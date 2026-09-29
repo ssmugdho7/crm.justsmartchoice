@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/action_sales"
+            android:orderInCategory="101"
+            android:iconTint="@color/GrayCloud"
+            android:icon="@drawable/ic_baseline_business_center_24"
+            android:title="@string/sales"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/action_settings"
+            android:orderInCategory="110"
+            android:title="@string/settings"
+            android:iconTint="@color/GrayCloud"
+            android:icon="@drawable/baseline_settings_24"
+            app:showAsAction="never" />
+    </group>
+</menu>

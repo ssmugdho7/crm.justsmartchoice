@@ -1,0 +1,20 @@
+Smart Choice Contractors Recruitment Module Build v1.7.0
+
+Target:
+- Perfex CRM 3.4.1
+- PHP 8.5 hosting compatibility
+
+Major changes:
+- Author changed to Smart Choice Contractors.
+- Version upgraded to 1.7.0.
+- Removed external activation/license requirement.
+- Fixed broken candidate profile PHP syntax error.
+- Fixed employee/candidate applied jobs page by removing dependency on the old activate filter.
+- Improved Apply Now flow so application records are created or updated without duplicates.
+- Added safer resume upload handling for PDF, DOC, DOCX, TXT, RTF, JPG, JPEG, PNG.
+- Improved portal UI with responsive mobile/tablet-friendly card styling.
+- Added migration 127 to normalize rec_applied_jobs.activate and add candidate/campaign index.
+- Kept existing tables and data intact.
+
+Install:
+Upload the ZIP in Setup > Modules, then activate/upgrade the module. If already installed, upload the module folder over the existing module folder and run module upgrade.

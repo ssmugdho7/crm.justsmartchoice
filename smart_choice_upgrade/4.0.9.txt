@@ -1,0 +1,7 @@
+Smart Choice CRM 4.0.9
+
+Targeted repair:
+- Restores the 4.0.7 native sales formatter behavior exactly.
+- Preserves the 4.0.8 external-link input fix that prevents UI-only link fields from entering invoice/estimate/proposal POST data.
+- No payment, discount, down-payment, AI, attachment, module, permission, or unrelated feature changes.
+- Code-only migration 409; no schema/data modifications.

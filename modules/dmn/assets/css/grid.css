@@ -1,0 +1,16 @@
+.cardbox { border: 1px solid lightgrey; border-radius: 4px; margin-bottom: 30px; }
+.cardbox img { border-radius: 60px; width: 100px; height: 100px; }
+label { font-weight: normal }
+.map_grid {
+     height: 250px;
+     width: 100%;
+}
+.gridtextarea{
+	display: none;
+}
+.map_grid iframe {
+width: 100% !important;
+    height: 210px;
+}
+.dmn-definitions{display: none;}
+.text-center-c{text-align: center !important}

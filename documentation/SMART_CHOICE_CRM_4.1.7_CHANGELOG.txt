@@ -1,0 +1,12 @@
+Smart Choice CRM 4.1.7
+
+Targeted repairs only:
+- Direct server-side Pay Now handoff to active Stripe Checkout.
+- Native bottom online payment form preserved.
+- Invoice edit page restored to stable 4.0.7 form wrapper while preserving current status/custom-status and payment logic.
+- Sales attachment previews remain available outside the main invoice POST form.
+- Proposal register restored to natural DataTables row sizing matching Estimates/Invoices.
+- Sales email CC addresses normalized and delivered through the existing mail template CC field.
+- Pricing, discounts, down payments, AI, Stripe credentials/gateway library, modules and unrelated features unchanged.
+
+Migration: 417_version_417.php (non-destructive build tracking only).

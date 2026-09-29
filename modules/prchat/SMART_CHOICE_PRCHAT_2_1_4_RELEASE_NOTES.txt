@@ -1,0 +1,1 @@
+PRChat 2.1.4: speech recognition stops on send, dictated drafts clear reliably, AI endpoint returns JSON errors, staff phone numbers are loaded from tblstaff.phonenumber, and assets remain scoped to PRChat.

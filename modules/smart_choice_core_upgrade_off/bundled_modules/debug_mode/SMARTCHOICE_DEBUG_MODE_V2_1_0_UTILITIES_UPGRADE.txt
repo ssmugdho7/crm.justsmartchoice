@@ -1,0 +1,20 @@
+CRM Utilities & Debug Tools v2.1.0
+
+Added:
+- Dedicated CRM Utilities admin page
+- Native Settings section
+- Safe cache cleanup preserving index.html and .htaccess
+- Recent CRM error report from application logs
+- Client portal enable/disable toggle
+- Bluehost phpMyAdmin quick link setting and button
+- Safe database tools: CHECK, ANALYZE, OPTIMIZE, REPAIR
+- Help Guide explaining each command
+- Debug Mode active notice with Smart Choice theme colors
+- Smart Choice website styling: green, orange, light blue, gray
+- Migration 210
+
+Install:
+1. Replace modules/debug_mode/
+2. Run Modules → CRM Utilities & Debug Tools → Upgrade Database
+3. Clear application/cache except index.html
+4. Press Ctrl + F5

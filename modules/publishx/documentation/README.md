@@ -1,0 +1,2 @@
+# Blogging 1.1.0
+Website-first bilingual blogging module. Assets are scoped to admin/publishx routes. Generated website pages contain the article body and configurable shared header/footer includes. No Perfex core files or core tables are modified.

@@ -1,0 +1,33 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<?php init_head(); ?>
+<div id="wrapper">
+    <div class="content">
+        <div class="row">
+            <?= form_open($this->uri->uri_string(), ['id'=>'invoice-form','class'=>'_transaction_form invoice-form','enctype'=>'multipart/form-data']); ?>
+            <?php if (isset($invoice)) { echo form_hidden('isedit'); } ?>
+            <div class="col-md-12">
+                <h4 class="tw-mt-0 tw-font-bold tw-text-lg tw-text-neutral-700 tw-flex tw-items-center tw-space-x-2">
+                    <span><?= e(isset($invoice) ? format_invoice_number($invoice) : _l('create_new_invoice')); ?></span>
+                    <?= isset($invoice) ? format_invoice_status($invoice->status) : ''; ?>
+                </h4>
+                <?php $this->load->view('admin/invoices/invoice_template'); ?>
+                <?php $this->load->view('admin/includes/smart_choice_sales_attachments', ['sc_rel_type'=>'invoice','sc_rel_id'=>isset($invoice)?(int)$invoice->id:0]); ?>
+                <?php $this->load->view('admin/includes/smart_choice_sales_links', ['sc_rel_type'=>'invoice','sc_rel_id'=>isset($invoice)?(int)$invoice->id:0]); ?>
+            </div>
+            <?= form_close(); ?>
+            <?php $this->load->view('admin/invoice_items/item'); ?>
+        </div>
+    </div>
+</div>
+<?php init_tail(); ?>
+<script>
+$(function(){
+    init_editor('#clientnote,#terms',{height:240});
+    validate_invoice_form();
+    init_currency();
+    init_ajax_project_search_by_customer_id();
+    init_ajax_search('items','#item_select.ajax-search',undefined,admin_url+'items/search');
+});
+</script>
+</body>
+</html>

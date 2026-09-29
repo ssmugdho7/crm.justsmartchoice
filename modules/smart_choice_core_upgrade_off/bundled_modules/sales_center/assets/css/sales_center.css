@@ -1,0 +1,296 @@
+.smartsource-panel {
+    border-radius: 12px;
+    box-shadow: 0 12px 28px rgba(0,0,0,.08);
+    border-top: 4px solid #169179;
+}
+.smartsource-panel .panel-body { padding: 24px; }
+.smartsource-stats-row { margin-bottom: 15px; }
+.smartsource-stat {
+    background:#ffffff;
+    border:1px solid #e5e7eb;
+    border-left:5px solid #169179;
+    border-radius:10px;
+    padding:15px;
+    min-height:88px;
+    box-shadow:0 8px 20px rgba(0,0,0,.06);
+    margin-bottom:12px;
+}
+.smartsource-stat strong { display:block; font-size:22px; color:#111827; line-height:1.2; }
+.smartsource-stat span { display:block; color:#6b7280; font-size:12px; font-weight:700; text-transform:uppercase; }
+.smartsource-stat.warning { border-left-color:#f59e0b; }
+.smartsource-stat.danger { border-left-color:#ef4444; }
+.smartsource-stat.muted { border-left-color:#6b7280; }
+.smartsource-table .btn { margin-bottom:3px; }
+.smartsource-trash-row { background:#f9fafb; opacity:.82; }
+.smartsource-contract-content { background:#fff; border:1px solid #e5e7eb; border-radius:10px; padding:22px; line-height:1.7; }
+.smartsource-help h2 { font-weight:800; color:#169179; }
+.smartsource-help h3 { margin-top:24px; font-weight:800; color:#111827; border-left:4px solid #169179; padding-left:10px; }
+.smartsource-help p { line-height:1.75; font-size:15px; }
+@media(max-width:767px){
+    .smartsource-panel .panel-body { padding:16px; }
+    .smartsource-table .btn { display:block; width:100%; margin-bottom:5px; }
+}
+
+/* Smart Choice CRM polish: clean cards, responsive statistics, and title-case presentation */
+.smartsource-stat {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+}
+.smartsource-stat strong {
+    word-break: break-word;
+    font-size: clamp(18px, 1.6vw, 24px);
+}
+.smartsource-stat span {
+    font-size: clamp(10px, .85vw, 12px);
+    line-height: 1.25;
+    white-space: normal;
+    word-break: normal;
+}
+.smartsource-panel h4,
+.smartsource-panel h3,
+.smartsource-panel h2 {
+    text-transform: capitalize;
+}
+.smartsource-table th,
+.smartsource-table td {
+    vertical-align: middle !important;
+}
+.smartsource-table .btn-sm {
+    border-radius: 6px;
+    font-weight: 600;
+}
+@media(max-width:991px){
+    .smartsource-stats-row .col-md-2,
+    .smartsource-stats-row .col-md-3 {
+        width: 50%;
+        float: left;
+    }
+}
+@media(max-width:600px){
+    .smartsource-stats-row .col-md-2,
+    .smartsource-stats-row .col-md-3 {
+        width: 100%;
+        float: none;
+    }
+}
+
+.smartsource-action-buttons .btn{margin:2px 0 4px 4px;}
+.smartsource-signature-pad{border:2px dashed #cbd5e1;border-radius:10px;background:#fff;margin-bottom:10px;max-width:100%;overflow:hidden;}
+.smartsource-signature-pad canvas{width:100%;height:180px;touch-action:none;display:block;}
+.smartsource-signature-box{border:1px solid #e5e7eb;border-radius:10px;padding:15px;min-height:190px;background:#fff;box-shadow:0 8px 18px rgba(0,0,0,.06);}
+.smartsource-signature-image{max-width:100%;max-height:95px;border-bottom:1px solid #111827;padding:8px;background:#fff;}
+.smartsource-merge-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px;}
+.smartsource-merge-grid code{display:block;background:#f8fafc;border:1px solid #e5e7eb;border-radius:6px;padding:8px;color:#0057b8;}
+.smartsource-document-list{padding-left:18px;margin-top:8px;}
+.smartsource-document-list li{margin-bottom:6px;}
+@media(max-width:767px){.smartsource-action-buttons .btn{display:block;width:100%;margin:4px 0;}.smartsource-action-header{display:block!important;}}
+.smartsource-profile-photo{width:110px;height:110px;border-radius:50%;object-fit:cover;border:4px solid #ef8c25;box-shadow:0 12px 28px rgba(0,0,0,.18);background:#fff;}
+.smartsource-copy-link{font-size:12px;}
+
+/* SmartSource v7 UI fixes */
+.smartsource-header-row{gap:12px;flex-wrap:wrap;}
+.smartsource-stat-link{display:block;text-decoration:none!important;color:inherit!important;}
+.smartsource-stat-link:hover .smartsource-stat{transform:translateY(-3px);box-shadow:0 14px 32px rgba(0,0,0,.18);}
+.smartsource-contract-preview{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:25px;box-shadow:0 10px 28px rgba(0,0,0,.08);line-height:1.65;}
+.smartsource-contract-preview h1,.smartsource-contract-preview h2,.smartsource-contract-preview h3{margin-top:12px;font-weight:800;}
+@media(max-width:767px){.smartsource-header-row{display:block!important}.smartsource-header-row>div:last-child{margin-top:12px}.smartsource-stat{margin-bottom:12px}.smartsource-table .btn{margin-bottom:4px}}
+
+
+/* SmartSource v10 stability and UI fixes */
+.smartsource-module-nav{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px 0;padding:12px;background:#fff;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.08);border-left:5px solid #169179}
+.smartsource-module-nav a{display:inline-block;padding:8px 12px;border-radius:6px;background:#f5f7f6;color:#1f2937;font-weight:700;text-decoration:none;border:1px solid #e5e7eb;font-size:12px}
+.smartsource-module-nav a:hover,.smartsource-module-nav a.active{background:#169179;color:#fff;text-decoration:none;border-color:#169179}
+.smartsource-table .btn,.smartsource-data-table .btn{padding:3px 7px;font-size:11px;line-height:1.4;margin:1px;border-radius:4px}
+.smartsource-table .label,.smartsource-data-table .label{display:inline-block;min-width:74px;padding:5px 7px;font-size:11px;color:#fff !important;background:#169179 !important;text-align:center;border-radius:4px}
+.smartsource-table .label-info,.smartsource-data-table .label-info{background:#0057b8 !important;color:#fff !important}
+.smartsource-table .label-warning,.smartsource-data-table .label-warning{background:#ef8c25 !important;color:#fff !important}
+.smartsource-table .label-danger,.smartsource-data-table .label-danger{background:#dc2626 !important;color:#fff !important}
+.smartsource-actions{white-space:nowrap}
+.smartsource-contract-preview{background:#fff;border:1px solid #d7dde2;border-radius:8px;padding:24px;box-shadow:0 6px 18px rgba(0,0,0,.08);line-height:1.65;max-width:100%;overflow-x:auto}
+.smartsource-template-editor-wrap{width:100%}
+@media(max-width:767px){.smartsource-module-nav a{width:100%;text-align:center}.smartsource-header-row{display:block!important}.smartsource-header-row .btn{margin-top:6px}.smartsource-table .btn,.smartsource-data-table .btn{display:inline-block;margin-bottom:3px}}
+
+.smartsource-help-title{font-size:22px;font-weight:800;margin-top:0;color:#1f2937}
+
+
+/* V11 stability fixes */
+.smartsource-template-editor-wrap{opacity:0;transition:opacity .18s ease;min-height:520px;}
+.smartsource-template-editor-wrap.smartsource-editor-ready{opacity:1;}
+.smartsource-table{display:table !important;visibility:visible !important;opacity:1 !important;}
+.smartsource-table tbody{display:table-row-group !important;}
+.smartsource-table tr{display:table-row !important;}
+.smartsource-table td,.smartsource-table th{display:table-cell !important;}
+.smartsource-table .btn-sm{padding:3px 7px;font-size:11px;line-height:1.35;margin:1px;}
+.smartsource-test-panel .form-control{margin-bottom:8px;}
+
+
+/* V12 final stability and UI polish */
+.smartsource-portal-enabled-box{margin-top:28px;padding:8px 10px;background:#f8fafc;border:1px solid #e5e7eb;border-radius:8px;}
+.smartsource-portal-enabled-box label{font-weight:700;color:#1f2937;}
+.smartsource-contract-actions,.smartsource-table td:last-child{min-width:190px;}
+.smartsource-table .btn,.smartsource-data-table .btn{padding:2px 6px!important;font-size:10.5px!important;line-height:1.25!important;margin:1px!important;}
+.smartsource-table .btn i,.smartsource-data-table .btn i{margin-right:2px;}
+.smartsource-table .label{font-weight:700;text-shadow:none;}
+@media(max-width:767px){.smartsource-portal-enabled-box{margin-top:0}.smartsource-contract-actions,.smartsource-table td:last-child{min-width:auto}}
+
+/* SmartSource v13 final table/action/filter polish */
+.smartsource-filter-box{background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px;padding:12px;margin:12px 0 18px;}
+.smartsource-filter-box .form-control{margin-bottom:8px;}
+.smartsource-actions,.smartsource-contract-actions{white-space:nowrap!important;min-width:270px!important;display:flex;flex-wrap:nowrap;gap:3px;align-items:center;}
+.smartsource-actions .btn,.smartsource-contract-actions .btn{display:inline-flex!important;align-items:center;justify-content:center;width:auto!important;white-space:nowrap!important;margin:0!important;}
+.smartsource-table td:last-child{white-space:nowrap!important;min-width:270px!important;}
+.smartsource-help-edit-card{border:1px solid #e5e7eb;border-radius:12px;padding:18px;margin-bottom:18px;background:#ffffff;box-shadow:0 8px 22px rgba(0,0,0,.06);}
+.smartsource-help-edit-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;border-bottom:1px solid #eef2f7;padding-bottom:10px;}
+.smartsource-help-preview-section{border-left:4px solid #169179;padding:10px 14px;margin-bottom:16px;background:#f8fafc;border-radius:8px;}
+@media(max-width:991px){.smartsource-actions,.smartsource-contract-actions{flex-wrap:wrap!important;min-width:220px!important}.smartsource-table td:last-child{min-width:220px!important}}
+
+/* v2.5.0 Help Guide collapsed editor */
+.smartsource-help-view-card{
+    background:#ffffff;
+    border:1px solid #e5e7eb;
+    border-radius:12px;
+    padding:18px;
+    margin-bottom:16px;
+    box-shadow:0 8px 22px rgba(15,23,42,.06);
+}
+.smartsource-help-view-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    border-bottom:1px solid #edf0f2;
+    padding-bottom:12px;
+    margin-bottom:14px;
+}
+.smartsource-help-view-header h4{
+    margin:0;
+    font-weight:800;
+    color:#111827;
+}
+.smartsource-help-actions{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+}
+.smartsource-help-edit-card{
+    background:#f8faf9;
+    border:1px dashed #cbd5e1;
+    border-radius:10px;
+    padding:15px;
+    margin-top:14px;
+}
+@media(max-width:767px){
+    .smartsource-help-view-header{display:block;}
+    .smartsource-help-actions{margin-top:12px;}
+}
+
+
+/* Sales Center v1.2.1 final polish */
+.sales-center-native-link-note{font-size:12px;color:#6b7280;margin-top:4px;}
+.smartsource-table td.smartsource-actions,
+.smartsource-table td.smartsource-contract-actions,
+.smartsource-actions,
+.smartsource-contract-actions{
+    display:flex!important;
+    align-items:center!important;
+    gap:4px!important;
+    flex-wrap:wrap!important;
+    min-width:220px!important;
+    white-space:normal!important;
+}
+.smartsource-table td.smartsource-actions .btn,
+.smartsource-table td.smartsource-contract-actions .btn,
+.smartsource-actions .btn,
+.smartsource-contract-actions .btn{
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    min-width:auto!important;
+    width:auto!important;
+    height:25px!important;
+    padding:3px 7px!important;
+    font-size:11px!important;
+    line-height:1.2!important;
+    margin:0!important;
+}
+.smartsource-table .label,
+.smartsource-data-table .label{
+    color:#fff!important;
+    text-shadow:none!important;
+    font-weight:700!important;
+}
+.smartsource-filter-actions .btn{margin-bottom:6px;}
+#sales-center-health-check{scroll-margin-top:80px;}
+
+
+/* Sales Hub v1.3.1 select/dropdown scrollbar cleanup */
+.smartsource-filter-scope .select2-container,
+.smartsource-filter-scope .select2-choice,
+.smartsource-filter-scope .selectpicker,
+.smartsource-filter-scope .dropdown-menu,
+.smartsource-filter-scope .bootstrap-select,
+.smartsource-filter-scope .bootstrap-select .dropdown-menu,
+.smartsource-filter-scope .bootstrap-select .dropdown-menu.inner{
+    max-height:none!important;
+    overflow:visible!important;
+}
+.smartsource-filter-scope .select2-results,
+.smartsource-filter-scope .select2-results__options,
+.smartsource-filter-scope .dropdown-menu.inner{
+    max-height:260px!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+}
+.smartsource-filter-scope .select2-drop,
+.smartsource-filter-scope .select2-dropdown{
+    overflow:visible!important;
+}
+.smartsource-commission-assignment .form-group,
+.smartsource-table-filters .form-group{
+    overflow:visible!important;
+}
+.smartsource-filter-actions .btn{margin-bottom:6px;}
+.smartsource-export-csv{margin-left:4px;}
+
+/* Version 1.3.2 table safety for CRM sales documents. */
+.smartsource-table th,
+.smartsource-table td {
+    white-space: normal !important;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    vertical-align: top !important;
+}
+.smartsource-actions .btn {
+    margin: 2px 2px 2px 0;
+    white-space: normal;
+}
+
+
+/* Sales Hub v1.3.6 compact table controls */
+.smartsource-toolbar-inline,
+.smartsource-table-actions-inline,
+.sales-center-generated-toolbar{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin:6px 0;}
+.smartsource-panel .btn,
+.sales-center-generated-toolbar .btn{padding:3px 7px!important;font-size:11px!important;line-height:1.35!important;border-radius:4px!important;}
+.smartsource-panel .form-control{min-height:30px;height:30px;padding:4px 8px;font-size:12px;}
+.smartsource-filter-box{background:#f8fafc;border:1px solid #e5e7eb;border-radius:8px;padding:8px;margin-bottom:10px;}
+.smartsource-table th,.smartsource-table td{font-size:12px;vertical-align:middle!important;}
+.sales-center-row-check{width:24px;text-align:center;}
+.sales-center-generated-toolbar .btn-danger{background:#dc2626;border-color:#dc2626;color:#fff;}
+.sales-center-generated-toolbar .btn-success{background:#16a34a;border-color:#16a34a;color:#fff;}
+.sales-center-generated-toolbar .btn-warning{background:#f59e0b;border-color:#f59e0b;color:#fff;}
+
+/* Sales Hub v1.3.7 scoped toolbar stability */
+.sales-center-toolbar-holder{
+    display:inline-flex;
+    vertical-align:middle;
+    margin:0 0 6px 8px;
+    gap:3px;
+    align-items:center;
+}
+.sales-center-generated-toolbar.btn-group{display:inline-flex;gap:3px;flex-wrap:wrap;align-items:center;}
+.sales-center-generated-toolbar .btn-xs{padding:2px 6px!important;font-size:10.5px!important;line-height:1.25!important;border-radius:4px!important;margin:0!important;}
+.sales-center-row-check{width:32px!important;text-align:center!important;vertical-align:middle!important;}
+@media(max-width:767px){.sales-center-toolbar-holder{display:flex;margin:6px 0;}.sales-center-generated-toolbar.btn-group{width:100%;}.sales-center-generated-toolbar .btn-xs{flex:1 1 auto;}}

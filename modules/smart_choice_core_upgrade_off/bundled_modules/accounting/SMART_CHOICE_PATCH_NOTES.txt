@@ -1,0 +1,29 @@
+Smart Choice Contractors USA / Harold Cabrera - Accounting Module Patch
+
+Purpose:
+- Preserve the existing Accounting module structure while fixing bank account creation from Banking > Bank Accounts.
+- Keep compatibility with Perfex CRM 3.4.x, MySQL 5.7, and PHP 8.5.
+
+What was fixed:
+1. Bank account modal selectors were corrected so the Add Bank Account modal opens with the correct Bank account type and detail type.
+2. Bank information fields now show correctly when adding a bank account.
+3. Bank account submit button is re-enabled if the server returns an error.
+4. AJAX response handling is safer so PHP warnings do not silently lock the modal.
+5. Banking create/edit permissions are honored for bank account creation instead of requiring only Chart of Accounts permissions.
+6. Migration 140 verifies required bank fields exist in tblacc_accounts.
+7. Module metadata updated to Smart Choice Contractors USA / Harold Cabrera.
+8. Existing invoice/payment/expense conversion hooks were preserved.
+
+Install:
+1. Replace modules/accounting/ with this patched folder.
+2. Go to Modules > Accounting > Upgrade Database.
+3. Clear application/cache except index.html.
+4. Press Ctrl+F5.
+5. Go to Accounting > Banking > Bank Accounts and test Add Bank Account.
+
+Important permissions:
+- Staff or role must have Accounting - Banking: View and Create.
+- For edits: Accounting - Banking: Edit.
+- For deletes: Accounting - Banking: Delete.
+
+No existing accounting, invoice, payment, expense, customer, or bank account records are deleted by this patch.

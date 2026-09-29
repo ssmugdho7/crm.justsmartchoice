@@ -1,0 +1,20 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed');
+
+$lang['flexstage'] = 'Flexstage';
+$lang['flexstage_menu'] = 'Flexstage';
+$lang['flexstage_settings'] = 'Configuración de Flexstage';
+$lang['flexstage_health'] = 'Salud';
+$lang['flexstage_help'] = 'Ayuda';
+$lang['settings'] = 'Configuración';
+$lang['health'] = 'Salud';
+$lang['help'] = 'Ayuda';
+$lang['create'] = 'Crear';
+$lang['edit'] = 'Editar';
+$lang['delete'] = 'Eliminar';
+$lang['view'] = 'Ver';
+$lang['view_own'] = 'Ver Propio';
+$lang['view_global'] = 'Ver Global';
+$lang['import'] = 'Importar';
+$lang['export'] = 'Exportar';
+$lang['sample_header'] = 'Encabezado de Muestra';
+$lang['mass_delete'] = 'Eliminar en Masa';

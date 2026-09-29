@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainCardView"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:layout_margin="10dp"
+    android:backgroundTint="@color/MilkWhite"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="15dp">
+
+    <com.skydoves.androidribbon.ShimmerRibbonView
+        android:id="@+id/clientRibbon"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:alpha="0.8"
+        android:visibility="gone"
+        app:shimmer_base_alpha="1.0"
+        app:shimmer_highlight_alpha="0.5"
+        app:shimmer_ribbon_background_color="@color/GreenSnake"
+        app:shimmer_ribbon_padding_bottom="3dp"
+        app:shimmer_ribbon_padding_top="3dp"
+        app:shimmer_ribbon_rotation="45"
+        app:shimmer_ribbon_text="Client"
+        app:shimmer_ribbon_textColor="@android:color/white"
+        app:shimmer_ribbon_textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:baselineAligned="false"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <LinearLayout
+            android:id="@+id/customer_view"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/customer_image"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/rounded_corners"
+                android:contentDescription="@string/customer_image"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:weightSum="2">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/company_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/contact_person_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/city"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/state"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/source"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="1dp"
+            android:background="@color/Gray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:weightSum="4">
+
+            <LinearLayout
+                android:id="@+id/dial_call"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                tools:ignore="UselessParent">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/ic_baseline_call_24"
+                    android:backgroundTint="@color/themeColorPrimary"
+                    android:contentDescription="@string/dial_call" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/send_mail"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                tools:ignore="UselessParent">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/ic_baseline_mail_outline_24"
+                    android:backgroundTint="@color/themeColorPrimary"
+                    android:contentDescription="@string/email" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lead_edit"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                tools:ignore="UselessParent">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/ic_baseline_edit_24"
+                    android:backgroundTint="@color/themeColorPrimary"
+                    android:contentDescription="@string/edit" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/delete_lead"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                tools:ignore="UselessParent">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/ic_baseline_delete_24"
+                    android:backgroundTint="@color/Red"
+                    android:contentDescription="@string/delete" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

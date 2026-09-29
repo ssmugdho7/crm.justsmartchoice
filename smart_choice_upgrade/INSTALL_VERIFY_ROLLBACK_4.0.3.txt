@@ -1,0 +1,36 @@
+SMART CHOICE CRM 4.0.3 - INSTALL / VERIFY / ROLLBACK
+
+BACKUP
+1. Back up the complete CRM database.
+2. Back up the complete CRM filesystem, including application, assets, modules, uploads, and configuration files.
+3. Do not delete uploads, modules, API credentials, or environment-specific configuration.
+
+INSTALL
+1. Upload crmmain_4.0.3.zip to the CRM root.
+2. Extract over the existing 4.0.2 installation, preserving all directories.
+3. Sign in as an administrator.
+4. Run the normal CRM database upgrade so migration 403 executes.
+5. Clear generated application cache while preserving .htaccess and index.html.
+6. Reset PHP OPcache and hard-refresh the browser.
+
+VERIFY
+1. Confirm CRM version/build reports 4.0.3 and migration 403.
+2. Open Proposals and confirm rows are continuous and compact.
+3. Create/edit proposal and estimate and confirm Select an Item reaches the green + button.
+4. Verify existing payment, discount, additional charge/credit, totals, and down-payment calculations without changing them.
+5. Open Settings > Appearance & Mobile and save color changes.
+6. Upload separate staff/admin and customer login background images; verify dimensions and file size are shown before save.
+7. Open Staff > Edit and verify Instagram, TikTok, banking, employment, supervisor/team, and required emergency fields.
+8. Verify Staff list defaults to All records.
+9. Open Smart Choice Team Time, add/remove a clock, save, and verify it persists after refresh.
+10. Open Dashboard > View Widgetable Area and verify the five new Smart Choice widgets are available.
+11. On iPhone/Android-width browser, verify top search results can be tapped and tables/menus remain usable.
+
+ROLLBACK
+1. Restore the pre-upgrade database backup.
+2. Restore the pre-upgrade CRM filesystem backup.
+3. Clear cache and reset OPcache.
+Do not manually delete migration-created staff columns while retaining a 4.0.3 database.
+
+SCOPE CONTROL
+This release does not intentionally modify payment formulas, discount formulas, AI provider/model/API settings or code, existing module functionality, existing uploads, or customer data.

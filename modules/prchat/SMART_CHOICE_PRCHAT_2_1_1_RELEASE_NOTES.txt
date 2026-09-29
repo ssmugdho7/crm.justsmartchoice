@@ -1,0 +1,6 @@
+PRChat 2.1.1
+- Scoped module CSS/JS to prevent CRM table and sales-document interference.
+- Added Voice to Text in English and Spanish using browser speech recognition.
+- Added permission-controlled Improve with AI using the existing CRM chatbot key.
+- Added automatic close of inactive floating chat windows after 10 seconds.
+- Preserved full-page chat and all existing messages, groups, media, and settings.

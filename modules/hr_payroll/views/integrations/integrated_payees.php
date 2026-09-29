@@ -1,0 +1,7 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); init_head(); ?>
+<div id="wrapper"><div class="content hrp-smart-choice"><div class="panel_s"><div class="panel-body">
+<div class="hrp-toolbar"><h4 class="no-margin"><?php echo _l('hrp_integrated_payees'); ?></h4><a href="<?php echo admin_url('hr_payroll/payroll_hub_health'); ?>" class="btn btn-default pull-right"><?php echo _l('hrp_health_check'); ?></a></div>
+<p class="text-muted"><?php echo _l('hrp_integrated_payees_note'); ?></p>
+<div class="table-responsive"><table class="table table-striped"><thead><tr><th><?php echo _l('staff_member'); ?></th><th><?php echo _l('hrp_payee_type'); ?></th><th><?php echo _l('email'); ?></th><th><?php echo _l('hrp_commission_income'); ?></th><th><?php echo _l('hrp_subcontractor_payments'); ?></th><th><?php echo _l('hrp_1099_total'); ?></th><th><?php echo _l('hrp_data_source'); ?></th></tr></thead><tbody>
+<?php foreach($rows as $r): ?><tr><td><?php echo staff_profile_image($r['staffid'],['staff-profile-image-small','mright5']); echo html_escape($r['name']); ?></td><td><?php echo html_escape($r['type']); ?></td><td><?php echo html_escape($r['email']); ?></td><td><?php echo app_format_money($r['commission'], get_base_currency()); ?></td><td><?php echo app_format_money($r['subcontractor_paid'], get_base_currency()); ?></td><td><?php echo app_format_money($r['total_1099'], get_base_currency()); ?></td><td><?php echo html_escape($r['source']); ?></td></tr><?php endforeach; ?>
+</tbody></table></div></div></div></div></div><?php init_tail(); ?>

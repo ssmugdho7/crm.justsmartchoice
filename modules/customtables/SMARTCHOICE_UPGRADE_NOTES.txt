@@ -1,0 +1,5 @@
+Custom Data Tables - Smart Choice Edition
+Version: 2.0.0
+Author: Smart Choice Contractors USA / Harold Cabrera
+
+This package was updated for PHP 8.5 and Perfex CRM 3.4.1 style compatibility. Activation and license callbacks were removed for internal use. Database migrations were normalized from 100 through 200 to avoid migration gap failures. The module does not modify Perfex core files during install. It keeps the original purpose: allowing staff to customize which CRM columns appear across major CRM list views and apply table styling from the admin interface.

@@ -1,0 +1,9 @@
+Smart Choice Links 1.2.1
+
+Repairs:
+- Restores one star to the left of the CRM search control and one star to the right.
+- Removes the unsafe fallback that placed both stars in the right navigation area.
+- Repositions existing live star elements left/right after CRM header refreshes.
+- Restores module-name search in the Setup menu for current Perfex/Smart Choice layouts.
+- Keeps the main-menu search feature unchanged.
+- No records are deleted and no existing links are changed.

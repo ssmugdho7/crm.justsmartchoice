@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="8dp"
+    app:layout_behavior="@string/bottom_sheet_behavior">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/streetBilling"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/street"
+                    app:counterEnabled="true"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true"
+                    app:startIconContentDescription="@string/street"
+                    app:startIconDrawable="@drawable/ic_baseline_add_road_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textMultiLine" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/cityBilling"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/city"
+                    app:counterEnabled="true"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true"
+                    app:startIconContentDescription="@string/city"
+                    app:startIconDrawable="@drawable/ic_baseline_work_outline_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPostalAddress" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/stateBilling"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/state"
+                    app:counterEnabled="true"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true"
+                    app:startIconContentDescription="@string/state"
+                    app:startIconDrawable="@drawable/ic_baseline_work_outline_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPostalAddress" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/zipBilling"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/zip_code"
+                    app:counterEnabled="true"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true"
+                    app:startIconContentDescription="@string/zip_code"
+                    app:startIconDrawable="@drawable/ic_baseline_work_outline_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPostalAddress" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    app:startIconDrawable="@drawable/ic_flag_black">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/countryBilling"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/country_text"
+                        android:inputType="none" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/allowShipping"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/shipping_address" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:id="@+id/shippingContainer"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <androidx.appcompat.widget.AppCompatCheckBox
+                        android:layout_width="wrap_content"
+                        android:id="@+id/showShippingDetailsOnInvoice"
+                        android:layout_height="wrap_content"
+                        android:text="@string/show_shipping_address_in_invoice" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/streetShipping"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/street"
+                        app:counterEnabled="true"
+                        app:endIconMode="clear_text"
+                        app:errorEnabled="true"
+                        app:startIconContentDescription="@string/street"
+                        app:startIconDrawable="@drawable/ic_baseline_add_road_24">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textMultiLine" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/cityShipping"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/city"
+                        app:counterEnabled="true"
+                        app:endIconMode="clear_text"
+                        app:errorEnabled="true"
+                        app:startIconContentDescription="@string/city"
+                        app:startIconDrawable="@drawable/ic_baseline_work_outline_24">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPostalAddress" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/stateShipping"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/state"
+                        app:counterEnabled="true"
+                        app:endIconMode="clear_text"
+                        app:errorEnabled="true"
+                        app:startIconContentDescription="@string/state"
+                        app:startIconDrawable="@drawable/ic_baseline_work_outline_24">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPostalAddress" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/zipShipping"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/zip_code"
+                        app:counterEnabled="true"
+                        app:endIconMode="clear_text"
+                        app:errorEnabled="true"
+                        app:startIconContentDescription="@string/zip_code"
+                        app:startIconDrawable="@drawable/ic_baseline_work_outline_24">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPostalAddress" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        app:startIconDrawable="@drawable/ic_flag_black">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/countryShipping"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/country_text"
+                            android:inputType="none" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:backgroundTint="@color/themeColorPrimary"
+                    android:text="@string/save"
+                    android:textColor="@color/white" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:backgroundTint="@color/themeColorPrimary"
+                    android:text="@string/close"
+                    android:textColor="@color/white" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.core.widget.NestedScrollView>
+</com.google.android.material.card.MaterialCardView>

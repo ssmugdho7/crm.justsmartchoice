@@ -1,0 +1,19 @@
+PRChat 2.2.9 - Smart Choice repair release
+
+Changes limited to requested delete controls:
+- Restores message Delete action for permitted staff. Message deletion removes the shared message record so it disappears for both conversation parties.
+- Adds a dedicated Delete Groups permission to Perfex role/staff capabilities.
+- Adds Delete Group to the group right-click context menu when that permission is granted.
+- Group Settings delete button now follows the dedicated Delete Groups permission.
+- Administrators always retain Delete Groups access.
+- Group photo add/change/remove behavior is unchanged.
+- Voice-to-text, AI Improve, calls, Pusher, chat messages, uploads, and all provider/API settings are unchanged.
+- Migration 229 is metadata-only and does not call install.php or overwrite existing API credentials/settings.
+
+Upgrade:
+1. Back up the database and modules/prchat directory.
+2. Upload this complete prchat folder over modules/prchat.
+3. Run the normal Perfex module upgrade so migration 229 executes.
+4. In Setup > Staff/Roles, grant PRChat > Delete Groups only to users/roles allowed to permanently delete groups.
+5. Verify an authorized user can right-click a group and select Delete Group.
+6. Verify a user with PRChat Delete can delete a sent message and both sides stop seeing it.

@@ -1,0 +1,4 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); init_head(); ?>
+<div id="wrapper"><div class="content"><div class="panel_s"><div class="panel-body"><?php $this->load->view('usi_smartchoice_seo/partials/top'); ?><h4><?php echo html_escape($title); ?></h4>
+<?php if ($command) { ?><table class="table table-condensed sc-table"><tbody><?php foreach ($command as $key=>$value) { ?><tr><th><?php echo ucwords(str_replace('_',' ',html_escape($key))); ?></th><td><?php echo nl2br(html_escape((string)$value)); ?></td></tr><?php } ?></tbody></table><a class="btn btn-default btn-sm" href="<?php echo admin_url('usi_smartchoice_seo/ai_command/' . (int)$command['id']); ?>">Edit</a><?php } ?> <a class="btn btn-default btn-sm" href="<?php echo admin_url('usi_smartchoice_seo/ai_commands'); ?>">Back</a>
+</div></div></div></div><?php init_tail(); ?>

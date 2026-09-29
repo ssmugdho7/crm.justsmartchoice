@@ -1,0 +1,2 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<div class="panel_s"><div class="panel-body"><h4>Smart Choice Embedded Modules</h4><p>Embedded module folders are copied by the Smart Choice Core activation routine. Activate them in Setup > Modules if they are not active.</p><ul><li>Accounting Hub</li><li>Purchasing Hub</li><li>Sales Hub</li><li>Smart Choice Office Stream</li><li>Training Manual</li><li>Custom PDF</li><li>Google Meet</li><li>Favorite Links</li><li>Video Library</li><li>Field Connector</li><li>Smart Choice To Do</li></ul></div></div>

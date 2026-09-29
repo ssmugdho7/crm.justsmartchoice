@@ -1,0 +1,1565 @@
+body {
+  overflow-x: hidden;
+}
+
+body .fixBtnsLine {
+  float: right;
+  width: initial;
+  padding-right: 0;
+}
+
+body .table-appointments .dropdown .fa.fa-caret-down {
+  margin-left: 7px !important;
+}
+
+body.appointly.appointments #google_not_set {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  position: relative;
+  top: 14px;
+}
+
+body li[class^="sub-menu-item-appointly-"].active a {
+  margin-left: 15px !important;
+  padding-left: 30px !important;
+}
+
+body li[class^="sub-menu-item-appointly-"].active a i.menu-icon {
+  margin-left: -15px !important;
+}
+
+body li[class^="sub-menu-item-appointly-"] a {
+  padding-left: 30px !important;
+}
+
+body li[class^="menu-item-appointly-"] a {
+  padding-left: 5px !important;
+}
+
+body #addedToOutlook {
+  margin-top: 1px !important;
+}
+
+body .btn_send_mails:hover {
+  border-color: #109083;
+}
+
+body .btn_send_mails {
+  background: #109083 !important;
+  border-color: #109083;
+}
+
+body.appointly.appointments_history a.calendar_list,
+body.appointly.appointments a.calendar_list {
+  background: #c7c6c6;
+  padding: 5px 10px 5px 10px;
+  border-radius: 4px;
+  color: #4a4a4a;
+}
+
+body .datetimepicker {
+  cursor: pointer !important;
+  color: #333 !important;
+}
+
+body .appointment_summary_parent .appoinment_summary:last-child {
+  border-right: none;
+}
+
+body .approve_appointment_spacing {
+  padding-left: 29px !important;
+  padding-right: 27px !important;
+}
+
+body .busy_time_info {
+  border-radius: 4px;
+  background: #fb4862;
+}
+
+body .available_time_info {
+  border-radius: 4px;
+  background: #3af;
+}
+
+body .busy_time_info_google {
+  border-radius: 4px;
+  background: #ffb100;
+}
+
+body .busy_time {
+  background: #fb4862 !important;
+  color: #fff !important;
+  pointer-events: none;
+}
+
+body .busy_google_time {
+  background: #ffb100 !important;
+  color: #fff !important;
+  font-weight: 300 !important;
+  pointer-events: none;
+}
+
+body .spmodified.appointment_notes {
+  overflow: auto;
+  max-height: 500px;
+  display: block;
+  overflow-wrap: break-word;
+}
+
+body .available_times_labels {
+  padding-top: 7px;
+  padding-bottom: 15px;
+}
+
+body .available_times_labels_edit {
+  width: calc(100% - 59%);
+  padding-top: 34px;
+}
+
+.text-white:hover,
+.text-white:active,
+.text-white:focus,
+.text-white {
+  color: #fff;
+}
+
+body .spmodified.attendees {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+body .spmodified.client_phone a {
+  align-self: baseline;
+}
+
+body .spmodified.client_phone {
+  /* justify-content: flex-start; */
+  flex-wrap: wrap;
+}
+
+body .approve_appointment_single:active,
+body .approve_appointment_single:focus,
+body .approve_appointment_single:hover {
+  background: rgb(75, 95, 197) !important;
+}
+
+.a-justify-content-center {
+  justify-content: center;
+}
+
+body .table-appointments .btn-info:not(.view_meeting) {
+  min-width: 69px;
+}
+
+body .text-muted.mtop1 a {
+  font-size: 18px;
+}
+
+body .text-muted.mtop1 {
+  text-overflow: ellipsis;
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+}
+body .appointly-secondary {
+  background: rgb(231 243 249);
+  padding: 10px;
+  border-radius: 6px;
+  width: 15.5rem;
+}
+
+body .mbot0 {
+  display: block;
+  margin-bottom: 0;
+}
+
+body .appointment_status_info {
+  margin: -1px 0 0;
+}
+
+body .appointly-default {
+  color: #252525 !important;
+  background-color: #ffffff !important;
+  text-align: center;
+  border-color: transparent;
+  padding: 9px;
+  font-size: 18px;
+  margin: 5px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+body ._filter_data .dropdown-menu.height500 {
+  overflow: hidden;
+}
+
+body .appointment-date {
+  background: #fff !important;
+}
+
+body .span_limited {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-bottom: 3px;
+}
+
+body .w-50 {
+  width: 50%;
+}
+
+body .w-100 {
+  width: 100%;
+}
+
+.appointment h3 {
+  margin-top: 8px;
+}
+
+.appointment {
+  padding: 10px 55px;
+}
+
+body .meeting_approved {
+  pointer-events: none !important;
+}
+
+body.appointments .btn-warning {
+  background-color: #ffb100;
+}
+
+body.appointments .label-primary {
+  background: rgba(3, 169, 244, 0.59);
+  border: 1px solid rgb(136, 214, 250);
+  text-transform: uppercase !important;
+  color: #ffffff !important;
+}
+
+body.appointments .label-warning {
+  background: #f7af3d;
+  border: 1px solid #f7af3d;
+  color: #fff;
+}
+
+body #wrapper .info-header h3 {
+  margin-top: 12px !important;
+  margin-left: 18px;
+}
+
+body .label_canceL_notes_parent {
+  max-width: 650px;
+  margin-top: 10px;
+}
+
+body .meeting_cancel_notes_client {
+  max-width: 650px;
+  white-space: pre-wrap;
+  padding-bottom: 16px;
+}
+
+body #wrapper .info-header {
+  margin: 0 auto;
+  background: #f1f1f1;
+  display: flex;
+  padding: 0 40px;
+  width: fit-content;
+  width: max-content;
+  margin-top: 15px;
+  margin-bottom: 25px;
+  text-align: center;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px rgb(1 1 1 / 8%);
+}
+
+body .appointment_logo img {
+  max-width: 150px;
+  height: auto;
+  float: left;
+  margin-right: 10px;
+}
+
+body .label {
+  font-size: 13px;
+}
+
+body.appointments .label-success:hover,
+body.appointments .label-success:active {
+  background: rgb(110, 160, 41);
+  border: rgb(132, 197, 41);
+  color: #ffffff !important;
+  text-transform: uppercase !important;
+}
+
+body.admin_light_theme_initiated.appointments .label-warning {
+  color: #fff !important;
+}
+
+body.appointments_history .label-success,
+body.appointments .label-success {
+  background: rgb(132, 197, 41);
+  border: rgb(132, 197, 41);
+  color: #ffffff !important;
+  text-transform: uppercase !important;
+}
+
+body.appointments .label-danger {
+  background: rgba(244, 3, 47, 0.59);
+  border: 1px solid rgb(248, 106, 132);
+  color: #ffffff !important;
+}
+
+body .appointly_single_view_form {
+  display: none;
+}
+
+body table.table-appointments th.sorting_disabled.not-export {
+  width: 220px;
+}
+
+body .appointment .fit-content {
+  text-align: center;
+  margin: 15px;
+}
+
+.align-items-center {
+  margin: 0 auto;
+  width: 80%;
+}
+
+body .appointment_icon_single {
+  padding-top: 0;
+  padding-right: 15px;
+  padding-left: 7px;
+  float: left;
+  font-size: 36px;
+}
+
+.spmodified.col-md-12.mright15 {
+  width: 100%;
+}
+
+body.perfex_office_theme_initiated.appointments ._buttons a {
+  cursor: pointer !important;
+}
+
+body.perfex_office_theme_initiated.appointments .label-warning {
+  background: #f7af3d !important;
+  font-size: 14px !important;
+  border: 1px solid #f7af3d !important;
+  color: #fff !important;
+}
+
+body .google_meet_send {
+  width: 21px;
+  height: 23px;
+  margin-bottom: -7px;
+  margin-top: -2px;
+}
+
+@media (max-width: 735px) {
+  body.appointly .appointmentWrapper {
+    padding: 0;
+  }
+
+  body.appointly .fixBtnsLine {
+    margin-bottom: 25px;
+  }
+
+  body.appointly .panel_s .panel-body {
+    padding: 0;
+  }
+
+  body .available_times_labels {
+    font-size: 11px;
+    margin: 0 auto;
+    display: grid;
+    padding: 0 11px;
+  }
+
+  body .col-md-12.d-flex.mtop15 {
+    display: unset;
+  }
+  body #wrapper .appointment_status_info {
+    float: right;
+  }
+
+  body #wrapper .info-header {
+    margin-left: auto;
+    /* padding: 0px 5px; */
+  }
+
+  body #wrapper .info-header h3 {
+    margin-left: 14px;
+    font-size: 21px;
+  }
+
+  body #wrapper .content {
+    padding-top: 0;
+  }
+
+  body .col-xs-12 {
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+  }
+
+  body .appointment_group_buttons,
+  body .early_reminders_parent {
+    display: inline-grid;
+    grid-gap: 8px;
+    grid-template-columns: 1fr;
+    width: 100%;
+    padding-left: 0;
+  }
+
+  body .text-muted.mtop1 {
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 13px;
+    text-overflow: ellipsis;
+  }
+
+  body .todays_appointment h5 span {
+    font-size: 11px;
+  }
+
+  body .span_limited {
+    width: 128px;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 11px;
+    text-overflow: ellipsis;
+  }
+
+  body .panel-body .todays_appointment {
+    width: 144px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-right: 0 !important;
+    margin-left: 7px !important;
+  }
+}
+
+body .col-md-4.ui-sortable .appointly-secondary {
+  width: 242px;
+}
+
+body .col-md-4.ui-sortable .todays_appointment {
+  margin-left: 6px !important;
+  margin-right: 4px;
+}
+
+.appointment_type_holder .appointment_color_type {
+  height: 30px;
+  width: 30px;
+  border-radius: 4px;
+  margin-top: 3px;
+}
+
+.btn-primary-google:active,
+.btn-primary-google:focus,
+.btn-primary-google:hover {
+  color: rgb(231, 229, 229);
+}
+
+.btn-primary-options {
+  background-color: #404ad8;
+  color: #fff;
+}
+
+.btn-primary-options:active,
+.btn-primary-options:focus,
+.btn-primary-options:hover {
+  color: rgb(231, 229, 229);
+  border-color: #404ad8;
+}
+
+.btn-primary-google {
+  background-color: #2663eb;
+  color: #fff;
+}
+
+.btn-primary-outlook:active,
+.btn-primary-outlook:focus,
+.btn-primary-outlook:hover {
+  color: rgb(231, 229, 229);
+}
+
+.btn-primary-outlook {
+  background-color: #226cb9;
+  color: #fff;
+}
+
+body .google_meet_main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1px 5px 5px 3px;
+  margin-left: -12px;
+  font-size: 1.8em;
+  cursor: pointer;
+}
+
+.appointment_type_holder .dropdown-menu li a:hover,
+.appointment_type_holder .dropdown-menu li a {
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 8px 20px;
+}
+
+body .open .appointly_dropdown_options {
+  border: 1px solid #1e95b1 !important;
+}
+
+.appointment_type_holder .bootstrap-select {
+  width: calc(100% - 39px) !important;
+  float: left;
+}
+
+#feedback_comment_area h6 {
+  max-width: 600px;
+  margin: 0 auto;
+  border: 1px solid #dedddd;
+  padding: 20px;
+  font-size: 14px;
+}
+
+.feedback_star i:before {
+  font-size: 28px;
+  margin-left: 6px;
+}
+
+.star_rated i:before {
+  color: #f37502;
+}
+
+.hover_star i:before {
+  color: #ffcc36;
+}
+
+body .btn {
+  font-size: 14px;
+}
+
+body .btn {
+  font-size: 14px;
+}
+
+body .table-services .btn {
+  margin-right: 5px;
+}
+
+body .table-services .btn-danger {
+  background-color: #d9534f;
+  border-color: #d43f3a;
+  color: white !important;
+  gap: 7px;
+}
+
+body .table-services .btn-danger:hover {
+  background-color: #c9302c;
+  border-color: #ac2925;
+}
+
+body .table-services .btn-default {
+  background-color: #fff;
+  border-color: #ccc;
+}
+
+body .table-services .btn-default:hover {
+  background-color: #e6e6e6;
+  border-color: #adadad;
+}
+
+body.appointly .initiated_by {
+  font-size: 0 !important;
+}
+
+body .delete_apppointment_type {
+  margin-top: 24px;
+  margin-left: 7px;
+}
+
+body .d-flex {
+  display: flex;
+}
+
+body .flex-wrap {
+  flex-wrap: wrap;
+  padding-left: 0;
+}
+
+body .sub-menu-item-appointly_sidemenu i {
+  margin-right: 8px !important;
+}
+
+@media (max-width: 767px) {
+  body.appointly .panel-body {
+    padding: 10px !important;
+  }
+  body.appointly #widget-today_appointments {
+    margin-top: 10px !important;
+  }
+}
+
+/* samsung s10E, s8, s8+  */
+
+@media only screen and (max-device-width: 360px) and (-webkit-device-pixel-ratio: 3) {
+  .xdsoft_datetimepicker {
+    left: 2px !important;
+  }
+
+  body #wrapper .info-header {
+    padding: 0 8px !important;
+  }
+}
+
+/* Firefox */
+
+body i.fa-globe.timezone {
+  font-size: 21px;
+  color: #1f8ea8;
+}
+
+/* Envelope icon for outlook style */
+
+.table-appointments::before {
+  content: "";
+}
+
+body .filterBlur {
+  filter: blur(2px);
+  -webkit-filter: blur(2px);
+  pointer-events: none;
+  transition: filter 0.3s ease;
+}
+
+/* Make sure selectpicker dropdowns remain usable */
+.bootstrap-select.open .dropdown-menu {
+  pointer-events: auto !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+}
+
+/* Make selectpicker items focusable */
+.bootstrap-select .dropdown-menu li a {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+
+/* Keep form validation styling visible through blur */
+.has-error .help-block,
+.has-error .control-label,
+.has-error .radio,
+.has-error .checkbox,
+.has-error .radio-inline,
+.has-error .checkbox-inline,
+.has-error.radio label,
+.has-error.checkbox label,
+.has-error.radio-inline label,
+.has-error.checkbox-inline label,
+.has-error .form-control {
+  filter: none !important;
+  -webkit-filter: none !important;
+}
+
+body.appointly .label {
+  line-height: normal;
+}
+
+body.appointly .mrtopmin5 {
+  margin-top: -5px;
+}
+
+.xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_disabled {
+  background: #ffeeee !important; /* Light red background */
+  color: #ff0000 !important; /* Red text */
+  opacity: 0.6;
+}
+
+/* Hover effect on blocked dates */
+.xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_disabled:hover {
+  background: #ffcccc !important;
+  color: #ff0000 !important;
+}
+
+/* Busy times in time picker */
+.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time.busy_time {
+  background: #ffeeee !important;
+  color: #ff0000 !important;
+}
+
+.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time.busy_time:hover {
+  background: #ffcccc !important;
+  color: #ff0000 !important;
+}
+
+.xdsoft_time {
+  padding: 5px !important;
+  font-size: 13px !important;
+}
+
+.xdsoft_time.busy_time {
+  background: #ffebee !important;
+  color: #d32f2f !important;
+  pointer-events: none;
+}
+
+.xdsoft_time.xdsoft_disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.xdsoft_timepicker {
+  width: 100px !important;
+}
+
+.xdsoft_time_box {
+  height: 205px !important;
+}
+
+/* Remove not-allowed cursor from input */
+.appointment-date {
+  cursor: pointer !important;
+}
+
+/* Only apply not-allowed cursor to calendar items */
+.xdsoft_datetimepicker .xdsoft_date.blocked-date,
+.xdsoft_datetimepicker .xdsoft_time.busy_time,
+.xdsoft_datetimepicker .xdsoft_time.xdsoft_disabled,
+.xdsoft_datetimepicker .xdsoft_date.xdsoft_disabled {
+  cursor: not-allowed !important;
+  position: relative;
+}
+
+.xdsoft_date.blocked-date {
+  background: #ffebee !important;
+  color: #c62828 !important;
+}
+
+.xdsoft_date.blocked-date:hover {
+  background: #ffcdd2 !important;
+}
+
+.blocked-icon {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 10px;
+  color: #c62828;
+}
+
+/* Fix time alignment */
+.xdsoft_time_variant .xdsoft_time {
+  position: relative;
+  padding: 5px 5px !important;
+  text-align: center;
+}
+
+.xdsoft_time.busy_time {
+  background: #f8d7da !important;
+  color: #721c24 !important;
+}
+
+.time-blocked-icon {
+  position: absolute;
+  right: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 10px;
+  color: #721c24;
+}
+
+.xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_today {
+  --tw-bg-opacity: 1;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  border-radius: 0.375rem;
+}
+
+.xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_current {
+  --tw-bg-opacity: 1;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  background-color: rgb(37 99 235 / var(--tw-bg-opacity));
+  border-radius: 0.375rem;
+  color: #fff;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+body.appointments .google-synced-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Style to show a clear visual indication */
+body.appointments tr[data-source="google_calendar"] {
+  background-color: rgba(66, 133, 244, 0.05); /* Light Google blue */
+}
+
+body.appointments .google-calendar-appointment {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+body.appointments  .table.dataTable  > thead:first-child  > tr:first-child  > th:last-child {
+  width: 120px;
+  text-align: center;
+}
+
+@media (max-width: 735px) {
+  body .google_meet_main {
+    display: inline-block;
+  }
+}
+
+/* Add these styles for calendar events */
+.fc-event.google-calendar-event {
+  border-left: 3px solid #4285f4 !important;
+}
+
+.fc-event.google-calendar-event .fc-title:before {
+  content: "\f1a0";
+  font-family: "Font Awesome 6 Brands", serif;
+  margin-right: 5px;
+}
+
+/* Make calendar tooltips more readable */
+.fc-tooltip {
+  max-width: 300px !important;
+  padding: 8px !important;
+  border-radius: 4px !important;
+  color: #333 !important;
+  background-color: #fff !important;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Improve calendar event styling */
+.fc-time-grid-event.fc-short .fc-title,
+.fc-day-grid-event .fc-title {
+  font-weight: 500 !important;
+}
+
+/* Override event colors to ensure they appear */
+.fc-event {
+  border-width: 0 0 0 3px !important;
+  border-radius: 2px !important;
+  padding: 1px 3px !important;
+}
+
+/* Fix event color rendering */
+.fc-event.appointly-event {
+  border-left-width: 3px !important;
+}
+
+/* Fix visibility of event content */
+.fc-event-container a.fc-event .fc-content {
+  padding: 2px 4px !important;
+}
+
+/* Fix event time display */
+.fc-event-container a.fc-event .fc-time {
+  font-weight: 600 !important;
+}
+
+/* Time slot styling for busy times */
+.xdsoft_time.busy-time,
+.xdsoft_time.busy_time {
+  background: #ffeded !important;
+  color: #f44336 !important;
+  font-weight: bold !important;
+  position: relative;
+  cursor: not-allowed !important;
+}
+
+.xdsoft_time.busy-time:hover,
+.xdsoft_time.busy_time:hover {
+  background: #ffe0e0 !important;
+  color: #d32f2f !important;
+}
+
+.xdsoft_time.busy-time .busy-label {
+  display: none;
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(244, 67, 54, 0.9);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 9999;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.xdsoft_time.busy-time:hover .busy-label,
+.xdsoft_time.busy_time:hover .busy-label {
+  display: block;
+}
+
+.time-blocked-icon {
+  margin-left: 3px;
+  color: #f44336;
+}
+
+/* Improved tooltip for unavailable slots */
+
+body .unavailable_time {
+  background: #ffeeee !important;
+  color: #ff6666 !important;
+  pointer-events: none;
+  text-decoration: line-through;
+  opacity: 0.85;
+}
+
+body .unavailable_day {
+  background: #fff0f0 !important;
+  color: #ff6666 !important;
+  pointer-events: none;
+  border-left: 4px solid #ff6666;
+  font-style: italic;
+}
+
+body .past_time {
+  background: #f0f0f0 !important;
+  color: #999 !important;
+  pointer-events: none;
+  text-decoration: line-through;
+  opacity: 0.75;
+}
+
+.time-slot-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.time-slot-tooltip .tooltip-text {
+  visibility: hidden;
+  width: 200px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -100px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.time-slot-tooltip .tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.time-slot-tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Specific reason styling */
+.unavailable-reason-staff_unavailable {
+  border-left-color: #ff3333;
+}
+
+.unavailable-reason-company_day_disabled {
+  border-left-color: #ff9900;
+}
+
+.unavailable-reason-busy_time_conflict {
+  border-left-color: #cc3366;
+}
+
+.unavailable-reason-fully_booked {
+  border-left-color: #9966cc;
+}
+
+/* Placeholder for days with no slots */
+.no-slots-available {
+  padding: 15px;
+  background: #fff0f0;
+  border: 1px dashed #ffcccc;
+  color: #ff6666;
+  text-align: center;
+  margin: 10px 0;
+  border-radius: 4px;
+}
+
+/* Time slot selection styling */
+.time-slots-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.time-slot {
+  flex: 0 0 calc(33.333% - 8px);
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+@media (max-width: 768px) {
+  .time-slot {
+    flex: 0 0 calc(50% - 8px);
+  }
+}
+
+@media (max-width: 480px) {
+  .time-slot {
+    flex: 0 0 100%;
+  }
+}
+
+.time-slot:hover:not(.busy_time):not(.unavailable_time):not(.past_time):not(
+    .unavailable_day
+  ) {
+  background-color: #f0f7ff;
+  border-color: #2673e8;
+}
+
+.time-slot.selected {
+  background-color: #2673e8 !important;
+  color: white !important;
+  border-color: #2673e8 !important;
+  font-weight: bold;
+}
+
+/* Day unavailable message */
+.day-unavailable-message {
+  background: #fff0f0;
+  color: #ff6666;
+  padding: 15px;
+  margin: 15px 0;
+  border-radius: 4px;
+  border-left: 4px solid #ff6666;
+  font-style: italic;
+}
+
+/* Status indicators */
+.status-indicator {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.status-available {
+  background-color: #2673e8;
+}
+
+.status-unavailable {
+  background-color: #ff6666;
+}
+
+.status-busy {
+  background-color: #fb4862;
+}
+
+.status-legend {
+  display: flex;
+  gap: 15px;
+  margin-top: 15px;
+  font-size: 13px;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+}
+
+/* Date picker highlighting for unavailable days */
+.xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_date.xdsoft_day_no_slots {
+  background: #fff0f0 !important;
+  color: #ff6666 !important;
+  position: relative;
+}
+
+.xdsoft_datetimepicker td.xdsoft_date.xdsoft_day_no_slots:after {
+  content: "×";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+/* Styles for unavailable time slots */
+.dropdown-menu .unavailable-time-slot,
+.dropdown-menu li.disabled a {
+  background-color: #ffeeee !important;
+  color: #ff6666 !important;
+  text-decoration: line-through !important;
+  font-style: italic !important;
+  pointer-events: none !important;
+}
+
+/* Make sure the unavailable slots are still visible in the dropdown */
+.bootstrap-select .dropdown-menu li.disabled {
+  display: block !important;
+  opacity: 0.8 !important;
+}
+
+.bootstrap-select .dropdown-menu li.disabled:hover {
+  background-color: #ffeeee !important;
+}
+
+/* Style for the unavailable time slot info message */
+.time-slot-unavailable-info {
+  margin-top: 5px;
+  padding: 12px 8px;
+  background-color: #fff0f0;
+  border-left: 3px solid #ff6666;
+  color: #ff6666;
+  font-size: 13px;
+  margin-bottom: 14px;
+}
+
+body.appointly #appointment_date:read-only {
+  cursor: pointer !important;
+}
+
+/* Appointment calendar date styles */
+.current-appointment-date {
+  background-color: rgba(0, 123, 255, 0.25) !important;
+  font-weight: bold;
+}
+.available-date {
+  background-color: rgba(40, 167, 69, 0.15) !important;
+}
+.unavailable-date {
+  background-color: rgba(255, 193, 7, 0.15) !important;
+}
+
+/* Style for the unavailable time slots in the dropdown - consolidated styles */
+.dropdown-menu .unavailable-time-slot,
+.dropdown-menu li.disabled a {
+  color: #ff6666 !important;
+  background-color: #ffeeee !important;
+  position: relative;
+  text-decoration: line-through !important;
+  font-style: italic !important;
+  pointer-events: none !important;
+}
+
+/* Make sure bootstrap-select displays the disabled options properly */
+.bootstrap-select .dropdown-menu li.disabled {
+  display: block !important;
+  opacity: 0.9 !important;
+}
+
+/* Keep the red background on hover for disabled options */
+.bootstrap-select .dropdown-menu li.disabled:hover a {
+  background-color: #ffeeee !important;
+  color: #ff6666 !important;
+}
+
+/* Add "(unavailable)" text after disabled options */
+.bootstrap-select .dropdown-menu li.disabled a:after {
+  content: " (unavailable)";
+  display: inline;
+  color: #ff6666;
+}
+
+/* Fix z-index for the dropdown to ensure it appears above other elements */
+.bootstrap-select.open .dropdown-menu {
+  z-index: 10000 !important;
+  max-height: 300px !important;
+  overflow-y: auto !important;
+}
+
+/* General datepicker improvements */
+.datepicker-days .day {
+  transition: background-color 0.2s ease;
+}
+
+.datepicker.datepicker-dropdown {
+  z-index: 10000 !important; /* Ensure datepicker shows above modal */
+}
+
+/* Update Appointment Styles */
+body.appointly.appointments #wrapper .appointment-collapsible {
+  margin-bottom: 15px;
+  border: 1px solid #e4e5e7;
+  border-radius: 4px;
+}
+
+/* Fix for consistent form spacing */
+body.appointly.appointments #wrapper .form-group {
+  margin-bottom: 15px;
+}
+
+body.appointly.appointments #wrapper .appointment-collapsible-header {
+  padding: 2px 15px;
+  background-color: #f8f9fa;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 3px;
+}
+
+body.appointly.appointments #wrapper .appointment-collapsible-header:hover {
+  background-color: #f1f3f4;
+}
+
+body.appointly.appointments #wrapper .appointment-toggle-plus {
+  font-size: 18px;
+  font-weight: bold;
+  color: #03a9f4;
+}
+
+body.appointly.appointments #wrapper .appointment-collapsible-content {
+  padding: 15px;
+  border-top: 1px solid #e4e5e7;
+}
+
+body .sidebar ul.nav > li.menu-item-appointly .nav-second-level a .menu-icon {
+  margin-right: 10px;
+}
+
+/* Truncate organizer and type columns with tooltips */
+body.appointly.appointments #wrapper .table-appointments td:nth-child(3), /* Organizer column */
+body.appointly.appointments #wrapper .table-appointments td:nth-child(6) {
+  /* Type column */
+  max-width: 150px;
+  position: relative;
+}
+
+body.appointly.appointments #wrapper .table-appointments td:nth-child(3) > div,
+body.appointly.appointments #wrapper .table-appointments td:nth-child(6) > div {
+  max-width: fit-content;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Ensure flex containers in organizer column don't break */
+body.appointly.appointments #wrapper .table-appointments td:nth-child(3) .tw-flex {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+body.appointly.appointments #wrapper .table-appointments td:nth-child(3) .tw-flex span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+/* Tooltip styling */
+body.appointly.appointments #wrapper .table-appointments td:nth-child(3)[title],
+body.appointly.appointments #wrapper .table-appointments td:nth-child(6)[title] {
+  cursor: help;
+}
+
+/* Custom tooltip styling for calendar dates - matches external form */
+.xdsoft_date[title]:hover:after {
+  content: attr(title);
+  position: absolute;
+  top: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+  padding: 5px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 10000;
+  width: auto;
+  min-width: 100px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+}
+
+/* Make sure calendar cells have relative positioning for tooltips */
+.xdsoft_datetimepicker .xdsoft_calendar td {
+  position: relative;
+}
+
+/* Blocked Days / Non-Working Days Styles */
+.blocked-days-section {
+  margin-bottom: 20px;
+}
+
+.blocked-date-tag {
+  display: inline-block;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 5px 10px;
+  margin: 3px;
+  font-size: 13px;
+  color: #495057;
+}
+
+.blocked-date-tag span {
+  margin-right: 8px;
+  font-weight: 500;
+}
+
+.blocked-date-tag .remove-date {
+  background: #dc3545;
+  border: none;
+  color: white;
+  border-radius: 3px;
+  padding: 2px 6px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.blocked-date-tag .remove-date:hover {
+  background: #c82333;
+}
+
+.blocked-date-tag .remove-date i {
+  font-size: 10px;
+}
+
+#blocked_dates_container {
+  min-height: 40px;
+  padding: 10px;
+  border: 1px dashed #dee2e6;
+  border-radius: 4px;
+  background: #f8f9fa;
+}
+
+#blocked_dates_container:empty::before {
+  content: "No blocked days selected";
+  color: #6c757d;
+  font-style: italic;
+}
+
+#blocked_dates_container .text-muted {
+  margin: 0;
+  color: #6c757d;
+  font-style: italic;
+}
+
+/* Date picker input styling */
+.blocked-days-section .input-group {
+  margin-bottom: 15px;
+}
+
+.blocked-days-section .datepicker {
+  border-radius: 4px;
+}
+
+.blocked-days-section .input-group-addon {
+  background: #e9ecef;
+  border-color: #ced4da;
+}
+
+.blocked-days-section .calendar-icon {
+  color: #6c757d;
+}
+
+/* Editing interface styles */
+.tw-cursor-pointer:hover {
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+/* Placeholder styling for empty content */
+.tw-text-neutral-500.tw-italic {
+  opacity: 0.7;
+}
+
+/* Status dropdown styling */
+.dropdown-menu li a {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  transition: all 0.2s ease;
+}
+
+.dropdown-menu li a:hover {
+  text-decoration: none;
+}
+
+/* Status colors */
+.dropdown-menu li a.tw-text-blue-600 {
+  color: #2563eb !important;
+}
+
+.dropdown-menu li a.tw-text-amber-600 {
+  color: #d97706 !important;
+}
+
+.dropdown-menu li a.tw-text-green-600 {
+  color: #16a34a !important;
+}
+
+.dropdown-menu li a.tw-text-red-600 {
+  color: #dc2626 !important;
+}
+
+.dropdown-menu li a.tw-text-gray-600 {
+  color: #4b5563 !important;
+}
+
+/* Hover effects */
+.dropdown-menu li a.tw-text-blue-600:hover {
+  background-color: #dbeafe !important;
+  color: #2563eb !important;
+}
+
+.dropdown-menu li a.tw-text-amber-600:hover {
+  background-color: #fef3c7 !important;
+  color: #d97706 !important;
+}
+
+.dropdown-menu li a.tw-text-green-600:hover {
+  background-color: #dcfce7 !important;
+  color: #16a34a !important;
+}
+
+.dropdown-menu li a.tw-text-red-600:hover {
+  background-color: #fee2e2 !important;
+  color: #dc2626 !important;
+}
+
+.dropdown-menu li a.tw-text-gray-600:hover {
+  background-color: #f9fafb !important;
+  color: #4b5563 !important;
+}
+
+/* Status icon colors */
+.tw-text-blue-600 {
+  color: #2563eb !important;
+}
+
+.tw-text-amber-600 {
+  color: #d97706 !important;
+}
+
+.tw-text-green-600 {
+  color: #16a34a !important;
+}
+
+.tw-text-red-600 {
+  color: #dc2626 !important;
+}
+
+.tw-text-gray-600 {
+  color: #4b5563 !important;
+}
+
+/* Additional commonly used classes that might be missing */
+.tw-bg-neutral-50 {
+  background-color: #fafafa !important;
+}
+
+.tw-bg-neutral-100 {
+  background-color: #f5f5f5 !important;
+}
+
+.tw-bg-neutral-200 {
+  background-color: #e5e5e5 !important;
+}
+
+.tw-bg-neutral-300 {
+  background-color: #d4d4d4 !important;
+}
+
+.tw-text-neutral-400 {
+  color: #a3a3a3 !important;
+}
+
+.tw-text-neutral-500 {
+  color: #737373 !important;
+}
+
+.tw-text-neutral-600 {
+  color: #525252 !important;
+}
+
+.tw-text-neutral-700 {
+  color: #404040 !important;
+}
+
+.tw-text-neutral-800 {
+  color: #262626 !important;
+}
+
+.tw-text-neutral-900 {
+  color: #171717 !important;
+}
+
+.tw-border-neutral-200 {
+  border-color: #e5e5e5 !important;
+}
+
+.tw-border-neutral-300 {
+  border-color: #d4d4d4 !important;
+}
+
+.tw-rounded-md {
+  border-radius: 0.375rem !important;
+}
+
+.tw-rounded-lg {
+  border-radius: 0.5rem !important;
+}
+
+.tw-shadow-sm {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+}
+
+.tw-shadow-md {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+.tw-transition-shadow {
+  transition-property: box-shadow !important;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition-duration: 150ms !important;
+}
+
+.tw-duration-300 {
+  transition-duration: 300ms !important;
+}
+
+.hover\:tw-shadow-md:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+.hover\:tw-bg-neutral-50:hover {
+  background-color: #fafafa !important;
+}
+
+.hover\:tw-bg-neutral-100:hover {
+  background-color: #f5f5f5 !important;
+}
+
+.tw-w-fit {
+  width: fit-content;
+}

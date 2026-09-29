@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mainCardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:backgroundTint="@color/MilkWhite"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="15dp">
+
+    <com.skydoves.androidribbon.ShimmerRibbonView
+        android:id="@+id/priority"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:alpha="0.8"
+        android:visibility="visible"
+        app:shimmer_base_alpha="1.0"
+        app:shimmer_highlight_alpha="0.5"
+        app:shimmer_ribbon_background_color="@color/Gray"
+        app:shimmer_ribbon_padding_bottom="3dp"
+        app:shimmer_ribbon_padding_top="3dp"
+        app:shimmer_ribbon_rotation="45"
+        app:shimmer_ribbon_text="@string/high_priority"
+        app:shimmer_ribbon_textColor="@android:color/white"
+        app:shimmer_ribbon_textStyle="bold" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/taskName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.3"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/recurringTask"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/isBillable"
+                android:textSize="13sp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
+                android:textColor="@color/white"
+                android:background="@drawable/background_rounded_corners_blush_red"
+                android:gravity="center"
+                android:padding="3dp"
+                android:text="@string/billable" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/isFinished"
+                android:textSize="13sp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/background_rounded_corners_green_onion"
+                android:textColor="@color/White"
+                android:gravity="center"
+                android:padding="3dp"
+                android:text="@string/finished" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/hourlyRate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
+                />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/totalCycles"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_weight="0.5"
+                android:background="@drawable/border_right" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/assigned"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_weight="1.5"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/startDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_weight="1" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/dueDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_weight="1"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:textStyle="italic" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="0dp"
+            >
+            <AutoCompleteTextView
+                android:id="@+id/status"
+                android:textSize="13sp"
+                android:labelFor="@id/status"
+                android:textColor="@color/Gray"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/startTimer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/border_right"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/start_timer"
+                android:textColor="@color/CloverGreen" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/editTask"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/border_right"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/edit"
+                android:textColor="@color/themeColorPrimary" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/deleteTask"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/delete"
+                android:textColor="@color/Red" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,23 @@
+<?php
+$lang['si_custom_status'] = 'Manage Custom Statuses';
+$lang['si_custom_status_setup_menu'] = 'Custom Statuses';
+$lang['si_custom_status_project_statuses_menu'] = 'Project Statuses';
+$lang['si_custom_status_task_statuses_menu'] = 'Task Statuses';
+$lang['si_custom_statuses'] = 'Custom Statuses';
+$lang['si_custom_status_new_status'] = 'Add New Status';
+$lang['si_custom_status_default_status'] = 'Default Status';
+$lang['si_custom_status_status_add_edit_order'] = 'Order';
+$lang['si_custom_status_status_color'] = 'Color';
+$lang['si_custom_status_status_add_edit_name'] = 'Status Name';
+$lang['si_custom_status_status_table_total'] = 'Total %s';
+$lang['si_custom_status_status_filter_default'] = 'Default in Filter';
+$lang['si_custom_status_message'] = 'Manage which %s statuses are available to administrators and which statuses are visible in the customer portal.';
+$lang['si_custom_status_edit_default_status_info'] = 'Enable editing for default %s statuses';
+$lang['si_custom_status_default_active_info'] = 'You can disable this default status only when total %s records are 0 for this status';
+$lang['si_custom_status_default_status_name'] = 'Leave status name blank to use the default CRM name';
+$lang['si_custom_status_error_in_update'] = 'The status setting could not be updated.';
+$lang['si_custom_status_visibility_scope'] = 'Visibility';
+$lang['si_custom_status_visibility_admin'] = 'Admin Only';
+$lang['si_custom_status_visibility_client'] = 'Client Only';
+$lang['si_custom_status_visibility_all'] = 'Whole CRM';
+$lang['si_custom_status_visibility_help'] = 'Use Whole CRM for statuses that should appear in both admin and customer portal. Use Admin Only to keep internal statuses hidden from customers. Use Client Only for customer-facing statuses.';

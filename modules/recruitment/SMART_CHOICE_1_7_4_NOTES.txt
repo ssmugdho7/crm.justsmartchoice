@@ -1,0 +1,17 @@
+Smart Choice Contractors USA / Harold Cabrera
+Recruitment module update v1.7.4
+
+Changes:
+- Fixed recruitment portal logo URL to use the verified CRM media path.
+- Added recruitment portal branding settings tab.
+- Added editable recruitment portal footer text.
+- Applied Smart Choice styling to job detail related jobs section.
+- Improved related job card layout, scrolling/readability, shadows, rounded corners, and mobile display.
+- Added migration 174 for portal logo/footer options.
+
+After upload:
+1. Replace modules/recruitment/.
+2. Go to Modules > Recruitment > Upgrade Database.
+3. Clear application/cache except index.html.
+4. Press Ctrl+F5.
+5. Go to Recruitment > Settings > Recruitment Portal Branding.

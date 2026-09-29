@@ -1,0 +1,14 @@
+Purchasing Hub v2.0.5
+
+Fixed:
+- Repaired old /admin/purchase AJAX routes to /admin/purchasing_hub/purchase.
+- Fixed import XLSX commodity AJAX path.
+- Added Quick Navigation bar across Purchasing Hub admin pages.
+- Added Health Check page and menu item.
+- Added English and Spanish label cleanup for visible underscore labels such as sku_code, sku_name, commodity_group, sub_group, purchase_price, unit_id.
+- Added Smart Choice UI polish CSS/JS.
+- Added migration 205.
+
+Notes:
+- Console errors for toast_master.css, customtables_g, highcharts duplicate load, and /admin/tasks/table 500 are outside Purchasing Hub unless they appear only after opening Purchasing Hub.
+- Clear application/cache after upload.

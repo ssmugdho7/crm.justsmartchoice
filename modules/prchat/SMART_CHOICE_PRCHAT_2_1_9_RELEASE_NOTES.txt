@@ -1,0 +1,8 @@
+Smart Choice PRChat 2.1.9
+- Restored client contact preview endpoint and eliminated its 404.
+- Added defensive JavaScript guards for incomplete message/unread payloads.
+- Corrected Settings group registration and added direct Chat Settings navigation.
+- Added visible AI key/model configuration.
+- Added explicit staff voice call mode: internal WebRTC or device phone/softphone link.
+- Preserved video calling as internal browser-to-browser WebRTC.
+- Added migration 219 and version consistency.

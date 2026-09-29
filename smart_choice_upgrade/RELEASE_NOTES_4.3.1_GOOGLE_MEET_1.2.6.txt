@@ -1,0 +1,8 @@
+Smart Choice CRM 4.3.1
+
+Targeted change only:
+- Replaces Google Meet 1.2.1/older bundled module with Google Meet 1.2.6 based on the user-supplied 1.2.5 package.
+- Repairs explicit customer portal meeting routes, including /google_meet/meeting_clients/meetings.
+- Preserves native customer portal header/navigation/footer and empty meeting state.
+- Restores Responsible Employee, Project, Staff Attendees, and Customer Contacts selectors.
+- No unrelated CRM core/module feature is removed or changed.

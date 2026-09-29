@@ -1,0 +1,49 @@
+<?php
+$lang['dmns']                                             = 'Peta konsep';
+$lang['dmn']                                              = 'Peta pikiran';
+$lang['dmn_create_new']                                   = 'Membuat baru';
+$lang['dmn_edit']                                         = 'Edit';
+$lang['dmn_delete']                                       = 'Menghapus';
+$lang['dmn_title']                                        = 'Judul';
+$lang['dmn_desc']                                         = 'Deskripsi';
+$lang['dmn_staff']										  = 'Dibuat oleh';
+$lang['dmn_search']										  = 'Cari Peta Pikiran';
+$lang['dmn_group']								          = 'Kelompok';
+$lang['dmn_groups']								          = 'Grup';
+$lang['edit_dmn_group']								      = 'Edit Grup';
+$lang['new_dmn_group']								      = 'Grup baru';
+$lang['dmn_group_add_edit_name']						  = 'Nama';
+$lang['dmn_group_add_edit_description']					  = 'Deskripsi';
+$lang['dmn_switch_to_grid_view']						  = 'Beralih ke Kotak';
+$lang['dmn_switch_to_list_view']						  = 'Beralih ke Daftar';
+$lang['dmn_assigned_to_me']								  = 'dmn saya';
+$lang['dmn_filter_staff']								  = 'Staf';
+$lang['dmn_filter_group']								  = 'Kelompok';
+$lang['dmn_info']								          = 'Info dmn';
+$lang['dmn_staff']								          = 'Staf';
+$lang['dmn_view']								          = 'Melihat';
+$lang['dmn_not_found']								      = 'dmn tidak ditemukan';
+$lang['preview_dmn']								      = 'Pratinjau dmn';
+$lang['dmn_settings_name']								  = 'Peta pikiran';
+$lang['new_dmn_group']								      = 'Grup baru';
+$lang['dmn_created_at']									  = 'Dibuat di';
+$lang['dmn_enable_group_option']                          = 'Izinkan anggota staf non-admin membuat Grup di area buat / edit dmn?  ';
+//client project view language
+
+$lang['clients_dmn_tittle']								  = 'Title';
+$lang['clients_dmn_description']						  = 'Description';
+$lang['clients_dmn_staff']								  = 'Staff';
+$lang['clients_dmn_group']								  = 'Group';
+$lang['clients_dmn_created_at']							  = 'Created At';
+
+$lang['properties']									 	  	= 'Edit Details';
+$lang['edit_canvas']									 	= 'Edit Canvas';
+$lang['action_btn_dropdown']								= 'Action';
+$lang['delete']												= 'Delete';
+$lang['share_via_email']									= 'Share via email';
+$lang['print_svg']											= 'Download SVG';
+$lang['window_print']										= 'Print';
+$lang['rating']												= 'Rating';
+$lang['add_email']											= 'Add Email';
+$lang['save']												= 'Save';
+$lang['close']												= 'Close';

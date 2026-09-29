@@ -1,0 +1,8 @@
+PRChat 2.3.2
+
+Repair only:
+- Keeps the three-dot message action control permanently visible beside messages in staff, group, and client admin conversations.
+- Keeps the floating/toggled staff chat message action button permanently visible.
+- Adds Create Task, Delete for me, Delete for recipient, and Delete for everyone to the floating staff chat message menu.
+- Preserves existing full-view scoped deletion, edit, create-task, AI, voice, calls, group photos, uploads, API credentials, permissions, and data.
+- Migration 232 is code-only and non-destructive.

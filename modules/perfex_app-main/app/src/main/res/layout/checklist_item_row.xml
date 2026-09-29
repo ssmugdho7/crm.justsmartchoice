@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainCardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:backgroundTint="@color/MilkWhite"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="15dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/checklist_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/completed_by"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/assignedTo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="1dp"
+            android:background="@color/MetallicSilver" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:baselineAligned="false"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:weightSum="4">
+
+            <LinearLayout
+                android:id="@+id/edit"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                tools:ignore="UselessParent">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/ic_baseline_edit_24"
+                    android:backgroundTint="@color/themeColorPrimary"
+                    android:contentDescription="@string/add_customer" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/assign_staff"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                tools:ignore="UselessParent">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/ic_baseline_person_add_alt_1_24"
+                    android:backgroundTint="@color/themeColorPrimary"
+                    android:contentDescription="@string/add_customer" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/save_as_template"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                tools:ignore="UselessParent">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/baseline_call_split_24"
+                    android:backgroundTint="@color/themeColorPrimary"
+                    android:contentDescription="@string/add_customer" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/delete"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                tools:ignore="UselessParent">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/ic_baseline_delete_24"
+                    android:backgroundTint="@color/Red"
+                    android:contentDescription="@string/add_customer" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

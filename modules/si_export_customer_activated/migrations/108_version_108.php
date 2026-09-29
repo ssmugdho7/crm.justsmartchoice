@@ -1,0 +1,15 @@
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+
+class Migration_Version_108 extends App_module_migration
+{
+    public function up()
+    {
+        // No schema changes for this migration.
+    }
+
+    public function down()
+    {
+        // Intentionally left blank to allow safe rollback checks.
+    }
+}

@@ -1,0 +1,18 @@
+Smart Choice Office Theme v1.3.9
+
+Changes:
+- Removed purple hover/background behavior from client login/client area logo and navigation.
+- Changed client portal top menu to blue/green gradient matching admin side.
+- Changed client icons to light blue/orange hover accents.
+- Removed boxed styling from customer area category/tab links such as Online Shopping, Hardware, Technology.
+- Kept text-style tab behavior with subtle shadow instead of heavy boxes.
+- Improved mobile client menu alignment so items stay straight and readable.
+- Changed admin caret/dropdown arrow color from orange/purple styling to navy blue.
+- Preserved safe non-destructive styling from v1.3.8.
+- Added migration 139 and updated version to 1.3.9.
+
+Install:
+1. Replace modules/perfex_office_theme/.
+2. Run Upgrade Database.
+3. Clear application/cache except index.html.
+4. Press Ctrl + F5.

@@ -1,0 +1,41 @@
+
+/* Smart Choice Payroll Hub — strictly scoped. */
+.sc-payroll-scope,
+body[class*="hr_payroll"] #wrapper .content,
+body .content .panel-body:has(.hrp-payroll-marker) {
+  --sc-blue:#1f3c88; --sc-green:#169179; --sc-orange:#d96b00; --sc-bg:#f5f7fb;
+}
+body .content:has(form[action*="hr_payroll"]),
+body .content:has(a[href*="hr_payroll"]) { background:var(--sc-bg,#f5f7fb); }
+body .content:has(a[href*="hr_payroll"]) .panel_s,
+body .content:has(form[action*="hr_payroll"]) .panel_s { border-radius:12px; overflow:hidden; box-shadow:0 6px 20px rgba(31,60,136,.08); }
+body .content:has(a[href*="hr_payroll"]) .panel-body,
+body .content:has(form[action*="hr_payroll"]) .panel-body { padding:18px; }
+body .content:has(a[href*="hr_payroll"]) h4,
+body .content:has(form[action*="hr_payroll"]) h4 { color:var(--sc-blue,#1f3c88); font-weight:700; }
+body .content:has(a[href*="hr_payroll"]) .btn-info,
+body .content:has(form[action*="hr_payroll"]) .btn-info { background:#169179; border-color:#169179; }
+body .content:has(a[href*="hr_payroll"]) .btn-primary,
+body .content:has(form[action*="hr_payroll"]) .btn-primary { background:#1f3c88; border-color:#1f3c88; }
+body .content:has(a[href*="hr_payroll"]) .btn { border-radius:6px; padding:6px 10px; font-size:12px; }
+body .content:has(a[href*="hr_payroll"]) .dataTables_wrapper,
+body .content:has(form[action*="hr_payroll"]) .dataTables_wrapper { width:100%; overflow:visible!important; }
+body .content:has(a[href*="hr_payroll"]) table.dataTable,
+body .content:has(form[action*="hr_payroll"]) table.dataTable { width:100%!important; table-layout:fixed; }
+body .content:has(a[href*="hr_payroll"]) table.dataTable th,
+body .content:has(a[href*="hr_payroll"]) table.dataTable td,
+body .content:has(form[action*="hr_payroll"]) table.dataTable th,
+body .content:has(form[action*="hr_payroll"]) table.dataTable td { white-space:normal!important; word-break:normal!important; overflow-wrap:anywhere; vertical-align:middle; padding:8px 7px; font-size:12px; }
+body .content:has(a[href*="hr_payroll"]) .table-responsive,
+body .content:has(form[action*="hr_payroll"]) .table-responsive { overflow:visible!important; }
+body .content:has(a[href*="hr_payroll"]) .handsontable,
+body .content:has(form[action*="hr_payroll"]) .handsontable { width:100%!important; max-width:100%!important; font-size:12px; }
+body .content:has(a[href*="hr_payroll"]) .handsontable .wtHolder,
+body .content:has(form[action*="hr_payroll"]) .handsontable .wtHolder { max-height:560px!important; overflow:auto!important; }
+body .content:has(a[href*="hr_payroll"]) .handsontable th,
+body .content:has(a[href*="hr_payroll"]) .handsontable td { height:34px!important; line-height:18px!important; white-space:normal!important; }
+.sc-ph-header{display:flex;align-items:center;justify-content:space-between;gap:12px}.sc-ph-badge{color:#d96b00;font-weight:700}
+.sc-template-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:18px 0}.sc-template-card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:12px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.05)}.sc-template-card:hover{transform:translateY(-2px)}.sc-template-thumb{height:130px;border-radius:8px;background:linear-gradient(135deg,#1f3c88,#169179);color:#fff;padding:12px;display:flex;flex-direction:column;justify-content:space-between}.sc-template-thumb.orange{background:linear-gradient(135deg,#d96b00,#1f3c88)}.sc-template-thumb.gray{background:linear-gradient(135deg,#374151,#169179)}
+.sc-report-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.sc-report-card{border:1px solid #e5e7eb;border-left:4px solid #169179;border-radius:10px;padding:15px;background:#fff}.sc-report-card h5{margin-top:0;color:#1f3c88;font-weight:700}
+@media(max-width:900px){.sc-template-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sc-report-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.sc-template-grid{grid-template-columns:1fr}body .content:has(a[href*="hr_payroll"]) table.dataTable{table-layout:auto}.sc-ph-header{align-items:flex-start;flex-direction:column}}

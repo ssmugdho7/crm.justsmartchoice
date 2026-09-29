@@ -1,0 +1,1 @@
+PRChat 2.1.2: visible Voice to Text and Improve with AI buttons for staff, groups and clients; Messaging Chat direct menu; AI settings; scoped composer controls; migration 212.

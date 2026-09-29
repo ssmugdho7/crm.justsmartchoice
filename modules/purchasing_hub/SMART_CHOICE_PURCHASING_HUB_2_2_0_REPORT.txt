@@ -1,0 +1,8 @@
+Purchasing Hub 2.2.0
+- CSS now loads only on Purchasing Hub routes.
+- Removed global CRM table, button, panel, and DataTables interference.
+- Removed duplicate page-level Refresh button from the main header.
+- Renamed Help Guide to How To.
+- Expanded beginner documentation for purchase orders, vendor quotes, accounts payable, and contracts.
+- Added migration 220 and synchronized module version.
+- No core CRM tables or files modified.

@@ -1,0 +1,8 @@
+Smart Choice CRM Core 3.7.0 SC
+
+- Mandatory migration 370.
+- Restored optional/selected line items for invoices, estimates, and proposals.
+- Added partial payment/down-payment schema consistency.
+- Added multiple customer-visible sales document uploads.
+- Added durable payment notification idempotency ledger.
+- Preserved all existing CRM files and data.

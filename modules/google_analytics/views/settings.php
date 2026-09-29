@@ -1,0 +1,11 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); init_head(); ?>
+<div id="wrapper"><div class="content ga-module"><div class="row"><div class="col-md-9"><div class="panel_s"><div class="panel-body"><h4><i class="fa fa-cogs"></i> <?php echo _l('ga_settings'); ?></h4><hr><?php echo form_open(current_url()); ?>
+<div class="checkbox checkbox-primary"><input type="checkbox" name="ga_enabled" id="ga_enabled" value="1" <?php echo get_option('ga_enabled')==='1'?'checked':''; ?>><label for="ga_enabled"><?php echo _l('ga_enable_tracking'); ?></label></div>
+<div class="checkbox checkbox-primary"><input type="checkbox" name="ga_track_client" id="ga_track_client" value="1" <?php echo get_option('ga_track_client')==='1'?'checked':''; ?>><label for="ga_track_client"><?php echo _l('ga_track_client_portal'); ?></label></div>
+<div class="checkbox checkbox-warning"><input type="checkbox" name="ga_track_admin" id="ga_track_admin" value="1" <?php echo get_option('ga_track_admin')==='1'?'checked':''; ?>><label for="ga_track_admin"><?php echo _l('ga_track_admin_area'); ?></label></div>
+<?php echo render_input('ga_crm_measurement_id','ga_crm_measurement_id',get_option('ga_crm_measurement_id'),'text',['placeholder'=>'G-XXXXXXXXXX']); ?>
+<?php echo render_input('ga_default_property_id','ga_default_property_id',get_option('ga_default_property_id')); ?>
+<?php echo render_input('ga_report_cache_minutes','ga_report_cache_minutes',get_option('ga_report_cache_minutes'),'number',['min'=>5,'max'=>1440]); ?>
+<div class="form-group"><label><?php echo _l('ga_service_account_json'); ?></label><textarea class="form-control" rows="10" name="ga_service_account_json" placeholder="<?php echo _l('ga_leave_blank_keep_secret'); ?>"></textarea><p class="text-muted"><?php echo _l('ga_service_account_help'); ?></p></div>
+<button class="btn btn-info"><i class="fa fa-save"></i> <?php echo _l('save'); ?></button><?php echo form_close(); ?></div></div></div>
+<div class="col-md-3"><div class="panel_s"><div class="panel-body"><h4><?php echo _l('ga_security'); ?></h4><p><?php echo _l('ga_security_help'); ?></p><a class="btn btn-default btn-block" href="<?php echo admin_url('google_analytics/health?test_api=1'); ?>"><i class="fa fa-plug"></i> <?php echo _l('ga_test_api'); ?></a></div></div></div></div></div></div><?php init_tail(); ?></body></html>

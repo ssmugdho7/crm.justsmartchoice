@@ -1,0 +1,1 @@
+Superman v1.2.5: separated visual builder field groups, added collapsible source banks, improved preview modal, added contractor/subcontractor/CRM contract/proposal/project/customer/sales hub/purchasing field separation, updated UI alignment, and kept migration bridge sequence intact.

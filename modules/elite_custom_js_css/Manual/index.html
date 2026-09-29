@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Elite Custom JS and CSS</title>
+        <style type="text/css">
+			body{
+				font-size: 15px;
+				font-family: "Arial", "Verdana";
+				line-height: 1.8;
+				color: #333;
+			}
+			#live-preview{
+				width: 900px;
+				margin: 100px auto 0 auto;
+				text-align: center;
+				color: #333;
+				font-size: 15px;
+				text-shadow:1px 1px 1px #fff;
+			}
+			p{
+				margin: 0px 0px 20px 0px;
+			}
+			.heading{
+				font-size: 22px;
+				margin: 10px 0;
+				color: #333;
+			}
+			.cta{
+				text-decoration: none;
+				display: inline-block;
+				color: #fff;
+				background: #333;
+				text-shadow: 1px 1px 1px #000;
+				line-height: 1;
+				padding: 10px 15px;
+				margin: 0 10px 10px 10px;
+				border-radius: 4px;
+			}
+			.social-links a{
+				text-decoration: none;
+				display: inline-block;
+				color: #333;
+			}
+			.wp-elite-rotating-plane {
+				width: 90px;
+				height: 60px;
+				background-color: #d35400;
+				margin: 28px auto;
+				-webkit-animation: wp-elite-rotatePlane 1.2s infinite ease-in-out;
+				animation: wp-elite-rotatePlane 1.2s infinite ease-in-out; 
+			}
+			@-webkit-keyframes wp-elite-rotatePlane {
+				0% {
+					-webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+					transform: perspective(120px) rotateX(0deg) rotateY(0deg); 
+				}
+				50% {
+					-webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+					transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg); 
+				}
+				100% {
+					-webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+					transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg); 
+				} 
+			}
+			@keyframes wp-elite-rotatePlane {
+				0% {
+					-webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+					transform: perspective(120px) rotateX(0deg) rotateY(0deg); 
+				}
+				50% {
+					-webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+					transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg); 
+				}
+				100% {
+					-webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+					transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg); 
+				} 
+			}
+        </style>
+        <script>
+        	setTimeout(function(){
+        		window.location = 'http://documents.wpeliteplugins.com/elite-custom-js-and-css/';
+        	}, 3000);
+        </script>
+    </head>
+    <body>
+		<section id="live-preview">
+			<p><img src="http://documents.wpeliteplugins.com/assets/images/wpeliteplugins-logo.png" alt=""></p>
+			<p>
+				<i>Redirecting to documentation, please wait...</i>
+			</p>
+			<div class="wp-elite-rotating-plane"></div>
+		</section>
+    </body>
+</html>

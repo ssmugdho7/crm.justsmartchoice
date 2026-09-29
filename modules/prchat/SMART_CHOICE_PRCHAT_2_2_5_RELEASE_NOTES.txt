@@ -1,0 +1,9 @@
+PRChat 2.2.5
+
+Repair scope:
+- Preserve all PRChat 2.2.4 bootstrap and clean-JSON fixes.
+- Load active staff even when legacy per-user PRChat permission rows are missing.
+- Make staff-row opening reliable for numeric staff IDs.
+- Allow staff/group/client list endpoints to run without mandatory Pusher initialization.
+- Harden groups and clients list JSON parsing and offline fallback.
+- Preserve all messages, groups, clients, settings, credentials, uploads, and schema data.

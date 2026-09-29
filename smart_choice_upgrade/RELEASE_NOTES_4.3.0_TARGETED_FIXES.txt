@@ -1,0 +1,14 @@
+Smart Choice CRM 4.3.0 — targeted repairs only
+
+- Project admin/member file upload permission and shared-hosting filesystem fallback.
+- Invoice quantity/unit/rate editor alignment and compact invoice table rows.
+- Customer profile badges count all linked records instead of only open/incomplete subsets.
+- Contract delete redirects safely instead of returning to a deleted public contract URL.
+- Selectable bulk-delete controls for invoices, estimates, proposals, contracts, credit notes and payments.
+- Shared Google Map link field and carry-forward synchronization across customer/lead/sales/project records.
+- Google Solar/Geocoding settings integrated into Setup > Settings > Google for Solar Pro compatibility.
+- Mobile sidebar and horizontal-page-overflow repairs.
+- Staff self-profile expanded for company email, compensation, banking, employment and emergency information.
+- Google Meet 1.2.1 bundled with selector-rendering recovery.
+
+No unrelated feature, API, payment configuration, module data, or existing migration is removed.

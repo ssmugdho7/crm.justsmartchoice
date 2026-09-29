@@ -1,0 +1,7 @@
+Smart Choice CRM 3.7.3
+- Sales labels/icons normalized
+- Proposal preview item drag ordering
+- Contract signing 500 repair
+- Merge fields toggle repair
+- Media attachment preview and submission repair
+- Customer portal responsive navigation and branding

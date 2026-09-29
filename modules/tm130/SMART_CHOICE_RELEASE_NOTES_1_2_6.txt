@@ -1,0 +1,22 @@
+Training Manual v1.2.6 - Smart Choice Repair
+
+Fixed:
+- Creator display now reads from tblstaff through wiki_articles.author_id.
+- Change Creator now updates author_id, created_by, updated_by, and audit columns.
+- Article cards no longer show Unknown Creator when a valid staff creator exists.
+- Added staff creator avatar support on article cards.
+- Logo inside training article view now returns to Training Manual Articles instead of Dashboard.
+- Added article toolbar: Home, Print, Copy Link, Edit.
+- Added article metadata row: creator, book, created date, updated date.
+- Added related training articles section.
+- Added Clone Article backend support for existing Clone buttons.
+- Added uninstall cleanup hook for module tables, options, uploads/training_manual, and generated mindmap storage.
+- Added migration 126_version_126.php.
+- Updated module version to 1.2.6.
+- PHP 8.5 syntax validation passed.
+
+Upload location:
+public_html/crm.justsmartchoice/modules/
+
+Folder structure:
+training_manual/

@@ -1,0 +1,19 @@
+Purchasing Hub v1.0.1 - Smart Choice Contractors USA / Harold Cabrera
+
+Install as a NEW module folder:
+modules/purchasing_hub/
+
+Recommended steps:
+1. Make a full database backup before activating.
+2. Upload the purchasing_hub folder to public_html/crm.justsmartchoice/modules/.
+3. Activate Purchasing Hub from Modules.
+4. Run Upgrade Database.
+5. Clear public_html/crm.justsmartchoice/application/cache/ except index.html.
+6. Press Ctrl + F5.
+7. Open Purchasing Hub > Help / Training.
+
+Important:
+- This module is renamed to purchasing_hub to avoid old module_name/version conflicts.
+- It preserves the original purchase database table names starting with tblpur_ to avoid data loss.
+- Do not drop old purchase tables unless you have a verified backup and confirm the old module is no longer needed.
+- The old migrations are stored in migrations_legacy_disabled/ and will not run.

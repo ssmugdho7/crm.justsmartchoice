@@ -1,0 +1,236 @@
+.smartsource-panel {
+    border-radius: 12px;
+    box-shadow: 0 12px 28px rgba(0,0,0,.08);
+    border-top: 4px solid #169179;
+}
+.smartsource-panel .panel-body { padding: 24px; }
+.smartsource-stats-row { margin-bottom: 15px; }
+.smartsource-stat {
+    background:#ffffff;
+    border:1px solid #e5e7eb;
+    border-left:5px solid #169179;
+    border-radius:10px;
+    padding:15px;
+    min-height:88px;
+    box-shadow:0 8px 20px rgba(0,0,0,.06);
+    margin-bottom:12px;
+}
+.smartsource-stat strong { display:block; font-size:22px; color:#111827; line-height:1.2; }
+.smartsource-stat span { display:block; color:#6b7280; font-size:12px; font-weight:700; text-transform:uppercase; }
+.smartsource-stat.warning { border-left-color:#f59e0b; }
+.smartsource-stat.danger { border-left-color:#ef4444; }
+.smartsource-stat.muted { border-left-color:#6b7280; }
+.smartsource-table .btn { margin-bottom:3px; }
+.smartsource-trash-row { background:#f9fafb; opacity:.82; }
+.smartsource-contract-content { background:#fff; border:1px solid #e5e7eb; border-radius:10px; padding:22px; line-height:1.7; }
+.smartsource-help h2 { font-weight:800; color:#169179; }
+.smartsource-help h3 { margin-top:24px; font-weight:800; color:#111827; border-left:4px solid #169179; padding-left:10px; }
+.smartsource-help p { line-height:1.75; font-size:15px; }
+@media(max-width:767px){
+    .smartsource-panel .panel-body { padding:16px; }
+    .smartsource-table .btn { display:block; width:100%; margin-bottom:5px; }
+}
+
+/* Smart Choice CRM polish: clean cards, responsive statistics, and title-case presentation */
+.smartsource-stat {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+}
+.smartsource-stat strong {
+    word-break: break-word;
+    font-size: clamp(18px, 1.6vw, 24px);
+}
+.smartsource-stat span {
+    font-size: clamp(10px, .85vw, 12px);
+    line-height: 1.25;
+    white-space: normal;
+    word-break: normal;
+}
+.smartsource-panel h4,
+.smartsource-panel h3,
+.smartsource-panel h2 {
+    text-transform: capitalize;
+}
+.smartsource-table th,
+.smartsource-table td {
+    vertical-align: middle !important;
+}
+.smartsource-table .btn-sm {
+    border-radius: 6px;
+    font-weight: 600;
+}
+@media(max-width:991px){
+    .smartsource-stats-row .col-md-2,
+    .smartsource-stats-row .col-md-3 {
+        width: 50%;
+        float: left;
+    }
+}
+@media(max-width:600px){
+    .smartsource-stats-row .col-md-2,
+    .smartsource-stats-row .col-md-3 {
+        width: 100%;
+        float: none;
+    }
+}
+
+.smartsource-action-buttons .btn{margin:2px 0 4px 4px;}
+.smartsource-signature-pad{border:2px dashed #cbd5e1;border-radius:10px;background:#fff;margin-bottom:10px;max-width:100%;overflow:hidden;}
+.smartsource-signature-pad canvas{width:100%;height:180px;touch-action:none;display:block;}
+.smartsource-signature-box{border:1px solid #e5e7eb;border-radius:10px;padding:15px;min-height:190px;background:#fff;box-shadow:0 8px 18px rgba(0,0,0,.06);}
+.smartsource-signature-image{max-width:100%;max-height:95px;border-bottom:1px solid #111827;padding:8px;background:#fff;}
+.smartsource-merge-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px;}
+.smartsource-merge-grid code{display:block;background:#f8fafc;border:1px solid #e5e7eb;border-radius:6px;padding:8px;color:#0057b8;}
+.smartsource-document-list{padding-left:18px;margin-top:8px;}
+.smartsource-document-list li{margin-bottom:6px;}
+@media(max-width:767px){.smartsource-action-buttons .btn{display:block;width:100%;margin:4px 0;}.smartsource-action-header{display:block!important;}}
+.smartsource-profile-photo{width:110px;height:110px;border-radius:50%;object-fit:cover;border:4px solid #ef8c25;box-shadow:0 12px 28px rgba(0,0,0,.18);background:#fff;}
+.smartsource-copy-link{font-size:12px;}
+
+/* Subcontractors v7 UI fixes */
+.smartsource-header-row{gap:12px;flex-wrap:wrap;}
+.smartsource-stat-link{display:block;text-decoration:none!important;color:inherit!important;}
+.smartsource-stat-link:hover .smartsource-stat{transform:translateY(-3px);box-shadow:0 14px 32px rgba(0,0,0,.18);}
+.smartsource-contract-preview{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:25px;box-shadow:0 10px 28px rgba(0,0,0,.08);line-height:1.65;}
+.smartsource-contract-preview h1,.smartsource-contract-preview h2,.smartsource-contract-preview h3{margin-top:12px;font-weight:800;}
+@media(max-width:767px){.smartsource-header-row{display:block!important}.smartsource-header-row>div:last-child{margin-top:12px}.smartsource-stat{margin-bottom:12px}.smartsource-table .btn{margin-bottom:4px}}
+
+
+/* Subcontractors v10 stability and UI fixes */
+.smartsource-module-nav{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px 0;padding:12px;background:#fff;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.08);border-left:5px solid #169179}
+.smartsource-module-nav a{display:inline-block;padding:8px 12px;border-radius:6px;background:#f5f7f6;color:#1f2937;font-weight:700;text-decoration:none;border:1px solid #e5e7eb;font-size:12px}
+.smartsource-module-nav a:hover,.smartsource-module-nav a.active{background:#169179;color:#fff;text-decoration:none;border-color:#169179}
+.smartsource-table .btn,.smartsource-data-table .btn{padding:3px 7px;font-size:11px;line-height:1.4;margin:1px;border-radius:4px}
+.smartsource-table .label,.smartsource-data-table .label{display:inline-block;min-width:74px;padding:5px 7px;font-size:11px;color:#fff !important;background:#169179 !important;text-align:center;border-radius:4px}
+.smartsource-table .label-info,.smartsource-data-table .label-info{background:#0057b8 !important;color:#fff !important}
+.smartsource-table .label-warning,.smartsource-data-table .label-warning{background:#ef8c25 !important;color:#fff !important}
+.smartsource-table .label-danger,.smartsource-data-table .label-danger{background:#dc2626 !important;color:#fff !important}
+.smartsource-actions{white-space:nowrap}
+.smartsource-contract-preview{background:#fff;border:1px solid #d7dde2;border-radius:8px;padding:24px;box-shadow:0 6px 18px rgba(0,0,0,.08);line-height:1.65;max-width:100%;overflow-x:auto}
+.smartsource-template-editor-wrap{width:100%}
+@media(max-width:767px){.smartsource-module-nav a{width:100%;text-align:center}.smartsource-header-row{display:block!important}.smartsource-header-row .btn{margin-top:6px}.smartsource-table .btn,.smartsource-data-table .btn{display:inline-block;margin-bottom:3px}}
+
+.smartsource-help-title{font-size:22px;font-weight:800;margin-top:0;color:#1f2937}
+
+
+/* V11 stability fixes */
+.smartsource-template-editor-wrap{opacity:0;transition:opacity .18s ease;min-height:520px;}
+.smartsource-template-editor-wrap.smartsource-editor-ready{opacity:1;}
+.smartsource-table{display:table !important;visibility:visible !important;opacity:1 !important;}
+.smartsource-table tbody{display:table-row-group !important;}
+.smartsource-table tr{display:table-row !important;}
+.smartsource-table td,.smartsource-table th{display:table-cell !important;}
+.smartsource-table .btn-sm{padding:3px 7px;font-size:11px;line-height:1.35;margin:1px;}
+.smartsource-test-panel .form-control{margin-bottom:8px;}
+
+
+/* V12 final stability and UI polish */
+.smartsource-portal-enabled-box{margin-top:28px;padding:8px 10px;background:#f8fafc;border:1px solid #e5e7eb;border-radius:8px;}
+.smartsource-portal-enabled-box label{font-weight:700;color:#1f2937;}
+.smartsource-contract-actions,.smartsource-table td:last-child{min-width:190px;}
+.smartsource-table .btn,.smartsource-data-table .btn{padding:2px 6px!important;font-size:10.5px!important;line-height:1.25!important;margin:1px!important;}
+.smartsource-table .btn i,.smartsource-data-table .btn i{margin-right:2px;}
+.smartsource-table .label{font-weight:700;text-shadow:none;}
+@media(max-width:767px){.smartsource-portal-enabled-box{margin-top:0}.smartsource-contract-actions,.smartsource-table td:last-child{min-width:auto}}
+
+/* Subcontractors v13 final table/action/filter polish */
+.smartsource-filter-box{background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px;padding:12px;margin:12px 0 18px;}
+.smartsource-filter-box .form-control{margin-bottom:8px;}
+.smartsource-actions,.smartsource-contract-actions{white-space:nowrap!important;min-width:270px!important;display:flex;flex-wrap:nowrap;gap:3px;align-items:center;}
+.smartsource-actions .btn,.smartsource-contract-actions .btn{display:inline-flex!important;align-items:center;justify-content:center;width:auto!important;white-space:nowrap!important;margin:0!important;}
+.smartsource-table td:last-child{white-space:nowrap!important;min-width:270px!important;}
+.smartsource-help-edit-card{border:1px solid #e5e7eb;border-radius:12px;padding:18px;margin-bottom:18px;background:#ffffff;box-shadow:0 8px 22px rgba(0,0,0,.06);}
+.smartsource-help-edit-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;border-bottom:1px solid #eef2f7;padding-bottom:10px;}
+.smartsource-help-preview-section{border-left:4px solid #169179;padding:10px 14px;margin-bottom:16px;background:#f8fafc;border-radius:8px;}
+@media(max-width:991px){.smartsource-actions,.smartsource-contract-actions{flex-wrap:wrap!important;min-width:220px!important}.smartsource-table td:last-child{min-width:220px!important}}
+
+/* v2.5.0 Help Guide collapsed editor */
+.smartsource-help-view-card{
+    background:#ffffff;
+    border:1px solid #e5e7eb;
+    border-radius:12px;
+    padding:18px;
+    margin-bottom:16px;
+    box-shadow:0 8px 22px rgba(15,23,42,.06);
+}
+.smartsource-help-view-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    border-bottom:1px solid #edf0f2;
+    padding-bottom:12px;
+    margin-bottom:14px;
+}
+.smartsource-help-view-header h4{
+    margin:0;
+    font-weight:800;
+    color:#111827;
+}
+.smartsource-help-actions{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+}
+.smartsource-help-edit-card{
+    background:#f8faf9;
+    border:1px dashed #cbd5e1;
+    border-radius:10px;
+    padding:15px;
+    margin-top:14px;
+}
+@media(max-width:767px){
+    .smartsource-help-view-header{display:block;}
+    .smartsource-help-actions{margin-top:12px;}
+}
+
+/* v2.7.0 persistent subcontractor application alert */
+.smartsource-application-alert-box{position:fixed;right:24px;bottom:24px;width:390px;max-width:calc(100vw - 40px);background:#ffffff;border:2px solid #ef8c25;border-radius:14px;box-shadow:0 20px 50px rgba(15,23,42,.28);z-index:99999;display:none;overflow:hidden;}
+.smartsource-application-alert-box.active{display:block;animation:smartsourceAlertPulse .9s ease-in-out 0s 2;}
+.smartsource-alert-head{background:linear-gradient(135deg,#169179,#0057b8);color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;font-size:14px;}
+.smartsource-alert-close{background:rgba(255,255,255,.18);border:0;color:#fff;border-radius:50%;width:26px;height:26px;line-height:20px;font-size:20px;font-weight:800;}
+.smartsource-alert-body{padding:12px;max-height:360px;overflow:auto;}
+.smartsource-alert-item{background:#f8fafc;border-left:5px solid #ef8c25;border-radius:10px;padding:12px;margin-bottom:10px;}
+.smartsource-alert-title{font-weight:800;color:#111827;margin-bottom:4px;}
+.smartsource-alert-message{font-size:13px;color:#374151;margin-bottom:10px;line-height:1.45;}
+.smartsource-alert-actions{display:flex;gap:6px;flex-wrap:wrap;}
+@keyframes smartsourceAlertPulse{0%{transform:scale(1)}50%{transform:scale(1.025)}100%{transform:scale(1)}}
+
+/* Smart Choice CRM Contract Integration v2.8.0 */
+.smartsource-action-header{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}.smartsource-action-buttons{display:flex;gap:6px;flex-wrap:wrap}.smartsource-action-buttons .btn{margin-bottom:4px}.smartsource-contract-paper{background:#fff;border:1px solid #ddd;padding:30px;box-shadow:0 6px 18px rgba(0,0,0,.08)}.smartsource-contract-paper p{text-align:justify}.smartsource-contract-paper h1,.smartsource-contract-paper h2,.smartsource-contract-paper h3{color:#245f46}.smartsource-page-break{border-top:2px dashed #d8d8d8;margin:30px 0}.ssc-cover-page{background:linear-gradient(135deg,#173c2e,#5d8f6d);color:#fff;min-height:480px;display:flex;align-items:center;justify-content:center;text-align:center;padding:40px}.ssc-cover-card{border:2px solid rgba(255,255,255,.45);padding:35px;background:rgba(255,255,255,.08);width:80%}.ssc-cover-card h1,.ssc-cover-card h2{color:#fff}.smartsource-signature-box{border:1px solid #d8d8d8;border-radius:6px;padding:15px;min-height:180px;background:#fbfbfb}.smartsource-contract-actions .btn,.smartsource-action-buttons .btn{border-radius:4px}.smartsource-merge-grid{display:flex;flex-wrap:wrap;gap:8px}.smartsource-merge-grid code{padding:6px 8px;background:#f4f4f4;border-radius:4px;color:#245f46}
+
+/* v2.8.1 Contract workspace repair */
+.smartsource-contract-topbar{border-left:5px solid #169179;border-radius:12px;box-shadow:0 8px 22px rgba(15,23,42,.08);margin-bottom:15px}
+.smartsource-contract-topbar-inner{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.smartsource-contract-title-block h4{margin:0;font-weight:800;color:#111827}.smartsource-contract-title-block p{margin:4px 0 0}
+.smartsource-contract-quick-actions-top{display:flex;justify-content:flex-end;align-items:center;gap:5px;flex-wrap:wrap;max-width:760px}
+.smartsource-contract-quick-actions-top .btn{padding:5px 9px!important;font-size:11.5px!important;line-height:1.35!important;margin:0!important;border-radius:5px!important}
+.smartsource-admin-digital-paper{background:#fff;border:1px solid #d7dde2;border-radius:10px;padding:24px;box-shadow:0 6px 18px rgba(0,0,0,.08);line-height:1.7;overflow:hidden}
+.smartsource-admin-digital-paper p{text-align:justify}.smartsource-side-card{position:sticky;top:80px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:14px;box-shadow:0 8px 20px rgba(0,0,0,.07)}
+.smartsource-side-card h4{margin-top:0;font-weight:800}.smartsource-side-card .btn{padding:6px 8px!important;font-size:11.5px!important;margin-bottom:5px!important}
+.smartsource-admin-digital-paper .ssc-cover-page,.smartsource-contract-preview .ssc-cover-page{min-height:auto!important;padding:28px!important;margin-bottom:18px!important}.smartsource-admin-digital-paper .ssc-cover-card{padding:22px!important}.smartsource-admin-digital-paper .ssc-cover-logo{max-height:90px;max-width:300px;background:#fff;border-radius:10px;padding:8px;margin:0 auto 12px;display:block}.smartsource-internal-note{border-left:4px solid #111827;background:#f8fafc}.smartsource-customer-comment{border-left:4px solid #169179;background:#f7fbf8}
+@media(max-width:991px){.smartsource-contract-topbar-inner{display:block}.smartsource-contract-quick-actions-top{justify-content:flex-start;margin-top:10px}.smartsource-contract-quick-actions-top .btn{margin:2px!important}.smartsource-side-card{position:static;margin-top:14px}}
+
+
+/* v2.8.2 Contract CRM integration polish */
+.smartsource-split-workspace .panel_s{border-radius:10px}.smartsource-left-list .panel-body{min-height:220px}.smartsource-right-preview{float:right}.smartsource-bulk-toolbar{background:#f8fafc;border:1px solid #e5e7eb;border-radius:8px;padding:9px;margin-bottom:10px}.smartsource-summary-card{border:1px solid #e5e7eb;border-radius:10px;background:#fff;padding:16px;margin-bottom:15px;min-height:210px}.smartsource-summary-card h4{margin-top:0;color:#173c2e;font-weight:800}.smartsource-comment{border:1px solid #e5e7eb;border-radius:8px;padding:11px;margin-bottom:9px}.smartsource-contract-quick-actions-top .btn-group{display:inline-block}.smartsource-contract-quick-actions-top .dropdown-menu{font-size:12px}.smartsource-contract-actions .dropdown-menu{font-size:12px}.smartsource-data-table th:first-child,.smartsource-data-table td:first-child{text-align:center}.smartsource-action-buttons .btn,.smartsource-bulk-toolbar .btn{padding:5px 9px!important;font-size:11.5px!important}.smartsource-contract-actions{min-width:215px!important;gap:3px!important}.smartsource-table td:last-child{min-width:215px!important}.smartsource-admin-digital-paper{max-height:72vh;overflow:auto}.smartsource-admin-digital-paper .ssc-cover-page{min-height:auto!important;padding:18px!important}.smartsource-admin-digital-paper .ssc-cover-card{padding:16px!important;width:92%!important}.smartsource-admin-digital-paper .ssc-cover-card h1{font-size:24px!important}.smartsource-admin-digital-paper .ssc-cover-card h2{font-size:18px!important}.smartsource-admin-digital-paper .ssc-cover-logo{max-height:70px!important}.smartsource-admin-digital-paper p{text-align:justify!important}.smartsource-contract-topbar{position:sticky;top:0;z-index:20}@media(max-width:991px){.smartsource-left-list{display:none}.smartsource-right-preview{width:100%;float:none}.smartsource-contract-topbar{position:static}.smartsource-admin-digital-paper{max-height:none}}
+
+
+/* Smart Choice 3.2.9 targeted repair */
+.smartsource-table th:first-child,
+.smartsource-table td:first-child,
+.smartsource-data-table th:first-child,
+.smartsource-data-table td:first-child { text-align:left !important; }
+.smartsource-module-brand{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:10px 14px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.smartsource-module-brand img{max-height:46px;max-width:190px;object-fit:contain}
+.smartsource-module-brand strong,.smartsource-module-brand span{display:block}
+.smartsource-module-brand span{font-size:12px;color:#6b7280}
+.smartsource-module-footer{margin-top:18px;padding:14px;text-align:center;color:#6b7280;border-top:1px solid #e5e7eb;font-size:12px}
+.smartsource-template-editor-wrap{opacity:1!important;visibility:visible!important;min-height:420px}
+.smartsource-template-editor-wrap .mce-tinymce,.smartsource-template-editor-wrap .tox-tinymce{display:block!important}
+
+/* 3.3.2: business and contract names must remain left aligned. */
+.smartsource-subcontractors-table td,.smartsource-subcontractors-table th,.table-subcontractors td,.table-subcontractors th,.table-contracts td,.table-contracts th{vertical-align:middle;}
+.smartsource-subcontractors-table td.company,.smartsource-subcontractors-table td.contract-name,.table-subcontractors td:nth-child(2),.table-contracts td:nth-child(2){text-align:left!important;}

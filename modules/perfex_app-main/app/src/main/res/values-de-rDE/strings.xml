@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="true">Perfex-App</string>
+    <string name="tab_dashboard" translatable="true">Armaturenbrett</string>
+    <string name="tab_customers" translatable="false">Kunden</string>
+    <string name="tab_projects" translatable="false">Projekte</string>
+    <string name="tab_tasks" translatable="false">Aufgaben</string>
+    <string name="tab_support" translatable="false">Die Unterstützung</string>
+    <string name="tab_leads" translatable="false">Führt</string>
+    <string name="tab_profile" translatable="false">Profil</string>
+    <string name="tab_task" translatable="false">Aufgabe</string>
+    <string name="tab_reminders" translatable="false">Erinnerungen</string>
+    <string name="tab_notes" translatable="false">Anmerkungen</string>
+    <string name="tab_activity_log" translatable="false">Aktivitätsprotokoll</string>
+    <string name="tab_contacts" translatable="false">Kontakte</string>
+    <string name="tab_invoices" translatable="false">Rechnungen</string>
+    <string name="tab_proposals" translatable="false">Vorschläge</string>
+    <string name="not_started" translatable="false">Nicht angefangen</string>
+    <string name="waiting_feedback" translatable="false">Erwarte Feedback</string>
+    <string name="testing" translatable="false">Testen</string>
+    <string name="in_progress" translatable="false">In Bearbeitung</string>
+    <string name="complete" translatable="false">Vollständig</string>
+    <string name="low_priority" translatable="false">Niedrig</string>
+    <string name="medium_priority" translatable="false">Mittel</string>
+    <string name="high_priority" translatable="false">Hoch</string>
+    <string name="urgent_priority" translatable="false">Dringend</string>
+    <string name="related_to_search" translatable="false">Suche</string>
+    <string name="related_to_lead" translatable="false">Das Blei</string>
+    <string name="related_to_customer" translatable="false">Kunde</string>
+    <string name="days" translatable="false">Tage</string>
+    <string name="weeks" translatable="false">Wochen</string>
+    <string name="months" translatable="false">Monat(e</string>
+    <string name="years" translatable="false">Jahre</string>
+    <string name="one_week" translatable="false">1 Woche</string>
+    <string name="two_weeks" translatable="false">2 Wochen</string>
+    <string name="one_month" translatable="false">1 Monat</string>
+    <string name="two_months" translatable="false">2 Monate</string>
+    <string name="three_months" translatable="false">3 Monate</string>
+    <string name="six_months" translatable="false">6 Monate</string>
+    <string name="one_year" translatable="false">1 Jahr</string>
+    <string name="custom_repeat" translatable="false">Benutzerdefiniert</string>
+    <string name="company_name" translatable="false">Name der Firma</string>
+    <string name="start_timer" translatable="false">Timer starten</string>
+    <string name="recurring" translatable="false">Wiederkehrend</string>
+    <string name="stop_timer" translatable="false">Timer stoppen</string>
+    <string name="add_lead" translatable="false">Blei hinzufügen</string>
+    <string name="add_reminder" translatable="false">Erinnerung hinzufügen</string>
+    <string name="add_notes" translatable="false">Notizen hinzufügen</string>
+    <string name="field_required" translatable="false">Dieses Feld wird benötigt</string>
+    <string name="contacted_today" translatable="false">Heute kontaktiert</string>
+    <string name="first_name" translatable="false">Vorname</string>
+    <string name="last_name" translatable="false">Familienname, Nachname</string>
+    <string name="send_set_password_email" translatable="false">Senden Sie eine SET-Passwort-E-Mail</string>
+    <string name="do_not_send_welcome_email" translatable="false">Senden Sie keine Willkommens-E-Mail</string>
+    <string name="related_to_type" translatable="false">Bezüglich</string>
+    <string name="hourly_rate" translatable="false">Stundensatz</string>
+    <string name="due_date" translatable="false">Geburtstermin</string>
+    <string name="helper_source" translatable="false">Bitte Quelle auswählen</string>
+    <string name="helper_assigned" translatable="false">Weisen Sie einen Mitarbeiter zu</string>
+    <string name="zero" translatable="false">0</string>
+    <string name="search_here" translatable="false">Suche</string>
+    <string name="add_customer" translatable="false">Kunde hinzufügen</string>
+    <string name="date" translatable="false">Datum</string>
+    <string name="start_date_and_end_date" translatable="false">%s - %s</string>
+    <string name="call_duration_with_date" translatable="false">%s %s:%s:%s</string>
+    <string name="add" translatable="false">Hinzufügen</string>
+    <string name="delete" translatable="false">Löschen</string>
+    <string name="start_date" translatable="false">Anfangsdatum</string>
+    <string name="update" translatable="false">Aktualisieren</string>
+    <string name="profile" translatable="false">Profil</string>
+    <string name="address" translatable="false">Die Anschrift</string>
+    <string name="choose_file" translatable="false">Datei wählen</string>
+    <string name="channel_name" translatable="false">Benachrichtigung importieren</string>
+    <string name="channel_description" translatable="false">Diese Benachrichtigung wird angezeigt, wenn Sie eine Benachrichtigung im CRM erhalten</string>
+    <string name="welcome_to_perfex_crm" translatable="false">Willkommen bei perfex CRM</string>
+    <string name="login" translatable="false">Anmeldung</string>
+    <string name="good" translatable="false">Gut</string>
+    <string name="morning" translatable="false">Morgen</string>
+    <string name="email" translatable="false">Email</string>
+    <string name="password" translatable="false">Passwort</string>
+    <string name="sign_in" translatable="false">Einloggen</string>
+    <string name="forgot_password" translatable="false">Passwort vergessen</string>
+    <string name="settings" translatable="false">Einstellungen</string>
+    <string name="logout" translatable="false">Ausloggen</string>
+    <string name="notification" translatable="false">Benachrichtigung</string>
+    <string name="notifications" translatable="false">Benachrichtigungen</string>
+    <string name="add_leads" translatable="false">Blei hinzufügen</string>
+    <string name="total_0" translatable="false">Gesamt: 0</string>
+    <string name="filtered_0" translatable="false">Gefiltert: 0</string>
+    <string name="total_count" translatable="false">Insgesamt: %d</string>
+    <string name="total_filtered" translatable="false">Gefiltert: %d</string>
+    <string name="dial_call" translatable="false">Anruf wählen</string>
+    <string name="customer_image" translatable="false">Kundenbild</string>
+    <string name="edit" translatable="false">Bearbeiten</string>
+    <string name="back_btn" translatable="false">Der Rücken</string>
+    <string name="convert" translatable="false">Konvertieren</string>
+    <string name="task_title" translatable="false">#%s - %s</string>
+    <string name="name_text" translatable="false">Name</string>
+    <string name="position_text" translatable="false">Position</string>
+    <string name="email_address" translatable="false">"Email</string>
+    <string name="website_text" translatable="false">Webseite</string>
+    <string name="phone_text" translatable="false">Telefonnummer</string>
+    <string name="lead_value_text" translatable="false">LeadWert</string>
+    <string name="company_text" translatable="false">Unternehmen</string>
+    <string name="address_text" translatable="false">Die Anschrift</string>
+    <string name="city_text" translatable="false">Stadt</string>
+    <string name="state_text" translatable="false">Zustand</string>
+    <string name="country_text" translatable="false">Land</string>
+    <string name="zip_code_text" translatable="false">Postleitzahl</string>
+    <string name="description_text" translatable="false">Beschreibung</string>
+    <string name="general_information" translatable="false">Allgemeine Informationen</string>
+    <string name="status_text" translatable="false">Status</string>
+    <string name="source_text" translatable="false">Quelle</string>
+    <string name="default_language_text" translatable="false">Standardsprache</string>
+    <string name="assigned" translatable="false">Zugewiesen</string>
+    <string name="created" translatable="false">Erstellt</string>
+    <string name="last_contact" translatable="false">Letzter Kontakt</string>
+    <string name="public_text" translatable="false">Öffentlich</string>
+    <string name="lead_information" translatable="false">Lead-Informationen</string>
+    <string name="yes" translatable="false">Ja</string>
+    <string name="no" translatable="false">Nein</string>
+    <string name="add_task" translatable="false">Aufgabe hinzufügen</string>
+    <string name="please_select_priority" translatable="false">Bitte Priorität auswählen</string>
+    <string name="subject" translatable="false">Bitte Betreff eingeben</string>
+    <string name="repeat_every" translatable="false">Wiederhole jeden</string>
+    <string name="billable" translatable="false">Abrechenbar</string>
+    <string name="not_billable" translatable="false">Nicht abrechenbar</string>
+    <string name="total_cycles" translatable="false">Total Cycles(0) für unendlich</string>
+    <string name="repeat_every_custom_count" translatable="false">Anzahl eingeben</string>
+    <string name="description" translatable="false">Bitte Beschreibung eingeben</string>
+    <string name="date_time_string" translatable="false">%s-%s-%s</string>
+    <string name="lead_touched" translatable="false">Ich habe mich mit diesem Lead in Verbindung gesetzt</string>
+    <string name="select_date" translatable="false">Bitte Datum auswählen</string>
+    <string name="save" translatable="false">Speichern</string>
+    <string name="close" translatable="false">Nah dran</string>
+    <string name="data_with_title" translatable="false">%s: %s</string>
+    <string name="send_email_for_reminder" translatable="false">E-Mail zur Erinnerung senden</string>
+    <string name="notified" translatable="false">Benachrichtigt: %s</string>
+    <string name="set_date" translatable="false">Datum auswählen</string>
+    <string name="add_log" translatable="false">Protokoll hinzufügen</string>
+    <string name="convert_to_customer" translatable="false">In Kunde umwandeln</string>
+    <string name="position" translatable="false">Position</string>
+    <string name="company" translatable="false">Name der Firma</string>
+    <string name="phone" translatable="false">Telefonnummer</string>
+    <string name="website" translatable="false">Webseite</string>
+    <string name="city" translatable="false">Stadt</string>
+    <string name="state" translatable="false">Zustand</string>
+    <string name="helper_country" translatable="false">Bitte Land auswählen</string>
+    <string name="zip_code" translatable="false">Postleitzahl</string>
+    <string name="helper_status" translatable="false">Bitte Status auswählen</string>
+    <string name="lead_value" translatable="false">Lead-Wert</string>
+    <string name="is_public" translatable="false">Ist öffentlich</string>
+    <string name="no_internet" translatable="false">Internet nicht verfügbar</string>
+    <string name="customer_details" translatable="false">Kundendetails</string>
+    <string name="vat_number" translatable="false">Umsatzsteuer-Identifikationsnummer</string>
+    <string name="billing_address" translatable="false">Rechnungsadresse</string>
+    <string name="sameAsCustomerInfo" translatable="false">Kopie vom Kunden</string>
+    <string name="street" translatable="false">Straße</string>
+    <string name="shipping_address" translatable="false">Versand</string>
+    <string name="sameAsBillingAddress" translatable="false">Kopieren Sie die Rechnungsinformationen</string>
+    <string name="save_and_create_contact" translatable="false">Speichern, Kontakt erstellen</string>
+    <string name="select_groups" translatable="false">Gruppen auswählen</string>
+    <string name="groups" translatable="false">Gruppen</string>
+    <string name="currency" translatable="false">Währung</string>
+    <string name="billing" translatable="false">Abrechnung</string>
+    <string name="shipping" translatable="false">Versand</string>
+    <string name="add_contact" translatable="false">Kontakt hinzufügen</string>
+    <string name="primary_contact" translatable="false">Hauptansprechpartner</string>
+    <string name="do_not_set_welcome_email" translatable="false">Senden Sie keine Willkommens-E-Mail</string>
+    <string name="permissions" translatable="false">Berechtigungen</string>
+    <string name="email_notifications" translatable="false">E-Mail Benachrichtigungen</string>
+    <string name="estimate" translatable="false">Schätzen</string>
+    <string name="credit_note" translatable="false">Gutschrift</string>
+    <string name="tickets" translatable="false">Eintrittskarten</string>
+    <string name="contract" translatable="false">Vertrag</string>
+    <string name="finished" translatable="false">Fertig bearbeitet</string>
+    <string name="not_finished" translatable="false">Nicht beendet</string>
+    <string name="add_support" translatable="false">Unterstützung hinzufügen</string>
+    <string name="view_public_form" translatable="false">Öffentliches Formular anzeigen</string>
+    <string name="not_available" translatable="false">N / A</string>
+    <string name="status_open" translatable="false">Offen</string>
+    <string name="status_in_progress" translatable="false">In Bearbeitung</string>
+    <string name="status_answered" translatable="false">Antwortete</string>
+    <string name="status_on_hold" translatable="false">In Wartestellung</string>
+    <string name="closed" translatable="false">Abgeschlossen</string>
+    <string name="add_ticket" translatable="false">Ticket hinzufügen</string>
+    <string name="helper_contact" translatable="false">Bitte Kontakt auswählen</string>
+    <string name="name" translatable="false">Name</string>
+    <string name="please_select_department" translatable="false">Bitte Abteilung auswählen</string>
+    <string name="cc" translatable="false">CC eingeben</string>
+    <string name="ticket_body" translatable="false">Ticketkörper</string>
+    <string name="predefined_replies" translatable="false">Vordefinierte Antworten</string>
+    <string name="knowledge_base_link" translatable="false">KnowledgeBase-Link</string>
+    <string name="ticket_without_contact" translatable="false">Ticket ohne Kontakt</string>
+    <string name="select_service" translatable="false">Dienst auswählen</string>
+    <string name="edit_ticket" translatable="false">Ticket bearbeiten</string>
+    <string name="converted_leads" translatable="false">Konvertierte Leads</string>
+    <string name="add_reply" translatable="false">Antwort hinzufügen</string>
+    <string name="reply" translatable="false">Antwort</string>
+    <string name="tasks_not_finished" translatable="false">Aufgaben Nicht erledigt</string>
+    <string name="open_tickets" translatable="false">Offene Eintrittskarten</string>
+    <string name="active_customers" translatable="false">Aktive Kunden</string>
+    <string name="active_contacts" translatable="false">Aktive Kontakte</string>
+    <string name="high_priority_tickets" translatable="false">Tickets mit hoher Priorität</string>
+    <string name="low_priority_tickets" translatable="false">Tickets mit niedriger Priorität</string>
+    <string name="mid_priority_tickets" translatable="false">Tickets mit mittlerer Priorität</string>
+    <string name="tickets_without_contact" translatable="false">Tickets ohne Kontakt</string>
+    <string name="inactive_contacts" translatable="false">Inaktive Kontakte</string>
+    <string name="dashboard_stats" translatable="false">%s/%s</string>
+    <string name="mark_as_read" translatable="false">als gelesen markieren</string>
+    <string name="sales" translatable="false">Verkauf</string>
+    <string name="title_activity_sales" translatable="false">Verkaufsaktivität</string>
+    <string name="home" translatable="false">Heim</string>
+    <string name="tab_items" translatable="false">Artikel</string>
+    <string name="add_proposals" translatable="false">Vorschlag hinzufügen</string>
+    <string name="tab_discussion" translatable="false">Diskussion</string>
+    <string name="subtotal" translatable="false">Zwischensumme</string>
+    <string name="discount" translatable="false">Rabatt</string>
+    <string name="tax" translatable="false">Steuer</string>
+    <string name="adjustment" translatable="false">Einstellung</string>
+    <string name="total" translatable="false">Gesamt</string>
+    <string name="staff_image" translatable="false">Mitarbeiterbild</string>
+    <string name="add_proposal" translatable="false">Vorschlag hinzufügen</string>
+    <string name="status_declined" translatable="false">Zurückgegangen</string>
+    <string name="status_accepted" translatable="false">Akzeptiert</string>
+    <string name="status_sent" translatable="false">Gesendet</string>
+    <string name="status_revised" translatable="false">Überarbeitet</string>
+    <string name="status_draft" translatable="false">Luftzug</string>
+    <string name="open_till" translatable="false">Bis öffnen</string>
+    <string name="allow_comments" translatable="false">Kommentare erlauben</string>
+    <string name="status" translatable="false">Status</string>
+    <string name="to" translatable="false">Zu</string>
+    <string name="search_leads" translatable="false">Such-Leads</string>
+    <string name="search_customers" translatable="false">Kunden suchen</string>
+    <string name="qty" translatable="false">Menge</string>
+    <string name="hours" translatable="false">Std</string>
+    <string name="qty_by_hours" translatable="false">Menge/Stunden</string>
+    <string name="show_quantity_as" translatable="false">Menge anzeigen als</string>
+    <string name="item" translatable="false">Artikel</string>
+    <string name="long_description" translatable="false">Lange Beschreibung</string>
+    <string name="rate" translatable="false">Rate</string>
+    <string name="remove" translatable="false">Entfernen</string>
+    <string name="Sub_total_0" translatable="false">Zwischensumme: 0</string>
+    <string name="select_taxes" translatable="false">Wählen Sie Steuern aus</string>
+    <string name="select_language" translatable="false">Sprache auswählen</string>
+    <string name="english_lang" translatable="false">Englisch</string>
+    <string name="hindi_lang" translatable="false">हिंदी</string>
+    <string name="bengali_lang" translatable="false">বাংলা</string>
+    <string name="german_lang" translatable="false">Deutsche</string>
+    <string name="portuguese_lang" translatable="false">Portugiesisch</string>
+    <string name="russian_lang" translatable="false">русский</string>
+    <string name="discount_type" translatable="false">Rabatttyp</string>
+    <string name="adjustment_amount" translatable="false">Einstellung</string>
+    <string name="percentage_symbol">%</string>
+
+    <string name="my_logged_time">Meine protokollierte Zeit</string>
+    <string name="hello_blank_fragment">Hallo leeres Fragment</string>
+    <string name="checklist_items">Punkte der Checkliste</string>
+    <string name="followers">Anhänger</string>
+    <string name="assignees">Beauftragte</string>
+    <string name="select_assignees">Wählen Sie Beauftragte aus</string>
+    <string name="select_followers">Wählen Sie Follower aus</string>
+    <string name="add_attachments">Anhang hinzufügen</string>
+    <string name="add_comment">Einen Kommentar hinzufügen</string>
+    <string name="confirm_deletion">Sind Sie sicher, dass Sie löschen möchten?</string>
+    <string name="add_checklist">Checkliste hinzufügen</string>
+    <string name="completed_by">Abgeschlossen von %s</string>
+    <string name="assigned_to">%s zugewiesen</string>
+    <string name="comment_added">Kommentar hinzugefügt</string>
+</resources>

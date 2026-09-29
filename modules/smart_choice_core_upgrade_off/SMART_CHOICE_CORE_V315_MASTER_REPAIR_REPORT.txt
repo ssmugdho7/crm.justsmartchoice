@@ -1,0 +1,18 @@
+Smart Choice Core Upgrade v3.1.5
+
+Included fixes:
+- Embedded smart_network_manager, perfex_office_theme, appointly, smart_installer_tracking, smart_choice_links.
+- Preserved prior embedded modules from v3.1.4.
+- Enabled Office Theme globally through core upgrade settings.
+- Added dropdown dedupe CSS/JS to reduce nested/double/triple scrollbars in selects.
+- Added Smart Installer Tracking + Appointly integration database bridge table.
+- Enabled client portal tracking option and one-hour appointment notification option placeholders.
+- Added Smart Choice Links star beside top search.
+- Added rounded Smart Choice success/error/warning alert styling.
+- Added compact Staff table alignment and email truncation fixes.
+- Added default icon settings section for main menu, submenu, and setup menu icons.
+- Enforced submenu icon fallback by JavaScript.
+- Kept global table tools: Import, Sample Header, Export, Reload, Mass Action.
+- Version updated to 3.1.5.
+- Quality retained as five stars.
+- PHP 8.5 syntax checked for modified files.

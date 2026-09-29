@@ -1,0 +1,24 @@
+Smart Choice Powerful Chat v2.0.8
+
+Fixes included:
+- Group photo upload now updates only the round group avatar/icon area.
+- Group photo persists in tblchatgroups.group_image while the group exists.
+- Existing group photo is replaced safely when a new one is uploaded.
+- Staff with delete permission/admin can right-click a group and delete the group photo.
+- Staff without delete permission cannot delete group photos.
+- Contact/group context menu includes Create Task.
+- Message/file right-click menu includes Create Task, Create Estimate, Create Proposal, and Email This Item.
+- Email This Item uses CRM email configuration and can attach uploaded chat files when available.
+- Group upload flow keeps CRM-allowed file extension support.
+- Migration 208 added.
+- Version updated to 2.0.8.
+- PHP syntax checked.
+
+Install:
+1. Replace modules/prchat/
+2. Run Setup > Modules > Powerful Chat > Upgrade Database
+3. Clear application/cache except index.html
+4. Press Ctrl + F5
+
+Important:
+Estimate and Proposal actions open the CRM create forms so staff can complete customer/project details safely.

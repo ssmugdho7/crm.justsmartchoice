@@ -1,0 +1,11 @@
+Google Meet v1.0.3
+
+Fixed:
+- google_meet text now displays as Google Meet.
+- Dashboard, menus, buttons, and labels use clean capitalization.
+- Create Meeting blank page fixed.
+- If Google Meet link is blank, fallback uses https://meet.google.com/new and saves the meeting.
+- Settings page now has working fields and saves options.
+- Added icon in menu.
+- English and Spanish language files included.
+- Migration 103 added.

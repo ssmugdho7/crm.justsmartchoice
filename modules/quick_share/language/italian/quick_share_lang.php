@@ -1,0 +1,49 @@
+<?php
+
+# Versione 1.0.0
+
+$lang['quick_share'] = 'QuickShare';
+$lang['quick_share_upload_title'] = 'QuickShare - Carica';
+$lang['upload_file'] = 'Carica File';
+$lang['enable_self_destruct_label'] = 'Attiva autodistruzione?';
+$lang['enable_self_destruct_tooltip'] = 'L\'upload si distruggerà automaticamente dopo il primo download del file';
+$lang['share_link_type_label'] = 'Come condividere il file?';
+$lang['share_link_type_tooltip'] = 'Puoi condividere l\'upload tramite email in modo che i destinatari ricevano un\'email o condividere tramite link copiando l\'URL e condividerlo con chi vuoi.';
+$lang['qs_send_using_email'] = 'Invia tramite email';
+$lang['qs_get_sharable_link'] = 'Ottieni un link condivisibile';
+$lang['qs_attach_file_placeholder'] = 'Allega File';
+$lang['qs_start_upload'] = 'Inizia Caricamento';
+$lang['qs_send_to_emails'] = 'Invia a indirizzi email';
+$lang['qs_protect_file_with_password_label'] = 'Proteggi l\'upload con una password';
+$lang['qs_protect_file_with_password_tooltip'] = 'Il tuo upload può essere scaricato solo inserendo una password.';
+$lang['qs_protect_email_list_tooltip'] = 'Puoi inviare il link a più indirizzi email separandoli con ",".';
+$lang['qs_table_file_path'] = 'Percorso del File';
+$lang['qs_table_file_size'] = 'Dimensione del File';
+$lang['qs_table_file_status'] = 'Stato del File';
+$lang['qs_table_file_created_at'] = 'Creato il';
+$lang['qs_table_file_auto_destroy'] = 'Auto-Distruzione';
+$lang['qs_table_file_has_password'] = 'Ha Password';
+$lang['qs_table_file_total_downloads'] = 'Download Totali';
+$lang['qs_table_file_share_type'] = 'Tipo di Condivisione';
+$lang['qs_downloads_table_downloaded_file'] = 'File Scaricato';
+$lang['qs_downloads_table_download_ip'] = 'Indirizzo IP del Download';
+$lang['qs_permission_view_downloads'] = 'Visualizza Download';
+$lang['qs_permission_manage_downloads'] = 'Gestisci Download';
+$lang['qs_view_downloads_title'] = 'QuickShare - Visualizza Download';
+$lang['qs_file_share_type_email'] = 'Email';
+$lang['qs_file_share_type_link'] = 'Link';
+$lang['qs_menu_view_list'] = 'Elenco File';
+$lang['qs_menu_upload_file'] = 'Carica File';
+$lang['qs_menu_settings'] = 'Impostazioni';
+$lang['qs_settings_maximum_kb_size'] = 'Dimensione massima del Caricamento (in KB)';
+$lang['qs_file_destroyed_message'] = 'Il file che stai cercando di scaricare è impostato in modalità autodistruzione ed è già stato scaricato. Se hai bisogno di ulteriore assistenza, contatta il nostro team di supporto. Grazie per la comprensione.';
+$lang['qs_file_maximum_size'] = 'Impossibile allegare il file perché supera la dimensione massima consentita. Si prega di regolare la dimensione del file nelle impostazioni di Quickshare.';
+$lang['qs_settings_allowed_file_extensions'] = 'Estensioni File Consentite';
+$lang['qs_settings_allowed_file_extensions_err'] = 'Il file che stai cercando di caricare non ha un\'estensione supportata. Si prega di regolare le estensioni nelle impostazioni di Quickshare.';
+$lang['qs_settings_selected_storage_engine'] = 'Motore di archiviazione selezionato';
+$lang['qs_settings_selected_storage_engine_1'] = 'Server';
+$lang['qs_settings_selected_storage_engine_2'] = 'Archiviazione Amazon S3';
+$lang['qs_settings_aws_key'] = 'Chiave AWS';
+$lang['qs_settings_aws_secret'] = 'Segreto AWS';
+$lang['qs_settings_aws_bucket'] = 'Bucket AWS';
+$lang['qs_settings_aws_region'] = 'Regione AWS';

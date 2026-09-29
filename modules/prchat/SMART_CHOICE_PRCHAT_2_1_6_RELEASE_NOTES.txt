@@ -1,0 +1,7 @@
+PRChat 2.1.6
+- Restored one-shot voice-to-text controls.
+- Fixed AI Improve route to return JSON.
+- Fixed incoming call modal ReferenceError that prevented Accept/Decline from displaying.
+- Internal staff calls no longer require a telephone number.
+- Composer clears and speech recognition stops after send.
+- Scoped changes to PRChat only.

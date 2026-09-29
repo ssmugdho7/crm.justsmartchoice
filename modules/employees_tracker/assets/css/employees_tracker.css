@@ -1,0 +1,20 @@
+
+.et-card{border-radius:18px;box-shadow:0 10px 30px rgba(15,23,42,.08);border:1px solid #e5edf6;overflow:hidden}
+.et-hero{background:linear-gradient(135deg,#0b5cad,#1d9bd1 55%,#169179);color:#fff;padding:22px 24px;border-radius:18px;margin-bottom:20px}
+.et-hero h3{margin:0;font-weight:700;letter-spacing:.2px}
+.et-hero p{margin:8px 0 0;color:rgba(255,255,255,.88)}
+.et-stat{background:#fff;border:1px solid #e7edf5;border-radius:14px;padding:15px;margin-bottom:15px}
+.et-map{width:100%;height:500px;border-radius:18px;border:1px solid #dfe8f3;background:#f8fafc}
+.et-actions .btn{border-radius:999px;font-weight:600;padding:9px 18px}
+.et-installer-card{display:flex;gap:12px;align-items:center;background:#fff;border:1px solid #e7edf5;border-radius:16px;padding:14px;margin-bottom:10px;box-shadow:0 4px 15px rgba(0,0,0,.04)}
+.et-installer-card img{width:58px;height:58px;border-radius:50%;object-fit:cover;border:3px solid #f7941d}
+.et-badge{display:inline-block;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:700;background:#e8f7f3;color:#169179;margin-right:6px}
+.et-badge.orange{background:#fff3e5;color:#f7941d}
+.et-muted{color:#64748b}
+.et-grid{display:grid;grid-template-columns:1fr 340px;gap:18px}
+@media(max-width:991px){.et-grid{grid-template-columns:1fr}.et-map{height:380px}.et-hero{padding:18px}}
+
+.et-toast{position:fixed;right:22px;bottom:22px;z-index:999999;background:#0b5cad;color:#fff;border-radius:14px;padding:12px 16px;box-shadow:0 12px 30px rgba(15,23,42,.25);opacity:0;transform:translateY(10px);transition:all .25s ease;font-weight:700}.et-toast.show{opacity:1;transform:translateY(0)}.et-toast-success{background:#169179}.et-toast-warning{background:#f7941d}.et-toast-danger{background:#dc2626}.et-toast-info{background:#0b5cad}.et-map-fallback{height:100%;display:flex;align-items:center;justify-content:center;text-align:center;color:#475569;padding:25px;font-weight:700}.et-tabs{display:flex;gap:10px;flex-wrap:wrap;margin:-8px 0 18px}.et-tabs a{border-radius:999px;background:#fff;border:1px solid #dbe7f3;color:#0f355a;padding:9px 16px;font-weight:700;text-decoration:none;box-shadow:0 5px 14px rgba(15,23,42,.06)}.et-tabs a:hover,.et-tabs a.active{background:linear-gradient(135deg,#0b5cad,#169179);color:#fff;border-color:transparent}.menu-open>a,.menu-item-employees-tracker.active>a{font-weight:700!important}
+
+
+.et-health-box{background:#fff7ed;border:1px solid #fed7aa;border-left:5px solid #f97316;border-radius:14px;padding:16px;margin-top:15px}.et-health-url{display:block;margin-top:10px;white-space:normal;word-break:break-all}.et-hero{background:linear-gradient(135deg,#111827,#f97316 62%,#ea580c)!important}.et-tabs a:hover,.et-tabs a.active{background:linear-gradient(135deg,#111827,#f97316)!important;color:#fff!important;border-color:transparent}.et-actions .btn-success,.btn-info{background:#f97316!important;border-color:#ea580c!important;color:#fff!important}.et-actions .btn-warning{background:#111827!important;border-color:#111827!important;color:#fff!important}

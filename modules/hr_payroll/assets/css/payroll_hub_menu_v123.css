@@ -1,0 +1,22 @@
+/* Payroll Hub menu branding only. Does not alter other CRM menus. */
+#side-menu a[href*="/admin/hr_payroll"],
+#side-menu a[href*="hr_payroll/"],
+.admin-menu a[href*="/admin/hr_payroll"],
+.admin-menu a[href*="hr_payroll/"]{
+    color:#0e6f5b!important;
+}
+#side-menu li.active > a[href*="/admin/hr_payroll"],
+#side-menu li.active > a[href*="hr_payroll/"],
+#side-menu a[href*="/admin/hr_payroll"]:hover,
+#side-menu a[href*="hr_payroll/"]:hover,
+.admin-menu li.active > a[href*="/admin/hr_payroll"],
+.admin-menu li.active > a[href*="hr_payroll/"],
+.admin-menu a[href*="/admin/hr_payroll"]:hover,
+.admin-menu a[href*="hr_payroll/"]:hover{
+    background:#0e6f5b!important;
+    color:#fff!important;
+}
+#side-menu a[href*="/admin/hr_payroll"] i,
+#side-menu a[href*="hr_payroll/"] i,
+.admin-menu a[href*="/admin/hr_payroll"] i,
+.admin-menu a[href*="hr_payroll/"] i{color:inherit!important;}

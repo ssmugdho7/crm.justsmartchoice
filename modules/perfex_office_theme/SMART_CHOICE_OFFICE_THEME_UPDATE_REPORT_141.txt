@@ -1,0 +1,13 @@
+Smart Choice Office Theme v1.4.1
+
+Fixed:
+- Restored module settings action links.
+- Preserved Settings and Health / Verification settings sections.
+- Removed background/cell/shadow effects from client portal logo.
+- Removed purple hover/background styling from client buttons and menu areas.
+- Kept login/register buttons functional while cleaning their styling.
+- Matched client portal top bar to admin blue/green gradient.
+- Slimmed calendar bars/events with lighter shadows.
+- Slimmed dashboard progress bars and widget panels.
+- Changed menu arrows/badges toward dark navy blue.
+- Updated version to 1.4.1 with migration 141.

@@ -1,0 +1,10 @@
+Smart Choice Training Manual v1.2.8
+
+- Fixed creator button article ID mismatch (data-article-id vs data-id).
+- Creator changes now validate against active native Perfex CRM tblstaff employees.
+- Creator update uses a transaction and verifies author_id/created_by after saving.
+- Added employee picture picker using native CRM staff profile images.
+- Added creator profile picture to article cards.
+- Replaced Bootstrap row cards with continuous masonry columns to eliminate empty spaces.
+- Tightened pipeline card spacing.
+- Added migration 128 and cache-busting asset versions.

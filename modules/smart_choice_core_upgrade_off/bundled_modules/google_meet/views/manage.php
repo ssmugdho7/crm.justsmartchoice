@@ -1,0 +1,9 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<?php init_head(); ?>
+<div id="wrapper"><div class="content"><div class="google-meet-wrap">
+<div class="gm-hero"><div><h1><?php echo _l('Google Meet'); ?></h1><p>Schedule Google Meet sessions, invite staff/customers, and track meeting duration.</p></div><a href="<?php echo admin_url('google_meet/create'); ?>" class="btn btn-info">+ <?php echo _l('New Meeting'); ?></a></div>
+<div class="row gm-stats"><div class="col-md-4"><div class="gm-card"><span>Total Meetings</span><strong><?php echo (int)$summary['total']; ?></strong></div></div><div class="col-md-4"><div class="gm-card"><span>Completed</span><strong><?php echo (int)$summary['completed']; ?></strong></div></div><div class="col-md-4"><div class="gm-card"><span>Total Minutes</span><strong><?php echo (int)$summary['minutes']; ?></strong></div></div></div>
+<div class="panel_s"><div class="panel-body"><table class="table dt-table"><thead><tr><th>Subject</th><th>Start</th><th>Status</th><th>Duration</th><th>Meet</th><th>Options</th></tr></thead><tbody>
+<?php foreach($meetings as $m){ ?><tr><td><?php echo html_escape($m['subject']); ?></td><td><?php echo _dt($m['start_time']); ?></td><td><span class="label label-<?php echo $m['status']=='completed'?'success':($m['status']=='live'?'danger':'info'); ?>"><?php echo html_escape(ucfirst($m['status'])); ?></span></td><td><?php echo (int)$m['duration_minutes']; ?> min</td><td><a href="<?php echo html_escape($m['meet_link']); ?>" target="_blank">Open</a></td><td><a class="btn btn-default btn-xs" href="<?php echo admin_url('google_meet/view/'.$m['id']); ?>">View</a> <a class="btn btn-default btn-xs" href="<?php echo admin_url('google_meet/create/'.$m['id']); ?>">Edit</a></td></tr><?php } ?>
+</tbody></table></div></div>
+</div></div></div><?php init_tail(); ?>

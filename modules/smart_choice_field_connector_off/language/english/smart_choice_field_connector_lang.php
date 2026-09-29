@@ -1,0 +1,24 @@
+<?php
+$lang['scfc_menu_name'] = 'Smart Choice Field Connector';
+$lang['scfc_settings'] = 'Smart Choice Field Connector Settings';
+$lang['scfc_dashboard_subtitle'] = 'Connect CRM fields visually and reduce repeated manual data entry.';
+$lang['scfc_health_check'] = 'Health Checker';
+$lang['scfc_refresh'] = 'Refresh';
+$lang['scfc_visual_connector'] = 'Visual Field Connector';
+$lang['scfc_visual_connector_help'] = 'Use this page to understand which CRM data can flow into estimates, proposals, contracts, invoices, and custom merge fields.';
+$lang['scfc_mappings'] = 'Field Mappings';
+$lang['scfc_add_mapping'] = 'Add Mapping';
+$lang['scfc_no_mappings'] = 'No mappings created yet.';
+$lang['scfc_custom_tokens'] = 'Custom Merge Tokens';
+$lang['scfc_add_token'] = 'Add Token';
+$lang['scfc_no_tokens'] = 'No custom tokens created yet.';
+$lang['scfc_database_status'] = 'Database Status';
+$lang['scfc_quick_help'] = 'Quick Help';
+$lang['scfc_mapping'] = 'Mapping';
+$lang['scfc_custom_token'] = 'Custom Token';
+$lang['scfc_saved'] = 'Saved successfully.';
+$lang['scfc_save_failed'] = 'Could not save. Please check required fields.';
+$lang['scfc_delete_disabled'] = 'Deleting custom tokens is disabled in settings.';
+$lang['scfc_token_has_impact'] = 'This token is still used somewhere. Review the impact report first.';
+$lang['scfc_impact_report'] = 'Impact Report';
+$lang['scfc_refreshed'] = 'Field Connector refreshed.';

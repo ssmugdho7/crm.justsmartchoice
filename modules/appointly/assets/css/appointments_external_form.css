@@ -1,0 +1,1013 @@
+body {
+  background: #e2e7ed !important;
+}
+
+body .label {
+  font-size: 13px;
+}
+
+body .busy_time_info {
+  margin-left: 10px;
+  background: #fb4862;
+}
+
+body .available_time_info {
+  background: #2663eb;
+}
+
+body .go_back_button {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+body .busy_time_info_google {
+  background: #fb4862;
+}
+
+body .busy_time {
+  background: #fb4862 !important;
+  color: #fff !important;
+  pointer-events: none;
+}
+
+body .has-error .form-control:focus {
+  border-color: #ff0300 !important;
+  box-shadow: none !important;
+}
+
+body .busy_google_time {
+  background: #fb4862 !important;
+  color: #fff !important;
+  font-weight: 300 !important;
+  pointer-events: none;
+}
+
+.appointment-header {
+  display: flex;
+  justify-content: center;
+}
+
+.appointment_logo img {
+  max-width: 150px;
+  height: auto;
+  float: left;
+}
+
+.logo.img-responsive.navbar-brand.logo {
+  margin-bottom: 0;
+  margin-left: -20px;
+}
+
+.logo.img-responsive.navbar-brand.logo {
+  margin-bottom: 0;
+  margin-left: -20px;
+}
+
+.datetimepicker {
+  background: #fff !important;
+}
+
+.mtop6 {
+  margin-top: 6px !important;
+}
+
+.mtop35 {
+  margin-top: 35px;
+}
+
+.appointment_type_holder .appointment_color_type {
+  height: 30px;
+  width: 30px;
+  margin-top: 3px;
+}
+
+.appointment_type_holder .dropdown-menu li a:hover,
+.appointment_type_holder .dropdown-menu li a {
+  border: none !important;
+  border-radius: 0px !important;
+  padding: 8px 20px;
+}
+
+.appointment_type_holder .bootstrap-select {
+  float: left;
+}
+
+.main_wrapper {
+  padding: 25px;
+  box-shadow: 0px 0px 0px 1px rgb(1 1 1 / 8%);
+  background: #fff;
+}
+
+.hwp {
+  border-radius: 4px;
+  padding: 4px 10px;
+  color: #fff;
+}
+
+body input {
+  height: 38px !important;
+}
+
+body textarea,
+body input {
+  border: 1px solid #ececec !important;
+}
+
+.hours_wrapper {
+  display: flex;
+  margin-top: 20px !important;
+}
+
+@media only screen and (max-device-width: 360px) and (-webkit-device-pixel-ratio: 3) {
+  .xdsoft_datetimepicker {
+    left: 2px !important;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
+
+/* Fix progress steps mobile overflow - MINIMAL FIX */
+@media (max-width: 640px) {
+  .progress-steps-container {
+    padding: 0 4px !important;
+  }
+
+  .step-indicator {
+    min-width: 50px !important;
+    flex: 1 !important;
+  }
+
+  .step-indicator .step-title {
+    font-size: 9px !important;
+    line-height: 1.1 !important;
+  }
+
+  .step-indicator .step-number {
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 10px !important;
+  }
+
+  .step-line {
+    margin: 0 2px !important;
+    top: -14px !important;
+  }
+}
+
+/* Blocked dates in calendar */
+.xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_disabled {
+  background: #ffeeee !important; /* Light red background */
+  color: #ff0000 !important; /* Red text */
+  opacity: 0.6;
+}
+
+/* Current date when it's blocked */
+.xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_disabled.xdsoft_current {
+  background: #ff0000 !important;
+  color: #ffffff !important;
+  box-shadow: #ff0000 0 1px 3px 0 inset;
+}
+
+/* Hover effect on blocked dates */
+.xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_disabled:hover {
+  background: #ffcccc !important;
+  color: #ff0000 !important;
+}
+
+/* Busy times in time picker */
+.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time.busy_time {
+  background: #ffeeee !important;
+  color: #ff0000 !important;
+}
+
+.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time.busy_time:hover {
+  background: #ffcccc !important;
+  color: #ff0000 !important;
+}
+
+/* Improved header styling */
+.appointments-external-form .main_wrapper {
+  @apply tw-bg-white tw-rounded-xl tw-shadow-md;
+}
+
+/* Custom select styling */
+.selectpicker {
+  @apply tw-appearance-none tw-bg-white tw-cursor-pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236B7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-position: right 0.75rem center;
+  background-repeat: no-repeat;
+  background-size: 1.25em 1.25em;
+  padding-right: 2.5rem;
+}
+
+/* Disabled select styling */
+.selectpicker:disabled {
+  @apply tw-bg-neutral-50 tw-cursor-not-allowed tw-opacity-75;
+}
+
+/* Remove default select arrow in IE/Edge */
+.selectpicker::-ms-expand {
+  display: none;
+}
+
+/* Base styles */
+.appointments-external-form {
+  @apply tw-bg-neutral-50;
+}
+
+.main_wrapper {
+  @apply tw-bg-white tw-rounded-xl tw-shadow-md tw-p-8 tw-max-w-3xl tw-mx-auto;
+}
+
+/* Header styling */
+.appointment-header {
+  @apply tw-mb-8;
+}
+
+.appointment-header h4 {
+  @apply tw-text-3xl tw-font-bold tw-text-neutral-900 tw-tracking-tight;
+}
+
+.appointment-header p {
+  @apply tw-text-lg tw-text-neutral-600 tw-mt-2;
+  @apply tw-text-lg tw-text-neutral-600 tw-mt-2;
+}
+
+.appointment-header hr {
+  @apply tw-border-t tw-border-neutral-200 tw-my-6 tw-max-w-md tw-mx-auto;
+}
+
+/* Form sections */
+.form-section {
+  @apply tw-mb-8 tw-p-6 tw-bg-neutral-50 tw-rounded-lg tw-border tw-border-neutral-200;
+}
+
+.form-section-title {
+  @apply tw-text-lg tw-font-semibold tw-text-neutral-800 tw-mb-4;
+}
+
+/* Form controls */
+.form-group {
+  @apply tw-relative tw-mb-6;
+}
+
+.form-group label {
+  @apply tw-block tw-text-sm tw-font-medium tw-text-neutral-700 tw-mb-2;
+}
+
+.form-group label.error,
+.invalid-feedback {
+  @apply tw-absolute tw-text-sm tw-text-red-600 tw-mt-1 tw-left-0 tw-bottom-0 tw-translate-y-full;
+}
+
+/* Add more space below inputs to accommodate error messages */
+.form-group {
+  @apply tw-mb-6;
+}
+
+/* Specific styling for select validation */
+.bootstrap-select.form-control + .error {
+  @apply tw-mt-1 tw-block tw-static tw-text-sm tw-text-red-600;
+}
+
+/* Error state for inputs */
+.form-control.error,
+.form-control.is-invalid {
+  @apply tw-border-red-500 focus:tw-border-red-500 focus:tw-ring-red-500;
+}
+
+/* Error state for select */
+.bootstrap-select.is-invalid .dropdown-toggle {
+  @apply tw-border-red-500;
+}
+
+.form-control {
+  @apply tw-w-full tw-rounded-lg tw-border-neutral-300 tw-shadow-sm;
+  @apply focus:tw-ring-2 focus:tw-ring-primary-500 focus:tw-border-primary-500;
+  @apply hover:tw-border-neutral-400;
+  transition: all 0.2s ease;
+}
+
+/* Working hours section */
+#provider_schedule {
+  @apply tw-mt-6 tw-p-6 tw-bg-neutral-50 tw-rounded-lg tw-border tw-border-neutral-200;
+}
+
+.working-hours-title {
+  @apply tw-text-sm tw-font-medium tw-text-neutral-700 tw-mb-4;
+}
+
+.working-hours-list {
+  @apply tw-space-y-3;
+}
+
+.working-hours-item {
+  @apply tw-flex tw-justify-between tw-items-center tw-text-sm tw-text-neutral-600;
+}
+
+/* Submit button */
+.btn-primary {
+  @apply tw-bg-primary-600 tw-text-white tw-font-medium tw-px-6 tw-py-3 tw-rounded-lg tw-shadow-sm;
+  @apply hover:tw-bg-primary-700 focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-offset-2 focus:tw-ring-primary-500;
+  @apply disabled:tw-opacity-50 disabled:tw-cursor-not-allowed;
+  transition: all 0.2s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .main_wrapper {
+    @apply tw-p-4;
+  }
+
+  .form-section {
+    @apply tw-p-4;
+  }
+}
+
+/* Loading states */
+.form-loading {
+  @apply tw-opacity-50 tw-pointer-events-none;
+}
+
+/* Success states */
+.is-valid {
+  @apply tw-border-green-500 focus:tw-border-green-500 focus:tw-ring-green-500;
+}
+
+/* Date and Location styling */
+.input-group.date {
+  @apply tw-flex tw-items-center tw-w-full tw-relative;
+}
+
+.input-group.date input {
+  @apply tw-rounded-lg tw-border-neutral-300 tw-pr-10;
+}
+
+.input-group.date .input-group-addon {
+  @apply tw-absolute tw-right-3 tw-top-1/2 tw-transform -tw-translate-y-1/2 tw-pointer-events-none tw-text-neutral-500;
+}
+
+.calendar-icon {
+  @apply tw-text-lg;
+}
+
+/* Datepicker styling */
+.bootstrap-datetimepicker-widget {
+  @apply tw-bg-white tw-shadow-lg tw-rounded-lg tw-border tw-border-neutral-200 !important;
+}
+
+.bootstrap-datetimepicker-widget table td.active,
+.bootstrap-datetimepicker-widget table td.active:hover {
+  @apply tw-bg-primary-600 tw-text-white !important;
+}
+
+.bootstrap-datetimepicker-widget table td {
+  @apply tw-text-center tw-p-2 tw-cursor-pointer hover:tw-bg-neutral-100 tw-rounded;
+}
+
+/* Disabled submit button */
+.btn-primary:disabled {
+  @apply tw-opacity-50 tw-cursor-not-allowed;
+}
+
+/* Booking form step by step styling */
+.booking-step {
+  @apply tw-transition-opacity tw-duration-150 tw-ease-in-out;
+}
+
+.booking-step.tw-opacity-0 {
+  @apply tw-opacity-0;
+}
+.form-booking-steps .step-indicator {
+  position: relative;
+  z-index: 5;
+}
+
+.form-booking-steps .progress-bar {
+  transition: width 0.5s ease-in-out, background-color 0.5s ease-in-out;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Step indicator styles */
+.step-indicator .step-number {
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.step-indicator.active .step-number {
+  background-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
+}
+
+.step-indicator.completed .step-number {
+  background-color: #10b981;
+}
+
+.step-indicator .step-title {
+  transition: color 0.3s ease;
+}
+
+.step-indicator.active .step-title {
+  color: #3b82f6;
+  font-weight: 500;
+}
+
+.step-indicator.completed .step-title {
+  color: #10b981;
+  font-weight: 500;
+}
+
+/* Connecting lines between steps - MUCH MORE VISIBLE */
+.connecting-line {
+  height: 4px !important; /* Thicker line */
+  background-color: #e5e7eb;
+  transition: background-color 0.5s ease;
+  position: relative;
+  margin: 0 8px;
+  top: 16px; /* Align with the middle of the circles */
+  border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Active connecting line */
+#connecting-line-1-2.active,
+#connecting-line-2-3.active,
+#connecting-line-3-4.active {
+  background-color: #3b82f6; /* Blue for active */
+  height: 4px !important;
+}
+
+/* Completed connecting line */
+#connecting-line-1-2.completed,
+#connecting-line-2-3.completed,
+#connecting-line-3-4.completed {
+  background-color: #10b981; /* Green for completed */
+  height: 4px !important;
+}
+
+/* Mobile responsive adjustments for connecting lines */
+@media (max-width: 768px) {
+  .connecting-line {
+    margin: 0 4px;
+  }
+
+  .step-indicator .step-number {
+    width: 28px !important;
+    height: 28px !important;
+  }
+
+  .step-indicator .step-title {
+    font-size: 0.7rem;
+  }
+}
+
+/* Service cards styling */
+.service-card {
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.service-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.service-card.selected {
+  border: 1px solid rgb(0 168 255 / 32%);
+  background-color: rgba(2, 132, 199, 0.05);
+  border-radius: 6px;
+}
+
+/* Provider cards styling */
+.provider-card {
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.provider-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Buttons styling */
+.btn-prev-step {
+  background: none;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.btn-prev-step i {
+  margin-right: 0.5rem;
+}
+
+.btn-next-step:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Custom time slots */
+.time-slots-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .time-slots-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .time-slots-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.time-slot {
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: white;
+  font-weight: 500;
+}
+
+.time-slot:hover:not(.selected):not(.busy) {
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+}
+
+.time-slot.selected {
+  background-color: rgba(2, 132, 199, 0.08);
+  color: #0284c7;
+  border-color: #0284c7;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(2, 132, 199, 0.2);
+}
+
+.time-slot.busy {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Animation for transitions */
+.step-indicator.completed .step-number {
+  background-color: #10b981;
+}
+
+.step-indicator .step-title {
+  color: #6b7280;
+}
+
+.step-indicator.active .step-title {
+  color: #0284c7;
+  font-weight: 500;
+}
+
+.step-indicator.completed .step-title {
+  color: #10b981;
+  font-weight: 500;
+}
+
+/* Form Steps */
+.booking-step {
+  display: none;
+}
+
+.booking-step.active {
+  display: block;
+}
+
+/* Service cards styling */
+.service-card {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Provider cards styling */
+.provider-card {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.provider-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.provider-card.selected {
+  border: 1px solid rgb(0 168 255 / 32%);
+  background-color: rgba(2, 132, 199, 0.05);
+  border-radius: 6px;
+}
+
+/* Disabled provider styling */
+.provider-card.disabled-provider {
+  opacity: 0.75;
+  cursor: not-allowed;
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.provider-card.disabled-provider:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: #e5e7eb;
+}
+
+/* Tooltip styling enhancement */
+.provider-card[data-toggle="tooltip"] {
+  position: relative;
+}
+
+/* Make buttons look nice */
+.btn-prev-step {
+  background: none;
+  border: none;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Fix for time picker display */
+.xdsoft_datetimepicker .xdsoft_timepicker {
+  width: 100px;
+}
+
+/* Blocked days styling - make it more obvious */
+.xdsoft_date.blocked-date,
+td.xdsoft_date.xdsoft_disabled.blocked-date {
+  background: #ffebee !important;
+  color: #c62828 !important;
+  position: relative !important;
+  cursor: not-allowed !important;
+}
+
+.xdsoft_date.blocked-date:before,
+td.xdsoft_date.xdsoft_disabled.blocked-date:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23c62828'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636'%3E%3C/path%3E%3C/svg%3E");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 70%;
+  opacity: 0.7;
+  z-index: 10;
+}
+
+/* Add tooltip styling for the datepicker - improved version */
+.xdsoft_datetimepicker .xdsoft_calendar td {
+  position: relative;
+}
+
+/* Custom tooltip for blocked dates - simplified version that works with title attributes */
+.xdsoft_date[title]:hover:after,
+.xdsoft_date.blocked-date[title]:hover:after,
+.xdsoft_date.provider-unavailable[title]:hover:after {
+  content: attr(title);
+  position: absolute;
+  top: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+  padding: 5px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 10000;
+  width: auto;
+  min-width: 100px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Busy times styling */
+.xdsoft_time.busy_time {
+  background: #f8d7da !important;
+  color: #721c24 !important;
+}
+
+/* Time slots styling */
+.time-slot-btn {
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 12px 16px;
+  background-color: white;
+  color: #374151;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.time-slot-btn:hover:not(.selected) {
+  transform: translateY(-1px);
+  border-color: #d1d5db;
+  background-color: #f9fafb;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.time-slot-btn.selected {
+  border-color: #0284c7 !important;
+  background-color: rgba(2, 132, 199, 0.08) !important;
+  color: #0284c7 !important;
+  position: relative;
+  box-shadow: 0 4px 6px -1px rgba(2, 132, 199, 0.2),
+    0 2px 4px -1px rgba(2, 132, 199, 0.1) !important;
+  transform: translateY(-1px);
+}
+
+.time-slot-btn.selected::after {
+  content: "";
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 18px;
+  height: 18px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%230284c7'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 13l4 4L19 7'%3E%3C/path%3E%3C/svg%3E");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 11px;
+}
+
+/* Custom styles */
+.ui-datepicker-unselectable {
+  opacity: 0.5;
+}
+
+.xdsoft_disabled.blocked-date {
+  background-color: #ffdddd !important;
+  color: #999 !important;
+}
+
+.xdsoft_disabled.provider-unavailable {
+  background-color: #ffe8cc !important;
+  color: #999 !important;
+}
+
+/* Date picker legend styles */
+.date-picker-legend {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  font-size: 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+}
+
+.legend-color.blocked {
+  background-color: #ffdddd;
+}
+
+.legend-color.unavailable {
+  background-color: #ffe8cc;
+}
+
+.legend-color.available {
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 640px) {
+  .form-booking-steps .step-title {
+    font-size: 0.75rem;
+  }
+
+  .time-slots-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .form-booking-steps .step-indicator:not(:last-child)::after {
+    display: none;
+  }
+}
+
+.step-indicator {
+  min-width: 80px; /* Ensure steps have minimum width */
+}
+
+/* Animate step transitions */
+.booking-step.hidden {
+  opacity: 0;
+  display: none;
+}
+
+.booking-step.active {
+  opacity: 1;
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.progress-steps-container {
+  margin-bottom: -3px;
+}
+
+/* Step line styling - VERY PROMINENT */
+.step-line {
+  height: 6px !important;
+  background-color: #e5e7eb;
+  border-radius: 3px;
+  position: relative;
+  transition: background-color 0.5s ease, height 0.3s ease;
+  top: -25px; /* Position lines to align with the middle of circles */
+}
+
+/* Step lines styling for active and completed steps */
+#line-1-2.active,
+#line-2-3.active,
+#line-3-4.active {
+  background-color: #3b82f6; /* Blue for active */
+}
+
+#line-1-2.completed,
+#line-2-3.completed,
+#line-3-4.completed {
+  background-color: #10b981; /* Green for completed */
+}
+
+/* Step number styling */
+.step-number {
+  transition: background-color 0.3s ease;
+  position: relative;
+  z-index: 10; /* Ensure circles appear above lines */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Step indicator styling */
+.step-indicator {
+  min-width: 90px;
+  position: relative;
+  z-index: 5;
+}
+
+.step-indicator.active .step-number {
+  background-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.15);
+}
+
+.step-indicator.completed .step-number {
+  background-color: #10b981;
+}
+
+.step-indicator .step-title {
+  transition: color 0.3s ease;
+}
+
+.step-indicator.active .step-title {
+  color: #3b82f6;
+  font-weight: 500;
+}
+
+.step-indicator.completed .step-title {
+  color: #10b981;
+  font-weight: 500;
+}
+
+/* Progress bar styling */
+.progress-bar {
+  transition: width 0.5s ease-in-out, background-color 0.5s ease-in-out;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .step-line {
+    top: -20px;
+    height: 4px !important;
+  }
+
+  .step-number {
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 12px;
+  }
+
+  .step-indicator .step-title {
+    font-size: 0.7rem;
+  }
+}
+
+/* Smart Choice public booking form compact brand placement */
+.appointment-public-brand-inside {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  padding: 0 0 14px !important;
+  margin: 0 0 18px !important;
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+.appointment-public-brand-inside .appointment-logo-link,
+.appointment-public-brand-inside .logo,
+.appointment-public-brand-inside a.logo {
+  display: inline-flex !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  float: none !important;
+  height: auto !important;
+}
+
+.appointment-public-brand-inside img,
+.appointment-public-brand-inside .logo img,
+.appointment-public-brand-inside .appointment-logo-link img {
+  width: var(--sc-public-logo-width, 82px) !important;
+  max-width: var(--sc-public-logo-width, 82px) !important;
+  height: var(--sc-public-logo-height, 30px) !important;
+  max-height: var(--sc-public-logo-height, 30px) !important;
+  object-fit: contain !important;
+  display: block !important;
+  margin: 0 !important;
+}
+
+.appointment-public-brand-site {
+  font-size: 13px !important;
+  line-height: 1.2 !important;
+  font-weight: 700 !important;
+  color: #0e6f5b !important;
+  text-decoration: none !important;
+}
+
+.appointment-public-brand-site:hover,
+.appointment-public-brand-inside a:hover {
+  color: #111827 !important;
+  text-decoration: underline !important;
+}
+
+@media (max-width: 640px) {
+  .appointment-public-brand-inside {
+    justify-content: center !important;
+    text-align: center !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+  }
+}

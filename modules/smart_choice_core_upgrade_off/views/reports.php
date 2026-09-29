@@ -1,0 +1,6 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<?php init_head(); ?>
+<div id="wrapper"><div class="content smart-choice-core-page"><div class="row"><div class="col-md-12">
+
+<div class="panel_s"><div class="panel-body"><h3>Smart Choice Reports</h3><div class="smart-choice-table-toolbar"><a href="#" class="btn btn-default btn-xs">Import</a><a href="#" class="btn btn-default btn-xs">Sample Header</a><a href="#" class="btn btn-default btn-xs">Export</a><a href="<?php echo current_url(); ?>" class="btn btn-default btn-xs">Refresh</a><a href="#" class="btn btn-danger btn-xs">Mass Delete</a></div><div class="table-responsive"><table class="table table-striped dt-table"><thead><tr><th>Report</th><th>Group</th><th>Description</th><th>Status</th></tr></thead><tbody><?php foreach ($reports as $report) { ?><tr><td><?php echo html_escape($report->report_name); ?></td><td><?php echo html_escape($report->report_group); ?></td><td><?php echo html_escape($report->description); ?></td><td><?php echo $report->is_active ? '<span class="label label-success">Active</span>' : '<span class="label label-default">Inactive</span>'; ?></td></tr><?php } ?></tbody></table></div></div></div>
+</div></div></div></div><?php init_tail(); ?>

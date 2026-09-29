@@ -1,0 +1,6 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<?php init_head(); ?>
+<div id="wrapper"><div class="content smart-choice-core-page"><div class="row"><div class="col-md-12">
+
+<div class="panel_s"><div class="panel-body"><h3>Smart Choice Update Center</h3><p>Current Smart Choice version: <strong><?php echo html_escape($version['current']); ?></strong></p><p>This module does not bypass Perfex licensing. It adds a Smart Choice enterprise upgrade layer, bundled modules, settings, reports, theme, and health checks for staging/testing.</p><?php echo form_open(admin_url('smart_choice_core_upgrade/apply_defaults')); ?><button class="btn btn-success btn-sm" type="submit">Apply Smart Choice Defaults</button><?php echo form_close(); ?><hr><h4>History</h4><table class="table table-striped"><thead><tr><th>From</th><th>To</th><th>Status</th><th>Message</th><th>Date</th></tr></thead><tbody><?php foreach ($history as $row) { ?><tr><td><?php echo html_escape($row->from_version); ?></td><td><?php echo html_escape($row->to_version); ?></td><td><?php echo html_escape($row->status); ?></td><td><?php echo html_escape($row->message); ?></td><td><?php echo html_escape($row->datecreated); ?></td></tr><?php } ?></tbody></table></div></div>
+</div></div></div></div><?php init_tail(); ?>

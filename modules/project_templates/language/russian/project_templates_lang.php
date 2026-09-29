@@ -1,0 +1,21 @@
+<?php
+$lang["pt_module_title"] = "Шаблоны Проектов";
+$lang["pt_project_template"] = "Шаблон Проекта";
+$lang["pt_project_template_lower"] = "шаблон проекта";
+$lang["pt_edit_project_template"] = "Редактировать Шаблон Проекта";
+$lang["pt_delete_project_template"] = "Удалить Шаблон Проекта";
+$lang["pt_copy_project_template"] = "Копировать Шаблон Проекта";
+$lang["pt_project_template_description"] = "Описание";
+$lang["pt_new_project_template"] = "Новый Шаблон Проекта";
+$lang["failed_to_copy_project_template"] = "Не удалось скопировать шаблон проекта";
+$lang["pt_project_template_copied_successfully"] = "Шаблон проекта успешно скопирован";
+$lang["pt_project_from_template"] = "проект из шаблона";
+$lang["pt_new_project_from_template"] = "Создать Проект Из Шаблона";
+$lang["pt_select_project_template"] = "Выбрать Шаблон Проекта";
+$lang["pt_project_template_not_found"] = "Шаблон проекта не найден";
+$lang["pt_duration_text"] = "Срок выполнения (в днях)";
+$lang["pt_milestone_start_date"] = "Дни до начала после даты начала проекта";
+$lang["pt_milestone_due_date"] = "Срок в днях";
+$lang["permission_create_milestones"] = "Создать Этапы";
+$lang["permission_edit_milestones"] = "Редактировать Этапы";
+$lang["permission_delete_milestones"] = "Удалить Этапы";

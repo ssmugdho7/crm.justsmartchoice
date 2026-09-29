@@ -1,0 +1,41 @@
+.min-ul-size {
+    min-height: 200px;
+    overflow-y: auto;
+}
+
+/* Smart Choice Contractors USA refresh */
+#customtables, .customtables-panel, .panel_s:has(.customtables-card) {
+    border-radius: 18px;
+}
+.customtables-card, .customtables-smart-card, .panel_s {
+    border-radius: 18px !important;
+    box-shadow: 0 10px 30px rgba(15, 38, 71, .08) !important;
+    border: 1px solid rgba(18, 104, 171, .12) !important;
+}
+.customtables-gradient-header {
+    background: linear-gradient(135deg, #f7941d, #1268ab) !important;
+    color: #fff !important;
+    border-radius: 18px 18px 0 0;
+    padding: 18px 22px;
+}
+.customtables-gradient-header h4,
+.customtables-gradient-header p { color:#fff !important; }
+.customtables-table-toolbar,
+.ct-toolbar {
+    border-radius: 14px;
+    background: #f8fbff;
+    border: 1px solid #e7eef7;
+    padding: 12px;
+}
+.customtables-modern-btn,
+.btn-customtables {
+    border-radius: 999px !important;
+    background: linear-gradient(135deg, #f7941d, #169179) !important;
+    color:#fff !important;
+    border:0 !important;
+    font-weight:700;
+}
+@media (max-width: 768px) {
+    .customtables-table-toolbar, .ct-toolbar { padding: 10px; }
+    .customtables-gradient-header { padding: 14px; }
+}

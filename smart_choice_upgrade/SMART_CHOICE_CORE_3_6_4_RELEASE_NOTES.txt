@@ -1,0 +1,5 @@
+Smart Choice CRM Core 3.6.4 SC
+Migration target: 364
+Invoice create/edit item table restored from canonical CRM package.
+Utilities calculator added.
+World clocks moved to one popup icon and Bangladesh added.

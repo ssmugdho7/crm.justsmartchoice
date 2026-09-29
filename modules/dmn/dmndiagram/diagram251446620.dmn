@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/DMN/20151101/dmn.xsd" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/1.0" id="dish" name="Dish" namespace="http://camunda.org/schema/1.0/dmn">
+  <decision id="Decision_1ourrqb" name="">
+    <extensionElements>
+      <biodi:bounds x="340" y="150" width="180" height="80" ></biodi:bounds>
+      <biodi:edge source="InputData_132qzyq">
+        <biodi:waypoints x="638" y="190" ></biodi:waypoints>
+        <biodi:waypoints x="520" y="190" ></biodi:waypoints>
+      </biodi:edge>
+      <biodi:edge source="KnowledgeSource_0dr5ffh">
+        <biodi:waypoints x="430" y="101" ></biodi:waypoints>
+        <biodi:waypoints x="430" y="150" ></biodi:waypoints>
+      </biodi:edge>
+    </extensionElements>
+    <informationRequirement>
+      <requiredInput href="#InputData_132qzyq" ></requiredInput>
+    </informationRequirement>
+    <authorityRequirement>
+      <requiredAuthority href="#KnowledgeSource_0dr5ffh" ></requiredAuthority>
+    </authorityRequirement>
+  </decision>
+  <inputData id="InputData_132qzyq" name="">
+    <extensionElements>
+      <biodi:bounds x="638" y="168" width="125" height="45" ></biodi:bounds>
+    </extensionElements>
+  </inputData>
+  <knowledgeSource id="KnowledgeSource_0dr5ffh" name="">
+    <extensionElements>
+      <biodi:bounds x="380" y="38" width="100" height="63" ></biodi:bounds>
+      <biodi:edge source="Decision_1ourrqb">
+        <biodi:waypoints x="430" y="150" ></biodi:waypoints>
+        <biodi:waypoints x="430" y="101" ></biodi:waypoints>
+      </biodi:edge>
+    </extensionElements>
+    <authorityRequirement>
+      <requiredDecision href="#Decision_1ourrqb" ></requiredDecision>
+    </authorityRequirement>
+  </knowledgeSource>
+  <decision id="Decision_054s6sa" name="">
+    <extensionElements>
+      <biodi:bounds x="800" y="150" width="180" height="80" ></biodi:bounds>
+      <biodi:edge source="InputData_132qzyq">
+        <biodi:waypoints x="763" y="190" ></biodi:waypoints>
+        <biodi:waypoints x="800" y="190" ></biodi:waypoints>
+      </biodi:edge>
+    </extensionElements>
+    <informationRequirement>
+      <requiredInput href="#InputData_132qzyq" ></requiredInput>
+    </informationRequirement>
+  </decision>
+</definitions>

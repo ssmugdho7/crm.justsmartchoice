@@ -1,0 +1,61 @@
+/* Appointly Calendar Event Styling */
+.fc-event.appointly-event {
+  border-left: 4px solid #007bff !important;
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) !important;
+  color: white !important;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.fc-event.appointly-event:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+  border-left-color: #0056b3 !important;
+}
+
+/* Status-based event styling */
+.fc-event.appointly-event.status-approved,
+.fc-event.appointly-event.status-confirmed,
+.fc-event.appointly-event.status-in-progress {
+  background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%) !important;
+  border-left-color: #28a745 !important;
+}
+
+.fc-event.appointly-event.status-pending {
+  background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%) !important;
+  border-left-color: #ffc107 !important;
+  color: #212529 !important;
+}
+
+.fc-event.appointly-event.status-cancelled,
+.fc-event.appointly-event.status-no-show {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
+  border-left-color: #dc3545 !important;
+}
+
+.fc-event.appointly-event.status-completed {
+  background: linear-gradient(135deg, #17a2b8 0%, #138496 100%) !important;
+  border-left-color: #17a2b8 !important;
+}
+
+/* Ensure Appointly events are clearly distinguishable */
+.fc-event.appointly-event .fc-title,
+.fc-event.appointly-event .fc-time {
+  color: inherit !important;
+  font-weight: 500;
+}
+
+/* Responsive design for mobile */
+@media (max-width: 768px) {
+  .fc-event.appointly-event {
+    font-size: 12px;
+    border-left-width: 3px !important;
+  }
+}
+
+/* Dark theme support */
+@media (prefers-color-scheme: dark) {
+  .fc-event.appointly-event {
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.6);
+  }
+}

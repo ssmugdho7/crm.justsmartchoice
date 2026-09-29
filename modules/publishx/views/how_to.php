@@ -1,0 +1,26 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); init_head(); ?><div id="wrapper"><div class="content publishx-scope"><div class="publishx-howto-hero"><span>SMART CHOICE CONTRACTORS USA</span><h1>Blogging Module: Complete How To Guide</h1><p>Create professional English or Spanish construction articles, publish them into the correct JustSmartChoice.com folder, reuse the website header and footer, add media, improve SEO with AI, and verify the final page.</p></div><div class="panel_s"><div class="panel-body publishx-howto">
+<h2>1. Configure the module</h2><p>Open <strong>Setup → Settings → Blogging</strong>. Set the default language, branding source, GA4 Measurement ID, and AI key preference. Blogging settings no longer appear in the main Blogging menu.</p>
+<h2>2. Add and test a website</h2><p>Open <strong>Blogging → Websites</strong>. Add the public website URL and the physical server document root. For JustSmartChoice.com, the public URL may be <code>https://justsmartchoice.com</code>, while the document root must be the exact cPanel folder where the website files are stored. Add the shared header and footer include paths. Click <strong>Test</strong>. The module creates and removes a temporary file to confirm that the folder is writable.</p>
+<div class="publishx-example"><h4>Website profile example</h4><pre>Website name: Just Smart Choice
+Website URL: https://justsmartchoice.com
+Document root: /home2/scusawco/public_html
+Default folder: services/engineering
+Header include: /home2/scusawco/public_html/sections-library/header.php
+Footer include: /home2/scusawco/public_html/sections-library/footer.php
+Method: Local</pre></div>
+<h2>3. Create the post</h2><p>Open <strong>Blogging → Posts → New Post</strong>. Enter the title, URL slug, summary, article body, meta title, meta description, and keywords. Choose a website, category, language, body template, and status.</p>
+<h2>4. Choose the publishing folder</h2><p>The target folder is relative to the website document root. For an Engineering article, use <code>services/engineering</code>. Do not enter the complete server path in the post. The module combines the website document root, target folder, and slug.</p>
+<div class="publishx-example"><h4>Generated result</h4><pre>Physical file:
+/home2/scusawco/public_html/services/engineering/smart-choice-services-engineering-testing-blog.php
+
+Public URL:
+https://justsmartchoice.com/services/engineering/smart-choice-services-engineering-testing-blog.php</pre></div>
+<h2>5. Add a featured image</h2><p>Use <strong>Upload Image</strong> to upload a new image directly to the post, or select <strong>Choose from Blogging Library</strong>. The chooser displays only files stored in the Blogging module media folder. It does not open or scan the complete CRM media library.</p>
+<h2>6. Manage Blogging media</h2><p>Open <strong>Blogging → Media</strong> to upload reusable images and videos. Supported formats include JPG, PNG, WebP, GIF, MP4, and WebM. Copy a media URL when you need to place it inside the article editor, gallery, or video field.</p>
+<h2>7. Preview templates</h2><p>Open <strong>Blogging → Templates</strong>. Click anywhere on a template card. A complete preview opens showing typography, featured-image placement, content columns, lists, call-to-action areas, and responsive behavior. Templates generate the body only; the website keeps its shared header, navigation, and footer.</p>
+<h2>8. Use AI assistance</h2><p>Enter a topic and optional instructions, then use the AI buttons for the title, summary, article, meta title, meta description, and keywords. Review every result before publishing. AI should improve writing and SEO, but staff remain responsible for factual accuracy, pricing, permits, licenses, and service claims.</p>
+<h2>9. Save and publish</h2><p>Use <strong>Save</strong> for a draft. Use <strong>Save & Publish to Website</strong> to create the PHP page. A successful result is reported only after the physical file exists and contains content. The post then stores the final file path, URL, and publication date.</p>
+<h2>10. Verify the page</h2><p>Open the saved public URL. Confirm the shared header and footer appear, the featured image loads, the page title and meta description are correct, all buttons work, and the mobile layout is readable. When the URL returns “Page Not Found,” use the website <strong>Test</strong> action and verify the document root and target folder.</p>
+<h2>11. Review reports</h2><p>Open <strong>Blogging → Reports</strong> to review posts, published pages, views, and active website profiles. Add the GA4 Measurement ID to the website profile or Blogging settings for Google Analytics reporting.</p>
+<h2>12. Safe operating rules</h2><ul><li>Do not enter <code>..</code> in target folders.</li><li>Do not publish into the CRM application folder.</li><li>Use the website shared header and footer instead of copying them into every article.</li><li>Use readable lowercase slugs.</li><li>Review AI-created content before publication.</li><li>Test the final URL before sending it to customers.</li></ul>
+</div></div></div></div><?php init_tail(); ?></body></html>

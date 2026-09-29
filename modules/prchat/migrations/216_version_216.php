@@ -1,0 +1,10 @@
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+class Migration_Version_216 extends App_module_migration
+{
+    public function up()
+    {
+        update_option('prchat_version', '2.1.6');
+    }
+    public function down() {}
+}

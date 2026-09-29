@@ -1,0 +1,25 @@
+
+/* Smart Choice Purchasing Hub polish */
+.ph-quick-nav{background:#fff;border:1px solid #d7e3e6;border-left:6px solid #f47c20;border-radius:12px;margin:0 0 18px 0;padding:12px 14px;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+.ph-quick-nav-title{font-weight:800;color:#169179;margin:0 0 8px 0;font-size:15px;letter-spacing:.2px}.ph-quick-nav-links{display:flex;flex-wrap:wrap;gap:8px}.ph-quick-nav-links a{display:inline-flex;align-items:center;gap:6px;background:#eaf4ff;color:#0057b8!important;border:1px solid #c9e3ff;border-radius:999px;padding:7px 12px;font-size:12px;font-weight:700;text-decoration:none!important;line-height:1.1}.ph-quick-nav-links a:hover,.ph-quick-nav-links a.active{background:#169179;color:#fff!important;border-color:#169179;box-shadow:0 6px 14px rgba(22,145,121,.22)}
+.ph-health-card{background:#fff;border-radius:14px;box-shadow:0 10px 28px rgba(0,0,0,.10);border-top:6px solid #f47c20;padding:22px;margin-bottom:18px}.ph-health-card h4{color:#169179;font-weight:800;margin-top:0}.ph-health-ok{color:#169179;font-weight:700}.ph-health-warn{color:#f47c20;font-weight:700}.ph-health-table td{padding:8px 10px!important;vertical-align:middle!important}.ph-pill{display:inline-block;border-radius:999px;background:#eaf4ff;color:#0057b8;padding:5px 10px;font-weight:700;font-size:12px}
+body .table th, body .table td { word-break: normal; }
+
+
+/* Purchasing Hub v2.0.6 American purchasing/accounting polish */
+body .ph-quick-nav{border-radius:16px;max-width:1180px;margin-left:auto;margin-right:auto;}
+body .ph-quick-nav-links a{border-radius:999px;}
+body .table thead th{background:#169179!important;color:#fff!important;border-color:#137b67!important;text-transform:capitalize!important;}
+body .table thead th:first-child{border-top-left-radius:8px;}
+body .table thead th:last-child{border-top-right-radius:8px;}
+body .btn{border-radius:7px;}
+body .panel_s .panel-body, body .panel-body{border-radius:12px;}
+body .dataTables_wrapper .row:first-child{margin-bottom:10px;}
+body .label, body .badge{border-radius:999px;}
+body .btn-info, body .btn-primary{background:#0057b8!important;border-color:#0057b8!important;}
+body .btn-success{background:#169179!important;border-color:#169179!important;}
+body .btn-warning{background:#f47c20!important;border-color:#f47c20!important;color:#fff!important;}
+body .btn-danger{border-radius:7px;}
+body .form-group label, body label.control-label{text-transform:capitalize;}
+body .modal-header{background:#169179;color:#fff;border-top-left-radius:8px;border-top-right-radius:8px;}
+body .modal-header .close{color:#fff;opacity:.9;}

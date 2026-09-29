@@ -1,0 +1,8 @@
+Google Meet v1.0.5
+
+Fixed:
+- Unable to load requested file: google_meet/dashboard.php
+- Added both flat and nested view paths.
+- Controller now loads flat module views: dashboard, create, settings, reports.
+- Database setup from v1.0.4 preserved.
+- Migration 105 added.

@@ -1,0 +1,8 @@
+PRChat 2.2.4 - ChatZoomView Bootstrap Repair
+
+- Prevents PHP notices from other CRM modules from contaminating the staff-list JSON response.
+- Removes remaining live-presence dependencies from initial contact rendering.
+- Safely handles missing Pusher presence, malformed unread payloads, and unavailable renderer helpers.
+- Adds an independent loader release failsafe that works even when later JavaScript fails.
+- Preserves all messages, settings, uploads, credentials, tables, and unrelated functionality.
+- Adds sequential migration 224_version_224.php.

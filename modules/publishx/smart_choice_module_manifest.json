@@ -1,0 +1,17 @@
+{
+  "module": "publishx",
+  "display_name": "Blogging",
+  "version": "1.1.1",
+  "core_files_modified": [],
+  "core_tables_modified": [],
+  "module_tables": [
+    "publishx_posts",
+    "publishx_categories",
+    "publishx_languages",
+    "publishx_websites",
+    "publishx_views"
+  ],
+  "global_css": false,
+  "global_javascript": false,
+  "uninstall_deletes_data": false
+}

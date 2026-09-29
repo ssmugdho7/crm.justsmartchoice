@@ -1,0 +1,6 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<div class="smart-choice-core-page">
+<?php init_head(); ?>
+<div id="wrapper"><div class="content"><div class="panel_s"><div class="panel-body"><h3 class="tw-mt-0"><i class="fa fa-triangle-exclamation"></i> System Error Report</h3><a href="<?php echo admin_url('smart_choice_core_upgrade'); ?>" class="btn btn-default btn-sm">Dashboard</a><a href="<?php echo admin_url('smart_choice_core_upgrade/export_error_report'); ?>" class="btn btn-info btn-sm">Export CSV</a><hr><div class="table-responsive"><table class="table table-striped"><thead><tr><th>Type</th><th>File</th><th>Line</th><th>Message</th><th>Date</th></tr></thead><tbody><?php if (!empty($errors)) { foreach ($errors as $row) { ?><tr><td><?php echo html_escape($row['type'] ?? ''); ?></td><td><?php echo html_escape($row['file'] ?? ''); ?></td><td><?php echo html_escape($row['line'] ?? ''); ?></td><td><?php echo html_escape($row['message'] ?? ''); ?></td><td><?php echo html_escape($row['date'] ?? ''); ?></td></tr><?php }} else { ?><tr><td colspan="5" class="text-center text-muted">No errors found.</td></tr><?php } ?></tbody></table></div></div></div></div></div><?php init_tail(); ?>
+
+</div>

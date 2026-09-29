@@ -1,0 +1,437 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/themeColorPrimary"
+    android:orientation="vertical"
+    tools:context=".customers.presentation.view_customer.tabs.contacts.edit.EditContactActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.Main">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/themeColorPrimary"
+            app:collapseIcon="@color/white"
+            app:popupTheme="@style/Theme.Main"
+            app:subtitleTextColor="@color/white"
+            app:titleTextColor="@color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <ImageView
+                    android:id="@+id/toolbarBack"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.20"
+                    android:background="@drawable/ic_baseline_arrow_back_24"
+                    android:backgroundTint="@color/white"
+                    android:contentDescription="@string/back_btn" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/toolbarText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1.9"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/updateContactBtn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.8"
+                    android:backgroundTint="@color/white"
+                    android:contentDescription="@string/back_btn"
+                    android:text="@string/update"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="4dp">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@android:style/Widget.Holo.ProgressBar.Large"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:visibility="gone" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp">
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/first_name"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/first_name"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="30"
+                    app:endIconMode="clear_text"
+                    app:startIconContentDescription="@string/first_name"
+                    app:startIconDrawable="@drawable/ic_baseline_person_outline_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/last_name"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/last_name"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="30"
+                    app:endIconMode="clear_text"
+                    app:startIconContentDescription="@string/last_name"
+                    app:startIconDrawable="@drawable/ic_baseline_person_outline_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/position"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/position"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="30"
+                    app:endIconMode="clear_text"
+                    app:startIconContentDescription="@string/position"
+                    app:startIconDrawable="@drawable/ic_baseline_business_center_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/email"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/email"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="40"
+                    app:endIconMode="clear_text"
+                    app:startIconContentDescription="@string/email"
+                    app:startIconDrawable="@drawable/ic_baseline_mail_outline_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/phone"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/phone"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="20"
+                    app:endIconMode="clear_text"
+                    app:startIconContentDescription="@string/phone"
+                    app:startIconDrawable="@drawable/ic_baseline_phone_iphone_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="phone" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/password"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/password"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="20"
+                    app:endIconMode="clear_text"
+                    app:startIconContentDescription="@string/password"
+                    app:startIconDrawable="@drawable/ic_baseline_security_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <CheckBox
+                    android:id="@+id/primary_contact"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/primary_contact"
+                    app:buttonTint="@color/themeColorPrimary" />
+
+
+                <CheckBox
+                    android:id="@+id/send_set_password_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/send_set_password_email"
+                    app:buttonTint="@color/themeColorPrimary" />
+
+                <View
+                    android:layout_marginTop="5dp"
+                    android:background="@color/GrayCloud"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:text="@string/permissions"
+                    android:layout_height="wrap_content" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:id="@+id/invoicesPermissionSwitch"
+                        app:thumbTint="@color/Gray"
+                        android:text="@string/tab_invoices"
+                        app:trackTint="@color/GreenOnion"
+                        android:checked="true"/>
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:id="@+id/estimatesPermissionSwitch"
+                        app:thumbTint="@color/Gray"
+                        android:text="@string/estimate"
+                        app:trackTint="@color/GreenOnion"
+                        android:checked="true"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:id="@+id/contractsPermissionSwitch"
+                        app:thumbTint="@color/Gray"
+                        android:text="@string/contract"
+                        app:trackTint="@color/GreenOnion"
+                        android:checked="true"/>
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:id="@+id/proposalsPermissionSwitch"
+                        app:thumbTint="@color/Gray"
+                        android:text="@string/tab_proposals"
+                        app:trackTint="@color/GreenOnion"
+                        android:checked="true"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:id="@+id/supportPermissionSwitch"
+                        app:thumbTint="@color/Gray"
+                        android:text="@string/tab_support"
+                        app:trackTint="@color/GreenOnion"
+                        android:checked="true"/>
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:id="@+id/projectsPermissionSwitch"
+                        app:thumbTint="@color/Gray"
+                        android:text="@string/tab_projects"
+                        app:trackTint="@color/GreenOnion"
+                        android:checked="true"/>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <View
+                    android:layout_marginTop="5dp"
+                    android:background="@color/GrayCloud"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:text="@string/email_notifications"
+                    android:layout_height="wrap_content" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:id="@+id/invoiceNotificationSwitch"
+                        app:thumbTint="@color/Gray"
+                        android:text="@string/tab_invoices"
+                        app:trackTint="@color/GreenOnion"
+                        android:checked="true"/>
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:id="@+id/estimatesNotificationSwitch"
+                        app:thumbTint="@color/Gray"
+                        android:text="@string/estimate"
+                        app:trackTint="@color/GreenOnion"
+                        android:checked="true"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:id="@+id/creditNoteSwitch"
+                        app:thumbTint="@color/Gray"
+                        android:text="@string/credit_note"
+                        app:trackTint="@color/GreenOnion"
+                        android:checked="true"/>
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:id="@+id/projectNotificationSwitch"
+                        app:thumbTint="@color/Gray"
+                        android:text="@string/tab_projects"
+                        app:trackTint="@color/GreenOnion"
+                        android:checked="true"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:id="@+id/ticketsNotificationSwitch"
+                        app:thumbTint="@color/Gray"
+                        android:text="@string/tickets"
+                        app:trackTint="@color/GreenOnion"
+                        android:checked="true"/>
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:id="@+id/contractNotificationSwitch"
+                        app:thumbTint="@color/Gray"
+                        android:text="@string/contract"
+                        app:trackTint="@color/GreenOnion"
+                        android:checked="true"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:id="@+id/tasksNotificationSwitch"
+                        app:thumbTint="@color/Gray"
+                        android:text="@string/tab_tasks"
+                        app:trackTint="@color/GreenOnion"
+                        android:checked="true"/>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </LinearLayout>
+        </ScrollView>
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>

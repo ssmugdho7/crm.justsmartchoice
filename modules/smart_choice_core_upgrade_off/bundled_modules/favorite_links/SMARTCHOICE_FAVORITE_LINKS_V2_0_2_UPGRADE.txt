@@ -1,0 +1,16 @@
+Smart Choice Favorite Links v2.0.2 Upgrade Notes
+
+1. Fixed module folder constant. Old version loaded assets from /modules/Favorite%20Links/ and caused 404 errors.
+2. Fixed non-clickable star caused by mobile script moving only the inner span instead of the dropdown anchor.
+3. Added PHP 8.5 safer null checks and migration down() methods.
+4. Added settings section for /admin/settings.
+5. Added automatic link normalization for common mistakes:
+   - adminmodules -> admin/modules
+   - ttps:// -> https://
+   - crm.justsmartchoice.com// -> crm.justsmartchoice.com/
+6. Preserved original tblperfex_menu_links table and original module workflow.
+
+After upload:
+- Run Upgrade Database for Favorite Links.
+- Clear application/cache except index.html.
+- Press Ctrl+F5 and log back in.

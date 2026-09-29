@@ -1,0 +1,54 @@
+.sc-sales-meta-panel{border:1px solid #dce6ef;border-radius:10px;background:#f8fbfd;padding:14px;margin:16px 0;box-shadow:0 3px 12px rgba(20,54,88,.06)}
+.sc-meta-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.sc-meta-heading strong{display:block;font-size:15px;color:#153f68}.sc-meta-heading small{display:block;color:#6b7280;margin-top:2px}
+.sc-meta-grid{display:grid;grid-template-columns:repeat(3,minmax(190px,1fr));gap:12px}.sc-meta-grid .form-group{margin-bottom:0}.sc-meta-grid label{font-size:12px;font-weight:700;color:#334155}
+.sc-payment-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px;padding-top:12px;border-top:1px solid #dce6ef}.sc-payment-summary>div{background:#fff;border:1px solid #e2e8f0;border-radius:7px;padding:9px 11px}.sc-payment-summary span{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#64748b}.sc-payment-summary strong{display:block;margin-top:3px;font-size:16px;color:#0f5132}
+.sc-discount-label{display:block;margin-top:3px;font-weight:500;color:#64748b}
+/* Unified sales item-entry geometry */
+.sc-aligned-sales-table{width:100%!important;table-layout:fixed!important;border-collapse:separate!important;border-spacing:0!important}
+.sc-aligned-sales-table thead th{vertical-align:middle!important;height:44px!important;padding:8px!important;white-space:normal!important}
+.sc-aligned-sales-table tbody tr.main>td,.sc-aligned-sales-table tbody tr.item>td{vertical-align:top!important;padding:10px 6px!important;height:auto!important}
+.sc-aligned-sales-table textarea.form-control{height:118px!important;min-height:118px!important;max-height:180px!important;resize:vertical!important;line-height:1.4!important}
+.sc-aligned-sales-table input.form-control,.sc-aligned-sales-table .bootstrap-select>.dropdown-toggle,.sc-aligned-sales-table select.form-control{height:44px!important;min-height:44px!important;line-height:24px!important;margin:0 0 7px!important}
+.sc-aligned-sales-table .input-transparent{height:34px!important;min-height:34px!important;margin-top:2px!important}
+.sc-aligned-sales-table .checkbox{margin-top:7px!important;margin-bottom:0!important}
+.sc-aligned-sales-table td.amount{padding-top:21px!important;font-weight:700!important;white-space:nowrap!important}
+.sc-aligned-sales-table tbody tr.main td:last-child,.sc-aligned-sales-table tbody tr.item td:last-child{padding-top:20px!important;text-align:center!important}
+.sc-aligned-sales-table .btn{min-width:38px!important;height:38px!important;padding:8px 11px!important;border-radius:7px!important}
+@media(max-width:991px){.sc-meta-grid{grid-template-columns:repeat(2,minmax(180px,1fr))}.sc-aligned-sales-table{min-width:1040px!important}.s_table,.table-responsive{overflow-x:auto!important;-webkit-overflow-scrolling:touch}}
+@media(max-width:767px){.sc-meta-grid,.sc-payment-summary{grid-template-columns:1fr}.sc-sales-meta-panel{padding:11px}.sc-aligned-sales-table .btn{min-width:44px!important;height:44px!important}.sc-aligned-sales-table{min-width:980px!important}}
+
+.sc-customer-payment-card{margin-top:18px}.sc-customer-payment-grid{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:10px}.sc-customer-payment-grid>div{border:1px solid #dbe5ef;border-radius:8px;padding:10px;background:#f8fbfd}.sc-customer-payment-grid span{display:block;font-size:11px;text-transform:uppercase;color:#64748b}.sc-customer-payment-grid strong{display:block;margin-top:4px;color:#163f68}@media(max-width:767px){.sc-customer-payment-grid{grid-template-columns:1fr}}
+
+/* v1.3.0 direct sales payment panel */
+.smart-choice-payment-schedule-panel{margin:18px 0!important}
+.smart-choice-payment-schedule-panel .panel-body{border:1px solid #dce6ef;border-radius:10px;background:#f8fbfd;box-shadow:0 3px 12px rgba(20,54,88,.06)}
+.smart-choice-payment-schedule-panel .form-group{margin-bottom:12px}
+.smart-choice-payment-schedule-panel .form-control,
+.smart-choice-payment-schedule-panel .bootstrap-select>.dropdown-toggle,
+.smart-choice-payment-schedule-panel .input-group-addon{min-height:40px}
+.smart-choice-live-payment-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px;padding-top:12px;border-top:1px solid #dce6ef}
+.smart-choice-live-payment-summary>div{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:9px 11px}
+.smart-choice-live-payment-summary span{display:block;font-size:11px;text-transform:uppercase;color:#64748b}
+.smart-choice-live-payment-summary strong{display:block;margin-top:3px;font-size:16px;color:#0f5132}
+
+/* Keep sales item inputs in one straight horizontal geometry. */
+table.items{width:100%!important;table-layout:fixed!important}
+table.items thead th{height:46px!important;vertical-align:middle!important;padding:8px 6px!important}
+table.items tbody tr.main>td,table.items tbody tr.item>td{vertical-align:top!important;padding:8px 5px!important}
+table.items textarea.form-control{min-height:108px!important;height:108px!important;line-height:1.35!important;resize:vertical!important;margin:0!important}
+table.items input.form-control,table.items select.form-control,table.items .bootstrap-select>.dropdown-toggle{height:40px!important;min-height:40px!important;margin:0 0 6px!important}
+table.items td.amount{padding-top:18px!important;white-space:nowrap!important}
+table.items td:last-child{text-align:center!important;padding-top:16px!important}
+table.items .btn{height:38px!important;min-width:38px!important;padding:7px 10px!important}
+
+/* Clients table: never clip the final date/action columns. */
+.table-clients{min-width:1180px!important;width:100%!important;table-layout:auto!important}
+.table-clients th,.table-clients td{vertical-align:middle!important;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important}
+.table-clients td:first-child,.table-clients th:first-child{min-width:210px!important}
+.table-clients td:last-child,.table-clients th:last-child{min-width:145px!important}
+.table-clients .row-options{white-space:normal!important}
+@media(max-width:991px){
+ .smart-choice-live-payment-summary{grid-template-columns:1fr}
+ .s_table,.table-responsive{overflow-x:auto!important;-webkit-overflow-scrolling:touch!important}
+ table.items{min-width:1050px!important}
+}

@@ -1,0 +1,8 @@
+Smart Choice Links 1.2.2
+
+- Fixed left and right star menus not opening from the CRM navigation bar.
+- Removed Bootstrap dropdown and tooltip conflicts from cloned star controls.
+- Added exclusive module click handling with proper open/close and Escape behavior.
+- Replaced sticky Bootstrap hover titles with lightweight non-sticky labels.
+- Preserved the correct one-star-on-each-side placement from version 1.2.1.
+- Expanded the How To page with complete setup, usage, permissions, troubleshooting, upgrade, and maintenance instructions.

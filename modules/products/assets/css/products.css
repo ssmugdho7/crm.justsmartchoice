@@ -1,0 +1,16 @@
+.zoom {
+  transition: transform .2s; 
+  width: auto;
+  height: 60px;
+}
+
+.zoom:hover {
+  transform: scale(1.4); 
+}
+
+.table-products .tag,
+.table-variations .tag {
+  padding: 7.5px;
+}
+/* Smart Choice Products v1.9.2 */
+.sc-products-nav .panel-body{padding:8px 10px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}.sc-products-nav .btn{padding:4px 9px;font-size:12px;border-radius:6px;line-height:1.35}.sc-products-toolbar{display:flex;gap:6px;align-items:center;justify-content:flex-end;flex-wrap:wrap;margin:8px 0}.sc-products-toolbar .btn{padding:4px 8px;font-size:12px;border-radius:6px}.sc-products-filter{height:30px;font-size:12px;max-width:240px}.sc-products-checkbox{width:20px;text-align:center}.sc-products-status-badge,.sc-products-pill{display:inline-block;padding:2px 7px;border-radius:999px;font-size:11px;font-weight:600;color:#fff;background:#5b3f86;white-space:nowrap}.sc-products-pill.orange{background:#f7941d}.sc-products-pill.green{background:#16a34a}.table-products td,.table-product-category td,.table-order-history td,.table-coupon td,.table-variations td{vertical-align:middle!important}.sc-product-card{height:100%;min-height:340px;border-radius:12px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.08);background:#fff}.sc-product-card-img{height:170px;object-fit:cover;width:100%;background:#f4f4f5}.sc-product-card-body{padding:12px;min-height:150px}.sc-product-card-title{font-size:15px;font-weight:700;line-height:1.25;min-height:38px;max-height:38px;overflow:hidden}.sc-product-card-desc{font-size:12px;line-height:1.35;min-height:50px;max-height:50px;overflow:hidden}.sc-product-gallery{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.sc-product-gallery img{width:68px;height:68px;object-fit:cover;border-radius:8px;border:1px solid #ddd}.sc-product-admin-description textarea{resize:vertical}.bootstrap-select .dropdown-menu{max-height:260px!important;overflow-y:auto!important}.bootstrap-select .inner{max-height:240px!important;overflow-y:auto!important}.bootstrap-select .dropdown-menu .inner{overflow-y:auto!important}.bootstrap-select .dropdown-menu .dropdown-menu{overflow:visible!important}.sc-construction-help{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;box-shadow:0 8px 20px rgba(0,0,0,.06)}

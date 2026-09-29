@@ -1,0 +1,17 @@
+Debug Mode Smart Choice Upgrade
+Version: 2.0.0
+Author: Smart Choice Contractors USA / Harold Cabrera
+
+Description:
+Debug Mode helps Smart Choice Contractors USA manage troubleshooting tools inside Perfex CRM without editing core files. The module provides admin-controlled debugging, role-based access, safe activation/deactivation controls, a clean settings screen, and a health check so authorized staff can review debugging status while keeping the live CRM protected.
+
+Included:
+- PHP 8.5 / Perfex CRM 3.4.1 target compatibility.
+- Safe migrations 100-200.
+- Activate/Deactivate setting.
+- Client-area visibility setting.
+- Role and staff access fields.
+- Health check page.
+- English and Spanish labels.
+- Smart Choice UI styling.
+- No activation/license validation.

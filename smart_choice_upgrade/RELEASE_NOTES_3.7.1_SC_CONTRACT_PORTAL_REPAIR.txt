@@ -1,0 +1,33 @@
+SMART CHOICE CRM 3.7.1 CONTRACT & CUSTOMER PORTAL REPAIR
+
+Scope: repair only; existing features, settings, modules, uploads, credentials and API values preserved.
+
+Implemented:
+- Contracts moved into Sales menu.
+- Save buttons in Contract Content tab.
+- Media-folder attachment workflow.
+- CC-only contract email delivery.
+- View as Customer action.
+- Two-column compact merge-field panel with collapse button.
+- Branded, readable contract charts.
+- RESIDENCE title validation without losing typed form data.
+- Customer initials captured at signing and exposed as {C_initial}.
+- Contract payment/project/financing custom fields created by migration.
+- Live comma formatting for monetary inputs across admin and customer forms.
+- Duplicate event-email suppression for contract-sign, ticket-open and customer-registration messages.
+- Items toolbar: sample header, test import, reload and bulk actions.
+- Proposal line-item drag initialization.
+- Responsive customer portal navigation, cards, knowledge base, footer and profile-image alignment.
+- Customer session default increased to 24 hours.
+- Migration sequence repaired with bridge migrations 358 and 360; target 371.
+
+Deployment:
+1. Back up database and all CRM files.
+2. Preserve live application/config/database.php, application/config/app-config.php and uploads/.
+3. Upload/replace this package.
+4. Run CRM database upgrade to migration 371.
+5. Clear application/cache except .htaccess and index.html.
+6. Reset OPcache.
+
+Rollback:
+Restore the file and database backups. Migration 371 is additive and does not remove existing data.

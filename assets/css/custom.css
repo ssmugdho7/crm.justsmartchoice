@@ -1,0 +1,121 @@
+:root{--sc-green:#169179;--sc-green-dark:#0e6f5b;--sc-orange:#f47c20;--sc-blue:#0057b8;--sc-light:#eef7f5;--sc-dark:#111827;--sc-gray:#4b5563}
+#header{height:68px!important;background:#fff!important;border-bottom:3px solid var(--sc-orange)!important}
+#header .navbar-nav>li>a{height:68px!important;padding-top:24px!important;padding-bottom:24px!important}
+#header .navbar-brand,#header a.logo{height:68px!important;display:flex!important;align-items:center!important;padding:4px 14px!important}
+#header a.logo img,.navbar-brand img{max-height:56px!important;width:auto!important;object-fit:contain!important}
+.sidebar{top:68px!important;background:#fff!important}
+.sidebar ul.nav li a{border-radius:7px!important}
+.sidebar>ul.nav>li.active>a,.sidebar>ul.nav>li:hover>a{background:linear-gradient(90deg,var(--sc-green),var(--sc-green-dark))!important;color:#fff!important;border-color:transparent!important}
+.sidebar>ul.nav>li.active>a .menu-icon,.sidebar>ul.nav>li:hover>a .menu-icon{color:#fff!important}
+.btn-primary{background:var(--sc-orange)!important;border-color:#d96512!important}.btn-primary:hover{background:#d96512!important}
+.btn-success{background:var(--sc-green)!important;border-color:var(--sc-green-dark)!important}.btn-info{background:var(--sc-blue)!important;border-color:#00458f!important}
+.panel_s>.panel-body{border-radius:10px!important;box-shadow:0 3px 14px rgba(17,24,39,.08)!important}
+.table>thead>tr>th{background:#f8fafc!important;color:var(--sc-dark)!important;font-weight:700!important;white-space:nowrap}
+.table>tbody>tr>td{vertical-align:middle!important}.table-responsive{border:0!important}
+@media(max-width:768px){#header{height:62px!important}#header a.logo img,.navbar-brand img{max-height:50px!important}.sidebar{top:62px!important}}
+
+/* Smart Choice responsive knowledge base */
+.kb-search,.knowledge-base-search{max-width:920px;margin:0 auto 24px}.kb-article,.knowledge-base-article,.kb-group{background:#fff;border:1px solid #e3e8ee;border-radius:12px;padding:18px;box-shadow:0 3px 14px rgba(15,23,42,.06);margin-bottom:16px}.kb-article h1,.kb-article h2,.kb-article h3{line-height:1.25}.kb-groups .panel,.knowledge-base .panel{border-radius:12px;overflow:hidden}.kb-groups a,.knowledge-base a{overflow-wrap:anywhere}@media(max-width:991px){.kb-article,.knowledge-base-article,.kb-group{padding:15px}.kb-search,.knowledge-base-search{width:100%}}@media(max-width:767px){.kb-article,.knowledge-base-article,.kb-group{border-radius:9px;padding:12px}.kb-article h1{font-size:24px}.kb-article h2{font-size:20px}.kb-groups .col-md-4,.kb-groups .col-sm-6{width:100%;float:none}}
+
+
+/* Smart Choice CRM 3.7.1 contract/customer portal repair pack */
+:root{--sc-orange:#F28C28;--sc-blue:#3598DB;--sc-green:#169179;--sc-dark:#0E6F5B;--sc-light:#F5F8FA;--sc-border:#DDE6EC}
+body.customers{background:#f4f7f9;color:#24323d}
+body.customers .navbar,body.customers .navbar-default{background:var(--sc-dark)!important;border:0!important;box-shadow:0 4px 16px rgba(14,111,91,.18);min-height:58px}
+body.customers .navbar .navbar-brand{float:left!important;margin-left:0!important;padding:8px 16px!important;display:flex;align-items:center;justify-content:flex-start}
+body.customers .navbar .navbar-brand img{max-height:42px!important;width:auto!important;object-fit:contain}
+body.customers .navbar-nav{display:flex;flex-wrap:wrap;align-items:center;gap:2px}
+body.customers .navbar-nav>li>a{color:#fff!important;border-radius:8px;margin:7px 2px;padding:11px 12px!important;font-weight:600;line-height:18px}
+body.customers .navbar-nav>li>a:hover,body.customers .navbar-nav>.active>a{background:rgba(255,255,255,.16)!important;color:#fff!important}
+body.customers .dropdown-menu{border-radius:10px;border:1px solid var(--sc-border);box-shadow:0 14px 38px rgba(24,39,55,.16);padding:7px}
+body.customers .dropdown-menu>li>a{border-radius:7px;padding:8px 10px}
+body.customers .panel_s,body.customers .panel{border:1px solid var(--sc-border)!important;border-radius:12px!important;box-shadow:0 5px 18px rgba(31,56,76,.07)!important;overflow:hidden}
+body.customers .panel_s .panel-body,body.customers .panel .panel-body{padding:18px!important}
+body.customers .panel-heading{background:#fff!important;border-bottom:1px solid var(--sc-border)!important;font-weight:700}
+body.customers .nav-tabs{background:#fff;border:1px solid var(--sc-border);border-radius:10px;padding:5px;display:flex;flex-wrap:wrap;gap:3px}
+body.customers .nav-tabs>li>a{border:0!important;border-radius:7px!important;padding:8px 12px!important;font-weight:600;color:#415463}
+body.customers .nav-tabs>li.active>a,body.customers .nav-tabs>li>a:hover{background:var(--sc-blue)!important;color:#fff!important}
+body.customers .project-summary .panel,body.customers [class*="project-summary"] .panel{min-height:0!important;border-left:4px solid var(--sc-green)!important}
+body.customers .knowledge-base .panel,body.customers .kb-category,body.customers [class*="knowledge-base"] .panel{min-height:0!important;margin-bottom:12px!important}
+body.customers .table-responsive{border:0!important}
+body.customers table.dataTable{width:100%!important}
+body.customers .client-home-chart,.quick-invoices-info{max-width:760px;margin-left:auto;margin-right:auto}
+body.customers footer,body.customers .footer{background:var(--sc-dark)!important;color:#fff!important;border:0!important;padding:20px 0!important;margin-top:30px}
+body.customers footer a,body.customers .footer a{color:#fff!important;text-decoration:underline}
+body.customers .profile-image img,body.customers .client-profile-image img,body.customers .navbar .img-circle{width:36px!important;height:36px!important;object-fit:cover!important;object-position:center!important;border:2px solid rgba(255,255,255,.8)}
+.sc-contract-chart-card{border-radius:14px!important;box-shadow:0 8px 24px rgba(31,56,76,.09)!important}
+.avilable_merge_fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 12px;background:#f8fafc;border:1px solid #dce6ed;border-radius:10px;padding:12px;max-height:430px;overflow:auto}
+.avilable_merge_fields>div{margin:0!important;padding:6px 8px;border-radius:6px;background:#fff;border:1px solid #edf1f4;font-size:12px}
+.avilable_merge_fields a{font-size:11px}
+.sc-proposal-drag{cursor:move;color:var(--sc-blue);display:inline-block}
+@media(max-width:991px){body.customers .navbar-nav{display:block}.avilable_merge_fields{grid-template-columns:1fr}body.customers .navbar-collapse{background:var(--sc-dark)}body.customers .navbar-nav>li>a{margin:2px 8px}.quick-invoices-info{max-width:100%}}
+@media(max-width:767px){body.customers .panel_s .panel-body,body.customers .panel .panel-body{padding:13px!important}body.customers .nav-tabs>li{float:none!important;flex:1 1 calc(50% - 4px);text-align:center}body.customers .navbar-brand img{max-width:190px}.table-responsive{overflow-x:auto}.tw-max-w-5xl{max-width:100%!important}}
+
+/* Smart Choice CRM 3.7.2 verified contract and client portal repair */
+body.customers .navbar.header{background:#0E6F5B!important;border-bottom:4px solid #F28C28!important;border-radius:0!important}
+body.customers .navbar.header>.container{width:100%!important;max-width:none!important;padding-left:10px!important;padding-right:14px!important;display:flex!important;align-items:flex-start!important}
+body.customers .navbar.header .navbar-header{flex:0 0 auto!important;margin:0!important}.navbar.header .navbar-brand.logo{min-width:0!important;width:auto!important;margin:0 14px 0 0!important;padding-left:0!important}.navbar.header .navbar-brand.logo img{max-width:220px!important}
+body.customers #theme-navbar-collapse{flex:1 1 auto!important;padding:0!important}body.customers #theme-navbar-collapse .navbar-nav{float:none!important;display:flex!important;justify-content:flex-start!important;align-items:center!important;flex-wrap:wrap!important;margin:2px 0!important;gap:3px!important}body.customers #theme-navbar-collapse .navbar-nav>li{float:none!important}body.customers #theme-navbar-collapse .navbar-nav>li>a{padding:9px 10px!important;margin:3px 0!important;border-radius:7px!important;white-space:nowrap!important;font-size:13px!important}body.customers #theme-navbar-collapse .customers-nav-item-profile{margin-left:auto!important}
+body.customers .footer{background:#0E6F5B!important;border-top:4px solid #F28C28!important;color:#fff!important;box-shadow:0 -5px 18px rgba(14,111,91,.15)!important}
+body.customers .section-client-dashboard>.panel_s,body.customers .section-client-dashboard>.panel{max-width:100%!important}.sc-client-dashboard-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:14px 0}.sc-client-summary-card{display:flex;align-items:center;gap:13px;background:#fff;border:1px solid #dce6ec;border-left:5px solid #3598DB;border-radius:12px;padding:15px;text-decoration:none!important;box-shadow:0 5px 16px rgba(31,56,76,.07)}.sc-client-summary-card:nth-child(2){border-left-color:#F28C28}.sc-client-summary-card:nth-child(3){border-left-color:#169179}.sc-client-summary-card:nth-child(4){border-left-color:#0E6F5B}.sc-client-summary-card i{font-size:24px;color:#3598DB}.sc-client-summary-card strong{display:block;font-size:22px;color:#172b3a}.sc-client-summary-card span{font-size:12px;color:#607381;text-transform:uppercase;font-weight:700}
+body.customers .knowledge-base .panel-body,body.customers .kb-category,body.customers [class*=knowledge-base] .panel-body{padding:12px!important}body.customers .knowledge-base .panel,body.customers [class*=knowledge-base] .panel{margin-bottom:8px!important;border-radius:9px!important}body.customers .knowledge-base h4,body.customers .knowledge-base h3{margin-top:4px!important;margin-bottom:7px!important;font-size:15px!important}
+body.customers .table-responsive{overflow-x:visible!important}body.customers table.dataTable{table-layout:auto!important}body.customers table.dataTable th,body.customers table.dataTable td{padding:8px!important;font-size:12px!important}body.customers .horizontal-scrollable-tabs .scroller{display:none!important}body.customers .horizontal-tabs{overflow:visible!important}
+.staff-profile-image-small,.staff-profile-image-thumb,.staff-profile-image{object-fit:cover!important;object-position:center!important;border-radius:50%!important}
+@media(max-width:1100px){.sc-client-dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr))}body.customers #theme-navbar-collapse .navbar-nav>li>a{font-size:12px!important;padding:8px!important}}
+@media(max-width:767px){body.customers .navbar.header>.container{display:block!important;padding:0 10px!important}body.customers #theme-navbar-collapse .navbar-nav{display:block!important}body.customers #theme-navbar-collapse .customers-nav-item-profile{margin-left:0!important}.sc-client-dashboard-grid{grid-template-columns:1fr 1fr}.sc-client-summary-card{padding:11px}.sc-client-summary-card strong{font-size:18px}}
+
+/* Smart Choice CRM 3.7.4 customer portal finishing */
+body.customers .kb-search-input, body.customers input[name="q"]{color:#111827!important;background:#fff!important;border-color:#cbd5e1!important}
+body.customers .kb-search-input::placeholder,body.customers input[name="q"]::placeholder{color:#475569!important;opacity:1!important}
+body.customers .invoice-quick-info .panel_s,body.customers .sc-dashboard-summary-card{border:1px solid #dbe7ef!important;border-radius:14px!important;box-shadow:0 6px 18px rgba(14,111,91,.08)!important;overflow:hidden!important}
+body.customers .invoice-quick-info .panel-body,body.customers .sc-dashboard-summary-card .panel-body{padding:14px!important}
+body.customers .invoice-quick-info i,body.customers .sc-dashboard-summary-card i{font-size:22px!important;color:#169179!important}
+body.customers .tickets-statuses a,body.customers .ticket-status-card{border-radius:12px!important;color:#fff!important;border:0!important;box-shadow:0 5px 14px rgba(15,23,42,.12)!important}
+body.customers .tickets-statuses>*:nth-child(1) a{background:#3598DB!important}body.customers .tickets-statuses>*:nth-child(2) a{background:#169179!important}body.customers .tickets-statuses>*:nth-child(3) a{background:#7c3aed!important}body.customers .tickets-statuses>*:nth-child(4) a{background:#db2777!important}body.customers .tickets-statuses>*:nth-child(5) a{background:#475569!important}
+body.customers .sc-auto-page-heading{background:#0E6F5B!important;color:#fff!important;border-radius:12px!important;padding:12px 16px!important;margin:0 0 16px!important;font-weight:700!important;display:flex!important;align-items:center!important;gap:9px!important}
+body.customers .navbar-nav>li>a i{min-width:18px;text-align:center}
+
+/* SCCRM 3.7.7 final document rendering repairs */
+.smart-choice-signed-images{display:flex;gap:18px;align-items:flex-end;justify-content:center;flex-wrap:wrap}.smart-choice-signature-card{background:#fff;border:1px solid #e4e8ee;border-radius:10px;padding:12px;box-shadow:0 4px 14px rgba(0,0,0,.06)}.smart-choice-initials-card{min-width:130px}.smart-choice-attachment-preview{margin:10px 0 18px;padding:10px;border:1px solid #e6e9ed;border-radius:10px;background:#fafbfc}.smart-choice-attachment-preview img{display:block;max-width:100%;max-height:520px;margin:auto;border-radius:6px}.smart-choice-pdf-preview object{width:100%;height:650px;border:0}.smart-choice-customer-books-page .panel_s{border-radius:14px;overflow:hidden}.smart-choice-empty-icon{width:70px;height:70px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;border-radius:50%;background:#edf7f5;color:#169179;font-size:30px}@media(max-width:767px){.smart-choice-pdf-preview object{height:480px}.smart-choice-signed-images{display:block}.smart-choice-signature-card{margin-bottom:12px}}
+
+
+/* SCCRM 3.7.8 final sales attachments and customer books */
+.smart-choice-public-upload{margin-top:20px}.smart-choice-public-upload .panel-body{border:1px solid #dce5ec;border-radius:10px;background:#fff;padding:18px}.smart-choice-public-upload h4{margin:0 0 12px;color:#0e6f5b}.smart-choice-attachment-preview img{max-width:100%;height:auto;border-radius:8px;border:1px solid #e2e8f0;margin-top:10px}.smart-choice-pdf-preview object{width:100%;min-height:520px;border:1px solid #dce5ec;border-radius:8px;margin-top:10px}.sc-customer-books-shell{min-height:55vh;display:flex;align-items:center;padding:45px 0}.sc-customer-books-card{max-width:720px;margin:0 auto;background:#fff;border:1px solid #dce5ec;border-radius:16px;padding:55px 25px;box-shadow:0 12px 32px rgba(14,111,91,.10)}.sc-customer-books-icon{width:74px;height:74px;border-radius:18px;background:#eef8f6;color:#169179;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 18px}.sc-customer-books-card h1{font-size:28px;color:#0e6f5b;margin:0 0 10px}.sc-customer-books-card p{color:#64748b;margin:0}@media(max-width:767px){.smart-choice-pdf-preview object{min-height:360px}.sc-customer-books-shell{padding:25px 12px}.sc-customer-books-card{padding:38px 18px}.smart-choice-public-upload .panel-body{padding:14px}}
+
+/* Smart Choice 3.9.4 dashboard appointment polish */
+#widget-todays-appointments .panel_s,.today-appointments-widget .panel_s,.appointments-today-widget .panel_s{border-radius:8px!important;box-shadow:0 4px 12px rgba(0,0,0,.18)!important;overflow:hidden!important}
+#widget-todays-appointments .panel-body,.today-appointments-widget .panel-body,.appointments-today-widget .panel-body{padding:10px 12px!important;background:#fff!important}
+#widget-todays-appointments .panel-heading,.today-appointments-widget .panel-heading,.appointments-today-widget .panel-heading{background:#F28C28!important;color:#fff!important;padding:9px 12px!important}
+#widget-todays-appointments table,.today-appointments-widget table,.appointments-today-widget table{font-size:12px!important}
+#widget-todays-appointments td,.today-appointments-widget td,.appointments-today-widget td{padding:6px 8px!important}
+.sc-proposal-notes-terms{border-top:1px solid #e5e7eb}.sc-proposal-notes-terms textarea{min-height:180px}
+@media(max-width:767px){.sc-proposal-notes-terms .col-md-6{margin-bottom:18px}.accounting-template .table-responsive{overflow-x:auto!important}.accounting-template{max-width:100%!important;overflow-x:hidden!important}}
+
+
+/* Smart Choice CRM 4.3.5 - responsive public sales documents */
+#proposal-wrapper,.sc-sales-document-layout,.sc-sales-document-main,.sc-sales-document-sidebar,.preview-top-wrapper,.preview-sticky-container{max-width:100%!important;box-sizing:border-box!important}
+.sc-sales-document-layout{margin-left:0!important;margin-right:0!important}
+.sc-sales-document-main,.sc-sales-document-sidebar{min-width:0!important}
+#proposal-wrapper .table-responsive,.sc-sales-document-main .table-responsive{max-width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important}
+#proposal-wrapper table,.sc-sales-document-main table{max-width:100%!important}
+.sc-customer-sales-actions{max-width:100%!important;flex-wrap:wrap!important;gap:6px!important}
+.invoice-html-files .smart-choice-attachment-preview img{width:auto!important;max-width:150px!important;height:auto!important;max-height:110px!important;object-fit:cover!important;margin:6px 0!important}
+.invoice-html-files .smart-choice-attachment-preview{display:inline-block!important;width:auto!important;max-width:170px!important;padding:6px!important}
+@media(max-width:991px){
+ .sc-sales-document-layout{display:block!important}
+ .sc-sales-document-main,.sc-sales-document-sidebar{width:100%!important;float:none!important;margin-left:0!important;margin-right:0!important}
+ .preview-sticky-container{width:100%!important;padding-left:12px!important;padding-right:12px!important}
+}
+@media(max-width:767px){
+ body{max-width:100%!important;overflow-x:hidden!important}
+ #proposal-wrapper,.preview-top-wrapper,.sc-sales-document-layout{width:100%!important;overflow:hidden!important}
+ #proposal-wrapper .table-responsive,.sc-sales-document-main .table-responsive{width:100%!important;overflow-x:auto!important}
+ #proposal-wrapper table.table,.sc-sales-document-main table.table{width:100%!important;min-width:0!important;table-layout:auto!important}
+ #proposal-wrapper table.table th,#proposal-wrapper table.table td,.sc-sales-document-main table.table th,.sc-sales-document-main table.table td{font-size:11px!important;padding:6px 5px!important;white-space:normal!important;word-break:break-word!important}
+ .transaction-html-info-col-left,.transaction-html-info-col-right{width:100%!important;float:none!important;text-align:left!important}
+ .sc-customer-sales-actions{display:flex!important;width:100%!important;align-items:stretch!important;justify-content:flex-start!important}
+ .sc-customer-sales-actions .btn,.sc-customer-sales-actions form{margin:0 4px 4px 0!important}
+ .invoice-html-files .smart-choice-attachment-preview img{max-width:120px!important;max-height:90px!important}
+}
+
+.todo-item-title{margin-bottom:3px;font-size:13px}.todo-shared{margin-top:4px}.todo-description{font-size:12.5px}

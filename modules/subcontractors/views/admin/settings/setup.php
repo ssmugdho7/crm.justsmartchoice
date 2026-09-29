@@ -1,0 +1,36 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<?php
+$CI = &get_instance();
+$CI->load->model('subcontractors/smartsource_subcontractors_model');
+$staff_members = $CI->db->select('staffid, firstname, lastname, email')->where('active', 1)->order_by('firstname', 'ASC')->get(db_prefix() . 'staff')->result_array();
+$portal_questions = json_decode((string) get_option('smartsource_portal_questions_json'), true);
+$portal_questions = is_array($portal_questions) ? $portal_questions : [];
+?>
+<div class="row"><div class="col-md-12"><div class="panel_s"><div class="panel-body">
+<h4><i class="fa fa-hard-hat"></i> <?php echo _l('smartsource_subcontractor_settings'); ?></h4>
+<p class="text-muted"><?php echo _l('smartsource_settings_intro'); ?></p><hr>
+<?php echo form_open(admin_url('subcontractors/settings')); ?><input type="hidden" name="settings" value="1">
+<div class="row">
+<div class="col-md-6"><h4><?php echo _l('smartsource_notification_settings'); ?></h4>
+<div class="checkbox checkbox-primary"><input type="checkbox" name="smartsource_application_screen_alerts" id="ss_alerts" value="1" <?php echo get_option('smartsource_application_screen_alerts')==='1'?'checked':''; ?>><label for="ss_alerts"><?php echo _l('smartsource_screen_alerts'); ?></label></div>
+<div class="checkbox checkbox-primary"><input type="checkbox" name="smartsource_application_notify_staff_sms" id="ss_staff_sms" value="1" <?php echo get_option('smartsource_application_notify_staff_sms')==='1'?'checked':''; ?>><label for="ss_staff_sms"><?php echo _l('smartsource_staff_sms_notifications'); ?></label></div>
+<?php echo render_select('smartsource_application_notify_staff[]', $staff_members, ['staffid',['firstname','lastname']], 'smartsource_notify_employees', array_filter(explode(',',(string)get_option('smartsource_application_notify_staff'))), ['multiple'=>true,'data-actions-box'=>true]); ?>
+</div>
+<div class="col-md-6"><h4><?php echo _l('smartsource_telegram_notifications'); ?></h4>
+<div class="checkbox checkbox-primary"><input type="checkbox" name="smartsource_telegram_enabled" id="ss_tg" value="1" <?php echo get_option('smartsource_telegram_enabled')==='1'?'checked':''; ?>><label for="ss_tg"><?php echo _l('smartsource_enable_telegram'); ?></label></div>
+<?php echo render_input('smartsource_telegram_bot_token','smartsource_telegram_bot_token',get_option('smartsource_telegram_bot_token')); ?>
+<?php echo render_input('smartsource_telegram_chat_ids','smartsource_telegram_chat_ids',get_option('smartsource_telegram_chat_ids')); ?>
+</div></div><hr>
+<h4><?php echo _l('smartsource_portal_branding'); ?></h4><div class="row">
+<div class="col-md-4"><?php echo render_input('smartsource_portal_primary_color','smartsource_primary_color',get_option('smartsource_portal_primary_color'),'color'); ?></div>
+<div class="col-md-4"><?php echo render_input('smartsource_portal_secondary_color','smartsource_secondary_color',get_option('smartsource_portal_secondary_color'),'color'); ?></div>
+<div class="col-md-4"><?php echo render_input('smartsource_portal_success_color','smartsource_success_color',get_option('smartsource_portal_success_color'),'color'); ?></div></div>
+<div class="row"><div class="col-md-6"><?php echo render_select('smartsource_portal_logo_animation',[['id'=>'particles','name'=>_l('smartsource_animation_particles')],['id'=>'fade','name'=>_l('smartsource_animation_fade')],['id'=>'none','name'=>_l('smartsource_animation_none')]],['id','name'],'smartsource_logo_animation',get_option('smartsource_portal_logo_animation')); ?></div><div class="col-md-6"><?php echo render_select('smartsource_portal_success_animation',[['id'=>'paper','name'=>_l('smartsource_animation_paper')],['id'=>'confetti','name'=>_l('smartsource_animation_confetti')],['id'=>'none','name'=>_l('smartsource_animation_none')]],['id','name'],'smartsource_success_animation',get_option('smartsource_portal_success_animation')); ?></div></div><hr>
+<h4><?php echo _l('smartsource_custom_portal_questions'); ?></h4><p class="text-muted"><?php echo _l('smartsource_custom_portal_questions_help'); ?></p>
+<div id="ss-questions">
+<?php foreach (($portal_questions ?? []) as $i=>$q) { ?><div class="row ss-question-row"><div class="col-md-3"><input class="form-control" name="portal_question_label_en[]" value="<?php echo html_escape($q['label_en']??''); ?>" placeholder="<?php echo html_escape(_l('smartsource_question_english')); ?>"></div><div class="col-md-3"><input class="form-control" name="portal_question_label_es[]" value="<?php echo html_escape($q['label_es']??''); ?>" placeholder="<?php echo html_escape(_l('smartsource_question_spanish')); ?>"></div><div class="col-md-2"><select class="form-control" name="portal_question_type[]"><?php foreach(['text','textarea','email','phone','date'] as $t){ ?><option value="<?php echo $t; ?>" <?php echo ($q['type']??'text')===$t?'selected':''; ?>><?php echo ucfirst($t); ?></option><?php } ?></select></div><div class="col-md-1"><label><input type="checkbox" name="portal_question_required[<?php echo $i; ?>]" <?php echo !empty($q['required'])?'checked':''; ?>> <?php echo _l('smartsource_required_short'); ?></label></div><div class="col-md-1"><label><input type="checkbox" name="portal_question_active[<?php echo $i; ?>]" <?php echo !empty($q['active'])?'checked':''; ?>> <?php echo _l('smartsource_active_short'); ?></label></div><div class="col-md-2"><button type="button" class="btn btn-danger ss-remove-question"><i class="fa fa-trash"></i></button></div></div><?php } ?>
+</div><button type="button" class="btn btn-default" id="ss-add-question"><i class="fa fa-plus"></i> <?php echo _l('smartsource_add_question'); ?></button><hr>
+<button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> <?php echo _l('save'); ?></button><?php echo form_close(); ?>
+</div></div></div></div>
+<script>(function(){var w=document.getElementById('ss-questions'),b=document.getElementById('ss-add-question');if(!w||!b)return;b.addEventListener('click',function(){var i=w.children.length,d=document.createElement('div');d.className='row ss-question-row';d.innerHTML='<div class="col-md-3"><input class="form-control" name="portal_question_label_en[]" placeholder="English question"></div><div class="col-md-3"><input class="form-control" name="portal_question_label_es[]" placeholder="Pregunta en español"></div><div class="col-md-2"><select class="form-control" name="portal_question_type[]"><option value="text">Text</option><option value="textarea">Textarea</option><option value="email">Email</option><option value="phone">Phone</option><option value="date">Date</option></select></div><div class="col-md-1"><label><input type="checkbox" name="portal_question_required['+i+']"> Required</label></div><div class="col-md-1"><label><input type="checkbox" name="portal_question_active['+i+']" checked> Active</label></div><div class="col-md-2"><button type="button" class="btn btn-danger ss-remove-question"><i class="fa fa-trash"></i></button></div>';w.appendChild(d);});document.addEventListener('click',function(e){var x=e.target.closest&&e.target.closest('.ss-remove-question');if(x)x.closest('.ss-question-row').remove();});})();</script>
+<style>.ss-question-row{margin-bottom:10px}.ss-question-row .form-control{min-height:34px}</style>

@@ -1,0 +1,32 @@
+
+.favorite-links-card,
+.favorite-link-card,
+.panel_s.favorite-links-panel {
+    border-radius: 18px !important;
+    box-shadow: 0 12px 32px rgba(15,23,42,.10) !important;
+    border: 1px solid rgba(249,115,22,.18) !important;
+    overflow: hidden;
+}
+.favorite-links-header,
+.favorite-link-header {
+    background: linear-gradient(135deg,#f97316,#2563eb);
+    color: #fff;
+    border-radius: 18px;
+    padding: 18px 22px;
+    margin-bottom: 18px;
+}
+.favorite-links-header h1,
+.favorite-link-header h1 {
+    color: #fff;
+    font-weight: 800;
+    margin: 0;
+}
+.favorite-link-pill {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 3px 9px;
+    font-size: 11px;
+    background: #f1f5f9;
+    color: #0f172a;
+}

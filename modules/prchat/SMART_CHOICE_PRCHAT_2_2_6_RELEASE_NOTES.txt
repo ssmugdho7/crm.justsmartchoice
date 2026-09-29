@@ -1,0 +1,9 @@
+PRChat 2.2.6
+
+- Preserves every repair from 2.2.4 and 2.2.5.
+- Loads staff contacts directly from the CRM database without waiting for Pusher.
+- Adds a core-staff fallback if enhanced chat metadata queries fail.
+- Loads only groups assigned to the current staff member using clean JSON.
+- Loads CRM clients through safely encoded server data, preventing JavaScript corruption.
+- Allows the full chat interface to operate when Pusher is disabled, blocked, slow, or misconfigured.
+- Preserves all messages, groups, clients, uploads, settings, API keys, and credentials.

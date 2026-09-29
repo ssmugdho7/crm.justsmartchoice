@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/themeColorPrimary"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    tools:context=".login.presentation.LoginActivity">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/appName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        android:fontFamily="@font/gotham"
+        android:gravity="center"
+        android:text="@string/welcome_to_perfex_crm"
+        android:textColor="#ffffff"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/greetingText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout"
+        android:layout_gravity="center"
+        android:fontFamily="@font/calibri"
+        android:gravity="center"
+        android:text="@string/morning"
+        android:textColor="#9affffff"
+        android:textSize="16sp"
+        tools:ignore="SmallSp" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@android:style/Widget.Holo.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="20dp"
+        android:indeterminate="true"
+        android:indeterminateDrawable="@drawable/progress_bg"
+        android:visibility="gone" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/companyLogo"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_gravity="center"
+        android:src="@drawable/loading_image"
+        android:layout_margin="20dp"
+        android:padding="10dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        app:shapeAppearanceOverlay="@style/circleImageView" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/email"
+            style="@style/LoginTextInputLayoutStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/email"
+            android:textColorHint="@color/white"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/white"
+            app:errorEnabled="true"
+            app:errorTextColor="@color/white"
+            app:startIconDrawable="@drawable/ic_baseline_email_24"
+            app:startIconTint="@color/white">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:textColor="@color/white" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/password"
+            style="@style/LoginTextInputLayoutStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/password"
+            android:textColorHint="@color/white"
+            app:endIconMode="password_toggle"
+            app:endIconTint="@color/white"
+            app:errorEnabled="true"
+            app:errorTextColor="@color/white"
+            app:startIconDrawable="@drawable/ic_baseline_lock_24"
+            app:startIconTint="@color/white">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:textColor="@color/white" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/loginBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/button_shape_white_bg"
+                android:fontFamily="@font/calibri"
+                android:shadowColor="@color/white"
+                android:text="@string/sign_in"
+                android:textAllCaps="false"
+                android:textColor="#96ffffff"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:backgroundTint="@color/white" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

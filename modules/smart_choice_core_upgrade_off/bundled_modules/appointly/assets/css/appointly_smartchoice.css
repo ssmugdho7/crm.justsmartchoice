@@ -1,0 +1,34 @@
+
+/* Smart Choice Appointly v2.0.0 */
+.appointly-public-logo img,
+.appointly-logo img,
+.appointment-public-logo img,
+.public-appointment-logo img,
+.appointly-booking-logo img,
+img.appointly-public-logo,
+img.appointly-logo,
+img.appointment-public-logo,
+img.public-appointment-logo,
+img.appointly-booking-logo {
+    width: 110px !important;
+    max-width: 110px !important;
+    height: 38px !important;
+    max-height: 38px !important;
+    object-fit: contain !important;
+}
+
+.appointly-card,
+.appointment-card,
+.panel_s.appointly-panel {
+    border-radius: 18px !important;
+    box-shadow: 0 12px 32px rgba(15,23,42,.10) !important;
+    border: 1px solid rgba(249,115,22,.18) !important;
+}
+
+.appointly-smartchoice-header {
+    background: linear-gradient(135deg,#f97316,#2563eb);
+    color: #fff;
+    border-radius: 18px;
+    padding: 18px 22px;
+    margin-bottom: 18px;
+}

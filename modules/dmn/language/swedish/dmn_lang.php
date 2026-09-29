@@ -1,0 +1,49 @@
+<?php
+$lang['dmns']                                             = 'Mind Maps';
+$lang['dmn']                                              = 'Mind Map';
+$lang['dmn_create_new']                                   = 'Skapa ny';
+$lang['dmn_edit']                                         = 'Redigera';
+$lang['dmn_delete']                                       = 'Radera';
+$lang['dmn_title']                                        = 'Titel';
+$lang['dmn_desc']                                         = 'Beskrivning';
+$lang['dmn_staff']										  = 'Skapad av';
+$lang['dmn_search']										  = 'Sök Mind Map';
+$lang['dmn_group']								          = 'Grupp';
+$lang['dmn_groups']								          = 'grupper';
+$lang['edit_dmn_group']								      = 'Redigera grupp';
+$lang['new_dmn_group']								      = 'Ny grupp';
+$lang['dmn_group_add_edit_name']						  = 'namn';
+$lang['dmn_group_add_edit_description']					  = 'Beskrivning';
+$lang['dmn_switch_to_grid_view']						  = 'Byt till Grid';
+$lang['dmn_switch_to_list_view']						  = 'Byt till lista';
+$lang['dmn_assigned_to_me']								  = 'Min dmn';
+$lang['dmn_filter_staff']								  = 'Personal';
+$lang['dmn_filter_group']								  = 'Grupp';
+$lang['dmn_info']								          = 'dmn Info';
+$lang['dmn_staff']								          = 'Personal';
+$lang['dmn_view']								          = 'Se';
+$lang['dmn_not_found']								      = 'dmn hittades inte';
+$lang['preview_dmn']								      = 'Förhandsgranska dmn';
+$lang['dmn_settings_name']								  = 'Mind Map';
+$lang['new_dmn_group']								      = 'Ny grupp';
+$lang['dmn_created_at']									  = 'Skapad vid';
+$lang['dmn_enable_group_option']                          = 'Låt personal som inte är administratörer skapa grupp i dmn skapa / redigera området?  ';
+//client project view language
+
+$lang['clients_dmn_tittle']									= 'Title';
+$lang['clients_dmn_description']							= 'Description';
+$lang['clients_dmn_staff']									= 'Staff';
+$lang['clients_dmn_group']									= 'Group';
+$lang['clients_dmn_created_at']								= 'Created At';.
+
+$lang['properties']									 	  	= 'Edit Details';
+$lang['edit_canvas']									 	= 'Edit Canvas';
+$lang['action_btn_dropdown']								= 'Action';
+$lang['delete']												= 'Delete';
+$lang['share_via_email']									= 'Share via email';
+$lang['print_svg']											= 'Print SVG';
+$lang['window_print']										= 'Print';
+$lang['rating']												= 'Rating';
+$lang['add_email']											= 'Add Email';
+$lang['save']												= 'Save';
+$lang['close']												= 'Close';

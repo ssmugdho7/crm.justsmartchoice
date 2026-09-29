@@ -1,0 +1,13 @@
+
+/* Smart Choice Chat compact and upload UX patch */
+.prchat-upload-toast{position:fixed;right:24px;bottom:24px;z-index:999999;background:#16a34a;color:#fff;padding:9px 14px;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);font-size:12px;font-weight:600}.prchat-upload-toast.error{background:#dc2626}.desktop_chat .btn,.desktop_chat button,.desktop_chat .chat-action-btn{font-size:12px!important;padding:5px 9px!important;border-radius:6px!important}.chat-call-number-line{font-size:12px;color:#cbd5e1;margin-top:4px;font-weight:600}.chat-call-target-number{font-size:12px;color:#64748b;margin-left:6px}
+
+
+/* Smart Choice Chat v2.0.7 center notification toast */
+.sc-chat-center-toast{position:fixed;left:50%;top:72px;transform:translate(-50%,-16px);z-index:999999;min-width:280px;max-width:460px;padding:10px 38px 10px 12px;border-radius:16px;color:#fff;display:flex;align-items:center;gap:10px;box-shadow:0 12px 36px rgba(15,23,42,.28);opacity:0;pointer-events:auto;transition:all .22s ease;font-size:13px;line-height:1.35}
+.sc-chat-center-toast.sc-chat-toast-show{opacity:1;transform:translate(-50%,0)}
+.sc-chat-toast-icon{width:28px;height:28px;border-radius:999px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;flex:0 0 28px}
+.sc-chat-toast-text{display:flex;flex-direction:column;gap:1px;min-width:0}.sc-chat-toast-text strong{font-size:13px}.sc-chat-toast-text span{font-size:12px;opacity:.94;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sc-chat-toast-close{position:absolute;right:10px;top:8px;width:22px;height:22px;border:0;border-radius:999px;background:rgba(255,255,255,.2);color:#fff;font-size:16px;line-height:20px;padding:0}.sc-chat-toast-close:hover{background:rgba(255,255,255,.32)}
+.optionsMore .optionBtn{font-size:12px;padding:6px 10px}.optionsMore .optionBtn i{width:16px;text-align:center;margin-right:6px}.chat-context-menu .ctx-item{font-size:12px;white-space:nowrap}.groups_image img.sc-chat-group-avatar{width:34px;height:34px;border-radius:50%;object-fit:cover;display:block}
+
+/* v2.1.0: Never alter native CRM tables outside the chat shell. */

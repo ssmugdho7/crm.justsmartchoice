@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_behavior="@string/bottom_sheet_behavior"
+    app:cardCornerRadius="8dp">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/themeColorPrimary"
+            android:drawableStart="@drawable/ic_baseline_sticky_note_2_24"
+            android:drawablePadding="10dp"
+            android:hint="@string/description" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/last_contact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            app:buttonTint="@color/themeColorPrimary"
+            android:text="@string/lead_touched"/>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/date"
+            android:visibility="gone"
+            android:layout_margin="4dp"
+            android:drawableStart="@drawable/ic_baseline_edit_calendar_24"
+            android:drawablePadding="8dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/select_date"
+            app:startIconContentDescription="@string/select_date"
+            app:startIconDrawable="@drawable/ic_baseline_access_time_24" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:gravity="center"
+            >
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/save"
+                app:backgroundTint="@color/themeColorPrimary"
+                android:layout_margin="10dp"
+                android:textColor="@color/white" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/close"
+                android:layout_margin="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/close"
+                android:textColor="@color/white"
+                app:backgroundTint="@color/Red"
+                />
+
+        </LinearLayout>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+</com.google.android.material.card.MaterialCardView>

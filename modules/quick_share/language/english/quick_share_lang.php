@@ -1,0 +1,49 @@
+<?php
+
+# Version 1.0.0
+
+$lang['quick_share'] = 'QuickShare';
+$lang['quick_share_upload_title'] = 'QuickShare - Upload';
+$lang['upload_file'] = 'Upload File';
+$lang['enable_self_destruct_label'] = 'Enable self destruct?';
+$lang['enable_self_destruct_tooltip'] = 'The upload will destruct itself after file first time download';
+$lang['share_link_type_label'] = 'How to share the file?';
+$lang['share_link_type_tooltip'] = 'You can share the upload by email so recipients will receive an email or share by link and copy the url and share it with everyone you want.';
+$lang['qs_send_using_email'] = 'Send using email';
+$lang['qs_get_sharable_link'] = 'Get a sharable link';
+$lang['qs_attach_file_placeholder'] = 'Attach File';
+$lang['qs_start_upload'] = 'Start Upload';
+$lang['qs_send_to_emails'] = 'Send to emails';
+$lang['qs_protect_file_with_password_label'] = 'Protect the upload with a password';
+$lang['qs_protect_file_with_password_tooltip'] = 'Your upload can only be downloaded by entering a password.';
+$lang['qs_protect_email_list_tooltip'] = 'You can send the link at multiple emails just separate them with ",".';
+$lang['qs_table_file_path'] = 'File Path';
+$lang['qs_table_file_size'] = 'File Size';
+$lang['qs_table_file_status'] = 'File Status';
+$lang['qs_table_file_created_at'] = 'Created At';
+$lang['qs_table_file_auto_destroy'] = 'Auto Destroy';
+$lang['qs_table_file_has_password'] = 'Has Password';
+$lang['qs_table_file_total_downloads'] = 'Total Downloads';
+$lang['qs_table_file_share_type'] = 'Share Type';
+$lang['qs_downloads_table_downloaded_file'] = 'Downloaded File';
+$lang['qs_downloads_table_download_ip'] = 'Download IP Address';
+$lang['qs_permission_view_downloads'] = 'View Downloads';
+$lang['qs_permission_manage_downloads'] = 'Manage Downloads';
+$lang['qs_view_downloads_title'] = 'QuickShare - View Downloads';
+$lang['qs_file_share_type_email'] = 'Email';
+$lang['qs_file_share_type_link'] = 'Link';
+$lang['qs_menu_view_list'] = 'File List';
+$lang['qs_menu_upload_file'] = 'Upload File';
+$lang['qs_menu_settings'] = 'Settings';
+$lang['qs_settings_maximum_kb_size'] = 'Maximum Upload Size (in KB)';
+$lang['qs_file_destroyed_message'] = 'The file you are trying to download is on auto destroy mode and has already been downloaded. If you require further assistance, please contact our support team. Thank you for your understanding.';
+$lang['qs_file_maximum_size'] = 'File could not be attached because maximum size of file, please adjust file size on Quickshare->Settings';
+$lang['qs_settings_allowed_file_extensions'] = 'Allowed File Extensions';
+$lang['qs_settings_allowed_file_extensions_err'] = 'File you are trying to upload is not a supported extension, please adjust extensions on Quickshare->Settings';
+$lang['qs_settings_selected_storage_engine'] = 'Storage Engine';
+$lang['qs_settings_selected_storage_engine_1'] = 'Server';
+$lang['qs_settings_selected_storage_engine_2'] = 'Amazon S3 Storage';
+$lang['qs_settings_aws_key'] = 'AWS Key';
+$lang['qs_settings_aws_secret'] = 'AWS Secret';
+$lang['qs_settings_aws_bucket'] = 'AWS Bucket';
+$lang['qs_settings_aws_region'] = 'AWS Region';

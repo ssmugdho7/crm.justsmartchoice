@@ -1,0 +1,21 @@
+<?php
+$lang["pt_module_title"] = "プロジェクトテンプレート";
+$lang["pt_project_template"] = "プロジェクトテンプレート";
+$lang["pt_project_template_lower"] = "プロジェクトテンプレート";
+$lang["pt_edit_project_template"] = "プロジェクトテンプレートを編集";
+$lang["pt_delete_project_template"] = "プロジェクトテンプレートを削除";
+$lang["pt_copy_project_template"] = "プロジェクトテンプレートをコピー";
+$lang["pt_project_template_description"] = "説明";
+$lang["pt_new_project_template"] = "新しいプロジェクトテンプレート";
+$lang["failed_to_copy_project_template"] = "プロジェクトテンプレートのコピーに失敗しました";
+$lang["pt_project_template_copied_successfully"] = "プロジェクトテンプレートが正常にコピーされました";
+$lang["pt_project_from_template"] = "テンプレートからのプロジェクト";
+$lang["pt_new_project_from_template"] = "テンプレートからプロジェクトを作成";
+$lang["pt_select_project_template"] = "プロジェクトテンプレートを選択";
+$lang["pt_project_template_not_found"] = "プロジェクトテンプレートが見つかりません";
+$lang["pt_duration_text"] = "期限の期間（単位：日）";
+$lang["pt_milestone_start_date"] = "プロジェクト開始日の後に開始する日数";
+$lang["pt_milestone_due_date"] = "期限（単位：日）";
+$lang["permission_create_milestones"] = "マイルストーンを作成";
+$lang["permission_edit_milestones"] = "マイルストーンを編集";
+$lang["permission_delete_milestones"] = "マイルストーンを削除";

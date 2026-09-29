@@ -1,0 +1,11 @@
+Smart Choice CRM 3.7.2 Verified Contract and Client Portal Repair
+- Guaranteed Sales > Contracts navigation entry
+- Migration 372 creates initials schema and contract custom fields on existing installations
+- Separate initials signature pad and {C_initial} image merge field
+- Contract media browser with click/double-click attachment selection
+- Compact grouped two-column merge fields
+- Equal content save buttons
+- Horizontal contract charts
+- Proposal preview item sorting
+- Compact customer dashboard with contracts summary
+- Strong responsive customer portal branding and footer

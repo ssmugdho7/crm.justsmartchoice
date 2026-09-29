@@ -1,0 +1,21 @@
+<?php
+$lang["pt_module_title"] = "项目模板";
+$lang["pt_project_template"] = "项目模板";
+$lang["pt_project_template_lower"] = "项目模板";
+$lang["pt_edit_project_template"] = "编辑项目模板";
+$lang["pt_delete_project_template"] = "删除项目模板";
+$lang["pt_copy_project_template"] = "复制项目模板";
+$lang["pt_project_template_description"] = "描述";
+$lang["pt_new_project_template"] = "新建项目模板";
+$lang["failed_to_copy_project_template"] = "复制项目模板失败";
+$lang["pt_project_template_copied_successfully"] = "项目模板复制成功";
+$lang["pt_project_from_template"] = "从模板创建项目";
+$lang["pt_new_project_from_template"] = "从模板创建项目";
+$lang["pt_select_project_template"] = "选择项目模板";
+$lang["pt_project_template_not_found"] = "未找到项目模板";
+$lang["pt_duration_text"] = "截止日期时长（以天为单位）";
+$lang["pt_milestone_start_date"] = "项目开始日期后开始的天数";
+$lang["pt_milestone_due_date"] = "到期天数";
+$lang["permission_create_milestones"] = "创建里程碑";
+$lang["permission_edit_milestones"] = "编辑里程碑";
+$lang["permission_delete_milestones"] = "删除里程碑";

@@ -1,0 +1,21 @@
+<?php
+$lang["pt_module_title"] = "Modèles de Projet";
+$lang["pt_project_template"] = "Modèle de Projet";
+$lang["pt_project_template_lower"] = "modèle de projet";
+$lang["pt_edit_project_template"] = "Modifier le Modèle de Projet";
+$lang["pt_delete_project_template"] = "Supprimer le Modèle de Projet";
+$lang["pt_copy_project_template"] = "Copier le Modèle de Projet";
+$lang["pt_project_template_description"] = "Description";
+$lang["pt_new_project_template"] = "Nouveau Modèle de Projet";
+$lang["failed_to_copy_project_template"] = "Échec de la copie du modèle de projet";
+$lang["pt_project_template_copied_successfully"] = "Modèle de projet copié avec succès";
+$lang["pt_project_from_template"] = "projet à partir du modèle";
+$lang["pt_new_project_from_template"] = "Créer un Projet à partir du Modèle";
+$lang["pt_select_project_template"] = "Sélectionner le Modèle de Projet";
+$lang["pt_project_template_not_found"] = "Modèle de projet non trouvé";
+$lang["pt_duration_text"] = "Durée de la Date d'Échéance (En Jours)";
+$lang["pt_milestone_start_date"] = "Jours pour commencer après la date de début du projet";
+$lang["pt_milestone_due_date"] = "Échéance en jours";
+$lang["permission_create_milestones"] = "Créer des Jalons";
+$lang["permission_edit_milestones"] = "Modifier les Jalons";
+$lang["permission_delete_milestones"] = "Supprimer les Jalons";

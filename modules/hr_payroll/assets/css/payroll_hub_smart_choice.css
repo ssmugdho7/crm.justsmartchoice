@@ -1,0 +1,17 @@
+
+/* Smart Choice Payroll Hub - intentionally loaded only on Payroll Hub pages/settings. */
+:root{--hrp-blue:#3598db;--hrp-green:#169179;--hrp-orange:#f97316;--hrp-dark:#0e6f5b}
+body:has(#wrapper .hrp-page), .hrp-smart-choice-settings{font-family:Arial,Helvetica,sans-serif}
+.hrp-page .panel_s,.hrp-smart-choice-settings{border-radius:12px}.hrp-page .panel-body{padding:18px}
+.hrp-page h4,.hrp-smart-choice-settings h3{color:#1f3c88;font-weight:700}
+.hrp-page .btn-info,.hrp-page .btn-primary,.hrp-smart-choice-settings .btn-primary{background:var(--hrp-green)!important;border-color:var(--hrp-dark)!important}
+.hrp-page .btn-default{border-color:#d8e2ec}.hrp-page .form-control{min-height:34px;border-radius:6px}
+.hrp-page .filter_by{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end}.hrp-page .filter_by>[class*=col-]{float:none!important;flex:1 1 180px;max-width:280px}
+.hrp-page .modal-footer{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}.hrp-page .modal-footer .btn{float:none!important;margin:0!important}
+.hrp-page .dataTables_wrapper{width:100%;overflow:visible}.hrp-page table.dataTable{width:100%!important;table-layout:auto}.hrp-page table.dataTable th,.hrp-page table.dataTable td{white-space:normal!important;word-break:normal!important;vertical-align:middle;padding:7px 8px!important}
+.hrp-page .table-responsive{overflow-x:visible!important}.hrp-page .handsontable{font-size:12px}.hrp-page .handsontable td,.hrp-page .handsontable th{white-space:normal!important;line-height:1.25}.hrp-page .wtHolder{max-width:100%!important}
+.hrp-hero{display:flex;justify-content:space-between;align-items:center;padding:16px;border-radius:12px;background:linear-gradient(135deg,#eef7ff,#f1fbf8);border-left:4px solid var(--hrp-orange);margin-bottom:18px}.hrp-hero p{margin:5px 0 0;color:#667085}.hrp-badge{color:var(--hrp-orange);font-weight:700}
+.hrp-setting-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:10px 0 18px}.hrp-toggle-card{display:flex;gap:9px;align-items:center;border:1px solid #dbe4ec;border-radius:9px;padding:10px;background:#fff}.hrp-quick-links{display:flex;flex-wrap:wrap;gap:6px}
+.hrp-template-gallery{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.hrp-template-card{border:1px solid #dbe4ec;border-radius:10px;padding:12px;background:#fff;box-shadow:0 5px 14px rgba(15,23,42,.06)}
+@media(max-width:991px){.hrp-template-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}.hrp-setting-grid{grid-template-columns:1fr}.hrp-page .table-responsive{overflow-x:auto!important}}
+@media(max-width:575px){.hrp-template-gallery{grid-template-columns:1fr}.hrp-page .content{padding:10px}.hrp-page .btn{min-height:38px}}

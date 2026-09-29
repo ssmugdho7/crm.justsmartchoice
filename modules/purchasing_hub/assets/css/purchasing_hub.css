@@ -1,0 +1,195 @@
+.purchasing-hub-page .purchasing-hub-hero{background:linear-gradient(135deg,#169179,#0f705e);border-radius:16px;padding:22px 24px;margin-bottom:22px;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:15px;box-shadow:0 12px 32px rgba(0,0,0,.13)}
+.purchasing-hub-page .purchasing-hub-hero h1{margin:0;font-weight:800;color:#fff;font-size:28px}.purchasing-hub-page .purchasing-hub-hero p{margin:6px 0 0;color:#eaf4ff}.purchasing-hub-actions .btn{border-radius:8px;margin-left:5px}.purchasing-hub-cards .panel_s .panel-body{border-top:5px solid #f47c20;border-radius:14px;min-height:105px}.purchasing-hub-cards h4{color:#169179;font-weight:700;margin-top:0}.purchasing-hub-cards strong{font-size:24px;color:#263238}.purchasing-hub-table thead th{background:#169179!important;color:#fff!important;border-color:#169179!important;font-weight:700}.purchasing-hub-table{border-radius:12px;overflow:hidden}.purchasing-hub-table .btn-xs{border-radius:6px;margin:2px}.purchasing-report-box{background:#fff;border-left:5px solid #f47c20;border-radius:14px;padding:20px;margin-bottom:18px;box-shadow:0 10px 26px rgba(0,0,0,.10);min-height:130px}.purchasing-report-box h4{color:#169179;font-weight:800}.purchasing-help h4{color:#169179;margin-top:22px;font-weight:800}@media(max-width:800px){.purchasing-hub-page .purchasing-hub-hero{display:block}.purchasing-hub-actions{margin-top:15px}.purchasing-hub-actions .btn{margin:3px 0}}
+
+.purchasing-hub-mini-nav{background:#fff;border-radius:12px;padding:10px 12px;margin:-10px 0 20px;box-shadow:0 5px 16px rgba(0,0,0,.07)}.purchasing-hub-mini-nav a{display:inline-block;padding:6px 9px;margin:2px;border-radius:7px;background:#f6f8f6;color:#169179;font-weight:700;font-size:12px}.purchasing-hub-mini-nav a:hover{background:#169179;color:#fff;text-decoration:none}.purchasing-hub-actions .btn,.purchasing-hub-page .btn{border-radius:7px;font-size:12px;padding:5px 9px}.purchasing-report-link{display:block;color:inherit}.purchasing-report-link:hover{text-decoration:none;transform:translateY(-1px)}
+.purchasing-merge-fields{background:#f7faf8;border:1px solid #dfe9e3;border-radius:10px;padding:10px;margin-bottom:15px}.purchasing-merge-field{margin:2px;font-size:11px;padding:4px 7px}.staff-profile-image-small{width:24px;height:24px;border-radius:50%;vertical-align:middle}
+
+/* Purchase Order dropdown duplicate repair */
+#pur_order-form .bootstrap-select + .bootstrap-select{display:none!important;}
+#pur_order-form .select2-container + .select2-container{display:none!important;}
+#pur_order-form select.bs-select-hidden{display:none!important;}
+
+
+/* Smart Choice Purchasing Hub v2.1.7 compact action-bar and button polish */
+body .purchasing-hub-page .btn,
+body #wrapper .content .purchasing-hub-page .btn,
+body #wrapper .content .btn.ph-btn-compact,
+body #wrapper .content .purchasing-hub-actions .btn,
+body #wrapper .content .purchasing-hub-action-row .btn,
+body #wrapper .content .ph-action-row .btn,
+body #wrapper .content .dt-buttons .btn,
+body #wrapper .content .table .btn,
+body #wrapper .content .btn.btn-sm,
+body #wrapper .content .btn.btn-xs {
+    font-size: 11px !important;
+    line-height: 1.25 !important;
+    padding: 4px 8px !important;
+    border-radius: 5px !important;
+    min-height: 0 !important;
+    box-shadow: none !important;
+}
+body #wrapper .content .table .btn.btn-xs,
+body #wrapper .content .purchasing-hub-table .btn.btn-xs {
+    font-size: 10.5px !important;
+    padding: 3px 6px !important;
+    margin: 1px !important;
+}
+body #wrapper .content .purchasing-hub-action-row,
+body #wrapper .content .ph-action-row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 5px !important;
+    margin-bottom: 10px !important;
+}
+body #wrapper .content .purchasing-hub-action-row .btn,
+body #wrapper .content .ph-action-row .btn,
+body #wrapper .content .purchasing-hub-action-row form,
+body #wrapper .content .ph-action-row form {
+    float: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    margin: 0 !important;
+}
+body #wrapper .content .purchasing-hub-filter-row,
+body #wrapper .content .ph-filter-row,
+body #wrapper .content form.form-inline.m-b-md {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 6px !important;
+    margin-bottom: 10px !important;
+}
+body #wrapper .content .purchasing-hub-filter-row .form-control,
+body #wrapper .content .ph-filter-row .form-control,
+body #wrapper .content form.form-inline.m-b-md .form-control,
+body #wrapper .content .dataTables_filter input[type="search"] {
+    height: 28px !important;
+    font-size: 11px !important;
+    padding: 3px 7px !important;
+    border-radius: 5px !important;
+    max-width: 190px !important;
+}
+body #wrapper .content .dataTables_filter label {
+    font-size: 11px !important;
+    margin-bottom: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+}
+body #wrapper .content .dataTables_wrapper .row:first-child {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+body #wrapper .content .dataTables_wrapper .dt-buttons {
+    display: inline-flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 5px !important;
+    margin-bottom: 6px !important;
+}
+body #wrapper .content .dataTables_wrapper .dataTables_filter {
+    margin-bottom: 6px !important;
+    text-align: right !important;
+}
+body #wrapper .content .purchasing-hub-mini-nav a,
+body #wrapper .content .ph-quick-nav-links a {
+    font-size: 11px !important;
+    padding: 4px 8px !important;
+    border-radius: 6px !important;
+}
+body #wrapper .content .panel_s .panel-body,
+body #wrapper .content .panel-body {
+    padding: 14px !important;
+}
+body #wrapper .content .table > thead > tr > th,
+body #wrapper .content .table > tbody > tr > td {
+    font-size: 11.5px !important;
+    padding: 6px 7px !important;
+    vertical-align: middle !important;
+}
+body #wrapper .content .ph-search-purchase-orders input[name="q"] {
+    width: 170px !important;
+    max-width: 170px !important;
+}
+@media (max-width: 767px) {
+    body #wrapper .content .purchasing-hub-action-row,
+    body #wrapper .content .ph-action-row,
+    body #wrapper .content .purchasing-hub-filter-row,
+    body #wrapper .content .ph-filter-row,
+    body #wrapper .content form.form-inline.m-b-md {
+        display: block !important;
+    }
+    body #wrapper .content .purchasing-hub-action-row .btn,
+    body #wrapper .content .ph-action-row .btn,
+    body #wrapper .content form.form-inline.m-b-md .btn,
+    body #wrapper .content form.form-inline.m-b-md .form-control {
+        margin: 2px 2px 4px 0 !important;
+        max-width: 100% !important;
+    }
+}
+
+/* Smart Choice Purchasing Hub v2.1.8 DataTables action placement repair */
+body #wrapper .content .ph-dt-actions {
+    display: none;
+}
+body #wrapper .content .dt-buttons .ph-dt-actions-inline {
+    display: inline-flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    gap: 4px !important;
+    margin-left: 4px !important;
+    vertical-align: middle !important;
+}
+body #wrapper .content .dt-buttons .ph-dt-actions-inline .btn {
+    float: none !important;
+    margin: 0 0 0 2px !important;
+    font-size: 10.5px !important;
+    padding: 3px 6px !important;
+    line-height: 1.2 !important;
+    border-radius: 4px !important;
+}
+body #wrapper .content .dataTables_wrapper .dataTables_length,
+body #wrapper .content .dataTables_wrapper .dt-buttons,
+body #wrapper .content .dataTables_wrapper .dataTables_filter {
+    display: inline-flex !important;
+    align-items: center !important;
+    vertical-align: middle !important;
+}
+body #wrapper .content .dataTables_wrapper .dataTables_length label {
+    font-size: 11px !important;
+    margin-bottom: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+}
+body #wrapper .content .dataTables_wrapper .dataTables_length select {
+    height: 27px !important;
+    font-size: 11px !important;
+    padding: 2px 6px !important;
+    max-width: 80px !important;
+}
+body #wrapper .content .dataTables_wrapper .row:first-child > div {
+    display: inline-flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+body #wrapper .content .ph-primary-action-row {
+    margin-bottom: 8px !important;
+}
+@media (max-width: 767px) {
+    body #wrapper .content .dt-buttons .ph-dt-actions-inline {
+        display: inline-flex !important;
+        flex-wrap: wrap !important;
+        margin-top: 4px !important;
+    }
+}
+
+/* Smart Choice Purchasing Hub v2.1.9 Help, PDF, health and item-line polish */
+.sc-ph-guide .ph-guide-hero{background:linear-gradient(135deg,#169179,#0f705e);color:#fff;border-radius:14px;padding:20px 22px;margin-bottom:18px;display:flex;justify-content:space-between;gap:14px;align-items:center;box-shadow:0 10px 24px rgba(0,0,0,.12)}
+.sc-ph-guide .ph-guide-hero h2{margin:0 0 5px;color:#fff;font-weight:800}.sc-ph-guide .ph-guide-hero p{margin:0;color:#e9fff8}.sc-ph-guide .ph-guide-badge{background:#fff;color:#0f705e;border-radius:999px;padding:7px 13px;font-weight:800;white-space:nowrap}.sc-ph-guide .ph-guide-card{background:#fff;border:1px solid #d9e2ec;border-radius:13px;padding:16px;margin-bottom:16px;box-shadow:0 6px 18px rgba(0,0,0,.06);border-top:4px solid #169179}.sc-ph-guide .ph-guide-card.orange{border-top-color:#f47b20}.sc-ph-guide .ph-guide-card.green{border-top-color:#169179}.sc-ph-guide .ph-guide-card.blue{border-top-color:#2f80ed}.sc-ph-guide .ph-guide-card.warning{background:#fffaf2;border-top-color:#f47b20}.sc-ph-guide .ph-guide-card h3{margin-top:0;color:#0f705e;font-weight:800}.sc-ph-guide .ph-guide-table th,.sc-ph-guide .ph-guide-table td{padding:6px 8px!important;font-size:12px!important}.sc-ph-guide .ph-guide-table thead th{background:#169179!important;color:#fff!important}
+.purchasing-hub-page .ph-health-table td,.purchasing-hub-page .ph-health-table th{padding:5px 7px!important;height:28px!important;font-size:11.5px!important}.purchasing-hub-page .alert-success .btn,.purchasing-hub-page .btn-success{padding:3px 7px!important;font-size:11px!important;border-radius:5px!important}
+.ph-section-title{font-weight:800;color:#0f705e;margin:16px 0 8px}.ph-item-lines th{background:#0f705e!important;color:#fff!important;font-size:11px!important}.ph-item-lines td{padding:4px!important}.ph-item-lines .form-control{height:28px!important;font-size:11px!important;padding:3px 5px!important}.ph-document-total{font-size:13px;color:#0f705e;margin-top:5px}.ph-document-total strong{font-size:15px}.purchasing-report-box{min-height:100px!important;padding:14px!important}.purchasing-report-box p{font-size:12px;margin-bottom:0}.purchasing-report-box h4{font-size:14px!important;margin-top:0}.purchasing-hub-table td,.purchasing-hub-table th{white-space:nowrap}.purchasing-hub-table td:last-child{white-space:normal}

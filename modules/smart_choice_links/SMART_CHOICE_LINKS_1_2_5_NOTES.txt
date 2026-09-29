@@ -1,0 +1,6 @@
+Smart Choice Links 1.2.5
+
+- Replaces cloned nested dropdown lookup with dedicated server-rendered left/right panel templates.
+- Opens the body-level portal from pointerup/click capture handlers.
+- Prevents duplicate pointer and click activation.
+- Preserves hover labels, star placement, Setup search, and saved links.

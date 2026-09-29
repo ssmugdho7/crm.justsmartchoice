@@ -1,0 +1,10 @@
+Smart Choice Recruitment v1.8.1
+
+- Premium branded public construction job application
+- Resume and driver-license uploads
+- Candidate-to-employee resume synchronization
+- Native CRM email templates in English and Spanish
+- Mandatory View (Own), View (Global), Create, Edit, Delete permissions
+- Detailed How-To guide
+- Upgrade-safe migration 181
+- PHP 8.5 / Perfex CRM 3.4.x structure

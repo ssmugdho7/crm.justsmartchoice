@@ -1,0 +1,26 @@
+Google Meet v1.0.9 Smart Choice Repair
+
+Fixed:
+- Module version upgraded to 1.0.9.
+- Migration chain normalized to 101 through 109 only.
+- Removed non-standard migration filenames.
+- Every migration has up() and down().
+- Error 104 upgrade path repaired.
+- Added CRM email notification sending through CodeIgniter/Perfex email library instead of raw mail().
+- Added CRM staff screen notifications through tblnotifications.
+- Added Twilio/SMS bridge hook support and CRM SMS attempt support when app_sms() exists.
+- Added notification tracking table.
+- Added popup/sound/AI/recording settings.
+- Added Health refresh and Fix Issues buttons.
+- Rebuilt Health page with separated status and recommendation columns.
+- Rebuilt Help page with current instructions.
+- Rebuilt Dashboard table and Join Meeting table for compact fit.
+- Added View action beside Join.
+- Improved client portal list and view pages.
+- Kept SAMI AI untouched. Only AI preference fields were added for future integration.
+
+Upload folder directly to:
+public_html/crm.justsmartchoice/modules/google_meet/
+
+Do not upload as:
+public_html/crm.justsmartchoice/modules/modules/google_meet/

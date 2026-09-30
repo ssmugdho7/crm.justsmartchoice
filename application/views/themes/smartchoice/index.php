@@ -1,8 +1,19 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?= theme_head_view(); ?>
 <?php get_template_part($navigationEnabled ? 'navigation' : ''); ?>
-<div id="wrapper">
-    <div id="content">
+<?php $customerPortalEnabled = is_client_logged_in() && $navigationEnabled; ?>
+<div id="wrapper"<?= $customerPortalEnabled ? ' class="sc-portal-layout"' : ''; ?>>
+    <?php if ($customerPortalEnabled) { get_template_part('customer_sidebar'); } ?>
+    <div id="content"<?= $customerPortalEnabled ? ' class="customers-content"' : ''; ?>>
+        <?php if ($customerPortalEnabled) { ?>
+        <div class="sc-portal-toolbar page-header">
+            <button type="button" class="sc-portal-menu-button" aria-controls="sc-customer-sidebar" aria-expanded="false" aria-label="Open customer navigation" title="Open customer navigation">
+                <i class="fa-solid fa-bars" aria-hidden="true"></i>
+            </button>
+            <span><?= e(_l('clients')); ?></span>
+            <a href="<?= site_url('clients/profile'); ?>" class="sc-portal-account"><i class="fa-regular fa-user" aria-hidden="true"></i> <?= e($contact->firstname . ' ' . $contact->lastname); ?></a>
+        </div>
+        <?php } ?>
         <div class="container">
             <div class="row">
                 <?php get_template_part('alerts'); ?>
@@ -55,7 +66,6 @@
             </div>
         </div>
     </div>
-</div>
 </div>
 <?= theme_footer_view();
 

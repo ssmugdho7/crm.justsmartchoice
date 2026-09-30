@@ -106,4 +106,12 @@ function theme_assets()
         'theme-css',
         base_url($CI->app_scripts->core_file(theme_assets_path() . '/css', 'style.css')) . '?v=' . $CI->app_css->core_version()
     );
+
+    if (is_client_logged_in()) {
+        // Direct, versioned assets avoid production selecting an outdated minified copy.
+        $portalCss = theme_assets_path() . '/css/customer-portal.css';
+        $portalJs = theme_assets_path() . '/js/customer-portal.js';
+        $CI->app_css->theme('customer-portal-css', base_url($portalCss) . '?v=' . filemtime(FCPATH . $portalCss), ['theme-css']);
+        $CI->app_scripts->theme('customer-portal-js', base_url($portalJs) . '?v=' . filemtime(FCPATH . $portalJs), ['theme-global-js']);
+    }
 }

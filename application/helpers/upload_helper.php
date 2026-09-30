@@ -1450,9 +1450,19 @@ function _file_attachments_index_fix($index_name)
  */
 function _maybe_create_upload_path($path)
 {
-    if (!file_exists($path)) {
-        mkdir($path, 0755);
-        fopen(rtrim($path, '/') . '/' . 'index.html', 'w');
+    if (!is_dir($path)) {
+        // Some attachment types have a nested base directory that may not exist
+        // yet (for example uploads/projects/{project_id}).
+        if (!@mkdir($path, 0755, true) && !is_dir($path)) {
+            log_message('error', 'Unable to create upload directory: ' . $path);
+
+            return;
+        }
+    }
+
+    $indexFile = rtrim($path, '/\\') . DIRECTORY_SEPARATOR . 'index.html';
+    if (!file_exists($indexFile)) {
+        @touch($indexFile);
     }
 }
 

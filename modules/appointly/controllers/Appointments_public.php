@@ -13,6 +13,21 @@ class Appointments_public extends ClientsController
         $this->load->model('staff_model');
     }
 
+    private function is_local_request()
+    {
+        $localHosts = ['localhost', '127.0.0.1', '::1'];
+        $configuredHost = strtolower((string) parse_url((string) APP_BASE_URL, PHP_URL_HOST));
+        $requestHost = strtolower((string) parse_url(
+            'http://' . (string) $this->input->server('HTTP_HOST', true),
+            PHP_URL_HOST
+        ));
+        $remoteAddress = (string) $this->input->server('REMOTE_ADDR', true);
+
+        return in_array($configuredHost, $localHosts, true)
+            && in_array($requestHost, $localHosts, true)
+            && in_array($remoteAddress, ['127.0.0.1', '::1'], true);
+    }
+
 
     /**
      * Clean public booking link used by Smart Choice website, emails, QR codes, and customer portal.
@@ -178,7 +193,9 @@ class Appointments_public extends ClientsController
         $recaptcha_keys_configured = (get_option('recaptcha_secret_key') != '' && get_option('recaptcha_site_key') != '');
 
         // Only enable recaptcha if both settings are properly configured
-        $data['form']->recaptcha = ($appointly_recaptcha_enabled == 1 && $recaptcha_keys_configured);
+        $data['form']->recaptcha = !$this->is_local_request()
+            && $appointly_recaptcha_enabled == 1
+            && $recaptcha_keys_configured;
 
         // Get base currency for pricing display
         $data['baseCurrency'] = appointly_get_base_currency();
@@ -202,7 +219,9 @@ class Appointments_public extends ClientsController
         // Check if reCAPTCHA is enabled and properly configured
         $appointly_recaptcha_enabled = get_option('appointly_appointments_recaptcha');
         $recaptcha_keys_configured = (get_option('recaptcha_secret_key') != '' && get_option('recaptcha_site_key') != '');
-        $recaptcha_active = ($appointly_recaptcha_enabled == 1 && $recaptcha_keys_configured);
+        $recaptcha_active = !$this->is_local_request()
+            && $appointly_recaptcha_enabled == 1
+            && $recaptcha_keys_configured;
 
         // Skip reCAPTCHA validation if it's disabled or keys not configured
         if (!$recaptcha_active) {

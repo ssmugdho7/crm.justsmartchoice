@@ -104,13 +104,15 @@
     function injectStaffSubcontractorFields(){
         if(window.location.href.indexOf('/admin/staff/member') === -1){ return; }
         if(document.getElementById('smartsource-staff-subcontractor-box')){ return; }
-        var form = document.querySelector('form');
+        var form = document.querySelector('form.staff-form');
         if(!form){ return; }
-        var target = form.querySelector('.panel-body') || form;
+        var target = form.querySelector('#tab_profile') || form;
         var box = document.createElement('div');
         box.id = 'smartsource-staff-subcontractor-box';
-        box.className = 'alert alert-info';
-        box.innerHTML = '<strong>Smart Choice Subcontractor Staff Type</strong><br><label style="margin-top:8px;"><input type="checkbox" name="is_subcontractor" value="1"> Mark This Staff Member As A Subcontractor</label><br><small>This field is stored by the SmartSource Subcontractors module when the staff profile is saved.</small>';
+        box.className = 'form-group';
+        box.innerHTML = '<div class="checkbox checkbox-primary"><input type="checkbox" id="is_subcontractor" name="is_subcontractor" value="1"><label for="is_subcontractor">Mark this staff member as a subcontractor</label></div><input type="hidden" name="smartsource_staff_fields_present" value="1"><input type="hidden" name="smartsource_subcontractor_id">';
+        box.querySelector('[name="is_subcontractor"]').checked = form.getAttribute('data-is-subcontractor') === '1';
+        box.querySelector('[name="smartsource_subcontractor_id"]').value = form.getAttribute('data-smartsource-subcontractor-id') || '0';
         target.insertBefore(box, target.firstChild);
     }
     if(document.readyState === 'loading'){

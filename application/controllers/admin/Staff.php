@@ -32,6 +32,9 @@ class Staff extends AdminController
 
         $this->load->model('departments_model');
         if ($this->input->post()) {
+            if (staff_cant($id == '' ? 'create' : 'edit', 'staff')) {
+                access_denied('staff');
+            }
             $data = $this->input->post();
             $allowedProfileFields = [
                 'firstname','lastname','email','phonenumber','default_language','direction','facebook','linkedin','skype','telegram','instagram','tiktok',
@@ -43,13 +46,19 @@ class Staff extends AdminController
             ];
             $data = array_intersect_key($data, array_flip($allowedProfileFields));
             if (isset($data['email'])) {
+                $data['email'] = trim($data['email']);
                 $duplicateEmail = $this->db
-                    ->where('email', trim($data['email']))
+                    ->where('email', $data['email'])
                     ->where('staffid !=', (int) $id)
                     ->count_all_results(db_prefix() . 'staff');
                 if ($duplicateEmail > 0) {
                     set_alert('danger', _l('staff_email_already_exists'));
                     redirect(admin_url('staff/member/' . $id));
+                }
+            }
+            foreach (['start_date', 'probation_end_date', 'contract_expiration_date'] as $dateField) {
+                if (array_key_exists($dateField, $data) && ($data[$dateField] === '' || $data[$dateField] === '0000-00-00')) {
+                    $data[$dateField] = null;
                 }
             }
             // Don't do XSS clean here.

@@ -82,7 +82,12 @@
                 <div class="panel-body">
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="tab_staff_member">
-                            <?= form_open_multipart($this->uri->uri_string(), ['class' => 'staff-form', 'autocomplete' => 'off']); ?>
+                            <?= form_open_multipart($this->uri->uri_string(), [
+                                'class' => 'staff-form',
+                                'autocomplete' => 'off',
+                                'data-is-subcontractor' => (int) ($member->is_subcontractor ?? 0),
+                                'data-smartsource-subcontractor-id' => (int) ($member->smartsource_subcontractor_id ?? 0),
+                            ]); ?>
 
                             <div class="panel-full-width-tabs">
                                 <ul class="nav nav-tabs nav-tabs-horizontal tw-mb-6 !tw-bg-white" role="tablist">

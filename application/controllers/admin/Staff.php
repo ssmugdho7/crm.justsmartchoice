@@ -34,18 +34,22 @@ class Staff extends AdminController
         if ($this->input->post()) {
             $data = $this->input->post();
             $allowedProfileFields = [
-                'firstname','lastname','email','phonenumber','default_language','direction','facebook','linkedin','skype','telegram',
+                'firstname','lastname','email','phonenumber','default_language','direction','facebook','linkedin','skype','telegram','instagram','tiktok',
                 'server_login','server_ip','server_password','email_signature','hourly_rate','bank_account_number','bank_account_type',
                 'bank_routing_number','bank_swift_aba','bank_name','bank_website','bank_account_name','bank_account_address',
                 'employee_staff_id','start_date','employment_type','supervisor_staff_id','team','probation_end_date','contract_expiration_date',
-                'emergency_contact_name','emergency_contact_relationship','emergency_contact_phone'
+                'emergency_contact_name','emergency_contact_relationship','emergency_contact_phone','marital_status','religion','children_count','children_json',
+                'administrator','is_not_staff','role','departments','permissions','custom_fields','send_welcome_email'
             ];
             $data = array_intersect_key($data, array_flip($allowedProfileFields));
             if (isset($data['email'])) {
-                $duplicateEmail = $this->db->where('email', trim($data['email']))->where('staffid !=', get_staff_user_id())->count_all_results(db_prefix() . 'staff');
+                $duplicateEmail = $this->db
+                    ->where('email', trim($data['email']))
+                    ->where('staffid !=', (int) $id)
+                    ->count_all_results(db_prefix() . 'staff');
                 if ($duplicateEmail > 0) {
                     set_alert('danger', _l('staff_email_already_exists'));
-                    redirect(admin_url('staff/edit_profile/' . get_staff_user_id()));
+                    redirect(admin_url('staff/member/' . $id));
                 }
             }
             // Don't do XSS clean here.

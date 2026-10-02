@@ -1,14 +1,2 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<div class="col-md-12 sc-dashboard">
-    <div class="sc-dashboard-welcome"><div><h1><?= e(_l('solar_pro_my_solar')); ?></h1><p><?= e(_l('solar_pro_my_solar_subtitle')); ?></p></div></div>
-    <div class="sc-dashboard-resource-grid">
-        <?php foreach ($analyses as $a) { ?>
-        <article class="sc-dashboard-project">
-            <h3><?= e($a['address']); ?></h3>
-            <p><?= e(number_format($a['system_kw'], 3)); ?> kW / <?= (int) $a['panel_count']; ?> <?= e(_l('solar_pro_panels')); ?> / <?= e(number_format($a['annual_production_kwh'])); ?> kWh</p>
-            <a class="btn btn-default" href="<?= site_url('solar_pro/portal/' . rawurlencode($a['public_token'])); ?>"><?= e(_l('solar_pro_view_report')); ?></a>
-        </article>
-        <?php } ?>
-    </div>
-    <?php if (!$analyses) { ?><div class="sc-dashboard-empty"><i class="fa-regular fa-sun" aria-hidden="true"></i><?= e(_l('solar_pro_no_customer_reports')); ?></div><?php } ?>
-</div>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title><?php echo html_escape($title); ?></title><link rel="stylesheet" href="<?php echo module_dir_url('solar_pro','assets/css/solar-pro-public.css?v='.SOLAR_PRO_VERSION); ?>"></head><body><div class="sp-public"><div class="sp-public-hero report"><div class="sp-sun">☀</div><h1><?php echo _l('solar_pro_my_solar'); ?></h1><p><?php echo _l('solar_pro_my_solar_subtitle'); ?></p></div><?php foreach($analyses as $a): ?><div class="sp-card"><h2><?php echo html_escape($a['address']); ?></h2><p><?php echo number_format($a['system_kw'],3); ?> kW · <?php echo (int)$a['panel_count']; ?> <?php echo _l('solar_pro_panels'); ?> · <?php echo number_format($a['annual_production_kwh']); ?> kWh</p><a class="sp-button" href="<?php echo site_url('solar_pro/portal/'.$a['public_token']); ?>"><?php echo _l('solar_pro_view_report'); ?></a></div><?php endforeach; ?><?php if(!$analyses): ?><div class="sp-card"><p><?php echo _l('solar_pro_no_customer_reports'); ?></p></div><?php endif; ?></div></body></html>

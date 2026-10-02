@@ -8,10 +8,6 @@ $scStripeCheckoutAvailable = sc_active_online_gateway_supports_currency('stripe'
     && $invoice->status != Invoices_model::STATUS_PAID
     && $invoice->status != Invoices_model::STATUS_CANCELLED
     && (float) $invoice->total_left_to_pay > 0;
-$scInvoiceCanAcceptOnlinePayment = $invoice->status != Invoices_model::STATUS_PAID
-    && $invoice->status != Invoices_model::STATUS_CANCELLED
-    && (float) $invoice->total_left_to_pay > 0
-    && ($scPaypalCheckoutAvailable || $scStripeCheckoutAvailable || found_invoice_mode($payment_modes, $invoice->id, false));
 ?>
 <?php $scCustomerAttachments = sc_sales_customer_attachments('invoice', (int) $invoice->id); ?>
 
@@ -54,8 +50,8 @@ $scInvoiceCanAcceptOnlinePayment = $invoice->status != Invoices_model::STATUS_PA
                     </button>
                     <?= form_close(); ?>
 
-                    <a href="<?= site_url('appointly/appointments_public/book'); ?>?col=<?= rawurlencode('col-md-8 col-md-offset-2'); ?>" class="btn btn-primary action-button sc-service-appointment-button"><i class="fa fa-calendar-check"></i> <?= _l('sc_make_service_appointment'); ?></a>
-                    <?php if ($scInvoiceCanAcceptOnlinePayment) { ?>
+                    <a href="<?= site_url('appointments'); ?>" class="btn btn-primary action-button sc-service-appointment-button"><i class="fa fa-calendar-check"></i> <?= _l('sc_make_service_appointment'); ?></a>
+                    <?php if (($scPaypalCheckoutAvailable || $scStripeCheckoutAvailable || found_invoice_mode($payment_modes, $invoice->id, false))) { ?>
                     <a href="#online_payment_form" class="btn btn-success action-button invoice-html-pay-now-top pay-now-top sticky-hidden">
                         <i class="fa fa-credit-card"></i> <?= _l('invoice_html_online_payment_button_text'); ?>
                     </a>
@@ -273,7 +269,7 @@ if ($scPaymentMeta) {
     <h4><?= _l('sc_payment_schedule'); ?></h4>
     <div class="smart-choice-public-payment-grid">
         <div><span><?= _l('sc_contract_total'); ?></span><strong><?= html_escape(app_format_money($scPaymentMeta->contract_total, $invoice->currency_name)); ?></strong></div>
-        <div><span><?= _l('sc_amount_due_now'); ?></span><strong><?= html_escape(app_format_money(max(0, (float) $invoice->total_left_to_pay), $invoice->currency_name)); ?></strong></div>
+        <div><span><?= _l('sc_amount_due_now'); ?></span><strong><?= html_escape(app_format_money($scPaymentMeta->due_now, $invoice->currency_name)); ?></strong></div>
         <div><span><?= _l('sc_remaining_balance'); ?></span><strong><?= html_escape(app_format_money($scPaymentMeta->remaining_balance, $invoice->currency_name)); ?></strong></div>
         <?php if ($scDiscountLabel !== '') { ?>
         <div><span>Discount</span><strong><?= html_escape($scDiscountLabel); ?></strong></div>
@@ -443,7 +439,7 @@ if ($total_payments > 0) { ?>
                     <div class="row">
                         <?php
                                           $found_online_mode = false;
-                if ($scInvoiceCanAcceptOnlinePayment) {
+                if (($scPaypalCheckoutAvailable || $scStripeCheckoutAvailable || found_invoice_mode($payment_modes, $invoice->id, false))) {
                     $found_online_mode = true; ?>
                         <div class="col-md-6 text-left">
                             <p class="tw-mb-2.5 tw-font-medium">
@@ -565,10 +561,8 @@ if ($total_payments > 0) { ?>
         new Sticky('[data-sticky]');
         var $payNowTop = $('.pay-now-top');
         var $form = $('#online_payment_form');
-        if ($payNowTop.length && $form.length && !$('#pay_now').isInViewport()) {
+        if ($payNowTop.length && !$('#pay_now').isInViewport()) {
             $payNowTop.removeClass('hide');
-        } else if (!$form.length) {
-            $payNowTop.addClass('hide');
         }
         $payNowTop.off('click.smartChoicePayNow').on('click.smartChoicePayNow', function(e){
             e.preventDefault();
@@ -585,7 +579,7 @@ if ($total_payments > 0) { ?>
 <div class="sc-invoice-discount-reason"><strong><?= _l('sc_discount_reason'); ?>:</strong> <?= e($invoice->sc_discount_reason); ?></div>
 <?php } ?>
 <?php if (isset($invoice->sc_down_payment_percent) && (float)$invoice->sc_down_payment_percent < 100) { ?>
-<div class="sc-invoice-payment-stage"><strong><?= _l('sc_down_payment'); ?>:</strong> <?= e($invoice->sc_down_payment_percent); ?>% &nbsp; <strong><?= _l('sc_amount_due_now'); ?>:</strong> <?= app_format_money(max(0, (float) $invoice->total_left_to_pay), $invoice->currency_name ?? ''); ?></div>
+<div class="sc-invoice-payment-stage"><strong><?= _l('sc_down_payment'); ?>:</strong> <?= e($invoice->sc_down_payment_percent); ?>% &nbsp; <strong><?= _l('sc_amount_due_now'); ?>:</strong> <?= app_format_money($invoice->total, $invoice->currency_name ?? ''); ?></div>
 <?php } ?>
 
 <script>

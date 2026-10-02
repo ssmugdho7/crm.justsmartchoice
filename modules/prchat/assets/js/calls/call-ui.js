@@ -390,7 +390,7 @@
     (function acquireVoiceMedia() {
       var m = window.__chatCallManager;
       if (m && m.localStream) return;
-      navigator.mediaDevices.getUserMedia({ audio: true })
+      navigator.mediaDevices.getUserMedia({ audio: preferredAudio() })
         .then(function (stream) {
           var mgr = window.__chatCallManager;
           if (!mgr || !mgr.pc) { stream.getTracks().forEach(function (t) { t.stop(); }); return; }
@@ -575,7 +575,7 @@
         icon2.className = "fa fa-spinner fa-spin";
         cameraBtn.title = "Requesting camera access…";
         var hasAudio = mgr.localStream && mgr.localStream.getAudioTracks().length > 0;
-        var constraints = hasAudio ? { video: true } : { audio: true, video: true };
+        var constraints = hasAudio ? { video: true } : { audio: preferredAudio(), video: true };
         Promise.race([
           navigator.mediaDevices.getUserMedia(constraints),
           new Promise(function (_, rej) { setTimeout(function () { rej(new Error("timeout")); }, 8000); })
@@ -719,7 +719,7 @@
       }
 
       function fallbackToAudioOnly() {
-        navigator.mediaDevices.getUserMedia({ audio: true })
+        navigator.mediaDevices.getUserMedia({ audio: preferredAudio() })
           .then(function (audioStream) {
             dismissPrompt();
             attachStreamToPC(audioStream);
@@ -734,7 +734,7 @@
 
       function requestMedia() {
         navigator.mediaDevices
-          .getUserMedia({ audio: true, video: true })
+          .getUserMedia({ audio: preferredAudio(), video: true })
           .then(function (stream) {
             dismissPrompt();
             attachStreamToPC(stream);
@@ -971,6 +971,11 @@
     }
   }
 
+  function preferredAudio() {
+    var manager = window.__chatCallManager;
+    return manager && manager.audioInputId ? { deviceId: { exact: manager.audioInputId } } : true;
+  }
+
   function openDevicePicker() {
     if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
       console.warn("[prchat-call] enumerateDevices not available");
@@ -983,7 +988,15 @@
       return;
     }
     Promise.race([
-      navigator.mediaDevices.enumerateDevices(),
+      navigator.mediaDevices.enumerateDevices().then(function (devices) {
+        var hasNamedMicrophone = devices.some(function (d) { return d.kind === 'audioinput' && d.label; });
+        if (hasNamedMicrophone) return devices;
+        // This picker is opened by a user gesture; permission reveals real device labels.
+        return navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+          stream.getTracks().forEach(function (track) { track.stop(); });
+          return navigator.mediaDevices.enumerateDevices();
+        });
+      }),
       new Promise(function (_, rej) {
         setTimeout(function () { rej(new Error("enumerateDevices timeout")); }, 5000);
       })
@@ -1068,6 +1081,16 @@
           spkSel.appendChild(o);
         });
 
+        var manager = window.__chatCallManager;
+        if (manager) {
+          if (mics.some(function (d) { return d.deviceId === manager.audioInputId; })) micSel.value = manager.audioInputId;
+          if (spks.some(function (d) { return d.deviceId === manager.audioOutputId; })) spkSel.value = manager.audioOutputId;
+        }
+        if (!('setSinkId' in HTMLMediaElement.prototype)) {
+          spkSel.disabled = true;
+          spkLabel.textContent = 'Speaker: controlled by your browser/system';
+        }
+
         // Actions
         var actions = document.createElement("div");
         actions.className = "chat-call-actions";
@@ -1089,22 +1112,24 @@
 
           try {
             if (window.__chatCallManager) {
-              if (micId && window.__chatCallManager.setAudioInput) {
+              if (!micSel.disabled && window.__chatCallManager.setAudioInput) {
                 promises.push(window.__chatCallManager.setAudioInput(micId));
               }
-              if (spkId && window.__chatCallManager.setAudioOutput) {
-                window.__chatCallManager.setAudioOutput(spkId);
+              if (!spkSel.disabled && window.__chatCallManager.setAudioOutput) {
+                promises.push(window.__chatCallManager.setAudioOutput(spkId));
               }
             }
           } catch (e) {
             console.error("Error setting audio devices:", e);
           }
 
-          Promise.all(promises).finally(function () {
+          Promise.all(promises).then(function () {
             closeModal(true); // Close device modal only
             if (typeof alert_float !== "undefined") {
               alert_float("success", "Audio devices updated successfully");
             }
+          }).catch(function () {
+            if (typeof alert_float !== "undefined") alert_float("danger", "Unable to select that device. Check microphone permission and reconnect the device.");
           });
         };
 

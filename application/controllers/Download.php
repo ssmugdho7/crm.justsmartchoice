@@ -183,6 +183,7 @@ class Download extends App_Controller
             $this->db->where('rel_id', $attachmentid);
             $this->db->where('rel_type', 'expense');
             $file = $this->db->get(db_prefix() . 'files')->row();
+            if (!$file) { show_404(); }
             $path = get_upload_path_by_type('expense') . $file->rel_id . '/' . $file->file_name;
             // l_attachment_key is if request is coming from public form
         } elseif ($folder_indicator == 'lead_attachment' || $folder_indicator == 'l_attachment_key') {
@@ -264,6 +265,10 @@ class Download extends App_Controller
             }
         }
 
+        if (!is_file($path) || !is_readable($path)) {
+            show_error('This attachment is missing from storage. Please ask a staff member to upload it again.', 404);
+            return;
+        }
         force_download($path, null);
     }
 }

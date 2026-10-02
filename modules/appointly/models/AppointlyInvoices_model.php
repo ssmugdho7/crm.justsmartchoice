@@ -2,7 +2,7 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Appointlyinvoices_model extends App_Model
+class AppointlyInvoices_model extends App_Model
 {
     public function __construct()
     {
@@ -84,41 +84,7 @@ class Appointlyinvoices_model extends App_Model
         $service_price = 0;
         if (!empty($appointment['service_price']) && $appointment['service_price'] > 0) {
             $service_price = $appointment['service_price'];
-        }
-
-        // Determine tax to apply based on settings
-        $tax_names = [];
-        $tax_rate_total = 0;
-        $tax_type = get_option('appointly_invoice_tax_type', 'none');
-
-        if ($tax_type === 'custom') {
-            // Custom percentage tax
-            $custom_vat = get_option('appointly_invoice_default_vat', 0);
-            if ($custom_vat > 0) {
-                $tax_names[] = 'VAT|' . $custom_vat;
-                $tax_rate_total += $custom_vat;
-            }
-        } elseif ($tax_type === 'system') {
-            // Use CRM tax rate
-            $system_tax_id = get_option('appointly_invoice_system_tax');
-            if ($system_tax_id) {
-                $this->db->where('id', $system_tax_id);
-                $tax = $this->db->get(db_prefix() . 'taxes')->row();
-                if ($tax) {
-                    $tax_names[] = $tax->name . '|' . $tax->taxrate;
-                    $tax_rate_total += $tax->taxrate;
                 }
-            }
-        }
-
-        // Calculate totals manually (Perfex expects these to be pre-calculated)
-        $subtotal = $service_price * 1; // qty * rate
-        $tax_amount = ($subtotal * $tax_rate_total) / 100;
-        $total = $subtotal + $tax_amount;
-
-        // Update invoice data with calculated totals
-        $invoice_data['subtotal'] = $subtotal;
-        $invoice_data['total'] = $total;
 
         // Add items to invoice data using Perfex's newitems pattern
         $invoice_data['newitems'] = [
@@ -128,23 +94,14 @@ class Appointlyinvoices_model extends App_Model
                 'qty' => 1,
                 'unit' => '',
                 'rate' => $service_price,
-                'taxname' => $tax_names,
+                'taxname' => [],
                 'order' => 1,
             ]
         ];
 
         // Create invoice
         $this->load->model('invoices_model');
-
-        // Clear any lingering $_POST data that might contaminate invoice creation
-        // Perfex's invoices_model->add() checks $_POST for additional items
-        $original_post = $_POST;
-        $_POST = [];
-
         $invoice_id = $this->invoices_model->add($invoice_data);
-
-        // Restore original $_POST data
-        $_POST = $original_post;
 
         if ($invoice_id) {
             // Force status to unpaid (Perfex auto-marks $0 invoices as paid)

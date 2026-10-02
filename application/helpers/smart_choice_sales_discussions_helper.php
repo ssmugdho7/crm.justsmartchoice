@@ -15,7 +15,7 @@ function sc_sales_document_summary_values($type,$document)
         if($meta){$values['contract_total']=(float)$meta->contract_total;$values['due_now']=(float)$meta->due_now;$values['remaining_balance']=(float)$meta->remaining_balance;}
     }
     if($values['contract_total']<=0)$values['contract_total']=$values['total'];
-    if($type==='invoice' && isset($document->total_left_to_pay))$values['due_now']=max(0.0,(float)$document->total_left_to_pay);
+    if($type==='invoice' && isset($document->total_left_to_pay) && $values['due_now']<=0)$values['due_now']=(float)$document->total_left_to_pay;
     elseif($values['due_now']<=0)$values['due_now']=$values['total'];
     return $values;
 }

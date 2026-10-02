@@ -20,11 +20,11 @@ $subject = $meeting->subject ?? $meeting->title ?? 'Google Meet Meeting';
           <div class="row">
             <div class="col-md-8">
               <h4>Meeting Details</h4>
-              <p><b>Start:</b> <?php echo !empty($meeting->start_time) ? _dt($meeting->start_time) : ''; ?></p>
-              <p><b>End:</b> <?php echo !empty($meeting->end_time) ? _dt($meeting->end_time) : ''; ?></p>
+              <p><b>Start:</b> <?php echo !empty($meeting->start_time) ? google_meet_display_datetime($meeting->start_time) : ''; ?></p>
+              <p><b>End:</b> <?php echo !empty($meeting->end_time) ? google_meet_display_datetime($meeting->end_time) : ''; ?></p>
               <p><b>Status:</b> <?php echo html_escape($meeting->status ?? ''); ?></p>
               <p><b>Duration:</b> <?php echo (int)($meeting->duration_minutes ?? 0); ?> minutes</p>
-              <p><b>Google API Status:</b> <?php echo html_escape($meeting->google_api_status ?? 'manual'); ?></p>
+              <p><b>Google API Status:</b> <?php echo html_escape(empty($meeting->google_event_id) ? 'Manual link — not synced to Google Calendar' : ($meeting->google_api_status ?? 'Created in Google Calendar')); ?></p>
               <p><b>Link:</b> <a  href="<?php echo html_escape($meeting->meet_link); ?>"><?php echo html_escape($meeting->meet_link); ?></a></p>
               <?php if (!empty($meeting->notes)) { ?><p><b>Internal Notes:</b><br><?php echo nl2br(html_escape($meeting->notes)); ?></p><?php } ?>
             </div>
@@ -61,7 +61,7 @@ $subject = $meeting->subject ?? $meeting->title ?? 'Google Meet Meeting';
             <?php foreach ((array)$comments as $comment) { ?>
               <div class="gm-comment-box">
                 <strong><?php echo html_escape($comment['staff_name'] ?: 'Staff'); ?></strong>
-                <small><?php echo !empty($comment['created_at']) ? _dt($comment['created_at']) : ''; ?></small>
+                <small><?php echo !empty($comment['created_at']) ? google_meet_display_datetime($comment['created_at']) : ''; ?></small>
                 <p><?php echo nl2br(html_escape($comment['comment'])); ?></p>
               </div>
             <?php } ?>

@@ -9,7 +9,7 @@
       <thead><tr><th>Meeting</th><th style="width:130px">Start</th><th style="width:95px">Status</th><th style="width:90px">Join</th><th style="width:90px">View</th></tr></thead><tbody>
       <?php foreach((array)$meetings as $m){ $title = $m['subject'] ?? $m['title'] ?? 'Google Meet Meeting'; ?><tr>
         <td class="gm-meeting-cell"><strong title="<?php echo html_escape($title); ?>"><?php echo html_escape($title); ?></strong><small><?php echo html_escape($m['meet_link'] ?? ''); ?></small></td>
-        <td class="gm-nowrap"><?php echo !empty($m['start_time']) ? _dt($m['start_time']) : ''; ?></td>
+        <td class="gm-nowrap"><?php echo !empty($m['start_time']) ? google_meet_display_datetime($m['start_time']) : ''; ?></td>
         <td><span class="gm-badge gm-badge-blue"><?php echo html_escape(ucfirst($m['status'] ?? 'scheduled')); ?></span></td>
         <td><?php if (!empty($m['meet_link'])) { ?><a class="btn btn-success btn-xs" href="<?php echo html_escape($m['meet_link']); ?>" target="_blank" rel="noopener"><i class="fa fa-sign-in"></i> Join</a><?php } ?></td>
         <td><button type="button" class="btn btn-default btn-xs gm-view-popup" data-id="<?php echo (int)$m['id']; ?>"><i class="fa fa-eye"></i> View</button></td>

@@ -871,11 +871,13 @@ class recruitment extends AdminController {
 				$mess = _l('care_candidate_success');
 				echo json_encode([
 					'mess' => $mess,
+					'success' => (bool) $id,
 				]);
 			} else {
 				$mess = _l('care_candidate_fail');
 				echo json_encode([
 					'mess' => $mess,
+					'success' => (bool) $id,
 				]);
 			}
 

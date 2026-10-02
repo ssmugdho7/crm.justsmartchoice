@@ -289,7 +289,7 @@ abstract class App_pdf extends TCPDF
         _bulk_pdf_export_maybe_tag($this->tag, $this);
 
         // Smart Choice compatibility: preserve Custom CRM PDF cover/end-page assets already stored in options.
-        $this->sc_render_custom_pdf_asset('cover');
+        if ($this->type() !== 'proposal') { $this->sc_render_custom_pdf_asset('cover'); }
 
         if ($path = $this->get_file_path()) {
             // Backwards compatible
@@ -301,7 +301,7 @@ abstract class App_pdf extends TCPDF
             include $path;
         }
 
-        $this->sc_render_custom_pdf_asset('end');
+        if ($this->type() !== 'proposal') { $this->sc_render_custom_pdf_asset('end'); }
 
         if (ob_get_length() > 0 && ENVIRONMENT == 'production') {
             ob_end_clean();

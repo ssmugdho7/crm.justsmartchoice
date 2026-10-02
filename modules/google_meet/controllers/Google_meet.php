@@ -24,16 +24,23 @@ class Google_meet extends AdminController
     {
         if ($this->input->post()) {
             $post = $this->input->post(null, true);
-            if ($id) {
-                $this->google_meet_model->update((int)$id, $post);
-                set_alert('success', 'Google Meet meeting updated successfully.');
-                redirect(admin_url('google_meet/view/' . (int)$id));
-            }
+            try {
+                if ($id) {
+                    $this->google_meet_model->update((int)$id, $post);
+                    set_alert('success', 'Google Meet meeting updated successfully.');
+                    redirect(admin_url('google_meet/view/' . (int)$id));
+                }
 
-            $meetingId = $this->google_meet_model->create($post);
-            if ($meetingId) {
-                set_alert('success', 'Google Meet meeting created successfully.');
-                redirect(admin_url('google_meet/view/' . $meetingId));
+                $meetingId = $this->google_meet_model->create($post);
+                if ($meetingId) {
+                    set_alert('success', 'Google Meet meeting created successfully.');
+                    redirect(admin_url('google_meet/view/' . $meetingId));
+                }
+
+            } catch (InvalidArgumentException $e) {
+                set_alert('danger', $e->getMessage());
+                redirect(admin_url('google_meet/create' . ($id ? '/' . (int)$id : '')));
+                return;
             }
 
             set_alert('danger', 'Google Meet meeting could not be created. Please run Upgrade Database.');
@@ -91,7 +98,7 @@ class Google_meet extends AdminController
         if ($this->google_meet_model->notify_attendees((int)$id)) {
             set_alert('success', 'Meeting notifications were sent through the CRM channels.');
         } else {
-            set_alert('warning', 'Invitations were not sent. Save one shared Google Meet URL first so every attendee enters the same meeting.');
+            set_alert('warning', 'No notification channel succeeded. Check the shared Meet link, attendees and notification settings.');
         }
         redirect(admin_url('google_meet/view/' . (int)$id));
     }

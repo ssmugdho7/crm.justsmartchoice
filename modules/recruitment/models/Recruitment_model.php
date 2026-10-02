@@ -1542,9 +1542,10 @@ class Recruitment_model extends App_Model {
 		$inbox['date_received'] = date('Y-m-d H:i:s');
 		$inbox['from_email'] = get_option('smtp_email');
 
-		if (new_strlen(get_option('smtp_host')) > 0 && new_strlen(get_option('smtp_password')) > 0 && new_strlen(get_option('smtp_username')) > 0) {
-
-			$this->rec_send_simple_email($inbox['to'], $inbox['subject'], $inbox['body']);
+		// Use the configured CRM transport, including OAuth or SMTP email as username.
+		// Never record a successful email when the transport rejects it.
+		if (!$this->rec_send_simple_email($inbox['to'], $inbox['subject'], $inbox['body'])) {
+			return false;
 		}
 
 		$care = array();
@@ -1576,9 +1577,10 @@ class Recruitment_model extends App_Model {
 		$inbox['body'] = nl2br_save_html($inbox['body']);
 		$inbox['date_received'] = date('Y-m-d H:i:s');
 		$inbox['from_email'] = get_option('smtp_email');
-		if (new_strlen(get_option('smtp_host')) > 0 && new_strlen(get_option('smtp_password')) > 0 && new_strlen(get_option('smtp_username')) > 0) {
-
-			$this->rec_send_simple_email($inbox['to'], $inbox['subject'], $inbox['body']);
+		// Use the configured CRM transport, including OAuth or SMTP email as username.
+		// Never record a successful email when the transport rejects it.
+		if (!$this->rec_send_simple_email($inbox['to'], $inbox['subject'], $inbox['body'])) {
+			return false;
 		}
 
 		$care = array();
@@ -5143,7 +5145,7 @@ class Recruitment_model extends App_Model {
 		}
 
 		$this->clear_attachments();
-		if ($this->email->send()) {
+		if ($this->email->send(true)) {
 			log_activity('Email sent to: ' . $cnf['email'] . ' Subject: ' . $cnf['subject']);
 
 			return true;

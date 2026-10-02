@@ -141,3 +141,46 @@
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
     else init();
 }());
+
+(function () {
+    'use strict';
+    function initLanguages() {
+        document.querySelectorAll('.customers-nav-item-languages').forEach(function (item) {
+            var trigger = item.querySelector('.sc-language-toggle');
+            var menu = item.querySelector('.sc-language-options');
+            if (!trigger || !menu) return;
+            function setOpen(open) {
+                item.classList.toggle('sc-language-open', open);
+                trigger.setAttribute('aria-expanded', String(open));
+                menu.inert = !open;
+            }
+            setOpen(false);
+            item.addEventListener('mouseenter', function () {
+                if (window.matchMedia('(hover: hover)').matches) setOpen(true);
+            });
+            item.addEventListener('mouseleave', function () {
+                if (!item.contains(document.activeElement)) setOpen(false);
+            });
+            trigger.addEventListener('click', function (event) {
+                event.preventDefault(); event.stopPropagation();
+                setOpen(!item.classList.contains('sc-language-open'));
+            });
+            item.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape' || event.key === 'ArrowRight') {
+                    if (item.classList.contains('sc-language-open')) {
+                        event.preventDefault(); event.stopPropagation(); setOpen(false); trigger.focus();
+                    }
+                } else if (event.target === trigger && (event.key === 'ArrowLeft' || event.key === 'ArrowDown' || event.key === ' ')) {
+                    event.preventDefault(); event.stopPropagation(); setOpen(true);
+                    var first = menu.querySelector('a'); if (first) first.focus();
+                }
+            });
+            item.addEventListener('focusout', function (event) {
+                if (!item.contains(event.relatedTarget)) setOpen(false);
+            });
+            if (window.jQuery) window.jQuery(item.closest('.customers-nav-item-profile')).on('hidden.bs.dropdown.scLanguages', function () { setOpen(false); });
+        });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initLanguages);
+    else initLanguages();
+}());

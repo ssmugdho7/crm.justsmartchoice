@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php $cart_url = site_url('products/client/place_order'); ?>
-<link rel="stylesheet" href="<?php echo module_dir_url('products', 'assets/css/catalog.css'); ?>?v=1">
+<link rel="stylesheet" href="<?php echo module_dir_url('products', 'assets/css/catalog.css'); ?>?v=2">
 <section id="sc-catalog" aria-labelledby="sc-catalog-title">
     <header class="sc-catalog-heading">
         <p class="sc-catalog-eyebrow">SMART CHOICE SERVICES</p>
@@ -61,4 +61,4 @@ window.scProductI18n = <?php echo json_encode($client_i18n ?? []); ?>;
 ?>
 <script type="text/javascript" src="<?php echo module_dir_url('products', 'assets/js/client_products.js'); ?>?v=3.0.0"></script>
 
-<script src="<?php echo module_dir_url('products', 'assets/js/catalog.js'); ?>?v=1"></script>
+<script src="<?php echo module_dir_url('products', 'assets/js/catalog.js'); ?>?v=2"></script>

@@ -2,7 +2,7 @@
 
 /* Scoped overrides for the legacy catalog stylesheet; checkout/detail views are unaffected. */
 #sc-catalog{max-width:1380px;margin:0 auto;color:#172b37;padding-bottom:32px}
-#sc-catalog [hidden]{display:none!important}
+#sc-catalog [hidden],#sc-catalog .product-row[hidden]{display:none!important}
 #sc-catalog .sc-catalog-heading{padding:12px 0 22px}
 #sc-catalog .sc-catalog-eyebrow{font-size:11px;letter-spacing:.1em;font-weight:700;color:#17685d;margin:0 0 10px}
 #sc-catalog h1{font-size:32px;line-height:1.25;font-weight:700;margin:0 0 10px}
@@ -28,14 +28,14 @@
 #sc-catalog .bootstrap-select .dropdown-menu .inner{scrollbar-width:thin;scrollbar-color:#cbd5e1 transparent}
 #sc-catalog .bootstrap-select .dropdown-menu li a{padding:9px 12px;white-space:normal;font-size:13px}
 #sc-catalog .sc-toolbar-actions{display:flex;gap:8px;align-items:center;text-align:left!important;margin:0!important}
-#sc-catalog .sc-toolbar-actions>a{min-height:44px;padding:10px 14px;font-size:13px;white-space:nowrap;text-decoration:none;transition:background-color .15s}
+#sc-catalog .sc-toolbar-actions>a{border-style:solid;min-height:44px;padding:10px 14px;font-size:13px;white-space:nowrap;text-decoration:none;transition:background-color .15s}
 #sc-catalog .sc-shop-cart:hover{background:#f1f5f9}
 #sc-catalog .sc-shop-checkout:hover{background:#115e59;color:#fff}
 #sc-catalog .sc-cart-count{font-size:11px;min-width:22px;height:22px;padding:2px 6px;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;background:#e8f2ee;color:#17685d}
 #sc-catalog .sc-catalog-count{font-size:13px;color:#526472;margin:18px 0}
 #sc-catalog .sc-product-grid{display:grid!important;align-items:stretch!important}
 #sc-catalog .product-row{width:auto!important;float:none!important;padding:0!important;margin:0!important;display:flex!important;min-width:0}
-#sc-catalog .sc-product-card{width:100%;display:flex;flex-direction:column;min-height:0!important;height:auto!important;overflow:visible!important;border-radius:12px!important;transition:box-shadow .15s,border-color .15s}
+#sc-catalog .sc-product-card{border-style:solid;width:100%;display:flex;flex-direction:column;min-height:0!important;height:auto!important;overflow:visible!important;border-radius:12px!important;transition:box-shadow .15s,border-color .15s}
 #sc-catalog .sc-product-card:hover{transform:none;box-shadow:0 5px 16px rgba(15,23,42,.08);border-color:#b1cbc3}
 #sc-catalog .sc-product-image-wrap{height:176px!important;padding:0!important;position:relative;border-radius:11px 11px 0 0!important;background:#edf3f2!important;overflow:hidden!important;flex-shrink:0}
 #sc-catalog .sc-product-image{width:100%!important;height:176px!important;min-height:0!important;max-height:176px!important;object-fit:cover!important;border-radius:0!important}
@@ -69,5 +69,5 @@
 #sc-catalog .sc-catalog-empty p{font-size:14px;color:#526472}
 #sc-catalog .sc-catalog-empty button{min-height:44px;border:1px solid #cbd5e1;background:#fff;color:#17685d;padding:10px 16px;border-radius:8px}
 #sc-catalog a:focus-visible,#sc-catalog button:focus-visible,#sc-catalog input:focus-visible,#sc-catalog select:focus-visible{outline:3px solid #2d8a78!important;outline-offset:3px}
-@media(max-width:767px){#sc-catalog h1{font-size:27px}#sc-catalog .sc-shop-toolbar{position:static}#sc-catalog .sc-shop-controls{gap:12px}#sc-catalog .sc-shop-search{flex-basis:100%}#sc-catalog .sc-shop-category,#sc-catalog .sc-shop-sort{flex:1 1 130px;min-width:0}#sc-catalog .sc-toolbar-actions{width:100%}#sc-catalog .sc-toolbar-actions>a{flex:1;justify-content:center}#sc-catalog .sc-product-body{padding:18px}}
+@media(max-width:767px){#sc-catalog h1{font-size:27px}#sc-catalog .sc-shop-toolbar{position:static}#sc-catalog .sc-shop-controls{gap:12px}#sc-catalog .sc-shop-search{flex-basis:100%}#sc-catalog .sc-shop-category,#sc-catalog .sc-shop-sort{flex:1 1 130px;min-width:0}#sc-catalog .sc-toolbar-actions{width:100%}#sc-catalog .sc-toolbar-actions>a{border-style:solid;flex:1;justify-content:center}#sc-catalog .sc-product-body{padding:18px}}
 @media(prefers-reduced-motion:reduce){#sc-catalog *{transition:none!important}}

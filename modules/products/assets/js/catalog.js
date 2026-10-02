@@ -8,6 +8,11 @@
     function update() {
         var terms = search.value.toLocaleLowerCase().trim().split(/\s+/).filter(Boolean);
         var cards = Array.from(grid.querySelectorAll('.product-row'));
+        root.querySelectorAll('.sc-variation-line').forEach(function (line) {
+            var label = line.querySelector('label');
+            var toggle = line.querySelector('button.dropdown-toggle');
+            if (label && toggle) toggle.setAttribute('aria-label', label.textContent + ': ' + line.closest('.product-row').dataset.catalogName);
+        });
         var visible = 0;
         cards.forEach(function (card) {
             card.hidden = !terms.every(function (term) { return card.dataset.catalogSearch.toLocaleLowerCase().indexOf(term) !== -1; });

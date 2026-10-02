@@ -1,5 +1,9 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<?php $privacyInformation = get_option('gdpr_page_top_information_block'); ?>
+<?php
+$privacyInformation = get_option('gdpr_page_top_information_block');
+// Resolve the policy's unfinished update-date placeholder; retain any published date.
+$privacyInformation = str_replace('[Date]', 'October 3, 2026', (string) $privacyInformation);
+?>
 <section class="sc-privacy-page" aria-labelledby="sc-privacy-title">
     <header class="sc-privacy-header">
         <span class="sc-privacy-eyebrow"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> YOUR PRIVACY</span>

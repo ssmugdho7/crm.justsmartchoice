@@ -14,7 +14,8 @@ function form_hidden($key, $value) { return '<input type="hidden" name="'.$key.'
 function form_close() { return '</form>'; }
 function verify($ok, $message) { if (!$ok) throw new RuntimeException($message); }
 $keys = ['gdpr_enable_terms_and_conditions','gdpr_contact_enable_right_to_be_forgotten','gdpr_data_portability_contacts','gdpr_enable_consent_for_contacts'];
-$policy = '<h1>Existing policy</h1><p>Keep <strong>this policy text</strong> exactly.</p>';
+$policy = '<h1>Existing policy</h1><p>Last updated: [Date]</p><p>Keep <strong>this policy text</strong> exactly.</p>';
+$expectedPolicy = str_replace('[Date]', 'October 3, 2026', $policy);
 foreach ([false, true] as $enabled) {
     for ($mask = 0; $mask < 16; $mask++) {
         foreach ([$policy, ''] as $policyContent) {
@@ -40,7 +41,7 @@ foreach ([false, true] as $enabled) {
                 verify($xpath->query('//a[@data-target="#dataRemoval" and @data-toggle="modal"]')->length === 1, 'Existing modal trigger');
                 verify($xpath->query('//*[@id="dataRemoval" and @aria-labelledby="sc-data-removal-title"]')->length === 1, 'Modal accessible title');
             }
-            verify($policyContent === '' || strpos($html, $policyContent) !== false, 'Preserve administrator policy HTML verbatim');
+            verify($policyContent === '' || strpos($html, $expectedPolicy) !== false, 'Only resolve the update-date placeholder in administrator policy HTML');
             verify($xpath->query('//*[@id="sc-privacy-policy"]')->length === ($policyContent === '' ? 0 : 1), 'No blank policy container');
         }
     }

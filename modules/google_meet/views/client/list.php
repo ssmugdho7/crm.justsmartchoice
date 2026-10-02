@@ -52,7 +52,7 @@ $summary = isset($summary) && is_array($summary) ? $summary : ['total'=>count((a
             ?>
               <tr>
                 <td><strong><?php echo html_escape($meetingTitle); ?></strong><?php if (!empty($meeting['description'])) { ?><div class="text-muted gm-client-description"><?php echo html_escape(mb_strimwidth(strip_tags((string)$meeting['description']),0,120,'...')); ?></div><?php } ?></td>
-                <td><?php echo !empty($meeting['start_time']) ? _dt($meeting['start_time']) : html_escape(google_meet_lang('google_meet_time_pending', 'Time pending')); ?></td>
+                <td><?php echo !empty($meeting['start_time']) ? google_meet_display_datetime($meeting['start_time']) : html_escape(google_meet_lang('google_meet_time_pending', 'Time pending')); ?></td>
                 <td><span class="label label-<?php echo $statusClass; ?> gm-status-label"><?php echo html_escape(ucwords(str_replace('_',' ', $status ?: 'scheduled'))); ?></span></td>
                 <td class="text-right gm-client-actions">
                   <a class="btn btn-default btn-sm" href="<?php echo site_url('google_meet/meeting_clients/view/' . $meetingId); ?>"><i class="fa fa-eye"></i> <?php echo html_escape(google_meet_lang('google_meet_view', 'View')); ?></a>

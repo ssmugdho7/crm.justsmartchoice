@@ -191,40 +191,50 @@ function sales_center_admin_init()
 
 
 
+        if (get_option('sales_center_hide_core_sales_menu') === '1' || get_option('sales_center_hide_core_estimates') === '1') {
         $CI->app_menu->add_sidebar_children_item('sales-center-main', [
             'slug'     => 'sales-center-estimates',
             'name'     => 'Estimates',
             'href'     => admin_url('estimates'),
             'position' => 5,
         ]);
+        }
 
+        if (get_option('sales_center_hide_core_sales_menu') === '1' || get_option('sales_center_hide_core_proposals') === '1') {
         $CI->app_menu->add_sidebar_children_item('sales-center-main', [
             'slug'     => 'sales-center-proposals',
             'name'     => 'Proposals',
             'href'     => admin_url('proposals'),
             'position' => 6,
         ]);
+        }
 
+        if (get_option('sales_center_hide_core_sales_menu') === '1' || get_option('sales_center_hide_core_invoices') === '1') {
         $CI->app_menu->add_sidebar_children_item('sales-center-main', [
             'slug'     => 'sales-center-invoices',
             'name'     => 'Invoices',
             'href'     => admin_url('invoices'),
             'position' => 7,
         ]);
+        }
 
+        if (get_option('sales_center_hide_core_sales_menu') === '1' || get_option('sales_center_hide_core_payments') === '1') {
         $CI->app_menu->add_sidebar_children_item('sales-center-main', [
             'slug'     => 'sales-center-payments',
             'name'     => 'Payments',
             'href'     => admin_url('payments'),
             'position' => 8,
         ]);
+        }
 
+        if (get_option('sales_center_hide_core_sales_menu') === '1' || get_option('sales_center_hide_core_credit_notes') === '1') {
         $CI->app_menu->add_sidebar_children_item('sales-center-main', [
             'slug'     => 'sales-center-credit-notes',
             'name'     => 'Credit Notes',
             'href'     => admin_url('credit_notes'),
             'position' => 9,
         ]);
+        }
 
 
 

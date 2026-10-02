@@ -317,7 +317,7 @@ foreach ($custom_fields as $field) { ?>
                                 <i
                                     class="<?= get_mime_class($expense->filetype); ?>"></i>
                                 <a
-                                    href="<?= site_url('download/file/expense/' . $expense->expenseid); ?>">
+                                    href="<?= site_url('download/file/expense/' . $expense->expenseid . '?preview=1'); ?>">
                                     <?= e($expense->attachment); ?>
                                 </a>
                             </div>

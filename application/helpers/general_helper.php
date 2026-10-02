@@ -281,7 +281,7 @@ function maybe_redirect_to_previous_url()
 /**
  * @return bool
  */
-function do_recaptcha_validation($str = '')
+function do_recaptcha_validation($str = '', $expectedHostname = null)
 {
     $CI = &get_instance();
     $CI->load->library('form_validation');
@@ -290,24 +290,34 @@ function do_recaptcha_validation($str = '')
     $secret     = get_option('recaptcha_secret_key');
     $ip         = $CI->input->ip_address();
 
-    $url = $google_url . '?secret=' . $secret . '&response=' . $str . '&remoteip=' . $ip;
+    if (is_string($str) && trim($str) !== '' && $secret !== '') {
+        $curl = curl_init($google_url);
+        if ($curl !== false) {
+            // Keep credentials out of URLs and safely encode the response token.
+            curl_setopt_array($curl, [
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => http_build_query(['secret' => $secret, 'response' => $str, 'remoteip' => $ip]),
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_CONNECTTIMEOUT => 5,
+                CURLOPT_TIMEOUT => 10,
+                CURLOPT_SSL_VERIFYPEER => true,
+                CURLOPT_SSL_VERIFYHOST => 2,
+            ]);
+            $response = curl_exec($curl);
+            $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            curl_close($curl);
+            $res = is_string($response) ? json_decode($response, true) : null;
+            $res = is_array($res) ? $res : [];
+            $expectedHost = rtrim(strtolower((string) $expectedHostname), '.');
+            $responseHost = isset($res['hostname']) && is_string($res['hostname'])
+                ? rtrim(strtolower($res['hostname']), '.') : '';
 
-    $curl = curl_init();
-
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_TIMEOUT, 10);
-
-    $res = curl_exec($curl);
-
-    if (is_resource($curl) || $curl instanceof CurlHandle) {
-        @curl_close($curl);
-    }
-
-    $res = json_decode($res, true);
-
-    if (isset($res['success']) && $res['success']) {
-        return true;
+            $hostMatches = $expectedHostname === null
+                || ($expectedHost !== '' && $responseHost === $expectedHost);
+            if ($httpStatus === 200 && ($res['success'] ?? false) === true && $hostMatches) {
+                return true;
+            }
+        }
     }
 
     $CI->form_validation->set_message('recaptcha', _l('recaptcha_error'));

@@ -358,7 +358,7 @@ class Authentication extends ClientsController
 
     public function recaptcha($str = '')
     {
-        return do_recaptcha_validation($str);
+        return do_recaptcha_validation($str, parse_url(APP_BASE_URL, PHP_URL_HOST));
     }
 
     public function change_language($lang = '')

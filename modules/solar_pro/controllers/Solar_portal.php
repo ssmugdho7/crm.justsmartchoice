@@ -255,17 +255,6 @@ class Solar_portal extends App_Controller
             }
             $data['analyses'] = $this->db->order_by('id', 'DESC')->get(db_prefix() . 'solar_analyses')->result_array();
         }
-        // Only the authenticated report list uses the customer theme; public token pages stay independent.
-        load_client_language();
-        $data['locale'] = $GLOBALS['locale'];
-        $data['language'] = $GLOBALS['language'];
-        $this->load->library('app_clients_area_constructor');
-        $data['navigationEnabled'] = true;
-        $data['subMenuEnabled'] = true;
-        $theme = 'themes/' . active_clients_theme() . '/';
-        $GLOBALS['customers_head'] = $this->load->view($theme . 'head', $data, true);
-        $GLOBALS['customers_view'] = $this->load->view('public/my', $data, true);
-        $GLOBALS['customers_footer'] = $this->load->view($theme . 'footer', $data, true);
-        $this->load->view($theme . 'index', $data);
+        $this->load->view('public/my', $data);
     }
 }

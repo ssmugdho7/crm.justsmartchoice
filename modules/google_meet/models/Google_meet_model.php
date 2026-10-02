@@ -1,6 +1,7 @@
 <?php
 
 defined('BASEPATH') or exit('No direct script access allowed');
+require_once dirname(__DIR__) . '/helpers/google_meet_dates_helper.php';
 
 class Google_meet_model extends App_Model
 {
@@ -34,8 +35,12 @@ class Google_meet_model extends App_Model
         }
 
         $duration = max(15, (int)($data['duration_minutes'] ?? get_option('google_meet_default_duration') ?: 30));
-        $startTime = !empty($data['start_time']) ? date('Y-m-d H:i:s', strtotime($data['start_time'])) : $now;
-        $endTime = !empty($data['end_time']) ? date('Y-m-d H:i:s', strtotime($data['end_time'])) : date('Y-m-d H:i:s', strtotime($startTime . ' +' . $duration . ' minutes'));
+        $startTime = !empty($data['start_time']) ? google_meet_parse_datetime($data['start_time']) : $now;
+        $endTime = !empty($data['end_time']) ? google_meet_parse_datetime($data['end_time']) : date('Y-m-d H:i:s', strtotime($startTime . ' +' . $duration . ' minutes'));
+        if (!$startTime || !$endTime || !google_meet_parse_datetime($startTime) || $endTime <= $startTime) {
+            throw new InvalidArgumentException('Enter valid meeting times, with the end after the start.');
+        }
+
 
         $meeting = [
             'title' => $subject,
@@ -108,8 +113,12 @@ class Google_meet_model extends App_Model
 
         $subject = trim((string)($data['subject'] ?? $data['title'] ?? $existing->subject ?? $existing->title ?? 'Google Meet Meeting'));
         $duration = max(15, (int)($data['duration_minutes'] ?? $existing->duration_minutes ?? get_option('google_meet_default_duration') ?: 30));
-        $startTime = !empty($data['start_time']) ? date('Y-m-d H:i:s', strtotime($data['start_time'])) : ($existing->start_time ?? date('Y-m-d H:i:s'));
-        $endTime = !empty($data['end_time']) ? date('Y-m-d H:i:s', strtotime($data['end_time'])) : date('Y-m-d H:i:s', strtotime($startTime . ' +' . $duration . ' minutes'));
+        $startTime = !empty($data['start_time']) ? google_meet_parse_datetime($data['start_time']) : ($existing->start_time ?? date('Y-m-d H:i:s'));
+        $endTime = !empty($data['end_time']) ? google_meet_parse_datetime($data['end_time']) : date('Y-m-d H:i:s', strtotime($startTime . ' +' . $duration . ' minutes'));
+        if (!$startTime || !$endTime || !google_meet_parse_datetime($startTime) || $endTime <= $startTime) {
+            throw new InvalidArgumentException('Enter valid meeting times, with the end after the start.');
+        }
+
 
         $meeting = [
             'title' => $subject,
@@ -158,6 +167,7 @@ class Google_meet_model extends App_Model
         $this->db->where('id', (int)$id)->update(db_prefix() . 'google_meet_meetings', $meeting);
         $this->sync_attendees((int)$id, $data);
         $this->add_log((int)$id, 'updated', 'Meeting updated');
+        if (!empty($meeting['send_invitations_now'])) { $this->notify_attendees((int)$id); }
         return true;
     }
 
@@ -344,6 +354,7 @@ class Google_meet_model extends App_Model
 
         foreach ($attendees as $a) {
             $name = trim((string)($a['name'] ?? '')) ?: 'Team Member';
+            $attendeeNotified = false;
             $email = trim((string)($a['email'] ?? ''));
             $phone = $this->resolve_attendee_phone($a);
             $staffId = !empty($a['staff_id']) ? (int)$a['staff_id'] : 0;
@@ -359,6 +370,7 @@ class Google_meet_model extends App_Model
             if (get_option('google_meet_email_enabled') === '1' && $email !== '') {
                 if ($this->send_crm_email($email, $templateSubject, $messageHtml, $messageText)) {
                     $results['email']++;
+                    $attendeeNotified = true;
                     $this->record_notification((int)$id, $a, 'email', $email, 'sent', $messageText);
                 } else {
                     $results['failed']++;
@@ -369,6 +381,7 @@ class Google_meet_model extends App_Model
             if (get_option('google_meet_push_enabled') === '1' && $staffId > 0) {
                 if ($this->create_crm_notification((int)$id, $staffId, $subject, $meeting->meet_link ?? '')) {
                     $results['crm']++;
+                    $attendeeNotified = true;
                     $this->record_notification((int)$id, $a, 'crm', (string)$staffId, 'sent', $messageText);
                 }
             }
@@ -376,6 +389,7 @@ class Google_meet_model extends App_Model
             if ((get_option('google_meet_twilio_enabled') === '1' || get_option('google_meet_sms_enabled') === '1') && $phone !== '') {
                 if ($this->send_crm_sms($phone, $messageText, (int)$id, $a)) {
                     $results['sms']++;
+                    $attendeeNotified = true;
                     $this->record_notification((int)$id, $a, 'sms', $phone, 'sent', $messageText);
                 } else {
                     $this->record_notification((int)$id, $a, 'sms', $phone, 'failed', $messageText);
@@ -383,7 +397,7 @@ class Google_meet_model extends App_Model
             }
 
             if (!empty($a['id'])) {
-                $this->db->where('id', (int)$a['id'])->update(db_prefix() . 'google_meet_attendees', ['notified' => 1]);
+                $this->db->where('id', (int)$a['id'])->update(db_prefix() . 'google_meet_attendees', ['notified' => $attendeeNotified ? 1 : 0]);
             }
         }
 
@@ -396,7 +410,7 @@ class Google_meet_model extends App_Model
         }
 
         $this->add_log((int)$id, 'notified', 'Meeting notifications sent. Email: ' . $results['email'] . ', CRM: ' . $results['crm'] . ', SMS: ' . $results['sms'] . ', Failed: ' . $results['failed']);
-        return true;
+        return ($results['email'] + $results['crm'] + $results['sms']) > 0;
     }
 
     public function send_test_notification($payload)
@@ -459,7 +473,7 @@ class Google_meet_model extends App_Model
         }
         $replacements = [
             '{meeting_name}' => $meeting->subject ?? $meeting->title ?? 'Google Meet Meeting',
-            '{meeting_start}' => !empty($meeting->start_time) ? _dt($meeting->start_time) : '',
+            '{meeting_start}' => !empty($meeting->start_time) ? google_meet_display_datetime($meeting->start_time) : '',
             '{meeting_link}' => $meeting->meet_link ?? '',
             '{recipient_name}' => $attendee['name'] ?? 'Team Member',
             '{email_signature}' => get_option('email_signature'),
@@ -470,7 +484,7 @@ class Google_meet_model extends App_Model
     private function build_invitation_plain_text($meeting, $name)
     {
         $subject = $meeting->subject ?? $meeting->title ?? 'Google Meet Meeting';
-        $start = !empty($meeting->start_time) ? _dt($meeting->start_time) : '';
+        $start = !empty($meeting->start_time) ? google_meet_display_datetime($meeting->start_time) : '';
         return trim((get_option('google_meet_default_notification_message') ?: 'You have been invited to a Smart Choice Contractors USA Google Meet meeting.') . "\n\n" .
             'Hello ' . $name . ",\n" .
             'Meeting: ' . $subject . "\n" .
@@ -481,7 +495,7 @@ class Google_meet_model extends App_Model
     private function build_invitation_html($meeting, $name)
     {
         $subject = html_escape($meeting->subject ?? $meeting->title ?? 'Google Meet Meeting');
-        $start = !empty($meeting->start_time) ? _dt($meeting->start_time) : '';
+        $start = !empty($meeting->start_time) ? google_meet_display_datetime($meeting->start_time) : '';
         $link = html_escape($meeting->meet_link ?? '');
         return '<div style="font-family:Arial,sans-serif;color:#111827;background:#f8fafc;padding:20px">'
             . '<div style="max-width:640px;margin:auto;background:#fff;border:1px solid #d1d5db;border-radius:12px;overflow:hidden">'
@@ -557,7 +571,12 @@ class Google_meet_model extends App_Model
             'additional_data' => serialize([$link]),
         ];
         $this->db->insert(db_prefix() . 'notifications', $data);
-        return $this->db->insert_id() > 0;
+        $saved = $this->db->insert_id() > 0;
+        if ($saved && function_exists('pusher_trigger_notification')) {
+            try { pusher_trigger_notification([$staffId]); }
+            catch (Throwable $e) { log_message('error', 'Google Meet real-time notification failed; inbox notification remains available.'); }
+        }
+        return $saved;
     }
 
     private function record_notification($meetingId, $attendee, $channel, $destination, $status, $message)

@@ -3,7 +3,7 @@
 var cart_items = [];
 var scProductI18n = window.scProductI18n || {};
 function scT(key, fallback) { return scProductI18n[key] || fallback || key; }
-function scEscape(value) { return $('<div/>').text(value == null ? '' : value).html(); }
+function scEscape(value) { return $('<div/>').text(value == null ? '' : value).html().replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
 function scCleanText(value) {
     return (value == null ? '' : String(value))
         .replace(/&nbsp;/gi, ' ')
@@ -124,6 +124,7 @@ $(function() {
         button.prop('disabled', true).addClass('disabled');
         $.post(site_url + 'products/client/add_cart', {quantity: quantity, product_id: product_id, product_variation_id: product_variation_id}, function(data) {
             try { cart_items = $.parseJSON(data); } catch(e) { cart_items = []; }
+            $(document).trigger('scCartUpdated', [cart_items]);
             button.text(scT('update_cart', 'Update Cart'));
             alert_float('success', scT('product_added_to_cart_success', 'Item added to cart.'));
         }).always(function() { button.prop('disabled', false).removeClass('disabled'); });
@@ -138,10 +139,11 @@ $(function() {
 function filter_data(post_data) {
     post_data = post_data || {};
     $('.no_product').addClass('hidden');
+    $('#filter_html').attr('aria-busy', 'true');
     $('#filter_html').html('<div class="col-xs-12 text-center sc-loading">' + scEscape(scT('product_loading_catalog', 'Loading catalog...')) + '</div>');
     $.ajax({url: site_url + 'products/client/filter', type: 'POST', dataType: 'json', data: post_data,
-        success: function(data) { render_product_data(data || []); },
-        error: function() { $('#filter_html').html('<div class="col-xs-12"><div class="alert alert-danger">' + scEscape(scT('product_unable_load', 'Unable to load products.')) + '</div></div>'); }
+        success: function(data) { $('#filter_html').attr('aria-busy', 'false'); render_product_data(data || []); },
+        error: function() { $('#filter_html').attr('aria-busy', 'false'); $('#filter_html').html('<div class="col-xs-12"><div class="alert alert-danger">' + scEscape(scT('product_unable_load', 'Unable to load products.')) + '</div></div>'); }
     });
 }
 
@@ -158,14 +160,21 @@ function scVariationGroups(variations) {
 }
 
 function scGalleryHtml(val, productName, noImageUrl) {
-    var images = val.product_gallery_urls && val.product_gallery_urls.length ? val.product_gallery_urls : [val.product_image_url];
+    // The API supplies a generic default even for products without uploaded artwork.
+    var images = (val.product_gallery_urls && val.product_gallery_urls.length ? val.product_gallery_urls : [val.product_image_url]).filter(function(url) {
+        return url && !/\/(sc-default-service-1\.jpg|image-not-available\.png)(?:[?#]|$)/i.test(url) && !/\/uploads\/?(?:[?#].*)?$/.test(url);
+    });
     var html = '<div class="sc-product-image-wrap sc-product-slider" data-index="0">';
-    html += '<img src="' + scEscape(images[0]) + '" alt="' + scEscape(productName) + '" class="img1 sc-product-image" data-images="' + scEscape(JSON.stringify(images)) + '" onerror="this.src=\'' + noImageUrl + '\'">';
+    html += '<div class="sc-product-cover"' + (images.length ? ' hidden' : '') + '><span>' + scEscape(productName) + '</span></div>';
+    if (images.length) {
+        html += '<img src="' + scEscape(images[0]) + '" alt="' + scEscape(productName) + '" class="sc-product-image" loading="lazy" data-images="' + scEscape(JSON.stringify(images)) + '">';
+    }
     if (images.length > 1) {
         html += '<button type="button" class="sc-slider-arrow sc-slider-prev" aria-label="Previous image">‹</button>';
         html += '<button type="button" class="sc-slider-arrow sc-slider-next" aria-label="Next image">›</button>';
         html += '<div class="sc-slider-count">1 / ' + images.length + '</div>';
     }
+    html += '<button type="button" class="sc-share-product" data-product-id="' + scEscape(val.id) + '" aria-label="' + scEscape(scT('product_share', 'Share') + ': ' + productName) + '" title="' + scEscape(scT('product_share', 'Share')) + '"><i class="fa fa-share-alt" aria-hidden="true"></i></button>';
     html += '</div>';
     return html;
 }
@@ -208,8 +217,8 @@ function render_product_data(data) {
             var groups = scVariationGroups(val.variations);
             $.each(groups, function(groupKey, group) {
                 variations_content += '<div class="sc-variation-line">';
-                variations_content += '<label class="sc-small-label">' + scEscape(group.name) + '</label>';
-                variations_content += '<select class="selectpicker variation_value_id form-control" data-width="100%">';
+                variations_content += '<label for="sc-option-' + index + '-' + scEscape(groupKey) + '" class="sc-small-label">' + scEscape(group.name) + '</label>';
+                variations_content += '<select id="sc-option-' + index + '-' + scEscape(groupKey) + '" class="selectpicker variation_value_id form-control" data-width="100%">';
                 variations_content += '<option value="" data-price="" data-quantity="">' + scEscape(scT('product_no_selection', 'No Selection')) + '</option>';
                 $.each(group.values, function(_, item) {
                     var price = parseFloat(item.rate || val.rate || 0);
@@ -230,23 +239,21 @@ function render_product_data(data) {
         var productName = val.display_product_name || val.product_name;
         var productDescription = val.display_product_description || val.product_description;
         var categoryName = val.display_category_name || val.p_category_name;
-        html += '<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 product-row ' + product_class + '">' +
-            '<div class="thumbnail shadow sc-product-card">' +
+        html += '<article class="product-row ' + product_class + '" data-catalog-order="' + index + '" data-catalog-name="' + scEscape(productName) + '" data-catalog-search="' + scEscape(scCleanText(productName + ' ' + productDescription + ' ' + categoryName)) + '">' +
+            '<div class="sc-product-card sc-tw-bg-white sc-tw-border sc-tw-border-slate-200 sc-tw-rounded-xl sc-tw-shadow-sm">' +
                 scGalleryHtml(val, productName, noImageUrl) +
                 '<div class="sc-product-body">' +
-                    '<h4 class="sc-product-title">' + scEscape(productName) + '</h4>' +
+                    '<div class="sc-category-label">' + scEscape(categoryName) + '</div>' + '<h2 class="sc-product-title">' + scEscape(productName) + '</h2>' +
                     '<div class="sc-product-description">' + scProductDescription(productDescription) + '</div>' +
-                    '<div class="sc-category-label">' + scEscape(categoryName) + '</div>' +
                     '<div class="rates products-pricing sc-price"><span>' + scEscape(scT('product_starting_at', 'Starting at')) + ': ' + scEscape(val.base_currency_name) + ' <strong class="product-price">' + scEscape(product_rate) + '</strong> ' + scEscape(recurring_type) + '</span> ' + total_taxes + '<small class="product-cycles">' + scEscape(cycles_text) + '</small></div>' +
                     variations_content +
                     '<div class="input_data sc-card-actions">' +
-                        '<div class="products-pricing sc-qty-control"><button type="button" class="qty-minus" aria-label="Decrease quantity">−</button><input type="number" inputmode="numeric" pattern="[0-9]*" name="quantity" min="1" ' + max_attr + ' value="' + qtyValue + '" class="form-control" placeholder="' + scEscape(val.qty) + '"><button type="button" class="qty-plus" aria-label="Increase quantity">+</button><input type="hidden" name="product_id" value="' + scEscape(val.id) + '" class="form-control"><input type="hidden" name="product_variation_id" value="" class="form-control"><input type="hidden" min="1" ' + max_attr + ' class="form-control variation_quantity"></div>' +
+                        '<div class="products-pricing sc-qty-control"><button type="button" class="qty-minus" aria-label="Decrease quantity">−</button><input type="number" inputmode="numeric" pattern="[0-9]*" name="quantity" aria-label="' + scEscape((val.qty || 'Quantity') + ': ' + productName) + '" min="1" ' + max_attr + ' value="' + qtyValue + '" class="form-control" placeholder="' + scEscape(val.qty) + '"><button type="button" class="qty-plus" aria-label="Increase quantity">+</button><input type="hidden" name="product_id" value="' + scEscape(val.id) + '" class="form-control"><input type="hidden" name="product_variation_id" value="" class="form-control"><input type="hidden" min="1" ' + max_attr + ' class="form-control variation_quantity"></div>' +
                         '<div class="products-pricing sc-action-button-wrap">' + button + '</div>' +
                     '</div>' +
-                    '<button type="button" class="btn btn-default btn-block sc-share-product" data-product-id="' + scEscape(val.id) + '"><i class="fa fa-share-alt"></i> ' + scEscape(scT('product_share', 'Share')) + '</button>' +
                 '</div>' +
             '</div>' +
-        '</div>';
+        '</article>';
     });
     $('#filter_html').hide().html(html).fadeIn('fast');
     if (html === '') { $('.no_product').removeClass('hidden'); }
@@ -263,6 +270,7 @@ function render_product_data(data) {
         row.find('.add_cart').text(scT('add_to_cart', 'Add to Cart'));
     });
     appSelectPicker();
+    $(document).trigger('scCatalogRendered');
 }
 
 function render_product_variation_values_data(el, data) { return; }

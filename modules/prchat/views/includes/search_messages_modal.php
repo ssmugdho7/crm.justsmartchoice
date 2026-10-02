@@ -101,7 +101,7 @@
 
         var messages_history;
         try {
-            messages_history = JSON.parse('<?= $messages; ?>');
+            messages_history = <?= json_encode(json_decode($messages, true), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
         } catch (e) {
             messages_history = null;
         }
@@ -122,14 +122,17 @@
 
             renderMessagesToView(messages_history);
 
-            $('body').on('input', '#search_mutual_messages', _debounce(function() {
+            $('body').off('input.prchatHistory', '#search_mutual_messages').on('input.prchatHistory', '#search_mutual_messages', _debounce(function() {
                 var input = $.trim($(this).val()).toLowerCase();
                 var render = [];
 
                 if (input.length) {
                     for (var i = 0; i < messages_history.length; i++) {
                         var row = messages_history[i];
-                        var raw = (row.message || '').toLowerCase();
+                        var decoder = document.createElement('textarea');
+                        decoder.innerHTML = row.message || '';
+                        decoder.innerHTML = decoder.value;
+                        var raw = decoder.value.replace(/<[^>]*>/g, ' ').toLowerCase();
                         var sender = (row.sender_fullname || row.contact_fullname || '').toLowerCase();
                         if (raw.indexOf(input) !== -1 || sender.indexOf(input) !== -1) {
                             if (render.indexOf(row) === -1) {
@@ -157,7 +160,7 @@
             $.each(messages, function(i, msg) {
                 var sender_fullname = msg.sender_fullname ? msg.sender_fullname : msg.contact_fullname;
                 var processedMessage = processHistoryMessage(msg.message);
-                var isOwn = (msg.sender_id === userSessionId || msg.sender_id == 'staff_' + userSessionId);
+                var isOwn = (String(msg.sender_id) === currentUserId || msg.sender_id === 'staff_' + currentUserId);
                 var avatarSrc = msg.user_image_path || '';
 
                 html += '<div class="history-msg' + (isOwn ? ' own' : '') + '">';

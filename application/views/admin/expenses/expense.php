@@ -35,7 +35,7 @@
                                 <div class="tw-flex tw-gap-x-2 tw-items-center"> <i
                                         class="fa-solid fa-paperclip tw-text-neutral-500"></i>
                                     <a class="tw-truncate tw-block"
-                                        href="<?= site_url('download/file/expense/' . $expense->expenseid); ?>">
+                                        href="<?= site_url('download/file/expense/' . $expense->expenseid . '?preview=1'); ?>">
                                         <?= e($expense->attachment); ?>
                                     </a>
                                 </div>

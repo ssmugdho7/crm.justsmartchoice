@@ -43,8 +43,8 @@ function send_mail_candidate(){
 
 function sendmail(){
 	"use strict";
-	$('.modal-title').html('');
-	$('.modal-title').append('<span><?php echo _l('send_mail'); ?></span>');
+	$('#care_modal .modal-title').html('');
+	$('#care_modal .modal-title').append('<span><?php echo _l('send_mail'); ?></span>');
 	$('#care_rs').html('');
 	$('#care_rs').append('<div class="form-group" app-field-wrapper="care_result"><label for="care_result" class="control-label"><?php echo _l('send_mail_rs') ?></label><input type="text" id="care_result" name="care_result" class="form-control" value=""></div>');
 
@@ -57,8 +57,8 @@ function sendmail(){
 }
 function call(){
 	"use strict";
-	$('.modal-title').html('');
-	$('.modal-title').append('<span><?php echo _l('call'); ?></span>');
+	$('#care_modal .modal-title').html('');
+	$('#care_modal .modal-title').append('<span><?php echo _l('call'); ?></span>');
 	$('#care_rs').html('');
 	$('#care_rs').append('<div class="form-group" app-field-wrapper="care_result"><label for="care_result" class="control-label"><?php echo _l('number_of_minutes_to_call') ?></label><input type="number" id="care_result" name="care_result" class="form-control" value=""></div>');
 
@@ -72,8 +72,8 @@ function call(){
 }
 function test(){
 	"use strict";
-	$('.modal-title').html('');
-	$('.modal-title').append('<span><?php echo _l('test'); ?></span>');
+	$('#care_modal .modal-title').html('');
+	$('#care_modal .modal-title').append('<span><?php echo _l('test'); ?></span>');
 	$('#care_rs').html('');
 	$('#care_rs').append('<div class="form-group" app-field-wrapper="care_result"><label for="care_result" class="control-label"><?php echo _l('result') ?></label><input type="text" id="care_result" name="care_result" class="form-control" value=""></div>');
 
@@ -87,9 +87,8 @@ function test(){
 }
 function interview(){
 	"use strict";
-	$('.modal-title').html('');
-	$('.modal-title').append('<span><?php echo _l('interview'); ?></span>');
-	$('.modal-title').append('<span><?php echo _l('test'); ?></span>');
+	$('#care_modal .modal-title').html('');
+	$('#care_modal .modal-title').text(<?= json_encode(_l('interview')); ?>);
 	$('#care_rs').html('');
 	$('#care_rs').append('<div class="form-group" app-field-wrapper="care_result"><label for="care_result" class="control-label"><?php echo _l('result') ?></label><input type="text" id="care_result" name="care_result" class="form-control" value=""></div>');
 
@@ -103,14 +102,16 @@ function interview(){
 }
 
 function submit_care_candidate(){
-	"use strict";
-	var data = $('#care_candidate-form').serialize();
-  	var url = $('#care_candidate-form').action;
-  	$.post(admin_url+'recruitment/care_candidate', data).done(function(response) {
-      response = JSON.parse(response);
-      alert_float('success', response.mess);
-      $('#care_modal').modal('hide');
-  	});
+    "use strict";
+    var form = $('#care_candidate-form');
+    if (!form.valid()) return;
+    var button = $('#sm_btn').prop('disabled', true);
+    $.ajax({url: form.attr('action'), type: 'POST', data: form.serialize(), dataType: 'json'})
+      .done(function(response) {
+        alert_float(response.success ? 'success' : 'danger', response.mess);
+        if (response.success) { $('#care_modal').modal('hide'); window.location.reload(); }
+      }).fail(function() { alert_float('danger', 'Unable to save candidate activity. Please try again.'); })
+      .always(function() { button.prop('disabled', false); });
 }
 
 function submit_rating_candidate(){

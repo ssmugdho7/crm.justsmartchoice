@@ -1,18 +1,21 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<section class="sc-profile-page sc-account-page" aria-labelledby="sc-profile-title">
+<header class="sc-account-heading"><span class="sc-account-eyebrow">YOUR ACCOUNT</span><h1 id="sc-profile-title"><?= _l('clients_profile_heading'); ?></h1><p>Manage your personal information, profile image, and account preferences.</p></header>
 <div class="row section-heading section-profile">
     <div class="col-md-8">
         <?= form_open_multipart('clients/profile', ['autocomplete' => 'off']); ?>
         <?= form_hidden('profile', true); ?>
         <?php hooks()->do_action('before_client_profile_form_loaded'); ?>
-        <h4 class="tw-mt-0 tw-font-bold tw-text-lg tw-text-neutral-700 section-text">
-            <?= _l('clients_profile_heading'); ?>
-        </h4>
+        <h2 class="sc-account-subheading">
+            Personal information
+        </h2>
         <div class="panel_s">
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
+                    <div class="col-md-12 sc-profile-fields">
+                        <div class="form-group sc-profile-photo">
                             <?php if ($contact->profile_image == null) { ?>
+                            <div class="sc-profile-identity"><span class="sc-profile-initials" aria-hidden="true"><?= e(mb_substr($contact->firstname, 0, 1) . mb_substr($contact->lastname, 0, 1)); ?></span><div><strong><?= e($contact->firstname . ' ' . $contact->lastname); ?></strong><span>Add a photo to personalize your profile.</span></div></div>
                             <div class="form-group profile-image-upload-group">
                                 <label for="profile_image"
                                     class="profile-image"><?= _l('client_profile_image'); ?></label>
@@ -24,12 +27,12 @@
                                 <div class="row">
                                     <div class="col-md-9">
                                         <img src="<?= e(contact_profile_image_url($contact->id, 'thumb')); ?>
-" class="client-profile-image-thumb">
+" class="client-profile-image-thumb" alt="<?= e($contact->firstname . ' ' . $contact->lastname); ?>">
                                     </div>
                                     <div class="col-md-3 text-right">
                                         <a
-                                            href="<?= site_url('clients/remove_profile_image'); ?>"><i
-                                                class="fa fa-remove text-danger"></i></a>
+                                            href="<?= site_url('clients/remove_profile_image'); ?>" class="sc-profile-remove-photo" aria-label="Remove profile image"><i
+                                                class="fa fa-remove text-danger" aria-hidden="true"></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -89,6 +92,7 @@
                         </div>
                         <?= render_custom_fields('contacts', get_contact_user_id(), ['show_on_client_portal' => 1]); ?>
                         <?php if (can_contact_view_email_notifications_options()) { ?>
+                        <div class="sc-profile-notifications">
                         <hr />
                         <p class="bold email-notifications-label">
                             <?= _l('email_notifications'); ?>
@@ -152,6 +156,7 @@
                                 for="task_emails"><?= _l('task'); ?></label>
                         </div>
                         <?php } ?>
+                        </div>
                         <?php } ?>
                         <?php hooks()->do_action('after_client_profile_form_loaded'); ?>
                     </div>
@@ -166,29 +171,30 @@
         <?= form_close(); ?>
     </div>
     <div class="col-md-4 contact-profile-change-password-section">
-        <h4 class="tw-mt-0 tw-font-bold tw-text-lg tw-text-neutral-700 section-text">
+        <h2 class="sc-account-subheading">
             <?= _l('clients_edit_profile_change_password_heading'); ?>
-        </h4>
+        </h2>
         <div class="panel_s">
             <div class="panel-body">
+                <p class="sc-profile-password-help">Use your current password to set a new one.</p>
                 <?= form_open('clients/profile'); ?>
                 <?= form_hidden('change_password', true); ?>
                 <div class="form-group">
                     <label
                         for="oldpassword"><?= _l('clients_edit_profile_old_password'); ?></label>
-                    <input type="password" class="form-control" name="oldpassword" id="oldpassword">
+                    <input type="password" class="form-control" name="oldpassword" id="oldpassword" autocomplete="current-password">
                     <?= form_error('oldpassword'); ?>
                 </div>
                 <div class="form-group">
                     <label
                         for="newpassword"><?= _l('clients_edit_profile_new_password'); ?></label>
-                    <input type="password" class="form-control" name="newpassword" id="newpassword">
+                    <input type="password" class="form-control" name="newpassword" id="newpassword" autocomplete="new-password">
                     <?= form_error('newpassword'); ?>
                 </div>
                 <div class="form-group">
                     <label
                         for="newpasswordr"><?= _l('clients_edit_profile_new_password_repeat'); ?></label>
-                    <input type="password" class="form-control" name="newpasswordr" id="newpasswordr">
+                    <input type="password" class="form-control" name="newpasswordr" id="newpasswordr" autocomplete="new-password">
                     <?= form_error('newpasswordr'); ?>
                 </div>
                 <div class="form-group">
@@ -207,3 +213,4 @@
     </div>
 
 </div>
+</section>

@@ -314,3 +314,35 @@ body.sc-customer-enhanced #wrapper.sc-portal-layout .sc-knowledge-page .sc-kb-op
 @media(prefers-reduced-motion:reduce){.sc-support-statuses>a,.sc-knowledge-page .sc-kb-category-card{transition:none!important}}
 
 @media(min-width:992px){.sc-support-page .sc-support-table .panel-body{overflow-x:auto}#wrapper.sc-portal-layout .sc-support-page .table-tickets{min-width:1000px}}
+
+/* Profile forms retain native fields, hooks, notification guards and password handling. */
+.sc-profile-page .section-profile{margin-top:0}
+#wrapper.sc-portal-layout .sc-profile-page .panel_s{border-radius:12px!important;box-shadow:0 2px 8px rgba(20,45,35,.04)!important;overflow:visible!important}
+#wrapper.sc-portal-layout .sc-profile-page .panel-body{padding:24px!important}
+.sc-profile-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 20px;min-width:0}
+.sc-profile-fields>*{grid-column:1/-1;min-width:0}
+.sc-profile-fields>:is(.profile-firstname-group,.profile-lastname-group,.profile-positon-group,.profile-email-group,.profile-phone-group,.profile-direction-group){grid-column:auto}
+.sc-profile-page .form-group{margin-bottom:20px}
+.sc-profile-page label{font-size:13px;font-weight:600;color:#41594d;line-height:1.5;margin-bottom:8px}
+.sc-profile-page .form-control,.sc-profile-page .bootstrap-select>.btn{min-height:44px;border:1px solid #d4e0d9!important;border-radius:8px!important;box-shadow:none!important;background:#fff!important;color:#304d3f;font-size:14px}
+.sc-profile-page .form-control:focus{border-color:#388d70!important;box-shadow:0 0 0 3px rgba(56,141,112,.12)!important}
+.sc-profile-photo{padding-bottom:4px;border-bottom:1px solid #e5ede8}
+.sc-profile-identity{display:flex;align-items:center;gap:14px;margin-bottom:20px;overflow-wrap:anywhere}
+.sc-profile-initials{display:grid;place-items:center;flex:none;width:56px;height:56px;background:#eaf5ef;color:#176b54;border-radius:50%;font-weight:600;font-size:20px}
+.sc-profile-identity strong{display:block;color:#19382e;font-size:16px;margin-bottom:5px}.sc-profile-identity div>span{font-size:13px;color:#61746c;line-height:1.5}
+.sc-profile-page input[type=file]{height:auto;padding:10px;max-width:100%;font-size:13px}
+.sc-profile-page input[type=file]::file-selector-button{border:0;border-radius:6px;background:#edf5f0;color:#0e6f5b;padding:8px 12px;margin-right:12px;font-weight:600;cursor:pointer}
+.sc-profile-page .client-profile-image-thumb{width:64px;height:64px;object-fit:cover;border-radius:50%;border:2px solid #dce8e0}
+.sc-profile-remove-photo{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid #edd9d0;border-radius:8px;background:#fff8f5}
+.sc-profile-page .contact-profile-save-section{padding:18px 24px;background:#f8fbf9;border-top:1px solid #e4ece7;border-radius:0 0 12px 12px}
+.sc-profile-page .btn-primary{min-height:44px;background:#0e6f5b!important;border-color:#0e6f5b!important;border-radius:8px;padding:10px 18px;font-weight:600}
+.sc-profile-page .btn-primary:hover{background:#095441!important}
+.sc-profile-notifications{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px}
+.sc-profile-notifications>hr,.sc-profile-notifications>.email-notifications-label{grid-column:1/-1}
+.sc-profile-notifications>hr{width:100%;margin:4px 0 20px}.sc-profile-notifications>.email-notifications-label{font-size:17px;color:#19382e;margin-bottom:16px}
+.sc-profile-notifications .checkbox{margin:0 0 10px;min-height:44px;background:#f5f9f6;border:1px solid #e2ebe5;border-radius:8px;padding:12px 12px 12px 32px}
+.sc-profile-notifications .checkbox label{margin:0;font-weight:500;font-size:13px}.sc-profile-notifications .checkbox input{accent-color:#0e6f5b}
+.sc-profile-password-help{font-size:14px;line-height:1.6;color:#61746c;margin-bottom:22px}
+.sc-profile-page .last-password-change{font-size:12px;color:#61746c;padding:16px 24px;background:#f8fbf9;border-top:1px solid #e4ece7;border-radius:0 0 12px 12px}
+@media(max-width:1100px){.sc-profile-page .section-profile>.col-md-8,.sc-profile-page .section-profile>.col-md-4{width:100%;float:none}.sc-profile-page .contact-profile-change-password-section{margin-top:28px}}
+@media(max-width:600px){.sc-profile-fields,.sc-profile-notifications{grid-template-columns:1fr}.sc-profile-fields>*{grid-column:1!important}#wrapper.sc-portal-layout .sc-profile-page .panel-body{padding:18px!important}.sc-profile-page .contact-profile-save-section{padding:16px 18px}.sc-profile-page .contact-profile-save{width:100%}}

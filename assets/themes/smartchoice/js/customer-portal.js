@@ -70,16 +70,19 @@
             bar.setAttribute('aria-valuenow', String(percent));
         });
 
-        // Some modules append header links through hooks instead of the theme menu.
-        // Copy only already-rendered, same-origin links; leave the header untouched.
+        // Keep Home and Support as quick links; move other granted destinations to the sidebar.
+        function syncHeaderLinks() {
         document.querySelectorAll('.navbar.header .navbar-nav > li:not(.dropdown) > a[href]').forEach(function (link) {
             var url;
             try { url = new URL(link.href); } catch (error) { return; }
             if (url.origin !== window.location.origin || url.hash || !link.textContent.trim()) return;
             if (url.pathname.replace(/\/$/, '') === new URL(sidebar.querySelector('a').href).pathname.replace(/\/$/, '')) return;
             var exists = Array.from(sidebar.querySelectorAll('a')).some(function (item) { return item.href === link.href; });
-            link.parentElement.classList.add('sc-portal-nav-moved');
-            if (exists) return;
+            var keepQuickLink = /\/clients\/tickets(?:\/|$)/.test(url.pathname);
+            if (exists) {
+                link.parentElement.classList.toggle('sc-portal-nav-moved', !keepQuickLink);
+                return;
+            }
             var group = sidebar.querySelector('[data-portal-group="Services & Booking"]');
             if (!group) {
                 group = document.createElement('div');
@@ -102,7 +105,12 @@
             if (url.pathname.replace(/\/$/, '') === window.location.pathname.replace(/\/$/, '')) item.setAttribute('aria-current', 'page');
             item.append(icon, label);
             group.appendChild(item);
+            link.parentElement.classList.toggle('sc-portal-nav-moved', !keepQuickLink);
         });
+        }
+        syncHeaderLinks();
+        var headerList = document.querySelector('.navbar.header .navbar-nav');
+        if (headerList) new MutationObserver(syncHeaderLinks).observe(headerList, {childList: true, subtree: true});
         // Hide a duplicate header destination only after it is available in the sidebar.
         document.body.classList.add('sc-customer-enhanced');
         var current = sidebar.querySelector('a[aria-current="page"]');

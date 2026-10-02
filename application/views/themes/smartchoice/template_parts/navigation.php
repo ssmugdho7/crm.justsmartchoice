@@ -16,7 +16,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <?php get_dark_company_logo('', 'navbar-brand logo'); ?>
+            <?php if (is_client_logged_in()) { get_template_part('portal_brand'); } else { get_dark_company_logo('', 'navbar-brand logo'); } ?>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="theme-navbar-collapse">

@@ -13,6 +13,7 @@ Requires at least: 3.4.1
 
 define('GOOGLE_MEET_MODULE_NAME', 'google_meet');
 define('GOOGLE_MEET_VERSION', '1.2.7');
+register_language_files(GOOGLE_MEET_MODULE_NAME, [GOOGLE_MEET_MODULE_NAME]);
 
 
 /**

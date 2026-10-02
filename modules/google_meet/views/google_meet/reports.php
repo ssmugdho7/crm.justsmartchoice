@@ -54,7 +54,7 @@
                         <tr>
                             <td><strong><?php echo html_escape($m['subject'] ?: $m['title'] ?: 'Google Meet Meeting'); ?></strong><br><small><?php echo html_escape($m['description'] ?? ''); ?></small></td>
                             <td><?php echo html_escape($m['assigned_staff_name'] ?: $m['created_by_name'] ?: ''); ?></td>
-                            <td><?php echo !empty($m['start_time']) ? _dt($m['start_time']) : ''; ?></td>
+                            <td><?php echo !empty($m['start_time']) ? google_meet_display_datetime($m['start_time']) : ''; ?></td>
                             <td><?php echo html_escape($m['status'] ?? ''); ?><br><small><?php echo html_escape($m['google_api_status'] ?? 'manual'); ?></small></td>
                             <td><?php echo html_escape($m['notes'] ?? ''); ?></td>
                             <td><?php if (!empty($m['meet_link'])) { ?><a  href="<?php echo html_escape($m['meet_link']); ?>">Open</a><?php } ?></td>

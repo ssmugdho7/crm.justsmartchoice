@@ -30,7 +30,7 @@
       <td><input type="checkbox" name="ids[]" value="<?php echo (int)$m['id']; ?>"></td>
       <td class="gm-meeting-cell"><strong><?php echo html_escape($m['subject'] ?: $m['title'] ?: 'Google Meet Meeting'); ?></strong><small><?php echo html_escape($m['description'] ?? ''); ?></small></td>
       <td class="gm-nowrap"><?php echo html_escape($m['assigned_staff_name'] ?: $m['created_by_name'] ?: ''); ?></td>
-      <td class="gm-nowrap"><?php echo !empty($m['start_time']) ? _dt($m['start_time']) : ''; ?></td>
+      <td class="gm-nowrap"><?php echo !empty($m['start_time']) ? google_meet_display_datetime($m['start_time']) : ''; ?></td>
       <td><span class="gm-badge gm-badge-blue"><?php echo html_escape($m['status'] ?? ''); ?></span></td>
       <td class="gm-smalltext"><?php echo html_escape($m['notes'] ?? ''); ?></td>
       <td><?php if(!empty($m['meet_link'])){?><a  class="btn btn-success btn-xs" href="<?php echo html_escape($m['meet_link']); ?>">Join</a><?php } ?></td>

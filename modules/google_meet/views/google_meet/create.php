@@ -8,9 +8,9 @@ foreach ($attendees as $a) {
     if (!empty($a['staff_id'])) { $selectedStaff[] = (int)$a['staff_id']; }
     if (!empty($a['contact_id'])) { $selectedContacts[] = (int)$a['contact_id']; }
 }
-$start = $meeting && !empty($meeting->start_time) ? date('Y-m-d H:i', strtotime($meeting->start_time)) : date('Y-m-d H:i');
+$start = $meeting && !empty($meeting->start_time) ? google_meet_form_datetime($meeting->start_time) : date('Y-m-d\TH:i');
 $duration = $meeting->duration_minutes ?? (get_option('google_meet_default_duration') ?: 30);
-$end = $meeting && !empty($meeting->end_time) ? date('Y-m-d H:i', strtotime($meeting->end_time)) : date('Y-m-d H:i', strtotime('+' . (int)$duration . ' minutes'));
+$end = $meeting && !empty($meeting->end_time) ? google_meet_form_datetime($meeting->end_time) : date('Y-m-d\TH:i', strtotime('+' . (int)$duration . ' minutes'));
 $subject = $meeting->subject ?? $meeting->title ?? '';
 ?>
 <div id="wrapper">

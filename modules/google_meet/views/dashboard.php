@@ -23,7 +23,7 @@
         <tr>
           <td><input type="checkbox" name="ids[]" value="<?php echo (int)$meeting['id']; ?>"></td>
           <td class="gm-meeting-cell"><strong title="<?php echo html_escape($title); ?>"><?php echo html_escape($title); ?></strong><small><?php echo html_escape($meeting['meet_link'] ?? ''); ?></small></td>
-          <td class="gm-nowrap"><?php echo !empty($meeting['start_time']) ? _dt($meeting['start_time']) : ''; ?></td>
+          <td class="gm-nowrap"><?php echo !empty($meeting['start_time']) ? google_meet_display_datetime($meeting['start_time']) : ''; ?></td>
           <td class="gm-smalltext"><?php echo html_escape($meeting['assigned_staff_name'] ?? ''); ?></td>
           <td><span class="gm-badge gm-badge-blue"><?php echo html_escape(ucfirst($meeting['status'] ?? 'scheduled')); ?></span></td>
           <td><?php if ($this->google_meet_model->is_real_meet_link($meeting['meet_link'] ?? '')) { ?><a class="btn btn-success btn-xs" href="<?php echo html_escape($meeting['meet_link']); ?>" target="_blank" rel="noopener"><i class="fa fa-sign-in"></i> Join</a><?php } else { ?><a class="btn btn-warning btn-xs" href="<?php echo admin_url('google_meet/create/' . (int)$meeting['id']); ?>" title="Add the shared Google Meet URL"><i class="fa fa-link"></i> Add Link</a><?php } ?></td>

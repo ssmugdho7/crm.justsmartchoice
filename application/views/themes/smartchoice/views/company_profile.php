@@ -1,16 +1,19 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<section class="sc-company-page sc-account-page" aria-labelledby="sc-company-title">
+<header class="sc-account-heading"><span class="sc-account-eyebrow">YOUR ACCOUNT</span><h1 id="sc-company-title"><?= _l('client_company_info'); ?></h1><p>Keep your company, contact, and address information up to date.</p></header>
 <div class="row">
     <div class="col-md-12">
         <?= form_open_multipart('clients/company', ['id' => 'company-profile-form']); ?>
         <!-- Required hidden field -->
         <?= form_hidden('company_form', true); ?>
         <h4 class="tw-mt-0 tw-font-bold tw-text-lg tw-text-neutral-700 section-text section-heading-company-profile">
-            <?= _l('clients_profile_heading'); ?>
+            Company information
         </h4>
         <div class="panel_s">
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-6">
+                        <h2 class="sc-account-subheading">Contact details</h2>
                         <div class="form-group company-profile-company-group">
                             <label for="company"
                                 class="control-label"><?= _l('clients_company'); ?></label>
@@ -24,7 +27,7 @@ if (! empty($company_val)) {
     }
 }
 ?>
-                            <input type="text" class="form-control" name="company"
+                            <input type="text" class="form-control" name="company" id="company"
                                 value="<?= set_value('company', $company_val); ?>">
                             <?= form_error('company'); ?>
                         </div>
@@ -32,7 +35,7 @@ if (! empty($company_val)) {
                         <div class="form-group company-profile-vat-group">
                             <label for="vat"
                                 class="control-label"><?= _l('clients_vat'); ?></label>
-                            <input type="text" class="form-control" name="vat"
+                            <input type="text" class="form-control" name="vat" id="vat"
                                 value="<?= e($client->vat); ?>">
                         </div>
                         <?php } ?>
@@ -50,7 +53,7 @@ if (! empty($company_val)) {
                         </div>
                         <div class="form-group company-profile-country-group">
                             <label
-                                for="lastname"><?= _l('clients_country'); ?></label>
+                                for="country"><?= _l('clients_country'); ?></label>
                             <select
                                 data-none-selected-text="<?= _l('dropdown_non_selected_tex'); ?>"
                                 data-live-search="true" name="country" class="form-control" id="country">
@@ -59,7 +62,7 @@ if (! empty($company_val)) {
                                 <?php
         $selected = '';
                                     if ($client->country == $country['country_id']) {
-                                        echo $selected = true;
+                                        $selected = true;
                                     }
                                     ?>
                                 <option
@@ -72,6 +75,7 @@ if (! empty($company_val)) {
                         </div>
                     </div>
                     <div class="col-md-6">
+                        <h2 class="sc-account-subheading">Address &amp; preferences</h2>
                         <div class="form-group company-profile-city-group">
                             <label
                                 for="city"><?= _l('clients_city'); ?></label>
@@ -238,3 +242,4 @@ if (! empty($company_val)) {
         <?= form_close(); ?>
     </div>
 </div>
+</section>

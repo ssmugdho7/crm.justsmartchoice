@@ -166,9 +166,9 @@ function scGalleryHtml(val, productName, noImageUrl) {
         return url && !/\/(sc-default-service-1\.jpg|image-not-available\.png)(?:[?#]|$)/i.test(url) && !/\/uploads\/?(?:[?#].*)?$/.test(url);
     });
     var html = '<div class="sc-product-image-wrap sc-product-slider" data-index="0">';
-    html += '<div class="sc-product-cover"' + (images.length ? ' hidden' : '') + '><span>' + scEscape(productName) + '</span></div>';
+    html += '<div class="sc-product-cover"><span>' + scEscape(productName) + '</span></div>';
     if (images.length) {
-        html += '<img src="' + scEscape(images[0]) + '" alt="' + scEscape(productName) + '" class="sc-product-image" loading="lazy" data-images="' + scEscape(JSON.stringify(images)) + '">';
+        html += '<img src="' + scEscape(images[0]) + '" alt="' + scEscape(productName) + '" class="sc-product-image sc-image-pending" loading="lazy" data-images="' + scEscape(JSON.stringify(images)) + '">';
     }
     if (images.length > 1) {
         html += '<button type="button" class="sc-slider-arrow sc-slider-prev" aria-label="Previous image">‹</button>';

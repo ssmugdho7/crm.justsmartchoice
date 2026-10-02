@@ -13,6 +13,12 @@
             var toggle = line.querySelector('button.dropdown-toggle');
             if (label && toggle) toggle.setAttribute('aria-label', label.textContent + ': ' + line.closest('.product-row').dataset.catalogName);
         });
+        grid.querySelectorAll('img.sc-product-image').forEach(function (image) {
+            if (image.complete && image.naturalWidth > 0) {
+                image.classList.remove('sc-image-pending');
+                image.closest('.sc-product-slider').querySelector('.sc-product-cover').hidden = true;
+            }
+        });
         var visible = 0;
         cards.forEach(function (card) {
             card.hidden = !terms.every(function (term) { return card.dataset.catalogSearch.toLocaleLowerCase().indexOf(term) !== -1; });
@@ -55,6 +61,7 @@
         var image = event.target;
         if (!image.classList || !image.classList.contains('sc-product-image')) return;
         image.hidden = false;
+        image.classList.remove('sc-image-pending');
         image.closest('.sc-product-slider').querySelector('.sc-product-cover').hidden = true;
     }, true);
     $(function () {

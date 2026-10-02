@@ -9,25 +9,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 function is_local_recaptcha_bypass_enabled()
 {
-    $hosts = [];
+    // Request host headers are untrusted; only installation configuration can enable this exemption.
+    $host = defined('APP_BASE_URL') ? parse_url(APP_BASE_URL, PHP_URL_HOST) : '';
 
-    foreach (['HTTP_HOST', 'SERVER_NAME'] as $serverKey) {
-        if (!empty($_SERVER[$serverKey])) {
-            $host = parse_url('http://' . $_SERVER[$serverKey], PHP_URL_HOST);
-            if ($host) {
-                $hosts[] = trim($host, '[]');
-            }
-        }
-    }
-
-    if (defined('APP_BASE_URL')) {
-        $host = parse_url(APP_BASE_URL, PHP_URL_HOST);
-        if ($host) {
-            $hosts[] = trim($host, '[]');
-        }
-    }
-
-    return count(array_intersect(array_unique($hosts), ['localhost', '127.0.0.1', '::1'])) > 0;
+    return in_array(strtolower(trim((string) $host, '[]')), ['localhost', '127.0.0.1', '::1'], true);
 }
 
 /**

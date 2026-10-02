@@ -1335,7 +1335,7 @@ $lang['chat_project_media_description'] = 'Review the CRM folders used for chat 
 $lang['chat_project_media_path'] = 'Storage Path';
 $lang['chat_project_media_folder'] = 'Folder';
 $lang['chat_project_media_empty'] = 'No project media folders found yet.';
-$lang['chat_permission_view_own_help'] = 'View conversations and groups assigned to the staff member.';
+$lang['chat_permission_view_own_help'] = 'Reserved for scoped conversation access. View own alone does not currently enable Messaging Chat; do not use it as a substitute for View.';
 $lang['chat_permission_view_global_help'] = 'View all permitted conversations and groups.';
 $lang['chat_permission_create_help'] = 'Create conversations, groups, and chat records.';
 $lang['chat_permission_edit_help'] = 'Edit conversations, groups, associations, and group photos.';
@@ -1387,3 +1387,5 @@ $lang['chat_task_title_prompt'] = 'Task title:';
 $lang['chat_task_default_title'] = 'Task from chat message';
 $lang['chat_task_created_success'] = 'Task created successfully.';
 $lang['chat_task_create_failed'] = 'Task could not be created.';
+
+$lang['chat_access_requirements_help'] = 'Messaging Chat currently requires the Chat module View permission or an Administrator account, with Chat enabled in settings. Create, Edit, Delete, View own, or AI Assistant alone do not enable Messaging Chat. Chatbot Support and Chatbot Manage grant their separate chatbot screens. Staff access uses the permissions saved on the staff account; changing a role does not update existing staff unless you select the option to update staff permissions.';

@@ -99,14 +99,28 @@ function prchat_register_settings_section()
 /**
  * Register new menu item in sidebar menu
  */
-if (staff_can('view', PR_CHAT_MODULE_NAME)) {
-    if (get_option('pusher_chat_enabled') == '1') {
+hooks()->add_action('admin_init', 'prchat_register_admin_menu');
+
+function prchat_register_admin_menu()
+{
+    $CI = &get_instance();
+    if (staff_can('view', PR_CHAT_MODULE_NAME) && get_option('pusher_chat_enabled') == '1') {
         // Messaging menu
         $CI->app_menu->add_sidebar_menu_item('prchat', [
             'name' => 'Messaging Chat',
             'href' => admin_url('prchat/Prchat_Controller/chat_full_view'),
             'icon' => 'fa fa-comment-alt',
-            'position' => 2
+            'position' => 2,
+            'collapse' => true,
+        ]);
+
+        // Parents with children toggle the sidebar; provide an explicit chat destination.
+        $CI->app_menu->add_sidebar_children_item('prchat', [
+            'slug' => 'prchat-conversations',
+            'name' => 'Conversations',
+            'href' => admin_url('prchat/Prchat_Controller/chat_full_view'),
+            'icon' => 'fa-regular fa-comments',
+            'position' => 1,
         ]);
 
         $CI->app_menu->add_sidebar_children_item('prchat', [
@@ -126,43 +140,42 @@ if (staff_can('view', PR_CHAT_MODULE_NAME)) {
                 'position' => 99,
             ]);
         }
+    }
 
-// Messaging Chat opens the conversations page directly.
-// AI Chatbot menu
-        if (staff_can('chatbot_support', PR_CHAT_MODULE_NAME) || staff_can('chatbot_manage', PR_CHAT_MODULE_NAME)) {
-            $CI->app_menu->add_sidebar_menu_item('prchat-chatbot', [
-                'name' => 'AI Chatbot',
-                'href' => admin_url('prchat/Chatbot_Admin/live_chat'),
-                'icon' => 'fa fa-brain',
-                'position' => 3,
-                'collapse' => true,
+    // Chatbot access is independent of permission to use staff Messaging Chat.
+    if (staff_can('chatbot_support', PR_CHAT_MODULE_NAME) || staff_can('chatbot_manage', PR_CHAT_MODULE_NAME)) {
+        $CI->app_menu->add_sidebar_menu_item('prchat-chatbot', [
+            'name' => 'AI Chatbot',
+            'href' => admin_url('prchat/Chatbot_Admin/live_chat'),
+            'icon' => 'fa fa-brain',
+            'position' => 3,
+            'collapse' => true,
+        ]);
+
+        $CI->app_menu->add_sidebar_children_item('prchat-chatbot', [
+            'slug' => 'chatbot-support',
+            'name' => 'Support',
+            'href' => admin_url('prchat/Chatbot_Admin/live_chat'),
+            'icon' => 'fa fa-headset',
+            'position' => 1,
+        ]);
+
+        if (staff_can('chatbot_manage', PR_CHAT_MODULE_NAME)) {
+            $CI->app_menu->add_sidebar_children_item('prchat-chatbot', [
+                'slug' => 'chatbot-settings',
+                'name' => 'Settings',
+                'href' => admin_url('prchat/Chatbot_Admin'),
+                'icon' => 'fa fa-cog',
+                'position' => 2,
             ]);
 
             $CI->app_menu->add_sidebar_children_item('prchat-chatbot', [
-                'slug' => 'chatbot-support',
-                'name' => 'Support',
-                'href' => admin_url('prchat/Chatbot_Admin/live_chat'),
-                'icon' => 'fa fa-headset',
-                'position' => 1,
+                'slug' => 'chatbot-analytics',
+                'name' => 'Analytics',
+                'href' => admin_url('prchat/Chatbot_Admin/analytics'),
+                'icon' => 'fa fa-bar-chart',
+                'position' => 3,
             ]);
-
-            if (staff_can('chatbot_manage', PR_CHAT_MODULE_NAME)) {
-                $CI->app_menu->add_sidebar_children_item('prchat-chatbot', [
-                    'slug' => 'chatbot-settings',
-                    'name' => 'Settings',
-                    'href' => admin_url('prchat/Chatbot_Admin'),
-                    'icon' => 'fa fa-cog',
-                    'position' => 2,
-                ]);
-
-                $CI->app_menu->add_sidebar_children_item('prchat-chatbot', [
-                    'slug' => 'chatbot-analytics',
-                    'name' => 'Analytics',
-                    'href' => admin_url('prchat/Chatbot_Admin/analytics'),
-                    'icon' => 'fa fa-bar-chart',
-                    'position' => 3,
-                ]);
-            }
         }
     }
 }
@@ -196,6 +209,18 @@ function chatbot_auto_close_cron()
 
 function chat_register_staff_permissions()
 {
+    $CI = &get_instance();
+    $requirements = $CI->lang->line('chat_access_requirements_help', false);
+    if (!$requirements) {
+        // Existing module translations may predate this access explanation.
+        $english = (static function () {
+            $lang = [];
+            require __DIR__ . '/language/english/chat_lang.php';
+            return $lang;
+        })();
+        $requirements = $english['chat_access_requirements_help'];
+    }
+
     $capabilities = [];
     $capabilities['capabilities'] = [
         'view_own' => _l('permission_view_own'),
@@ -208,8 +233,9 @@ function chat_register_staff_permissions()
         'chatbot_manage' => _l('chat_chatbot_manage_access_label'),
         'ai_assist' => _l('chat_ai_assist_permission'),
     ];
+    $capabilities['before'] = '<div class="alert alert-info">' . $requirements . '</div>';
     $capabilities['help'] = [
-        'view_own' => _l('chat_permission_view_own_help'),
+        'view_own' => $requirements,
         'view' => _l('chat_permission_view_global_help'),
         'create' => _l('chat_permission_create_help'),
         'edit' => _l('chat_permission_edit_help'),

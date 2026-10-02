@@ -11,6 +11,11 @@ class Calls_Controller extends AdminController
     {
         parent::__construct();
 
+        // Calls belong to Messaging Chat and require its effective staff permission.
+        if (!staff_can('view', PR_CHAT_MODULE_NAME)) {
+            $this->jsonError('Forbidden', 403);
+        }
+
         if (!$this->app_modules->is_active('prchat')) {
             redirect('admin');
         }

@@ -50,12 +50,15 @@ if (in_array($variant, ['band','citrus','contrast'], true)) {
     $header = '<table cellpadding="8" cellspacing="0" width="100%" style="border-bottom:3px solid '.$primary.';"><tr><td width="52%">'.$logo.'</td><td width="48%" align="right"><span style="font-size:24px;color:'.$primary.';font-weight:bold;">'.html_escape($typeLabel).'</span><br><span style="font-size:14px;color:'.$primary.';font-weight:bold;">'.html_escape($document_number).'</span></td></tr></table>';
 }
 $pdf->writeHTML($header, true, false, false, false, '');
+if ($document_type === 'proposal') {
+    $pdf->writeHTML('<h2 style="color:' . $primary . ';font-size:16px;">' . html_escape($document->subject) . '</h2>', true, false, false, false, '');
+}
 $pdf->Ln(3);
 
 $metaCellStyle = 'background-color:'.$secondary.';';
 if ($variant === 'boxed' || $variant === 'executive') $metaCellStyle = 'border:1px solid #D1D5DB;background-color:#FFFFFF;';
 $meta = '<table cellpadding="7" cellspacing="3" width="100%" style="color:'.$text.';"><tr>'
-    . '<td width="33%" style="'.$metaCellStyle.'"><b>'._l('invoice_data_date').'</b><br>'.html_escape($date).'</td>'
+    . '<td width="33%" style="'.$metaCellStyle.'"><b>'._l($document_type === 'proposal' ? 'proposal_date' : 'invoice_data_date').'</b><br>'.html_escape($date).'</td>'
     . '<td width="34%" style="'.$metaCellStyle.'"><b>'.html_escape($untilLabel).'</b><br>'.html_escape($until).'</td>'
     . '<td width="33%" style="'.$metaCellStyle.'"><b>'._l('status').'</b><br>'.html_escape($statusText).'</td>'
     . '</tr></table>';
@@ -72,16 +75,17 @@ if ($document_type === 'invoice' || $document_type === 'estimate') {
     }
 } else {
     $customer = '<b style="color:'.$primary.';">'._l('proposal_to').':</b><br>';
-    foreach (['proposal_to','address','city','state','zip','country','email','phone'] as $field) {
-        if (!empty($document->{$field})) $customer .= html_escape($document->{$field}).'<br>';
-    }
+    $customer .= format_proposal_info($document, 'pdf');
 }
 pdf_multi_row($organization, $customer, $pdf, ($dimensions['wk'] / 2) - $dimensions['lm']);
 $pdf->Ln(7);
 
 $items = styleflow_get_items_table_data($document, $document_type, 'pdf');
-$pdf->writeHTML($items->table(), true, false, false, false, '');
-$pdf->Ln(6);
+$itemsHtml = $items->table();
+if ($document_type !== 'proposal') {
+    $pdf->writeHTML($itemsHtml, true, false, false, false, '');
+    $pdf->Ln(6);
+}
 
 $currency = $document->currency_name ?? '';
 $totals = '<table cellpadding="6" cellspacing="0" width="100%" style="font-size:'.($font_size+1).'px;color:'.$text.';">';
@@ -103,11 +107,14 @@ if ($document_type === 'invoice' && isset($document->total_left_to_pay)) {
     $totals .= '<tr style="background-color:'.$secondary.';"><td width="72%"></td><td width="16%" align="right"><b>'._l('invoice_amount_due').'</b></td><td width="12%" align="right"><b>'.app_format_money($document->total_left_to_pay, $currency).'</b></td></tr>';
 }
 $totals .= '</table>';
-$pdf->writeHTML($totals, true, false, false, false, '');
-$pdf->Ln(5);
+if ($document_type !== 'proposal') {
+    $pdf->writeHTML($totals, true, false, false, false, '');
+    $pdf->Ln(5);
+}
 
-if ($document_type === 'proposal' && !empty($document->content)) {
-    $pdf->writeHTML('<div style="border-top:2px solid '.$accent.';padding-top:8px;color:'.$text.';">'.$document->content.'</div>', true, false, false, false, '');
+if ($document_type === 'proposal') {
+    $proposalContent = sc_proposal_items_content($document->content ?? '', $itemsHtml . '<br /><br />' . $totals);
+    $pdf->writeHTML('<div style="border-top:2px solid '.$accent.';padding-top:8px;color:'.$text.';">'.$proposalContent.'</div>', true, false, false, false, '');
     $pdf->Ln(4);
 }
 $note = $document->clientnote ?? '';
@@ -135,3 +142,5 @@ if ($staffId > 0) {
         $pdf->Cell(0, 5, _l('styleflow_employee_representative'), 0, 1, 'L');
     }
 }
+
+if ($document_type === 'proposal' && function_exists('sc_append_sale_attachments_to_pdf')) { sc_append_sale_attachments_to_pdf($pdf, 'proposal', (int) $document->id); }

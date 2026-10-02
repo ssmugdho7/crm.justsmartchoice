@@ -88,7 +88,7 @@ class Meeting_clients extends ClientsController
         if (method_exists($this, 'title')) {
             $this->title($data['title']);
         }
-        $this->view('client/list');
+        parent::view('client/list');
         $this->layout();
     }
 
@@ -118,7 +118,7 @@ class Meeting_clients extends ClientsController
 
         $this->data(['meeting' => $meeting, 'title' => $title]);
         if (method_exists($this, 'title')) { $this->title($title); }
-        $this->view('client/view');
+        parent::view('client/view');
         $this->layout();
     }
 

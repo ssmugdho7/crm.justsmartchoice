@@ -116,6 +116,13 @@
         if (headerList) new MutationObserver(syncHeaderLinks).observe(headerList, {childList: true, subtree: true});
         // Hide only links that remain available in the sidebar.
         document.body.classList.add('sc-customer-enhanced');
+        var customerHeader = document.querySelector('.navbar.header');
+        if (customerHeader) {
+            function sizeHeader() { document.body.style.setProperty('--sc-header-height', customerHeader.getBoundingClientRect().height + 'px'); }
+            sizeHeader();
+            if (window.ResizeObserver) new ResizeObserver(sizeHeader).observe(customerHeader);
+            else window.addEventListener('resize', sizeHeader);
+        }
         var current = sidebar.querySelector('a[aria-current="page"]');
         if (current) layout.querySelectorAll('.sc-portal-mobile-nav a').forEach(function (link) {
             if (link.href === current.href) link.setAttribute('aria-current', 'page');

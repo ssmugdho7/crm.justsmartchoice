@@ -172,7 +172,11 @@
                     }
                 } else if (event.target === trigger && (event.key === 'ArrowLeft' || event.key === 'ArrowDown' || event.key === ' ')) {
                     event.preventDefault(); event.stopPropagation(); setOpen(true);
-                    var first = menu.querySelector('a'); if (first) first.focus();
+                    var first = menu.querySelector('a');
+                    if (first) {
+                        first.focus();
+                        if (window.requestAnimationFrame) window.requestAnimationFrame(function () { if (item.classList.contains('sc-language-open')) first.focus(); });
+                    }
                 }
             });
             item.addEventListener('focusout', function (event) {

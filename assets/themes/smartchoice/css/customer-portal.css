@@ -146,7 +146,7 @@ body.sc-portal-drawer-open{overflow:hidden}
 }
 
 /* Account language submenu: open toward the viewport interior, not off the right edge. */
-.customers-nav-item-profile>.dropdown-menu{border:1px solid #dce7e1;border-radius:10px;padding:6px;box-shadow:0 8px 24px rgba(25,53,43,.12)}
+.customers-nav-item-profile>.dropdown-menu{overflow:visible!important;max-height:none!important;border:1px solid #dce7e1;border-radius:10px;padding:6px;box-shadow:0 8px 24px rgba(25,53,43,.12)}
 .customers-nav-item-profile>.dropdown-menu>li>a{border-radius:6px;padding:10px 12px;font-size:14px;line-height:1.5}
 .customers-nav-item-profile>.dropdown-menu>li>a:hover{background:#edf5f0;color:#17685d}
 .customers-nav-item-profile .customers-nav-item-languages{float:none!important;position:relative}

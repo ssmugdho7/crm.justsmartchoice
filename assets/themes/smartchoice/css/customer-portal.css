@@ -237,3 +237,78 @@ body.sc-customer-enhanced #content,body.sc-customer-enhanced #sc-privacy-policy{
  .sc-dashboard-columns>.sc-dashboard-section>.sc-dashboard-section-title{flex:none}
  .sc-dashboard-columns>.sc-dashboard-section>:is(.sc-dashboard-empty,.sc-dashboard-billing,.sc-dashboard-project){flex:1}
 }
+
+/* Company, support and knowledge screens: scoped presentation, existing actions and data. */
+.sc-account-page{margin:16px 0 32px;color:#19382e;min-width:0}
+.sc-account-heading{padding:20px 0 28px}
+.sc-account-eyebrow{display:block;font-size:11px;letter-spacing:1.1px;font-weight:700;color:#247860;margin-bottom:12px}
+.sc-account-heading h1{font-size:30px;line-height:1.25;letter-spacing:-.6px;font-weight:700;color:#19382e;margin:0 0 12px!important}
+.sc-account-heading p{font-size:15px;line-height:1.6;color:#61746c;margin:0;max-width:720px}
+.sc-account-subheading{font-size:17px;font-weight:600;line-height:1.4;color:#19382e;margin:0 0 20px}
+.sc-company-page .section-heading-company-profile{font-size:18px;margin-bottom:16px}
+#wrapper.sc-portal-layout .sc-company-page .panel-body{padding:26px!important}
+.sc-company-page .panel_s{border-radius:12px!important;box-shadow:0 2px 8px rgba(20,45,35,.04)!important;overflow:visible!important}
+.sc-company-page .form-group{margin-bottom:20px}
+.sc-company-page label{font-size:13px;font-weight:600;color:#41594d;margin-bottom:8px;line-height:1.5}
+.sc-company-page .form-control,.sc-company-page .bootstrap-select>.btn{min-height:44px;border:1px solid #d4e0d9!important;border-radius:8px!important;background:#fff!important;box-shadow:none!important;font-size:14px;color:#304d3f!important}
+.sc-company-page textarea.form-control{min-height:110px;line-height:1.6;padding:12px}
+.sc-company-page .bootstrap-select>.btn{padding:11px 14px}
+.sc-company-page .form-control:focus{border-color:#388d70!important;box-shadow:0 0 0 3px rgba(56,141,112,.12)!important}
+.sc-company-page .custom-fields{padding-top:12px;margin-top:4px}
+.sc-company-page .company-profile-billing-shipping-heading{font-size:20px;font-weight:600;margin-top:24px;color:#19382e}
+.sc-company-page .company-profile-billing-address-heading,.sc-company-page .company-profile-shipping-address-heading{font-size:17px;font-weight:600;color:#19382e;margin-top:24px}
+.sc-company-page .company-profile-save-section{padding:18px 26px;border-top:1px solid #e4ece7;background:#f8fbf9;border-radius:0 0 12px 12px}
+.sc-company-page .company-profile-save{min-height:44px;border-radius:8px;background:#0e6f5b!important;border-color:#0e6f5b!important;padding:10px 22px;font-weight:600}
+.sc-company-page .company-profile-save:hover{background:#095441!important}
+.sc-support-heading{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.sc-support-page .new-ticket{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:11px 18px;border-radius:8px;background:#0e6f5b!important;border-color:#0e6f5b!important;font-weight:600;white-space:normal}
+.sc-support-page .new-ticket:hover{background:#095441!important}
+.sc-support-page .tickets-summary-heading{font-size:17px;font-weight:600;margin-bottom:14px}
+.sc-support-statuses{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px!important;margin:0 0 30px!important}
+.sc-support-statuses>a{border:1px solid #dce6e1!important;border-radius:10px!important;text-decoration:none;box-shadow:0 2px 6px rgba(20,45,35,.03);transition:border-color .15s,background .15s}
+.sc-support-statuses>a:hover{background:#edf7f2!important;border-color:#81ab96!important}
+.sc-support-statuses>a>div{padding:16px!important}
+.sc-support-statuses dt{font-size:13px;line-height:1.5;font-weight:600}
+.sc-support-statuses dd{margin:8px 0 0!important}
+.sc-support-statuses dd>div{font-size:24px!important;color:#19382e!important;line-height:1.2}
+.sc-support-page .sc-portal-empty{border-radius:12px;padding:28px;line-height:1.6}
+.sc-support-page .sc-portal-empty h2{font-size:18px;font-weight:600;color:#19382e}
+.sc-support-page .sc-support-table{border-radius:12px!important;box-shadow:0 2px 8px rgba(20,45,35,.04)!important}
+.sc-support-page .dataTables_filter input,.sc-support-page .dataTables_length select{min-height:40px;border-radius:8px!important;border-color:#d4e0d9!important;background:#fff}
+#wrapper.sc-portal-layout .sc-support-page .table-tickets{font-size:13px}
+#wrapper.sc-portal-layout .sc-support-page .table-tickets th{background:#f4f8f5!important;color:#52675c!important;font-weight:600;padding:14px 10px;line-height:1.5;border-bottom:1px solid #dce6e1}
+.sc-support-page .table-tickets td{padding:16px 10px;line-height:1.6;vertical-align:middle;border-color:#e9efeb}
+.sc-support-page .table-tickets td>a{color:#0e6f5b;font-weight:600}.sc-support-page .table-tickets .label{border-radius:6px;padding:5px 9px;font-size:11px}
+.sc-account-page :is(a,button,input,select,textarea):focus-visible,.sc-knowledge-page a:focus-visible,.sc-knowledge-search :is(input,button):focus-visible{outline:3px solid #27856f;outline-offset:3px}
+body.sc-customer-enhanced .sc-knowledge-search{background:transparent!important;border-radius:0!important;box-shadow:none!important;padding:20px 0 24px!important;margin:16px 0 0!important;color:#19382e!important}
+body.sc-customer-enhanced .sc-knowledge-search .sc-account-heading{padding:0 0 22px}
+body.sc-customer-enhanced .sc-knowledge-search h1{color:#19382e!important}
+body.sc-customer-enhanced .sc-knowledge-search .kb-search{background:#fff!important;border:1px solid #dce6e1;border-radius:12px!important;padding:20px 24px!important;box-shadow:0 2px 8px rgba(20,45,35,.03)}
+body.sc-customer-enhanced .sc-knowledge-search .kb-search>.container{width:100%!important;padding:0!important}
+body.sc-customer-enhanced .sc-knowledge-search .col-md-8{width:100%!important;margin-left:0!important}
+.sc-knowledge-search .text-center{text-align:left}
+body.sc-customer-enhanced .sc-knowledge-search .kb-search-heading{display:block;color:#41594d!important;font-size:13px!important;font-weight:600;margin:0 0 10px!important}
+.sc-knowledge-search .form-group{margin:0}
+body.sc-customer-enhanced .sc-knowledge-search .kb-search-input{height:46px!important;border:1px solid #d4e0d9!important;background:#fff!important;border-radius:8px 0 0 8px!important;font-size:14px;padding-left:38px!important;box-shadow:none!important;color:#304d3f}
+body.sc-customer-enhanced .sc-knowledge-search .kb-search-button{height:46px!important;background:#0e6f5b!important;border-color:#0e6f5b!important;color:#fff!important;border-radius:0 8px 8px 0!important;padding:10px 22px;font-weight:600}
+.sc-knowledge-search .kb-search-icon{color:#7c9185!important;z-index:4;left:2px;top:6px}
+body.sc-customer-enhanced .sc-knowledge-page>.panel_s{background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;overflow:visible!important}
+#wrapper.sc-portal-layout .sc-knowledge-page>.panel_s>.panel-body{padding:0!important;background:transparent!important}
+.sc-knowledge-page .sc-kb-portal-shell{margin:0 0 28px}
+body.sc-customer-enhanced .sc-knowledge-page .sc-kb-category-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:16px!important;margin-top:0}
+body.sc-customer-enhanced .sc-knowledge-page .sc-kb-category-card{display:flex;flex-direction:column;border:1px solid #dce6e1!important;border-radius:12px!important;box-shadow:0 2px 6px rgba(20,45,35,.03)!important;transform:none!important;transition:border-color .15s,box-shadow .15s;background:#fff}
+body.sc-customer-enhanced .sc-knowledge-page .sc-kb-category-card:hover{border-color:#81ab96!important;box-shadow:0 4px 12px rgba(20,45,35,.07)!important}
+.sc-knowledge-page .sc-kb-category-topline,.sc-knowledge-page .sc-kb-card-rule{display:none}
+body.sc-customer-enhanced .sc-knowledge-page .sc-kb-category-body{display:flex;flex-direction:column;flex:1;padding:20px!important}
+body.sc-customer-enhanced .sc-knowledge-page .sc-kb-category-icon{width:36px!important;height:36px!important;margin-bottom:16px!important;border-radius:9px!important;background:#eaf5ef!important;color:#247860!important;box-shadow:none!important;font-size:15px}
+.sc-knowledge-page .sc-kb-category-title-row{align-items:flex-start;gap:10px}
+.sc-knowledge-page .sc-kb-category-title-row h3{font-size:16px!important;font-weight:600!important;line-height:1.5}
+body.sc-customer-enhanced .sc-knowledge-page .sc-kb-category-title-row h3 a{color:#19382e!important;font-weight:600!important}
+body.sc-customer-enhanced .sc-knowledge-page .sc-kb-count{background:#f0f6f3!important;color:#247860!important;border:0!important;font-size:11px;font-weight:600;min-width:30px;height:24px;line-height:24px;padding:0 8px}
+.sc-knowledge-page .sc-kb-category-card p:empty{display:none}
+body.sc-customer-enhanced .sc-knowledge-page .sc-kb-category-card p{font-size:13px!important;line-height:1.65;color:#61746c;min-height:0;margin:12px 0 18px}
+body.sc-customer-enhanced .sc-knowledge-page .sc-kb-open{margin-top:auto;padding-top:16px;font-size:13px;font-weight:600!important;color:#0e6f5b!important;gap:8px;min-height:44px}
+.sc-knowledge-page .articles_list>li{padding:22px;background:#fff;border:1px solid #dce6e1;border-radius:10px;margin-bottom:12px}.sc-knowledge-page .articles_list a{color:#0e6f5b!important}.sc-knowledge-page .articles_list h4{font-size:16px!important;font-weight:600}
+@media(max-width:1100px){body.sc-customer-enhanced .sc-knowledge-page .sc-kb-category-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.sc-support-statuses{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:600px){.sc-account-heading h1{font-size:26px}.sc-account-heading{padding:16px 0 24px}.sc-support-statuses{grid-template-columns:repeat(2,minmax(0,1fr))}.sc-support-heading .new-ticket{width:100%}#wrapper.sc-portal-layout .sc-company-page .panel-body{padding:18px!important}.sc-company-page .company-profile-save-section{padding:16px 18px}.sc-company-page .company-profile-save{width:100%}body.sc-customer-enhanced .sc-knowledge-page .sc-kb-category-grid{grid-template-columns:1fr!important}body.sc-customer-enhanced .sc-knowledge-search .kb-search{padding:18px 16px!important}.sc-knowledge-search .kb-search-button{padding:10px 16px!important}}
+@media(prefers-reduced-motion:reduce){.sc-support-statuses>a,.sc-knowledge-page .sc-kb-category-card{transition:none!important}}

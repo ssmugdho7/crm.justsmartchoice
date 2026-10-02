@@ -70,15 +70,22 @@
             bar.setAttribute('aria-valuenow', String(percent));
         });
 
-        // Preserve header links and also expose granted module destinations in the sidebar.
+        // Keep Support in the header; retain other granted destinations in the sidebar.
         function syncHeaderLinks() {
         document.querySelectorAll('.navbar.header .navbar-nav > li:not(.dropdown) > a[href]').forEach(function (link) {
             var url;
             try { url = new URL(link.href); } catch (error) { return; }
             if (url.origin !== window.location.origin || url.hash || !link.textContent.trim()) return;
-            if (url.pathname.replace(/\/$/, '') === new URL(sidebar.querySelector('a').href).pathname.replace(/\/$/, '')) return;
+            if (url.pathname.replace(/\/$/, '') === new URL(sidebar.querySelector('a').href).pathname.replace(/\/$/, '')) {
+                link.parentElement.classList.add('sc-portal-nav-moved');
+                return;
+            }
             var exists = Array.from(sidebar.querySelectorAll('a')).some(function (item) { return item.href === link.href; });
-            if (exists) return;
+            var keepSupport = /\/clients\/tickets(?:\/|$)/.test(url.pathname);
+            if (exists) {
+                link.parentElement.classList.toggle('sc-portal-nav-moved', !keepSupport);
+                return;
+            }
             var group = sidebar.querySelector('[data-portal-group="Services & Booking"]');
             if (!group) {
                 group = document.createElement('div');
@@ -101,12 +108,13 @@
             if (url.pathname.replace(/\/$/, '') === window.location.pathname.replace(/\/$/, '')) item.setAttribute('aria-current', 'page');
             item.append(icon, label);
             group.appendChild(item);
+            link.parentElement.classList.toggle('sc-portal-nav-moved', !keepSupport);
         });
         }
         syncHeaderLinks();
         var headerList = document.querySelector('.navbar.header .navbar-nav');
         if (headerList) new MutationObserver(syncHeaderLinks).observe(headerList, {childList: true, subtree: true});
-        // Mark the enhanced layout without removing any header destinations.
+        // Hide only links that remain available in the sidebar.
         document.body.classList.add('sc-customer-enhanced');
         var current = sidebar.querySelector('a[aria-current="page"]');
         if (current) layout.querySelectorAll('.sc-portal-mobile-nav a').forEach(function (link) {

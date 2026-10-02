@@ -137,6 +137,10 @@
     this.hasEnded = false;
     this.audioInputId = null;
     this.audioOutputId = null;
+    try {
+      this.audioInputId = window.localStorage.getItem('prchat_audio_input') || null;
+      this.audioOutputId = window.localStorage.getItem('prchat_audio_output') || null;
+    } catch (_) {}
     this.recipientType = "staff";
     this.callerType = "staff";
   }
@@ -184,6 +188,9 @@
       }
       self.remoteStream = stream;
       self.onRemoteTrack(stream);
+      self.setAudioOutput(self.audioOutputId).catch(function (e) {
+        console.warn('[prchat-call] Audio output unavailable:', e.name);
+      });
     };
 
     this.pc = pc;
@@ -496,7 +503,9 @@
 
   // ── Audio I/O helpers ──────────────────────────────────────────────
   CallManager.prototype.setAudioInput = function (deviceId) {
+    var previous = this.audioInputId;
     this.audioInputId = deviceId || null;
+    try { window.localStorage.setItem('prchat_audio_input', this.audioInputId || ''); } catch (_) {}
     var self = this;
     if (!this.pc) return Promise.resolve();
     return navigator.mediaDevices
@@ -510,25 +519,32 @@
         });
         if (sender) {
           return sender.replaceTrack(newTrack).then(function () {
-            self.localStream.getAudioTracks().forEach(function (t) { t.stop(); });
+            self.localStream.getAudioTracks().forEach(function (t) { t.stop(); self.localStream.removeTrack(t); });
             self.localStream.addTrack(newTrack);
-            self.muted = false;
+            newTrack.enabled = !self.muted;
           });
         }
         self.pc.addTrack(newTrack, stream);
         self.localStream.addTrack(newTrack);
-        self.muted = false;
+        newTrack.enabled = !self.muted;
+      }).catch(function (error) {
+        self.audioInputId = previous;
+        try { window.localStorage.setItem('prchat_audio_input', previous || ''); } catch (_) {}
+        throw error;
       });
   };
 
   CallManager.prototype.setAudioOutput = function (deviceId) {
-    this.audioOutputId = deviceId || null;
-    try {
-      var el = document.getElementById("chat-call-remote");
-      if (el && typeof el.setSinkId === "function" && this.audioOutputId) {
-        el.setSinkId(this.audioOutputId).catch(function (e) { console.warn('[prchat-call] setSinkId failed:', e); });
-      }
-    } catch (e) { console.warn('[prchat-call] setAudioOutput error:', e); }
+    var self = this;
+    var selected = deviceId || '';
+    var elements = ['chat-call-remote', 'chat-call-remote-video', 'client-call-remote-audio']
+      .map(function (id) { return document.getElementById(id); })
+      .filter(function (el) { return el && typeof el.setSinkId === 'function'; });
+    return Promise.all(elements.map(function (el) { return el.setSinkId(selected); }))
+      .then(function () {
+        self.audioOutputId = selected || null;
+        try { window.localStorage.setItem('prchat_audio_output', selected); } catch (_) {}
+      });
   };
 
   CallManager.prototype.connectMicrophone = function () {

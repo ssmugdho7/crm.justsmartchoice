@@ -63,8 +63,7 @@
 						</ul>
 
 
-							<a href="#" onclick="send_mail_candidate(); return false;" class="btn btn-info pull-right display-block mright5 mbot15" ><i class="fa fa-envelope"></i><?php echo ' ' . _l('send_mail
-							'); ?></a>
+							<a href="#" onclick="send_mail_candidate(); return false;" class="btn btn-info pull-right display-block mright5 mbot15" ><i class="fa fa-envelope"></i><?php echo ' ' . _l('send_mail'); ?></a>
 
 							<div class="form-group">
 

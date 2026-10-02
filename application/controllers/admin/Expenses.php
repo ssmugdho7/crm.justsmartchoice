@@ -404,7 +404,11 @@ class Expenses extends AdminController
 
     public function add_expense_attachment($id)
     {
-        handle_expense_attachments($id);
+        if (!handle_expense_attachments($id)) {
+            $this->output->set_status_header(400);
+            echo 'Unable to upload receipt. Check the file type, size and upload directory.';
+            return;
+        }
         echo json_encode([
             'url' => admin_url('expenses/list_expenses/' . $id),
         ]);

@@ -106,12 +106,14 @@
   }
 
   Instance.prototype.start = function() {
-    if (!MIME) {
+    if (!MIME || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       this.cfg.onError && this.cfg.onError("Voice recording is not supported in this browser.");
       return;
     }
     var self = this;
-    navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+    var micId = null;
+    try { micId = root.localStorage.getItem('prchat_audio_input'); } catch (_) {}
+    navigator.mediaDevices.getUserMedia({ audio: micId ? { deviceId: { exact: micId } } : true }).then(function(stream) {
       self.stream = stream;
       self.chunks = [];
       self.seconds = 0;
@@ -133,8 +135,13 @@
           self.ui.querySelector(".pvr-timer").textContent = formatTime(self.seconds);
         }
       }, 1000);
-    }).catch(function() {
-      self.cfg.onError && self.cfg.onError("Microphone access denied.");
+    }).catch(function(error) {
+      if (self.stream) self.stream.getTracks().forEach(function(track) { track.stop(); });
+      self.active = false;
+      var message = error.name === 'NotFoundError' || error.name === 'OverconstrainedError'
+        ? 'Selected microphone is unavailable. Choose a connected microphone in Audio devices.'
+        : 'Unable to record. Allow microphone access and close other applications using it.';
+      self.cfg.onError && self.cfg.onError(message);
     });
   };
 

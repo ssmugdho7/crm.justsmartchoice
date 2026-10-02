@@ -59,6 +59,6 @@ window.scProductI18n = <?php echo json_encode($client_i18n ?? []); ?>;
         echo '<style>.products-pricing { display: none; }</style>';
     }
 ?>
-<script type="text/javascript" src="<?php echo module_dir_url('products', 'assets/js/client_products.js'); ?>?v=3.0.2"></script>
+<script type="text/javascript" src="<?php echo module_dir_url('products', 'assets/js/client_products.js'); ?>?v=3.0.3"></script>
 
 <script src="<?php echo module_dir_url('products', 'assets/js/catalog.js'); ?>?v=4"></script>

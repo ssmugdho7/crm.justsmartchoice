@@ -91,7 +91,8 @@ $(function() {
         if ($(this).hasClass('sc-slider-next')) { current = (current + 1) % images.length; }
         else { current = (current - 1 + images.length) % images.length; }
         wrap.attr('data-index', current);
-        img.attr('src', images[current]);
+        wrap.find('.sc-product-cover').prop('hidden', false);
+        img.prop('hidden', false).addClass('sc-image-pending').attr('src', images[current]);
         wrap.find('.sc-slider-count').text((current + 1) + ' / ' + images.length);
     });
 

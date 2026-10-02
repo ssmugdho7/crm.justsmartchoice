@@ -37,6 +37,9 @@ setTimeout(()=>{
   assert.equal(alpha.querySelector('.sc-product-cover').hidden,false,'broken image shows fallback');
   alpha.querySelector('img').dispatchEvent(new w.Event('load'));
   assert.equal(alpha.querySelector('.sc-product-cover').hidden,true,'gallery recovery restores photo');
+  $(alpha.querySelector('.sc-slider-next')).trigger('click');
+  assert.equal(alpha.querySelector('img').getAttribute('src'),'/uploads/door2.jpg');
+  assert.equal(alpha.querySelector('.sc-product-cover').hidden,false,'gallery transition keeps name cover visible');
   const select=alpha.querySelector('select'); select.value='41'; $(select).trigger('change');
   assert.equal(alpha.querySelector('[name=product_variation_id]').value,'41');
   assert.equal(alpha.querySelector('.product-price').textContent,'150');

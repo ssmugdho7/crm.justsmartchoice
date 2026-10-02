@@ -5,6 +5,7 @@ define('TRAINING_MANUAL_ASSETS_PATH', 'modules/training_manual/assets');
 function base_url($path) { return '/' . $path; }
 function site_url($path) { return '/' . $path; }
 function html_escape($text) { return htmlspecialchars((string) $text, ENT_QUOTES, 'UTF-8'); }
+function training_manual_customer_image_url($value = '', $title = '') { return '/guide-cover.svg'; }
 function _l($key) { return $key; }
 $view = dirname(__DIR__) . '/modules/training_manual/views/client_portal_books.php';
 function render_library($books) { global $view; ob_start(); require $view; return ob_get_clean(); }

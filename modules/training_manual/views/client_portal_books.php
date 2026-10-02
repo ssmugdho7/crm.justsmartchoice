@@ -11,7 +11,7 @@ foreach ($books as $book) {
     foreach (($book['articles'] ?? []) as $article) {
         $description = trim(strip_tags((string) ($article['description'] ?? '')));
         $articleCategory = preg_match('/training|educational|trains employees|trains staff/i', $name . ' ' . $description) ? 'training' : $category;
-        $guides[] = ['article' => $article, 'book' => $name, 'category' => $articleCategory, 'description' => $description ?: trim(strip_tags((string) ($book['short_description'] ?? '')))];
+        $guides[] = ['article' => $article, 'book' => $name, 'cover' => $book['cover_image'] ?? '', 'category' => $articleCategory, 'description' => $description ?: trim(strip_tags((string) ($book['short_description'] ?? '')))];
     }
 }
 $featured = [];
@@ -21,7 +21,7 @@ foreach (['How to Use the Client Portal', 'Our Project Process', 'What to Expect
     }
 }
 ?>
-<link rel="stylesheet" href="<?php echo base_url(TRAINING_MANUAL_ASSETS_PATH . '/css/help_library.css?v=2'); ?>">
+<link rel="stylesheet" href="<?php echo base_url(TRAINING_MANUAL_ASSETS_PATH . '/css/help_library.css?v=3'); ?>">
 <section class="sc-help-library" aria-labelledby="help-library-title">
     <header class="sc-help-header">
         <span class="sc-help-eyebrow"><i class="fa fa-book-open" aria-hidden="true"></i> CUSTOMER RESOURCES</span>

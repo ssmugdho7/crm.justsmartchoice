@@ -1,0 +1,10 @@
+const fs=require('node:fs');const assert=require('node:assert/strict');const {JSDOM}=require('jsdom');
+const dom=new JSDOM('<li class="customers-nav-item-profile"><ul><li class="customers-nav-item-languages"><a href="#" class="sc-language-toggle" aria-expanded="false">Language</a><ul class="sc-language-options"><li><a href="/clients/change_language/english">English</a></li><li><a href="/clients/change_language/spanish">Spanish</a></li></ul></li></ul></li>',{runScripts:'outside-only'});
+const w=dom.window;w.eval(fs.readFileSync(require.resolve('jquery'),'utf8'));w.matchMedia=()=>({matches:false});w.eval(fs.readFileSync('assets/themes/smartchoice/js/customer-portal.js','utf8'));w.document.dispatchEvent(new w.Event('DOMContentLoaded'));
+const d=w.document;const toggle=d.querySelector('.sc-language-toggle');const menu=d.querySelector('.sc-language-options');
+assert.equal(toggle.getAttribute('aria-expanded'),'false');assert.equal(menu.inert,true);
+toggle.click();assert.equal(toggle.getAttribute('aria-expanded'),'true');assert.equal(menu.inert,false);
+toggle.dispatchEvent(new w.KeyboardEvent('keydown',{key:'ArrowLeft',bubbles:true,cancelable:true}));assert.equal(d.activeElement.textContent,'English');
+menu.dispatchEvent(new w.KeyboardEvent('keydown',{key:'Escape',bubbles:true,cancelable:true}));assert.equal(toggle.getAttribute('aria-expanded'),'false');assert.equal(d.activeElement,toggle);
+assert.equal(d.querySelectorAll('a[href^="/clients/change_language/"]').length,2);
+console.log('PASS language click toggle, keyboard opening, focus, Escape, inert closed options and unchanged routes');dom.window.close();

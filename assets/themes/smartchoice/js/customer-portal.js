@@ -24,7 +24,10 @@
             sidebar.inert = mobile.matches && !open;
             if (open) {
                 previousFocus = document.activeElement;
-                close.focus();
+                // Focus after the drawer visibility transition has started.
+                requestAnimationFrame(function () {
+                    if (layout.classList.contains('sc-portal-open')) close.focus();
+                });
             } else if (previousFocus) {
                 previousFocus.focus();
                 previousFocus = null;
@@ -54,7 +57,8 @@
             var focusable = Array.from(sidebar.querySelectorAll('a, button')).filter(function (element) { return element.getClientRects().length; });
             var first = focusable[0];
             var last = focusable[focusable.length - 1];
-            if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+            if (!sidebar.contains(document.activeElement)) { event.preventDefault(); (event.shiftKey ? last : first).focus(); }
+            else if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
             else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
         });
         mobile.addEventListener('change', function () { setOpen(false); });

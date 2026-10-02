@@ -21,7 +21,7 @@ foreach (['How to Use the Client Portal', 'Our Project Process', 'What to Expect
     }
 }
 ?>
-<link rel="stylesheet" href="<?php echo base_url(TRAINING_MANUAL_ASSETS_PATH . '/css/help_library.css?v=1'); ?>">
+<link rel="stylesheet" href="<?php echo base_url(TRAINING_MANUAL_ASSETS_PATH . '/css/help_library.css?v=2'); ?>">
 <section class="sc-help-library" aria-labelledby="help-library-title">
     <header class="sc-help-header">
         <span class="sc-help-eyebrow"><i class="fa fa-book-open" aria-hidden="true"></i> CUSTOMER RESOURCES</span>
@@ -46,7 +46,7 @@ foreach (['How to Use the Client Portal', 'Our Project Process', 'What to Expect
     <?php foreach ($categories as $key => $label) {
         $categoryGuides = array_values(array_filter($guides, static function ($guide) use ($key) { return $guide['category'] === $key; }));
         if (!$categoryGuides) { continue; } ?>
-        <section class="sc-help-category" data-category="<?php echo $key; ?>" aria-labelledby="help-category-<?php echo $key; ?>"><div class="sc-help-section-heading"><h3 id="help-category-<?php echo $key; ?>"><?php echo $label; ?></h3><span><?php echo count($categoryGuides); ?> guides</span></div>
+        <section class="sc-help-category" data-category="<?php echo $key; ?>" aria-labelledby="help-category-<?php echo $key; ?>"><div class="sc-help-section-heading"><h3 id="help-category-<?php echo $key; ?>"><?php echo $label; ?></h3><span><?php echo count($categoryGuides) . (count($categoryGuides) === 1 ? ' guide' : ' guides'); ?></span></div>
         <?php if ($key === 'training') { ?><p class="sc-help-category-intro">Educational resources and professional training, separate from customer help guides.</p><?php } ?>
         <div class="sc-help-grid"><?php foreach ($categoryGuides as $guide) { $isFeatured = false; require __DIR__ . '/partials/help_guide_card.php'; } ?></div></section>
     <?php } ?>
@@ -56,4 +56,4 @@ foreach (['How to Use the Client Portal', 'Our Project Process', 'What to Expect
     <div class="sc-help-empty"><i class="fa fa-book" aria-hidden="true"></i><h2><?php echo _l('training_manual_no_customer_books_title'); ?></h2><p><?php echo _l('training_manual_no_customer_books'); ?></p></div>
     <?php } ?>
 </section>
-<script src="<?php echo base_url(TRAINING_MANUAL_ASSETS_PATH . '/js/help_library.js?v=1'); ?>" defer></script>
+<script src="<?php echo base_url(TRAINING_MANUAL_ASSETS_PATH . '/js/help_library.js?v=2'); ?>" defer></script>

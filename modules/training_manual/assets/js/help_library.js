@@ -23,14 +23,21 @@
             if (match) count++;
         });
         sections.forEach(function (section) {
-            section.hidden = !Array.from(section.querySelectorAll('[data-guide]')).some(function (card) { return !card.hidden; });
+            var visible = Array.from(section.querySelectorAll('[data-guide]')).filter(function (card) { return !card.hidden; }).length;
+            section.hidden = visible === 0;
+            section.querySelector('.sc-help-section-heading > span').textContent = visible + (visible === 1 ? ' guide' : ' guides');
         });
         if (featured) featured.hidden = terms.length > 0 || category !== 'all';
         clear.hidden = search.value.length === 0;
         root.querySelector('#help-no-results').hidden = count !== 0;
         root.querySelector('#help-result-count').textContent = count + (count === 1 ? ' guide' : ' guides') + (terms.length || category !== 'all' ? ' found' : ' available');
     }
-    function reset() { search.value = ''; filter.value = 'all'; update(); search.focus(); }
+    function reset() {
+        search.value = ''; filter.value = 'all';
+        // The portal enhances native selects with its existing Bootstrap selectpicker.
+        if (window.jQuery && window.jQuery(filter).data('selectpicker')) window.jQuery(filter).selectpicker('refresh');
+        update(); search.focus();
+    }
     search.addEventListener('input', update);
     filter.addEventListener('change', update);
     clear.addEventListener('click', function () { search.value = ''; update(); search.focus(); });

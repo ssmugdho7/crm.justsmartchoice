@@ -32,6 +32,7 @@ setTimeout(()=>{
   const alpha=rows()[1];
   assert.equal(alpha.dataset.catalogName,'Alpha "safe" service','quotes cannot break attributes');
   assert.equal(alpha.querySelector('img').getAttribute('src'),'/uploads/door.jpg');
+  assert.equal(alpha.querySelector('.sc-product-cover').hidden,false,'name cover remains visible while a photo is loading');
   alpha.querySelector('img').dispatchEvent(new w.Event('error'));
   assert.equal(alpha.querySelector('.sc-product-cover').hidden,false,'broken image shows fallback');
   alpha.querySelector('img').dispatchEvent(new w.Event('load'));

@@ -781,6 +781,7 @@ class Google_meet_model extends App_Model
                 return [];
             }
 
+            $hasStartTime = $this->db->field_exists('start_time', $meetingsTable);
             $this->db->select('m.*');
             $this->db->from($meetingsTable . ' m');
             $this->db->join($attendeeTable . ' a', 'a.meeting_id = m.id', 'inner');
@@ -796,7 +797,7 @@ class Google_meet_model extends App_Model
                 if ($conditionAdded) {
                     $this->db->or_group_start();
                 }
-                $this->db->where_in('LOWER(a.email)', $emails, false);
+                $this->db->where_in('LOWER(a.email)', $emails);
                 if ($conditionAdded) {
                     $this->db->group_end();
                 }
@@ -809,7 +810,7 @@ class Google_meet_model extends App_Model
 
             $this->db->group_end();
             $this->db->group_by('m.id');
-            if ($this->db->field_exists('start_time', $meetingsTable)) {
+            if ($hasStartTime) {
                 $this->db->order_by('m.start_time', 'DESC');
             } else {
                 $this->db->order_by('m.id', 'DESC');
@@ -819,6 +820,9 @@ class Google_meet_model extends App_Model
         } catch (Throwable $e) {
             log_message('error', 'Google Meet client meeting lookup failed: ' . $e->getMessage());
             return [];
+        } finally {
+            // A failed query must not pollute later customer/theme queries.
+            $this->db->reset_query();
         }
     }
 

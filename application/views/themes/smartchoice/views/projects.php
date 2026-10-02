@@ -12,6 +12,11 @@
     <?= _l('clients_my_projects'); ?>
 </h4>
 
+<?php if (isset($projects) && count($projects) === 0) {
+    $portalEmptyTitle = 'No projects yet';
+    $portalEmptyText = 'Your projects will appear here when the team adds them to your account.';
+    get_template_part('portal_empty_state', compact('portalEmptyTitle', 'portalEmptyText'));
+} ?>
 <div class="panel_s">
     <div class="panel-body">
         <table class="table dt-table table-projects" data-order-col="2" data-order-type="desc">

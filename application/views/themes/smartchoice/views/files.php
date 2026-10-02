@@ -21,7 +21,7 @@
         <?php if (count($files) == 0) { ?>
         <hr class="hr-panel-heading" />
         <p class="tw-text-neutral-500">
-            <?= _l('no_files_found'); ?>
+            <?= _l('no_files_found'); ?> Upload a document using the area above. Files shared by the team will also appear here.
         </p>
         <?php } else { ?>
         <table class="table dt-table mtop15 table-files" data-order-col="1" data-order-type="desc">
@@ -90,7 +90,7 @@
                     <td>
                         <?php if ($file['contact_id'] == get_contact_user_id()) { ?>
                         <a href="<?= site_url('clients/delete_file/' . $file['id'] . '/general'); ?>"
-                            class="btn btn-danger btn-icon _delete file-delete"><i class="fa fa-remove"></i></a>
+                            class="btn btn-danger btn-icon _delete file-delete" aria-label="Delete <?= e($file['file_name']); ?>"><i class="fa fa-remove"></i></a>
                         <?php } ?>
                     </td>
                     <?php } ?>

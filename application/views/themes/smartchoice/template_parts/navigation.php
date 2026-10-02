@@ -47,7 +47,7 @@
                 <?php if (is_client_logged_in()) { ?>
                 <li class="dropdown customers-nav-item-profile">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                        aria-expanded="false">
+                        aria-expanded="false" aria-label="Account menu">
                         <img src="<?= e(contact_profile_image_url($contact->id, 'thumb')); ?>
 " data-toggle="tooltip" data-title="<?= e($contact->firstname . ' ' . $contact->lastname); ?>"
                             data-placement="bottom" class="client-profile-image-small">
@@ -104,10 +104,10 @@
                         <?php if (! is_language_disabled()) {
                             ?>
                         <li class="dropdown-submenu pull-left customers-nav-item-languages">
-                            <a href="#" tabindex="-1">
-                                <?= _l('language'); ?>
+                            <a href="#" class="sc-language-toggle" role="button" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-chevron-left" aria-hidden="true"></i> <?= _l('language'); ?>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-left">
+                            <ul class="dropdown-menu dropdown-menu-left sc-language-options" aria-label="<?= e(_l('language')); ?>">
                                 <?php foreach ($this->app->get_available_languages() as $user_lang) { ?>
                                 <li <?php if (get_contact_language() == $user_lang) {
                                     echo 'class="active"';

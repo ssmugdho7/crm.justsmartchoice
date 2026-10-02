@@ -3,6 +3,7 @@
     <?= _l('clients_ticket_open_subject'); ?>
 </h4>
 <?= form_open_multipart('clients/open_ticket', ['id' => 'open-new-ticket-form']); ?>
+<p class="sc-form-guidance">Fields marked * are required. Describe what you need help with and attach relevant files if useful.</p>
 <div class="row">
     <div class="col-md-12">
         <?php hooks()->do_action('before_client_open_ticket_form_start'); ?>
@@ -12,8 +13,8 @@
                     <div class="col-md-12">
                         <div class="form-group open-ticket-subject-group">
                             <label
-                                for="subject"><?= _l('customer_ticket_subject'); ?></label>
-                            <input type="text" class="form-control" name="subject" id="subject"
+                                for="subject"><?= _l('customer_ticket_subject'); ?> <span class="sc-required" aria-hidden="true">*</span><span class="sr-only"> (required)</span></label>
+                            <input type="text" class="form-control" name="subject" id="subject" required aria-required="true"
                                 value="<?= set_value('subject'); ?>">
                             <?= form_error('subject'); ?>
                         </div>
@@ -40,10 +41,10 @@
                             <div class="col-md-6">
                                 <div class="form-group open-ticket-department-group">
                                     <label
-                                        for="department"><?= _l('clients_ticket_open_departments'); ?></label>
+                                        for="department"><?= _l('clients_ticket_open_departments'); ?> <span class="sc-required" aria-hidden="true">*</span><span class="sr-only"> (required)</span></label>
                                     <select
                                         data-none-selected-text="<?= _l('dropdown_non_selected_tex'); ?>"
-                                        name="department" id="department" class="form-control selectpicker">
+                                        name="department" id="department" aria-required="true" class="form-control selectpicker">
                                         <option value=""></option>
                                         <?php foreach ($departments as $department) { ?>
                                         <option
@@ -59,10 +60,10 @@
                             <div class="col-md-6">
                                 <div class="form-group open-ticket-priority-group">
                                     <label
-                                        for="priority"><?= _l('clients_ticket_open_priority'); ?></label>
+                                        for="priority"><?= _l('clients_ticket_open_priority'); ?> <span class="sc-required" aria-hidden="true">*</span><span class="sr-only"> (required)</span></label>
                                     <select
                                         data-none-selected-text="<?= _l('dropdown_non_selected_tex'); ?>"
-                                        name="priority" id="priority" class="form-control selectpicker">
+                                        name="priority" id="priority" aria-required="true" class="form-control selectpicker">
                                         <option value=""></option>
                                         <?php foreach ($priorities as $priority) { ?>
                                         <option
@@ -119,13 +120,13 @@
                                     <input type="file"
                                         extension="<?= str_replace(['.', ' '], '', get_option('ticket_attachments_file_extensions')); ?>"
                                         filesize="<?= file_upload_max_size(); ?>"
-                                        class="form-control" name="attachments[0]"
+                                        class="form-control" id="attachment" name="attachments[0]"
                                         accept="<?= get_ticket_form_accepted_mimes(); ?>">
                                     <span class="input-group-btn">
                                         <button class="btn btn-default add_more_attachments"
                                             data-max="<?= get_option('maximum_allowed_ticket_attachments'); ?>"
-                                            type="button">
-                                            <i class="fa fa-plus"></i>
+                                            type="button" aria-label="Add another attachment">
+                                            <i class="fa fa-plus" aria-hidden="true"></i>
                                         </button>
                                     </span>
                                 </div>

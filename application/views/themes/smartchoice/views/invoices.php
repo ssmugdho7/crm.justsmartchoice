@@ -11,6 +11,11 @@
     </span>
     <?php } ?>
 </h4>
+<?php if (isset($invoices) && count($invoices) === 0) {
+    $portalEmptyTitle = 'No invoices yet';
+    $portalEmptyText = 'Invoices shared with your account will appear here. If you expected an invoice, ask the team.';
+    get_template_part('portal_empty_state', compact('portalEmptyTitle', 'portalEmptyText'));
+} ?>
 <div class="panel_s">
     <div class="panel-body">
         <?php get_template_part('invoices_stats'); ?>

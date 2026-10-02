@@ -1,50 +1,91 @@
-<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
-
-<style id="sc-dashboard-card-fix-v376">
-.sc-client-dashboard-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:20px 0!important}.sc-client-summary-card{display:flex!important;align-items:center!important;min-height:92px;padding:16px!important;border:1px solid #dce5ee!important;border-radius:12px!important;background:#fff!important;box-shadow:0 5px 16px rgba(31,45,61,.08)!important;text-decoration:none!important}.sc-client-summary-card i{display:flex!important;align-items:center;justify-content:center;width:46px;height:46px;margin-right:13px;border-radius:10px;background:#3598DB;color:#fff!important;font-size:21px!important}.sc-client-summary-card:nth-child(2) i{background:#F28C28}.sc-client-summary-card:nth-child(3) i{background:#169179}.sc-client-summary-card:nth-child(4) i{background:#0E6F5B}.sc-client-summary-card strong{display:block;font-size:24px;line-height:1.05;color:#1f2937}.sc-client-summary-card span{display:block;margin-top:5px;color:#52606d;font-weight:600}@media(max-width:767px){.sc-client-dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sc-client-summary-card{min-height:82px;padding:12px!important}}
-</style>
-
-<div class="row">
-    <div class="col-md-12 section-client-dashboard">
-        <h3 id="greeting" class="tw-font-semibold tw-mt-0"></h3>
-        <?php if (has_contact_permission('projects')) { ?>
-        <h3 class="projects-summary-heading tw-text-neutral-700 tw-font-medium tw-text-lg tw-mt-7">
-            <?= _l('projects_summary'); ?>
-        </h3>
-        <?php get_template_part('projects/project_summary'); ?>
-        <?php } ?>
-        <?php hooks()->do_action('client_area_after_project_overview'); ?>
-        <div class="sc-client-dashboard-grid">
-            <?php if (has_contact_permission('invoices')) { ?>
-            <a class="sc-client-summary-card" href="<?= site_url('clients/invoices'); ?>"><i class="fa-solid fa-file-invoice-dollar"></i><div><strong><?= total_rows(db_prefix().'invoices', ['clientid'=>get_client_user_id()]); ?></strong><span>Invoices</span></div></a>
-            <?php } ?>
-            <?php if (has_contact_permission('contracts')) { ?>
-            <a class="sc-client-summary-card" href="<?= site_url('clients/contracts'); ?>"><i class="fa-solid fa-file-signature"></i><div><strong><?= total_rows(db_prefix().'contracts', ['client'=>get_client_user_id(), 'trash'=>0]); ?></strong><span>Contracts</span></div></a>
-            <?php } ?>
-            <?php if (has_contact_permission('projects')) { ?>
-            <a class="sc-client-summary-card" href="<?= site_url('clients/projects'); ?>"><i class="fa-solid fa-diagram-project"></i><div><strong><?= total_rows(db_prefix().'projects', ['clientid'=>get_client_user_id()]); ?></strong><span>Projects</span></div></a>
-            <?php } ?>
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+$portalMetrics = [];
+if (has_contact_permission('projects')) {
+    $portalMetrics[] = ['clients/projects', 'fa-solid fa-diagram-project', _l('clients_my_projects'), total_rows(db_prefix() . 'projects', ['clientid' => get_client_user_id()]), 'work'];
+}
+if (has_contact_permission('invoices')) {
+    $invoiceWhere = ['clientid' => get_client_user_id()];
+    if (get_option('exclude_invoice_from_client_area_with_draft_status') == 1) { $invoiceWhere['status !='] = Invoices_model::STATUS_DRAFT; }
+    $portalMetrics[] = ['clients/invoices', 'fa-solid fa-file-invoice-dollar', _l('clients_my_invoices'), total_rows(db_prefix() . 'invoices', $invoiceWhere), 'billing'];
+}
+if (has_contact_permission('contracts')) {
+    $portalMetrics[] = ['clients/contracts', 'fa-solid fa-file-signature', _l('clients_contracts'), total_rows(db_prefix() . 'contracts', ['client' => get_client_user_id(), 'trash' => 0, 'not_visible_to_client' => 0]), 'legal'];
+}
+if (has_contact_permission('support')) {
+    $ticketWhere = ['userid' => get_client_user_id()];
+    if (!can_logged_in_contact_view_all_tickets()) { $ticketWhere['contactid'] = get_contact_user_id(); }
+    $portalMetrics[] = ['clients/tickets', 'fa-solid fa-headset', _l('clients_nav_support'), total_rows(db_prefix() . 'tickets', $ticketWhere), 'support'];
+}
+?>
+<div class="col-md-12 section-client-dashboard sc-dashboard">
+    <div class="sc-dashboard-welcome">
+        <div>
+            <div class="sc-dashboard-eyebrow">Customer Portal / <?= e(_l('dashboard_string')); ?></div>
+            <h1>Welcome back, <?= e($contact->firstname); ?>!</h1>
+            <p>Your projects and account, at a glance.</p>
+        </div>
+        <div class="sc-dashboard-actions">
             <?php if (has_contact_permission('support')) { ?>
-            <a class="sc-client-summary-card" href="<?= site_url('clients/tickets'); ?>"><i class="fa-solid fa-headset"></i><div><strong><?= total_rows(db_prefix().'tickets', ['userid'=>get_client_user_id()]); ?></strong><span>Support Tickets</span></div></a>
+            <a class="btn btn-primary" href="<?= site_url('clients/open_ticket'); ?>"><i class="fa-solid fa-headset" aria-hidden="true"></i> Support Request</a>
+            <?php } ?>
+            <?php if (has_contact_permission('invoices')) { ?>
+            <a class="btn btn-default" href="<?= site_url('clients/statement'); ?>"><i class="fa-regular fa-file-lines" aria-hidden="true"></i> <?= e(_l('view_account_statement')); ?></a>
             <?php } ?>
         </div>
-        <?php if (has_contact_permission('invoices')) { ?><div class="text-right mtop10"><a class="btn btn-default btn-sm" href="<?= site_url('clients/statement'); ?>">View Account Statement</a></div><?php } ?>
-        <?php hooks()->do_action('client_area_dashboard_end'); ?>
     </div>
-    <script>
-        var greetDate = new Date();
-        var hrsGreet = greetDate.getHours();
-
-        var greet;
-        if (hrsGreet < 12)
-            greet = "<?= _l('good_morning'); ?>";
-        else if (hrsGreet >= 12 && hrsGreet <= 17)
-            greet = "<?= _l('good_afternoon'); ?>";
-        else if (hrsGreet >= 17 && hrsGreet <= 24)
-            greet = "<?= _l('good_evening'); ?>";
-
-        if (greet) {
-            document.getElementById('greeting').innerHTML =
-                '<b>' + greet + ' <?= e($contact->firstname); ?>!</b>';
-        }
-    </script>
+    <?php if ($portalMetrics) { ?>
+    <div class="sc-dashboard-metrics">
+        <?php foreach ($portalMetrics as [$route, $icon, $label, $count, $type]) { ?>
+        <a class="sc-dashboard-metric sc-metric-<?= e($type); ?>" href="<?= site_url($route); ?>"><i class="<?= e($icon); ?>" aria-hidden="true"></i><div><strong><?= e($count); ?></strong><span><?= e($label); ?></span></div></a>
+        <?php } ?>
+    </div>
+    <?php } ?>
+    <div class="sc-dashboard-columns">
+        <?php if (has_contact_permission('projects')) {
+            // Mirror the existing customer project scope and cap the dashboard query.
+            $recentProjects = get_instance()->db->select('id,name,status,deadline')->where('clientid', get_client_user_id())->order_by('id', 'DESC')->limit(3)->get(db_prefix() . 'projects')->result_array();
+        ?>
+        <section class="sc-dashboard-section" aria-labelledby="sc-recent-projects">
+            <div class="sc-dashboard-section-title"><h2 id="sc-recent-projects">Recent projects</h2><a href="<?= site_url('clients/projects'); ?>">View all <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div>
+            <?php foreach ($recentProjects as $project) {
+                $status = get_project_status_by_id($project['status']);
+                $progress = max(0, min(100, (int) get_instance()->projects_model->calc_progress($project['id'])));
+            ?>
+            <article class="sc-dashboard-project">
+                <div class="sc-dashboard-project-header"><h3><a href="<?= site_url('clients/project/' . $project['id']); ?>"><?= e($project['name']); ?></a></h3><span class="label label-default"><?= e($status['name'] ?? ''); ?></span></div>
+                <p><?= e(_l('project_deadline')); ?>: <?= $project['deadline'] ? e(_d($project['deadline'])) : 'Not set'; ?></p>
+                <div class="progress"><div class="progress-bar" role="progressbar" aria-label="Project progress" aria-valuenow="<?= e($progress); ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?= e($progress); ?>%"></div></div>
+                <small><?= e($progress); ?>% complete</small>
+            </article>
+            <?php } if (!$recentProjects) { ?>
+            <div class="sc-dashboard-empty"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i>No projects yet. Your projects will appear here when they are available.</div>
+            <?php } ?>
+        </section>
+        <?php } ?>
+        <?php if (has_contact_permission('invoices')) { ?>
+        <section class="sc-dashboard-section" aria-labelledby="sc-billing-snapshot">
+            <div class="sc-dashboard-section-title"><h2 id="sc-billing-snapshot">Billing snapshot</h2><a href="<?= site_url('clients/invoices'); ?>">View invoices <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div>
+            <div class="sc-dashboard-billing">
+                <?php get_template_part('invoices_stats'); ?>
+                <a class="btn btn-default btn-block" href="<?= site_url('clients/statement'); ?>"><?= e(_l('view_account_statement')); ?></a>
+            </div>
+        </section>
+        <?php } ?>
+    </div>
+    <?php if (has_contact_permission('projects')) { ?>
+    <section class="sc-dashboard-summary" aria-labelledby="sc-project-summary"><div class="sc-dashboard-section-title"><h2 id="sc-project-summary"><?= e(_l('projects_summary')); ?></h2></div><?php get_template_part('projects/project_summary'); ?></section>
+    <?php } ?>
+    <?php hooks()->do_action('client_area_after_project_overview'); ?>
+    <section class="sc-dashboard-section" aria-labelledby="sc-resources">
+        <div class="sc-dashboard-section-title"><h2 id="sc-resources">Documents & resources</h2></div>
+        <div class="sc-dashboard-resource-grid">
+            <a class="sc-dashboard-resource" href="<?= site_url('clients/files'); ?>"><i class="fa-solid fa-paperclip" aria-hidden="true"></i><div><strong><?= e(_l('customer_profile_files')); ?></strong><span>Uploads and shared project files.</span></div></a>
+            <a class="sc-dashboard-resource" href="<?= site_url('clients/calendar'); ?>"><i class="fa-regular fa-calendar" aria-hidden="true"></i><div><strong><?= e(_l('calendar')); ?></strong><span>Upcoming events and project dates.</span></div></a>
+            <?php if (is_knowledge_base_viewable(true)) { ?>
+            <a class="sc-dashboard-resource" href="<?= site_url('knowledge-base'); ?>"><i class="fa-solid fa-book-open" aria-hidden="true"></i><div><strong><?= e(_l('clients_nav_kb')); ?></strong><span>Answers, guides, and customer resources.</span></div></a>
+            <?php } ?>
+        </div>
+    </section>
+    <?php hooks()->do_action('client_area_dashboard_end'); ?>
+</div>

@@ -219,8 +219,13 @@ function smartsource_subcontractors_register_settings_tab()
 function smartsource_subcontractors_before_save_staff($data, $staffid = null)
 {
     $CI = &get_instance();
-    $data['is_subcontractor'] = $CI->input->post('is_subcontractor') ? 1 : 0;
-    $data['smartsource_subcontractor_id'] = (int) $CI->input->post('smartsource_subcontractor_id');
+    // Other staff forms must not clear module fields they do not render.
+    if ($CI->input->post('smartsource_staff_fields_present') || $CI->input->post('is_subcontractor') !== null) {
+        $data['is_subcontractor'] = $CI->input->post('is_subcontractor') ? 1 : 0;
+    }
+    if ($CI->input->post('smartsource_subcontractor_id') !== null) {
+        $data['smartsource_subcontractor_id'] = (int) $CI->input->post('smartsource_subcontractor_id');
+    }
     return $data;
 }
 
@@ -252,7 +257,7 @@ function smartsource_subcontractors_admin_footer()
     ];
 
     echo '<script>window.smartsourceApplicationAlerts = ' . json_encode($config) . ';</script>';
-    echo '<script src="' . module_dir_url(SMARTSOURCE_SUBCONTRACTORS_MODULE_NAME, 'assets/js/smartsource_subcontractors.js') . '"></script>';
+    echo '<script src="' . module_dir_url(SMARTSOURCE_SUBCONTRACTORS_MODULE_NAME, 'assets/js/smartsource_subcontractors.js') . '?v=' . filemtime(__DIR__ . '/assets/js/smartsource_subcontractors.js') . '"></script>';
 }
 
 /* Smart Choice Module Structural Repair: verified for flat language/migration structure and PHP 8.5 baseline. */

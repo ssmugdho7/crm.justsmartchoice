@@ -82,7 +82,12 @@
                 <div class="panel-body">
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="tab_staff_member">
-                            <?= form_open_multipart($this->uri->uri_string(), ['class' => 'staff-form', 'autocomplete' => 'off']); ?>
+                            <?= form_open_multipart($this->uri->uri_string(), [
+                                'class' => 'staff-form',
+                                'autocomplete' => 'off',
+                                'data-is-subcontractor' => (int) ($member->is_subcontractor ?? 0),
+                                'data-smartsource-subcontractor-id' => (int) ($member->smartsource_subcontractor_id ?? 0),
+                            ]); ?>
 
                             <div class="panel-full-width-tabs">
                                 <ul class="nav nav-tabs nav-tabs-horizontal tw-mb-6 !tw-bg-white" role="tablist">
@@ -214,17 +219,17 @@
                         <?php $scSupervisorOptions=[]; foreach(($staff_members ?? []) as $sm){ if(!isset($member)||$sm['staffid']!=$member->staffid){$scSupervisorOptions[]=['staffid'=>$sm['staffid'],'name'=>trim($sm['firstname'].' '.$sm['lastname'])];}} ?>
                         <div class="row">
                           <div class="col-md-4"><?= render_input('employee_staff_id','sc_employee_staff_id',isset($member)?($member->employee_staff_id ?? ''):''); ?></div>
-                          <div class="col-md-4"><?= render_input('start_date','sc_start_date',isset($member)?($member->start_date ?? ''):'','date'); ?></div>
+                          <div class="col-md-4"><?= render_input('start_date','sc_start_date',isset($member) && ($member->start_date ?? '') !== '0000-00-00' ? ($member->start_date ?? '') : '','date'); ?></div>
                           <div class="col-md-4"><?= render_select('employment_type',[['id'=>'employee_full_time','name'=>_l('sc_employee_full_time')],['id'=>'employee_part_time','name'=>_l('sc_employee_part_time')],['id'=>'contractor','name'=>_l('sc_contractor')],['id'=>'freelancer','name'=>_l('sc_freelancer')]],['id','name'],'sc_employment_type',isset($member)?($member->employment_type ?? ''):''); ?></div>
                         </div>
                         <div class="row">
                           <div class="col-md-4"><?= render_select('supervisor_staff_id',$scSupervisorOptions,['staffid','name'],'sc_supervisor_manager',isset($member)?($member->supervisor_staff_id ?? ''):'',['data-live-search'=>true,'data-size'=>10]); ?></div>
                           <?php $scTeamDepartments=[]; foreach(($departments ?? []) as $dep){ $scTeamDepartments[]=['id'=>$dep['departmentid'],'name'=>$dep['name']]; } ?>
                           <div class="col-md-4"><?= render_select('team',$scTeamDepartments,['id','name'],'sc_team',isset($member)?($member->team ?? ''):'',['data-live-search'=>true]); ?></div>
-                          <div class="col-md-4"><?= render_input('probation_end_date','sc_probation_end_date',isset($member)?($member->probation_end_date ?? ''):'','date'); ?></div>
+                          <div class="col-md-4"><?= render_input('probation_end_date','sc_probation_end_date',isset($member) && ($member->probation_end_date ?? '') !== '0000-00-00' ? ($member->probation_end_date ?? '') : '','date'); ?></div>
                         </div>
                         <div class="row">
-                          <div class="col-md-4"><?= render_input('contract_expiration_date','sc_contract_expiration_date',isset($member)?($member->contract_expiration_date ?? ''):'','date'); ?></div>
+                          <div class="col-md-4"><?= render_input('contract_expiration_date','sc_contract_expiration_date',isset($member) && ($member->contract_expiration_date ?? '') !== '0000-00-00' ? ($member->contract_expiration_date ?? '') : '','date'); ?></div>
                           <div class="col-md-4"><?= render_input('emergency_contact_name','sc_emergency_contact_name',isset($member)?($member->emergency_contact_name ?? ''):'','text',['required'=>true]); ?></div>
                           <div class="col-md-4"><?= render_input('emergency_contact_relationship','sc_emergency_contact_relationship',isset($member)?($member->emergency_contact_relationship ?? ''):'','text',['required'=>true]); ?></div>
                         </div>

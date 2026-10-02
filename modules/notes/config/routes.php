@@ -16,4 +16,4 @@ $route['admin/notes/save_type'] = 'notes/notes/save_type';
 $route['admin/notes/delete_type/(:num)'] = 'notes/notes/delete_type/$1';
 $route['admin/notes/save_preferences'] = 'notes/notes/save_preferences';
 $route['admin/notes/share_link/(:num)'] = 'notes/notes/share_link/$1';
-$route['notes/share/(:any)'] = 'notes/share/index/$1';
+$route['notes/share/(:any)'] = 'share/index/$1';

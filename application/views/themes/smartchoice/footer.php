@@ -32,7 +32,8 @@
     var $main=$('body.customers .main-content, body.customers #wrapper .content, body.customers .customers-content').first();
     if(!$main.length) $main=$('body.customers .container').last();
     var $active=$('body.customers .navbar-nav>li.active>a').first();
-    if($main.length && $active.length && !$main.find('.sc-auto-page-heading,.page-header,.panel-heading').first().length){
+    var isLoginPage=/\/authentication\/login\/?$/.test(window.location.pathname);
+    if(!isLoginPage && $main.length && $active.length && !$main.find('.sc-auto-page-heading,.page-header,.panel-heading').first().length){
       var text=$.trim($active.text()); var icon=$active.find('i').attr('class')||'fa-solid fa-layer-group';
       if(text){ $main.prepend('<div class="sc-auto-page-heading"><i class="'+icon+'"></i><span>'+ $('<div>').text(text).html() +'</span></div>'); }
     }

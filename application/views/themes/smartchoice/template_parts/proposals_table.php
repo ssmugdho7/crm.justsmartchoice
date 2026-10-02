@@ -37,6 +37,7 @@
               }
         ?>
         </a>
+      </td>
       <td>
         <a href="<?= site_url('proposal/' . $proposal['id'] . '/' . $proposal['hash']); ?>"
           class="td-proposal-url-subject">

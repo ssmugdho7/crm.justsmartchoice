@@ -12,6 +12,11 @@
     <?= _l('clients_contracts'); ?>
 </h4>
 
+<?php if (isset($contracts) && count($contracts) === 0) {
+    $portalEmptyTitle = 'No contracts yet';
+    $portalEmptyText = 'Contracts shared with your account will appear here for review and signature.';
+    get_template_part('portal_empty_state', compact('portalEmptyTitle', 'portalEmptyText'));
+} ?>
 <div class="panel_s">
     <div class="panel-body">
         <?php get_template_part('contracts_table'); ?>

@@ -11,10 +11,15 @@
         var backdrop = layout.querySelector('.sc-portal-backdrop');
         var mobile = window.matchMedia('(max-width: 991px)');
         var previousFocus;
+        var more = layout.querySelector('.sc-portal-more');
 
         function setOpen(open) {
             layout.classList.toggle('sc-portal-open', open);
             toggle.setAttribute('aria-expanded', String(open));
+            if (more) more.setAttribute('aria-expanded', String(open));
+            document.body.classList.toggle('sc-portal-drawer-open', open);
+            if (open && mobile.matches) { sidebar.setAttribute('role', 'dialog'); sidebar.setAttribute('aria-modal', 'true'); }
+            else { sidebar.removeAttribute('role'); sidebar.removeAttribute('aria-modal'); }
             backdrop.hidden = !open;
             sidebar.inert = mobile.matches && !open;
             if (open) {
@@ -26,6 +31,7 @@
             }
         }
         toggle.addEventListener('click', function () { setOpen(!layout.classList.contains('sc-portal-open')); });
+        if (more) more.addEventListener('click', function () { setOpen(!layout.classList.contains('sc-portal-open')); });
         close.addEventListener('click', function () { setOpen(false); });
         backdrop.addEventListener('click', function () { setOpen(false); });
         collapse.addEventListener('click', function () {
@@ -68,20 +74,65 @@
             if (url.origin !== window.location.origin || url.hash || !link.textContent.trim()) return;
             if (url.pathname.replace(/\/$/, '') === new URL(sidebar.querySelector('a').href).pathname.replace(/\/$/, '')) return;
             var exists = Array.from(sidebar.querySelectorAll('a')).some(function (item) { return item.href === link.href; });
+            link.parentElement.classList.add('sc-portal-nav-moved');
             if (exists) return;
             var group = sidebar.querySelector('[data-portal-group="Services & Booking"]');
+            if (!group) {
+                group = document.createElement('div');
+                group.className = 'sc-portal-nav-group';
+                group.dataset.portalGroup = 'Services & Booking';
+                var heading = document.createElement('h2');
+                heading.textContent = 'Services & Booking';
+                group.appendChild(heading);
+                sidebar.querySelector('nav').appendChild(group);
+            }
             var item = document.createElement('a');
             var icon = document.createElement('i');
             var label = document.createElement('span');
             item.href = link.href;
             var headerTitle = link.querySelector('.gm-client-nav-title');
             item.title = label.textContent = (headerTitle || link).textContent.trim();
+            item.setAttribute('aria-label', item.title);
             icon.className = 'fa-solid fa-arrow-up-right-from-square';
             icon.setAttribute('aria-hidden', 'true');
             if (url.pathname.replace(/\/$/, '') === window.location.pathname.replace(/\/$/, '')) item.setAttribute('aria-current', 'page');
             item.append(icon, label);
             group.appendChild(item);
         });
+        // Hide a duplicate header destination only after it is available in the sidebar.
+        document.body.classList.add('sc-customer-enhanced');
+        var current = sidebar.querySelector('a[aria-current="page"]');
+        if (current) layout.querySelectorAll('.sc-portal-mobile-nav a').forEach(function (link) {
+            if (link.href === current.href) link.setAttribute('aria-current', 'page');
+        });
+
+        function labelTables() {
+            layout.querySelectorAll('table.dt-table').forEach(function (table) {
+                var headers = Array.from(table.querySelectorAll('thead tr:first-child th'));
+                if (!headers.length) return;
+                table.classList.add('sc-mobile-cards');
+                table.querySelectorAll('tbody tr').forEach(function (row) {
+                    Array.from(row.cells).forEach(function (cell, index) {
+                        if (cell.colSpan !== 1 || !headers[index]) return;
+                        cell.dataset.label = headers[index].textContent.trim();
+                    });
+                });
+                table.querySelectorAll('.dataTables_empty').forEach(function (cell) {
+                    cell.setAttribute('role', 'status');
+                    if (!cell.querySelector('.sc-filter-help')) {
+                        var help = document.createElement('p');
+                        help.className = 'sc-filter-help';
+                        help.textContent = 'No matching records in this view. Try clearing your search or changing the status filter.';
+                        cell.appendChild(help);
+                    }
+                });
+            });
+        }
+        labelTables();
+        if (window.jQuery) window.jQuery(document).on('draw.dt.scPortal', function (event) {
+            if (layout.contains(event.target)) labelTables();
+        });
+
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
     else init();

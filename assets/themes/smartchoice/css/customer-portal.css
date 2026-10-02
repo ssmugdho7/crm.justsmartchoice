@@ -108,3 +108,39 @@
 }
 @media(max-width:575px){#wrapper.sc-portal-layout{padding-inline:8px}#wrapper.sc-portal-layout #content>.container{padding-inline:8px}.sc-dashboard-welcome h1{font-size:24px}.sc-dashboard-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.sc-dashboard-metric{padding:14px 10px;gap:8px}.sc-dashboard-metric>i{width:30px;height:34px;flex-basis:30px;font-size:15px}.sc-dashboard-metric strong{font-size:22px}.sc-dashboard-resource-grid{grid-template-columns:1fr}#wrapper.sc-portal-layout .panel-body{padding:12px!important}}
 @media(prefers-reduced-motion:reduce){.sc-portal-sidebar{transition:none!important}}
+
+/* Targeted usability fixes; all styles are limited to authenticated customer pages. */
+body.sc-customer-enhanced .navbar.header .navbar-nav>li.sc-portal-nav-moved{display:none}
+body.sc-portal-drawer-open{overflow:hidden}
+.sc-portal-skip{position:absolute;top:0;left:16px;transform:translateY(-200%);background:#fff;padding:12px;z-index:1100}
+.sc-portal-skip:focus{position:fixed;transform:none}
+#wrapper.sc-portal-layout :is(a.btn,button.btn,.sc-portal-sidebar button,.sc-portal-menu-button){min-height:44px}
+#wrapper.sc-portal-layout .sc-portal-sidebar button,.sc-portal-menu-button{width:44px;flex-basis:44px}
+#wrapper.sc-portal-layout :is(input,select,textarea):focus-visible{outline:3px solid #277fa1;outline-offset:2px}
+.sc-portal-empty{background:#fff;border:1px solid var(--portal-border);border-radius:8px;padding:20px;margin-bottom:18px}
+.sc-portal-empty h2{font-size:18px;margin:0 0 8px}
+.sc-portal-empty p,.sc-form-guidance,.sc-filter-help{color:var(--portal-muted);line-height:1.6}
+.sc-filter-help{font-size:13px;margin:8px 0 0}
+.sc-dashboard-metric small{display:block;color:var(--portal-muted);margin-top:5px}
+.sc-required{color:#a82318;font-weight:700}
+.sc-portal-mobile-nav{display:none}
+@media(max-width:767px){
+ #wrapper.sc-portal-layout{padding-bottom:calc(92px + env(safe-area-inset-bottom))}
+ .sc-portal-mobile-nav{display:flex;position:fixed;inset-inline:0;bottom:0;z-index:1030;background:#fff;border-top:1px solid var(--portal-border);padding:6px 4px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -3px 12px rgba(0,0,0,.05)}
+ .sc-portal-mobile-nav>a,.sc-portal-mobile-nav>button{flex:1;min-width:0;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px;color:#43514d;background:none;border:0;text-decoration:none}
+ .sc-portal-mobile-nav i{font-size:18px}
+ .sc-portal-mobile-nav [aria-current="page"]{color:#165c45;background:#e9f5ee;border-radius:6px;font-weight:700}
+ #wrapper.sc-portal-layout .sc-mobile-cards{display:block;max-width:100%;border:0!important}
+ #wrapper.sc-portal-layout .sc-mobile-cards thead{display:block;margin-bottom:12px}
+ #wrapper.sc-portal-layout .sc-mobile-cards thead tr{display:flex;flex-wrap:wrap;gap:4px}
+ #wrapper.sc-portal-layout .sc-mobile-cards thead th{display:block;min-height:44px;width:auto!important;max-width:100%;white-space:normal;border:1px solid var(--portal-border);border-radius:4px;padding:12px 22px 12px 8px!important}
+ #wrapper.sc-portal-layout .sc-mobile-cards tbody{display:block}
+ #wrapper.sc-portal-layout .sc-mobile-cards tbody tr{display:block;border:1px solid var(--portal-border);border-radius:8px;margin-bottom:12px;background:#fff}
+ #wrapper.sc-portal-layout .sc-mobile-cards tbody td{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;width:auto!important;padding:10px!important;border:0;overflow-wrap:anywhere;white-space:normal}
+ #wrapper.sc-portal-layout .sc-mobile-cards tbody td[data-label]:before{content:attr(data-label);flex:0 0 38%;color:var(--portal-muted);font-size:12px;font-weight:600}
+ #wrapper.sc-portal-layout .sc-mobile-cards tbody td.dataTables_empty{display:block;text-align:start}
+ #wrapper.sc-portal-layout .dataTables_paginate .pagination{display:flex;flex-wrap:wrap}
+ #wrapper.sc-portal-layout .dataTables_paginate .pagination a{min-width:44px;min-height:44px}
+ #wrapper.sc-portal-layout .gpicker{min-height:44px;white-space:normal}
+ #wrapper.sc-portal-layout .section-heading a{display:inline-block;min-height:44px;padding-block:10px}
+}

@@ -10,7 +10,7 @@ $countQueries = [];
 function e($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8'); }
 function _l($key) { return $key; }
 function site_url($path = '') { return 'https://portal.example/' . $path; }
-function current_full_url() { return site_url('clients/projects/2'); }
+function current_full_url() { global $scenario; return site_url($scenario === 'full' ? 'clients/project/2' : 'clients/projects/2'); }
 function has_contact_permission($permission) { global $scenario; return $scenario !== 'restricted' || $permission === 'support'; }
 function get_client_user_id() { return 42; }
 function get_contact_user_id() { return 7; }
@@ -76,4 +76,10 @@ include dirname(__DIR__) . '/application/views/themes/smartchoice/template_parts
 $sidebar = ob_get_clean();
 if ($scenario === 'restricted') verify(strpos($sidebar, 'Finance &amp; Legal') === false, 'Empty finance group must be omitted');
 else verify(strpos($sidebar, 'aria-current="page"') !== false, 'Project status route must retain active sidebar link');
+verify(strpos($sidebar, 'aria-label="dashboard_string"') !== false, 'Collapsed home link needs a name');
+verify(strpos($sidebar, 'aria-label="Customer shortcuts"') !== false, 'Missing mobile shortcuts');
+if ($scenario === 'restricted') {
+    verify(strpos($sidebar, 'aria-label="Work"') === false && strpos($sidebar, 'aria-label="Money"') === false, 'Restricted mobile links must be omitted');
+    verify(strpos($sidebar, 'aria-label="Support"') !== false, 'Support remains available');
+}
 echo 'PASS: ' . $scenario . " (escaping, permissions, customer scope, navigation)\n";

@@ -47,3 +47,21 @@ should use the site's test payment environment.
 
 Development changes belong on `staging`; promotion to `main` requires an explicit
 request. A staging push does not update the live deployment that follows main.
+
+## Targeted usability update
+
+- Duplicate header destinations are hidden only after the same permitted link is
+  available in the sidebar. Module links and the account menu remain accessible.
+- Mobile shortcuts use existing contact permissions. The navigation drawer keeps
+  focus containment, Escape handling, and focus return; collapsed links have names.
+- List cards retain their original tables, payloads, links, ordering, pagination,
+  and sortable headings. Labels are refreshed after DataTables draws.
+- Empty-state guidance uses already-loaded records and permission-aware actions.
+- Support required indicators mirror existing server validation; hidden selectpicker
+  controls do not receive native required validation. No controllers or schema are
+  changed by this presentation update.
+- Additional regression check: `php tests/customer_portal_usability.php`.
+
+Releases for this task use `origin/mugdho`, merge into `origin/dev`, and deploy only
+on `dev.justsmartchoice.com`. This supersedes the earlier staging/main instructions
+for this development-site release; production promotion is not included.

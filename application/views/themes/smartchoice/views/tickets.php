@@ -34,6 +34,11 @@
     </a>
 </div>
 
+<?php if (isset($tickets) && count($tickets) === 0) {
+    $portalEmptyTitle = 'No support requests in this view';
+    $portalEmptyText = 'Try another status filter, or open a support request if you need help.';
+    get_template_part('portal_empty_state', compact('portalEmptyTitle', 'portalEmptyText'));
+} ?>
 <div class="panel_s">
     <div class="panel-body">
         <?php get_template_part('tickets_table'); ?>

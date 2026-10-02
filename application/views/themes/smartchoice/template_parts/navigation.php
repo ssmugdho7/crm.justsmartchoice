@@ -47,7 +47,7 @@
                 <?php if (is_client_logged_in()) { ?>
                 <li class="dropdown customers-nav-item-profile">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                        aria-expanded="false">
+                        aria-expanded="false" aria-label="Account menu">
                         <img src="<?= e(contact_profile_image_url($contact->id, 'thumb')); ?>
 " data-toggle="tooltip" data-title="<?= e($contact->firstname . ' ' . $contact->lastname); ?>"
                             data-placement="bottom" class="client-profile-image-small">

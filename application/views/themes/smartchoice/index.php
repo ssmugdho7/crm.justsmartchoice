@@ -3,14 +3,14 @@
 <?php get_template_part($navigationEnabled ? 'navigation' : ''); ?>
 <?php $customerPortalEnabled = is_client_logged_in() && $navigationEnabled; ?>
 <div id="wrapper"<?= $customerPortalEnabled ? ' class="sc-portal-layout"' : ''; ?>>
-    <?php if ($customerPortalEnabled) { get_template_part('customer_sidebar'); } ?>
-    <div id="content"<?= $customerPortalEnabled ? ' class="customers-content"' : ''; ?>>
+    <?php if ($customerPortalEnabled) { ?><a class="sc-portal-skip" href="#content">Skip to content</a><?php get_template_part('customer_sidebar'); } ?>
+    <div id="content"<?= $customerPortalEnabled ? ' class="customers-content" role="main" tabindex="-1"' : ''; ?>>
         <?php if ($customerPortalEnabled) { ?>
         <div class="sc-portal-toolbar page-header">
             <button type="button" class="sc-portal-menu-button" aria-controls="sc-customer-sidebar" aria-expanded="false" aria-label="Open customer navigation" title="Open customer navigation">
                 <i class="fa-solid fa-bars" aria-hidden="true"></i>
             </button>
-            <span><?= e(_l('clients')); ?></span>
+            <span><?= e($title ?? _l('clients')); ?></span>
             <a href="<?= site_url('clients/profile'); ?>" class="sc-portal-account"><i class="fa-regular fa-user" aria-hidden="true"></i> <?= e($contact->firstname . ' ' . $contact->lastname); ?></a>
         </div>
         <?php } ?>

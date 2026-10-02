@@ -37,7 +37,7 @@ if (has_contact_permission('support')) {
     <?php if ($portalMetrics) { ?>
     <div class="sc-dashboard-metrics">
         <?php foreach ($portalMetrics as [$route, $icon, $label, $count, $type]) { ?>
-        <a class="sc-dashboard-metric sc-metric-<?= e($type); ?>" href="<?= site_url($route); ?>"><i class="<?= e($icon); ?>" aria-hidden="true"></i><div><strong><?= e($count); ?></strong><span><?= e($label); ?></span></div></a>
+        <a class="sc-dashboard-metric sc-metric-<?= e($type); ?>" href="<?= site_url($route); ?>"><i class="<?= e($icon); ?>" aria-hidden="true"></i><div><strong><?= e($count); ?></strong><span><?= e($label); ?></span><?php if ((int) $count === 0) { ?><small>Nothing shared yet</small><?php } ?></div></a>
         <?php } ?>
     </div>
     <?php } ?>
@@ -59,7 +59,7 @@ if (has_contact_permission('support')) {
                 <small><?= e($progress); ?>% complete</small>
             </article>
             <?php } if (!$recentProjects) { ?>
-            <div class="sc-dashboard-empty"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i>No projects yet. Your projects will appear here when they are available.</div>
+            <div class="sc-dashboard-empty"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i><strong>No projects yet</strong><p>Your projects will appear here when the team adds them to your account.</p><?php if (has_contact_permission('support')) { ?><a class="btn btn-default" href="<?= site_url('clients/open_ticket'); ?>">Ask the team</a><?php } ?></div>
             <?php } ?>
         </section>
         <?php } ?>

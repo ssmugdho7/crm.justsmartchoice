@@ -11,6 +11,8 @@ abstract class Proposal_document_pdf extends App_pdf
     protected $proposal_number;
     private $closing_page_number = 0;
     private $prepared = false;
+    private $presentationPages = [1 => true];
+    private $renderingPresentation = false;
     private $previous_language;
     private $previous_last_language;
 
@@ -79,7 +81,8 @@ abstract class Proposal_document_pdf extends App_pdf
 
     public function Header()
     {
-        if ($this->page == 1 || $this->page == $this->closing_page_number) {
+        if ($this->renderingPresentation) { $this->presentationPages[$this->page] = true; }
+        if (isset($this->presentationPages[$this->page]) || $this->page == $this->closing_page_number) {
             return;
         }
         $w = $this->getPageWidth();
@@ -103,7 +106,8 @@ abstract class Proposal_document_pdf extends App_pdf
 
     public function Footer()
     {
-        if ($this->page == 1 || $this->page == $this->closing_page_number) {
+        if ($this->renderingPresentation) { $this->presentationPages[$this->page] = true; }
+        if (isset($this->presentationPages[$this->page]) || $this->page == $this->closing_page_number) {
             return;
         }
         $w = $this->getPageWidth();
@@ -127,6 +131,8 @@ abstract class Proposal_document_pdf extends App_pdf
 
     private function renderPresentationPage($section)
     {
+        $this->renderingPresentation = true;
+        $this->presentationPages[$this->page] = true;
         $w = $this->getPageWidth();
         $h = $this->getPageHeight();
         $margin = $this->getBreakMargin();
@@ -142,6 +148,7 @@ abstract class Proposal_document_pdf extends App_pdf
             $y = $this->sectionOption($section, 'align_from_top');
             $x = is_numeric($x) ? max(12, min($w - 40, (float) $x)) : 22;
             $y = is_numeric($y) ? max(12, min($h - 40, (float) $y)) : 60;
+            $this->SetAutoPageBreak(true, 20);
             $this->writeHTMLCell($w - $x - 22, 0, $x, $y, $text, 0, 0);
         } elseif ($image === '') {
             // Designed defaults also work when uploaded images/settings are absent.
@@ -178,6 +185,7 @@ abstract class Proposal_document_pdf extends App_pdf
         $this->SetFont($this->get_font_name(), '', $this->get_font_size());
         $this->SetAutoPageBreak($auto, $margin);
         $this->setPageMark();
+        $this->renderingPresentation = false;
     }
 
     public function Close()

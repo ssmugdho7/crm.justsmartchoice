@@ -39,7 +39,7 @@ $items_html = $items->table();
 
 $items_html .= '<br /><br />';
 $items_html .= '';
-$items_html .= '<table cellpadding="6" style="font-size:' . ($font_size + 4) . 'px">';
+$items_html .= '<table cellpadding="6" style="font-size:' . ($font_size + 1) . 'px">';
 
 $items_html .= '
 <tr>

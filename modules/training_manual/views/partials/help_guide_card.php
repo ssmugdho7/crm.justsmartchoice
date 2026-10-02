@@ -1,7 +1,7 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 $title = (string) ($guide['article']['title'] ?? '');
 $description = mb_strimwidth($guide['description'], 0, 190, '…');
-$image = training_manual_customer_image_url($guide['article']['thumbnail'] ?? $guide['cover'] ?? '', $title . ' ' . $guide['book']);
+$image = training_manual_customer_image_url(!empty($guide['article']['thumbnail']) ? $guide['article']['thumbnail'] : ($guide['cover'] ?? ''), $title . ' ' . $guide['book']);
 $fallback = training_manual_customer_image_url('', $title . ' ' . $guide['book']);
 ?>
 <a class="sc-help-guide<?php echo $isFeatured ? ' sc-help-guide-featured' : ''; ?>" href="<?php echo site_url('training_manual/customer-books/article/' . (int) $guide['article']['id']); ?>"<?php if (!$isFeatured) { ?> data-guide data-category="<?php echo $guide['category']; ?>" data-search="<?php echo html_escape($title . ' ' . $guide['description'] . ' ' . $guide['book']); ?>"<?php } ?>>

@@ -184,3 +184,10 @@ body.customers:has(#wrapper.sc-portal-layout) .navbar.header a:focus-visible,bod
  body.customers:has(#wrapper.sc-portal-layout) .navbar.header #theme-navbar-collapse .customers-nav-item-profile{grid-column:1/-1}
 }
 @media(prefers-reduced-motion:reduce){body.customers .navbar.header .navbar-nav>li>a{transition:none!important}}
+
+/* Support is the sole top-level destination; account controls stay at the right edge. */
+body.sc-customer-enhanced .navbar.header .navbar-nav>li.sc-portal-nav-moved{display:none!important}
+@media(max-width:767px){
+ body.customers:has(#wrapper.sc-portal-layout) .navbar.header #theme-navbar-collapse>ul.nav{display:flex!important;justify-content:flex-end!important;grid-template-columns:none!important}
+ body.customers:has(#wrapper.sc-portal-layout) .navbar.header #theme-navbar-collapse .customers-nav-item-profile{grid-column:auto}
+}

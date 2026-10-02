@@ -191,3 +191,5 @@ body.sc-customer-enhanced .navbar.header .navbar-nav>li.sc-portal-nav-moved{disp
  body.customers:has(#wrapper.sc-portal-layout) .navbar.header #theme-navbar-collapse>ul.nav{display:flex!important;justify-content:flex-end!important;grid-template-columns:none!important}
  body.customers:has(#wrapper.sc-portal-layout) .navbar.header #theme-navbar-collapse .customers-nav-item-profile{grid-column:auto}
 }
+
+body.customers:has(#wrapper.sc-portal-layout) .navbar.header #theme-navbar-collapse>ul.nav>.customers-nav-item-profile{margin-left:0!important}

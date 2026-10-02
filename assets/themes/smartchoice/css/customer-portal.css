@@ -230,3 +230,10 @@ body.sc-customer-enhanced .navbar.header{position:sticky!important;top:0;z-index
 @media(min-width:992px){body.sc-customer-enhanced .sc-portal-sidebar{top:calc(var(--sc-header-height,76px) + 16px);max-height:calc(100dvh - var(--sc-header-height,76px) - 32px)}}
 body.sc-customer-enhanced #content,body.sc-customer-enhanced #sc-privacy-policy{scroll-margin-top:calc(var(--sc-header-height,76px) + 24px)}
 @media(max-width:767px){body.sc-customer-enhanced .navbar.header #theme-navbar-collapse.in{max-height:calc(100dvh - 90px);overflow-y:auto}}
+
+/* Match the side-by-side dashboard card heights without fixing their content height. */
+@media(min-width:1200px){
+ .sc-dashboard-columns>.sc-dashboard-section{display:flex;flex-direction:column}
+ .sc-dashboard-columns>.sc-dashboard-section>.sc-dashboard-section-title{flex:none}
+ .sc-dashboard-columns>.sc-dashboard-section>:is(.sc-dashboard-empty,.sc-dashboard-billing,.sc-dashboard-project){flex:1}
+}

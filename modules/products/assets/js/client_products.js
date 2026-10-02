@@ -140,10 +140,11 @@ function filter_data(post_data) {
     post_data = post_data || {};
     $('.no_product').addClass('hidden');
     $('#filter_html').attr('aria-busy', 'true');
+    $('#sc-catalog-count').text(scT('product_loading_catalog', 'Loading catalog...'));
     $('#filter_html').html('<div class="col-xs-12 text-center sc-loading">' + scEscape(scT('product_loading_catalog', 'Loading catalog...')) + '</div>');
     $.ajax({url: site_url + 'products/client/filter', type: 'POST', dataType: 'json', data: post_data,
         success: function(data) { $('#filter_html').attr('aria-busy', 'false'); render_product_data(data || []); },
-        error: function() { $('#filter_html').attr('aria-busy', 'false'); $('#filter_html').html('<div class="col-xs-12"><div class="alert alert-danger">' + scEscape(scT('product_unable_load', 'Unable to load products.')) + '</div></div>'); }
+        error: function() { $('#sc-catalog-count').text(''); $('#filter_html').attr('aria-busy', 'false'); $('#filter_html').html('<div class="col-xs-12"><div class="alert alert-danger">' + scEscape(scT('product_unable_load', 'Unable to load products.')) + '</div></div>'); }
     });
 }
 

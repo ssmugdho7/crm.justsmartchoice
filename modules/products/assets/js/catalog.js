@@ -24,7 +24,7 @@
             return sort.value === 'name-desc' ? -result : result;
         }).forEach(function (card) { grid.appendChild(card); });
         root.querySelector('.no_product').classList.toggle('hidden', visible > 0 || grid.getAttribute('aria-busy') === 'true');
-        root.querySelector('#sc-catalog-count').textContent = visible + (visible === 1 ? ' service' : ' services') + (terms.length ? ' found' : ' available');
+        if (grid.getAttribute('aria-busy') !== 'true') root.querySelector('#sc-catalog-count').textContent = visible + (visible === 1 ? ' service' : ' services') + (terms.length ? ' found' : ' available');
     }
     function countCart(items) {
         var count = (Array.isArray(items) ? items : []).reduce(function (sum, item) { return sum + Math.max(0, Number(item.quantity) || 0); }, 0);

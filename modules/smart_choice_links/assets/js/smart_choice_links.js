@@ -1,8 +1,8 @@
-/* Smart Choice Links menu interaction v1.2.9 */
+/* Smart Choice Links menu interaction v1.2.10 */
 (function ($) {
     'use strict';
-    if (window.smartChoiceLinksMenusInitializedV129) { return; }
-    window.smartChoiceLinksMenusInitializedV129 = true;
+    if (window.smartChoiceLinksMenusInitializedV1210) { return; }
+    window.smartChoiceLinksMenusInitializedV1210 = true;
     var observer = null, timer = null;
 
     function removeLegacyVisuals() {
@@ -92,7 +92,7 @@
          * fallback remains data-only and may never be opened by Bootstrap. */
         $star.children('ul.smart-choice-links-dropdown')
             .removeClass('dropdown-menu animated fadeIn show in')
-            .attr('aria-hidden', 'true')
+            .attr('aria-hidden', 'true').attr('inert', '')
             .css('display', 'none');
 
         $star.find('.tooltip').remove();
@@ -260,7 +260,7 @@
 
     function showPortalLabel(nav) {
         ensurePortalElements();
-        if (!nav || activePortalOwner === nav) { return; }
+        if (!nav || activePortalOwner) { return; }
         var $nav = $(nav);
         var label = $nav.attr('data-scl-label') || $nav.find('.scl-dropdown-header strong').first().text() || 'Quick Links';
         $portalLabel.text(label).addClass('is-visible').attr('aria-hidden', 'false');
@@ -273,7 +273,7 @@
         activePortalOwner = null;
         $('.smart-choice-links-nav').removeClass('open scl-force-open scl-label-visible')
             .children('.smart-choice-links-trigger').attr('aria-expanded', 'false');
-        $('.smart-choice-links-nav > ul.smart-choice-links-dropdown').attr('aria-hidden','true').css('display','none');
+        $('.smart-choice-links-nav > ul.smart-choice-links-dropdown').attr('aria-hidden','true').attr('inert', '').css('display','none');
         $portalPanel.removeClass('is-open').attr('aria-hidden', 'true').attr('inert', '');
         hidePortalLabel();
         if (restoreFocus && owner && document.contains(owner)) {
@@ -308,7 +308,7 @@
         var $content = $sourcePanel.clone(false, false)
             .removeAttr('id style aria-hidden inert')
             .removeClass('smart-choice-links-panel-template smart-choice-links-dropdown smart-choice-links-dropdown-left smart-choice-links-dropdown-right dropdown-menu animated fadeIn show in')
-            .addClass('scl-portal-content');
+            .addClass('scl-portal-content').attr('data-scl-side', side);
         $portalPanel.empty().append($content).attr('aria-label', $trigger.attr('aria-label') || 'Quick Links');
         positionPortal($trigger, $portalPanel, true);
         $portalPanel.removeAttr('inert').attr('aria-hidden', 'false').addClass('is-open');

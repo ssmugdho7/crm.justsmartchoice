@@ -54,10 +54,6 @@
     background: #ffffff !important;
     animation-duration: var(--scl-animation-speed, 160ms) !important;
 }
-.smart-choice-links-nav.open > .smart-choice-links-dropdown,
-.smart-choice-links-nav.open > ul.smart-choice-links-dropdown {
-    display: block !important;
-}
 .smart-choice-links-left .smart-choice-links-dropdown {
     left: 0 !important;
     right: auto !important;
@@ -231,12 +227,6 @@
     font-size: 12px !important;
     padding: 4px 8px !important;
 }
-.smart-choice-links-nav.open > ul.dropdown-menu.smart-choice-links-dropdown {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    z-index: 99999 !important;
-}
 .smart-choice-links-nav .dropdown-backdrop { display: none !important; }
 
 /* Smart Choice Links v1.1.4 menu-search and link-target improvements */
@@ -308,12 +298,6 @@
 }
 .smart-choice-links-nav.open::after { display: none !important; }
 .smart-choice-links-nav > .smart-choice-links-trigger { cursor: pointer !important; }
-.smart-choice-links-nav.open > .smart-choice-links-dropdown {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-}
 
 
 /* Smart Choice Links v1.2.3 — capture-phase star controls and reliable labels */
@@ -323,16 +307,6 @@
     visibility: visible !important;
     opacity: 1 !important;
     transform: translateX(-50%) translateY(0) !important;
-}
-.smart-choice-links-nav.scl-force-open > .smart-choice-links-dropdown,
-.smart-choice-links-nav.scl-force-open > ul.smart-choice-links-dropdown,
-.smart-choice-links-nav.open > .smart-choice-links-dropdown,
-.smart-choice-links-nav.open > ul.smart-choice-links-dropdown {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    z-index: 100000 !important;
 }
 .smart-choice-links-nav.scl-force-open::after,
 .smart-choice-links-nav.open::after { display: none !important; }
@@ -409,7 +383,9 @@
     outline-offset: 3px;
 }
 /* Nested lists are data-only; Bootstrap must not open a second panel. */
-.smart-choice-links-nav > ul.smart-choice-links-dropdown {
+.smart-choice-links-nav > ul.smart-choice-links-dropdown,
+.smart-choice-links-nav.open > ul.smart-choice-links-dropdown,
+.smart-choice-links-nav.scl-force-open > ul.smart-choice-links-dropdown {
     display: none !important;
     visibility: hidden !important;
     pointer-events: none !important;

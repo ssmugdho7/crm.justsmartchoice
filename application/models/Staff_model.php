@@ -420,6 +420,7 @@ class Staff_model extends App_Model
             }
         }
 
+        unset($data['administrator']);
         $send_welcome_email = true;
         $original_password  = $data['password'];
         if (!isset($data['send_welcome_email'])) {
@@ -435,11 +436,16 @@ class Staff_model extends App_Model
             unset($data['departments']);
         }
 
-        $permissions = [];
-        if (isset($data['permissions'])) {
-            $permissions = $data['permissions'];
-            unset($data['permissions']);
+        $submitted = array_key_exists('permissions', $data) || !empty($data['permissions_submitted']);
+        $permissions = $submitted ? normalize_staff_permission_input($data['permissions'] ?? []) : [];
+        if (!empty($data['role'])) {
+            $this->load->model('roles_model');
+            $role = $this->roles_model->get($data['role']);
+            if (!$role) { return false; }
+            if (!$submitted) { $permissions = $role->permissions; }
         }
+        unset($data['permissions'], $data['permissions_submitted']);
+        if ($permissions === null) { return false; }
 
         if (isset($data['custom_fields'])) {
             $custom_fields = $data['custom_fields'];
@@ -450,8 +456,23 @@ class Staff_model extends App_Model
             $data['is_not_staff'] = 0;
         }
 
-        $this->db->insert(db_prefix() . 'staff', $data);
-        $staffid = $this->db->insert_id();
+        $debug = $this->db->db_debug;
+        $this->db->db_debug = false;
+        $this->db->trans_start();
+        try {
+            $this->db->insert(db_prefix() . 'staff', $data);
+            $staffid = $this->db->insert_id();
+            $savedPermissions = $staffid && $this->update_permissions($data['admin'] == 1 ? [] : $permissions, $staffid);
+            if ($savedPermissions) { $committed = $this->db->trans_complete(); }
+            else { $this->db->trans_rollback(); $committed = false; }
+        } catch (Throwable $e) {
+            $this->db->trans_rollback();
+            $committed = false;
+            $savedPermissions = false;
+            log_message('error', 'Staff creation failed; transaction rolled back.');
+        }
+        $this->db->db_debug = $debug;
+        if (!$savedPermissions || !$committed) { return false; }
         if ($staffid) {
             $slug = $data['firstname'] . ' ' . $data['lastname'];
 
@@ -480,8 +501,6 @@ class Staff_model extends App_Model
                 }
             }
 
-            // Delete all staff permission if is admin we dont need permissions stored in database (in case admin check some permissions)
-            $this->update_permissions($data['admin'] == 1 ? [] : $permissions, $staffid);
 
             log_activity('New Staff Member Added [ID: ' . $staffid . ', ' . $data['firstname'] . ' ' . $data['lastname'] . ']');
 
@@ -522,10 +541,10 @@ class Staff_model extends App_Model
 
         $data = hooks()->apply_filters('before_update_staff_member', $data, $id);
 
-        if (is_admin()) {
-            if (isset($data['administrator'])) {
+        if (!is_admin()) { unset($data['admin'], $data['administrator']); }
+        if (is_admin() && (array_key_exists('administrator', $data) || !empty($data['permissions_submitted']))) {
+            if (!empty($data['administrator'])) {
                 $data['admin'] = 1;
-                unset($data['administrator']);
             } else {
                 if ($id != get_staff_user_id()) {
                     if ($id == 1) {
@@ -542,16 +561,33 @@ class Staff_model extends App_Model
             }
         }
 
+        unset($data['administrator']);
+        if (isset($data['admin']) && (int) $data['admin'] === 0 && ($id == 1 || $id == get_staff_user_id())) {
+            return [$id == 1 ? 'cant_remove_main_admin' : 'cant_remove_yourself_from_admin' => true];
+        }
         $affectedRows = 0;
         if (isset($data['departments'])) {
             $departments = $data['departments'];
             unset($data['departments']);
         }
 
-        $permissions = [];
-        if (isset($data['permissions'])) {
-            $permissions = $data['permissions'];
-            unset($data['permissions']);
+        $submitted = array_key_exists('permissions', $data) || !empty($data['permissions_submitted']);
+        $permissions = $submitted ? normalize_staff_permission_input($data['permissions'] ?? []) : null;
+        unset($data['permissions'], $data['permissions_submitted']);
+        if ($submitted && $permissions === null) { return false; }
+        if (!empty($data['role'])) {
+            $this->load->model('roles_model');
+            $role = $this->roles_model->get($data['role']);
+            if (!$role) { return false; }
+        }
+        if (!$submitted && !empty($data['role'])) {
+            $currentRole = $this->db->select('role')->where('staffid', $id)->get(db_prefix() . 'staff')->row('role');
+            if ((string) $currentRole !== (string) $data['role']) {
+                $this->load->model('roles_model');
+                $role = $this->roles_model->get($data['role']);
+                if (!$role) { return false; }
+                $permissions = $role->permissions;
+            }
         }
 
         if (isset($data['custom_fields'])) {
@@ -577,7 +613,7 @@ class Staff_model extends App_Model
 
         if (isset($data['is_not_staff'])) {
             $data['is_not_staff'] = 1;
-        } else {
+        } elseif ($submitted) {
             $data['is_not_staff'] = 0;
         }
 
@@ -636,15 +672,33 @@ class Staff_model extends App_Model
         }
 
 
-        $this->db->where('staffid', $id);
-        $this->db->update(db_prefix() . 'staff', $data);
-
-        if ($this->db->affected_rows() > 0) {
-            $affectedRows++;
+        $debug = $this->db->db_debug;
+        $this->db->db_debug = false;
+        $this->db->trans_start();
+        try {
+            $this->db->where('staffid', $id);
+            $savedStaff = $this->db->update(db_prefix() . 'staff', $data);
+            if ($this->db->affected_rows() > 0) { $affectedRows++; }
+            $savedPermissions = true;
+            if ($permissions !== null || (isset($data['admin']) && $data['admin'] == 1)) {
+                $savedPermissions = $this->update_permissions(isset($data['admin']) && $data['admin'] == 1 ? [] : $permissions, $id);
+                $affectedRows++;
+            }
+            if ($savedStaff && $savedPermissions) { $committed = $this->db->trans_complete(); }
+            else { $this->db->trans_rollback(); $committed = false; }
+        } catch (Throwable $e) {
+            $this->db->trans_rollback();
+            $committed = false;
+            $savedStaff = $savedPermissions = false;
+            log_message('error', 'Staff update failed; transaction rolled back.');
         }
-
-        if ($this->update_permissions((isset($data['admin']) && $data['admin'] == 1 ? [] : $permissions), $id)) {
-            $affectedRows++;
+        $this->db->db_debug = $debug;
+        $this->app_object_cache->delete('is-admin-' . $id);
+        $this->clear_permission_cache($id);
+        if (!$savedStaff || !$savedPermissions || !$committed) { return false; }
+        if (isset($GLOBALS['current_user']) && (int) $GLOBALS['current_user']->staffid === (int) $id) {
+            if (isset($data['admin'])) { $GLOBALS['current_user']->admin = (string) $data['admin']; }
+            if (isset($data['is_not_staff'])) { $GLOBALS['current_user']->is_not_staff = (string) $data['is_not_staff']; }
         }
 
         if ($affectedRows > 0) {
@@ -659,24 +713,46 @@ class Staff_model extends App_Model
 
     public function update_permissions($permissions, $id)
     {
-        $this->db->where('staff_id', $id);
-        $this->db->delete('staff_permissions');
-
-        $is_staff_member = is_staff_member($id);
-
-        foreach ($permissions as $feature => $capabilities) {
-            foreach ($capabilities as $capability) {
-
-                // Maybe do this via hook.
-                if ($feature == 'leads' && !$is_staff_member) {
-                    continue;
-                }
-
-                $this->db->insert('staff_permissions', ['staff_id' => $id, 'feature' => $feature, 'capability' => $capability]);
-            }
+        $permissions = normalize_staff_permission_input($permissions);
+        if ($permissions === null || !ctype_digit((string) $id) || (int) $id <= 0) {
+            return false;
         }
+        $debug = $this->db->db_debug;
+        $this->db->db_debug = false;
+        $this->db->trans_start();
+        try {
+            // Serialize concurrent replacements of the same account's permissions.
+            $staff = $this->db->query('SELECT staffid, is_not_staff FROM ' . db_prefix() . 'staff WHERE staffid = ? FOR UPDATE', [(int) $id]);
+            if (!$staff || !$staff->row()) {
+                $this->db->trans_rollback();
+                $this->db->db_debug = $debug;
+                return false;
+            }
+            $is_staff_member = (int) $staff->row()->is_not_staff === 0;
+            $this->db->where('staff_id', $id)->delete('staff_permissions');
+            foreach ($permissions as $feature => $capabilities) {
+                foreach ($capabilities as $capability) {
+                    if ($feature == 'leads' && !$is_staff_member) { continue; }
+                    $this->db->insert('staff_permissions', ['staff_id' => $id, 'feature' => $feature, 'capability' => $capability]);
+                }
+            }
+            $success = $this->db->trans_complete();
+        } catch (Throwable $e) {
+            $this->db->trans_rollback();
+            $success = false;
+            log_message('error', 'Staff permission replacement failed; transaction rolled back.');
+        }
+        $this->db->db_debug = $debug;
+        $this->clear_permission_cache($id);
+        return $success;
+    }
 
-        return true;
+    public function clear_permission_cache($id)
+    {
+        $this->app_object_cache->delete('staff-' . $id . '-permissions');
+        if (isset($GLOBALS['current_user']) && (int) $GLOBALS['current_user']->staffid === (int) $id) {
+            $GLOBALS['current_user']->permissions = $this->get_staff_permissions($id);
+        }
     }
 
     public function update_profile($data, $id)

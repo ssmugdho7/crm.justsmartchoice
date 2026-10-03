@@ -10,11 +10,14 @@ class Roles_model extends App_Model
      */
     public function add($data)
     {
+        unset($data['permissions_submitted']);
         $permissions = [];
         if (isset($data['permissions'])) {
             $permissions = $data['permissions'];
         }
 
+        $permissions = normalize_staff_permission_input($permissions);
+        if ($permissions === null) { return false; }
         $data['permissions'] = serialize($permissions);
 
         $this->db->insert(db_prefix() . 'roles', $data);
@@ -37,40 +40,70 @@ class Roles_model extends App_Model
      */
     public function update($data, $id)
     {
+        $existing = $this->get($id);
+        if (!$existing) { return false; }
         $affectedRows = 0;
-        $permissions  = [];
+        $submitted = array_key_exists('permissions', $data) || !empty($data['permissions_submitted']);
+        unset($data['permissions_submitted']);
+        $permissions = $submitted ? [] : $existing->permissions;
         if (isset($data['permissions'])) {
             $permissions = $data['permissions'];
         }
 
+        $permissions = normalize_staff_permission_input($permissions);
+        if ($permissions === null) { return false; }
         $data['permissions'] = serialize($permissions);
 
         $update_staff_permissions = false;
         if (isset($data['update_staff_permissions'])) {
-            $update_staff_permissions = true;
+            $update_staff_permissions = in_array($data['update_staff_permissions'], ['on', '1', 1, true], true);
             unset($data['update_staff_permissions']);
         }
 
-        $this->db->where('roleid', $id);
-        $this->db->update(db_prefix() . 'roles', $data);
+        $debug = $this->db->db_debug;
+        $this->db->db_debug = false;
+        $staff = [];
+        $this->db->trans_start();
+        try {
+            $this->db->where('roleid', $id);
+            $this->db->update(db_prefix() . 'roles', $data);
 
-        if ($this->db->affected_rows() > 0) {
-            $affectedRows++;
-        }
+            if ($this->db->affected_rows() > 0) {
+                $affectedRows++;
+            }
 
-        if ($update_staff_permissions == true) {
-            $this->load->model('staff_model');
+            $staff = [];
+            if ($update_staff_permissions == true) {
+                $this->load->model('staff_model');
 
-            $staff = $this->staff_model->get('', [
-                'role' => $id,
-            ]);
+                $staff = $this->staff_model->get('', [
+                    'role' => $id,
+                ]);
 
-            foreach ($staff as $member) {
-                if ($this->staff_model->update_permissions($permissions, $member['staffid'])) {
-                    $affectedRows++;
+                usort($staff, static function ($a, $b) { return (int) $a['staffid'] <=> (int) $b['staffid']; });
+                foreach ($staff as $member) {
+                    if ($this->staff_model->update_permissions($permissions, $member['staffid'])) {
+                        $affectedRows++;
+                    } else {
+                        $this->db->trans_rollback();
+                        $this->db->db_debug = $debug;
+                        foreach ($staff as $affected) { $this->staff_model->clear_permission_cache($affected['staffid']); }
+                        $this->app_object_cache->delete('role-' . $id);
+                        return false;
+                    }
                 }
             }
+
+            $success = $this->db->trans_complete();
+        } catch (Throwable $e) {
+            $this->db->trans_rollback();
+            $success = false;
+            log_message('error', 'Role permission application failed; transaction rolled back.');
         }
+        $this->db->db_debug = $debug;
+        $this->app_object_cache->delete('role-' . $id);
+        foreach ($staff as $affected) { $this->staff_model->clear_permission_cache($affected['staffid']); }
+        if (!$success) { return false; }
 
         if ($affectedRows > 0) {
             log_activity('Role Updated [ID: ' . $id . ', Name: ' . $data['name'] . ']');
@@ -88,6 +121,7 @@ class Roles_model extends App_Model
      */
     public function get($id = '')
     {
+        if ($id !== '' && (!is_scalar($id) || !ctype_digit((string) $id) || (int) $id <= 0)) { return null; }
         if (is_numeric($id)) {
 
             $role = $this->app_object_cache->get('role-' . $id);
@@ -99,7 +133,9 @@ class Roles_model extends App_Model
             $this->db->where('roleid', $id);
 
             $role              = $this->db->get(db_prefix() . 'roles')->row();
-            $role->permissions = !empty($role->permissions) ? unserialize($role->permissions) : [];
+            if (!$role) { return null; }
+            $decoded = !empty($role->permissions) ? @unserialize($role->permissions, ['allowed_classes' => false]) : [];
+            $role->permissions = normalize_staff_permission_input($decoded) ?? [];
 
             $this->app_object_cache->add('role-' . $id, $role);
 
@@ -134,6 +170,7 @@ class Roles_model extends App_Model
         }
 
         if ($affectedRows > 0) {
+            $this->app_object_cache->delete('role-' . $id);
             log_activity('Role Deleted [ID: ' . $id);
 
             return true;

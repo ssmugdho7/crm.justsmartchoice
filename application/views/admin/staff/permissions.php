@@ -1,3 +1,4 @@
+<input type="hidden" name="permissions_submitted" value="1">
 <div class="table-responsive">
     <table class="table table-bordered roles no-margin">
         <thead>

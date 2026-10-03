@@ -42,7 +42,7 @@ class Staff extends AdminController
                 'bank_routing_number','bank_swift_aba','bank_name','bank_website','bank_account_name','bank_account_address',
                 'employee_staff_id','start_date','employment_type','supervisor_staff_id','team','probation_end_date','contract_expiration_date',
                 'emergency_contact_name','emergency_contact_relationship','emergency_contact_phone','marital_status','religion','children_count','children_json',
-                'administrator','is_not_staff','role','departments','permissions','custom_fields','send_welcome_email'
+                'administrator','is_not_staff','role','departments','permissions','permissions_submitted','custom_fields','send_welcome_email'
             ];
             $data = array_intersect_key($data, array_flip($allowedProfileFields));
             if (isset($data['email'])) {
@@ -149,7 +149,11 @@ class Staff extends AdminController
             ajax_access_denied('staff');
         }
 
-        echo json_encode($this->roles_model->get($id)->permissions);
+        $role = $this->roles_model->get($id);
+        if (!$role) {
+            return $this->output->set_status_header(404)->set_content_type('application/json')->set_output(json_encode(['error' => 'Role not found']));
+        }
+        return $this->output->set_content_type('application/json')->set_output(json_encode((object) $role->permissions));
     }
 
     public function save_dashboard_widgets_order()

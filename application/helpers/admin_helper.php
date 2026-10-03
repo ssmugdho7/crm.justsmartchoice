@@ -113,6 +113,27 @@ function staff_cant($capability, $feature = null, $staff_id = '')
     return ! staff_can($capability, $feature, $staff_id);
 }
 
+/** Validate permission payloads before replacing any saved rights. */
+function normalize_staff_permission_input($permissions)
+{
+    if (!is_array($permissions)) {
+        return null;
+    }
+    $normalized = [];
+    foreach ($permissions as $feature => $capabilities) {
+        if (!is_string($feature) || !preg_match('/^[a-zA-Z0-9_.:-]+$/D', $feature) || !is_array($capabilities)) {
+            return null;
+        }
+        foreach ($capabilities as $capability) {
+            if (!is_string($capability) || !preg_match('/^[a-zA-Z0-9_.:-]+$/D', $capability)) {
+                return null;
+            }
+        }
+        $normalized[$feature] = array_values(array_unique($capabilities));
+    }
+    return $normalized;
+}
+
 /**
  * @since  2.3.3
  * Helper function for checking staff capabilities, this function should be used instead of has_permission
@@ -167,7 +188,7 @@ function staff_can($capability, $feature = null, $staff_id = '')
      * Get permissions for this staff
      * Permissions will be cached in object cache upon first request
      */
-    if (! $permissions) {
+    if ($permissions === null) {
         if (! class_exists('staff_model', false)) {
             $CI->load->model('staff_model');
         }
@@ -204,7 +225,8 @@ function staff_can($capability, $feature = null, $staff_id = '')
 function has_role_permission($role_id, $capability, $feature)
 {
     $CI          = &get_instance();
-    $permissions = $CI->roles_model->get($role_id)->permissions;
+    $role = $CI->roles_model->get($role_id);
+    $permissions = $role ? $role->permissions : [];
 
     foreach ($permissions as $appliedFeature => $capabilities) {
         if ($feature == $appliedFeature && in_array($capability, $capabilities)) {

@@ -49,6 +49,7 @@ class Roles extends AdminController
         } else {
             $data['role_staff'] = $this->roles_model->get_role_staff($id);
             $role               = $this->roles_model->get($id);
+            if (!$role) { show_404(); }
             $data['role']       = $role;
             $title              = _l('edit', _l('role')) . ' ' . $role->name;
         }

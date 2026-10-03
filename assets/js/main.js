@@ -3756,7 +3756,20 @@ function do_filter_active(value, parent_selector) {
 }
 
 // Called when editing member profile
+var rolePermissionRequest = null;
+var rolePermissionSequence = 0;
+var rolePermissionFailed = false;
+document.addEventListener("submit", function (event) {
+  if ($(event.target).find("table.roles").length && !$('input[name="administrator"]').prop("checked") && (rolePermissionRequest || rolePermissionFailed)) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    alert_float("danger", "Please wait for the selected role's permissions to load, or reselect the role if loading failed.");
+  }
+}, true);
 function init_roles_permissions(roleid, user_changed) {
+  rolePermissionFailed = false;
+  var sequence = ++rolePermissionSequence;
+  if (rolePermissionRequest) { rolePermissionRequest.abort(); rolePermissionRequest = null; }
   roleid =
     typeof roleid == "undefined" ? $('select[name="role"]').val() : roleid;
   var isedit = $('.member > input[name="isedit"]');
@@ -3782,7 +3795,8 @@ function init_roles_permissions(roleid, user_changed) {
 
   // Get all permissions
   var permissions = $("table.roles").find("tr");
-  requestGetJSON("staff/role_changed/" + roleid).done(function (response) {
+  rolePermissionRequest = requestGetJSON("staff/role_changed/" + encodeURIComponent(roleid)).done(function (response) {
+    if (sequence !== rolePermissionSequence || String($('select[name="role"]').val()) !== String(roleid) || $('input[name="administrator"]').prop("checked")) { return; }
     permissions
       .find(".capability")
       .not('[data-not-applicable="true"]')
@@ -3806,6 +3820,13 @@ function init_roles_permissions(roleid, user_changed) {
         }
       });
     });
+  }).fail(function (xhr, status) {
+    if (status !== "abort" && sequence === rolePermissionSequence) {
+      rolePermissionFailed = true;
+      alert_float("danger", "Could not load this role's permissions. Please reselect the role before saving.");
+    }
+  }).always(function () {
+    if (sequence === rolePermissionSequence) { rolePermissionRequest = null; }
   });
 }
 

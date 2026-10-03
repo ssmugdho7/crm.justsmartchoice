@@ -8,7 +8,7 @@ function star(side, title) {
     return `<li class="smart-choice-links-nav smart-choice-links-${side}" data-scl-label="${title}" data-scl-side="${side}"><a href="#" class="smart-choice-links-trigger" aria-label="${title}"><i class="fa fa-star"></i></a><ul class="smart-choice-links-dropdown dropdown-menu"><li><a href="/fallback-${side}">Fallback</a></li></ul></li>`;
 }
 async function run() {
-    const dom = new JSDOM(`<html><head></head><body><nav><ul id="header-nav"><li id="top_search_button"><button>Search</button></li></ul></nav><button id="outside">Outside</button><ul id="side-menu"><li><a href="/projects">Projects</a></li></ul><div id="smart-choice-links-source" hidden><ul>${star('left','Admin Links')}${star('right','Setup Links')}</ul></div><div id="smart-choice-links-panel-templates" hidden><ul id="smart-choice-links-left-panel-template"><li><a href="/admin/projects" data-scl-open-behavior="_self">Projects</a></li><li><a href="/docs" data-scl-open-behavior="_blank">Docs</a></li></ul><ul id="smart-choice-links-right-panel-template"><li><a href="/admin/settings" data-scl-open-behavior="_self">Settings</a></li></ul></div></body></html>`, { runScripts: 'outside-only', url: 'https://crm.example/' });
+    const dom = new JSDOM(`<html><head></head><body><nav><ul id="header-nav"><li id="top_search_button"><button>Search</button></li></ul></nav><button id="outside">Outside</button><ul id="side-menu"><li><a href="/projects">Projects</a></li></ul><div id="smart-choice-links-source" hidden><ul>${star('left','Admin Links')}${star('right','Setup Links')}</ul></div><div id="smart-choice-links-panel-templates" hidden><ul id="smart-choice-links-left-panel-template" data-scl-side="left"><li><a href="/admin/projects" data-scl-open-behavior="_self">Projects</a></li><li><a href="/docs" data-scl-open-behavior="_blank">Docs</a></li></ul><ul id="smart-choice-links-right-panel-template" data-scl-side="right"><li><a href="/admin/settings" data-scl-open-behavior="_self">Settings</a></li></ul></div></body></html>`, { runScripts: 'outside-only', url: 'https://crm.example/' });
     const w = dom.window, d = w.document;
     w.eval(fs.readFileSync(require.resolve('jquery'), 'utf8'));
     const $ = w.jQuery;
@@ -36,6 +36,12 @@ async function run() {
         assert.equal(trigger(owner).getAttribute('aria-expanded'), 'true');
         assert.equal(panel.getAttribute('aria-hidden'), 'false');
         assert.equal(panel.hasAttribute('inert'), false);
+        assert.equal(panel.children.length, 1, 'Only one list may be rendered in the active popup');
+        assert.equal(panel.firstElementChild.getAttribute('data-scl-side'), owner.getAttribute('data-scl-side'), 'Render only the selected side');
+        assert.equal(owner.querySelector('ul').hasAttribute('inert'), true, 'Data-only fallback must not accept input');
+        const source = d.querySelector('#smart-choice-links-' + owner.getAttribute('data-scl-side') + '-panel-template') || owner.querySelector('ul');
+        const links = container => [...container.querySelectorAll('a')].map(a => [a.textContent, a.getAttribute('href'), a.getAttribute('target'), a.getAttribute('rel')]);
+        assert.deepEqual(links(panel), links(source), 'Only selected configured links are shown, preserving destination and behavior');
     };
     assert.ok(left && right, 'Both configured menus are placed');
     assert.equal(d.querySelector('#top_search_button').previousElementSibling, left);
@@ -61,6 +67,8 @@ async function run() {
     assert.equal(d.querySelector('#smart-choice-links-left-live'), left, 'Repairs retain the original trigger node');
     assert.equal(mutations.filter(m => [...m.removedNodes].includes(left) || [...m.removedNodes].includes(right)).length, 0, 'Repairs do not detach buttons or cause observer churn');
     tracker.disconnect();
+    right.dispatchEvent(new w.MouseEvent('mouseover', { bubbles: true, relatedTarget: left }));
+    assert.equal(d.querySelector('#smart-choice-links-label-portal').getAttribute('aria-hidden'), 'true', 'Do not display another label alongside an open list');
     click(trigger(right)); assertOpen(right);
     assert.equal(trigger(left).getAttribute('aria-expanded'), 'false');
     assert.equal(panel.textContent.trim(), 'Settings', 'Switching menus replaces the correct configured links');
@@ -108,6 +116,9 @@ async function run() {
     assert.match(css, /transition: opacity var\(--scl-animation-speed/);
     assert.match(css, /visibility 0s linear var\(--scl-animation-speed/);
     assert.match(css, /prefers-reduced-motion: reduce/);
+    assert.match(css, /\.smart-choice-links-nav\.scl-force-open > ul\.smart-choice-links-dropdown \{\s*display: none !important/);
+    assert.doesNotMatch(css, /\.smart-choice-links-nav[^{}]*>[^{}]*\.smart-choice-links-dropdown[^{}]*\{\s*display: block/); // Legacy rules cannot expose a duplicate.
+
     console.log('PASS: completed clicks, touch-style activation, keyboard/focus, no repair churn, late initialization, outside/Escape dismissal, route preservation, duplicate includes and transition rules');
 }
 run().catch(e => { console.error(e); process.exitCode = 1; });

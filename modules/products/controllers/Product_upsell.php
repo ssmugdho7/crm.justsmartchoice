@@ -23,7 +23,7 @@ class Product_upsell extends AdminController
 
     public function save()
     {
-        if (!has_permission('products', '', 'create')) {
+        if (!has_permission('products', '', $this->input->post('id') ? 'edit' : 'create')) {
             access_denied();
         }
         $trigger_ids = $this->input->post('trigger_product_ids');

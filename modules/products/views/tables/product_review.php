@@ -19,12 +19,16 @@ foreach ($rResult as $aRow) {
     $row[] = $aRow['approved'] ? '<span class="label label-success">' . _l('product_review_approved') . '</span>' : '<span class="label label-default">' . _l('product_review_pending') . '</span>';
     $row[] = _d($aRow['datecreated']);
     $options = '';
+    if (has_permission('products', '', 'edit')) {
     if (!$aRow['approved']) {
         $options .= '<a href="' . admin_url('products/product_reviews/approve/' . $aRow['id']) . '" class="btn btn-success btn-icon">' . _l('approve') . '</a> ';
     } else {
         $options .= '<a href="' . admin_url('products/product_reviews/unapprove/' . $aRow['id']) . '" class="btn btn-default btn-icon">' . _l('unapprove') . '</a> ';
     }
+    }
+    if (has_permission('products', '', 'delete')) {
     $options .= '<a href="' . admin_url('products/product_reviews/delete/' . $aRow['id']) . '" class="btn btn-danger btn-icon _delete">' . _l('delete') . '</a>';
+    }
     $row[] = $options;
     $output['aaData'][] = $row;
 }

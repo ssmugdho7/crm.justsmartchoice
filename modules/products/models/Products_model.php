@@ -110,14 +110,16 @@ class Products_model extends App_Model
 				$product->quantity = $cart_item['quantity'];
 				
 				// Check if 'product_variation_id' key exists in $cart_item array
-				if (isset($cart_item['product_variation_id'])) {
+				if (!empty($cart_item['product_variation_id'])) {
 					$this->db->select(db_prefix() . 'product_variations.*, ' . db_prefix() . 'variations.name as variation_name, ' . db_prefix() . 'variation_values.value as variation_value');
 					$this->db->from(db_prefix() . 'product_variations');
 					$this->db->join('variations', db_prefix() . 'variations.id=' . db_prefix() . 'product_variations.variation_id', 'LEFT');
 					$this->db->join('variation_values', db_prefix() . 'variation_values.id=' . db_prefix() . 'product_variations.variation_value_id', 'LEFT');
 					$this->db->where(db_prefix() . 'product_variations.id', $cart_item['product_variation_id']);
+					$this->db->where(db_prefix() . 'product_variations.product_id', $cart_item['product_id']);
 					$product_variation = $this->db->get()->row();
 
+					if (!$product_variation) { continue; }
 					if ($product_variation) {
 						$product->product_variation_id = $cart_item['product_variation_id'];
 						$product->variation_name = $product_variation->variation_name;
@@ -145,12 +147,15 @@ class Products_model extends App_Model
             $this->db->join('product_categories', db_prefix() . 'product_categories.p_category_id='.db_prefix() . 'product_master.product_category_id', 'LEFT');
             $this->db->where_in('id', $item['product_id']);
             $product = $this->db->get(db_prefix() . 'product_master')->row();
-            if ($item['product_variation_id']) {
+            if (!$product) { return []; }
+            if (!empty($item['product_variation_id'])) {
                 $this->db->select(db_prefix() . 'product_variations.*, ' . db_prefix() . 'variations.name as variation_name, ' . db_prefix() . 'variation_values.value as variation_value');
                 $this->db->join('variations', db_prefix() . 'variations.id=' . db_prefix() . 'product_variations.variation_id', 'LEFT');
                 $this->db->join('variation_values', db_prefix() . 'variation_values.id=' . db_prefix() . 'product_variations.variation_value_id', 'LEFT');
-                $this->db->where('product_variations.id', $item['product_variation_id']);
+                $this->db->where(db_prefix() . 'product_variations.id', $item['product_variation_id']);
+                $this->db->where(db_prefix() . 'product_variations.product_id', $item['product_id']);
                 $product_variation = $this->db->get(db_prefix() . 'product_variations')->row();
+                if (!$product_variation) { return []; }
                 $product->product_name = $product->product_name . ' (' . $product_variation->variation_name . ' ' . $product_variation->variation_value . ' )';
                 $product->rate = $product_variation->rate;
                 $product->quantity_number = $product_variation->quantity_number;

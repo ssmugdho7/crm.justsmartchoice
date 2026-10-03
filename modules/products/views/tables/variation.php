@@ -18,8 +18,10 @@ foreach ($rResult as $aRow) {
     $row        = [];
     $outputName = '<a href="#">'.$aRow['name'].'</a>';
     $outputName .= '<div class="row-options">';
-    if (has_permission('products', '', 'delete')) {
+    if (has_permission('products', '', 'edit')) {
         $outputName .= ' <a href="'.admin_url('products/variations/edit/'.$aRow['id']).'" class="_edit">'._l('edit').'</a>';
+    }
+    if (has_permission('products', '', 'delete')) {
         $outputName .= '| <a href="'.admin_url('products/variations/delete/'.$aRow['id']).'" class="text-danger _delete">'._l('delete').'</a>';
     }
     $outputName .= '</div>';

@@ -9,7 +9,9 @@
                 <div class="panel_s">
                     <div class="panel-body">
                      <div class="_buttons">
+                        <?php if (has_permission('products', '', 'create')) { ?>
                         <a href="#" class="btn btn-info pull-left" data-toggle="modal" data-target="#product_category_modal"><?php echo _l('new_category'); ?></a>
+                        <?php } ?>
                     </div>
                     <div class="clearfix"></div>
                     <hr class="hr-panel-heading" />

@@ -15,6 +15,10 @@ class Coupons extends AdminController
 
     public function index()
     {
+        if (!has_permission('products', '', 'view')) {
+            access_denied('products');
+        }
+
         if (0 != get_option('coupons_disabled')) {
             set_alert('warning', _l('access_denied'));
             redirect(site_url());
@@ -31,11 +35,11 @@ class Coupons extends AdminController
 
     public function add()
     {
-        if (!has_permission('products', '', 'view')) {
-            access_denied('products View');
+        if (!has_permission('products', '', 'create')) {
+            access_denied('products Create');
         }
         close_setup_menu();
-        if (has_permission('products', '', 'view')) {
+        if (has_permission('products', '', 'create')) {
             $post          = $this->input->post();
             if (!empty($post)) {
                 $this->form_validation->set_rules('code', 'coupon code', 'required|is_unique[coupons.code]');
@@ -75,11 +79,11 @@ class Coupons extends AdminController
 
     public function edit($id)
     {
-        if (!has_permission('products', '', 'view')) {
-            access_denied('products View');
+        if (!has_permission('products', '', 'edit')) {
+            access_denied('products Edit');
         }
         close_setup_menu();
-        if (has_permission('products', '', 'view')) {
+        if (has_permission('products', '', 'edit')) {
             $original_coupon = $data['coupon'] = $this->coupons_model->get($id, true);
             if (empty($original_coupon)) {
                 set_alert('danger', _l('not_found_products'));
@@ -124,6 +128,10 @@ class Coupons extends AdminController
 
     public function delete($id)
     {
+        if (!has_permission('products', '', 'delete')) {
+            access_denied('products');
+        }
+
 
         if (!$id) {
             redirect(admin_url('products/coupons'));
@@ -134,6 +142,6 @@ class Coupons extends AdminController
         } else {
             set_alert('warning', _l('problem_deleting', _l('coupons')));
         }
-        redirect(admin_url('coupons'));
+        redirect(admin_url('products/coupons'));
     }
 }

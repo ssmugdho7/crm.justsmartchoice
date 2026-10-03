@@ -20,77 +20,35 @@ class Client extends ClientsController
     public function my_cart()
     {
         $ids = $this->input->get('id');
-        if (!empty($ids)) {
-            foreach ($ids as $product_id) {
-                $cart_data = $newdata['cart_data'] = ($this->session->userdata('cart_data') ?? []);
-                $qty = 1;
-                if (!empty($cart_data)) {
-                    foreach ($cart_data as $index => $value) {
-                        if ($value['product_id'] == $product_id) {
-                            $newdata['cart_data'][$index]['quantity'] = $value['quantity'] + 1;
-                        }
-                    }
-                }
-                $this->session->set_userdata($newdata);
-                $cart_data = ($this->session->userdata('cart_data') ?? []);
-            }
+        foreach (is_array($ids) ? $ids : [$ids] as $product_id) {
+            $this->add_shortcut_item($product_id);
         }
         redirect('products/client/place_order');
     }
-	
-    public function manualorder() {
-        $product_id = $this->input->get('id');  // Fetch product ID from GET parameter
-        $quantity = 1;  // Default quantity
-        //$variation_id = $this->input->get('variation');  // Fetch variation ID from GET parameter
-        
-        // Perform validation if needed
-        if (!$product_id || !$quantity) {
-            // Handle validation error, perhaps return an error response
-            echo json_encode(['error' => 'Invalid parameters']);
+
+    public function manualorder()
+    {
+        $this->add_shortcut_item($this->input->get('id'));
+        redirect('products/client/place_order');
+    }
+
+    private function add_shortcut_item($product_id)
+    {
+        if (!is_scalar($product_id) || !ctype_digit((string)$product_id) || (int)$product_id < 1) {
             return;
         }
-
-        // Logic to add the product to the cart
-        // Example logic:
-        $cart_data = ($this->session->userdata('cart_data') ?? []);  // Get existing cart data from session
-
-        // Check if the cart data is empty or initialize if it's not set
-        if (empty($cart_data)) {
-            $cart_data = [];
-        }
-
-        // Check if the product already exists in the cart
-        $product_exists_in_cart = false;
-        foreach ($cart_data as $index => $item) {
-            if ($item['product_id'] == $product_id) {
-                // Product found in cart, increase quantity
-                $cart_data[$index]['quantity'] += $quantity;
-                $product_exists_in_cart = true;
-                break;
+        $cart = $this->session->userdata('cart_data');
+        $cart = is_array($cart) ? $cart : [];
+        foreach ($cart as $index => $item) {
+            if ($item['product_id'] == $product_id && empty($item['product_variation_id'])) {
+                $cart[$index]['quantity'] = max(1, (int)($item['quantity'] ?? 0)) + 1;
+                $cart[$index]['product_variation_id'] = '';
+                $this->session->set_userdata('cart_data', array_values($cart));
+                return;
             }
         }
-
-        // If product does not exist in cart, add it
-        if (!$product_exists_in_cart) {
-            $new_item = [
-                'product_id' => $product_id,
-                'quantity' => $quantity,
-            ];
-
-            // Add variation ID if provided
-           // if ($variation_id) {
-           //     $new_item['variation_id'] = $variation_id;
-           // }
-
-            // Push new item to cart data array
-            $cart_data[] = $new_item;
-        }
-
-        // Update session with new cart data
-        $this->session->set_userdata('cart_data', $cart_data);
-
-        // Redirect to place_order method or route
-        redirect('products/client/place_order');
+        $cart[] = ['product_id' => $product_id, 'product_variation_id' => '', 'quantity' => 1];
+        $this->session->set_userdata('cart_data', array_values($cart));
     }
 
 
@@ -361,6 +319,12 @@ class Client extends ClientsController
 
     private function sort_cart($cart_data)
     {
+        if (!is_array($cart_data)) { return []; }
+        foreach ($cart_data as $item) {
+            if (!is_array($item) || !isset($item['product_id']) || !is_scalar($item['product_id'])
+                || !ctype_digit((string)$item['product_id']) || (int)$item['product_id'] < 1) { return []; }
+        }
+        $cart_data = array_values($cart_data);
         $cart_data_keys = array_keys($cart_data);
         $first_index = 0;
         while ($first_index < count($cart_data_keys) - 1) {
@@ -394,7 +358,7 @@ class Client extends ClientsController
         } else {
             $cart_item_exist = false;
             foreach ($newdata['cart_data'] as $cart_item_index => $cart_item) {
-                if ($cart_item['product_id'] == $product_id && $cart_item['product_variation_id'] == $product_variation_id) {
+                if ($cart_item['product_id'] == $product_id && ($cart_item['product_variation_id'] ?? '') == $product_variation_id) {
                     $newdata['cart_data'][$cart_item_index]['quantity'] = $quantity;
                     $cart_item_exist = true;
                 }
@@ -414,12 +378,12 @@ class Client extends ClientsController
         if (empty($product_id)) {
             $product_id = $this->input->post('product_id');
         }
-        if (empty($product_variation_id)) {
+        if ($product_variation_id === null) {
             $product_variation_id = $this->input->post('product_variation_id');
         }
         $newdata['cart_data'] = ($this->session->userdata('cart_data') ?? []);
         foreach ($newdata['cart_data'] as $key => $value) {
-            if ($product_id == $value['product_id'] && $product_variation_id == $value['product_variation_id']) {
+            if ($product_id == $value['product_id'] && ($product_variation_id ?? '') == ($value['product_variation_id'] ?? '')) {
                 unset($newdata['cart_data'][$key]);
             }
         }
@@ -469,7 +433,9 @@ class Client extends ClientsController
         unset($post['taxes']);
         unset($post['shipping_cost']);
         if (!empty($post)) {
-            $post['product_items'] = $this->sort_cart($post['product_items']);
+            // Customer checkout always bills the signed-in customer; staff POS remains separate.
+            $post['clientid'] = get_client_user_id();
+            $post['product_items'] = $this->sort_cart($post['product_items'] ?? []);
             $return_data = $this->order_model->add_invoice_order($post);
             if ($return_data['status']) {
                 $this->session->unset_userdata('cart_data');

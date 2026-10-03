@@ -272,7 +272,7 @@
     .done(function(data) {
       data = $.parseJSON(data);
       if(data.status == "error"){
-        alert_float("danger","End Date Must Be Larger Than Start Date");
+        alert_float("danger", data.message || "End Date Must Be Larger Than Start Date");
         return false;
       }
       Highcharts.chart('container_order_custom', {

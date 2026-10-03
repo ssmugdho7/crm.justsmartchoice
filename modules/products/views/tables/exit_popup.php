@@ -10,11 +10,15 @@ $rResult = $result['rResult'];
 
 foreach ($rResult as $aRow) {
     $row = [];
-    $name = '<a href="' . admin_url('products/exit_popups/edit/' . $aRow['id']) . '">' . htmlspecialchars($aRow['name']) . '</a>';
+    $name = htmlspecialchars($aRow['name']);
     $name .= '<div class="row-options">';
     $name .= ' <a href="#" class="exit-popup-preview" data-id="' . (int) $aRow['id'] . '">' . _l('preview') . '</a>';
+    if (has_permission('products', '', 'edit')) {
     $name .= ' | <a href="' . admin_url('products/exit_popups/edit/' . $aRow['id']) . '">' . _l('edit') . '</a>';
+    }
+    if (has_permission('products', '', 'delete')) {
     $name .= ' | <a href="' . admin_url('products/exit_popups/delete/' . $aRow['id']) . '" class="text-danger _delete">' . _l('delete') . '</a>';
+    }
     $name .= '</div>';
     $row[] = $name;
     $row[] = htmlspecialchars($aRow['title']);

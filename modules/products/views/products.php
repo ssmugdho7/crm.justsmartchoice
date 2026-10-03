@@ -33,8 +33,10 @@ foreach ($rResult as $aRow) {
     $row[] = '<input type="checkbox" name="ids[]" value="'.(int)$aRow['id'].'" class="sc-products-row-check">';
     $outputName = '<a href="#">'.$aRow['product_name'].'</a>';
     $outputName .= '<div class="row-options">';
-    if (has_permission('products', '', 'delete')) {
+    if (has_permission('products', '', 'edit')) {
         $outputName .= ' <a href="'.admin_url('products/edit/'.$aRow['id']).'" class="_edit">'._l('edit').'</a>';
+    }
+    if (has_permission('products', '', 'delete')) {
         $outputName .= '| <a href="'.admin_url('products/delete/'.$aRow['id']).'" class="text-danger _delete">'._l('delete').'</a>';
     }
     $outputName .= '</div>';

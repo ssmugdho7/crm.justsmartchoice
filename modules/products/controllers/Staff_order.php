@@ -38,6 +38,10 @@ class Staff_order extends AdminController
 
     public function get_available_coupons($client_id = false)
     {
+        if (!has_permission('products', '', 'create')) {
+            access_denied('products');
+        }
+
         if (empty($client_id)) {
             $client_id = $this->input->post('client_id');
         }
@@ -46,6 +50,10 @@ class Staff_order extends AdminController
     }
 
     public function get_product_data() {
+        if (!has_permission('products', '', 'create')) {
+            access_denied('products');
+        }
+
     	$id = $this->input->post('product_id');
     	$res = $this->products_model->get_by_id_product($id);
     	echo json_encode($res);

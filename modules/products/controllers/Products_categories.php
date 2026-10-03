@@ -13,6 +13,10 @@ class Products_categories extends AdminController
 
     public function index()
     {
+        if (!has_permission('products', '', 'view')) {
+            access_denied('products');
+        }
+
 
         if ($this->input->is_ajax_request()) {
             $this->app->get_table_data(module_views_path('products', 'tables/product_category'));
@@ -24,12 +28,19 @@ class Products_categories extends AdminController
     public function category()
     {
 
+        if (!has_permission('products', '', $this->input->post('p_category_id') ? 'edit' : 'create')) {
+            access_denied('products');
+        }
         $this->load->library('form_validation');
         if ($this->input->is_ajax_request()) {
             $data              = $this->input->post();
             $original_category = (object) [];
             if (!empty($data['p_category_id'])) {
                 $original_category = $this->product_category_model->get($data['p_category_id']);
+                if (!$original_category) {
+                    echo json_encode(['success' => false, 'message' => _l('not_found')]);
+                    return;
+                }
                 if ($original_category->p_category_name != $data['p_category_name']) {
                     $this->form_validation->set_rules('p_category_name', 'Category name', 'required|is_unique[product_categories.p_category_name]');
                 }
@@ -45,7 +56,7 @@ class Products_categories extends AdminController
 
                 return;
             }
-            if ('' == $data['p_category_id']) {
+            if (empty($data['p_category_id'])) {
                 $id      = $this->product_category_model->add($data);
                 $message = $id ? _l('added_successfully', _l('products_categories')) : '';
                 echo json_encode([
@@ -70,6 +81,10 @@ class Products_categories extends AdminController
 
     public function delete_category($id)
     {
+        if (!has_permission('products', '', 'delete')) {
+            access_denied('products');
+        }
+
 
         if (!$id) {
             redirect(admin_url('products/products_categories'));

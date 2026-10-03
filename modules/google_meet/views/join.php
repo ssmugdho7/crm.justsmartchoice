@@ -1,7 +1,7 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php init_head(); ?>
 <div id="wrapper"><div class="content"><div class="google-meet-wrap smart-choice-normalized-module">
-  <div class="google-meet-header"><div><h1><i class="fa fa-sign-in"></i> Join Google Meet</h1><p>Fast access to scheduled, live, and recently created meetings.</p></div><div><a href="<?php echo admin_url('google_meet/create'); ?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> New Meeting</a></div></div>
+  <div class="google-meet-header"><div><h1><i class="fa fa-sign-in"></i> Join Google Meet</h1><p>Fast access to scheduled, live, and recently created meetings.</p></div><div><?php if (has_permission('google_meet', '', 'create')) { ?><a href="<?php echo admin_url('google_meet/create'); ?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> New Meeting</a><?php } ?></div></div>
   <?php $this->load->view('google_meet/_nav'); ?>
   <div class="panel_s google-meet-card"><div class="panel-body">
     <div class="gm-table-toolbar"><input type="text" class="form-control input-sm gm-table-search" placeholder="Search meetings..."><a class="btn btn-default btn-sm" href="<?php echo admin_url('google_meet/join'); ?>"><i class="fa fa-refresh"></i> Reload</a></div>

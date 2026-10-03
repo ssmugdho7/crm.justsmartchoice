@@ -26,6 +26,26 @@ class Google_meet_model extends App_Model
         return $this->db->get($table)->result_array();
     }
 
+    public function staff_has_meeting($meeting, $staffId)
+    {
+        $staffId = (int)$staffId;
+        if (!$meeting || $staffId < 1) { return false; }
+        if ((int)$meeting->created_by === $staffId || (int)$meeting->assigned_staff_id === $staffId) { return true; }
+        return $this->db->where('meeting_id', (int)$meeting->id)->where('staff_id', $staffId)
+            ->count_all_results(db_prefix() . 'google_meet_attendees') > 0;
+    }
+
+    private function apply_staff_scope($staffId)
+    {
+        if (!$staffId) { return; }
+        $staffId = (int)$staffId;
+        $this->db->group_start();
+        $this->db->where('gm.created_by', $staffId);
+        $this->db->or_where('gm.assigned_staff_id', $staffId);
+        $this->db->or_where('gm.id IN (SELECT meeting_id FROM ' . db_prefix() . 'google_meet_attendees WHERE staff_id=' . $staffId . ')', null, false);
+        $this->db->group_end();
+    }
+
     public function create($data)
     {
         $now = date('Y-m-d H:i:s');
@@ -164,7 +184,9 @@ class Google_meet_model extends App_Model
             $meeting['status'] = 'link_required';
         }
 
-        $this->db->where('id', (int)$id)->update(db_prefix() . 'google_meet_meetings', $meeting);
+        if (!$this->db->where('id', (int)$id)->update(db_prefix() . 'google_meet_meetings', $meeting)) {
+            return false;
+        }
         $this->sync_attendees((int)$id, $data);
         $this->add_log((int)$id, 'updated', 'Meeting updated');
         if (!empty($meeting['send_invitations_now'])) { $this->notify_attendees((int)$id); }
@@ -175,15 +197,16 @@ class Google_meet_model extends App_Model
     public function update_meet_link($id, $link)
     {
         $link = $this->normalize_meet_link($link);
-        if (!$this->is_real_meet_link($link)) {
+        if (!$this->is_real_meet_link($link) || !$this->get((int)$id)) {
             return false;
         }
-        $this->db->where('id', (int)$id)->update(db_prefix() . 'google_meet_meetings', [
+        $saved = $this->db->where('id', (int)$id)->update(db_prefix() . 'google_meet_meetings', [
             'meet_link' => $link,
             'google_api_status' => 'shared_link_saved',
             'status' => 'scheduled',
             'updated_at' => date('Y-m-d H:i:s'),
         ]);
+        if (!$saved) { return false; }
         $this->add_log((int)$id, 'link_saved', 'Shared Google Meet link saved for all attendees.');
         return true;
     }
@@ -205,14 +228,7 @@ class Google_meet_model extends App_Model
         $this->db->join(db_prefix() . 'staff st', 'st.staffid = gm.created_by', 'left');
         $this->db->join(db_prefix() . 'staff ast', 'ast.staffid = gm.assigned_staff_id', 'left');
 
-        if (!empty($filters['staff_id'])) {
-            $staffId = (int)$filters['staff_id'];
-            $this->db->group_start();
-            $this->db->where('gm.created_by', $staffId);
-            $this->db->or_where('gm.assigned_staff_id', $staffId);
-            $this->db->or_where('gm.id IN (SELECT meeting_id FROM ' . db_prefix() . 'google_meet_attendees WHERE staff_id=' . $staffId . ')', null, false);
-            $this->db->group_end();
-        }
+        $this->apply_staff_scope($filters['staff_id'] ?? null);
         if (!empty($filters['date_from'])) {
             $this->db->where('gm.start_time >=', date('Y-m-d 00:00:00', strtotime($filters['date_from'])));
         }
@@ -311,32 +327,39 @@ class Google_meet_model extends App_Model
     {
         $comment = trim((string)$comment);
         if ($comment === '' || !$this->db->table_exists(db_prefix() . 'google_meet_comments')) { return false; }
-        $this->db->insert(db_prefix() . 'google_meet_comments', [
+        $saved = $this->db->insert(db_prefix() . 'google_meet_comments', [
             'meeting_id' => (int)$meeting_id,
             'comment' => $comment,
             'created_by' => is_staff_logged_in() ? get_staff_user_id() : null,
             'created_at' => date('Y-m-d H:i:s'),
         ]);
+        if (!$saved) { return false; }
         $this->add_log((int)$meeting_id, 'comment', 'Meeting comment added');
         return true;
     }
 
     public function start($id)
     {
-        $this->db->where('id', (int)$id)->update(db_prefix() . 'google_meet_meetings', ['status' => 'live', 'actual_start' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')]);
+        if (!$this->get((int)$id)) { return false; }
+        $saved = $this->db->where('id', (int)$id)->update(db_prefix() . 'google_meet_meetings', ['status' => 'live', 'actual_start' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')]);
+        if (!$saved) { return false; }
         $this->add_log((int)$id, 'started', 'Meeting started');
+        return true;
     }
 
     public function finish($id)
     {
         $meeting = $this->get((int)$id);
+        if (!$meeting) { return false; }
         $end = date('Y-m-d H:i:s');
         $minutes = 0;
         if (!empty($meeting->actual_start)) {
             $minutes = max(0, (int)round((strtotime($end) - strtotime($meeting->actual_start)) / 60));
         }
-        $this->db->where('id', (int)$id)->update(db_prefix() . 'google_meet_meetings', ['status' => 'completed', 'actual_end' => $end, 'duration_minutes' => $minutes, 'updated_at' => $end]);
+        $saved = $this->db->where('id', (int)$id)->update(db_prefix() . 'google_meet_meetings', ['status' => 'completed', 'actual_end' => $end, 'duration_minutes' => $minutes, 'updated_at' => $end]);
+        if (!$saved) { return false; }
         $this->add_log((int)$id, 'completed', 'Meeting completed after ' . $minutes . ' minutes');
+        return true;
     }
 
     public function notify_attendees($id)
@@ -606,13 +629,13 @@ class Google_meet_model extends App_Model
         ]);
     }
 
-    public function report_summary()
+    public function report_summary($filters = [])
     {
-        $table = db_prefix() . 'google_meet_meetings';
-        $total = (int)$this->db->count_all($table);
-        $completed = (int)$this->db->where('status', 'completed')->count_all_results($table);
-        $minutes = $this->db->select_sum('duration_minutes')->get($table)->row()->duration_minutes ?? 0;
-        return ['total' => $total, 'completed' => $completed, 'minutes' => (int)$minutes];
+        $this->db->select("COUNT(*) AS total, SUM(CASE WHEN gm.status = 'completed' THEN 1 ELSE 0 END) AS completed, SUM(gm.duration_minutes) AS minutes", false);
+        $this->db->from(db_prefix() . 'google_meet_meetings gm');
+        $this->apply_staff_scope($filters['staff_id'] ?? null);
+        $summary = $this->db->get()->row();
+        return ['total' => (int)($summary->total ?? 0), 'completed' => (int)($summary->completed ?? 0), 'minutes' => (int)($summary->minutes ?? 0)];
     }
 
     private function create_google_calendar_event($meeting, $data)

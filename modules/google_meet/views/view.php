@@ -29,10 +29,12 @@ $subject = $meeting->subject ?? $meeting->title ?? 'Google Meet Meeting';
               <?php if (!empty($meeting->notes)) { ?><p><b>Internal Notes:</b><br><?php echo nl2br(html_escape($meeting->notes)); ?></p><?php } ?>
             </div>
             <div class="col-md-4">
+              <?php if (has_permission('google_meet', '', 'edit')) { ?>
               <a class="btn btn-info btn-block" href="<?php echo admin_url('google_meet/start/'.$meeting->id); ?>">Mark Started</a>
               <a class="btn btn-success btn-block" href="<?php echo admin_url('google_meet/finish/'.$meeting->id); ?>">Mark Completed</a>
               <a class="btn btn-warning btn-block" href="<?php echo admin_url('google_meet/notify/'.$meeting->id); ?>">Send Notifications</a>
               <a class="btn btn-default btn-block" href="<?php echo admin_url('google_meet/create/'.$meeting->id); ?>">Edit</a>
+              <?php } ?>
               <a class="btn btn-default btn-block" href="<?php echo admin_url('google_meet/reports'); ?>">Reports</a>
             </div>
           </div>
@@ -76,10 +78,12 @@ $subject = $meeting->subject ?? $meeting->title ?? 'Google Meet Meeting';
 <h4><i class="fa fa-link"></i> Shared Meeting Room</h4>
 <?php if (empty($meeting->meet_link) || rtrim($meeting->meet_link,'/') === 'https://meet.google.com/new') { ?>
 <div class="alert alert-warning">No shared room has been saved. Do not send <strong>meet.google.com/new</strong> to attendees because each person can receive a different room.</div>
+<?php if (has_permission('google_meet', '', 'edit')) { ?>
 <a class="btn btn-info btn-sm" target="_blank" rel="noopener" href="https://meet.google.com/new"><i class="fa fa-video-camera"></i> Host: Create Google Meet</a>
 <?php echo form_open(admin_url('google_meet/save_shared_link/'.(int)$meeting->id), ['style'=>'margin-top:12px']); ?>
 <div class="input-group"><input class="form-control" type="url" name="meet_link" placeholder="https://meet.google.com/abc-defg-hij" required><span class="input-group-btn"><button class="btn btn-primary" type="submit">Save Shared Link</button></span></div>
 <?php echo form_close(); ?>
+<?php } ?>
 <?php } else { ?><p><strong>Every invitation uses this same room:</strong><br><a target="_blank" rel="noopener" href="<?php echo html_escape($meeting->meet_link); ?>"><?php echo html_escape($meeting->meet_link); ?></a></p><?php } ?>
 <a class="btn btn-default btn-sm" href="<?php echo admin_url('google_meet/calendar/'.(int)$meeting->id); ?>"><i class="fa fa-calendar"></i> Download Calendar File</a>
 </div></div>

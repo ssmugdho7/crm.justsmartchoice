@@ -20,6 +20,7 @@ register_language_files(DEBUG_MODE_MODULE, [DEBUG_MODE_MODULE]);
 hooks()->add_action('admin_init', 'debug_mode_smartchoice_admin_init');
 hooks()->add_action('app_admin_head', 'debug_mode_smartchoice_assets');
 hooks()->add_action('app_admin_footer', 'debug_mode_smartchoice_footer_notice');
+hooks()->add_filter('before_settings_updated', 'debug_mode_smartchoice_before_settings_updated');
 
 function debug_mode_smartchoice_activation_hook()
 {
@@ -30,8 +31,11 @@ function debug_mode_smartchoice_activation_hook()
 function debug_mode_smartchoice_deactivation_hook()
 {
     // Do not delete logs or settings. Only place the CRM back in production mode.
-    debug_mode_enable_environment('production');
-    update_option('debug_mode_enabled', '0');
+    if (debug_mode_enable_environment('production')) {
+        update_option('debug_mode_enabled', '0');
+    } else {
+        set_alert('danger', 'Production mode could not be applied. Check index.php permissions and the environment declaration.');
+    }
 }
 
 function debug_mode_smartchoice_add_default_options()
@@ -106,7 +110,7 @@ function debug_mode_smartchoice_assets()
 
 function debug_mode_smartchoice_footer_notice()
 {
-    if (get_option('debug_mode_enabled') !== '1' || get_option('debug_mode_show_admin_banner') !== '1') {
+    if (!debug_mode_is_enabled() || get_option('debug_mode_show_admin_banner') !== '1') {
         return;
     }
 
@@ -124,37 +128,127 @@ function debug_mode_smartchoice_footer_notice()
     </script>';
 }
 
+/** Return a source change only for a single supported, executable ENVIRONMENT declaration. */
+function debug_mode_environment_source($content, $desired_env)
+{
+    if (!in_array($desired_env, ['development', 'production'], true)) {
+        return false;
+    }
+
+    $tokens = [];
+    $offset = 0;
+    foreach (token_get_all($content) as $token) {
+        $text = is_array($token) ? $token[1] : $token;
+        if (!is_array($token) || !in_array($token[0], [T_WHITESPACE, T_COMMENT, T_DOC_COMMENT], true)) {
+            $tokens[] = ['text' => $text, 'offset' => $offset, 'type' => is_array($token) ? $token[0] : null];
+        }
+        $offset += strlen($text);
+    }
+
+    $changes = [];
+    foreach ($tokens as $i => $token) {
+        if ($token['type'] !== T_STRING || strtolower($token['text']) !== 'define'
+            || ($tokens[$i + 1]['text'] ?? '') !== '('
+            || !in_array($tokens[$i + 2]['text'] ?? '', ["'ENVIRONMENT'", '"ENVIRONMENT"'], true)
+            || ($tokens[$i + 3]['text'] ?? '') !== ',') {
+            continue;
+        }
+        // Never edit a method call or a function declaration with the same name.
+        if (in_array($tokens[$i - 1]['text'] ?? '', ['->', '?->', '::', 'function'], true)) {
+            continue;
+        }
+        $start = $tokens[$i + 4]['offset'] ?? strlen($content);
+        for ($j = $i + 4; isset($tokens[$j]); $j++) {
+            if ($tokens[$j]['text'] === ')') {
+                break;
+            }
+        }
+        if (!isset($tokens[$j]) || ($tokens[$j + 1]['text'] ?? '') !== ';') {
+            return false;
+        }
+        $end = $tokens[$j]['offset'];
+        $expression = trim(substr($content, $start, $end - $start));
+        // Support the current CI_ENV fallback and the older literal environment declaration.
+        if (!preg_match('~^(?:\$_SERVER\[\s*([\'"])CI_ENV\1\s*\]\s*\?\?\s*)?([\'"])(production|development|testing)\2$~', $expression)) {
+            return false;
+        }
+        $changes[] = [$start, $end];
+    }
+    if (count($changes) !== 1) {
+        return false;
+    }
+    [$start, $end] = $changes[0];
+    return substr($content, 0, $start) . "'" . $desired_env . "'" . substr($content, $end);
+}
+
 function debug_mode_enable_environment($desired_env)
 {
-    $desired_env = $desired_env === 'development' ? 'development' : 'production';
     $indexFile = FCPATH . 'index.php';
-
-    if (!is_writable($indexFile)) {
+    if (!is_file($indexFile) || !is_writable($indexFile)) {
         return false;
     }
-
-    $content = file_get_contents($indexFile);
-    if ($content === false) {
+    $handle = @fopen($indexFile, 'r');
+    if (!$handle) {
         return false;
     }
-
-    $newContent = preg_replace(
-        "/define\(['\"]ENVIRONMENT['\"],\s*['\"][^'\"]+['\"]\);/",
-        "define('ENVIRONMENT', '" . $desired_env . "');",
-        $content,
-        1
-    );
-
-    if (!$newContent || $newContent === $content) {
-        return false;
+    $temporaryFile = false;
+    try {
+        if (!flock($handle, LOCK_EX)) {
+            return false;
+        }
+        $content = stream_get_contents($handle);
+        $newContent = $content === false ? false : debug_mode_environment_source($content, $desired_env);
+        if ($newContent === false) {
+            return false;
+        }
+        // Another switch may have replaced the file while this request waited for its lock.
+        if (@file_get_contents($indexFile) !== $content) {
+            return false;
+        }
+        if ($newContent === $content) {
+            return true;
+        }
+        // Replace atomically so a web request never reads a partially written PHP entry point.
+        $temporaryFile = @tempnam(dirname($indexFile), '.debug-env-');
+        if (!$temporaryFile || realpath(dirname($temporaryFile)) !== realpath(dirname($indexFile))
+            || @file_put_contents($temporaryFile, $newContent) !== strlen($newContent)
+            || !@chmod($temporaryFile, fileperms($indexFile) & 0777)
+            || !@rename($temporaryFile, $indexFile)) {
+            return false;
+        }
+        if (function_exists('opcache_invalidate')) {
+            @opcache_invalidate($indexFile, true);
+        }
+        return true;
+    } finally {
+        if ($temporaryFile && is_file($temporaryFile)) {
+            @unlink($temporaryFile);
+        }
+        flock($handle, LOCK_UN);
+        fclose($handle);
     }
-
-    return file_put_contents($indexFile, $newContent) !== false;
 }
 
 function debug_mode_is_enabled()
 {
-    return get_option('debug_mode_enabled') === '1';
+    // A stale database preference must not misrepresent the environment of this request.
+    return defined('ENVIRONMENT') && ENVIRONMENT === 'development';
+}
+
+function debug_mode_smartchoice_before_settings_updated($data)
+{
+    if (!isset($data['settings']) || !array_key_exists('debug_mode_enabled', $data['settings'])) {
+        return $data;
+    }
+    $value = $data['settings']['debug_mode_enabled'];
+    if (!is_admin() || !in_array($value, ['0', '1'], true)) {
+        unset($data['settings']['debug_mode_enabled']);
+        set_alert('danger', 'Only an administrator can change Debug Mode using a valid on/off setting.');
+    } elseif (!debug_mode_enable_environment($value === '1' ? 'development' : 'production')) {
+        unset($data['settings']['debug_mode_enabled']);
+        set_alert('danger', 'Debug Mode was not changed. Check index.php permissions and the environment declaration.');
+    }
+    return $data;
 }
 
 function debug_mode_user_allowed()

@@ -7,8 +7,8 @@
                     <h1>CRM Utilities & Debug Tools</h1>
                     <p>Troubleshooting center for modules, errors, folders, backups, staff data, links, files, cache, and database checks.</p>
                 </div>
-                <div class="debug-mode-status-pill <?php echo get_option('debug_mode_enabled') === '1' ? 'active' : ''; ?>">
-                    <?php echo get_option('debug_mode_enabled') === '1' ? 'Debug Mode Active' : 'Production Mode'; ?>
+                <div class="debug-mode-status-pill <?php echo debug_mode_is_enabled() ? 'active' : ''; ?>">
+                    <?php echo debug_mode_is_enabled() ? 'Debug Mode Active' : 'Production Mode'; ?>
                 </div>
             </div>
 

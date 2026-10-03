@@ -11,7 +11,7 @@
                 </div>
 
                 <div class="checkbox checkbox-primary">
-                    <input type="checkbox" id="debug_mode_enabled" name="debug_mode_enabled" value="1" <?php echo get_option('debug_mode_enabled') == '1' ? 'checked' : ''; ?>>
+                    <input type="checkbox" id="debug_mode_enabled" name="debug_mode_enabled" value="1" <?php echo debug_mode_is_enabled() ? 'checked' : ''; ?>>
                     <label for="debug_mode_enabled">Activate Debug Mode</label>
                 </div>
 

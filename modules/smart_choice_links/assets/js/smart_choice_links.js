@@ -1,6 +1,8 @@
-/* Smart Choice Links v1.2.8 */
+/* Smart Choice Links menu interaction v1.2.9 */
 (function ($) {
     'use strict';
+    if (window.smartChoiceLinksMenusInitializedV129) { return; }
+    window.smartChoiceLinksMenusInitializedV129 = true;
     var observer = null, timer = null;
 
     function removeLegacyVisuals() {
@@ -81,7 +83,9 @@
 
         $star.find('.smart-choice-links-trigger')
             .removeAttr('data-toggle data-target data-bs-toggle data-bs-target title data-original-title aria-describedby')
+            .attr('role', 'button')
             .attr('aria-haspopup', 'true')
+            .attr('aria-controls', 'smart-choice-links-panel-portal')
             .attr('aria-expanded', 'false');
 
         /* The visible list is always rendered in the body portal. The nested
@@ -111,43 +115,23 @@
 
         if (!$left.length) {
             $left = cloneStar($source.find('.smart-choice-links-left').first(), 'smart-choice-links-left-live');
-        } else {
-            $left = prepareLiveStar($left, 'smart-choice-links-left-live');
         }
         if (!$right.length) {
             $right = cloneStar($source.find('.smart-choice-links-right').first(), 'smart-choice-links-right-live');
-        } else {
-            $right = prepareLiveStar($right, 'smart-choice-links-right-live');
         }
 
         var $anchor = findTopSearchAnchor();
         if (!$anchor.length) { return; }
 
-        /* Force one star on each side of the actual search control. Detaching
-         * first also repairs stars left in the wrong location by older builds. */
-        if ($left.length) { $left.detach().removeClass('scl-flex-host-item'); }
-        if ($right.length) { $right.detach().removeClass('scl-flex-host-item'); }
-
-        if ($anchor.is('li')) {
-            if ($left.length) { $anchor.before($left); }
-            if ($right.length) { $anchor.after($right); }
-            return;
-        }
-
-        var $anchorLi = $anchor.closest('li');
-        if ($anchorLi.length) {
-            if ($left.length) { $anchorLi.before($left); }
-            if ($right.length) { $anchorLi.after($right); }
-            return;
-        }
-
+        // Keep existing nodes in place: detaching resets focus and triggers observers.
+        var flexHost = !$anchor.is('li');
         if ($left.length) {
-            $left.addClass('scl-flex-host-item');
-            $anchor.before($left);
+            $left.toggleClass('scl-flex-host-item', flexHost);
+            if ($anchor.prev()[0] !== $left[0]) { $anchor.before($left); }
         }
         if ($right.length) {
-            $right.addClass('scl-flex-host-item');
-            $anchor.after($right);
+            $right.toggleClass('scl-flex-host-item', flexHost);
+            if ($anchor.next()[0] !== $right[0]) { $anchor.after($right); }
         }
         removeLegacyVisuals();
     }
@@ -245,7 +229,7 @@
 
         $portalPanel = $('#smart-choice-links-panel-portal').first();
         if (!$portalPanel.length) {
-            $portalPanel = $('<div id="smart-choice-links-panel-portal" class="scl-panel-portal" aria-hidden="true"></div>').appendTo(document.body);
+            $portalPanel = $('<div id="smart-choice-links-panel-portal" class="scl-panel-portal" aria-hidden="true" inert></div>').appendTo(document.body);
         }
         $portalLabel = $('#smart-choice-links-label-portal').first();
         if (!$portalLabel.length) {
@@ -257,20 +241,21 @@
         if (!$target || !$target.length || !$portal || !$portal.length) { return; }
         var rect = $target[0].getBoundingClientRect();
         var viewportWidth = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-        var width = isPanel ? Math.max(240, parseInt(getComputedStyle(document.documentElement).getPropertyValue('--scl-panel-width'), 10) || 285) : $portal.outerWidth();
+        var width = isPanel ? Math.min(Math.max(240, parseInt(getComputedStyle(document.documentElement).getPropertyValue('--scl-panel-width'), 10) || 285), viewportWidth - 16) : $portal.outerWidth();
         var left = rect.left + (rect.width / 2) - (width / 2);
         left = Math.max(8, Math.min(left, viewportWidth - width - 8));
         $portal.css({
             position: 'fixed',
             top: Math.round(rect.bottom + (isPanel ? 8 : 6)) + 'px',
             left: Math.round(left) + 'px',
-            width: isPanel ? width + 'px' : 'auto'
+            width: isPanel ? width + 'px' : 'auto',
+            maxHeight: isPanel ? Math.max(0, (window.innerHeight || document.documentElement.clientHeight) - rect.bottom - 24) + 'px' : ''
         });
     }
 
     function hidePortalLabel() {
         ensurePortalElements();
-        $portalLabel.removeClass('is-visible').attr('aria-hidden', 'true').empty();
+        $portalLabel.removeClass('is-visible').attr('aria-hidden', 'true');
     }
 
     function showPortalLabel(nav) {
@@ -282,14 +267,18 @@
         positionPortal($nav.children('.smart-choice-links-trigger').first(), $portalLabel, false);
     }
 
-    function closeAllStarMenus() {
+    function closeAllStarMenus(restoreFocus) {
+        var owner = activePortalOwner;
         ensurePortalElements();
         activePortalOwner = null;
         $('.smart-choice-links-nav').removeClass('open scl-force-open scl-label-visible')
             .children('.smart-choice-links-trigger').attr('aria-expanded', 'false');
         $('.smart-choice-links-nav > ul.smart-choice-links-dropdown').attr('aria-hidden','true').css('display','none');
-        $portalPanel.removeClass('is-open').attr('aria-hidden', 'true').empty();
+        $portalPanel.removeClass('is-open').attr('aria-hidden', 'true').attr('inert', '');
         hidePortalLabel();
+        if (restoreFocus && owner && document.contains(owner)) {
+            $(owner).children('.smart-choice-links-trigger').first().trigger('focus');
+        }
     }
 
     function openPortalMenu(nav) {
@@ -317,11 +306,12 @@
         $trigger.attr('aria-expanded', 'true');
 
         var $content = $sourcePanel.clone(false, false)
-            .removeAttr('id style')
+            .removeAttr('id style aria-hidden inert')
             .removeClass('smart-choice-links-panel-template smart-choice-links-dropdown smart-choice-links-dropdown-left smart-choice-links-dropdown-right dropdown-menu animated fadeIn show in')
             .addClass('scl-portal-content');
-        $portalPanel.empty().append($content).addClass('is-open').attr('aria-hidden', 'false');
+        $portalPanel.empty().append($content).attr('aria-label', $trigger.attr('aria-label') || 'Quick Links');
         positionPortal($trigger, $portalPanel, true);
+        $portalPanel.removeAttr('inert').attr('aria-hidden', 'false').addClass('is-open');
     }
 
     function togglePortalMenu(nav) {
@@ -332,48 +322,48 @@
         }
     }
 
+    function closestElement(target, selector) {
+        return target && target.nodeType === 1 ? target.closest(selector) :
+            (target && target.parentElement ? target.parentElement.closest(selector) : null);
+    }
+
+    function focusFirstPortalLink() {
+        if (activePortalOwner) { $portalPanel.find('a[href]').first().trigger('focus'); }
+    }
+
     function installCaptureClickHandler() {
-        if (window.smartChoiceLinksCaptureInstalledV128) { return; }
-        window.smartChoiceLinksCaptureInstalledV128 = true;
-
-        function closestElement(target, selector) {
-            while (target && target !== document) {
-                if (target.matches && target.matches(selector)) { return target; }
-                target = target.parentNode;
-            }
-            return null;
-        }
-
-        /* Use mousedown in capture phase.  This runs before Perfex/Bootstrap
-         * click handlers and avoids the pointerup/click double-toggle that
-         * affected earlier releases. */
-        document.addEventListener('mousedown', function (event) {
-            var trigger = closestElement(event.target, '.smart-choice-links-trigger');
-            if (!trigger) { return; }
-            var nav = closestElement(trigger, '.smart-choice-links-nav');
-            if (!nav) { return; }
-
-            event.preventDefault();
-            event.stopPropagation();
-            if (event.stopImmediatePropagation) { event.stopImmediatePropagation(); }
-            hidePortalLabel();
-            togglePortalMenu(nav);
-        }, true);
-
-        /* Suppress the later Bootstrap click only for the star itself. */
+        // A completed click handles mouse, touch and keyboard-generated activation once.
         document.addEventListener('click', function (event) {
             var trigger = closestElement(event.target, '.smart-choice-links-trigger');
-            if (trigger) {
+            var nav = trigger && closestElement(trigger, '.smart-choice-links-nav');
+            if (nav) {
+                if (event.button && event.button !== 0) { return; }
                 event.preventDefault();
-                event.stopPropagation();
-                if (event.stopImmediatePropagation) { event.stopImmediatePropagation(); }
+                event.stopImmediatePropagation();
+                hidePortalLabel();
+                togglePortalMenu(nav);
+                if (event.detail === 0) { focusFirstPortalLink(); }
                 return;
             }
+            if (!closestElement(event.target, '#smart-choice-links-panel-portal')) {
+                closeAllStarMenus();
+            }
+        }, true);
 
-            if (closestElement(event.target, '#smart-choice-links-panel-portal')) {
-                return;
+        document.addEventListener('keydown', function (event) {
+            var trigger = closestElement(event.target, '.smart-choice-links-trigger');
+            var nav = trigger && closestElement(trigger, '.smart-choice-links-nav');
+            if (!nav || ['Enter', ' ', 'ArrowDown'].indexOf(event.key) === -1) { return; }
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            if (event.repeat) { return; }
+            hidePortalLabel();
+            if (event.key === 'ArrowDown') {
+                if (activePortalOwner !== nav) { openPortalMenu(nav); }
+            } else {
+                togglePortalMenu(nav);
             }
-            closeAllStarMenus();
+            focusFirstPortalLink();
         }, true);
     }
 
@@ -384,7 +374,11 @@
         $(document).off('.smartChoiceLinks');
 
         $(document).on('keydown.smartChoiceLinks', function (e) {
-            if (e.key === 'Escape') { closeAllStarMenus(); }
+            if (e.key === 'Escape' && activePortalOwner) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                closeAllStarMenus(true);
+            }
         });
 
         $(document).on('mouseenter.smartChoiceLinks focusin.smartChoiceLinks', '.smart-choice-links-nav', function () {
@@ -392,6 +386,12 @@
         });
         $(document).on('mouseleave.smartChoiceLinks focusout.smartChoiceLinks', '.smart-choice-links-nav', function () {
             hidePortalLabel();
+        });
+
+        $(document).on('focusin.smartChoiceLinks', function (event) {
+            if (activePortalOwner && !closestElement(event.target, '#smart-choice-links-panel-portal,.smart-choice-links-trigger')) {
+                closeAllStarMenus();
+            }
         });
 
         $(window).off('.smartChoiceLinksPortal').on('resize.smartChoiceLinksPortal scroll.smartChoiceLinksPortal', function () {
@@ -426,11 +426,33 @@
         $('#smart-choice-links-table-search').off('.sclTable').on('input.sclTable',function(){ var q=normalizeText(this.value); $tbody.find('tr').each(function(){ $(this).toggle(!q||normalizeText($(this).text()).indexOf(q)!==-1); }); });
     }
 
-    function boot() { placeStars(); initMenuSearch(); initEvents(); initTableTools(); }
+    function refreshDom() {
+        // Do not observe our own repairs; external header changes are still repaired.
+        if (observer) { observer.disconnect(); }
+        try {
+            placeStars(); initMenuSearch();
+            if (activePortalOwner && !document.contains(activePortalOwner)) {
+                closeAllStarMenus();
+            } else if (activePortalOwner) {
+                positionPortal($(activePortalOwner).children('.smart-choice-links-trigger').first(), $portalPanel, true);
+            }
+        }
+        finally {
+            if (observer) { observer.observe(document.body, { childList: true, subtree: true }); }
+        }
+    }
+    function boot() { refreshDom(); initEvents(); initTableTools(); }
     function observe() {
         if (!window.MutationObserver || observer) { return; }
-        observer = new MutationObserver(function(){ clearTimeout(timer); timer=setTimeout(function(){ placeStars(); initMenuSearch(); },100); });
-        observer.observe(document.body,{childList:true,subtree:true});
+        observer = new MutationObserver(function (records) {
+            var externalChange = records.some(function (record) {
+                return !closestElement(record.target, '#smart-choice-links-panel-portal,#smart-choice-links-label-portal');
+            });
+            if (!externalChange) { return; }
+            clearTimeout(timer);
+            timer = setTimeout(refreshDom, 100);
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
     }
-    $(function(){ boot(); observe(); setTimeout(boot,300); setTimeout(boot,1000); setTimeout(boot,2500); });
+    $(function () { boot(); observe(); setTimeout(refreshDom, 300); setTimeout(refreshDom, 1000); setTimeout(refreshDom, 2500); });
 })(jQuery);

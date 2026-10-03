@@ -145,7 +145,7 @@ function smart_choice_links_admin_head()
         return;
     }
 
-    echo '<link href="' . module_dir_url(SMART_CHOICE_LINKS_MODULE_NAME, 'assets/css/smart_choice_links.css') . '?v=1.2.8" rel="stylesheet" type="text/css" />';
+    echo '<link href="' . module_dir_url(SMART_CHOICE_LINKS_MODULE_NAME, 'assets/css/smart_choice_links.css') . '?v=1.2.9" rel="stylesheet" type="text/css" />';
 }
 
 function smart_choice_links_admin_footer()
@@ -170,7 +170,7 @@ function smart_choice_links_admin_footer()
     echo '<script>window.smartChoiceLinksSettingsUrl = "' . admin_url('smart_choice_links/settings') . '";</script>';
     echo '<script>window.smartChoiceLinksManageUrl = "' . admin_url('smart_choice_links') . '";</script>';
     echo '<style id="smart-choice-links-dynamic-css">:root{--scl-panel-width:' . (int)(get_option('smart_choice_links_panel_width') ?: 285) . 'px;--scl-row-height:' . (int)(get_option('smart_choice_links_row_height') ?: 34) . 'px;--scl-icon-size:' . (int)(get_option('smart_choice_links_icon_size') ?: 16) . 'px;--scl-font-size:' . (int)(get_option('smart_choice_links_font_size') ?: 13) . 'px;--scl-padding:' . (int)(get_option('smart_choice_links_padding') ?: 8) . 'px;--scl-radius:' . (int)(get_option('smart_choice_links_radius') ?: 8) . 'px;--scl-animation-speed:' . (int)(get_option('smart_choice_links_animation_speed') ?: 180) . 'ms;}</style>';
-    echo '<script src="' . module_dir_url(SMART_CHOICE_LINKS_MODULE_NAME, 'assets/js/smart_choice_links.js') . '?v=1.2.8"></script>';
+    echo '<script src="' . module_dir_url(SMART_CHOICE_LINKS_MODULE_NAME, 'assets/js/smart_choice_links.js') . '?v=1.2.9"></script>';
 }
 
 function smart_choice_links_ensure_database()

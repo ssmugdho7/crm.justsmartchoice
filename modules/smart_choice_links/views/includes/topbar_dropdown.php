@@ -93,7 +93,7 @@ function smart_choice_links_render_dropdown_list($links, $title, $side, $footer)
 {
     ?>
     <li class="icon smart-choice-links-nav smart-choice-links-<?php echo html_escape($side); ?> tw-relative ltr:tw-mr-1.5 rtl:tw-ml-1.5" data-scl-side="<?php echo html_escape($side); ?>" data-scl-label="<?php echo html_escape($title); ?>">
-        <a href="#" aria-expanded="false" class="smart-choice-links-trigger" data-scl-side="<?php echo html_escape($side); ?>" aria-label="<?php echo html_escape($title); ?>">
+        <a href="#" role="button" aria-haspopup="true" aria-controls="smart-choice-links-panel-portal" aria-expanded="false" class="smart-choice-links-trigger" data-scl-side="<?php echo html_escape($side); ?>" aria-label="<?php echo html_escape($title); ?>">
             <span class="scl-star-shell"><i class="fa fa-star"></i></span>
         </a>
         <ul class="dropdown-menu animated fadeIn smart-choice-links-dropdown smart-choice-links-dropdown-<?php echo html_escape($side); ?>">

@@ -338,35 +338,49 @@
 .smart-choice-links-nav.open::after { display: none !important; }
 
 
-/* Smart Choice Links v1.2.4 — body portal prevents CRM header clipping */
-.scl-panel-portal {
-    display: none;
+/* Body portals keep menus outside clipped headers; one state owns visibility. */
+#smart-choice-links-panel-portal.scl-panel-portal {
+    display: block !important;
     position: fixed;
     z-index: 2147483000 !important;
     max-width: calc(100vw - 16px);
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-6px);
+    transition: opacity var(--scl-animation-speed, 180ms) ease,
+        transform var(--scl-animation-speed, 180ms) ease,
+        visibility 0s linear var(--scl-animation-speed, 180ms);
 }
-.scl-panel-portal.is-open { display: block !important; }
-.scl-panel-portal .scl-portal-content {
+#smart-choice-links-panel-portal.scl-panel-portal.is-open {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+    transition-delay: 0s;
+}
+#smart-choice-links-panel-portal .scl-portal-content {
     display: block !important;
     position: static !important;
     float: none !important;
     width: 100% !important;
     min-width: 0 !important;
     max-width: 100% !important;
+    max-height: inherit;
     margin: 0 !important;
     padding: 0 !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
+    visibility: inherit;
     border: 1px solid #d9e2ec !important;
     border-radius: var(--scl-radius, 9px) !important;
-    overflow: hidden !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
     background: #fff !important;
     box-shadow: 0 12px 30px rgba(15,23,42,.28) !important;
     list-style: none !important;
 }
-.scl-label-portal {
-    display: none;
+#smart-choice-links-label-portal.scl-label-portal {
+    display: block !important;
     position: fixed;
     z-index: 2147483001 !important;
     padding: 5px 9px;
@@ -378,40 +392,31 @@
     line-height: 1.25;
     white-space: nowrap;
     pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-3px);
+    transition: opacity .12s ease, transform .12s ease, visibility 0s linear .12s;
     box-shadow: 0 4px 12px rgba(15,23,42,.24);
 }
-.scl-label-portal.is-visible { display: block !important; }
-/* Disable old pseudo labels; the body portal label cannot be clipped. */
-.smart-choice-links-nav::after { display: none !important; content: none !important; }
-
-/* Smart Choice Links v1.2.6 — definitive clickable portal panel */
-#smart-choice-links-panel-portal.scl-panel-portal.is-open {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
+#smart-choice-links-label-portal.scl-label-portal.is-visible {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0s;
 }
-#smart-choice-links-panel-portal > ul.scl-portal-content {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    position: static !important;
+.smart-choice-links-nav > .smart-choice-links-trigger:focus-visible {
+    outline: 2px solid #14b8a6;
+    outline-offset: 3px;
 }
-
-
-/* Smart Choice Links v1.2.8 — single label and single portal only */
+/* Nested lists are data-only; Bootstrap must not open a second panel. */
 .smart-choice-links-nav > ul.smart-choice-links-dropdown {
     display: none !important;
     visibility: hidden !important;
-    opacity: 0 !important;
     pointer-events: none !important;
 }
 .smart-choice-links-nav::before,
-.smart-choice-links-nav::after {
-    display: none !important;
-    content: none !important;
+.smart-choice-links-nav::after { display: none !important; content: none !important; }
+@media (prefers-reduced-motion: reduce) {
+    #smart-choice-links-panel-portal.scl-panel-portal,
+    #smart-choice-links-label-portal.scl-label-portal { transition: none; transform: none; }
 }
-#smart-choice-links-label-portal { display: none !important; }
-#smart-choice-links-label-portal.is-visible { display: block !important; }
-body > #smart-choice-links-panel-portal.is-open { display: block !important; }

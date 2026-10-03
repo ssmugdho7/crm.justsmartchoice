@@ -1423,6 +1423,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
       window.removeEventListener('offline', this.handleConnectionChange);
 
       // Cleanup Pusher channels to prevent memory leaks
+      if (this.personalChannel) { this.personalChannel.unbind_all(); this.pusher.unsubscribe('private-prchat-staff-<?= (int) get_staff_user_id() ?>'); }
+      if (this.clientMessageChannel) { this.clientMessageChannel.unbind_all(); this.pusher.unsubscribe('private-prchat-clients-staff-<?= (int) get_staff_user_id() ?>'); }
       if (this.presenceChannel) {
         this.presenceChannel.unbind_all();
         this.pusher.unsubscribe('presence-mychanel');
@@ -1433,7 +1435,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
       }
       if (this.userMessagesChannel) {
         this.userMessagesChannel.unbind_all();
-        this.pusher.unsubscribe('user_messages');
+        this.pusher.unsubscribe('private-prchat-receipts-<?= (int) get_staff_user_id() ?>');
       }
       if (this.clientsChannel) {
         this.clientsChannel.unbind_all();
@@ -2074,8 +2076,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
           // Subscribe to presence channel
           this.presenceChannel = this.pusher.subscribe('presence-mychanel');
+          this.personalChannel = this.pusher.subscribe('private-prchat-staff-<?= (int) get_staff_user_id() ?>');
           this.chatStatusChannel = this.pusher.subscribe('user_changed_chat_status');
-          this.userMessagesChannel = this.pusher.subscribe('user_messages');
+          this.userMessagesChannel = this.pusher.subscribe('private-prchat-receipts-<?= (int) get_staff_user_id() ?>');
 
           // Staff call signaling must NOT wait on presence/member sync (same idea as full chat:
           // audio/video rings use calls-staff-{id} only). Presence can be slow; calls would never wire in time.
@@ -2106,24 +2109,24 @@ defined('BASEPATH') or exit('No direct script access allowed');
           });
 
           // Message events
-          this.presenceChannel.bind('send-event', (data) => {
+          this.personalChannel.bind('send-event', (data) => {
             this.handleIncomingMessage(data);
           });
 
-          this.presenceChannel.bind('message-edited', (data) => {
+          this.personalChannel.bind('message-edited', (data) => {
             this.handleStaffMessageEdited(data);
           });
 
-          this.presenceChannel.bind('message-deleted', (data) => {
+          this.personalChannel.bind('message-deleted', (data) => {
             this.handleStaffMessageDeleted(data);
           });
 
           // Message reactions (emoji toggles)
-          this.presenceChannel.bind('message-reaction', (data) => {
+          this.personalChannel.bind('message-reaction', (data) => {
             this.handleMessageReaction(data);
           });
 
-          this.presenceChannel.bind('typing-event', (data) => {
+          this.personalChannel.bind('typing-event', (data) => {
             this.handleTypingEvent(data);
           });
 
@@ -2140,7 +2143,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
           // Subscribe to client channel for client-to-staff message notifications
           <?php if (isClientsEnabled()): ?>
             this.clientsChannel = this.pusher.subscribe('presence-clients');
-            this.clientsChannel.bind('send-event', (data) => {
+            this.clientMessageChannel = this.pusher.subscribe('private-prchat-clients-staff-<?= (int) get_staff_user_id() ?>');
+            this.clientMessageChannel.bind('send-event', (data) => {
               this.handleClientMessage(data);
             });
 

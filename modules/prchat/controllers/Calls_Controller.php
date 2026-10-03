@@ -12,7 +12,7 @@ class Calls_Controller extends AdminController
         parent::__construct();
 
         // Calls belong to Messaging Chat and require its effective staff permission.
-        if (!staff_can('view', PR_CHAT_MODULE_NAME)) {
+        if (!prchat_staff_can_chat()) {
             $this->jsonError('Forbidden', 403);
         }
 
@@ -85,6 +85,8 @@ class Calls_Controller extends AdminController
      */
     private function getChannel($toId, $recipientType = 'staff')
     {
+        if (!is_scalar($toId) || !ctype_digit((string) $toId) || (int) $toId <= 0 || !in_array($recipientType, ['staff', 'client'], true)) { $this->jsonError('Invalid call recipient', 422); }
+        if ($recipientType === 'client' ? !prchat_staff_can_contact($toId) : !prchat_staff_available_for_chat($toId)) { $this->jsonError('Forbidden call recipient', 403); }
         if ($recipientType === 'client') {
             return CHAT_CALLS_CLIENT_CHANNEL_PREFIX . $toId;
         }
@@ -143,7 +145,7 @@ class Calls_Controller extends AdminController
         $sdp    = $this->input->post('sdp');
         $isVideo = (bool)$this->input->post('is_video');
         $recipientType = $this->input->post('recipient_type') ?: 'staff';
-        $callerType = $this->input->post('caller_type') ?: 'staff';
+        $callerType = 'staff';
 
         $channel = $this->getChannel($toId, $recipientType);
         $callerInfo = $this->getCallerInfo($fromId, $callerType);
@@ -183,7 +185,7 @@ class Calls_Controller extends AdminController
         $sdp    = $this->input->post('sdp');
         $isVideo = (bool)$this->input->post('is_video');
         $recipientType = $this->input->post('recipient_type') ?: 'staff';
-        $callerType = $this->input->post('caller_type') ?: 'staff';
+        $callerType = 'staff';
 
         $channel = $this->getChannel($toId, $recipientType);
         $callerInfo = $this->getCallerInfo($fromId, $callerType);

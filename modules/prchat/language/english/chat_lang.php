@@ -1337,7 +1337,7 @@ $lang['chat_project_media_folder'] = 'Folder';
 $lang['chat_project_media_empty'] = 'No project media folders found yet.';
 $lang['chat_permission_view_own_help'] = 'Reserved for scoped conversation access. View own alone does not currently enable Messaging Chat; do not use it as a substitute for View.';
 $lang['chat_permission_view_global_help'] = 'View all permitted conversations and groups.';
-$lang['chat_permission_create_help'] = 'Create conversations, groups, and chat records.';
+$lang['chat_permission_create_help'] = 'Create groups, send announcements, and send employee SMS.';
 $lang['chat_permission_edit_help'] = 'Edit conversations, groups, associations, and group photos.';
 $lang['chat_add_group_photo'] = 'Add Group Photo';
 $lang['chat_remove_group_photo'] = 'Remove Group Photo';
@@ -1388,4 +1388,4 @@ $lang['chat_task_default_title'] = 'Task from chat message';
 $lang['chat_task_created_success'] = 'Task created successfully.';
 $lang['chat_task_create_failed'] = 'Task could not be created.';
 
-$lang['chat_access_requirements_help'] = 'Messaging Chat currently requires the Chat module View permission or an Administrator account, with Chat enabled in settings. Create, Edit, Delete, View own, or AI Assistant alone do not enable Messaging Chat. Chatbot Support and Chatbot Manage grant their separate chatbot screens. Staff access uses the permissions saved on the staff account; changing a role does not update existing staff unless you select the option to update staff permissions.';
+$lang['chat_access_requirements_help'] = 'Messaging Chat requires View or View own, or an Administrator account, with Chat enabled in settings. View own allows your conversations and joined groups, with customer chat limited to assigned customers. Create, Edit, Delete, and AI Assistant control their respective actions and do not enable chat by themselves. Chatbot Support and Chatbot Manage grant their separate chatbot screens. Staff access uses the permissions saved on the staff account; changing a role does not update existing staff unless you select the option to update staff permissions.';

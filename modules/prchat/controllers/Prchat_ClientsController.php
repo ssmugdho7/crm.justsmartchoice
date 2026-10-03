@@ -26,8 +26,10 @@ class Prchat_ClientsController extends ClientsController
             return;
         }
         $contact_id = function_exists('get_contact_user_id') ? (int) get_contact_user_id() : 0;
-        if ($contact_id <= 0 && function_exists('get_client_user_id')) {
-            $contact_id = (int) get_client_user_id();
+        if ($contact_id <= 0) { $this->output->set_status_header(403)->set_output('{}'); return; }
+        if (get_option('chat_client_enabled') != '1' || !in_array($channel_name, ['presence-clients', 'private-prchat-clients-contact-' . $contact_id, 'private-prchat-receipts-contact-' . $contact_id, 'private-calls-client-' . $contact_id], true)) {
+            $this->output->set_status_header(403)->set_content_type('application/json')->set_output(json_encode(['error' => 'Forbidden channel']));
+            return;
         }
         $name = function_exists('get_contact_full_name') ? get_contact_full_name($contact_id) : 'Client';
         $presence = ['name' => $name, 'type' => 'client', 'contact_id' => $contact_id];

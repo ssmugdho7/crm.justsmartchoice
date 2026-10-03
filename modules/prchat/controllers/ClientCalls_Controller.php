@@ -24,6 +24,9 @@ class ClientCalls_Controller extends ClientsController
     public function __construct()
     {
         parent::__construct();
+        if (!is_client_logged_in() || !get_contact_user_id() || get_option('chat_client_enabled') != '1' || get_option('chat_client_calls_enabled') != '1') {
+            $this->jsonError('Unauthorized client calls', 403);
+        }
 
         if ($this->router->fetch_method() === 'get_call_token') {
             if (!get_contact_user_id()) {
@@ -118,6 +121,9 @@ class ClientCalls_Controller extends ClientsController
      */
     private function getChannel($toId, $recipientType = 'staff')
     {
+        if ($recipientType !== 'staff' || !is_scalar($toId) || !ctype_digit((string) $toId) || !prchat_staff_available_for_chat($toId) || !prchat_staff_can_contact(get_contact_user_id(), $toId)) {
+            $this->jsonError('Forbidden call recipient', 403);
+        }
         if ($recipientType === 'client') {
             return CHAT_CALLS_CLIENT_CHANNEL_PREFIX . $toId;
         }
@@ -288,7 +294,7 @@ class ClientCalls_Controller extends ClientsController
         }
 
         try {
-            $auth = $this->pusher->authorizeChannel($channelName, $socketId);
+            $auth = $this->pusher->socket_auth($channelName, $socketId);
             echo $auth;
         } catch (Exception $e) {
             http_response_code(500);

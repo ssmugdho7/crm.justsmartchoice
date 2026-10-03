@@ -142,7 +142,7 @@ class Prchat_model extends App_Model
   private function filterStaffByPermissions(array $users): array
   {
     return array_filter($users, function ($user) {
-      return staff_can('view', PR_CHAT_MODULE_NAME, $user['staffid']);
+      return prchat_staff_can_chat($user['staffid']);
     });
   }
 
@@ -290,7 +290,7 @@ class Prchat_model extends App_Model
     $users = $this->db->get(db_prefix() . 'staff')->result_array();
 
     foreach ($users as $key => $user) {
-      if (!staff_can('view', PR_CHAT_MODULE_NAME, $user['staffid'])) {
+      if (!prchat_staff_can_chat($user['staffid'])) {
         unset($users[$key]);
         continue;
       }
@@ -719,7 +719,8 @@ class Prchat_model extends App_Model
     }
 
     $prefix = db_prefix();
-    $group_ids = array_map('intval', $group_ids);
+    $group_ids = array_values(array_filter(array_map('intval', $group_ids), 'prchat_staff_can_group'));
+    if (!$group_ids) { return []; }
     $results = [];
 
     $escaped = implode(',', $group_ids);
@@ -1880,7 +1881,7 @@ class Prchat_model extends App_Model
           db_prefix() . 'chatmessages'
         );
 
-        $pusher->trigger(
+        prchat_trigger_event($pusher,
           'presence-mychanel',
           'send-event',
           [
@@ -1928,7 +1929,7 @@ class Prchat_model extends App_Model
           db_prefix() . 'chatclientmessages'
         );
 
-        $pusher->trigger(
+        prchat_trigger_event($pusher,
           'presence-clients',
           'send-event',
           [
@@ -1971,7 +1972,7 @@ class Prchat_model extends App_Model
     $presence_data['created_by_id'] = $own_id;
     $presence_data['message'] = _l('chat_new_group_created_text');
 
-    if ($pusher->trigger('group-chat', 'group-chat', $presence_data)) {
+    if (prchat_trigger_event($pusher, 'group-chat', 'group-chat', $presence_data)) {
       echo json_encode(['data' => $presence_data]);
     } else {
       echo json_encode(['result' => 'error']);
@@ -1987,8 +1988,10 @@ class Prchat_model extends App_Model
   {
     $id = (int) get_staff_user_id();
 
-    $this->db->order_by('id', 'ASC');
-    $groups = $this->db->get(TABLE_CHATGROUPS)->result_array();
+    $this->db->select('g.*')->distinct()->from(TABLE_CHATGROUPS . ' g')
+      ->join(TABLE_CHATGROUPMEMBERS . ' gm', 'gm.group_id = g.id')
+      ->where('gm.member_id', $id)->order_by('g.id', 'ASC');
+    $groups = $this->db->get()->result_array();
 
     $this->db->trans_start();
 
@@ -2151,7 +2154,7 @@ class Prchat_model extends App_Model
       try {
         $channel = preg_replace('/[^a-zA-Z0-9_\-=@,.;]/', '-', $group_name);
         $presence_data = ['result' => 'true', 'group_name' => $group_name, 'group_id' => $group_id];
-        $pusher->trigger($channel, 'group-deleted', $presence_data);
+        prchat_trigger_event($pusher, $channel, 'group-deleted', $presence_data);
       } catch (Exception $e) {
         log_message('error', 'Prchat: Pusher trigger failed for group deletion - ' . $e->getMessage());
       }
@@ -2191,7 +2194,7 @@ class Prchat_model extends App_Model
     ];
 
     if ($this->db->affected_rows() != 0) {
-      if ($pusher->trigger('group-chat', 'added-to-channel', $presence_data)) {
+      if (prchat_trigger_event($pusher, 'group-chat', 'added-to-channel', $presence_data)) {
         echo json_encode(['data' => $presence_data]);
       }
     } else {
@@ -2311,7 +2314,7 @@ class Prchat_model extends App_Model
 
     if ($deleted && $this->db->affected_rows() > 0) {
       $presence_data['created_by_me'] = $this->isGroupCreatedBy($group_id, $own_id);
-      $pusher->trigger('group-chat', 'removed-from-channel', $presence_data);
+      prchat_trigger_event($pusher, 'group-chat', 'removed-from-channel', $presence_data);
       echo json_encode(['response' => 'success', 'data' => $presence_data]);
     } else {
       echo json_encode(['response' => 'error', 'message' => 'Failed to remove member from group - no rows affected', 'data' => $presence_data]);
@@ -2345,7 +2348,7 @@ class Prchat_model extends App_Model
     ];
 
     if ($deleted) {
-      $pusher->trigger('group-chat', 'member-left-channel', $presence_data);
+      prchat_trigger_event($pusher, 'group-chat', 'member-left-channel', $presence_data);
       echo json_encode(['message' => 'deleted']);
     }
   }
@@ -2493,7 +2496,7 @@ class Prchat_model extends App_Model
     $result = [];
     foreach ($rows as $row) {
       if (!defined('PRCHAT_AJAX_SKIP_PERM_CHECK')) {
-        if (!staff_can('view', PR_CHAT_MODULE_NAME, $row['staffid'])) {
+        if (!prchat_staff_can_chat($row['staffid'])) {
           continue;
         }
       }
@@ -3052,7 +3055,7 @@ class Prchat_model extends App_Model
     // Slugify channel name for Pusher (spaces/special chars are invalid)
     $channelName = CHAT_GROUP_PRESENCE_PREFIX . slugifyGroupName($groupName);
 
-    $pusher->trigger($channelName, 'mention-event', [
+    prchat_trigger_event($pusher, $channelName, 'mention-event', [
       'group_name' => $groupName,
       'from' => $data['from'],
       'users' => $data['users'],
@@ -3075,7 +3078,7 @@ class Prchat_model extends App_Model
    */
   public function setMessageAsViewed($pusher, $messages)
   {
-    $pusher->trigger('user_messages', 'message_seen', $messages);
+    prchat_trigger_event($pusher, 'user_messages', 'message_seen', $messages);
   }
 
   /**

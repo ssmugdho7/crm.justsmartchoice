@@ -9,6 +9,7 @@ Requires at least: 3.0.0
 */
 
 define('PR_CHAT_MODULE_NAME', 'prchat');
+require_once __DIR__ . '/helpers/prchat_permissions_helper.php';
 define('PR_CHAT_VERSION', '2.3.2');
 define('PR_CHAT_MODULE_UPLOAD_FOLDER', module_dir_path(PR_CHAT_MODULE_NAME, 'uploads'));
 define('PR_CHAT_MODULE_GROUPS_UPLOAD_FOLDER', module_dir_path(PR_CHAT_MODULE_NAME, 'uploads/groups'));
@@ -104,7 +105,7 @@ hooks()->add_action('admin_init', 'prchat_register_admin_menu');
 function prchat_register_admin_menu()
 {
     $CI = &get_instance();
-    if (staff_can('view', PR_CHAT_MODULE_NAME) && get_option('pusher_chat_enabled') == '1') {
+    if (prchat_staff_can_chat() && get_option('pusher_chat_enabled') == '1') {
         // Messaging menu
         $CI->app_menu->add_sidebar_menu_item('prchat', [
             'name' => 'Messaging Chat',

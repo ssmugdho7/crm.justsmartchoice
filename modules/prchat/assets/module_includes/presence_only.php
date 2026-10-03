@@ -41,6 +41,7 @@
 
         // Subscribe to same presence channel as full/toggled chat (staff online status)
         var presenceChannel = window.pusher.subscribe('presence-mychanel');
+        var personalChannel = window.pusher.subscribe('private-prchat-staff-<?= (int) get_staff_user_id() ?>');
 
         presenceChannel.bind('pusher:subscription_succeeded', function() {});
 
@@ -66,7 +67,7 @@
         })();
 
         // Staff-to-staff messages: show floating notification when not on conversations page (skip if sender muted)
-        presenceChannel.bind('send-event', function(data) {
+        personalChannel.bind('send-event', function(data) {
             if (!data || String(data.to) !== String(currentUserId) || String(data.from) === String(currentUserId)) return;
             if (presenceMutedStaff.indexOf(String(data.from)) !== -1) return;
             if (typeof FloatingChatNotifications === 'undefined') return;
@@ -96,8 +97,9 @@
         // Subscribe to clients channel for notifications (if clients enabled and staff has access)
         <?php if (isClientsEnabled() && staffCanAccessClientsTab()) : ?>
             var clientsChannel = window.pusher.subscribe('presence-clients');
+            var clientMessageChannel = window.pusher.subscribe('private-prchat-clients-staff-<?= (int) get_staff_user_id() ?>');
 
-            clientsChannel.bind('send-event', function(data) {
+            clientMessageChannel.bind('send-event', function(data) {
                 // Client-to-staff message
                 if (data.to !== 'staff_' + currentUserId) return;
                 var clientContactId = String((data.from || '').replace(/^client_/, ''));

@@ -14,7 +14,7 @@ if (get_option('pusher_chat_enabled') == '1') {
   hooks()->add_action('before_staff_login', 'prchat_set_session_variable_before_login_for_notification');
 }
 
-if (staff_can('view', PR_CHAT_MODULE_NAME) && get_option('pusher_chat_enabled') == '1') {
+if (prchat_staff_can_chat() && get_option('pusher_chat_enabled') == '1') {
   hooks()->add_action('app_admin_head', 'pr_chat_add_head_components');
   hooks()->add_action('app_admin_footer', 'pr_chat_init_checkView');
   hooks()->add_action('app_admin_footer', 'pr_chat_load_js');
@@ -756,7 +756,7 @@ function get_staff_customers($limit = 30, $offset = 0, $arrayData = false)
     return;
   }
 
-  $staffCanViewAllClients = staff_can('view', 'customers');
+  $staffCanViewAllClients = staff_can('view', 'customers') && !prchat_staff_own_scope();
   $current_staff_id = get_staff_user_id();
 
   $CI->db->select('firstname, lastname, ' . db_prefix() . 'contacts.id as contact_id, ' . get_sql_select_client_company());
@@ -859,7 +859,7 @@ function get_customer_admins()
   $customer_admins = $CI->db->get(db_prefix() . 'staff')->result_array();
 
   foreach ($customer_admins as $key => &$admin) {
-    if (!staff_can('view', PR_CHAT_MODULE_NAME, $admin['staffid'])) {
+    if (!prchat_staff_can_contact($contact_id, $admin['staffid'])) {
       unset($customer_admins[$key]);
       continue;
     }
@@ -892,36 +892,7 @@ function get_customer_admins()
  */
 function staff_can_access_contact_for_chat($contact_id)
 {
-  $CI = &get_instance();
-
-  if (staff_can('view', 'customers')) {
-    $CI->db->select('id');
-    $CI->db->where('id', (int) $contact_id);
-    $CI->db->where('active', 1);
-    $row = $CI->db->get(db_prefix() . 'contacts')->row();
-    return $row !== null;
-  }
-
-  $staff_id = (int) get_staff_user_id();
-  $customer_ids = $CI->db->select('customer_id')
-    ->from(db_prefix() . 'customer_admins')
-    ->where('staff_id', $staff_id)
-    ->get()
-    ->result_array();
-  $userids = array_column($customer_ids, 'customer_id');
-  if (empty($userids)) {
-    return false;
-  }
-
-  $CI->db->select(db_prefix() . 'contacts.id');
-  $CI->db->from(db_prefix() . 'contacts');
-  $CI->db->join(db_prefix() . 'clients', db_prefix() . 'clients.userid=' . db_prefix() . 'contacts.userid', 'left');
-  $CI->db->where(db_prefix() . 'contacts.id', (int) $contact_id);
-  $CI->db->where(db_prefix() . 'clients.active', 1);
-  $CI->db->where(db_prefix() . 'contacts.active', 1);
-  $CI->db->where_in(db_prefix() . 'clients.userid', $userids);
-  $row = $CI->db->get()->row();
-  return $row !== null;
+  return prchat_staff_can_contact($contact_id);
 }
 
 /**
@@ -1015,6 +986,7 @@ function isClientsEnabled()
  */
 function staffCanAccessClientsTab()
 {
+  if (!prchat_staff_can_chat()) { return false; }
   if (is_admin()) {
     return true;
   }

@@ -719,9 +719,10 @@
 
     /*---------------* Pusher Trigger accessing channel *---------------*/
     var presenceChannel = pusher.subscribe("presence-mychanel");
+    var personalChannel = pusher.subscribe("private-prchat-staff-<?= (int) get_staff_user_id() ?>");
     var chat_status = pusher.subscribe("user_changed_chat_status");
-    var user_messages_events = pusher.subscribe("user_messages");
-    var groupChannels = pusher.subscribe("group-chat");
+    var user_messages_events = pusher.subscribe("private-prchat-receipts-<?= (int) get_staff_user_id() ?>");
+    var groupChannels = pusher.subscribe("private-prchat-groups-<?= (int) get_staff_user_id() ?>");
 
     // Subscribe to individual group channels immediately on page load
     // so group-notify-event and group-send-event are received before Groups tab is clicked
@@ -1819,7 +1820,7 @@
     }
 
     /*---------------* Bind the 'send-event' & update the chat box message log *---------------*/
-    presenceChannel.bind("send-event", function(data) {
+    personalChannel.bind("send-event", function(data) {
       if (data.global) {
         data.message = "<?= '<strong>' . _l('chat_message_announce') . '</strong>'; ?>" + data.message;
       }
@@ -1943,7 +1944,7 @@
       }
     });
 
-    presenceChannel.bind("message-edited", function(data) {
+    personalChannel.bind("message-edited", function(data) {
       var mid = data.message_id || data.id;
       if (!mid) return;
       var $msg = $('.messages .modern-messages-container').find('[data-message-id="' + mid + '"]');
@@ -1989,14 +1990,14 @@
       }
     });
 
-    presenceChannel.bind("message-hidden", function(data) {
+    personalChannel.bind("message-hidden", function(data) {
       var mid = data && (data.message_id || data.id);
       var me = String(typeof userSessionId !== 'undefined' ? userSessionId : '');
       if (!mid || String(data.viewer_type || '') !== 'staff' || String(data.viewer_id || '') !== me) return;
       $('.messages .modern-messages-container').find('[data-message-id="' + mid + '"]').remove();
     });
 
-    presenceChannel.bind("message-deleted", function(data) {
+    personalChannel.bind("message-deleted", function(data) {
       var mid = data && (data.message_id || data.id);
       if (!mid) return;
 
@@ -2038,7 +2039,7 @@
         $sidebarPreview.removeData("original-preview");
       }
     }
-    presenceChannel.bind("typing-event", function(data) {
+    personalChannel.bind("typing-event", function(data) {
       if (
         presenceChannel.members.me.id != data.to ||
         data.from == presenceChannel.members.me.id
@@ -2080,7 +2081,7 @@
     });
 
     /*---------------* Trigger notification popup increment and live notification *---------------*/
-    presenceChannel.bind("notify-event", function(data) {
+    personalChannel.bind("notify-event", function(data) {
       if (chat_desktop_notifications_enabled) {
         if (data.from !== userSessionId && data.to == userSessionId) {
           if (user_chat_status != "busy" && user_chat_status != "offline") {
@@ -5254,7 +5255,7 @@
 
       // Pusher: message-reaction event for staff messages
       if (typeof presenceChannel !== 'undefined' && presenceChannel) {
-        presenceChannel.bind('message-reaction', function(data) {
+        personalChannel.bind('message-reaction', function(data) {
           if (data && data.message_id) {
             updateReactionPillsOnDom(data.message_id, data.reactions);
           }

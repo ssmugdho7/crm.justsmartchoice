@@ -8,6 +8,7 @@
     var clientsChannel = (typeof pusher !== "undefined" && pusher && typeof pusher.subscribe === "function")
       ? pusher.subscribe("presence-clients")
       : { members: { get: function(){ return null; } }, bind: function(){ return this; } };
+    var clientMessageChannel = (typeof pusher !== "undefined" && pusher) ? pusher.subscribe("private-prchat-clients-staff-<?= (int) get_staff_user_id() ?>") : {bind: function(){return this;}};
     var customersUlFirst = "";
     var hiddenUnreadMessages = $(".invisibleUnread");
     var own_image_url = $(".icon.header-user-profile a img").prop("src");
@@ -1146,7 +1147,7 @@
     /*---------------* Bind the 'send-event' & update the chat box message log *---------------*/
     var invisibleCounter = 1;
 
-    clientsChannel.bind("send-event", function(data) {
+    clientMessageChannel.bind("send-event", function(data) {
       $("#frame .client_messages").find(".typing-indicator").removeClass("show");
       var clientMessages = $(".chat_client_messages");
       var selectedContact = $(".chat_clients_list > li.contact_name.selected");
@@ -1358,20 +1359,20 @@
       }
     });
 
-    clientsChannel.bind("message-hidden", function(data) {
+    clientMessageChannel.bind("message-hidden", function(data) {
       var mid = data && (data.message_id || data.id);
       var me = String(typeof userSessionId !== 'undefined' ? userSessionId : '');
       if (!mid || String(data.viewer_type || '') !== 'staff' || String(data.viewer_id || '') !== me) return;
       $('.client_messages .modern-messages-container').find('[data-message-id="' + mid + '"]').remove();
     });
 
-    clientsChannel.bind("message-deleted", function(data) {
+    clientMessageChannel.bind("message-deleted", function(data) {
       var mid = data && (data.message_id || data.id);
       if (!mid) return;
       $('.client_messages .modern-messages-container').find('[data-message-id="' + mid + '"]').remove();
     });
 
-    clientsChannel.bind("message-edited", function(data) {
+    clientMessageChannel.bind("message-edited", function(data) {
       if (!data || !data.message_id || !data.rendered_message) {
         return;
       }
@@ -1407,7 +1408,7 @@
     });
 
     /*---------------* Pusher: message-reaction for client messages *---------------*/
-    clientsChannel.bind("message-reaction", function(data) {
+    clientMessageChannel.bind("message-reaction", function(data) {
       if (data && data.message_id && typeof window.prchatRenderReactionPills === 'function') {
         var $msg = $('.client_messages .modern-message-item[data-message-id="' + data.message_id + '"]');
         if ($msg.length) {
@@ -1427,7 +1428,7 @@
 
     /*---------------* Detect when a user is typing a message *---------------*/
     var clientTypingTimerId;
-    clientsChannel.bind("typing-event", function(data) {
+    clientMessageChannel.bind("typing-event", function(data) {
       var clearTypingInterval = 2500;
       var clientMessages = $("#frame .client_messages");
       var selectedContact = $(".chat_clients_list > li.contact_name.selected");

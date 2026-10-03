@@ -20,7 +20,7 @@ class Prchat_Controller extends AdminController
     parent::__construct();
 
     if ($this->router->fetch_method() === 'get_call_token') {
-      if (!staff_can('view', PR_CHAT_MODULE_NAME)) {
+      if (!prchat_staff_can_chat()) {
         $this->output
           ->set_status_header(403)
           ->set_content_type('application/json', 'utf-8')
@@ -44,7 +44,7 @@ class Prchat_Controller extends AdminController
     }
 
 
-    if (!staff_can('view', PR_CHAT_MODULE_NAME)) {
+    if (!prchat_staff_can_chat()) {
       redirect('admin');
     }
 
@@ -52,6 +52,9 @@ class Prchat_Controller extends AdminController
       redirect('admin');
     }
 
+    if (!prchat_authorize_staff_request($this->router->fetch_method(), $this->input)) {
+      $this->jsonError('Forbidden', 403);
+    }
     $this->load->model('prchat_model', 'chat_model');
 
     // Database-only bootstrap endpoints and the full chat shell must remain
@@ -138,8 +141,7 @@ class Prchat_Controller extends AdminController
       return false;
     }
     try {
-      $this->app_pusher->trigger($channel, $event, $payload);
-      return true;
+      return prchat_trigger_event($this->app_pusher, $channel, $event, $payload);
     } catch (\Throwable $e) {
       // A real-time delivery failure must never roll back or hide a message
       // that was already stored successfully in MySQL.
@@ -287,7 +289,7 @@ class Prchat_Controller extends AdminController
   public function initiateGroupChat()
   {
     if ($this->input->post()) {
-      $from = $this->input->post('from');
+      $from = get_staff_user_id();
       $group_id = $this->input->post('group_id');
       $group_name = $this->db->get_where(TABLE_CHATGROUPS, ['id' => $group_id])->row('group_name');
 
@@ -297,7 +299,7 @@ class Prchat_Controller extends AdminController
         $stored_message = $this->chat_model->process_message_for_storage($this->input->post('g_message', false));
 
         $message_data = [
-          'sender_id' => $this->input->post('from'),
+          'sender_id' => get_staff_user_id(),
           'group_id' => $this->input->post('group_id'),
           'message' => htmlspecialchars($stored_message),
           'time_sent' => date("Y-m-d H:i:s")
@@ -320,15 +322,15 @@ class Prchat_Controller extends AdminController
           'message' => $group_display_message,
           'from' => $from,
           'to_group' => $group_id,
-          'from_name' => get_staff_full_name($this->input->post('from')),
+          'from_name' => get_staff_full_name(get_staff_user_id()),
           'group_name' => $group_name,
           'last_insert_id' => $last_id,
           'sender_image' => $imageData['sender_image'],
         ]);
 
         $this->triggerPusher($group_name, 'group-notify-event', [
-          'from' => $this->input->post('from'),
-          'from_name' => get_staff_full_name($this->input->post('from')),
+          'from' => get_staff_user_id(),
+          'from_name' => get_staff_full_name(get_staff_user_id()),
           'to_group' => $group_id,
           'group_name' => $group_name,
           'sender_image' => $imageData['sender_image'],
@@ -343,8 +345,8 @@ class Prchat_Controller extends AdminController
           'group-typing-event',
           [
             'message' => 'true',
-            'from' => $this->input->post('from'),
-            'from_name' => get_staff_full_name($this->input->post('from')),
+            'from' => get_staff_user_id(),
+            'from_name' => get_staff_full_name(get_staff_user_id()),
             'to_group' => $group_id,
             'group_name' => $group_name,
           ]
@@ -356,8 +358,8 @@ class Prchat_Controller extends AdminController
           'group-typing-event',
           [
             'message' => 'null',
-            'from' => $this->input->post('from'),
-            'from_name' => get_staff_full_name($this->input->post('from')),
+            'from' => get_staff_user_id(),
+            'from_name' => get_staff_full_name(get_staff_user_id()),
             'to_group' => $group_id,
             'group_name' => $group_name,
           ]
@@ -735,6 +737,7 @@ class Prchat_Controller extends AdminController
       $channel_name = $this->input->post('channel_name') ?: $this->input->get('channel_name');
       $socket_id = $this->input->post('socket_id') ?: $this->input->get('socket_id');
 
+      if (!prchat_staff_can_subscribe($channel_name)) { $this->jsonError('Forbidden channel', 403); }
       if (!$channel_name) {
         exit('channel_name must be supplied');
       }
@@ -749,9 +752,7 @@ class Prchat_Controller extends AdminController
         && !empty(get_option('pusher_app_id'))
       ) {
         if (
-          strpos($channel_name, 'private-') === 0
-          && preg_match('/^private-calls-staff-(\d+)$/', $channel_name, $m)
-          && (int) $m[1] === (int) $user_id
+strpos($channel_name, 'private-') === 0
         ) {
           $auth = $this->app_pusher->socket_auth($channel_name, $socket_id);
         } else {
@@ -893,7 +894,7 @@ class Prchat_Controller extends AdminController
 
     $this->load->library('upload', $config);
     if ($this->upload->do_upload('userfile')) {
-      $from = $this->input->post()['send_from'];
+      $from = get_staff_user_id();
       $to_group = $this->input->post()['to_group'];
 
       $this->db->insert(
@@ -1983,7 +1984,7 @@ class Prchat_Controller extends AdminController
 
     if ($this->input->post('group_id')) {
       $group_id = $this->input->post('group_id');
-      $member_id = $this->input->post('member_id');
+      $member_id = get_staff_user_id();
 
       return $this->chat_model->chatMemberLeaveGroup($group_id, $member_id, $this->app_pusher);
     }
@@ -2191,6 +2192,12 @@ class Prchat_Controller extends AdminController
       show_404();
     }
     if ($data) {
+      $data['from'] = get_staff_user_id();
+      $group = $this->db->where('id', (int) $data['group_id'])->get(TABLE_CHATGROUPS)->row();
+      $data['channel'] = substr($group->group_name, strlen(CHAT_GROUP_PRESENCE_PREFIX));
+      $data['users'] = array_values(array_filter((array) ($data['users'] ?? []), static function ($user) use ($data) {
+        return is_array($user) && isset($user['user_id']) && prchat_staff_can_group($data['group_id'], $user['user_id']);
+      }));
       $this->chat_model->handleMentionEvent($data, $this->app_pusher);
     }
   }
@@ -2426,7 +2433,7 @@ class Prchat_Controller extends AdminController
       ];
 
       // Staff clients (full chat and toggled chat) listen on presence-mychanel.
-      $this->triggerPusher('presence-mychanel', 'message-reaction', $payload);
+      if ($messageType === 'staff') { $this->triggerPusher('presence-mychanel', 'message-reaction', $payload); }
 
       // Client portal listens on presence-clients for staff<->client messages.
       if ($messageType === 'client') {
@@ -2482,7 +2489,7 @@ class Prchat_Controller extends AdminController
    */
   public function health_check()
   {
-    if (!staff_can('view', PR_CHAT_MODULE_NAME)) {
+    if (!prchat_staff_can_chat()) {
       access_denied(PR_CHAT_MODULE_NAME);
     }
     $this->load->helper('prchat/prchat');
@@ -2513,7 +2520,7 @@ class Prchat_Controller extends AdminController
    */
   public function project_media()
   {
-    if (!staff_can('view', PR_CHAT_MODULE_NAME)) {
+    if (!prchat_staff_can_chat()) {
       access_denied(PR_CHAT_MODULE_NAME);
     }
     $this->load->helper('prchat/prchat');
@@ -2587,7 +2594,7 @@ class Prchat_Controller extends AdminController
     if ($this->input->method(true) !== 'POST') {
       return $this->output->set_status_header(405)->set_content_type('application/json')->set_output(json_encode(['success' => false, 'message' => 'POST required.']));
     }
-    if (!staff_can('view', PR_CHAT_MODULE_NAME)) {
+    if (!prchat_staff_can_chat()) {
       access_denied(PR_CHAT_MODULE_NAME);
     }
 
@@ -2783,7 +2790,7 @@ class Prchat_Controller extends AdminController
     }
     $raw = (string) $this->input->get('contact_ids');
     $ids = array_values(array_filter(array_map('intval', explode(',', $raw)), static function ($id) { return $id > 0; }));
-    $ids = array_slice(array_unique($ids), 0, 500);
+    $ids = array_values(array_filter(array_slice(array_unique($ids), 0, 500), 'prchat_staff_can_contact'));
     $staffKey = 'staff_' . get_staff_user_id();
     $result = $this->chat_model->getClientContactPreviews($staffKey, $ids);
     return $this->output->set_content_type('application/json')->set_output(json_encode($result ?: []));
@@ -2949,9 +2956,10 @@ class Prchat_Controller extends AdminController
 
   public function sms_log()
   {
-    if (!is_staff_logged_in() || (!staff_can('view', PR_CHAT_MODULE_NAME) && !is_admin())) { access_denied(PR_CHAT_MODULE_NAME); }
+    if (!is_staff_logged_in() || (!prchat_staff_can_chat() && !is_admin())) { access_denied(PR_CHAT_MODULE_NAME); }
     $table=db_prefix().'prchat_sms_log';
     $data['title']='Employee SMS Log';
+    if (prchat_staff_own_scope()) { $this->db->group_start()->where('l.staff_id', get_staff_user_id())->or_where('l.recipient_staff_id', get_staff_user_id())->group_end(); }
     $data['sms_rows']=$this->db->select('l.*, CONCAT(s.firstname," ",s.lastname) AS recipient_name, CONCAT(a.firstname," ",a.lastname) AS sender_name')
       ->from($table.' l')->join(db_prefix().'staff s','s.staffid=l.recipient_staff_id','left')->join(db_prefix().'staff a','a.staffid=l.staff_id','left')
       ->order_by('l.id','DESC')->limit(500)->get()->result_array();

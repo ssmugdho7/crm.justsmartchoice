@@ -10,6 +10,7 @@ $administrator = false;
 $registeredCapabilities = [];
 function get_option($name) { return $GLOBALS['options'][$name] ?? ''; }
 function db_prefix() { return 'tbl'; }
+function get_staff_user_id() { return 7; }
 function staff_can($capability, $feature = null, $id = '') {
     return $GLOBALS['administrator'] || in_array($capability, $GLOBALS['permissions'][$feature] ?? [], true);
 }
@@ -62,7 +63,7 @@ $cases = [
     'edit only' => [['prchat' => ['edit']], false, false, false],
     'delete only' => [['prchat' => ['delete']], false, false, false],
     'ai assist only' => [['prchat' => ['ai_assist']], false, false, false],
-    'legacy own only' => [['prchat' => ['view_own']], false, false, false],
+    'own only' => [['prchat' => ['view_own']], false, true, false],
     'admin' => [[], true, true, true],
 ];
 foreach ($cases as $name => [$permissions, $administrator, $expectChat, $expectBot]) {
@@ -103,14 +104,20 @@ class ChatAccessOutput {
     public function _display() { throw new RuntimeException('Call denied ' . $this->status); }
 }
 class AdminController {
+    public $router;
+    public $input;
     public $output;
     public $app_modules;
     public $load;
     public function __construct() {
+        $this->router = new class { public function fetch_method() { return $GLOBALS['chatAccessMethod'] ?? 'users'; } };
+        $this->input = new class { public function get_post($key) { return null; } public function get($key) { return null; } public function post($key) { return null; } };
         $this->output = new ChatAccessOutput();
         $this->app_modules = new class { public function is_active($name) { return true; } };
         $this->load = new class {
             public $libraries = [];
+            public function model(...$args) {}
+            public function helper(...$args) {}
             public function library($name) { $this->libraries[] = $name; }
         };
     }
@@ -128,3 +135,46 @@ foreach ($cases as $name => [$permissions, $administrator, $expectChat, $expectB
     }
 }
 echo "PASS 22 menu cases and 11 call access cases; native saved-menu transforms and chatbot restrictions preserved\n";
+
+function redirect($url) { throw new RuntimeException('Chat denied redirect'); }
+require $root . '/modules/prchat/controllers/Prchat_Controller.php';
+foreach ($cases as $name => [$permissions, $administrator, $expectChat, $expectBot]) {
+    $options['pusher_chat_enabled'] = '1';
+    $GLOBALS['chatAccessMethod'] = 'users';
+    try { new Prchat_Controller(); check($expectChat, "$name: backend read guard"); }
+    catch (RuntimeException $e) { check(!$expectChat && $e->getMessage() === 'Chat denied redirect', $e->getMessage()); }
+    $GLOBALS['chatAccessMethod'] = 'get_call_token';
+    try { new Prchat_Controller(); check($expectChat, "$name: token guard"); }
+    catch (RuntimeException $e) { check(!$expectChat && $e->getMessage() === 'Call denied 403', $e->getMessage()); }
+}
+echo "PASS 11 backend chat bootstrap cases and 11 call-token cases\n";
+
+class ClientsController extends AdminController {}
+function is_client_logged_in() { return $GLOBALS['fixtureClientLoggedIn'] ?? false; }
+function get_contact_user_id() { return is_client_logged_in() ? 7 : 0; }
+require $root . '/modules/prchat/controllers/ClientCalls_Controller.php';
+$fixtureClientLoggedIn = true;
+$options['chat_client_enabled'] = '1';
+$options['chat_client_calls_enabled'] = '1';
+$GLOBALS['chatAccessMethod'] = 'get_call_token';
+new ClientCalls_Controller();
+foreach (['login', 'chat', 'calls'] as $disabled) {
+    $fixtureClientLoggedIn = $disabled !== 'login';
+    $options['chat_client_enabled'] = $disabled === 'chat' ? '0' : '1';
+    $options['chat_client_calls_enabled'] = $disabled === 'calls' ? '0' : '1';
+    try { new ClientCalls_Controller(); throw new RuntimeException('Client gate missing'); }
+    catch (RuntimeException $e) { check($e->getMessage() === 'Call denied 403', $e->getMessage()); }
+}
+$fixtureClientLoggedIn = true;
+$client = (new ReflectionClass(ClientCalls_Controller::class))->newInstanceWithoutConstructor();
+$client->input = new class { public $channel; public function post($key) { return $key === 'channel_name' ? $this->channel : 'fixture-socket'; } };
+$pusher = new class { public $signed=[]; public function socket_auth($channel,$socket) { $this->signed[]=$channel; return '{"auth":"fixture"}'; } };
+$property = new ReflectionProperty(ClientCalls_Controller::class,'pusher'); $property->setAccessible(true); $property->setValue($client,$pusher);
+$client->input->channel = CHAT_CALLS_CLIENT_CHANNEL_PREFIX . '7';
+ob_start(); $client->pusherAuth(); $payload=ob_get_clean();
+check(json_decode($payload,true)['auth']==='fixture','Own private call channel signed');
+$client->input->channel = CHAT_CALLS_CLIENT_CHANNEL_PREFIX . '8';
+ob_start(); $client->pusherAuth(); $payload=ob_get_clean();
+check(strpos($payload, 'Unauthorized channel') !== false && count($pusher->signed)===1,'Another contact call channel denied');
+check(strpos(CHAT_CALLS_STAFF_CHANNEL_PREFIX,'private-')===0 && strpos(CHAT_CALLS_CLIENT_CHANNEL_PREFIX,'private-')===0,'Call signaling is private');
+echo "PASS client call login/settings gates and private channel ownership\n";

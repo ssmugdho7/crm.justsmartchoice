@@ -1,5 +1,5 @@
 <?php
-if (staff_can('view', PR_CHAT_MODULE_NAME)) {
+if (prchat_staff_can_chat()) {
 	if (get_option('pusher_chat_enabled') == '1') {
 		if (get_option('pusher_realtime_notifications') == 0) {
 			echo '<script src="https://js.pusher.com/8.0/pusher.min.js"></script>';

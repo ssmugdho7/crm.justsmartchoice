@@ -884,9 +884,10 @@ $is24Hour_client = get_option('time_format') == '24';
 
   /*---------------* Pusher Trigger accessing channel *---------------*/
   var clientsChannel = pusher.subscribe("presence-clients");
+  var clientMessageChannel = pusher.subscribe("private-prchat-clients-contact-<?= (int) get_contact_user_id() ?>");
 
   /*---------------* Pusher Trigger Message Seen / Unseen *---------------*/
-  var user_messages_events = pusher.subscribe("user_messages");
+  var user_messages_events = pusher.subscribe("private-prchat-receipts-contact-<?= (int) get_contact_user_id() ?>");
 
   /*---------------* Calls Channel for receiving calls from staff *---------------*/
   <?php if (get_option('chat_client_calls_enabled') == '1'): ?>
@@ -1989,7 +1990,7 @@ $is24Hour_client = get_option('time_format') == '24';
 
   /*---------------* Event that is binded to typing event with pusher webockets *---------------*/
   var clearTypingTimerId;
-  clientsChannel.bind("typing-event", function(data) {
+  clientMessageChannel.bind("typing-event", function(data) {
     var clearTypingInterval = 2500;
     var typingIndicator = $(".clientwrapper").find(".typing-indicator");
 
@@ -2028,7 +2029,7 @@ $is24Hour_client = get_option('time_format') == '24';
   });
 
   /*---------------* Event that is binded to send event with pusher webockets *---------------*/
-  clientsChannel.bind("send-event", function(data) {
+  clientMessageChannel.bind("send-event", function(data) {
     $(".clientwrapper").find(".typing-indicator").removeClass("show");
 
     // IMPORTANT: Only process messages that are meant for THIS client
@@ -2176,7 +2177,7 @@ $is24Hour_client = get_option('time_format') == '24';
 
   });
 
-  clientsChannel.bind("message-edited", function(data) {
+  clientMessageChannel.bind("message-edited", function(data) {
     if (!data || !data.message_id || !data.rendered_message) {
       return;
     }
@@ -2488,7 +2489,7 @@ $is24Hour_client = get_option('time_format') == '24';
     });
   }
 
-  clientsChannel.bind("chat-ticket-event", function(event) {
+  clientMessageChannel.bind("chat-ticket-event", function(event) {
     if (event.client_id == contact_id) {
       alert_float("success", "<?= _l('chat_client_new_ticket_created'); ?>");
     }
@@ -3112,7 +3113,7 @@ $is24Hour_client = get_option('time_format') == '24';
 
     // Pusher: message-reaction event
     if (typeof clientsChannel !== 'undefined' && clientsChannel) {
-      clientsChannel.bind('message-reaction', function(data) {
+      clientMessageChannel.bind('message-reaction', function(data) {
         if (data && data.message_id) {
           updateClientReactionPills(data.message_id, data.reactions);
         }

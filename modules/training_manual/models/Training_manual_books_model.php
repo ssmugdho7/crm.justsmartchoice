@@ -157,6 +157,22 @@ class Training_manual_books_model extends App_Model
         return $this->db->get()->result_array();
     }
 
+    // Listing cards do not need full article or mind-map bodies.
+    public function get_customer_book_article_cards($book_ids)
+    {
+        if (!$book_ids) { return []; }
+        $articles = $this->db->select('A.id,A.book_id,A.title,A.description,A.thumbnail,A.updated_at')
+            ->from(db_prefix() . 'wiki_articles A')
+            ->join(db_prefix() . 'wiki_books B', 'B.id = A.book_id')
+            ->where_in('A.book_id', array_map('intval', $book_ids))
+            ->where('A.is_publish', 1)
+            ->where('B.customer_visible', 1)
+            ->order_by('A.updated_at', 'DESC')->get()->result_array();
+        $byBook = [];
+        foreach ($articles as $article) { $byBook[$article['book_id']][] = $article; }
+        return $byBook;
+    }
+
     public function get_customer_book_articles($book_id)
     {
         return $this->db->select('A.*, CONCAT(IFNULL(S.firstname, ""), " ", IFNULL(S.lastname, "")) AS creator_name', false)

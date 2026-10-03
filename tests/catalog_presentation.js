@@ -18,7 +18,15 @@ $.fn.modal=function(){return this;};
 $.ajax=function(options){options.success(products);};
 $.getJSON=()=>({done(fn){fn([{quantity:2},{quantity:3}]);return this;}});
 $.post=function(url,payload,callback){posted={url,payload};callback(JSON.stringify([{quantity:payload.quantity}]));return {always(fn){fn();return this;}};};
-w.eval(fs.readFileSync('modules/products/assets/js/client_products.js','utf8'));
+w.eval(fs.readFileSync('modules/products/assets/js/client_products.js','utf8') + '\nwindow.__testEscape = scEscape;');
+let escapeNodes = 0;
+const originalCreateElement = w.document.createElement.bind(w.document);
+w.document.createElement = function(...args) { escapeNodes++; return originalCreateElement(...args); };
+assert.equal(w.__testEscape('<>&"\''), '&lt;&gt;&amp;&quot;&#39;');
+assert.equal(w.__testEscape(null), ''); assert.equal(w.__testEscape(0), '0');
+assert.equal(w.__testEscape('é 😀'), 'é 😀');
+assert.equal(escapeNodes, 0, 'Escaping does not allocate a DOM node per field');
+w.document.createElement = originalCreateElement;
 w.eval(fs.readFileSync('modules/products/assets/js/catalog.js','utf8'));
 w.document.dispatchEvent(new w.Event('DOMContentLoaded'));
 setTimeout(()=>{

@@ -44,8 +44,10 @@ function get_instance() {
     if (!$ci) $ci = (object) ['db' => new PortalTestQuery(), 'projects_model' => new class { function calc_progress($id) { return 130; } }];
     return $ci;
 }
-function get_template_part($name) {
+function sc_customer_status_counts($table) { global $scenario; return $scenario === 'empty' ? [] : [1=>1, 2=>1, 5=>1, 6=>1]; }
+function get_template_part($name, $data = []) {
     global $project_statuses;
+    extract($data);
     include dirname(__DIR__) . '/application/views/themes/smartchoice/template_parts/' . $name . '.php';
 }
 function verify($condition, $message) { if (!$condition) throw new RuntimeException($message); }

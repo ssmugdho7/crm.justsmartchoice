@@ -427,6 +427,7 @@ class Clients_model extends App_Model
                     }
                 }
             }
+            clear_contact_permission_cache($id);
             if ($send_set_password_email) {
                 $set_password_email_sent = $this->authentication_model->set_password_email($data['email'], 0);
             }
@@ -588,6 +589,8 @@ class Clients_model extends App_Model
                     }
                 }
             }
+
+            clear_contact_permission_cache($contact_id);
 
             if ($send_welcome_email == true) {
                 send_mail_template('customer_created_welcome_mail', $data['email'], $data['userid'], $contact_id, $password_before_hash);
@@ -994,6 +997,8 @@ class Clients_model extends App_Model
 
             $this->db->where('userid', $id);
             $this->db->delete(db_prefix() . 'contact_permissions');
+
+            clear_contact_permission_cache($id);
 
             $this->db->where('user_id', $id);
             $this->db->where('staff', 0);

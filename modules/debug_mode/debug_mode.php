@@ -36,17 +36,25 @@ function debug_mode_smartchoice_deactivation_hook()
 
 function debug_mode_smartchoice_add_default_options()
 {
-    add_option('debug_mode_enabled', '0');
-    add_option('debug_mode_client_visible', '0');
-    add_option('debug_mode_log_level', 'basic');
-    add_option('debug_mode_allowed_roles', '');
-    add_option('debug_mode_allowed_staff', '');
-    add_option('debug_mode_phpmyadmin_url', 'https://s111.bluehost.com:2083/');
-    add_option('debug_mode_client_portal_enabled', '1');
-    add_option('debug_mode_show_admin_banner', '1');
-    add_option('debug_mode_cache_last_cleared', '');
-    add_option('debug_mode_version', '2.1.6');
-    add_option('debug_mode_access_control_enabled', '0');
+    $defaults = [
+        'debug_mode_enabled' => '0',
+        'debug_mode_client_visible' => '0',
+        'debug_mode_log_level' => 'basic',
+        'debug_mode_allowed_roles' => '',
+        'debug_mode_allowed_staff' => '',
+        'debug_mode_phpmyadmin_url' => 'https://s111.bluehost.com:2083/',
+        'debug_mode_client_portal_enabled' => '1',
+        'debug_mode_show_admin_banner' => '1',
+        'debug_mode_cache_last_cleared' => '',
+        'debug_mode_version' => '2.1.6',
+        'debug_mode_access_control_enabled' => '0',
+    ];
+    $rows = get_instance()->db->select('name')->where_in('name', array_keys($defaults))
+        ->get(db_prefix() . 'options')->result_array();
+    $existing = array_fill_keys(array_column($rows, 'name'), true);
+    foreach ($defaults as $name => $value) {
+        if (!isset($existing[$name])) { add_option($name, $value); }
+    }
 }
 
 function debug_mode_smartchoice_admin_init()

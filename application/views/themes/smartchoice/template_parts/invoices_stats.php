@@ -1,15 +1,14 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
-$where_total = 'clientid=' . get_client_user_id() . ' AND status !=5';
+$invoiceStatusCounts = $invoiceStatusCounts ?? sc_customer_status_counts('invoices');
+$total_invoices = array_sum($invoiceStatusCounts) - ($invoiceStatusCounts[5] ?? 0);
 if (get_option('exclude_invoice_from_client_area_with_draft_status') == 1) {
-    $where_total .= ' AND status != 6';
+    $total_invoices -= $invoiceStatusCounts[6] ?? 0;
 }
-
-$total_invoices            = total_rows(db_prefix() . 'invoices', $where_total);
-$total_open                = total_rows(db_prefix() . 'invoices', ['status' => 1, 'clientid' => get_client_user_id()]);
-$total_paid                = total_rows(db_prefix() . 'invoices', ['status' => 2, 'clientid' => get_client_user_id()]);
-$total_not_paid_completely = total_rows(db_prefix() . 'invoices', ['status' => 3, 'clientid' => get_client_user_id()]);
-$total_overdue             = total_rows(db_prefix() . 'invoices', ['status' => 4, 'clientid' => get_client_user_id()]);
+$total_open                = $invoiceStatusCounts[1] ?? 0;
+$total_paid                = $invoiceStatusCounts[2] ?? 0;
+$total_not_paid_completely = $invoiceStatusCounts[3] ?? 0;
+$total_overdue             = $invoiceStatusCounts[4] ?? 0;
 
 $percent_open                = ($total_invoices > 0 ? number_format(($total_open * 100) / $total_invoices, 2) : 0);
 $percent_paid                = ($total_invoices > 0 ? number_format(($total_paid * 100) / $total_invoices, 2) : 0);

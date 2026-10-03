@@ -50,50 +50,54 @@ class Products_model extends App_Model
 
     public function get_by_id_product($id = false)
     {
-        $this->db->join('product_categories', db_prefix() . 'product_categories.p_category_id='.db_prefix() . 'product_master.product_category_id', 'LEFT');
+        $this->db->join('product_categories', db_prefix() . 'product_categories.p_category_id=' . db_prefix() . 'product_master.product_category_id', 'LEFT');
         if ($id) {
-            $this->db->where_in('id', $id);
-            if (is_array($id)) {
-                $product = $this->db->get(db_prefix() . 'product_master')->result();
-                foreach ($product as $product_row) {
-                    if ($product_row->is_variation) {
-                        $this->db->select(db_prefix() . 'product_variations.*, ' . db_prefix() . 'variations.name as variation_name, ' . db_prefix() . 'variation_values.value as variation_value');
-                        $this->db->join('variations', db_prefix() . 'variations.id=' . db_prefix() . 'product_variations.variation_id', 'LEFT');
-                        $this->db->join('variation_values', db_prefix() . 'variation_values.id=' . db_prefix() . 'product_variations.variation_value_id', 'LEFT');
-                        $this->db->where('product_id', $product_row->id);
-                        $this->db->order_by('variation_id');
-                        $product_row->variations = $this->db->get(db_prefix() . 'product_variations')->result();
-                    }
-                }
-            } else {
+            $this->db->where_in(db_prefix() . 'product_master.id', $id);
+            if (!is_array($id)) {
                 $product = $this->db->get(db_prefix() . 'product_master')->row();
-                if ($product->is_variation) {
-                    $this->db->select(db_prefix() . 'product_variations.*, ' . db_prefix() . 'variations.name as variation_name, ' . db_prefix() . 'variation_values.value as variation_value');
-                    $this->db->join('variations', db_prefix() . 'variations.id=' . db_prefix() . 'product_variations.variation_id', 'LEFT');
-                    $this->db->join('variation_values', db_prefix() . 'variation_values.id=' . db_prefix() . 'product_variations.variation_value_id', 'LEFT');
-                    $this->db->where('product_id', $product->id);
-                    $this->db->order_by('variation_id');
-                    $product->variations = $this->db->get(db_prefix() . 'product_variations')->result();
-                }
+                if (!$product) { return $product; }
+                $products = $this->attach_product_variations([$product]);
+                return $products[0];
             }
-
-            return $product;
+            return $this->attach_product_variations($this->db->get(db_prefix() . 'product_master')->result());
         }
         $this->db->order_by(db_prefix() . 'product_master.product_category_id', 'ASC');
         $this->db->order_by(db_prefix() . 'product_master.product_name', 'ASC');
-        $products = $this->db->get(db_prefix() . 'product_master')->result_array();
-        foreach ($products as $product_index => $product) {
-            if ($product['is_variation']) {
-                $this->db->select(db_prefix() . 'product_variations.*, ' . db_prefix() . 'variations.name as variation_name, ' . db_prefix() . 'variation_values.value as variation_value');
-                $this->db->join('variations', db_prefix() . 'variations.id=' . db_prefix() . 'product_variations.variation_id', 'LEFT');
-                $this->db->join('variation_values', db_prefix() . 'variation_values.id=' . db_prefix() . 'product_variations.variation_value_id', 'LEFT');
-                $this->db->where('product_id', $product['id']);
-                $this->db->order_by('variation_id');
-                $products[$product_index]['variations'] = $this->db->get(db_prefix() . 'product_variations')->result();
-            }
-        }
+        return $this->attach_product_variations($this->db->get(db_prefix() . 'product_master')->result_array());
+    }
 
+    // Fetch options once for the selected products, retaining object/array return formats.
+    private function attach_product_variations($products)
+    {
+        $ids = [];
+        foreach ($products as $product) {
+            $row = (array) $product;
+            if (!empty($row['is_variation'])) { $ids[] = $row['id']; }
+        }
+        if (!$ids) { return $products; }
+        $variations = $this->db
+            ->select(db_prefix() . 'product_variations.*, ' . db_prefix() . 'variations.name as variation_name, ' . db_prefix() . 'variation_values.value as variation_value')
+            ->join('variations', db_prefix() . 'variations.id=' . db_prefix() . 'product_variations.variation_id', 'LEFT')
+            ->join('variation_values', db_prefix() . 'variation_values.id=' . db_prefix() . 'product_variations.variation_value_id', 'LEFT')
+            ->where_in('product_id', array_unique($ids))
+            ->order_by('variation_id')
+            ->get(db_prefix() . 'product_variations')->result();
+        $byProduct = [];
+        foreach ($variations as $variation) { $byProduct[$variation->product_id][] = $variation; }
+        foreach ($products as $index => $product) {
+            $row = (array) $product;
+            if (empty($row['is_variation'])) { continue; }
+            $options = $byProduct[$row['id']] ?? [];
+            if (is_object($product)) { $product->variations = $options; }
+            else { $products[$index]['variations'] = $options; }
+        }
         return $products;
+    }
+
+    public function get_populated_category_ids()
+    {
+        $rows = $this->db->distinct()->select('product_category_id')->get(db_prefix() . 'product_master')->result_array();
+        return array_column($rows, 'product_category_id');
     }
 
 	public function get_by_cart_product($cart_data)

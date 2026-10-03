@@ -2,12 +2,14 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 $portalMetrics = [];
 if (has_contact_permission('projects')) {
-    $portalMetrics[] = ['clients/projects', 'fa-solid fa-diagram-project', _l('clients_my_projects'), total_rows(db_prefix() . 'projects', ['clientid' => get_client_user_id()]), 'work'];
+    $projectStatusCounts = sc_customer_status_counts('projects');
+    $portalMetrics[] = ['clients/projects', 'fa-solid fa-diagram-project', _l('clients_my_projects'), array_sum($projectStatusCounts), 'work'];
 }
 if (has_contact_permission('invoices')) {
-    $invoiceWhere = ['clientid' => get_client_user_id()];
-    if (get_option('exclude_invoice_from_client_area_with_draft_status') == 1) { $invoiceWhere['status !='] = Invoices_model::STATUS_DRAFT; }
-    $portalMetrics[] = ['clients/invoices', 'fa-solid fa-file-invoice-dollar', _l('clients_my_invoices'), total_rows(db_prefix() . 'invoices', $invoiceWhere), 'billing'];
+    $invoiceStatusCounts = sc_customer_status_counts('invoices');
+    $invoiceMetricTotal = array_sum($invoiceStatusCounts);
+    if (get_option('exclude_invoice_from_client_area_with_draft_status') == 1) { $invoiceMetricTotal -= $invoiceStatusCounts[Invoices_model::STATUS_DRAFT] ?? 0; }
+    $portalMetrics[] = ['clients/invoices', 'fa-solid fa-file-invoice-dollar', _l('clients_my_invoices'), $invoiceMetricTotal, 'billing'];
 }
 if (has_contact_permission('contracts')) {
     $portalMetrics[] = ['clients/contracts', 'fa-solid fa-file-signature', _l('clients_contracts'), total_rows(db_prefix() . 'contracts', ['client' => get_client_user_id(), 'trash' => 0, 'not_visible_to_client' => 0]), 'legal'];
@@ -67,14 +69,14 @@ if (has_contact_permission('support')) {
         <section class="sc-dashboard-section" aria-labelledby="sc-billing-snapshot">
             <div class="sc-dashboard-section-title"><h2 id="sc-billing-snapshot">Billing snapshot</h2><a href="<?= site_url('clients/invoices'); ?>">View invoices <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div>
             <div class="sc-dashboard-billing">
-                <?php get_template_part('invoices_stats'); ?>
+                <?php get_template_part('invoices_stats', ['invoiceStatusCounts' => $invoiceStatusCounts]); ?>
                 <a class="btn btn-default btn-block" href="<?= site_url('clients/statement'); ?>"><?= e(_l('view_account_statement')); ?></a>
             </div>
         </section>
         <?php } ?>
     </div>
     <?php if (has_contact_permission('projects')) { ?>
-    <section class="sc-dashboard-summary" aria-labelledby="sc-project-summary"><div class="sc-dashboard-section-title"><h2 id="sc-project-summary"><?= e(_l('projects_summary')); ?></h2></div><?php get_template_part('projects/project_summary'); ?></section>
+    <section class="sc-dashboard-summary" aria-labelledby="sc-project-summary"><div class="sc-dashboard-section-title"><h2 id="sc-project-summary"><?= e(_l('projects_summary')); ?></h2></div><?php get_template_part('projects/project_summary', ['projectStatusCounts' => $projectStatusCounts]); ?></section>
     <?php } ?>
     <?php hooks()->do_action('client_area_after_project_overview'); ?>
     <section class="sc-dashboard-section" aria-labelledby="sc-resources">

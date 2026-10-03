@@ -233,12 +233,11 @@ class Client extends ClientsController
         }
         $this->load->model('product_category_model');
         $data['title']              = _l('products');
-        $data['products']           = $this->products_model->get_by_id_product();
+        // The catalog is loaded by filter(); the HTML view only needs categories.
+        $populatedCategories = array_fill_keys($this->products_model->get_populated_category_ids(), true);
         $data['product_categories'] = $this->product_category_model->get();
         foreach ($data['product_categories'] as $key => $category) {
-            $this->db->where('product_category_id', (int) $category['p_category_id']);
-            $count = (int) $this->db->count_all_results(db_prefix() . 'product_master');
-            if ($count < 1) {
+            if (!isset($populatedCategories[$category['p_category_id']])) {
                 unset($data['product_categories'][$key]);
                 continue;
             }

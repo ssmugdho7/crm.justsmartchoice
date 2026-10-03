@@ -3,7 +3,12 @@
 var cart_items = [];
 var scProductI18n = window.scProductI18n || {};
 function scT(key, fallback) { return scProductI18n[key] || fallback || key; }
-function scEscape(value) { return $('<div/>').text(value == null ? '' : value).html().replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+function scEscape(value) {
+    // Avoid constructing a DOM node for every catalog field and option.
+    return String(value == null ? '' : value).replace(/[&<>"']/g, function(character) {
+        return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[character];
+    });
+}
 function scCleanText(value) {
     return (value == null ? '' : String(value))
         .replace(/&nbsp;/gi, ' ')

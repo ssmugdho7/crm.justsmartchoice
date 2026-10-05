@@ -221,6 +221,7 @@ class Client extends ClientsController
             'product_cart_updated_success' => _l('product_cart_updated_success'),
             'product_loading_catalog' => _l('product_loading_catalog'),
             'product_unable_load' => _l('product_unable_load'),
+            'product_unable_add_cart' => _l('product_unable_add_cart'),
             'product_no_selection' => _l('product_no_selection'),
         ];
     }

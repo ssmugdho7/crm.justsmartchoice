@@ -145,6 +145,7 @@ $lang['product_added_to_cart_success'] = 'Item added to cart.';
 $lang['product_cart_updated_success'] = 'Cart updated.';
 $lang['product_loading_catalog'] = 'Loading catalog...';
 $lang['product_unable_load'] = 'Unable to load products.';
+$lang['product_unable_add_cart'] = 'Unable to add this item to the cart. Please try again.';
 
 $lang['products_appointment_booking_url'] = 'Appointment booking page URL';
 $lang['products_appointment_booking_url_help'] = 'This link is used for the invoice button so customers can pick service days or create an appointment after checkout.';

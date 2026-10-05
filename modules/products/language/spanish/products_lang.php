@@ -139,6 +139,7 @@ $lang['product_added_to_cart_success'] = 'Artículo agregado al carrito.';
 $lang['product_cart_updated_success'] = 'Carrito actualizado.';
 $lang['product_loading_catalog'] = 'Cargando catálogo...';
 $lang['product_unable_load'] = 'No se pudieron cargar los productos.';
+$lang['product_unable_add_cart'] = 'No se pudo agregar este artículo al carrito. Inténtelo de nuevo.';
 
 $lang['products_appointment_booking_url'] = 'URL de la página de citas';
 $lang['products_appointment_booking_url_help'] = 'Este enlace se usa en el botón de la factura para que el cliente pueda escoger días de servicio o crear una cita después del checkout.';

@@ -8,9 +8,14 @@ The page keeps the original multi-category toolbar, View Cart and Checkout
 buttons. Cards with images appear first, keeping the original order within
 the photographed and unphotographed groups, including after category filtering.
 The layout keeps the original Bootstrap one/two/three-column cards, larger image areas, price panels,
-variation controls, quantity steppers and bottom Share buttons. Existing
+quantity steppers and bottom Share buttons. Product variations now open in a
+Bootstrap dialog when Add to Cart is clicked instead of occupying a fixed-height
+area on every card. The dialog shows the product name, price, dropdowns and
+quantity; it closes after a successful cart response and remains open for
+validation or request errors. Products without variations add directly.
+Existing
 `products_frontend.css` supplies the layout. The scoped `legacy_catalog.css`
-only supports loading, broken-image and missing-image covers. The later
+supports image covers and removes the old fixed card/body heights. The later
 `catalog.css` and `catalog.js` assets are no longer loaded by this page.
 
 Current escaping, labeled options and quantities, cart request validation,

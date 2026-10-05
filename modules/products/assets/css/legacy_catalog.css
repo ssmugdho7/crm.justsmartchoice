@@ -18,3 +18,27 @@
 #sc-service-catalog .sc-product-cover[hidden],
 #sc-service-catalog .sc-product-image[hidden] { display: none !important; }
 #sc-service-catalog .sc-image-pending { opacity: 0; }
+
+/* Options are configured in a dialog instead of reserving space on every card. */
+#sc-service-catalog .sc-product-grid .sc-product-card {
+    min-height: 0 !important;
+    height: auto !important;
+}
+#sc-service-catalog .sc-product-grid .sc-product-body {
+    min-height: 0 !important;
+}
+#sc-service-catalog .sc-product-grid .input_data.sc-card-actions {
+    margin-top: 12px;
+}
+#sc-service-catalog .sc-card-actions,
+#scProductOptionsModal .sc-card-actions {
+    flex-direction: row;
+    align-items: center;
+}
+#scProductOptionsModal .sc-card-actions { justify-content: flex-start; }
+#scProductOptionsModal .modal-body {
+    max-height: 65vh;
+    overflow-y: auto;
+}
+#scProductOptionsModal .sc-variation-line { margin-bottom: 14px !important; }
+#scProductOptionsModal .bootstrap-select { width: 100% !important; }

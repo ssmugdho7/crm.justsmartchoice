@@ -1,6 +1,7 @@
 "use strict";
 
 var cart_items = [];
+var scCatalogOptions = {};
 var scProductI18n = window.scProductI18n || {};
 function scT(key, fallback) { return scProductI18n[key] || fallback || key; }
 function scEscape(value) {
@@ -117,6 +118,22 @@ $(function() {
     $(document).on('click', '.add_cart', function() {
         var button = $(this);
         var row = button.closest('.product-row');
+        if (!row.hasClass('without-variations') && !row.closest('#scProductOptionsModal').length) {
+            var modal = $('#scProductOptionsModal');
+            var modalRow = modal.find('.product-row');
+            modalRow.data('scSourceRow', row);
+            modal.find('.modal-title').text(row.attr('data-catalog-name'));
+            modal.find('#scProductOptionsBody').empty()
+                .append(row.find('.sc-price').clone())
+                .append(scCatalogOptions[row.attr('data-catalog-order')] || '')
+                .append($('<div class="sc-card-actions products-pricing"></div>').append(row.find('.sc-qty-control').clone()));
+            modalRow.find('input[name="product_variation_id"]').val('');
+            modalRow.find('.add_cart').text(scT('add_to_cart', 'Add to Cart'));
+            appSelectPicker();
+            modal.attr('aria-hidden', 'false').modal('show');
+            return false;
+        }
+        if (button.prop('disabled')) { return false; }
         var quantityInput = row.find('input[name="quantity"]');
         var quantity = parseInt(quantityInput.val() || '0', 10);
         var max = parseInt(quantityInput.attr('max') || '0', 10);
@@ -130,6 +147,7 @@ $(function() {
         var product_variation_id = row.find('input[name="product_variation_id"]').val();
         if (!row.hasClass('without-variations') && !product_variation_id) {
             alert_float('danger', scT('product_choose_option', 'Please choose a product option.'));
+            row.find('select.variation_value_id').first().selectpicker('toggle');
             return false;
         }
         if (product_variation_id && variation_max > 0 && quantity > variation_max) {
@@ -141,12 +159,44 @@ $(function() {
             return false;
         }
         button.prop('disabled', true).addClass('disabled');
+        var optionsModal = row.closest('#scProductOptionsModal');
+        optionsModal.data('scCartPending', true);
         $.post(site_url + 'products/client/add_cart', {quantity: quantity, product_id: product_id, product_variation_id: product_variation_id}, function(data) {
-            try { cart_items = $.parseJSON(data); } catch(e) { cart_items = []; }
+            var response;
+            try { response = typeof data === 'string' ? $.parseJSON(data) : data; } catch(e) { response = null; }
+            if (!Array.isArray(response)) {
+                alert_float('danger', scT('product_unable_add_cart', 'Unable to add this item to the cart. Please try again.'));
+                return;
+            }
+            cart_items = response;
             $(document).trigger('scCartUpdated', [cart_items]);
             button.text(scT('update_cart', 'Update Cart'));
+            var sourceRow = row.data('scSourceRow');
+            if (sourceRow) {
+                sourceRow.find('input[name="quantity"]').val(quantity);
+                sourceRow.find('.add_cart').text(scT('update_cart', 'Update Cart'));
+                optionsModal.data('scCartPending', false).modal('hide');
+            }
             alert_float('success', scT('product_added_to_cart_success', 'Item added to cart.'));
-        }).always(function() { button.prop('disabled', false).removeClass('disabled'); });
+        }).fail(function() {
+            alert_float('danger', scT('product_unable_add_cart', 'Unable to add this item to the cart. Please try again.'));
+        }).always(function() {
+            optionsModal.data('scCartPending', false);
+            button.prop('disabled', false).removeClass('disabled');
+        });
+    });
+
+    $('#scProductOptionsModal').on('shown.bs.modal', function() {
+        $(this).find('.bootstrap-select button').first().trigger('focus');
+    }).on('hide.bs.modal', function(event) {
+        if ($(this).data('scCartPending')) { event.preventDefault(); }
+    }).on('hidden.bs.modal', function() {
+        $(this).attr('aria-hidden', 'true');
+        var row = $(this).find('.product-row');
+        var sourceRow = row.data('scSourceRow');
+        row.removeData('scSourceRow');
+        $(this).find('#scProductOptionsBody').empty();
+        if (sourceRow) { sourceRow.find('.add_cart').trigger('focus'); }
     });
 
     $(document).on('change', '#product_categories', function() {
@@ -200,6 +250,7 @@ function scGalleryHtml(val, productName, noImageUrl) {
 
 function render_product_data(data) {
     var html = '';
+    scCatalogOptions = {};
     cart_items = [];
     $.each(data, function(index, val) {
         var cart_data_quantity = '';
@@ -250,8 +301,8 @@ function render_product_data(data) {
             variations_content += '</div>';
         } else {
             product_class = 'without-variations';
-            variations_content = '<div class="variations sc-variation-row"><div class="sc-variation-line"><label class="sc-small-label">' + scEscape(scT('product_option', 'Option')) + '</label><select class="selectpicker variation_value_id form-control" disabled><option value="">' + scEscape(scT('product_no_selection', 'No Selection')) + '</option></select></div></div>';
         }
+        scCatalogOptions[index] = variations_content;
         var imageUrl = scEscape(val.product_image_url);
         var noImageUrl = scEscape(val.no_image_url);
         var qtyValue = cart_data_quantity ? scEscape(cart_data_quantity) : '1';
@@ -266,7 +317,6 @@ function render_product_data(data) {
                     '<div class="sc-product-description">' + scProductDescription(productDescription) + '</div>' +
                     '<div class="sc-category-label">' + scEscape(categoryName) + '</div>' +
                     '<div class="rates products-pricing sc-price"><span>' + scEscape(scT('product_starting_at', 'Starting at')) + ': ' + scEscape(val.base_currency_name) + ' <strong class="product-price">' + scEscape(product_rate) + '</strong> ' + scEscape(recurring_type) + '</span> ' + total_taxes + '<small class="product-cycles">' + scEscape(cycles_text) + '</small></div>' +
-                    variations_content +
                     '<div class="input_data sc-card-actions">' +
                         '<div class="products-pricing sc-qty-control"><button type="button" class="qty-minus" aria-label="Decrease quantity">−</button><input type="number" inputmode="numeric" pattern="[0-9]*" name="quantity" aria-label="' + scEscape((val.qty || 'Quantity') + ': ' + productName) + '" min="1" ' + max_attr + ' value="' + qtyValue + '" class="form-control" placeholder="' + scEscape(val.qty) + '"><button type="button" class="qty-plus" aria-label="Increase quantity">+</button><input type="hidden" name="product_id" value="' + scEscape(val.id) + '" class="form-control"><input type="hidden" name="product_variation_id" value="" class="form-control"><input type="hidden" min="1" ' + max_attr + ' class="form-control variation_quantity"></div>' +
                         '<div class="products-pricing sc-action-button-wrap">' + button + '</div>' +

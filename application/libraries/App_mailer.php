@@ -10,6 +10,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class App_mailer extends CI_Email
 {
     public $phpmailer;  // This property has been made public for testing purposes.
+    protected $accepted_recipients = [];
     protected static $default_properties = [
         'useragent'           => 'CodeIgniter',
         'mailpath'            => '/usr/sbin/sendmail',
@@ -439,6 +440,7 @@ class App_mailer extends CI_Email
     public function send($auto_clear = true)
     {
         $auto_clear = ! empty($auto_clear);
+        $this->accepted_recipients = [];
         if ($this->mailer_engine == 'phpmailer') {
             if ($this->mailtype == 'html') {
                 // Modified by Ivan Tcholakov, 01-AUG-2015.
@@ -446,7 +448,23 @@ class App_mailer extends CI_Email
                 // $this->phpmailer->AltBody = $this->_get_alt_message();
                 $this->phpmailer->AltBody = str_replace(['{unwrap}', '{/unwrap}'], '', $this->_get_alt_message());
             }
-            $result = (bool) $this->phpmailer->send();
+            $previousCallback = $this->phpmailer->action_function;
+            $this->phpmailer->action_function = function ($accepted, $to, $cc, $bcc, $subject, $body, $from, $extra) use ($previousCallback) {
+                // PHPMailer reports recipient acceptance after SMTP DATA succeeds.
+                if ($accepted) {
+                    foreach (array_merge($to, $cc, $bcc) as $address) {
+                        $this->accepted_recipients[] = strtolower($address[0]);
+                    }
+                }
+                if (is_callable($previousCallback)) {
+                    call_user_func($previousCallback, $accepted, $to, $cc, $bcc, $subject, $body, $from, $extra);
+                }
+            };
+            try {
+                $result = (bool) $this->phpmailer->send();
+            } finally {
+                $this->phpmailer->action_function = $previousCallback;
+            }
 
             if ($result) {
                 $this->_set_error_message('lang:email_sent', $this->_get_protocol());
@@ -461,6 +479,11 @@ class App_mailer extends CI_Email
         }
 
         return $result;
+    }
+
+    public function get_accepted_recipients()
+    {
+        return array_values(array_unique($this->accepted_recipients));
     }
 
     // Methods for setting configuration options -------------------------------

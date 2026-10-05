@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php $cart_url = site_url('products/client/place_order'); ?>
-<link rel="stylesheet" href="<?php echo module_dir_url('products', 'assets/css/legacy_catalog.css'); ?>?v=2">
+<link rel="stylesheet" href="<?php echo module_dir_url('products', 'assets/css/legacy_catalog.css'); ?>?v=3">
 <section id="sc-service-catalog" aria-label="Online Shopping">
 <div class="sc-shop-toolbar">
     <div class="row">

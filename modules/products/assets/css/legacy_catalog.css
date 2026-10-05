@@ -42,3 +42,147 @@
 }
 #scProductOptionsModal .sc-variation-line { margin-bottom: 14px !important; }
 #scProductOptionsModal .bootstrap-select { width: 100% !important; }
+
+/* Compact actions, using the customer portal's teal accent. */
+#sc-service-catalog .sc-cart-btn,
+#sc-service-catalog .sc-pill-btn,
+#sc-service-catalog .sc-share-product,
+#scProductOptionsModal .modal-footer .btn,
+#scShareProductModal .modal-footer .btn {
+    min-height: 34px;
+    height: auto !important;
+    padding: 7px 14px !important;
+    border-radius: 8px !important;
+    font-size: 13px !important;
+    font-weight: 600;
+    line-height: 18px;
+    text-transform: none;
+    letter-spacing: normal;
+    background-image: none !important;
+    box-shadow: none !important;
+    transition: background-color .15s, border-color .15s, color .15s;
+}
+#sc-service-catalog .sc-action-button-wrap { flex: 0 1 auto; }
+#sc-service-catalog .sc-card-actions { justify-content: flex-start; gap: 12px !important; }
+#sc-service-catalog .sc-cart-btn {
+    width: auto;
+    min-width: 0 !important;
+    white-space: normal;
+}
+#sc-service-catalog .add_cart,
+#sc-service-catalog .sc-pill-btn.btn-success,
+#scProductOptionsModal .modal-footer .add_cart,
+#scShareProductModal .modal-footer .btn-success {
+    background: #17685d !important;
+    border-color: #17685d !important;
+    color: #fff !important;
+}
+#sc-service-catalog .add_cart:hover,
+#sc-service-catalog .sc-pill-btn.btn-success:hover,
+#scProductOptionsModal .modal-footer .add_cart:hover,
+#scShareProductModal .modal-footer .btn-success:hover {
+    background: #115348 !important;
+    border-color: #115348 !important;
+}
+#sc-service-catalog .sc-pill-btn.btn-info,
+#sc-service-catalog .sc-share-product,
+#scProductOptionsModal .modal-footer .btn-default,
+#scShareProductModal .modal-footer .btn-default {
+    background: #fff !important;
+    border: 1px solid #d6e3df !important;
+    color: #17685d !important;
+}
+#sc-service-catalog .sc-pill-btn.btn-info:hover,
+#sc-service-catalog .sc-share-product:hover,
+#scProductOptionsModal .modal-footer .btn-default:hover,
+#scShareProductModal .modal-footer .btn-default:hover {
+    background: #edf6f2 !important;
+    border-color: #8db9ad !important;
+}
+#sc-service-catalog .sc-share-product {
+    width: auto;
+    align-self: flex-start;
+    margin-top: 12px;
+}
+#sc-service-catalog .sc-qty-control,
+#scProductOptionsModal .sc-qty-control {
+    flex-basis: 104px !important;
+    width: 104px;
+    height: 34px !important;
+    border-radius: 8px;
+    border-color: #d6e3df;
+}
+#sc-service-catalog .sc-qty-control input[type="number"],
+#scProductOptionsModal .sc-qty-control input[type="number"] {
+    height: 32px !important;
+    min-width: 38px;
+    font-size: 13px;
+}
+#sc-service-catalog .qty-minus,
+#sc-service-catalog .qty-plus,
+#scProductOptionsModal .qty-minus,
+#scProductOptionsModal .qty-plus {
+    background: #f2f7f5;
+    color: #17685d;
+    font-size: 17px;
+}
+#sc-service-catalog .qty-minus:hover,
+#sc-service-catalog .qty-plus:hover,
+#scProductOptionsModal .qty-minus:hover,
+#scProductOptionsModal .qty-plus:hover { background: #dfeee7; }
+#sc-service-catalog .select_cat .btn.dropdown-toggle {
+    border: 1px solid #d6e3df !important;
+    border-radius: 8px !important;
+    box-shadow: none !important;
+    color: #31554d;
+}
+#sc-service-catalog .sc-shop-toolbar .bs-actionsbox .btn {
+    padding: 6px 10px !important;
+    border: 1px solid #d6e3df !important;
+    border-radius: 6px !important;
+    background: #f2f7f5 !important;
+    color: #17685d !important;
+    font-size: 12px !important;
+}
+#scProductOptionsModal .modal-header .close,
+#scShareProductModal .modal-header .close {
+    width: 32px;
+    height: 32px;
+    margin-top: -5px;
+    border-radius: 8px;
+    color: #31554d;
+    opacity: 1;
+}
+#scProductOptionsModal .modal-header .close:hover,
+#scShareProductModal .modal-header .close:hover { background: #edf6f2; }
+#sc-service-catalog .sc-slider-arrow {
+    height: 36px !important;
+    border-radius: 8px !important;
+    font-size: 22px !important;
+    line-height: 32px !important;
+}
+#sc-service-catalog button:focus-visible,
+#sc-service-catalog a.btn:focus-visible,
+#scProductOptionsModal button:focus-visible,
+#scShareProductModal button:focus-visible {
+    outline: 3px solid #6eb2a1;
+    outline-offset: 3px;
+}
+#sc-service-catalog .sc-cart-btn:disabled,
+#scProductOptionsModal .modal-footer .btn:disabled,
+#scShareProductModal .modal-footer .btn:disabled {
+    opacity: .55;
+    cursor: not-allowed;
+}
+@media (max-width: 767px) {
+    #sc-service-catalog .sc-cart-btn,
+    #sc-service-catalog .sc-pill-btn,
+    #sc-service-catalog .sc-share-product,
+    #scProductOptionsModal .modal-footer .btn,
+    #scShareProductModal .modal-footer .btn { min-height: 40px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    #sc-service-catalog .btn,
+    #scProductOptionsModal .btn,
+    #scShareProductModal .btn { transition: none; }
+}

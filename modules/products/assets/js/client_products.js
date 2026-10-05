@@ -272,6 +272,11 @@ function render_product_data(data) {
         '</div>';
     });
     $('#filter_html').hide().html(html).fadeIn('fast');
+    // Put photographed services first without changing the order within either group.
+    var cards = $('#filter_html').children('.product-row').toArray();
+    var withImages = cards.filter(function(card) { return card.querySelector('.sc-product-image'); });
+    var withoutImages = cards.filter(function(card) { return !card.querySelector('.sc-product-image'); });
+    $('#filter_html').append(withImages.concat(withoutImages));
     if (html === '') { $('.no_product').removeClass('hidden'); }
     $(document).off('change.scVariationValue', '.selectpicker.variation_value_id').on('change.scVariationValue', '.selectpicker.variation_value_id', function() {
         var row = $(this).closest('.product-row');

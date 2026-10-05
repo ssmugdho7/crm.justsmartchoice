@@ -5,7 +5,9 @@ Git snapshot `fc338ebe`. Its view and card script match the Bluehost backup
 `/home2/scusawco/codex-backups/shop-catalog-20261003/previous-catalog.tar.gz`.
 
 The page keeps the original multi-category toolbar, View Cart and Checkout
-buttons, Bootstrap one/two/three-column cards, larger image areas, price panels,
+buttons. Cards with images appear first, keeping the original order within
+the photographed and unphotographed groups, including after category filtering.
+The layout keeps the original Bootstrap one/two/three-column cards, larger image areas, price panels,
 variation controls, quantity steppers and bottom Share buttons. Existing
 `products_frontend.css` supplies the layout. The scoped `legacy_catalog.css`
 only supports loading, broken-image and missing-image covers. The later

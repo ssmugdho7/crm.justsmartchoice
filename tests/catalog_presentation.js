@@ -33,10 +33,11 @@ setTimeout(()=>{
   const doc=w.document;
   const rows=()=>Array.from(doc.querySelectorAll('.product-row'));
   assert.equal(rows().length,3);
-  assert.equal(rows()[0].querySelector('img'),null,'an explicitly empty gallery never falls back to a discarded template');
-  assert.equal(rows()[0].querySelector('.sc-product-cover').textContent,'Zeta service');
+  assert.deepEqual(rows().map(row=>row.dataset.catalogName),['Alpha "safe" service','Zeta service','Unavailable'],'cards with images come first, preserving order within each group');
+  assert.equal(rows()[1].querySelector('img'),null,'an explicitly empty gallery never falls back to a discarded template');
+  assert.equal(rows()[1].querySelector('.sc-product-cover').textContent,'Zeta service');
   assert.equal(rows()[2].querySelector('img'),null,'empty upload URL becomes cover');
-  const alpha=rows()[1];
+  const alpha=rows()[0];
   assert.equal(alpha.dataset.catalogName,'Alpha "safe" service','quotes cannot break attributes');
   assert.equal(alpha.querySelector('img').getAttribute('src'),'/uploads/door.jpg');
   assert.equal(alpha.querySelector('.sc-product-cover').hidden,false,'name cover remains visible while a photo is loading');

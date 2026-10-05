@@ -226,6 +226,7 @@ body.customers:has(#wrapper.sc-portal-layout) .navbar.header #theme-navbar-colla
 @media(prefers-reduced-motion:reduce){.sc-privacy-page .btn{transition:none!important}}
 
 /* Keep customer navigation visible while scrolling, below dialogs and the mobile drawer. */
+body.sc-customer-enhanced{height:auto;min-height:100%;overflow-x:clip!important}
 body.sc-customer-enhanced .navbar.header{position:sticky!important;top:0;z-index:1035}
 @media(min-width:992px){body.sc-customer-enhanced .sc-portal-sidebar{top:calc(var(--sc-header-height,76px) + 16px);max-height:calc(100dvh - var(--sc-header-height,76px) - 32px)}}
 body.sc-customer-enhanced #content,body.sc-customer-enhanced #sc-privacy-policy{scroll-margin-top:calc(var(--sc-header-height,76px) + 24px)}

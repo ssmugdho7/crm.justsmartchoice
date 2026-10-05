@@ -20,9 +20,11 @@ controller alias redirects to that route. Public report, calculator, contract
 and proposal views retain their public layouts. Report access still matches the
 validated contact's customer account or email address.
 
-Every staff account sees Estimates, Online Shopping and Projects in the shared
-admin header. The links retain the existing destination authorization checks.
-The header stays sticky, and its measured height offsets the sidebar.
+The shared customer header retains Estimates, Online Shopping and Projects on
+every customer panel page, alongside the existing Support and Meetings links.
+Existing contact permissions and enabled-module settings still determine which
+links are granted. The customer header stays sticky, with the sidebar offset by
+its measured height. The admin header is unchanged.
 
 Verification:
 

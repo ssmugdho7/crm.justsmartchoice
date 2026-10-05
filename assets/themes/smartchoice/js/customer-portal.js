@@ -70,7 +70,7 @@
             bar.setAttribute('aria-valuenow', String(percent));
         });
 
-        // Keep Projects, Support and Meetings in the header; retain other granted destinations in the sidebar.
+        // Keep the requested customer shortcuts in the header as well as the sidebar.
         function syncHeaderLinks() {
         document.querySelectorAll('.navbar.header .navbar-nav > li:not(.dropdown) > a[href]').forEach(function (link) {
             var url;
@@ -81,7 +81,9 @@
                 return;
             }
             var exists = Array.from(sidebar.querySelectorAll('a')).some(function (item) { return item.href === link.href; });
-            var keepHeader = /\/clients\/(?:projects|tickets)(?:\/|$)/.test(url.pathname) || /\/google_meet\/meeting_clients\/meetings(?:\/|$)/.test(url.pathname);
+            var keepHeader = /\/clients\/(?:projects|tickets|estimates)(?:\/|$)/.test(url.pathname)
+                || /\/products\/client(?:\/|$)/.test(url.pathname)
+                || /\/google_meet\/meeting_clients\/meetings(?:\/|$)/.test(url.pathname);
             if (exists) {
                 link.parentElement.classList.toggle('sc-portal-nav-moved', !keepHeader);
                 return;

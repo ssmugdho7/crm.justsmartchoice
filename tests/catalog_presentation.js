@@ -7,7 +7,7 @@ const w = dom.window;
 w.eval(fs.readFileSync(require.resolve('jquery'),'utf8'));
 const $ = w.jQuery;
 const products = [
- {id:1,product_name:'Zeta service',product_description:'Paint your walls',p_category_name:'Painting',rate:'100',quantity_number:8,is_digital:0,recurring:0,product_gallery_urls:['/uploads/sc-default-service-1.jpg'],variations:[],add_to_cart:'Add to Cart'},
+ {id:1,product_name:'Zeta service',product_description:'Paint your walls',p_category_name:'Painting',rate:'100',quantity_number:8,is_digital:0,recurring:0,product_gallery_urls:[],product_image_url:'/uploads/sc-zeta-service.jpg',variations:[],add_to_cart:'Add to Cart'},
  {id:2,product_name:'Alpha "safe" service',product_description:'Doors',p_category_name:'Doors',rate:'120',quantity_number:9,is_digital:0,recurring:0,product_gallery_urls:['/uploads/door.jpg','/uploads/door2.jpg'],variations:[{id:41,variation_id:5,variation_name:'Door Width',variation_value:'32 inch',rate:'150',quantity_number:3}],add_to_cart:'Add to Cart'},
  {id:3,product_name:'Unavailable',product_description:'No stock',p_category_name:'Roofing',rate:'50',quantity_number:0,is_digital:0,recurring:0,product_image_url:'/uploads/',out_of_stock:'Out of stock'},
 ];
@@ -34,7 +34,7 @@ setTimeout(()=>{
   const doc=w.document;
   const rows=()=>Array.from(doc.querySelectorAll('.product-row'));
   assert.equal(rows().length,3);
-  assert.equal(rows()[0].querySelector('img'),null,'generic default becomes name cover');
+  assert.equal(rows()[0].querySelector('img'),null,'an explicitly empty gallery never falls back to a discarded template');
   assert.equal(rows()[0].querySelector('.sc-product-cover').textContent,'Zeta service');
   assert.equal(rows()[2].querySelector('img'),null,'empty upload URL becomes cover');
   const alpha=rows()[1];

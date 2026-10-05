@@ -23,6 +23,10 @@ if (!function_exists('products_smartchoice_catalog_seed_203')) {
         $defaultImage = 'sc-default-service-1.jpg';
         $products = $CI->db->get(db_prefix() . 'product_master')->result();
         foreach ($products as $product) {
+            // A catalog upgrade must not replace an existing service image or custom upload.
+            if (!empty($product->product_image)) {
+                continue;
+            }
             $slug = products_smartchoice_slug_203($product->product_name);
             $mainImage = 'sc-' . $slug . '.jpg';
             $mainPath = module_dir_path('products', 'uploads/' . $mainImage);

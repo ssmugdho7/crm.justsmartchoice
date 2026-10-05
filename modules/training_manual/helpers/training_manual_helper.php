@@ -35,7 +35,7 @@ if (!function_exists('training_manual_customer_fallback_asset')) {
         } elseif (strpos($needle, 'process') !== false || strpos($needle, 'material') !== false || strpos($needle, 'service') !== false || strpos($needle, 'expect') !== false) {
             $asset = 'service-experience.svg';
         }
-        return base_url(TRAINING_MANUAL_ASSETS_PATH . '/img/customer-guides/' . $asset);
+        return base_url(TRAINING_MANUAL_ASSETS_PATH . '/img/customer-guides/' . $asset . '?v=3');
     }
 }
 
@@ -59,7 +59,9 @@ if (!function_exists('training_manual_customer_image_url')) {
         $normalized = ltrim(str_replace('\\', '/', $value), '/');
         if (strpos($normalized, 'modules/training_manual/') === 0 || strpos($normalized, 'uploads/') === 0) {
             $localPath = FCPATH . $normalized;
-            return is_file($localPath) ? base_url($normalized) : $fallback;
+            // Refresh bundled guide covers independently of cached database paths.
+            $revision = strpos($normalized, TRAINING_MANUAL_ASSETS_PATH . '/img/customer-guides/') === 0 ? '?v=3' : '';
+            return is_file($localPath) ? base_url($normalized . $revision) : $fallback;
         }
 
         $basename = basename($normalized);

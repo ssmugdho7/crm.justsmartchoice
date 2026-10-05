@@ -2,10 +2,11 @@
 // Isolated presentation check: the controller and permission queries are untouched.
 define('BASEPATH', __DIR__);
 define('TRAINING_MANUAL_ASSETS_PATH', 'modules/training_manual/assets');
+define('FCPATH', dirname(__DIR__) . '/');
 function base_url($path) { return '/' . $path; }
 function site_url($path) { return '/' . $path; }
 function html_escape($text) { return htmlspecialchars((string) $text, ENT_QUOTES, 'UTF-8'); }
-function training_manual_customer_image_url($value = '', $title = '') { return '/guide-cover.svg'; }
+require FCPATH . 'modules/training_manual/helpers/training_manual_helper.php';
 function _l($key) { return $key; }
 $view = dirname(__DIR__) . '/modules/training_manual/views/client_portal_books.php';
 function render_library($books) { global $view; ob_start(); require $view; return ob_get_clean(); }
@@ -28,6 +29,14 @@ $checks = [
  'fallback categories retain new content'=> $xpath->query('//*[@data-guide and @href="/training_manual/customer-books/article/100"]')->length === 1,
  'search progressive enhancement'=> $xpath->query('//*[contains(@class,"sc-help-controls") and @hidden]')->length === 1,
  'empty account has no inert controls'=> strpos(render_library([]), 'id="help-library-search"') === false,
+ 'every cover has bounded topic and generic fallbacks'=> $xpath->query('//img[@data-fallback and @data-generic-fallback]')->length === 6,
+ 'bundled database cover bypasses stale browser cache'=> training_manual_customer_image_url('modules/training_manual/assets/img/customer-guides/support-system.svg') === '/modules/training_manual/assets/img/customer-guides/support-system.svg?v=3',
+ 'missing cover uses refreshed topic artwork'=> strpos(training_manual_customer_image_url('missing.png', 'Documents'), 'documents-payments.svg?v=3') !== false,
+ 'custom remote cover retained'=> training_manual_customer_image_url('https://example.test/cover.png') === 'https://example.test/cover.png',
 ];
+foreach (glob(FCPATH . TRAINING_MANUAL_ASSETS_PATH . '/img/customer-guides/*.svg') as $asset) {
+ $svg = new DOMDocument();
+ $checks['browser-parseable SVG: ' . basename($asset)] = @$svg->loadXML(file_get_contents($asset));
+}
 foreach ($checks as $name=>$pass) { echo ($pass ? 'PASS ' : 'FAIL ') . $name . PHP_EOL; }
 exit(in_array(false, $checks, true) ? 1 : 0);

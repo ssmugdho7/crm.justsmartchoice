@@ -71,6 +71,8 @@ class App_mail_template
      */
     protected $skipQueue = false;
 
+    private $acceptedCc = [];
+
     /**
      * Parent template should set $for property so the sending script can identify whether this email is for the customer or staff
      * Allowed values: customer, staff;
@@ -89,6 +91,7 @@ class App_mail_template
      */
     public function send()
     {
+        $this->acceptedCc = [];
         if (defined('DEMO') && DEMO) {
             return true;
         }
@@ -276,7 +279,12 @@ class App_mail_template
         $this->_alt_message();
         $this->_attachments();
 
-        if ($this->ci->email->send($this->skipQueue)) {
+        $sent = $this->ci->email->send($this->skipQueue);
+        $ccAddresses = is_array($this->cc) ? $this->cc : explode(',', (string) $this->cc);
+        $ccAddresses = array_map(static function ($address) { return strtolower(trim($address)); }, $ccAddresses);
+        $this->acceptedCc = array_values(array_intersect($ccAddresses, $this->ci->email->get_accepted_recipients()));
+
+        if ($sent) {
             log_activity('Email Sent To [Email: ' . $this->send_to . ', Template: ' . $this->template->name . ']');
 
             hooks()->do_action('email_template_sent', [
@@ -290,9 +298,9 @@ class App_mail_template
             return true;
         }
 
-        if (ENVIRONMENT !== 'production') {
-            log_activity('Failed to send email template - ' . $this->ci->email->print_debugger());
-        }
+        // Keep failures visible in production without recording message bodies or headers.
+        $error = html_escape(trim(strip_tags($this->ci->email->print_debugger([]))));
+        log_activity('Failed to send email template [Template: ' . $this->slug . '] [Reason: ' . $error . ']');
 
         $this->clear();
 
@@ -616,6 +624,12 @@ class App_mail_template
     public function get_merge_fields()
     {
         return $this->merge_fields;
+    }
+
+    /** CC recipients confirmed by the mail transport for the latest send. */
+    public function get_accepted_cc()
+    {
+        return $this->acceptedCc;
     }
 
     /**

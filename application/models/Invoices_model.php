@@ -1799,14 +1799,8 @@ class Invoices_model extends App_Model
                 $attach = $pdf->Output($invoice_number . '.pdf', 'S');
             }
 
-            $i = 0;
             foreach ($send_to as $contact_id) {
                 if ($contact_id != '') {
-
-                    // Send cc only for the first contact
-                    if (!empty($cc) && $i > 0) {
-                        $cc = '';
-                    }
 
                     $contact = $this->clients_model->get_contact($contact_id);
 
@@ -1841,11 +1835,20 @@ class Invoices_model extends App_Model
                     sc_attach_sales_files_to_mail_template($template, 'invoice', $invoice->id);
 
                     if ($template->send()) {
+                        // Include CC once, on the first accepted delivery.
+                        $cc = '';
                         $sent = true;
                         array_push($emails_sent, $contact->email);
+                    } elseif ($cc !== '' && $template->get_accepted_cc()) {
+                        // A partial SMTP delivery can accept CC even when To is rejected.
+                        // Retry only the CC addresses that the server did not accept.
+                        $remainingCc = array_map('trim', explode(',', $cc));
+                        $acceptedCc = $template->get_accepted_cc();
+                        $cc = implode(',', array_filter($remainingCc, static function ($address) use ($acceptedCc) {
+                            return !in_array(strtolower($address), $acceptedCc, true);
+                        }));
                     }
                 }
-                $i++;
             }
         } elseif ($isDraft) {
             // Revert the number on failure

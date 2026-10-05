@@ -6,6 +6,9 @@ class Invoice_send_to_customer_already_sent extends App_mail_template
 {
     protected $for = 'customer';
 
+    // A sales document is sent only after the mail transport accepts it.
+    protected $skipQueue = true;
+
     protected $invoice;
 
     protected $contact;

@@ -1056,12 +1056,6 @@ class Proposals_model extends App_Model
 
     public function send_proposal_to_email($id, $attachpdf = true, $cc = '')
     {
-        // Proposal status is draft update to sent
-        if (total_rows(db_prefix() . 'proposals', ['id' => $id, 'status' => 6]) > 0) {
-            $this->db->where('id', $id);
-            $this->db->update(db_prefix() . 'proposals', ['status' => 4]);
-        }
-
         $proposal = $this->get($id);
 
         $template = mail_template('proposal_send_to_customer', $proposal, $attachpdf, $cc);

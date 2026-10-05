@@ -59,6 +59,7 @@ class App_Email extends App_mailer
      */
     public function send($skip_job = false)
     {
+        $this->accepted_recipients = [];
         $attachments = $this->mailer_engine == 'codeigniter' ? $this->_attachments : $this->phpmailer->getAttachments();
 
         $emailQueue          = get_option('email_queue_enabled');
@@ -77,9 +78,7 @@ class App_Email extends App_mailer
             $bcc     = implode(', ', $this->_bcc_array);
             $headers = serialize($this->_headers);
         } else {
-            $to = $this->phpmailer->getToAddresses();
-            $to = array_filter($to[0]);
-            $to = is_array($to) ? implode(', ', $to) : $to;
+            $to = implode(', ', array_column($this->phpmailer->getToAddresses(), 0));
 
             $ccMailer = $this->phpmailer->getCcAddresses();
             $cc       = '';

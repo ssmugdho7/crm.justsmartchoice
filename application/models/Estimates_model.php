@@ -1291,8 +1291,6 @@ class Estimates_model extends App_Model
         $status_now          = $estimate->status;
 
         if (is_array($send_to) && count($send_to) > 0) {
-            $i = 0;
-
             // Auto update status to sent in case when user sends the estimate is with status draft
             if ($status_now == 1) {
                 $this->db->where('id', $estimate->id);
@@ -1312,11 +1310,6 @@ class Estimates_model extends App_Model
 
             foreach ($send_to as $contact_id) {
                 if ($contact_id != '') {
-                    // Send cc only for the first contact
-                    if (! empty($cc) && $i > 0) {
-                        $cc = '';
-                    }
-
                     $contact = $this->clients_model->get_contact($contact_id);
 
                     if (! $contact) {
@@ -1341,10 +1334,19 @@ class Estimates_model extends App_Model
 
                     sc_attach_sales_files_to_mail_template($template, 'estimate', $estimate->id);
                     if ($template->send()) {
+                        // Include CC once, on the first accepted delivery.
+                        $cc = '';
                         array_push($emails_sent, $contact->email);
+                    } elseif ($cc !== '' && $template->get_accepted_cc()) {
+                        // A partial SMTP delivery can accept CC even when To is rejected.
+                        // Retry only the CC addresses that the server did not accept.
+                        $remainingCc = array_map('trim', explode(',', $cc));
+                        $acceptedCc = $template->get_accepted_cc();
+                        $cc = implode(',', array_filter($remainingCc, static function ($address) use ($acceptedCc) {
+                            return !in_array(strtolower($address), $acceptedCc, true);
+                        }));
                     }
                 }
-                $i++;
             }
         } else {
             return false;

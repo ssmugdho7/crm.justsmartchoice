@@ -1,0 +1,40 @@
+/* A second header row keeps all destinations available on narrow screens. */
+#header {
+    position: sticky;
+    top: 0;
+    height: auto !important;
+    min-height: 68px;
+    z-index: 1000;
+    display: flow-root;
+}
+#header > .sc-admin-destinations {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    clear: both;
+    padding: 7px 16px;
+    border-top: 1px solid #e5e7eb;
+    background: #fff;
+}
+#header .sc-admin-destinations a {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: #0e6f5b;
+    font-weight: 600;
+}
+#header .sc-admin-destinations a:hover,
+#header .sc-admin-destinations a:focus-visible {
+    background: #eef7f5;
+}
+body:not(.customers) .sidebar {
+    top: var(--sc-admin-header-height, 114px) !important;
+}
+#header .mobile-navbar {
+    top: 100%;
+}
+@media (max-width: 768px) {
+    #header .sc-admin-destinations { gap: 0; padding: 7px 8px; }
+    #header .sc-admin-destinations a { padding: 6px 10px; }
+}

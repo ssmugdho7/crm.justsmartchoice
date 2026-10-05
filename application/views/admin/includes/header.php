@@ -260,6 +260,11 @@
             </ul>
         </div>
     </nav>
+    <nav class="sc-admin-destinations" aria-label="Main navigation">
+        <a href="<?= e(admin_url('estimates')); ?>"><?= e(_l('estimates')); ?></a>
+        <a href="<?= e(admin_url('products')); ?>"><?= e(_l('products')); ?></a>
+        <a href="<?= e(admin_url('projects')); ?>"><?= e(_l('projects')); ?></a>
+    </nav>
 </div>
 
 <!-- Smart Choice enhancements retained after native Perfex header -->

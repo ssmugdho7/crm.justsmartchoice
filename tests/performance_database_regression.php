@@ -49,6 +49,16 @@ foreach ([
  'project_members'=>'project_id INT, staff_id INT',
 ] as $table=>$columns) { check($db->query('CREATE TEMPORARY TABLE audit_'.$table.' ('.$columns.')'), 'Fixture schema: '.$table); }
 require $root.'/modules/products/models/Products_model.php'; $products = new Products_model();
+check($db->query('CREATE TEMPORARY TABLE audit_product_images (id INT PRIMARY KEY, product_id INT, image VARCHAR(255), is_primary INT)'), 'Gallery fixture schema');
+$db->data_cache['table_names'] = array_merge($db->list_tables(), ['audit_product_images']);
+foreach ([[1, 1, 'one-gallery.jpg', 0], [2, 1, 'one-primary.jpg', 1], [3, 2, 'two.jpg', 0], [4, 3, 'excluded.jpg', 1]] as [$id, $product, $image, $primary]) {
+    $db->insert('audit_product_images', ['id'=>$id, 'product_id'=>$product, 'image'=>$image, 'is_primary'=>$primary]);
+}
+$before = count($db->queries); $galleries = $products->get_catalog_gallery_images([1, 2]);
+check(count($db->queries)-$before === 1, 'Gallery lookup is batched into one query');
+check(array_column($galleries[1], 'image') === ['one-primary.jpg', 'one-gallery.jpg'], 'Primary image and stable gallery order retained');
+check(array_column($galleries[2], 'image') === ['two.jpg'] && !isset($galleries[3]), 'Uploaded galleries never cross products');
+$before = count($db->queries); check($products->get_catalog_gallery_images([]) === [] && count($db->queries) === $before, 'Empty catalog avoids gallery reads');
 $db->insert('audit_product_categories',['p_category_id'=>1,'p_category_name'=>'Fixture']);
 $db->insert('audit_product_categories',['p_category_id'=>2,'p_category_name'=>'Empty']);
 $db->insert('audit_variations',['id'=>1,'name'=>'Size']); $db->insert('audit_variations',['id'=>2,'name'=>'Color']);

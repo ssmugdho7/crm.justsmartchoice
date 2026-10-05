@@ -15,7 +15,7 @@ $route['solar_pro/portal/(:any)/pdf'] = 'solar_portal/pdf/$1';
 $route['solar_pro/portal/(:any)/document/(:num)'] = 'solar_portal/document/$1/$2';
 $route['solar_pro/portal/(:any)/sign'] = 'solar_portal/sign/$1';
 $route['solar_pro/portal/(:any)'] = 'solar_portal/view/$1';
-$route['solar_pro/my'] = 'solar_portal/my';
+$route['solar_pro/my'] = 'solar_customer/index';
 
 $route['solar_pro/proposal/(:any)/pdf'] = 'solar_portal/proposal_pdf/$1';
 $route['solar_pro/proposal/(:any)'] = 'solar_portal/proposal/$1';

@@ -97,6 +97,11 @@ function _init_admin_assets()
         $CI->app_css->add('custom-css', base_url('assets/css/custom.css'), 'admin', ['app-css']);
     }
 
+    $CI->app_css->add('admin-navigation-css', base_url('assets/css/admin-navigation.css')
+        . '?v=' . filemtime(FCPATH . 'assets/css/admin-navigation.css'), 'admin', ['custom-css', 'app-css']);
+    $CI->app_scripts->add('admin-navigation-js', base_url('assets/js/admin-navigation.js')
+        . '?v=' . filemtime(FCPATH . 'assets/js/admin-navigation.js'));
+
     hooks()->do_action('app_admin_assets_added');
 }
 

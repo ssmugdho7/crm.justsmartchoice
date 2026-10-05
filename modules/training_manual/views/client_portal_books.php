@@ -21,7 +21,7 @@ foreach (['How to Use the Client Portal', 'Our Project Process', 'What to Expect
     }
 }
 ?>
-<link rel="stylesheet" href="<?php echo base_url(TRAINING_MANUAL_ASSETS_PATH . '/css/help_library.css?v=3'); ?>">
+<link rel="stylesheet" href="<?php echo base_url(TRAINING_MANUAL_ASSETS_PATH . '/css/help_library.css?v=4'); ?>">
 <section class="sc-help-library" aria-labelledby="help-library-title">
     <header class="sc-help-header">
         <span class="sc-help-eyebrow"><i class="fa fa-book-open" aria-hidden="true"></i> CUSTOMER RESOURCES</span>

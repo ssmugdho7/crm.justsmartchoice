@@ -1,0 +1,20 @@
+/* The original service catalog keeps its existing products_frontend.css layout. */
+#sc-service-catalog .sc-product-cover {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: linear-gradient(135deg, #edf5f2, #dcebe6);
+    text-align: center;
+}
+#sc-service-catalog .sc-product-cover span {
+    color: #315b51;
+    font-size: 21px;
+    font-weight: 600;
+    line-height: 1.45;
+}
+#sc-service-catalog .sc-product-cover[hidden],
+#sc-service-catalog .sc-product-image[hidden] { display: none !important; }
+#sc-service-catalog .sc-image-pending { opacity: 0; }

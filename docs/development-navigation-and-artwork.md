@@ -1,5 +1,14 @@
 # Development navigation and catalog artwork
 
+The service-shopping layout is restored from `fc338ebe`, also verified against
+Bluehost’s `shop-catalog-20261003/previous-catalog.tar.gz`. The category toolbar,
+Bootstrap card grid, larger image areas, price panels and bottom Share buttons
+use the original markup and existing `products_frontend.css`. Current escaping,
+option labels, cart validation, gallery loading and original-image recovery are
+retained. `legacy_catalog.css` adds only loading and missing-image covers.
+The SSD copy at `/Volumes/mySSD/smart_projects_ext/justsmartchoice` contains the
+Nuxt hardware demo and a file inventory, but no CRM products module.
+
 The local SQL backup already contains the overwritten `sc-<service>.jpg` and
 `sc-default-service-1.jpg` assignments. Migration 203 replaced previous product
 images with these generated templates. The local uploads retain 27 original

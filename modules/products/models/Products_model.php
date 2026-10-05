@@ -9,6 +9,21 @@ class Products_model extends App_Model
         parent::__construct();
     }
 
+    public function get_catalog_gallery_images(array $productIds)
+    {
+        if (!$productIds || !$this->db->table_exists(db_prefix() . 'product_images')) {
+            return [];
+        }
+        $images = $this->db->where_in('product_id', array_map('intval', $productIds))
+            ->order_by('is_primary', 'DESC')->order_by('id', 'ASC')
+            ->get(db_prefix() . 'product_images')->result_array();
+        $byProduct = [];
+        foreach ($images as $image) {
+            $byProduct[(int) $image['product_id']][] = $image;
+        }
+        return $byProduct;
+    }
+
     public function add_product($data)
     {
         $variations = $data['variations'];

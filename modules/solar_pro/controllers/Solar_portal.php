@@ -241,20 +241,6 @@ class Solar_portal extends App_Controller
 
     public function my()
     {
-        if (!is_client_logged_in()) {
-            redirect(site_url('authentication/login'));
-        }
-        $contactId = get_contact_user_id();
-        $contact = $this->db->where('id', $contactId)->get(db_prefix() . 'contacts')->row();
-        $data['title'] = _l('solar_pro_my_solar');
-        $data['analyses'] = [];
-        if ($contact) {
-            $this->db->where('client_id', $contact->userid);
-            if (!empty($contact->email)) {
-                $this->db->or_where('email', $contact->email);
-            }
-            $data['analyses'] = $this->db->order_by('id', 'DESC')->get(db_prefix() . 'solar_analyses')->result_array();
-        }
-        $this->load->view('public/my', $data);
+        redirect(site_url('solar_pro/my'));
     }
 }

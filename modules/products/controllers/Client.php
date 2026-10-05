@@ -297,27 +297,12 @@ class Client extends ClientsController
     }
 
 
-    private function sc_product_gallery_urls($product)
+    private function sc_product_gallery_urls($product, $gallery = null)
     {
-        $name = isset($product['product_name']) ? $product['product_name'] : '';
-        $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9]+/', '-', $name), '-'));
-        if ($slug === '') { $slug = 'product'; }
-        $urls = [];
-        $dir = module_dir_path('products', 'uploads/service-gallery/' . $slug . '/');
-        if (is_dir($dir)) {
-            $files = glob($dir . '*.{jpg,jpeg,png,webp}', GLOB_BRACE);
-            sort($files);
-            foreach ($files as $file) {
-                $urls[] = module_dir_url('products', 'uploads/service-gallery/' . $slug . '/' . basename($file));
-            }
+        if ($gallery === null) {
+            $gallery = products_get_gallery_images((int) $product['id']);
         }
-        if (empty($urls) && !empty($product['product_image'])) {
-            $urls[] = module_dir_url('products', 'uploads') . '/' . $product['product_image'];
-        }
-        if (empty($urls)) {
-            $urls[] = module_dir_url('products', 'uploads/sc-default-service-1.jpg');
-        }
-        return $urls;
+        return products_catalog_artwork_urls($product, $gallery);
     }
 
     public function filter()
@@ -326,10 +311,11 @@ class Client extends ClientsController
         $cart_data     = ($this->session->userdata('cart_data') ?? []);
         $products      = $this->products_model->get_category_filter($p_category_id);
         $base_currency = $this->currencies_model->get_base_currency();
+        $galleries = $this->products_model->get_catalog_gallery_images(array_column($products, 'id'));
         foreach ($products as $key => $value) {
             $products[$key]['cart_data']          = $this->get_cart_product($value['id']);
             $products[$key]['product_image_url']  = module_dir_url('products', 'uploads') . '/' . $value['product_image'];
-            $products[$key]['product_gallery_urls'] = $this->sc_product_gallery_urls($value);
+            $products[$key]['product_gallery_urls'] = $this->sc_product_gallery_urls($value, $galleries[(int) $value['id']] ?? []);
             $products[$key]['no_image_url']       = module_dir_url('products', 'uploads') . '/image-not-available.png';
             $products[$key]['base_currency_name'] = $base_currency->name;
             $taxes                                = unserialize($value['taxes']);

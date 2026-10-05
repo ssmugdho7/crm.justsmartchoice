@@ -164,7 +164,7 @@ function scVariationGroups(variations) {
 function scGalleryHtml(val, productName, noImageUrl) {
     // The API supplies a generic default even for products without uploaded artwork.
     var images = (val.product_gallery_urls && val.product_gallery_urls.length ? val.product_gallery_urls : [val.product_image_url]).filter(function(url) {
-        return url && !/\/(sc-default-service-1\.jpg|image-not-available\.png)(?:[?#]|$)/i.test(url) && !/\/uploads\/?(?:[?#].*)?$/.test(url);
+        return url && !/\/(sc-default-service-[123]\.jpg|image-not-available\.png)(?:[?#]|$)/i.test(url) && !/\/uploads\/?(?:[?#].*)?$/.test(url);
     });
     var html = '<div class="sc-product-image-wrap sc-product-slider" data-index="0">';
     html += '<div class="sc-product-cover"><span>' + scEscape(productName) + '</span></div>';

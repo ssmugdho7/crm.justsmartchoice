@@ -61,6 +61,78 @@ function products_get_gallery_images($product_id)
     return $CI->db->where('product_id', (int)$product_id)->order_by('is_primary DESC, id ASC')->get(db_prefix().'product_images')->result();
 }
 
+/** Resolve real uploads before the recovered, service-specific catalog artwork. */
+function products_catalog_artwork_urls(array $product, array $gallery = [])
+{
+    $name = strtolower(trim(preg_replace('/[^A-Za-z0-9]+/', '-', $product['product_name'] ?? ''), '-'));
+    $urls = [];
+    $root = realpath(module_dir_path('products', 'uploads'));
+    $filenames = array_merge([$product['product_image'] ?? ''], array_map(function ($image) {
+        return ((array) $image)['image'] ?? '';
+    }, $gallery));
+    foreach ($filenames as $filename) {
+        // Never resolve customer-controlled paths, URLs or symlinks outside public product uploads.
+        if (!is_string($filename) || $filename === '' || basename($filename) !== $filename
+            || !preg_match('/\A[A-Za-z0-9_.-]+\.(?:jpe?g|png|webp|gif)\z/i', $filename)) {
+            continue;
+        }
+        // These legacy generated files all contain the same door photo with changed captions.
+        if (preg_match('/\Asc-default-service-[123]\.jpg\z/i', $filename)
+            || $filename === 'sc-' . $name . '.jpg'
+            || in_array(strtolower($filename), ['image-not-available.png', 'no-product.png'], true)) {
+            continue;
+        }
+        $file = $root ? realpath($root . DIRECTORY_SEPARATOR . $filename) : false;
+        if ($file && is_file($file) && strpos($file, $root . DIRECTORY_SEPARATOR) === 0) {
+            $urls[] = module_dir_url('products', 'uploads/' . rawurlencode($filename));
+        }
+    }
+    if ($urls) {
+        return array_values(array_unique($urls));
+    }
+
+    static $originals;
+    if ($originals === null) {
+        $originals = json_decode(file_get_contents(module_dir_path('products', 'assets/images/original-services/manifest.json')), true);
+    }
+    $artwork = $originals[$name] ?? null;
+    if (!$artwork) {
+        // Related services reuse the nearest existing artwork; never the universal door template.
+        $matches = [
+            'window.*clean|screen.*clean' => 6, 'dryer.*vent' => 8, 'gutter' => 4,
+            'pressure.*wash' => 5, 'lawn|yard' => 7,
+            'garage.*opener' => 18, 'garage.*door' => 19,
+            'door.*(?:lock|handle|hardware)' => 14, 'door' => 17, 'window|screen|glass' => 20,
+            'smoke|co-detector' => 12, 'panel|ev-charger' => 16,
+            'fan|light|fixture' => 9, 'electrical|electric|outlet|switch|circuit' => 15,
+            'kitchen.*faucet' => 22, 'toilet' => 21, 'disposal|sink' => 23,
+            'faucet|showerhead|plumb|leak|water-heater|shower|tub' => 11,
+            'drywall|paint|primer|texture' => 13, 'permit|hoa' => 26,
+            'engineering|engineer|stamp|seal|structural|wind-load|inspection' => 24,
+            'draft|design|plan|drawing|revision|scope' => 25,
+            'shed|storage' => 28, 'fenc|gate|post-replacement' => 29,
+            'clean' => 3, 'hvac|duct|air-handler|vent' => 8, 'kitchen|cabinet|pantry' => 22,
+        ];
+        foreach ($matches as $pattern => $id) {
+            if (preg_match('/' . $pattern . '/i', $name)) {
+                $artwork = 'product_' . $id . '.webp';
+                break;
+            }
+        }
+    }
+    if (!$artwork) {
+        $category = strtolower($product['p_category_name'] ?? '');
+        $artwork = 'home-service.svg';
+        foreach (['flooring' => 'floor|tile|baseboard|stair', 'roofing' => 'roof|fascia|soffit', 'concrete' => 'concrete|curb|foot|slab|masonry'] as $type => $pattern) {
+            if (preg_match('/' . $pattern . '/i', $name . ' ' . $category)) {
+                $artwork = $type . '.svg';
+                break;
+            }
+        }
+    }
+    return [module_dir_url('products', 'assets/images/original-services/' . $artwork)];
+}
+
 function products_nav_links()
 {
     return [

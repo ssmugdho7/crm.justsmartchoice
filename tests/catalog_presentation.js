@@ -2,13 +2,14 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const {JSDOM} = require('jsdom');
-const dom = new JSDOM(`<section id="sc-service-catalog"><select id="product_categories" multiple></select><div class="no_product hidden"></div><div id="filter_html" class="sc-product-grid" aria-busy="false"></div></section>`, {runScripts:'outside-only',url:'https://catalog.example/'});
+const dom = new JSDOM(`<section id="sc-catalog"><div class="sc-shop-utilities"></div><input id="sc-catalog-search"><select id="sc-catalog-sort"><option value="default">Default</option><option value="name">Name</option><option value="name-desc">Name descending</option></select><select id="product_categories" multiple></select><div class="no_product hidden"><button id="sc-catalog-reset">Reset</button></div><p id="sc-catalog-count"></p><span id="sc-cart-count"></span><div id="filter_html" aria-busy="false"></div></section>`, {runScripts:'outside-only',url:'https://catalog.example/'});
 const w = dom.window;
 w.eval(fs.readFileSync(require.resolve('jquery'),'utf8'));
 const $ = w.jQuery;
 const products = [
  {id:1,product_name:'Zeta service',product_description:'Paint your walls',p_category_name:'Painting',rate:'100',quantity_number:8,is_digital:0,recurring:0,product_gallery_urls:[],product_image_url:'/uploads/sc-zeta-service.jpg',variations:[],add_to_cart:'Add to Cart'},
  {id:2,product_name:'Alpha "safe" service',product_description:'Doors',p_category_name:'Doors',rate:'120',quantity_number:9,is_digital:0,recurring:0,product_gallery_urls:['/uploads/door.jpg','/uploads/door2.jpg'],variations:[{id:41,variation_id:5,variation_name:'Door Width',variation_value:'32 inch',rate:'150',quantity_number:3}],add_to_cart:'Add to Cart'},
+ {id:4,product_name:'Omega photo service',product_description:'Photo',p_category_name:'Doors',rate:'50',quantity_number:9,is_digital:0,recurring:0,product_gallery_urls:['/uploads/omega.jpg'],variations:[],add_to_cart:'Add to Cart'},
  {id:3,product_name:'Unavailable',product_description:'No stock',p_category_name:'Roofing',rate:'50',quantity_number:0,is_digital:0,recurring:0,product_image_url:'/uploads/',out_of_stock:'Out of stock'},
 ];
 let posted;
@@ -27,16 +28,17 @@ assert.equal(w.__testEscape(null), ''); assert.equal(w.__testEscape(0), '0');
 assert.equal(w.__testEscape('é 😀'), 'é 😀');
 assert.equal(escapeNodes, 0, 'Escaping does not allocate a DOM node per field');
 w.document.createElement = originalCreateElement;
+w.eval(fs.readFileSync('modules/products/assets/js/catalog.js','utf8'));
 w.document.dispatchEvent(new w.Event('DOMContentLoaded'));
 setTimeout(()=>{
  try {
   const doc=w.document;
   const rows=()=>Array.from(doc.querySelectorAll('.product-row'));
-  assert.equal(rows().length,3);
-  assert.deepEqual(rows().map(row=>row.dataset.catalogName),['Alpha "safe" service','Zeta service','Unavailable'],'cards with images come first, preserving order within each group');
-  assert.equal(rows()[1].querySelector('img'),null,'an explicitly empty gallery never falls back to a discarded template');
-  assert.equal(rows()[1].querySelector('.sc-product-cover').textContent,'Zeta service');
-  assert.equal(rows()[2].querySelector('img'),null,'empty upload URL becomes cover');
+  assert.equal(rows().length,4);
+  assert.deepEqual(rows().map(row=>row.dataset.catalogName),['Alpha "safe" service','Omega photo service','Zeta service','Unavailable'],'cards with images come first, preserving order within each group');
+  assert.equal(rows()[2].querySelector('img'),null,'an explicitly empty gallery never falls back to a discarded template');
+  assert.equal(rows()[2].querySelector('.sc-product-cover').textContent,'Zeta service');
+  assert.equal(rows()[3].querySelector('img'),null,'empty upload URL becomes cover');
   const alpha=rows()[0];
   assert.equal(alpha.dataset.catalogName,'Alpha "safe" service','quotes cannot break attributes');
   assert.equal(alpha.querySelector('img').getAttribute('src'),'/uploads/door.jpg');
@@ -57,15 +59,24 @@ setTimeout(()=>{
   $(alpha.querySelector('.add_cart')).trigger('click');
   assert.equal(posted.url,'https://catalog.example/products/client/add_cart');
   assert.deepEqual(JSON.parse(JSON.stringify(posted.payload)),{quantity:2,product_id:'2',product_variation_id:'41'});
-  assert.equal(alpha.classList.contains('col-md-4'),true,'original three-column Bootstrap cards are restored');
-  assert.equal(alpha.querySelector('.thumbnail.shadow.sc-product-card') !== null,true,'original thumbnail styling is restored');
-  assert.equal(alpha.querySelector('.sc-product-title').tagName,'H4','original title markup is restored');
-  assert.equal(alpha.querySelector('.sc-product-image-wrap .sc-share-product'),null,'share leaves the image area');
-  assert.equal(alpha.querySelector('.sc-product-body > .sc-share-product').textContent.trim(),'Share','original bottom Share button is restored');
+  assert.equal(alpha.tagName,'ARTICLE','modern service cards use semantic article markup');
+  assert.equal(alpha.querySelector('.sc-product-title').tagName,'H2');
+  assert.equal(alpha.querySelector('.sc-product-image-wrap .sc-share-product') !== null,true,'share control has an accessible image-area button');
+  assert.equal(doc.querySelector('#sc-cart-count').textContent,'2');
+  const sort=doc.querySelector('#sc-catalog-sort');sort.value='name-desc';$(sort).trigger('change');
+  assert.deepEqual(rows().map(row=>row.dataset.catalogName),['Omega photo service','Alpha "safe" service','Zeta service','Unavailable'],'descending sort keeps both image cards ahead of name covers');
+  assert.equal(alpha.querySelector('select').value,'41','sorting preserves selected options');
+  sort.value='default';$(sort).trigger('change');
+  assert.deepEqual(rows().map(row=>row.dataset.catalogName),['Alpha "safe" service','Omega photo service','Zeta service','Unavailable'],'default ordering retains image priority');
+  const search=doc.querySelector('#sc-catalog-search');search.value='paint';search.dispatchEvent(new w.Event('input'));
+  assert.equal(rows().filter(row=>!row.hidden).length,1,'search filters existing cards');
+  search.value='not found';search.dispatchEvent(new w.Event('input'));
+  assert.equal(doc.querySelector('.no_product').classList.contains('hidden'),false,'empty search displays guidance');
+  search.value='';search.dispatchEvent(new w.Event('input'));
   assert.equal(doc.querySelector('[data-catalog-name=Unavailable] button.sc-cart-btn').disabled,true);
   products.length=0; $('#product_categories').trigger('change');
   assert.equal(doc.querySelector('.no_product').classList.contains('hidden'),false,'empty response displays guidance');
-  console.log('PASS catalog covers, escaping, gallery recovery, options, stock, stepper, cart payload, original card layout and empty state');
+  console.log('PASS catalog covers, escaping, gallery recovery, options, stock, stepper, cart payload, modern cards, image-first sorting, search and empty state');
  } catch(error) { console.error(error);process.exitCode=1; }
  finally {dom.window.close();}
 },30);

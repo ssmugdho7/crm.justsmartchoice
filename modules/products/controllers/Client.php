@@ -314,8 +314,8 @@ class Client extends ClientsController
         $galleries = $this->products_model->get_catalog_gallery_images(array_column($products, 'id'));
         foreach ($products as $key => $value) {
             $products[$key]['cart_data']          = $this->get_cart_product($value['id']);
-            $products[$key]['product_image_url']  = module_dir_url('products', 'uploads') . '/' . $value['product_image'];
             $products[$key]['product_gallery_urls'] = $this->sc_product_gallery_urls($value, $galleries[(int) $value['id']] ?? []);
+            $products[$key]['product_image_url'] = $products[$key]['product_gallery_urls'][0] ?? '';
             $products[$key]['no_image_url']       = module_dir_url('products', 'uploads') . '/image-not-available.png';
             $products[$key]['base_currency_name'] = $base_currency->name;
             $taxes                                = unserialize($value['taxes']);

@@ -1,11 +1,17 @@
 # Development navigation and catalog artwork
 
-The catalog's legacy `sc-<service>.jpg` images and slug-directory galleries used
-the same door-repair photo with different captions. The catalog now prefers
-genuine configured uploads and the product's uploaded gallery, fetched together
-in one query. Without custom artwork it resolves the original branded service
-image by name, then the nearest related service artwork. Flooring, roofing,
-concrete and otherwise unmatched services have neutral service illustrations.
+The local SQL backup already contains the overwritten `sc-<service>.jpg` and
+`sc-default-service-1.jpg` assignments. Migration 203 replaced previous product
+images with these generated templates. The local uploads retain 27 original
+service images, named `product_3.png` through `product_29.png` (27 is a JPEG).
+Their service captions match the product names in the SQL backup, establishing
+the original assignments recorded in the name manifest.
+
+The catalog prefers genuine configured uploads and uploaded galleries, fetched
+in one query, followed by these verified originals. No related-service guesses
+or replacement illustrations are used. The other 163 entries in the 190-product
+backup have no original image files; they use the existing service-name cover.
+An explicitly empty gallery never falls back to a discarded template.
 No product records, prices, stock, order payloads or customer permissions change.
 
 Recovered public artwork is versioned under
@@ -37,8 +43,5 @@ php tests/products_stability_regression.php
 php tests/catalog_permission_controls.php
 ```
 
-The local `origin` has two push URLs. `git push origin <branch>` attempts both the
-existing repository and `just-smart-choice/just-smart-choice-crm`. The latter is
-also available as the `just-smart-choice` remote. GitHub must grant the SSH account
-write access to both repositories; chat authorization alone does not change the
-GitHub role. Do not claim a successful second push when GitHub rejects it.
+Development changes are pushed only to the existing `origin` repository,
+`ssmugdho7/crm.justsmartchoice`, and pulled in Bluehost's development checkout.

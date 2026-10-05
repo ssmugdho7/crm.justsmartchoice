@@ -6,6 +6,12 @@ function module_dir_path($module, $path) {
     return dirname(__DIR__) . '/modules/' . $module . '/' . $path;
 }
 function module_dir_url($module, $path) { return '/modules/' . $module . '/' . $path; }
+function &get_instance() { return $GLOBALS['upgradeCI']; }
+function db_prefix() { return 'tbl'; }
+function add_option($name, $value) {}
+function update_option($name, $value) {}
+function site_url($path) { return '/' . $path; }
+class App_module_migration {}
 function check($condition, $message) { if (!$condition) throw new RuntimeException($message); }
 require dirname(__DIR__) . '/modules/products/helpers/products_helper.php';
 $uploadFixture = sys_get_temp_dir() . '/catalog-artwork-' . bin2hex(random_bytes(8));
@@ -26,10 +32,29 @@ try {
         $custom['product_image'] = $bad;
         check(products_catalog_artwork_urls($custom) === [$urls[0]], 'Unsafe/missing/template filename must fall back: ' . $bad);
     }
-    foreach (['Flooring' => 'flooring', 'Roofing' => 'roofing', 'Concrete' => 'concrete'] as $category => $file) {
-        check(products_catalog_artwork_urls(['product_name' => 'Special service', 'p_category_name' => $category]) === ['/modules/products/assets/images/original-services/' . $file . '.svg'], 'Fallback illustration must match service type');
+    foreach (['Air Handler Platform', 'Accent Wall Painting', 'Luxury Vinyl Plank Installation', 'Special service'] as $name) {
+        check(products_catalog_artwork_urls(['product_name' => $name]) === [], 'Unmatched services must not borrow unrelated original artwork');
     }
-    echo "PASS distinct recovered artwork, real galleries, shipped assets, related-service fallback and safe paths\n";
+    $manifest = json_decode(file_get_contents(dirname(__DIR__) . '/modules/products/assets/images/original-services/manifest.json'), true);
+    check(count($manifest) === 27, 'Recover exactly the 27 original services');
+    foreach ($manifest as $name => $file) {
+        check(products_catalog_artwork_urls(['product_name' => $name, 'product_image' => 'sc-' . $name . '.jpg']) === ['/modules/products/assets/images/original-services/' . $file], 'Recover every verified original: ' . $name);
+        check(is_file(dirname(__DIR__) . '/modules/products/assets/images/original-services/' . $file), 'Every original ships in Git');
+    }
+    // Regression for the upgrade that originally overwrote every configured image.
+    $upgradeCI = (object) ['db' => new class {
+        public $updates = [];
+        public $selectedId;
+        public function table_exists($table) { return true; }
+        public function get($table) { return $this; }
+        public function result() { return [(object) ['id' => 3, 'product_name' => 'Home Cleaning Service', 'product_image' => 'product_3.png'], (object) ['id' => 100, 'product_name' => 'Custom service', 'product_image' => 'custom.jpg'], (object) ['id' => 200, 'product_name' => 'Empty service', 'product_image' => null]]; }
+        public function where($field, $id) { $this->selectedId = $id; return $this; }
+        public function update($table, $data) { $this->updates[$this->selectedId] = $data; }
+    }];
+    require dirname(__DIR__) . '/modules/products/migrations/203_version_203.php';
+    products_smartchoice_catalog_seed_203();
+    check(array_keys($upgradeCI->db->updates) === [200], 'Catalog upgrade preserves original and custom image assignments');
+    echo "PASS 27 verified original assignments, no guessed matches, real galleries and safe paths\n";
 } finally {
     foreach (glob($uploadFixture . '/*') as $file) unlink($file);
     rmdir($uploadFixture);

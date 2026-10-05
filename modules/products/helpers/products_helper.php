@@ -96,39 +96,9 @@ function products_catalog_artwork_urls(array $product, array $gallery = [])
         $originals = json_decode(file_get_contents(module_dir_path('products', 'assets/images/original-services/manifest.json')), true);
     }
     $artwork = $originals[$name] ?? null;
-    if (!$artwork) {
-        // Related services reuse the nearest existing artwork; never the universal door template.
-        $matches = [
-            'window.*clean|screen.*clean' => 6, 'dryer.*vent' => 8, 'gutter' => 4,
-            'pressure.*wash' => 5, 'lawn|yard' => 7,
-            'garage.*opener' => 18, 'garage.*door' => 19,
-            'door.*(?:lock|handle|hardware)' => 14, 'door' => 17, 'window|screen|glass' => 20,
-            'smoke|co-detector' => 12, 'panel|ev-charger' => 16,
-            'fan|light|fixture' => 9, 'electrical|electric|outlet|switch|circuit' => 15,
-            'kitchen.*faucet' => 22, 'toilet' => 21, 'disposal|sink' => 23,
-            'faucet|showerhead|plumb|leak|water-heater|shower|tub' => 11,
-            'drywall|paint|primer|texture' => 13, 'permit|hoa' => 26,
-            'engineering|engineer|stamp|seal|structural|wind-load|inspection' => 24,
-            'draft|design|plan|drawing|revision|scope' => 25,
-            'shed|storage' => 28, 'fenc|gate|post-replacement' => 29,
-            'clean' => 3, 'hvac|duct|air-handler|vent' => 8, 'kitchen|cabinet|pantry' => 22,
-        ];
-        foreach ($matches as $pattern => $id) {
-            if (preg_match('/' . $pattern . '/i', $name)) {
-                $artwork = 'product_' . $id . '.webp';
-                break;
-            }
-        }
-    }
-    if (!$artwork) {
-        $category = strtolower($product['p_category_name'] ?? '');
-        $artwork = 'home-service.svg';
-        foreach (['flooring' => 'floor|tile|baseboard|stair', 'roofing' => 'roof|fascia|soffit', 'concrete' => 'concrete|curb|foot|slab|masonry'] as $type => $pattern) {
-            if (preg_match('/' . $pattern . '/i', $name . ' ' . $category)) {
-                $artwork = $type . '.svg';
-                break;
-            }
-        }
+    // Only verified original assignments belong here. Unmatched services keep their name cover.
+    if (!$artwork || !is_file(module_dir_path('products', 'assets/images/original-services/' . $artwork))) {
+        return [];
     }
     return [module_dir_url('products', 'assets/images/original-services/' . $artwork)];
 }

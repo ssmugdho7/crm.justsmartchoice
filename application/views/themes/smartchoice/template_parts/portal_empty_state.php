@@ -3,7 +3,7 @@
     <h2><?= e($portalEmptyTitle); ?></h2>
     <p><?= e($portalEmptyText); ?></p>
     <?php if (has_contact_permission('support')) { ?>
-    <a class="btn btn-default" href="<?= site_url('clients/open_ticket'); ?>">Ask the team</a>
+    <a class="btn btn-default sc-portal-empty-action" href="<?= site_url('clients/open_ticket'); ?>">Ask the team</a>
     <?php } else { ?>
     <a class="btn btn-default" href="<?= site_url('clients/profile'); ?>">Review your account</a>
     <?php } ?>

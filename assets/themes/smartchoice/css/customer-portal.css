@@ -119,6 +119,8 @@ body.sc-portal-drawer-open{overflow:hidden}
 .sc-portal-empty{background:#fff;border:1px solid var(--portal-border);border-radius:8px;padding:20px;margin-bottom:18px}
 .sc-portal-empty h2{font-size:18px;margin:0 0 8px}
 .sc-portal-empty p,.sc-form-guidance,.sc-filter-help{color:var(--portal-muted);line-height:1.6}
+.sc-portal-empty-action{display:flex;align-items:center;justify-content:center;width:max-content;min-height:40px;margin:16px auto 0;background:var(--portal-green);border-color:var(--portal-green);color:#fff;line-height:1.2}
+.sc-portal-empty-action:hover,.sc-portal-empty-action:focus{background:#0f513f;border-color:#0f513f;color:#fff}
 .sc-filter-help{font-size:13px;margin:8px 0 0}
 .sc-dashboard-metric small{display:block;color:var(--portal-muted);margin-top:5px}
 .sc-required{color:#a82318;font-weight:700}

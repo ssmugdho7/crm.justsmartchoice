@@ -1,11 +1,15 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <style id="smart-choice-client-navigation-fix">
+/* Apply the customer shortcut list before the header paints, including module links.
+   Other destinations remain available to the customer sidebar script. */
+.navbar.header.sc-customer-shortcuts #theme-navbar-collapse>.navbar-nav>li:not(.customers-nav-item-online-shopping):not(.customers-nav-item-projects):not(.customers-nav-item-estimates):not(.customers-nav-item-profile){display:none!important}
+.navbar.header.sc-customer-shortcuts #theme-navbar-collapse>.navbar-nav{justify-content:flex-end!important;gap:8px!important;flex-wrap:nowrap!important}
 .navbar.header .navbar-header{min-height:64px;display:flex;align-items:center;}
 .navbar.header .navbar-brand.logo{height:64px!important;min-width:240px;padding:3px 10px!important;display:flex!important;align-items:center!important;}
 .navbar.header .navbar-brand.logo img,.navbar.header .navbar-brand img{display:block!important;height:58px!important;max-height:58px!important;width:auto!important;max-width:250px!important;object-fit:contain!important;margin:0!important;}
 @media(max-width:767px){.navbar.header .navbar-brand.logo{min-width:190px;height:58px!important}.navbar.header .navbar-brand.logo img,.navbar.header .navbar-brand img{height:52px!important;max-height:52px!important;max-width:205px!important}}
 </style>
-<nav class="navbar navbar-default header">
+<nav class="navbar navbar-default header<?= is_client_logged_in() ? ' sc-customer-shortcuts' : ''; ?>">
     <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">

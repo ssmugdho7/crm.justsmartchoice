@@ -208,13 +208,25 @@ class Download extends App_Controller
             $path = get_upload_path_by_type('lead') . $attachment->rel_id . '/' . $attachment->file_name;
         } elseif ($folder_indicator == 'client') {
             $this->db->where('attachment_key', $attachmentid);
+            $this->db->where('rel_type', 'customer');
             $attachment = $this->db->get(db_prefix() . 'files')->row();
             if (! $attachment) {
                 show_404();
             }
-            if (staff_can('view', 'customers') || is_customer_admin($attachment->rel_id) || is_client_logged_in()) {
-                $path = get_upload_path_by_type('customer') . $attachment->rel_id . '/' . $attachment->file_name;
+            $staffAccess = is_staff_logged_in() && (staff_can('view', 'customers') || is_customer_admin($attachment->rel_id));
+            if (!$staffAccess) {
+                if (!is_client_logged_in() || (int) $attachment->rel_id !== (int) get_client_user_id() || (int) $attachment->visible_to_customer !== 1) {
+                    show_404();
+                    return;
+                }
+                $this->db->where('file_id', $attachment->id);
+                $this->db->where('contact_id', get_contact_user_id());
+                if ($this->db->count_all_results(db_prefix() . 'shared_customer_files') === 0) {
+                    show_404();
+                    return;
+                }
             }
+            $path = get_upload_path_by_type('customer') . $attachment->rel_id . '/' . $attachment->file_name;
         } elseif ($folder_indicator == 'estimate_request_attachment') {
             if (! is_staff_logged_in() && strpos($_SERVER['HTTP_REFERER'], 'forms/l/') === false) {
                 show_404();
@@ -257,6 +269,7 @@ class Download extends App_Controller
             if (isset($inlineTypes[$ext])) {
                 while (ob_get_level() > 0) { @ob_end_clean(); }
                 header('Content-Type: ' . $inlineTypes[$ext]);
+                header('X-Content-Type-Options: nosniff');
                 header('Content-Disposition: inline; filename="' . basename($path) . '"');
                 header('Content-Length: ' . filesize($path));
                 header('Cache-Control: private, max-age=300');

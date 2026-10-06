@@ -3,7 +3,7 @@
     <?= _l('customer_profile_files'); ?>
 </h4>
 <?php hooks()->do_action('after_customers_area_files_heading'); ?>
-<div class="panel_s">
+<div class="panel_s sc-files-page">
     <div class="panel-body">
         <?= form_open_multipart(site_url('clients/upload_files'), ['class' => 'dropzone', 'id' => 'files-upload']); ?>
         <input type="file" name="file" multiple class="hide" />
@@ -48,29 +48,34 @@
                       $url    = site_url() . 'download/file/client/';
                     $path     = get_upload_path_by_type('customer') . $file['rel_id'] . '/' . $file['file_name'];
                     $is_image = false;
-                    if (! isset($file['external'])) {
+                    $is_external = !empty($file['external']);
+                    $can_preview = false;
+                    if (!$is_external) {
                         $attachment_url = $url . $file['attachment_key'];
-                        $is_image       = is_image($path);
-                        $img_url        = site_url('download/preview_image?path=' . protected_file_url_by_path($path, true) . '&type=' . $file['filetype']);
+                        $extension = strtolower(pathinfo($file['file_name'], PATHINFO_EXTENSION));
+                        $is_image = in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp'], true);
+                        $can_preview = $is_image || $extension === 'pdf';
+                        $view_url = $attachment_url . '?preview=1';
+                        $img_url = $view_url;
                     } elseif (isset($file['external']) && ! empty($file['external'])) {
                         if (! empty($file['thumbnail_link'])) {
                             $is_image = true;
                             $img_url  = optimize_dropbox_thumbnail($file['thumbnail_link']);
                         }
                         $attachment_url = $file['external_link'];
+                        $view_url = $attachment_url;
+                        $can_preview = true;
                     }
                     if ($is_image) {
-                        echo '<div class="preview_image">';
+                        echo '<div class="sc-file-photo">';
                     }
                     ?>
-                        <a href="<?= e($attachment_url); ?>"
-                            <?= isset($file['external']) && ! empty($file['external']) ? ' target="_blank"' : ''; ?>
+                        <a href="<?= e($can_preview ? $view_url : $attachment_url); ?>"
+                            <?= $can_preview ? ' target="_blank" rel="noopener noreferrer"' : ''; ?>
                             class="display-block mbot5">
                             <?php if ($is_image) { ?>
-                            <div class="table-image">
-                                <div class="text-center"><i class="fa fa-spinner fa-spin mtop30"></i></div>
-                                <img src="#" class="img-table-loading"
-                                    data-orig="<?= e($img_url); ?>">
+                            <div class="sc-file-thumbnail">
+                                <img src="<?= e($img_url); ?>" alt="<?= e($file['file_name']); ?>" loading="lazy" decoding="async">
                             </div>
                             <?php } else { ?>
                             <i
@@ -81,6 +86,13 @@
                         <?php if ($is_image) {
                             echo '</div>';
                         } ?>
+                        <?php if ($is_image) { ?><strong class="sc-file-name"><?= e($file['file_name']); ?></strong><?php } ?>
+                        <div class="sc-file-actions">
+                            <?php if ($can_preview) { ?>
+                            <a class="btn sc-file-view" href="<?= e($view_url); ?>" target="_blank" rel="noopener noreferrer" aria-label="View <?= e($file['file_name']); ?>"><i class="fa fa-eye" aria-hidden="true"></i> View</a>
+                            <?php } ?>
+                            <a class="btn btn-default" href="<?= e($attachment_url); ?>" <?= $is_external ? 'target="_blank" rel="noopener noreferrer"' : ''; ?> aria-label="Download <?= e($file['file_name']); ?>"><i class="fa fa-download" aria-hidden="true"></i> Download</a>
+                        </div>
                     </td>
                     <td
                         data-order="<?= e($file['dateadded']); ?>">

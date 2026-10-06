@@ -2,7 +2,7 @@
 <style id="smart-choice-client-navigation-fix">
 /* Apply the customer shortcut list before the header paints, including module links.
    Other destinations remain available to the customer sidebar script. */
-.navbar.header.sc-customer-shortcuts #theme-navbar-collapse>.navbar-nav>li:not(.customers-nav-item-online-shopping):not(.customers-nav-item-projects):not(.customers-nav-item-estimates):not(.customers-nav-item-profile){display:none!important}
+.navbar.header.sc-customer-shortcuts #theme-navbar-collapse>.navbar-nav>li:not(.customers-nav-item-online-shopping):not(.customers-nav-item-projects):not(.customers-nav-item-estimates):not(.customers-nav-item-support):not(.customers-nav-item-google-meet):not(.customers-nav-item-profile){display:none!important}
 .navbar.header.sc-customer-shortcuts #theme-navbar-collapse>.navbar-nav{justify-content:flex-end!important;gap:8px!important;flex-wrap:nowrap!important}
 .navbar.header .navbar-header{min-height:64px;display:flex;align-items:center;}
 .navbar.header .navbar-brand.logo{height:64px!important;min-width:240px;padding:3px 10px!important;display:flex!important;align-items:center!important;}

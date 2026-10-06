@@ -5,7 +5,8 @@
 <?php if (isset($proposals) && count($proposals) === 0) {
     $portalEmptyTitle = 'No proposals yet';
     $portalEmptyText = 'Your proposals will appear here when they are ready to review.';
-    get_template_part('portal_empty_state', compact('portalEmptyTitle', 'portalEmptyText'));
+    $portalEmptyClass = 'sc-proposals-empty';
+    get_template_part('portal_empty_state', compact('portalEmptyTitle', 'portalEmptyText', 'portalEmptyClass'));
 } ?>
 <div class="panel_s">
     <div class="panel-body">

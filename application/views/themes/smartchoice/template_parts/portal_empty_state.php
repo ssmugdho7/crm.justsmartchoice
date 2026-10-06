@@ -1,5 +1,5 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<div class="sc-portal-empty" role="status">
+<div class="sc-portal-empty <?= isset($portalEmptyClass) ? e($portalEmptyClass) : ''; ?>" role="status">
     <h2><?= e($portalEmptyTitle); ?></h2>
     <p><?= e($portalEmptyText); ?></p>
     <?php if (has_contact_permission('support')) { ?>

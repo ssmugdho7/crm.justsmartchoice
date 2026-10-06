@@ -105,7 +105,7 @@
                             ?>
                         <li class="dropdown-submenu pull-left customers-nav-item-languages">
                             <a href="#" class="sc-language-toggle" role="button" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-chevron-left" aria-hidden="true"></i> <?= _l('language'); ?>
+                                <?= _l('language'); ?>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-left sc-language-options" aria-label="<?= e(_l('language')); ?>">
                                 <?php foreach ($this->app->get_available_languages() as $user_lang) { ?>

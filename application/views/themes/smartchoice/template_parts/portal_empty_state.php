@@ -1,7 +1,9 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <div class="sc-portal-empty <?= isset($portalEmptyClass) ? e($portalEmptyClass) : ''; ?>" role="status">
-    <h2><?= e($portalEmptyTitle); ?></h2>
-    <p><?= e($portalEmptyText); ?></p>
+    <div class="sc-portal-empty-copy">
+        <h2><?= e($portalEmptyTitle); ?></h2>
+        <p><?= e($portalEmptyText); ?></p>
+    </div>
     <?php if (has_contact_permission('support')) { ?>
     <a class="btn btn-default sc-portal-empty-action" href="<?= site_url('clients/open_ticket'); ?>">Ask the team</a>
     <?php } else { ?>

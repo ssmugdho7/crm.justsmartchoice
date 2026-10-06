@@ -61,7 +61,7 @@ if (has_contact_permission('support')) {
                 <small><?= e($progress); ?>% complete</small>
             </article>
             <?php } if (!$recentProjects) { ?>
-            <div class="sc-dashboard-empty"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i><strong>No projects yet</strong><p>Your projects will appear here when the team adds them to your account.</p><?php if (has_contact_permission('support')) { ?><a class="btn btn-default" href="<?= site_url('clients/open_ticket'); ?>">Ask the team</a><?php } ?></div>
+            <div class="sc-dashboard-empty"><div class="sc-dashboard-empty-copy"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i><strong>No projects yet</strong><p>Your projects will appear here when the team adds them to your account.</p></div><?php if (has_contact_permission('support')) { ?><a class="btn btn-default sc-portal-empty-action" href="<?= site_url('clients/open_ticket'); ?>">Ask the team</a><?php } ?></div>
             <?php } ?>
         </section>
         <?php } ?>

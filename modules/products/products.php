@@ -349,7 +349,7 @@ function add_product_menu()
 	// Show products only at logged in users for clients area
     if (1 == get_option('nlu_product_menu_disabled') && 0 == get_option('product_menu_disabled')) {
 		if (is_client_logged_in()) {
-			echo '<li class="customers-nav-item-contracts">
+			echo '<li class="customers-nav-item-online-shopping">
 				<a href="'.site_url('products/client').'">Online Shopping</a>
 			</li>';
 		}
@@ -357,7 +357,7 @@ function add_product_menu()
 	
 	// Allow products view for everyone in clients area
     if (0 == get_option('nlu_product_menu_disabled') && 0 == get_option('product_menu_disabled')) {
-        echo '<li class="customers-nav-item-contracts">
+        echo '<li class="customers-nav-item-online-shopping">
             <a href="'.site_url('products/client').'">Online Shopping</a>
         </li>';
 	}

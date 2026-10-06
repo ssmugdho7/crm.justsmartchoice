@@ -5,15 +5,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /*
 Module Name: Google Meet
 Description: Google Meet connects Perfex CRM with meeting scheduling for staff and customers. Smart Choice Contractors USA can create instant or scheduled meetings, generate or save Meet links, invite employees/customers by CRM email, CRM notifications, and Twilio SMS when available, track attendees, comments, reports, health checks, and customer portal access without disrupting the existing CRM workflow.
-Version: 1.2.7
+Version: 1.3.0
 Author URI: https://justsmartchoice.com/webdeveloper.php
 Author: Smart Choice Contractors USA / Harold Cabrera
 Requires at least: 3.4.1
 */
 
 define('GOOGLE_MEET_MODULE_NAME', 'google_meet');
-define('GOOGLE_MEET_VERSION', '1.2.7');
+define('GOOGLE_MEET_VERSION', '1.3.0');
 require_once __DIR__ . '/helpers/google_meet_dates_helper.php';
+require_once __DIR__ . '/helpers/jitsi_helper.php';
 register_language_files(GOOGLE_MEET_MODULE_NAME, [GOOGLE_MEET_MODULE_NAME]);
 
 

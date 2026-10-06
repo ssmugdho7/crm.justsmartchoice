@@ -2024,6 +2024,10 @@ function generate_appointment_ics_content($appointment)
         $description = escape_ics_text($appointment['description']);
     }
 
+    if (!empty($appointment['google_meet_link'])) {
+        $description .= ($description !== '' ? '\\n' : '') . escape_ics_text('Join video meeting: ' . $appointment['google_meet_link']);
+    }
+
     // Prepare location
     $location = '';
     if (!empty($appointment['location'])) {
@@ -2130,4 +2134,29 @@ function escape_ics_text($text)
     $text = wordwrap($text, 73, "\r\n ", true);
 
     return $text;
+}
+
+/** Include the saved video room in invitations whose existing template omits it. */
+function appointly_jitsi_invitation_link($template)
+{
+    $mailer = $GLOBALS['SENDING_EMAIL_TEMPLATE_CLASS'] ?? null;
+    $invitationSlugs = ['appointment-submitted-to-contact', 'appointment-submitted-to-staff',
+        'appointment-approved-to-contact', 'appointment-approved-to-staff',
+        'appointment-cron-reminder-to-contact', 'appointment-cron-reminder-to-staff',
+        'appointment-updated-to-contact', 'appointment-updated-to-staff'];
+    if (!$template || !$mailer || !method_exists($mailer, 'get_merge_fields')
+        || !in_array($mailer->slug ?? '', $invitationSlugs, true)
+        || (get_option('video_meeting_provider') ?: 'jitsi') !== 'jitsi') { return $template; }
+    $fields = $mailer->get_merge_fields();
+    $link = trim((string)($fields['{appointment_google_meet_link}'] ?? ''));
+    require_once dirname(__DIR__, 2) . '/google_meet/helpers/jitsi_helper.php';
+    if (!jitsi_meeting_room((object)['meet_link' => $link])
+        || strpos($template->message, '{appointment_google_meet_link}') !== false
+        || strpos($template->message, $link) !== false
+        || strpos($template->message, html_escape($link)) !== false) { return $template; }
+    $template = clone $template;
+    $template->message .= !empty($template->plaintext)
+        ? "\nJoin video meeting: " . $link
+        : '<p><strong>Join video meeting:</strong> <a href="' . html_escape($link) . '">' . html_escape($link) . '</a></p>';
+    return $template;
 }

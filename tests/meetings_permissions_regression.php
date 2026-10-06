@@ -9,6 +9,9 @@ $checks=0;$permissions=[];$alerts=[];
 function check($value,$label){global $checks;if(!$value){throw new RuntimeException($label);}++$checks;}
 function has_permission($feature,$staff='',$cap='view'){return in_array($cap,$GLOBALS['permissions'][$feature]??[],true);}
 function get_staff_user_id(){return 42;}
+function is_admin(){return false;}
+class HttpFailure extends Flow {public $status;function __construct($status){$this->status=$status;}}
+function show_error($message,$status=500){throw new HttpFailure($status);}
 function is_staff_logged_in(){return true;}
 function access_denied($feature=null){throw new Denied();}
 function show_404(){throw new Missing();}
@@ -18,7 +21,7 @@ function admin_url($path=''){return $path;}
 function _dt($date){return $date;}
 function _l($key){return $key;}
 function db_prefix(){return 'tbl';}
-function get_option($key){return '0';}
+function get_option($key){return ['jitsi_server_domain'=>'meet.jit.si','google_meet_client_portal_enabled'=>'1'][$key]??'0';}
 function &get_instance(){return $GLOBALS['ci'];}
 function register_staff_capabilities($feature,$definition,$name){$GLOBALS['registered'][$feature]=$definition;}
 function load_function($path,$name){
@@ -53,10 +56,13 @@ $ci->app_menu=new MenuFixture();$permissions=['google_meet'=>['create']];google_
 check($ci->app_menu->items['google-meet']['href']==='google_meet/create' && $ci->app_menu->children===['google-meet-new-meeting'],'Create-only menu opens allowed form');
 $definition=products_module_permissions_for_staff([]);
 check(array_keys($definition['products']['capabilities'])===['view','create','edit','delete'],'Product Edit/Delete are assignable');
-class InputFixture {public $posted=[],$query=[];function post($key=null,$xss=false){return $key===null?$this->posted:($this->posted[$key]??null);}function get($key,$xss=false){return $this->query[$key]??null;}}
+class InputFixture {public $posted=[],$query=[],$requestMethod='post';function method(){return $this->requestMethod;}function post($key=null,$xss=false){return $key===null?$this->posted:($this->posted[$key]??null);}function get($key,$xss=false){return $this->query[$key]??null;}}
 class LoadFixture {public $data=[];function view($view,$data){$this->data=$data;throw new Flow('render '.$view);}}
 class MeetingFixture {
-    public $filters=[],$summaryFilters=[],$deleted=[],$updateResult=false;
+    public $filters=[],$summaryFilters=[],$deleted=[],$updateResult=false,$joins=[],$finishes=0,$notes=0;
+    function record_participant_join($id,$type){$this->joins[]=[$id,$type];return true;}
+    function record_meeting_finish($id){$this->finishes++;return true;}
+    function save_room_note($id,$comment,$key){$this->notes++;return 123;}
     function get($id=null){return $id===404?null:(object)['id'=>$id,'created_by'=>$id===7?42:99,'assigned_staff_id'=>99];}
     function staff_has_meeting($meeting,$staff){return $meeting->created_by===$staff;}
     function report_summary($filters=[]){$this->summaryFilters=$filters;return [];}
@@ -74,7 +80,7 @@ class MeetingFixture {
 }
 $c=(new ReflectionClass('Google_meet'))->newInstanceWithoutConstructor();$c->input=new InputFixture();$c->load=new LoadFixture();$c->google_meet_model=new MeetingFixture();
 $permissions=[];
-foreach(['index','create','view','add_comment','start','finish','notify','save_shared_link','calendar','settings','reports','join','health','help','mass_delete','export_csv','meeting_modal','test_notifications','send_test_notifications','fix_health','delete'] as $method){
+foreach(['index','create','view','add_comment','start','finish','notify','save_shared_link','calendar','settings','reports','join','health','help','mass_delete','export_csv','meeting_modal','test_notifications','send_test_notifications','fix_health','delete','room','save_room_note','generate_room'] as $method){
     try{$c->$method(7);throw new RuntimeException('Unguarded meeting route '.$method);}catch(Denied $e){check(true,'Route denied before read/write: '.$method);}
 }
 $permissions=['google_meet'=>['view_own']];
@@ -82,7 +88,7 @@ foreach(['index','reports','join'] as $method){$c->input->query=['staff_id'=>99]
     check(($c->google_meet_model->filters['staff_id']??null)===42,'Own meeting lists ignore foreign staff query: '.$method);
     if($method!=='join'){check(($c->google_meet_model->summaryFilters['staff_id']??null)===42,'Own summary uses same scope');}
 }
-foreach(['view','meeting_modal','add_comment','calendar'] as $method){
+foreach(['view','meeting_modal','add_comment','calendar','room','save_room_note'] as $method){
     try{$c->$method(8);throw new RuntimeException('Foreign record read allowed');}catch(Denied $e){check(true,'Direct foreign record denied: '.$method);}
 }
 try{$c->view(7);}catch(Flow $e){check(!($e instanceof Denied),'Own meeting detail available');}
@@ -139,3 +145,29 @@ foreach(['report_summary','report_meetings'] as $method){$model->db->calls=[];$m
     check(in_array(['or_where',['gm.id IN (SELECT meeting_id FROM tblgoogle_meet_attendees WHERE staff_id=42)',null,false]],$model->db->calls,true),'Native query builder includes invited staff');
 }
 echo "PASS: $checks meeting permissions, ownership, menu, reporting and failure-feedback checks\n";
+
+class SecurityFixture {function get_csrf_token_name(){return 'csrf';}function get_csrf_hash(){return 'fresh-token';}}
+class OutputFixture {public $status,$data;function set_status_header($value){$this->status=$value;return $this;}function set_content_type($value){return $this;}function set_output($value){$this->data=json_decode($value,true);return $this;}}
+$c->security=new SecurityFixture();$c->output=new OutputFixture();$c->google_meet_model=new MeetingFixture();
+$permissions=['google_meet'=>['view_own']];$c->input->posted=['meeting_id'=>7,'event'=>'joined','userType'=>'host'];$c->ajax_lifecycle();
+check($c->google_meet_model->joins===[[7,'guest']],'Body cannot promote a staff viewer to host');
+check($c->output->data['csrf']['hash']==='fresh-token','AJAX returns refreshed CSRF token');
+$c->input->posted['event']='left';$c->ajax_lifecycle();check($c->google_meet_model->finishes===0,'Guest leave cannot complete meeting');
+$c->input->posted['event']='finish';try{$c->ajax_lifecycle();throw new RuntimeException('Viewer finished meeting');}catch(Denied $e){check(true,'Finish requires authenticated host');}
+$permissions=['google_meet'=>['view_own','edit']];$c->input->posted['event']='joined';$c->ajax_lifecycle();
+check(end($c->google_meet_model->joins)===[7,'host'],'Owner with edit permission is host');
+$c->input->posted['event']='finish';$c->ajax_lifecycle();check($c->google_meet_model->finishes===1,'Host finishes scoped meeting');
+$c->input->posted['meeting_id']=8;try{$c->ajax_lifecycle();throw new RuntimeException('Foreign lifecycle');}catch(Denied $e){check($c->google_meet_model->finishes===1,'Foreign lifecycle denied before mutation');}
+$c->input->requestMethod='get';foreach(['delete','save_room_note','generate_room','ajax_lifecycle'] as $route){try{$c->$route(7);throw new RuntimeException('GET mutation allowed');}catch(HttpFailure $e){check($e->status===405,'GET rejected: '.$route);}}
+#[AllowDynamicProperties] class ClientsController {public $payload;function __construct(){}function data($data){$this->payload=$data;}function view($view){}function layout(){}}
+function is_client_logged_in(){return true;}function get_client_user_id(){return 42;}function site_url($path=''){return $path;}
+require $root.'/modules/google_meet/controllers/Meeting_clients.php';
+class CustomerMeetingFixture extends MeetingFixture {function client_can_access_meeting($id,$client){return $id===7&&$client===42;}}
+$customer=(new ReflectionClass('Meeting_clients'))->newInstanceWithoutConstructor();$property=new ReflectionProperty($customer,'gmm');$gmm=new CustomerMeetingFixture();$property->setValue($customer,$gmm);
+$customer->input=new InputFixture();$customer->output=new OutputFixture();$customer->security=new SecurityFixture();
+$customer->input->posted=['meeting_id'=>7,'event'=>'joined','userType'=>'host'];$customer->ajax_lifecycle();check($gmm->joins===[[7,'guest']],'Customer cannot forge host identity');
+$customer->input->posted['event']='left';$customer->ajax_lifecycle();check($gmm->finishes===0,'Customer leave retains meeting');
+$customer->input->posted['event']='finish';$customer->ajax_lifecycle();check($gmm->finishes===0&&$customer->output->status===409,'Customer finish rejected');
+foreach(['room','calendar','ajax_lifecycle'] as $route){$customer->input->posted['meeting_id']=8;try{$customer->$route(8);throw new RuntimeException('Foreign customer meeting accessible');}catch(HttpFailure $e){check($e->status===403,'Customer ownership enforced: '.$route);}}
+check(!method_exists($customer,'save_room_note'),'Private live notes have no customer endpoint');
+echo "PASS: $checks total meeting permission, lifecycle, ownership and POST checks\n";

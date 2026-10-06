@@ -26,8 +26,8 @@
           <td class="gm-nowrap"><?php echo !empty($meeting['start_time']) ? google_meet_display_datetime($meeting['start_time']) : ''; ?></td>
           <td class="gm-smalltext"><?php echo html_escape($meeting['assigned_staff_name'] ?? ''); ?></td>
           <td><span class="gm-badge gm-badge-blue"><?php echo html_escape(ucfirst($meeting['status'] ?? 'scheduled')); ?></span></td>
-          <td><?php if ($this->google_meet_model->is_real_meet_link($meeting['meet_link'] ?? '')) { ?><a class="btn btn-success btn-xs" href="<?php echo html_escape($meeting['meet_link']); ?>" target="_blank" rel="noopener"><i class="fa fa-sign-in"></i> Join</a><?php } elseif (has_permission('google_meet', '', 'edit')) { ?><a class="btn btn-warning btn-xs" href="<?php echo admin_url('google_meet/create/' . (int)$meeting['id']); ?>" title="Add the shared Google Meet URL"><i class="fa fa-link"></i> Add Link</a><?php } ?></td>
-          <td class="gm-actions"><button type="button" class="btn btn-default btn-xs gm-view-popup" data-id="<?php echo (int)$meeting['id']; ?>"><i class="fa fa-eye"></i> View</button><?php if (has_permission('google_meet', '', 'edit')) { ?> <a class="btn btn-info btn-xs" href="<?php echo admin_url('google_meet/create/' . (int)$meeting['id']); ?>"><i class="fa fa-pencil"></i> Edit</a><?php } ?><?php if (has_permission('google_meet', '', 'delete')) { ?> <a class="btn btn-danger btn-xs _delete" href="<?php echo admin_url('google_meet/delete/' . (int)$meeting['id']); ?>"><i class="fa fa-trash"></i> Delete</a><?php } ?></td>
+          <td><?php if ($this->google_meet_model->is_real_meet_link($meeting['meet_link'] ?? '', (object)$meeting)) { ?><a class="btn btn-success btn-xs" href="<?php echo admin_url('google_meet/room/' . (int)$meeting['id']); ?>"><i class="fa fa-sign-in"></i> Join</a><?php } elseif (has_permission('google_meet', '', 'edit')) { ?><a class="btn btn-warning btn-xs" href="<?php echo admin_url('google_meet/create/' . (int)$meeting['id']); ?>" title="Add the shared Google Meet URL"><i class="fa fa-link"></i> Add Link</a><?php } ?></td>
+          <td class="gm-actions"><button type="button" class="btn btn-default btn-xs gm-view-popup" data-id="<?php echo (int)$meeting['id']; ?>"><i class="fa fa-eye"></i> View</button><?php if (has_permission('google_meet', '', 'edit')) { ?> <a class="btn btn-info btn-xs" href="<?php echo admin_url('google_meet/create/' . (int)$meeting['id']); ?>"><i class="fa fa-pencil"></i> Edit</a><?php } ?><?php if (has_permission('google_meet', '', 'delete')) { ?> <?php echo form_open(admin_url('google_meet/delete/' . (int)$meeting['id']), ['style'=>'display:inline', 'onsubmit'=>"return confirm('Delete this meeting and its history?');"]); ?><button class="btn btn-danger btn-xs" type="submit"><i class="fa fa-trash"></i> Delete</button><?= form_close(); ?><?php } ?></td>
         </tr>
       <?php } ?>
       </tbody>
@@ -40,10 +40,10 @@
     <div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button><h4 class="modal-title"><i class="fa fa-video-camera"></i> <span id="gm-modal-title">Google Meet</span></h4></div>
     <div class="modal-body">
       <p class="text-muted" id="gm-modal-description"></p>
-      <div class="gm-modal-link-box"><i class="fa fa-television"></i><div><strong>Meeting Link</strong><a id="gm-modal-link" href="#" target="_blank" rel="noopener"></a></div></div>
+      <div class="gm-modal-link-box"><i class="fa fa-television"></i><div><strong>Meeting Link</strong><a id="gm-modal-link" href="#"></a></div></div>
       <p class="gm-modal-meta"><strong>Start:</strong> <span id="gm-modal-start"></span> &nbsp; <strong>Status:</strong> <span id="gm-modal-status"></span></p>
     </div>
-    <div class="modal-footer"><a id="gm-modal-join" href="#" target="_blank" rel="noopener" class="btn btn-success btn-sm"><i class="fa fa-sign-in"></i> Join Meeting</a><button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button></div>
+    <div class="modal-footer"><a id="gm-modal-join" href="#" class="btn btn-success btn-sm"><i class="fa fa-sign-in"></i> Join Meeting</a><button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button></div>
   </div></div>
 </div>
 <script>
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded',function(){
         var link=data.meet_link||'#';
         document.getElementById('gm-modal-link').textContent=link;
         document.getElementById('gm-modal-link').href=link;
-        document.getElementById('gm-modal-join').href=link;
+        document.getElementById('gm-modal-join').href=data.room_url || link;
         if(window.jQuery){ jQuery('#gm-meeting-view-modal').modal('show'); }
       });
     });

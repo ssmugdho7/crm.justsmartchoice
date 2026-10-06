@@ -74,7 +74,7 @@
                       </a>
                       <?php } ?>
                       <?php if ($meetLink !== '') { ?>
-                      <a class="btn btn-success btn-xs" href="<?php echo html_escape($meetLink); ?>" target="_blank" rel="noopener" title="<?php echo google_meet_lang('google_meet_join', 'Join'); ?>">
+                      <a class="btn btn-success btn-xs" href="<?php echo admin_url('google_meet/room/' . $meetingId); ?>" title="<?php echo google_meet_lang('google_meet_join', 'Join'); ?>">
                         <i class="fa fa-video-camera"></i> <span><?php echo google_meet_lang('google_meet_join', 'Join'); ?></span>
                       </a>
                       <?php } ?>
@@ -91,7 +91,7 @@
                           <li><a href="<?php echo admin_url('google_meet/view/' . $meetingId); ?>#attendance"><i class="fa fa-users"></i> <?php echo google_meet_lang('google_meet_attendance', 'Meeting Attendance'); ?></a></li>
                           <?php if (has_permission('google_meet', '', 'delete')) { ?>
                           <li role="separator" class="divider"></li>
-                          <li><a href="<?php echo admin_url('google_meet/delete/' . $meetingId); ?>" class="text-danger _delete"><i class="fa fa-trash"></i> <?php echo _l('delete'); ?></a></li>
+                          <li><?php echo form_open(admin_url('google_meet/delete/' . (int)$meetingId), ['onsubmit'=>"return confirm('Delete this meeting and its history?');"]); ?><button type="submit" class="btn btn-link text-danger"><i class="fa fa-trash"></i> <?php echo _l('delete'); ?></button><?= form_close(); ?></li>
                           <?php } ?>
                         </ul>
                       </div>

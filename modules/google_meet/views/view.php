@@ -1,5 +1,6 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php init_head();
+$hasRoomLink = $this->google_meet_model->is_real_meet_link($meeting->meet_link ?? '', $meeting);
 $subject = $meeting->subject ?? $meeting->title ?? 'Google Meet Meeting';
 ?>
 <div id="wrapper">
@@ -10,7 +11,7 @@ $subject = $meeting->subject ?? $meeting->title ?? 'Google Meet Meeting';
           <h1><?php echo html_escape($subject); ?></h1>
           <p><?php echo html_escape($meeting->description ?? ''); ?></p>
         </div>
-        <a class="btn btn-success btn-sm"  href="<?php echo html_escape($meeting->meet_link); ?>">Join Google Meet</a>
+        <?php if ($hasRoomLink) { ?><a class="btn btn-success btn-sm"  href="<?php echo admin_url('google_meet/room/'.(int)$meeting->id); ?>">Join meeting</a><?php } else { ?><span class="label label-default">Meeting link pending</span><?php } ?>
       </div>
 
       <?php $this->load->view('google_meet/_nav'); ?>
@@ -24,11 +25,14 @@ $subject = $meeting->subject ?? $meeting->title ?? 'Google Meet Meeting';
               <p><b>End:</b> <?php echo !empty($meeting->end_time) ? google_meet_display_datetime($meeting->end_time) : ''; ?></p>
               <p><b>Status:</b> <?php echo html_escape($meeting->status ?? ''); ?></p>
               <p><b>Duration:</b> <?php echo (int)($meeting->duration_minutes ?? 0); ?> minutes</p>
-              <p><b>Google API Status:</b> <?php echo html_escape(empty($meeting->google_event_id) ? 'Manual link — not synced to Google Calendar' : ($meeting->google_api_status ?? 'Created in Google Calendar')); ?></p>
+              <p><b>Link status:</b> <?php echo html_escape(($meeting->provider ?? '') === 'jitsi' ? 'Shared Jitsi room ready' : ($hasRoomLink ? 'Existing meeting link' : 'Meeting link pending')); ?></p>
               <p><b>Link:</b> <a  href="<?php echo html_escape($meeting->meet_link); ?>"><?php echo html_escape($meeting->meet_link); ?></a></p>
               <?php if (!empty($meeting->notes)) { ?><p><b>Internal Notes:</b><br><?php echo nl2br(html_escape($meeting->notes)); ?></p><?php } ?>
             </div>
             <div class="col-md-4">
+              <button class="btn btn-info btn-block" type="button" data-toggle="modal" data-target="#shareMeetingModal" <?= $hasRoomLink ? '' : 'disabled'; ?>>Share meeting</button>
+              <?php if (has_permission('google_meet', '', 'delete')) { echo form_open(admin_url('google_meet/delete/' . (int)$meeting->id), ['onsubmit' => "return confirm('Delete this meeting and all its attendees, notes and notification history?');", 'class' => 'mtop10']); ?><button class="btn btn-danger btn-block" type="submit">Delete meeting</button><?= form_close(); } ?>
+
               <?php if (has_permission('google_meet', '', 'edit')) { ?>
               <a class="btn btn-info btn-block" href="<?php echo admin_url('google_meet/start/'.$meeting->id); ?>">Mark Started</a>
               <a class="btn btn-success btn-block" href="<?php echo admin_url('google_meet/finish/'.$meeting->id); ?>">Mark Completed</a>
@@ -79,12 +83,12 @@ $subject = $meeting->subject ?? $meeting->title ?? 'Google Meet Meeting';
 <?php if (empty($meeting->meet_link) || rtrim($meeting->meet_link,'/') === 'https://meet.google.com/new') { ?>
 <div class="alert alert-warning">No shared room has been saved. Do not send <strong>meet.google.com/new</strong> to attendees because each person can receive a different room.</div>
 <?php if (has_permission('google_meet', '', 'edit')) { ?>
-<a class="btn btn-info btn-sm" target="_blank" rel="noopener" href="https://meet.google.com/new"><i class="fa fa-video-camera"></i> Host: Create Google Meet</a>
+<?php echo form_open(admin_url('google_meet/generate_room/' . (int)$meeting->id)); ?><button class="btn btn-info btn-sm" type="submit">Create shared Jitsi room</button><?= form_close(); ?>
 <?php echo form_open(admin_url('google_meet/save_shared_link/'.(int)$meeting->id), ['style'=>'margin-top:12px']); ?>
-<div class="input-group"><input class="form-control" type="url" name="meet_link" placeholder="https://meet.google.com/abc-defg-hij" required><span class="input-group-btn"><button class="btn btn-primary" type="submit">Save Shared Link</button></span></div>
+<div class="input-group"><input class="form-control" type="url" name="meet_link" placeholder="Shared Jitsi or existing Google Meet room URL" required><span class="input-group-btn"><button class="btn btn-primary" type="submit">Save Shared Link</button></span></div>
 <?php echo form_close(); ?>
 <?php } ?>
 <?php } else { ?><p><strong>Every invitation uses this same room:</strong><br><a target="_blank" rel="noopener" href="<?php echo html_escape($meeting->meet_link); ?>"><?php echo html_escape($meeting->meet_link); ?></a></p><?php } ?>
 <a class="btn btn-default btn-sm" href="<?php echo admin_url('google_meet/calendar/'.(int)$meeting->id); ?>"><i class="fa fa-calendar"></i> Download Calendar File</a>
 </div></div>
-<?php init_tail(); ?>
+<?php $this->load->view('modals/share_meeting_modal', ['meeting' => $meeting]); init_tail(); ?>

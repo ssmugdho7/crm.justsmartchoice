@@ -110,6 +110,64 @@ class Google_meet extends AdminController
         $this->load->view('view', $data);
     }
 
+    private function is_room_host($meeting)
+    {
+        $staffId = (int)get_staff_user_id();
+        return has_permission('google_meet', '', 'edit') && (is_admin()
+            || (int)$meeting->created_by === $staffId || (int)$meeting->assigned_staff_id === $staffId);
+    }
+
+    private function json_room_response($data, $status = 200)
+    {
+        $data['csrf'] = ['token_name' => $this->security->get_csrf_token_name(), 'hash' => $this->security->get_csrf_hash()];
+        $this->output->set_status_header($status)->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    public function room($id)
+    {
+        $this->require_access('view', $id);
+        $meeting = $this->google_meet_model->get((int)$id);
+        $room = jitsi_meeting_room($meeting);
+        if (!$room || get_option('jitsi_embedded_mode') === '0') {
+            if ($this->google_meet_model->is_real_meet_link($meeting->meet_link) || $room) { redirect($meeting->meet_link); return; }
+            set_alert('warning', 'Save a shared meeting link before joining.');
+            redirect(admin_url('google_meet/view/' . (int)$id)); return;
+        }
+        $staff = $this->db->where('staffid', get_staff_user_id())->get(db_prefix() . 'staff')->row();
+        $data = ['title' => $meeting->subject ?: $meeting->title, 'meeting' => $meeting, 'room' => $room,
+            'attendees' => $this->google_meet_model->attendees((int)$id), 'comments' => $this->google_meet_model->comments((int)$id),
+            'current_user' => ['name' => trim(($staff->firstname ?? '') . ' ' . ($staff->lastname ?? '')), 'email' => $staff->email ?? '', 'is_host' => $this->is_room_host($meeting)],
+            'note_key' => bin2hex(random_bytes(16))];
+        $this->load->view('room', $data);
+    }
+
+    public function ajax_lifecycle()
+    {
+        if ($this->input->method() !== 'post') { show_error('POST required.', 405); }
+        $id = (int)$this->input->post('meeting_id');
+        $this->require_access('view', $id);
+        $meeting = $this->google_meet_model->get($id);
+        $host = $this->is_room_host($meeting);
+        $event = $this->input->post('event', true);
+        if ($event === 'joined') { $saved = $this->google_meet_model->record_participant_join($id, $host ? 'host' : 'guest'); }
+        elseif (in_array($event, ['left', 'finish'], true)) {
+            if (!$host) { if ($event === 'left') { $this->json_room_response(['success' => true]); return; } access_denied('Google Meet'); }
+            $this->require_access('edit', $id);
+            $saved = $this->google_meet_model->record_meeting_finish($id);
+        } else { $this->json_room_response(['success' => false, 'message' => 'Invalid meeting event.'], 400); return; }
+        $this->json_room_response(['success' => (bool)$saved], $saved ? 200 : 409);
+    }
+
+    public function save_room_note($id)
+    {
+        if ($this->input->method() !== 'post') { show_error('POST required.', 405); }
+        $this->require_access('view', $id);
+        $comment = $this->input->post('comment', true);
+        $saved = $this->google_meet_model->save_room_note((int)$id, $comment, $this->input->post('note_key', true));
+        $this->json_room_response(['success' => (bool)$saved, 'comment_id' => $saved ?: null, 'comment' => $saved ? $comment : '',
+            'message' => $saved ? 'Note saved to timeline.' : 'Note could not be saved. Keep your text and try again.'], $saved ? 200 : 422);
+    }
+
     public function add_comment($id)
     {
         $this->require_access('view', $id);
@@ -160,10 +218,20 @@ class Google_meet extends AdminController
             redirect(admin_url('google_meet/view/' . (int)$id));
         }
         if ($this->google_meet_model->update_meet_link((int)$id, $this->input->post('meet_link', true))) {
-            set_alert('success', 'The shared Google Meet link was saved. Every attendee will now join the same meeting.');
+            set_alert('success', 'The shared meeting link was saved. Every attendee will now join the same meeting.');
         } else {
-            set_alert('danger', 'Enter a complete Google Meet URL such as https://meet.google.com/abc-defg-hij. Do not use /new as an attendee link.');
+            set_alert('danger', 'Enter a shared Jitsi room URL or a complete existing Google Meet URL. Do not use /new as an attendee link.');
         }
+        redirect(admin_url('google_meet/view/' . (int)$id));
+    }
+
+    public function generate_room($id)
+    {
+        if ($this->input->method() !== 'post') { show_error('POST required.', 405); }
+        $this->require_access('edit', $id);
+        try { $saved = $this->google_meet_model->ensure_shared_room((int)$id); }
+        catch (InvalidArgumentException $e) { $saved = false; }
+        set_alert($saved ? 'success' : 'danger', $saved ? 'Shared Jitsi room saved.' : 'Room could not be generated. Check the Jitsi server setting.');
         redirect(admin_url('google_meet/view/' . (int)$id));
     }
 
@@ -173,13 +241,9 @@ class Google_meet extends AdminController
 
         $meeting = $this->google_meet_model->get((int)$id);
         if (!$meeting) { show_404(); }
-        $start = gmdate('Ymd\\THis\\Z', strtotime($meeting->start_time));
-        $end = gmdate('Ymd\\THis\\Z', strtotime($meeting->end_time));
-        $title = $meeting->subject ?? $meeting->title ?? 'Google Meet Meeting';
-        $body = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Smart Choice Contractors USA//Google Meet//EN\r\nBEGIN:VEVENT\r\nUID:google-meet-".(int)$meeting->id."@justsmartchoice.com\r\nDTSTAMP:".gmdate('Ymd\\THis\\Z')."\r\nDTSTART:".$start."\r\nDTEND:".$end."\r\nSUMMARY:".str_replace(["\r","\n"], ' ', $title)."\r\nDESCRIPTION:".str_replace(["\r","\n"], ' ', (string)$meeting->description)."\r\nLOCATION:".(string)$meeting->meet_link."\r\nURL:".(string)$meeting->meet_link."\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n";
         header('Content-Type: text/calendar; charset=utf-8');
-        header('Content-Disposition: attachment; filename="smart-choice-meeting-'.$meeting->id.'.ics"');
-        echo $body; exit;
+        header('Content-Disposition: attachment; filename="smart-choice-meeting-' . (int)$meeting->id . '.ics"');
+        echo jitsi_calendar_content($meeting);
     }
 
     public function settings()
@@ -187,11 +251,21 @@ class Google_meet extends AdminController
         $this->require_settings($this->input->post() ? 'edit' : 'view');
 
         if ($this->input->post()) {
+            try {
+                $domain = jitsi_server_domain($this->input->post('jitsi_server_domain', true) ?: 'meet.jit.si');
+                if (strlen($domain) > 137) { throw new InvalidArgumentException('Use a shorter Jitsi hostname so appointment links fit their existing storage.'); }
+            }
+            catch (InvalidArgumentException $e) { set_alert('danger', $e->getMessage()); redirect(admin_url('google_meet/settings')); return; }
+            update_option('video_meeting_provider', 'jitsi');
+            update_option('jitsi_server_domain', $domain);
+            update_option('jitsi_room_prefix', substr(preg_replace('/[^A-Za-z0-9_-]/', '', (string)$this->input->post('jitsi_room_prefix', true)), 0, 24) ?: 'SC');
+            update_option('jitsi_require_pin', $this->input->post('jitsi_require_pin') ? '1' : '0');
+            update_option('jitsi_embedded_mode', $this->input->post('jitsi_embedded_mode') ? '1' : '0');
             update_option('google_meet_enabled', $this->input->post('google_meet_enabled') ? '1' : '0');
             update_option('google_meet_use_google_calendar_api', $this->input->post('google_meet_use_google_calendar_api') ? '1' : '0');
             update_option('google_meet_allow_placeholder_links', $this->input->post('google_meet_allow_placeholder_links') ? '1' : '0');
-            update_option('google_meet_google_api_key', $this->input->post('google_meet_google_api_key', true) ?: '');
-            update_option('google_meet_google_access_token', $this->input->post('google_meet_google_access_token', true) ?: '');
+            if ($this->input->post('google_meet_google_api_key', true)) { update_option('google_meet_google_api_key', $this->input->post('google_meet_google_api_key', true)); }
+            if ($this->input->post('google_meet_google_access_token', true)) { update_option('google_meet_google_access_token', $this->input->post('google_meet_google_access_token', true)); }
             update_option('google_meet_calendar_id', $this->input->post('google_meet_calendar_id', true) ?: 'primary');
             update_option('google_meet_timezone', $this->input->post('google_meet_timezone', true) ?: 'America/New_York');
             update_option('google_meet_default_duration', $this->input->post('google_meet_default_duration', true) ?: '30');
@@ -346,6 +420,7 @@ class Google_meet extends AdminController
             'start_time' => !empty($meeting->start_time) ? _dt($meeting->start_time) : '',
             'status' => ucfirst($meeting->status ?? 'scheduled'),
             'meet_link' => $meeting->meet_link ?? '',
+            'room_url' => $this->google_meet_model->is_real_meet_link($meeting->meet_link ?? '', $meeting) ? admin_url('google_meet/room/' . (int)$meeting->id) : '',
         ]);
     }
 
@@ -376,7 +451,7 @@ class Google_meet extends AdminController
             'email'    => trim((string)$this->input->post('email', true)),
             'phone'    => trim((string)$this->input->post('phone', true)),
             'message'  => $message,
-            'link'     => trim((string)$this->input->post('meet_link', true)) ?: 'https://meet.google.com/new',
+            'link'     => trim((string)$this->input->post('meet_link', true)) ?: jitsi_build_room_url(jitsi_generate_room_name('Test')),
         ]);
 
         set_alert(!empty($result['failed']) ? 'warning' : 'success', 'Test complete. Email: ' . (int)$result['email'] . ', CRM: ' . (int)$result['crm'] . ', SMS: ' . (int)$result['sms'] . ', Failed: ' . (int)$result['failed']);
@@ -394,6 +469,7 @@ class Google_meet extends AdminController
 
     public function delete($id)
     {
+        if ($this->input->method() !== 'post') { show_error('POST required.', 405); }
         $this->require_access('delete', $id);
 
         if (!has_permission('google_meet', '', 'delete')) {

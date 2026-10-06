@@ -2,6 +2,7 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 require_once dirname(__DIR__) . '/helpers/google_meet_dates_helper.php';
+require_once dirname(__DIR__) . '/helpers/jitsi_helper.php';
 
 class Google_meet_model extends App_Model
 {
@@ -91,26 +92,10 @@ class Google_meet_model extends App_Model
             'updated_at' => $now,
         ];
 
-        $apiResult = ['success' => false, 'meet_link' => '', 'event_id' => '', 'error' => 'manual'];
-        if (empty($meeting['meet_link']) && (string)get_option('google_meet_auto_create_link') === '1') {
-            $apiResult = $this->create_google_calendar_event($meeting, $data);
-            if (!empty($apiResult['success'])) {
-                $meeting['meet_link'] = $apiResult['meet_link'];
-                $meeting['google_event_id'] = $apiResult['event_id'];
-                $meeting['google_api_status'] = 'created';
-            } else {
-                $meeting['meet_link'] = '';
-                $meeting['google_api_status'] = 'link_required_' . ($apiResult['error'] ?? 'unknown');
-            }
-        }
+        $meeting = array_merge($meeting, jitsi_prepare_meeting_link($meeting['meet_link']));
+        $meeting['google_api_status'] = $meeting['provider'] === 'jitsi' ? 'jitsi_room_ready' : 'manual';
 
-        if (empty($meeting['meet_link'])) {
-            $meeting['meet_link'] = '';
-            $meeting['google_api_status'] = 'link_required';
-            $meeting['status'] = 'link_required';
-        }
-
-        $this->db->insert(db_prefix() . 'google_meet_meetings', $meeting);
+        if (!$this->db->insert(db_prefix() . 'google_meet_meetings', $meeting)) { return 0; }
         $id = (int)$this->db->insert_id();
 
         if ($id > 0) {
@@ -166,23 +151,9 @@ class Google_meet_model extends App_Model
             'updated_at' => date('Y-m-d H:i:s'),
         ];
 
-        if (empty($meeting['meet_link']) && (string)get_option('google_meet_auto_create_link') === '1') {
-            $apiResult = $this->create_google_calendar_event($meeting, $data);
-            if (!empty($apiResult['success'])) {
-                $meeting['meet_link'] = $apiResult['meet_link'];
-                $meeting['google_event_id'] = $apiResult['event_id'];
-                $meeting['google_api_status'] = 'created';
-            } else {
-                $meeting['meet_link'] = '';
-                $meeting['google_api_status'] = 'link_required_' . ($apiResult['error'] ?? 'unknown');
-            }
-        }
-
-        if (empty($meeting['meet_link'])) {
-            $meeting['meet_link'] = '';
-            $meeting['google_api_status'] = 'link_required';
-            $meeting['status'] = 'link_required';
-        }
+        $meeting = array_merge($meeting, jitsi_prepare_meeting_link($meeting['meet_link'], $existing));
+        $meeting['google_api_status'] = $meeting['provider'] === 'jitsi' ? 'jitsi_room_ready' : 'manual';
+        if (($existing->status ?? '') === 'link_required') { $meeting['status'] = 'scheduled'; }
 
         if (!$this->db->where('id', (int)$id)->update(db_prefix() . 'google_meet_meetings', $meeting)) {
             return false;
@@ -194,30 +165,131 @@ class Google_meet_model extends App_Model
     }
 
 
-    public function update_meet_link($id, $link)
+    public function ensure_shared_room($id)
     {
-        $link = $this->normalize_meet_link($link);
-        if (!$this->is_real_meet_link($link) || !$this->get((int)$id)) {
+        $table = db_prefix() . 'google_meet_meetings';
+        $this->db->trans_begin();
+        try {
+            $query = $this->db->query("SELECT * FROM `$table` WHERE id = ? FOR UPDATE", [(int)$id]);
+            $meeting = $query ? $query->row() : null;
+            if (!$meeting) { $this->db->trans_rollback(); return false; }
+            if ($this->is_real_meet_link($meeting->meet_link ?? '', $meeting)) { $this->db->trans_commit(); return true; }
+            $meeting->meet_link = '';
+            try { $values = jitsi_prepare_meeting_link('', $meeting); }
+            catch (InvalidArgumentException $e) { $this->db->trans_rollback(); throw $e; }
+            $values['google_api_status'] = 'jitsi_room_ready';
+            if ($meeting->status === 'link_required') { $values['status'] = 'scheduled'; }
+            $values['updated_at'] = date('Y-m-d H:i:s');
+            $saved = $this->db->where('id', (int)$id)->update($table, $values);
+            if (!$saved || !$this->db->trans_status()) { $this->db->trans_rollback(); return false; }
+            $this->db->trans_commit();
+            return true;
+        } catch (Throwable $e) {
+            $this->db->trans_rollback();
+            log_message('error', 'Video meeting transaction failed: ensure_shared_room.');
             return false;
         }
-        $saved = $this->db->where('id', (int)$id)->update(db_prefix() . 'google_meet_meetings', [
-            'meet_link' => $link,
-            'google_api_status' => 'shared_link_saved',
-            'status' => 'scheduled',
-            'updated_at' => date('Y-m-d H:i:s'),
-        ]);
-        if (!$saved) { return false; }
-        $this->add_log((int)$id, 'link_saved', 'Shared Google Meet link saved for all attendees.');
+    }
+
+    public function update_meet_link($id, $link)
+    {
+        $existing = $this->get((int)$id);
+        if (!$existing || !$this->is_real_meet_link($link, trim((string)$link) === ($existing->meet_link ?? '') ? $existing : null)) { return false; }
+        try { $values = jitsi_prepare_meeting_link($link, $existing); }
+        catch (InvalidArgumentException $e) { return false; }
+        $values['google_api_status'] = 'shared_link_saved';
+        $values['updated_at'] = date('Y-m-d H:i:s');
+        if (($existing->status ?? '') === 'link_required') { $values['status'] = 'scheduled'; }
+        if (!$this->db->where('id', (int)$id)->update(db_prefix() . 'google_meet_meetings', $values)) { return false; }
+        $this->add_log((int)$id, 'link_saved', 'Shared room saved for all attendees.');
         return true;
     }
 
-    public function is_real_meet_link($link)
+    public function is_real_meet_link($link, $meeting = null)
     {
         $link = trim((string)$link);
-        if ($link === '' || rtrim($link, '/') === 'https://meet.google.com/new') {
+        return (bool)preg_match('~^https://meet\.google\.com/[a-z]{3}-[a-z]{4}-[a-z]{3}(?:[/?#].*)?$~i', $link)
+            || jitsi_meeting_room($meeting ?: (object)['meet_link' => $link]) !== null;
+    }
+
+    public function record_participant_join($meetingId, $userType)
+    {
+        if (!in_array($userType, ['host', 'guest'], true)) { return false; }
+        $table = db_prefix() . 'google_meet_meetings';
+        $this->db->trans_begin();
+        try {
+            $query = $this->db->query("SELECT * FROM `$table` WHERE id = ? FOR UPDATE", [(int)$meetingId]);
+            $meeting = $query ? $query->row() : null;
+            if (!$meeting || !in_array($meeting->status, ['scheduled', 'live'], true)) { $this->db->trans_rollback(); return false; }
+            $now = date('Y-m-d H:i:s');
+            $column = $userType === 'host' ? 'host_joined_at' : 'guest_joined_at';
+            $values = ['status' => 'live', 'updated_at' => $now];
+            if (empty($meeting->actual_start)) { $values['actual_start'] = $now; }
+            if (empty($meeting->$column)) { $values[$column] = $now; }
+            $saved = $this->db->where('id', (int)$meetingId)->update($table, $values);
+            if (!$saved || !$this->db->trans_status()) { $this->db->trans_rollback(); return false; }
+            $this->db->trans_commit();
+            return true;
+        } catch (Throwable $e) {
+            $this->db->trans_rollback();
+            log_message('error', 'Video meeting transaction failed: record_participant_join.');
             return false;
         }
-        return (bool) preg_match('~^https://meet\\.google\\.com/[a-z]{3}-[a-z]{4}-[a-z]{3}(?:[/?#].*)?$~i', $link);
+    }
+
+    public function record_meeting_finish($meetingId)
+    {
+        $table = db_prefix() . 'google_meet_meetings';
+        $this->db->trans_begin();
+        try {
+            $query = $this->db->query("SELECT * FROM `$table` WHERE id = ? FOR UPDATE", [(int)$meetingId]);
+            $meeting = $query ? $query->row() : null;
+            if (!$meeting || !in_array($meeting->status, ['live', 'completed'], true)) { $this->db->trans_rollback(); return false; }
+            if ($meeting->status === 'completed') { $this->db->trans_commit(); return true; }
+            $now = date('Y-m-d H:i:s');
+            $minutes = empty($meeting->actual_start) ? 0 : max(0, (int)round((strtotime($now) - strtotime($meeting->actual_start)) / 60));
+            $saved = $this->db->where('id', (int)$meetingId)->update($table, ['status' => 'completed', 'actual_end' => $now, 'duration_minutes' => $minutes, 'updated_at' => $now]);
+            if (!$saved || !$this->db->trans_status()) { $this->db->trans_rollback(); return false; }
+            $this->add_log((int)$meetingId, 'completed', 'Video meeting completed after ' . $minutes . ' minutes');
+            if (!$this->db->trans_status()) { $this->db->trans_rollback(); return false; }
+            $this->db->trans_commit();
+            return true;
+        } catch (Throwable $e) {
+            $this->db->trans_rollback();
+            log_message('error', 'Video meeting transaction failed: record_meeting_finish.');
+            return false;
+        }
+    }
+
+    public function save_room_note($meetingId, $comment, $noteKey)
+    {
+        $comment = trim((string)$comment);
+        if ($comment === '' || strlen($comment) > 20000 || !preg_match('/^[a-f0-9]{32,64}$/D', (string)$noteKey)) { return false; }
+        $table = db_prefix() . 'google_meet_comments';
+        $owner = (int)get_staff_user_id();
+        if ($owner < 1) { return false; }
+        $this->db->trans_begin();
+        try {
+            // Serialize saves for this meeting and deletion; never write to a deleted meeting.
+            $query = $this->db->query('SELECT id FROM `' . db_prefix() . 'google_meet_meetings` WHERE id = ? FOR UPDATE', [(int)$meetingId]);
+            $parent = $query ? $query->row() : null;
+            if (!$parent) { $this->db->trans_rollback(); return false; }
+            $where = ['meeting_id' => (int)$meetingId, 'created_by' => $owner, 'room_note_key' => $noteKey];
+            $existing = $this->db->where($where)->get($table)->row();
+            if ($existing) { $saved = $this->db->where('id', (int)$existing->id)->update($table, ['comment' => $comment]); $id = (int)$existing->id; }
+            else {
+                $saved = $this->db->insert($table, $where + ['comment' => $comment, 'created_at' => date('Y-m-d H:i:s')]);
+                $id = (int)$this->db->insert_id();
+                if ($saved) { $this->add_log((int)$meetingId, 'comment', 'Live meeting note added'); }
+            }
+            if (!$saved || !$this->db->trans_status()) { $this->db->trans_rollback(); return false; }
+            $this->db->trans_commit();
+            return $id;
+        } catch (Throwable $e) {
+            $this->db->trans_rollback();
+            log_message('error', 'Video meeting transaction failed: save_room_note.');
+            return false;
+        }
     }
 
     public function report_meetings($filters = [])
@@ -366,8 +438,8 @@ class Google_meet_model extends App_Model
     {
         $meeting = $this->get((int)$id);
         if (!$meeting) { return false; }
-        if (!$this->is_real_meet_link($meeting->meet_link ?? '')) {
-            $this->add_log((int)$id, 'notification_skipped', 'Invitations were not sent because a shared Google Meet URL has not been saved.');
+        if (!$this->is_real_meet_link($meeting->meet_link ?? '', $meeting)) {
+            $this->add_log((int)$id, 'notification_skipped', 'Invitations were not sent because a shared meeting room has not been saved.');
             return false;
         }
 
@@ -481,7 +553,7 @@ class Google_meet_model extends App_Model
         $language = $language === 'spanish' ? 'spanish' : 'english';
         $slug = 'google-meet-invitation';
         $table = db_prefix() . 'emailtemplates';
-        $subject = 'Google Meet Invitation - ' . ($meeting->subject ?? $meeting->title ?? 'Meeting');
+        $subject = 'Video Meeting Invitation - ' . ($meeting->subject ?? $meeting->title ?? 'Meeting');
         $message = $this->build_invitation_html($meeting, $attendee['name'] ?? 'Team Member');
         if ($this->db->table_exists($table)) {
             $this->db->where('slug', $slug);
@@ -500,8 +572,15 @@ class Google_meet_model extends App_Model
             '{meeting_link}' => $meeting->meet_link ?? '',
             '{recipient_name}' => $attendee['name'] ?? 'Team Member',
             '{email_signature}' => get_option('email_signature'),
+            '{room_pin}' => $meeting->room_pin ?? '',
         ];
-        return [strtr($subject, $replacements), strtr($message, $replacements)];
+        if (!empty($meeting->room_pin) && strpos($message, '{room_pin}') === false && strpos($message, 'Room PIN:') === false) {
+            $message .= '<p><strong>Room PIN:</strong> ' . html_escape($meeting->room_pin) . '</p>';
+        }
+        // Subjects are plain text; template substitutions in HTML must be escaped.
+        $htmlReplacements = array_map('html_escape', $replacements);
+        $htmlReplacements['{email_signature}'] = get_option('email_signature');
+        return [strtr($subject, $replacements), strtr($message, $htmlReplacements)];
     }
 
     private function build_invitation_plain_text($meeting, $name)
@@ -512,7 +591,7 @@ class Google_meet_model extends App_Model
             'Hello ' . $name . ",\n" .
             'Meeting: ' . $subject . "\n" .
             'Start: ' . $start . "\n" .
-            'Join: ' . ($meeting->meet_link ?? '') . "\n");
+            'Join: ' . ($meeting->meet_link ?? '') . "\n" . (!empty($meeting->room_pin) ? 'Room PIN: ' . $meeting->room_pin . "\n" : ''));
     }
 
     private function build_invitation_html($meeting, $name)
@@ -522,10 +601,11 @@ class Google_meet_model extends App_Model
         $link = html_escape($meeting->meet_link ?? '');
         return '<div style="font-family:Arial,sans-serif;color:#111827;background:#f8fafc;padding:20px">'
             . '<div style="max-width:640px;margin:auto;background:#fff;border:1px solid #d1d5db;border-radius:12px;overflow:hidden">'
-            . '<div style="background:#169179;color:#fff;padding:18px 22px"><h2 style="margin:0;color:#fff">Smart Choice Contractors USA</h2><p style="margin:4px 0 0;color:#eef7f4">Google Meet Invitation</p></div>'
+            . '<div style="background:#169179;color:#fff;padding:18px 22px"><h2 style="margin:0;color:#fff">Smart Choice Contractors USA</h2><p style="margin:4px 0 0;color:#eef7f4">Video Meeting Invitation</p></div>'
             . '<div style="padding:22px"><p>Hello ' . html_escape($name) . ',</p><p>You have been invited to a video meeting.</p>'
             . '<p><strong>Meeting:</strong> ' . $subject . '<br><strong>Start:</strong> ' . html_escape($start) . '</p>'
-            . '<p><a href="' . $link . '" style="display:inline-block;background:#169179;color:#fff;text-decoration:none;padding:10px 16px;border-radius:6px;font-weight:bold">Join Google Meet</a></p>'
+            . '<p><a href="' . $link . '" style="display:inline-block;background:#169179;color:#fff;text-decoration:none;padding:10px 16px;border-radius:6px;font-weight:bold">Join meeting</a></p>'
+            . (!empty($meeting->room_pin) ? '<p><strong>Room PIN:</strong> ' . html_escape($meeting->room_pin) . '</p>' : '')
             . '<p style="font-size:12px;color:#4b5563">If the button does not work, copy this link: ' . $link . '</p></div></div></div>';
     }
 
@@ -638,97 +718,12 @@ class Google_meet_model extends App_Model
         return ['total' => (int)($summary->total ?? 0), 'completed' => (int)($summary->completed ?? 0), 'minutes' => (int)($summary->minutes ?? 0)];
     }
 
-    private function create_google_calendar_event($meeting, $data)
-    {
-        if ((string)get_option('google_meet_use_google_calendar_api') !== '1') {
-            return ['success' => false, 'meet_link' => '', 'event_id' => '', 'error' => 'api_disabled'];
-        }
-
-        $accessToken = trim((string)get_option('google_meet_google_access_token'));
-        if ($accessToken === '' || !function_exists('curl_init')) {
-            return ['success' => false, 'meet_link' => '', 'event_id' => '', 'error' => 'missing_token_or_curl'];
-        }
-
-        $calendarId = trim((string)get_option('google_meet_calendar_id')) ?: 'primary';
-        $timezone = trim((string)get_option('google_meet_timezone')) ?: 'America/New_York';
-        $attendees = [];
-
-        foreach ((array)($data['staff_ids'] ?? []) as $staff_id) {
-            $staff = $this->db->where('staffid', (int)$staff_id)->get(db_prefix() . 'staff')->row();
-            if (!empty($staff->email)) { $attendees[] = ['email' => $staff->email]; }
-        }
-
-        foreach ((array)($data['contact_ids'] ?? []) as $contact_id) {
-            $contact = $this->db->where('id', (int)$contact_id)->get(db_prefix() . 'contacts')->row();
-            if (!empty($contact->email)) { $attendees[] = ['email' => $contact->email]; }
-        }
-
-        $requestId = 'perfex-' . time() . '-' . mt_rand(1000, 9999);
-        $payload = [
-            'summary' => $meeting['subject'] ?? $meeting['title'] ?? 'Google Meet Meeting',
-            'description' => $meeting['description'] ?? '',
-            'start' => ['dateTime' => date('c', strtotime($meeting['start_time'])), 'timeZone' => $timezone],
-            'end' => ['dateTime' => date('c', strtotime($meeting['end_time'])), 'timeZone' => $timezone],
-            'attendees' => $attendees,
-            'conferenceData' => [
-                'createRequest' => [
-                    'requestId' => $requestId,
-                    'conferenceSolutionKey' => ['type' => 'hangoutsMeet'],
-                ],
-            ],
-        ];
-
-        $url = 'https://www.googleapis.com/calendar/v3/calendars/' . rawurlencode($calendarId) . '/events?conferenceDataVersion=1&sendUpdates=all';
-        $ch = curl_init($url);
-        curl_setopt_array($ch, [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POST => true,
-            CURLOPT_HTTPHEADER => [
-                'Authorization: Bearer ' . $accessToken,
-                'Content-Type: application/json',
-            ],
-            CURLOPT_POSTFIELDS => json_encode($payload),
-            CURLOPT_TIMEOUT => 20,
-        ]);
-        $response = curl_exec($ch);
-        $httpCode = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $curlError = curl_error($ch);
-        @curl_close($ch);
-
-        if ($response === false || $httpCode < 200 || $httpCode >= 300) {
-            log_activity('Google Meet API failed: HTTP ' . $httpCode . ' ' . $curlError . ' ' . substr((string)$response, 0, 500));
-            return ['success' => false, 'meet_link' => '', 'event_id' => '', 'error' => 'api_failed'];
-        }
-
-        $json = json_decode($response, true);
-        $meetLink = $json['hangoutLink'] ?? '';
-        if ($meetLink === '' && isset($json['conferenceData']['entryPoints'])) {
-            foreach ($json['conferenceData']['entryPoints'] as $entry) {
-                if (($entry['entryPointType'] ?? '') === 'video' && !empty($entry['uri'])) {
-                    $meetLink = $entry['uri'];
-                    break;
-                }
-            }
-        }
-
-        if ($meetLink === '') {
-            return ['success' => false, 'meet_link' => '', 'event_id' => $json['id'] ?? '', 'error' => 'missing_meet_link'];
-        }
-
-        return ['success' => true, 'meet_link' => $meetLink, 'event_id' => $json['id'] ?? '', 'error' => ''];
-    }
-
     private function normalize_meet_link($link)
     {
         $link = trim((string)$link);
         if ($link === '') { return ''; }
         if (!preg_match('#^https?://#i', $link)) { $link = 'https://' . $link; }
         return $link;
-    }
-
-    private function generate_placeholder_meet_link()
-    {
-        return '';
     }
 
     public function delete_many($ids)
@@ -740,21 +735,31 @@ class Google_meet_model extends App_Model
             if ($id > 0) { $clean[] = $id; }
         }
         if (!$clean) { return 0; }
-        if ($this->db->table_exists(db_prefix() . 'google_meet_attendees')) {
-            $this->db->where_in('meeting_id', $clean)->delete(db_prefix() . 'google_meet_attendees');
+        $this->db->trans_begin();
+        try {
+            $table = db_prefix() . 'google_meet_meetings';
+            $marks = implode(',', array_fill(0, count($clean), '?'));
+            $this->db->query("SELECT id FROM `$table` WHERE id IN ($marks) FOR UPDATE", $clean);
+            foreach (['attendees', 'comments', 'logs', 'notifications'] as $suffix) {
+                $child = db_prefix() . 'google_meet_' . $suffix;
+                if ($this->db->table_exists($child)) { $this->db->where_in('meeting_id', $clean)->delete($child); }
+            }
+            $this->db->where_in('id', $clean)->delete($table);
+            $deleted = $this->db->affected_rows();
+            if (!$this->db->trans_status()) { $this->db->trans_rollback(); return 0; }
+            $this->db->trans_commit();
+            return $deleted;
+        } catch (Throwable $e) {
+            $this->db->trans_rollback();
+            log_message('error', 'Video meeting transaction failed: delete_many.');
+            return 0;
         }
-        if ($this->db->table_exists(db_prefix() . 'google_meet_comments')) {
-            $this->db->where_in('meeting_id', $clean)->delete(db_prefix() . 'google_meet_comments');
-        }
-        if ($this->db->table_exists(db_prefix() . 'google_meet_logs')) {
-            $this->db->where_in('meeting_id', $clean)->delete(db_prefix() . 'google_meet_logs');
-        }
-        $this->db->where_in('id', $clean)->delete(db_prefix() . 'google_meet_meetings');
-        return $this->db->affected_rows();
     }
 
     public function health_checks()
     {
+        try { $domain = jitsi_server_domain(); $validDomain = true; }
+        catch (InvalidArgumentException $e) { $domain = 'Invalid server hostname'; $validDomain = false; }
         return [
             ['name' => 'Meetings Table', 'status' => $this->db->table_exists(db_prefix() . 'google_meet_meetings'), 'detail' => 'Stores meeting topic, link, timing, status, recording URL, and AI summary fields.'],
             ['name' => 'Attendees Table', 'status' => $this->db->table_exists(db_prefix() . 'google_meet_attendees'), 'detail' => 'Stores assigned staff/customer recipients.'],
@@ -764,9 +769,10 @@ class Google_meet_model extends App_Model
             ['name' => 'CRM Push Enabled', 'status' => get_option('google_meet_push_enabled') === '1', 'detail' => 'Creates staff screen notifications inside Perfex CRM.'],
             ['name' => 'Twilio SMS Bridge Enabled', 'status' => get_option('google_meet_twilio_enabled') === '1' || get_option('google_meet_sms_enabled') === '1', 'detail' => 'Uses existing CRM SMS infrastructure when available and fires a hook for Twilio modules.'],
             ['name' => 'Client Portal Enabled', 'status' => get_option('google_meet_client_portal_enabled') === '1', 'detail' => 'Customer portal route: ' . site_url('google_meet/meeting_clients/meetings')],
-            ['name' => 'Google Calendar API Option', 'status' => get_option('google_meet_use_google_calendar_api') === '1', 'detail' => 'Automatic Meet creation requires Google Calendar API and a valid OAuth token.'],
-            ['name' => 'Google Access Token', 'status' => trim((string)get_option('google_meet_google_access_token')) !== '', 'detail' => 'Required only for automatic Meet creation. Manual/fallback links still work without this.'],
-            ['name' => 'Recording Preference', 'status' => get_option('google_meet_allow_recording') === '1', 'detail' => 'Actual recording availability is controlled by Google Workspace permissions.'],
+            ['name' => 'Jitsi Server', 'status' => $validDomain, 'detail' => $domain . '. CRM room creation uses no Google OAuth or API key. The public meet.jit.si service requires host sign-in.'],
+            ['name' => 'Jitsi Schema', 'status' => $this->db->field_exists('host_joined_at', db_prefix() . 'google_meet_meetings') && $this->db->field_exists('room_note_key', db_prefix() . 'google_meet_comments'), 'detail' => 'Shared rooms, attendance timestamps and retry-safe live notes.'],
+            ['name' => 'Embedded Rooms', 'status' => get_option('jitsi_embedded_mode') !== '0', 'detail' => 'Opens the same saved room inside the CRM. External links remain available.'],
+            ['name' => 'Recording Preference', 'status' => get_option('google_meet_allow_recording') === '1', 'detail' => 'Recording availability and moderation are controlled by the video provider.'],
             ['name' => 'AI Notes Preference', 'status' => get_option('google_meet_ai_notes_enabled') === '1', 'detail' => 'Stored preference for SAMI/AI meeting summary workflow. SAMI AI is not modified by this module.'],
         ];
     }

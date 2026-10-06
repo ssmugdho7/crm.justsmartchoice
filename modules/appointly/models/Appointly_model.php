@@ -21,6 +21,23 @@ class Appointly_model extends App_Model
      * @return bool
      * @throws Exception
      */
+    private function prepare_jitsi_appointment($data, $providedLink = null)
+    {
+        if ((get_option('video_meeting_provider') ?: 'jitsi') !== 'jitsi') { return $data; }
+        require_once dirname(__DIR__, 2) . '/google_meet/helpers/jitsi_helper.php';
+        $link = $providedLink !== null ? trim((string)$providedLink) : trim((string)($data['google_meet_link'] ?? ''));
+        if ($link === '' || preg_match('~^https://meet\.google\.com/new(?:[/?#].*)?$~i', $link)) {
+            $link = jitsi_build_room_url(jitsi_generate_room_name('Appt'));
+        }
+        if (!filter_var($link, FILTER_VALIDATE_URL) || parse_url($link, PHP_URL_SCHEME) !== 'https'
+            || preg_match('/[\s\x00-\x1f<>\"\']/', $link)) {
+            throw new InvalidArgumentException('Enter a valid HTTPS meeting URL.');
+        }
+        if (strlen($link) > 191) { throw new InvalidArgumentException('Meeting link exceeds the appointment link limit. Use a shorter server hostname.'); }
+        $data['google_meet_link'] = $link;
+        return $data;
+    }
+
     public function create_appointment($data)
     {
         $attendees    = [];
@@ -210,8 +227,10 @@ class Appointly_model extends App_Model
             return false;
         }
 
+        $sharedVideoLink = $data['google_meet_link'] ?? '';
+
         // Google Calendar integration
-        if ((isset($data['google']) && $data['google'] && appointlyGoogleAuth()) || (get_option('appointly_auto_enable_google_meet') == '1' && appointlyGoogleAuth())) {
+        if ((isset($data['google']) && $data['google'] && appointlyGoogleAuth()) || (get_option('appointly_auto_enable_google_meet') == '1' && (get_option('video_meeting_provider') ?: 'jitsi') !== 'jitsi' && appointlyGoogleAuth())) {
             // For staff-only, ensure each attendee has a valid email before adding to Google
             if ($relation == 'internal_staff' && ! empty($attendees)) {
                 // Validate attendee emails before trying to add to Google Calendar
@@ -231,7 +250,7 @@ class Appointly_model extends App_Model
                     if ($googleEvent) {
                         $data['google_event_id']      = $googleEvent['google_event_id'];
                         $data['google_calendar_link'] = $googleEvent['htmlLink'];
-                        if (isset($googleEvent['hangoutLink'])) {
+                        if (isset($googleEvent['hangoutLink']) && (get_option('video_meeting_provider') ?: 'jitsi') !== 'jitsi') {
                             $data['google_meet_link'] = $googleEvent['hangoutLink'];
                         }
                         $data['google_added_by_id'] = get_staff_user_id();
@@ -243,7 +262,7 @@ class Appointly_model extends App_Model
                 if ($googleEvent) {
                     $data['google_event_id']      = $googleEvent['google_event_id'];
                     $data['google_calendar_link'] = $googleEvent['htmlLink'];
-                    if (isset($googleEvent['hangoutLink'])) {
+                    if (isset($googleEvent['hangoutLink']) && (get_option('video_meeting_provider') ?: 'jitsi') !== 'jitsi') {
                         $data['google_meet_link'] = $googleEvent['hangoutLink'];
                     }
                     $data['google_added_by_id'] = get_staff_user_id();
@@ -274,6 +293,7 @@ class Appointly_model extends App_Model
         }
 
         // Insert the appointment
+        $data = $this->prepare_jitsi_appointment($data, $sharedVideoLink ?? null);
         $this->db->insert(db_prefix() . 'appointly_appointments', $data);
         $insert_id = $this->db->insert_id();
 
@@ -535,7 +555,7 @@ class Appointly_model extends App_Model
         $googleEvent                              = insertAppointmentToGoogleCalendar($data, $attendees);
         $googleInsertData['google_event_id']      = $googleEvent['google_event_id'];
         $googleInsertData['google_calendar_link'] = $googleEvent['htmlLink'];
-        if (isset($googleEvent['hangoutLink'])) {
+        if (isset($googleEvent['hangoutLink']) && (get_option('video_meeting_provider') ?: 'jitsi') !== 'jitsi') {
             $googleInsertData['google_meet_link'] = $googleEvent['hangoutLink'];
         }
 
@@ -619,7 +639,7 @@ class Appointly_model extends App_Model
                 ];
 
                 // Add Google Meet link if available
-                if (isset($googleEvent['hangoutLink'])) {
+                if (isset($googleEvent['hangoutLink']) && (get_option('video_meeting_provider') ?: 'jitsi') !== 'jitsi') {
                     $googleUpdateData['google_meet_link'] = $googleEvent['hangoutLink'];
                 }
 
@@ -634,7 +654,7 @@ class Appointly_model extends App_Model
                         'message'              => _l('appointments_added_to_google_calendar'),
                         'google_event_id'      => $googleEvent['google_event_id'],
                         'google_calendar_link' => $googleEvent['htmlLink'],
-                        'google_meet_link'     => $googleEvent['hangoutLink'] ?? null,
+                        'google_meet_link'     => (get_option('video_meeting_provider') ?: 'jitsi') === 'jitsi' ? ($appointment['google_meet_link'] ?? null) : ($googleEvent['hangoutLink'] ?? null),
                     ];
                 }
             }
@@ -721,6 +741,7 @@ class Appointly_model extends App_Model
         unset($data['rel_type'], $data['terms_accepted'], $data['custom_fields']);
 
         // Insert appointment
+        $data = $this->prepare_jitsi_appointment($data);
         $this->db->insert(db_prefix() . 'appointly_appointments', $data);
         $appointment_id = $this->db->insert_id();
 

@@ -26,6 +26,7 @@ hooks()->add_action('after_cron_run', 'appointly_recurring_events');
 hooks()->add_action('app_admin_footer', 'appointly_add_filters_js');
 hooks()->add_action('app_admin_footer', 'appointly_get_environment');
 hooks()->add_action('after_email_templates', 'appointly_add_email_templates');
+hooks()->add_filter('before_parse_email_template_message', 'appointly_jitsi_invitation_link');
 
 // Add appointments permission to client contact permissions
 hooks()->add_filter('get_contact_permissions', 'appointly_add_contact_permission');

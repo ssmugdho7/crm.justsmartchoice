@@ -17,6 +17,12 @@ add_option('google_meet_auto_create_link', '1');
 add_option('google_meet_use_google_calendar_api', '0');
 add_option('google_meet_allow_placeholder_links', '0');
 
+add_option('video_meeting_provider', 'jitsi');
+add_option('jitsi_server_domain', 'meet.jit.si');
+add_option('jitsi_room_prefix', 'SC');
+add_option('jitsi_require_pin', '0');
+add_option('jitsi_embedded_mode', '1');
+
 $table = db_prefix() . 'google_meet_meetings';
 if (!$CI->db->table_exists($table)) {
     $CI->db->query('CREATE TABLE `' . $table . '` (
@@ -244,4 +250,20 @@ if ($CI->db->table_exists($emailTable)) {
             $CI->db->insert($emailTable,$row);
         }
     }
+}
+
+// Version 1.3.0: retain existing links and distinguish new Jitsi rooms explicitly.
+foreach (['provider' => "VARCHAR(30) NOT NULL DEFAULT 'legacy'", 'room_name' => 'VARCHAR(191) NULL',
+    'room_pin' => 'VARCHAR(20) NULL', 'host_joined_at' => 'DATETIME NULL', 'guest_joined_at' => 'DATETIME NULL'] as $column => $definition) {
+    if (!$CI->db->field_exists($column, $table)) {
+        $CI->db->query("ALTER TABLE `$table` ADD `$column` $definition");
+    }
+}
+$commentsTable = db_prefix() . 'google_meet_comments';
+if (!$CI->db->field_exists('room_note_key', $commentsTable)) {
+    $CI->db->query("ALTER TABLE `$commentsTable` ADD `room_note_key` VARCHAR(64) NULL");
+}
+$noteIndex = $CI->db->query("SHOW INDEX FROM `$commentsTable` WHERE Key_name = 'room_note_identity'")->result_array();
+if (!$noteIndex) {
+    $CI->db->query("ALTER TABLE `$commentsTable` ADD UNIQUE KEY `room_note_identity` (`meeting_id`, `created_by`, `room_note_key`)");
 }

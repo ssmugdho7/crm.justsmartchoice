@@ -72,6 +72,30 @@ trait StrClickable
      */
     public static function clickable($ret)
     {
+        // Existing links and HTML attributes must stay intact. Only convert
+        // unlinked text; converting anchor labels creates nested links and can
+        // replace an explicit HTTPS destination with an inferred HTTP URL.
+        $parts = preg_split(
+            '#(<a\b[^>]*>.*?</a\s*>|<(?:script|style)\b[^>]*>.*?</(?:script|style)\s*>|<!--.*?-->|<[^>]+>)#is',
+            $ret,
+            -1,
+            PREG_SPLIT_DELIM_CAPTURE
+        );
+
+        foreach ($parts as &$part) {
+            if ($part === '' || $part[0] === '<') {
+                continue;
+            }
+
+            $part = self::clickableText($part);
+        }
+        unset($part);
+
+        return trim(implode('', $parts));
+    }
+
+    private static function clickableText($ret)
+    {
         $ret = ' ' . $ret;
         // in testing, using arrays here was found to be faster
         $ret = preg_replace_callback('#([\s>])([\w]+?://[\w\\x80-\\xff\#$%&~/.\-;:=,?@\[\]+]*)#is', fn($matches) => self::make_url_clickable_cb($matches), $ret);
@@ -79,8 +103,6 @@ trait StrClickable
         $ret = preg_replace_callback('#([\s>])([.0-9a-z_+-]+)@(([0-9a-z-]+\.)+[0-9a-z]{2,})#i', fn($matches) => self::make_email_clickable_cb($matches), $ret);
         // this one is not in an array because we need it to run last, for cleanup of accidental links within links
         $ret = preg_replace('#(<a( [^>]+?>|>))<a [^>]+?>([^>]+?)</a></a>#i', '$1$3</a>', $ret);
-        $ret = trim($ret);
-
-        return $ret;
+        return substr($ret, 1);
     }
 }

@@ -70,22 +70,14 @@
             bar.setAttribute('aria-valuenow', String(percent));
         });
 
-        // Keep the requested customer shortcuts in the header as well as the sidebar.
+        // Mirror granted header destinations into the sidebar without hiding the header links.
         function syncHeaderLinks() {
         document.querySelectorAll('.navbar.header .navbar-nav > li:not(.dropdown) > a[href]').forEach(function (link) {
             var url;
             try { url = new URL(link.href); } catch (error) { return; }
             if (url.origin !== window.location.origin || url.hash || !link.textContent.trim()) return;
-            if (url.pathname.replace(/\/$/, '') === new URL(sidebar.querySelector('a').href).pathname.replace(/\/$/, '')) {
-                link.parentElement.classList.add('sc-portal-nav-moved');
-                return;
-            }
             var exists = Array.from(sidebar.querySelectorAll('a')).some(function (item) { return item.href === link.href; });
-            var keepHeader = /\/clients\/(?:projects|tickets|estimates)(?:\/|$)/.test(url.pathname)
-                || /\/products\/client(?:\/|$)/.test(url.pathname)
-                || /\/google_meet\/meeting_clients\/meetings(?:\/|$)/.test(url.pathname);
             if (exists) {
-                link.parentElement.classList.toggle('sc-portal-nav-moved', !keepHeader);
                 return;
             }
             var group = sidebar.querySelector('[data-portal-group="Services & Booking"]');
@@ -110,13 +102,11 @@
             if (url.pathname.replace(/\/$/, '') === window.location.pathname.replace(/\/$/, '')) item.setAttribute('aria-current', 'page');
             item.append(icon, label);
             group.appendChild(item);
-            link.parentElement.classList.toggle('sc-portal-nav-moved', !keepHeader);
         });
         }
         syncHeaderLinks();
         var headerList = document.querySelector('.navbar.header .navbar-nav');
         if (headerList) new MutationObserver(syncHeaderLinks).observe(headerList, {childList: true, subtree: true});
-        // Hide only links that remain available in the sidebar.
         document.body.classList.add('sc-customer-enhanced');
         var customerHeader = document.querySelector('.navbar.header');
         if (customerHeader) {

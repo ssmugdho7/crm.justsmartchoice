@@ -116,16 +116,20 @@ body.sc-portal-drawer-open{overflow:hidden}
 #wrapper.sc-portal-layout :is(a.btn,button.btn,.sc-portal-sidebar button,.sc-portal-menu-button){min-height:44px}
 #wrapper.sc-portal-layout .sc-portal-sidebar button,.sc-portal-menu-button{width:44px;flex-basis:44px}
 #wrapper.sc-portal-layout :is(input,select,textarea):focus-visible{outline:3px solid #277fa1;outline-offset:2px}
-.sc-portal-empty{display:flex;flex-direction:column;min-height:146px;box-sizing:border-box;background:#fff;border:1px solid var(--portal-border);border-radius:8px;padding:20px;margin-bottom:18px}
+.sc-portal-empty{position:relative;min-height:132px;box-sizing:border-box;background:#fff;border:1px solid var(--portal-border);border-radius:8px;padding:20px;margin-bottom:18px}
 .sc-portal-empty h2{font-size:18px;margin:0 0 8px}
 .sc-portal-empty p,.sc-form-guidance,.sc-filter-help{color:var(--portal-muted);line-height:1.6}
-.sc-portal-empty .sc-portal-ask-team{align-self:center;margin:auto;background:#166b53;border-color:#166b53;color:#fff}
+.sc-portal-empty h2,.sc-portal-empty>p{max-width:calc(50% - 12px)}
+.sc-portal-empty .sc-portal-ask-team{position:absolute;top:50%;left:50%;display:flex;align-items:center;justify-content:center;width:max-content;min-height:40px;margin:0;transform:translate(-50%,-50%);background:#166b53;border-color:#166b53;color:#fff;line-height:1.2}
 .sc-portal-empty .sc-portal-ask-team:hover,.sc-portal-empty .sc-portal-ask-team:focus{background:#105740;border-color:#105740;color:#fff}
 .sc-filter-help{font-size:13px;margin:8px 0 0}
 .sc-dashboard-metric small{display:block;color:var(--portal-muted);margin-top:5px}
 .sc-required{color:#a82318;font-weight:700}
 .sc-portal-mobile-nav{display:none}
 @media(max-width:767px){
+ .sc-portal-empty{min-height:0}
+ .sc-portal-empty h2,.sc-portal-empty>p{max-width:none}
+ .sc-portal-empty .sc-portal-ask-team{position:static;margin:16px auto 0;transform:none}
  #wrapper.sc-portal-layout{padding-bottom:calc(92px + env(safe-area-inset-bottom))}
  .sc-portal-mobile-nav{display:flex;position:fixed;inset-inline:0;bottom:0;z-index:1030;background:#fff;border-top:1px solid var(--portal-border);padding:6px 4px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -3px 12px rgba(0,0,0,.05)}
  .sc-portal-mobile-nav>a,.sc-portal-mobile-nav>button{flex:1;min-width:0;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px;color:#43514d;background:none;border:0;text-decoration:none}

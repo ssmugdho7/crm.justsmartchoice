@@ -176,19 +176,28 @@
                 <div class="form-group">
                     <label
                         for="oldpassword"><?= _l('clients_edit_profile_old_password'); ?></label>
-                    <input type="password" class="form-control" name="oldpassword" id="oldpassword">
+                    <div class="sc-password-field">
+                        <input type="password" class="form-control" name="oldpassword" id="oldpassword" autocomplete="current-password">
+                        <button type="button" class="sc-password-toggle" aria-controls="oldpassword" aria-pressed="false" aria-label="<?= e('Show ' . _l('clients_edit_profile_old_password')); ?>" data-show-label="<?= e('Show ' . _l('clients_edit_profile_old_password')); ?>" data-hide-label="<?= e('Hide ' . _l('clients_edit_profile_old_password')); ?>"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                    </div>
                     <?= form_error('oldpassword'); ?>
                 </div>
                 <div class="form-group">
                     <label
                         for="newpassword"><?= _l('clients_edit_profile_new_password'); ?></label>
-                    <input type="password" class="form-control" name="newpassword" id="newpassword">
+                    <div class="sc-password-field">
+                        <input type="password" class="form-control" name="newpassword" id="newpassword" autocomplete="new-password">
+                        <button type="button" class="sc-password-toggle" aria-controls="newpassword" aria-pressed="false" aria-label="<?= e('Show ' . _l('clients_edit_profile_new_password')); ?>" data-show-label="<?= e('Show ' . _l('clients_edit_profile_new_password')); ?>" data-hide-label="<?= e('Hide ' . _l('clients_edit_profile_new_password')); ?>"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                    </div>
                     <?= form_error('newpassword'); ?>
                 </div>
                 <div class="form-group">
                     <label
                         for="newpasswordr"><?= _l('clients_edit_profile_new_password_repeat'); ?></label>
-                    <input type="password" class="form-control" name="newpasswordr" id="newpasswordr">
+                    <div class="sc-password-field">
+                        <input type="password" class="form-control" name="newpasswordr" id="newpasswordr" autocomplete="new-password">
+                        <button type="button" class="sc-password-toggle" aria-controls="newpasswordr" aria-pressed="false" aria-label="<?= e('Show ' . _l('clients_edit_profile_new_password_repeat')); ?>" data-show-label="<?= e('Show ' . _l('clients_edit_profile_new_password_repeat')); ?>" data-hide-label="<?= e('Hide ' . _l('clients_edit_profile_new_password_repeat')); ?>"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                    </div>
                     <?= form_error('newpasswordr'); ?>
                 </div>
                 <div class="form-group">
@@ -207,3 +216,4 @@
     </div>
 
 </div>
+<?php require dirname(__DIR__, 2) . '/partials/client_password_visibility.php'; ?>

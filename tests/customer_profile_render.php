@@ -23,7 +23,9 @@ function verify($ok,$why) { if(!$ok) throw new RuntimeException($why); }
 $contact=(object)['id'=>7,'firstname'=>'<unsafe>','lastname'=>'Example','title'=>'Manager','email'=>'sample@example.test','phonenumber'=>'555-0100','direction'=>'rtl','invoice_emails'=>1,'credit_note_emails'=>0,'estimate_emails'=>1,'ticket_emails'=>1,'contract_emails'=>0,'project_emails'=>1,'task_emails'=>0];
 foreach([null,'existing.png'] as $image) foreach([false,true] as $notifications) for($mask=0;$mask<32;$mask++) {
  $contact->profile_image=$image; $contact->last_password_change=$image? '2026-10-02':null; $hookCalls=[];
- ob_start(); include dirname(__DIR__).'/application/views/themes/smartchoice/views/profile.php'; $html=ob_get_clean();
+ $profileTheme = getenv('PROFILE_TEST_THEME') === 'perfex' ? 'perfex' : 'smartchoice';
+ ob_start(); include dirname(__DIR__).'/application/views/themes/'.$profileTheme.'/views/profile.php'; $html=ob_get_clean();
+ if (getenv('PROFILE_RENDER_HTML')) { echo $html; exit; }
  $d=new DOMDocument(); @$d->loadHTML($html); $x=new DOMXPath($d);
  verify($x->query('//form[@method="post" and @action="https://portal.example/clients/profile"]')->length===2,'Keep two native profile forms');
  verify($x->query('//form//input[@name="csrf_test"]')->length===2,'Both forms retain CSRF');
@@ -34,6 +36,7 @@ foreach([null,'existing.png'] as $image) foreach([false,true] as $notifications)
  verify($x->query('//input[@type="file" and @name="profile_image"]')->length===($image?0:1),'Keep photo upload condition');
  verify($x->query('//a[@href="https://portal.example/clients/remove_profile_image"]')->length===($image?1:0),'Keep remove-photo route and condition');
  foreach(['oldpassword','newpassword','newpasswordr'] as $name) verify($x->query('//input[@name="'.$name.'" and @type="password"]')->length===1,'Keep password field '.$name);
+ foreach(['oldpassword','newpassword','newpasswordr'] as $name) verify($x->query('//button[@type="button" and @aria-controls="'.$name.'" and @aria-pressed="false"]')->length===1,'Independent accessible password toggle '.$name);
  foreach(['invoice_emails'=>'invoices','credit_note_emails'=>'invoices','estimate_emails'=>'estimates','ticket_emails'=>'support','contract_emails'=>'contracts','project_emails'=>'projects','task_emails'=>'projects'] as $field=>$permission) {
   $allowed=$notifications&&has_contact_permission($permission); $node=$x->query('//input[@name="'.$field.'"]');
   verify($node->length===($allowed?1:0),'Notification permission '.$field);

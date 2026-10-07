@@ -2,19 +2,15 @@
 
 defined('BASEPATH') || exit('No direct script access allowed');
 
-include_once APPPATH.'/libraries/pdf/App_pdf.php';
+require_once APPPATH . 'libraries/pdf/Sales_document_pdf.php';
 
-class Invoice_pdf extends App_pdf
+class Invoice_pdf extends Sales_document_pdf
 {
     protected $invoice;
-    protected $is_ending_page = false;
 
-    protected $page_width;
-    protected $page_height;
 
     private $invoice_number;
 
-    protected $render_cover_page = false;
 
     public function __construct($invoice, $tag = '')
     {
@@ -32,13 +28,9 @@ class Invoice_pdf extends App_pdf
         $this->invoice        = $invoice;
         $this->invoice_number = format_invoice_number($this->invoice->id);
 
-        $this->page_width  = $this->getPageDimensions()['wk'];
-        $this->page_height = $this->getPageDimensions()['hk'];
 
         $this->SetTitle($this->invoice_number);
 
-        // Add Cover page
-        $this->getCoverPage();
     }
 
     public function prepare()
@@ -56,12 +48,8 @@ class Invoice_pdf extends App_pdf
     }
 
     // Page header
-    public function Header()
+    protected function renderSalesBodyHeader()
     {
-        if (($this->render_cover_page === true && (int) $this->page === 1) || $this->is_ending_page === true) {
-            return;
-        }
-
         $header_text = parsePDFMergeFields('invoice', getPdfOptions('invoice', 'header', 'text'), $this->invoice);
         $image_file  = custom_pdf_uploaded_image_path('invoice', getPdfOptions('invoice', 'header', 'image'));
 
@@ -77,17 +65,13 @@ class Invoice_pdf extends App_pdf
     }
 
     // Page footer
-    public function Footer()
+    protected function renderSalesBodyFooter()
     {
-        if (($this->render_cover_page === true && (int) $this->page === 1) || $this->is_ending_page === true) {
-            return;
-        }
-
         $footer_text = parsePDFMergeFields('invoice', getPdfOptions('invoice', 'footer', 'text'), $this->invoice);
         $image_file  = custom_pdf_uploaded_image_path('invoice', getPdfOptions('invoice', 'footer', 'image'));
 
         if ($image_file !== '') {
-            $this->Image($image_file, 0, $this->page_height - 30, $this->page_width, 30);
+            $this->Image($image_file, 0, $this->getPageHeight() - 30, $this->getPageWidth(), 30);
         }
 
         if ($footer_text !== '') {
@@ -97,81 +81,9 @@ class Invoice_pdf extends App_pdf
         $this->SetFooterMargin(35);
     }
 
-    // Closing page
-    public function Close()
-    {
-        if (hooks()->apply_filters('process_pdf_signature_on_close', true)) {
-            $this->processSignature();
-        }
-
-        hooks()->do_action('pdf_close', ['pdf_instance' => $this, 'type' => $this->type()]);
-
-        $this->last_page_flag = true;
-
-        if (!empty(getPdfOptions('invoice', 'closing_page', 'image')) || !empty(getPdfOptions('invoice', 'closing_page', 'text'))) {
-            $this->AddPage();
-            $this->is_ending_page = true;
-            $bMargin              = $this->getBreakMargin();
-            $auto_page_break      = $this->getAutoPageBreak();
-            $this->SetAutoPageBreak(false, 0);
-
-            $pdf_cover_image = getPdfOptions('invoice', 'closing_page', 'image');
-            $close_page_text = getPdfOptions('invoice', 'closing_page', 'text');
-
-            $parsedClosePageText = parsePDFMergeFields('invoice', $close_page_text, $this->invoice);
-
-            $align_from_left = getPdfOptions('invoice', 'closing_page', 'align_from_left');
-            $align_from_top  = getPdfOptions('invoice', 'closing_page', 'align_from_top');
-            $img_file        = custom_pdf_uploaded_image_path('invoice', $pdf_cover_image);
-
-            if ($img_file !== '') {
-                $this->Image($img_file, 0, 0, $this->page_width, $this->page_height, '', '', '', false, 300, '', false, false, 0);
-            }
-            $this->writeHTMLCell(0, 0, $align_from_left, $align_from_top, $parsedClosePageText, 0, 0, 0, true, '', true);
-
-            $this->SetAutoPageBreak($auto_page_break, $bMargin);
-            $this->setPageMark();
-        }
-
-        TCPDF::Close();
-    }
-
     protected function type()
     {
         return 'invoice';
-    }
-
-    // Cover page
-    protected function getCoverPage()
-    {
-        if (!empty(getPdfOptions('invoice', 'cover_page', 'image')) || !empty(getPdfOptions('invoice', 'cover_page', 'text'))) {
-            $this->render_cover_page = true;
-            $bMargin         = $this->getBreakMargin();
-            $auto_page_break = $this->getAutoPageBreak();
-            $this->SetAutoPageBreak(false, 0);
-
-            $pdf_cover_image = getPdfOptions('invoice', 'cover_page', 'image');
-            $cover_page_text = getPdfOptions('invoice', 'cover_page', 'text');
-
-            $parsedCoverPageText = parsePDFMergeFields('invoice', $cover_page_text, $this->invoice);
-
-            $align_from_left = getPdfOptions('invoice', 'cover_page', 'align_from_left');
-            $align_from_top  = getPdfOptions('invoice', 'cover_page', 'align_from_top');
-
-            $img_file = custom_pdf_uploaded_image_path('invoice', $pdf_cover_image);
-
-            if ($img_file !== '') {
-                $this->Image($img_file, 0, 0, $this->page_width, $this->page_height, '', '', '', false, 300, '', false, false, 0);
-            }
-            $this->writeHTMLCell(0, 0, $align_from_left, $align_from_top, $parsedCoverPageText, 0, 0, 0, true, '', true);
-
-            // restore auto-page-break status
-            $this->SetAutoPageBreak($auto_page_break, $bMargin);
-            // set the starting point for the page content
-            $this->setPageMark();
-
-            $this->AddPage();
-        }
     }
 
     protected function file_path()

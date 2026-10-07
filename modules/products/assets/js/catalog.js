@@ -25,6 +25,8 @@
             if (!card.hidden) visible++;
         });
         cards.sort(function (a, b) {
+            var imagePriority = Number(!!b.querySelector('.sc-product-image')) - Number(!!a.querySelector('.sc-product-image'));
+            if (imagePriority) return imagePriority;
             if (sort.value === 'default') return Number(a.dataset.catalogOrder) - Number(b.dataset.catalogOrder);
             var result = a.dataset.catalogName.localeCompare(b.dataset.catalogName);
             return sort.value === 'name-desc' ? -result : result;

@@ -1,32 +1,25 @@
 # Customer Online Shopping catalog
 
-The service-shopping layout was restored on October 5, 2026 from the original
-Git snapshot `fc338ebe`. Its view and card script match the Bluehost backup
-`/home2/scusawco/codex-backups/shop-catalog-20261003/previous-catalog.tar.gz`.
+The customer shopping page uses a responsive service grid, a restrained green
+heading, search, multi-category filtering, sorting, a cart badge, readable prices
+and accessible option controls. Full service photos fit inside the image area.
+Cards with images always appear first, including after category filtering and
+alphabetical sorting. Order within each group follows the selected sort.
 
-The page keeps the original multi-category toolbar, View Cart and Checkout
-buttons. Cards with images appear first, keeping the original order within
-the photographed and unphotographed groups, including after category filtering.
-The layout keeps the original Bootstrap one/two/three-column cards, larger image areas, price panels,
-quantity steppers and bottom Share buttons. Product variations now open in a
-Bootstrap dialog when Add to Cart is clicked instead of occupying a fixed-height
-area on every card. The dialog shows the product name, price, dropdowns and
-quantity; it closes after a successful cart response and remains open for
-validation or request errors. Products without variations add directly.
-Existing
-`products_frontend.css` supplies the layout. The scoped `legacy_catalog.css`
-supports image covers and removes the old fixed card/body heights. The later
-`catalog.css` and `catalog.js` assets are no longer loaded by this page.
+Current product records, uploaded galleries, 27 recovered original service
+images, prices, cart requests, checkout routes and hidden-price settings remain
+in place. The shared customer header and sidebar are retained. Existing main
+branch runtime and debug configuration is preserved.
 
-Current escaping, labeled options and quantities, cart request validation,
-stock checks, recurring prices, translations, hidden-price settings, real
-uploaded galleries and 27 recovered original service images remain in place.
-The shared customer header and sidebar are retained. Product records and
-checkout routes are unchanged.
+The page loads scoped `catalog.css` and `catalog.js`. Compile CSS with:
 
-Run `tests/catalog_presentation.js` with an isolated jsdom/jquery runtime to
-verify original card markup, image loading and recovery, escaping, variation
-pricing and stock, quantity controls, original cart payload and empty responses.
-Run `tests/catalog_artwork_regression.php`, `tests/products_stability_regression.php`
-and `tests/catalog_permission_controls.php` for artwork, checkout and permission
-checks. No order or outgoing email is required for presentation validation.
+```sh
+npm exec --yes --package=tailwindcss@3.4.17 -- tailwindcss -c modules/products/assets/css/catalog.tailwind.cjs -i modules/products/assets/css/catalog.source.css -o modules/products/assets/css/catalog.css --minify
+```
+
+Run `tests/catalog_presentation.js` with an isolated jsdom/jquery runtime for
+image-first default and descending order, search, cart badge, image loading,
+escaping, variation prices, stock and quantity controls. Also run
+`tests/catalog_artwork_regression.php`, `tests/solar_customer_render.php` and
+`tests/customer_header_destinations.js` to verify the existing related fixes.
+Presentation validation requires no submitted order or outgoing email.

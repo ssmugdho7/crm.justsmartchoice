@@ -76,9 +76,14 @@ if (!function_exists('parsePDFMergeFields')) {
     function parsePDFMergeFields($type, $text, $data = '')
     {
         $merge_field_type = ($type == 'payment') ? 'invoice' : $type;
-        // Retrieve merge fields for the specified type
+        // A payment's joined id can belong to its payment mode, not its invoice.
+        $mergeId = is_object($data) ? ($data->id ?? 0) : 0;
+        if ($type === 'payment' && is_object($data)) {
+            $mergeId = $data->invoice_data->id ?? $data->invoiceid ?? 0;
+        }
+        // Retrieve merge fields only for the receipt's associated invoice.
         $mergeFields = get_instance()->app_mail_template
-            ->set_merge_fields($merge_field_type . '_merge_fields', !empty($data) && is_object($data) && isset($data->id) ? $data->id : 0)
+            ->set_merge_fields($merge_field_type . '_merge_fields', $mergeId)
             ->merge_fields;
 
         if (!is_array($mergeFields)) {

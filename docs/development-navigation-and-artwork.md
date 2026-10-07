@@ -1,13 +1,11 @@
 # Development navigation and catalog artwork
 
-The service-shopping layout is restored from `fc338ebe`, also verified against
-Bluehost’s `shop-catalog-20261003/previous-catalog.tar.gz`. The category toolbar,
-Bootstrap card grid, larger image areas, price panels and bottom Share buttons
-use the original markup and existing `products_frontend.css`. Current escaping,
-option labels, cart validation, gallery loading and original-image recovery are
-retained. `legacy_catalog.css` adds only loading and missing-image covers.
-The SSD copy at `/Volumes/mySSD/smart_projects_ext/justsmartchoice` contains the
-Nuxt hardware demo and a file inventory, but no CRM products module.
+The original service shopping page was recovered from `fc338ebe` and verified
+against Bluehost's earlier page backup. The requested production release now
+modernizes its presentation while retaining original service artwork and
+prioritizing cards with images. See `customer-shopping-catalog.md` for the current
+layout and validation. The SSD copy contains only a Nuxt hardware demo and a
+file inventory; its CRM products module is missing.
 
 The local SQL backup already contains the overwritten `sc-<service>.jpg` and
 `sc-default-service-1.jpg` assignments. Migration 203 replaced previous product
@@ -47,9 +45,6 @@ Verification:
 php tests/catalog_artwork_regression.php
 php tests/solar_customer_render.php
 NODE_PATH=/path/to/jsdom-and-jquery/node_modules node tests/catalog_presentation.js
-CRM_SITE_ROOT="$PWD" php tests/performance_database_regression.php
-php tests/products_stability_regression.php
-php tests/catalog_permission_controls.php
 ```
 
 Development changes are pushed only to the existing `origin` repository,

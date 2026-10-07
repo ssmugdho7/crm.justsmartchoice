@@ -48,9 +48,18 @@ class Debug_mode extends AdminController
     public function toggle_debug($mode = '')
     {
         if (!is_admin()) { access_denied('CRM Utilities'); }
+        if (!in_array($mode, ['on', 'off'], true)) {
+            set_alert('danger', 'Invalid Debug Mode action.');
+            redirect(admin_url('debug_mode'));
+            return;
+        }
         $enable = $mode === 'on';
+        if (!debug_mode_enable_environment($enable ? 'development' : 'production')) {
+            set_alert('danger', 'Debug Mode was not changed. Check index.php permissions and the environment declaration.');
+            redirect(admin_url('debug_mode'));
+            return;
+        }
         update_option('debug_mode_enabled', $enable ? '1' : '0');
-        debug_mode_enable_environment($enable ? 'development' : 'production');
         set_alert('success', $enable ? 'Debug Mode activated.' : 'Debug Mode deactivated.');
         redirect(admin_url('debug_mode'));
     }

@@ -59,7 +59,9 @@ if (!function_exists('training_manual_customer_image_url')) {
         $normalized = ltrim(str_replace('\\', '/', $value), '/');
         if (strpos($normalized, 'modules/training_manual/') === 0 || strpos($normalized, 'uploads/') === 0) {
             $localPath = FCPATH . $normalized;
-            return is_file($localPath) ? base_url($normalized . (strpos($normalized, TRAINING_MANUAL_ASSETS_PATH . '/img/customer-guides/') === 0 ? '?v=6' : '')) : $fallback;
+            // Refresh bundled guide covers independently of cached database paths.
+            $revision = strpos($normalized, TRAINING_MANUAL_ASSETS_PATH . '/img/customer-guides/') === 0 ? '?v=6' : '';
+            return is_file($localPath) ? base_url($normalized . $revision) : $fallback;
         }
 
         $basename = basename($normalized);

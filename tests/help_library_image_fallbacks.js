@@ -11,7 +11,7 @@ try {
     assert.ok(image, 'Custom cover is initially preserved');
     image.dispatchEvent(new dom.window.Event('error'));
     assert.equal(image.getAttribute('src'), image.dataset.fallback, 'Broken custom cover uses its topic artwork');
-    assert.match(image.src, /client-portal\.svg\?v=2$/);
+    assert.match(image.src, /client-portal\.svg\?v=6$/);
     assert.equal(image.hidden, false);
     image.dispatchEvent(new dom.window.Event('error'));
     assert.equal(image.getAttribute('src'), image.dataset.genericFallback, 'Broken topic artwork uses generic artwork');

@@ -32,10 +32,10 @@ $checks = [
  'empty account has no inert controls'=> strpos(render_library([]), 'id="help-library-search"') === false,
  'every card has topic and generic image fallbacks'=> $xpath->query('//img[@data-fallback and @data-generic-fallback]')->length === 6,
  'every card has an offline category cover'=> $xpath->query('//*[contains(@class,"sc-help-cover-placeholder")]')->length === 6,
- 'missing upload uses support cover'=> strpos(training_manual_customer_image_url('missing-cover.png', 'Using the Support Ticket System'), 'support-system.svg?v=2') !== false,
- 'missing records cover uses document artwork'=> strpos(training_manual_customer_image_url('', 'Your Project Records'), 'documents-payments.svg?v=2') !== false,
- 'unknown topic has generic artwork'=> strpos(training_manual_customer_image_url('', 'Unknown'), 'default-cover.svg?v=2') !== false,
- 'valid custom cover retained'=> training_manual_customer_image_url('modules/training_manual/assets/img/customer-guides/client-portal.svg', 'Support') === '/modules/training_manual/assets/img/customer-guides/client-portal.svg',
+ 'missing upload uses support cover'=> strpos(training_manual_customer_image_url('missing-cover.png', 'Using the Support Ticket System'), 'support-system.svg?v=6') !== false,
+ 'missing records cover uses document artwork'=> strpos(training_manual_customer_image_url('', 'Your Project Records'), 'documents-payments.svg?v=6') !== false,
+ 'unknown topic has generic artwork'=> strpos(training_manual_customer_image_url('', 'Unknown'), 'default-cover.svg?v=6') !== false,
+ 'valid custom cover retained'=> training_manual_customer_image_url('modules/training_manual/assets/img/customer-guides/client-portal.svg', 'Support') === '/modules/training_manual/assets/img/customer-guides/client-portal.svg?v=6',
  'remote cover retained for browser validation'=> training_manual_customer_image_url('https://example.com/cover.png', 'Support') === 'https://example.com/cover.png',
 ];
 foreach (glob(FCPATH . TRAINING_MANUAL_ASSETS_PATH . '/img/customer-guides/*.svg') as $asset) {

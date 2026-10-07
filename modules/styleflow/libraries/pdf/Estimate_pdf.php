@@ -1,9 +1,9 @@
 <?php
 
 defined('BASEPATH') or exit('No direct script access allowed');
-include_once(APPPATH . 'libraries/pdf/App_pdf.php');
+require_once APPPATH . 'libraries/pdf/Sales_document_pdf.php';
 
-class Estimate_pdf extends App_pdf
+class Estimate_pdf extends Sales_document_pdf
 {
     protected $estimate;
     private $document_number;

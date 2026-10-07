@@ -1,18 +1,15 @@
 <?php
 
 defined('BASEPATH') or exit('No direct script access allowed');
-require_once __DIR__ . '/App_pdf.php';
+require_once __DIR__ . '/Sales_document_pdf.php';
 require_once APPPATH . 'helpers/proposal_pdf_helper.php';
 
 /** Shared document lifecycle for native and Custom PDF proposal exports. */
-abstract class Proposal_document_pdf extends App_pdf
+abstract class Proposal_document_pdf extends Sales_document_pdf
 {
     protected $proposal;
     protected $proposal_number;
-    private $closing_page_number = 0;
     private $prepared = false;
-    private $presentationPages = [1 => true];
-    private $renderingPresentation = false;
     private $previous_language;
     private $previous_last_language;
 
@@ -49,8 +46,6 @@ abstract class Proposal_document_pdf extends App_pdf
         }
         $this->prepared = true;
         $this->with_number_to_word('unknown');
-        $this->renderPresentationPage('cover_page');
-        $this->AddPage();
         $this->set_view_vars([
             'number' => $this->proposal_number,
             'proposal' => $this->proposal,
@@ -62,153 +57,15 @@ abstract class Proposal_document_pdf extends App_pdf
 
     protected function type() { return 'proposal'; }
 
-    private function sectionOption($section, $field)
-    {
-        return function_exists('getPdfOptions') ? getPdfOptions('proposals', $section, $field) : '';
-    }
-
-    private function sectionImage($section)
-    {
-        $image = $this->sectionOption($section, 'image');
-        return function_exists('custom_pdf_uploaded_image_path') ? custom_pdf_uploaded_image_path('proposals', $image) : '';
-    }
-
-    private function sectionText($section)
-    {
-        $text = $this->sectionOption($section, 'text');
-        return function_exists('parsePDFMergeFields') ? parsePDFMergeFields('proposals', $text, $this->proposal) : $text;
-    }
-
-    public function Header()
-    {
-        if ($this->renderingPresentation) { $this->presentationPages[$this->page] = true; }
-        if (isset($this->presentationPages[$this->page]) || $this->page == $this->closing_page_number) {
-            return;
-        }
-        $w = $this->getPageWidth();
-        $image = $this->sectionImage('header');
-        if ($image !== '') {
-            $this->Image($image, 0, 0, $w, 28);
-        }
-        $text = $this->sectionText('header');
-        $this->SetFont($this->get_font_name(), '', 9);
-        $this->SetTextColor(29, 48, 65);
-        if ($text !== '') {
-            $this->writeHTMLCell($w - 36, 0, 18, 12, $text, 0, 0);
-        } elseif ($image === '') {
-            $this->SetXY(18, 14);
-            $this->Cell($w - 70, 7, (string) get_option('companyname'), 0, 0);
-            $this->Cell(34, 7, 'PROPOSAL', 0, 0, 'R');
-        }
-        $this->SetDrawColor(20, 128, 128);
-        $this->Line(18, 27, $w - 18, 27);
-    }
-
-    public function Footer()
-    {
-        if ($this->renderingPresentation) { $this->presentationPages[$this->page] = true; }
-        if (isset($this->presentationPages[$this->page]) || $this->page == $this->closing_page_number) {
-            return;
-        }
-        $w = $this->getPageWidth();
-        $image = $this->sectionImage('footer');
-        if ($image !== '') {
-            $this->Image($image, 0, $this->getPageHeight() - 24, $w, 24);
-        }
-        $this->SetFont($this->get_font_name(), '', 8);
-        $this->SetTextColor(98, 111, 121);
-        $this->SetDrawColor(220, 226, 231);
-        $this->Line(18, $this->getPageHeight() - 25, $w - 18, $this->getPageHeight() - 25);
-        $text = $this->sectionText('footer');
-        if ($text !== '') {
-            $this->writeHTMLCell($w - 36, 0, 18, $this->getPageHeight() - 22, $text, 0, 0, false, true, 'C');
-        } elseif ($image === '') {
-            $this->SetXY(18, $this->getPageHeight() - 20);
-            $this->Cell($w - 70, 6, $this->proposal_number, 0, 0);
-            $this->Cell(34, 6, 'Page ' . ($this->page - 1), 0, 0, 'R');
-        }
-    }
-
-    private function renderPresentationPage($section)
-    {
-        $this->renderingPresentation = true;
-        $this->presentationPages[$this->page] = true;
-        $w = $this->getPageWidth();
-        $h = $this->getPageHeight();
-        $margin = $this->getBreakMargin();
-        $auto = $this->getAutoPageBreak();
-        $this->SetAutoPageBreak(false, 0);
-        $image = $this->sectionImage($section);
-        $text = $this->sectionText($section);
-        if ($image !== '') {
-            $this->Image($image, 0, 0, $w, $h);
-        }
-        if ($text !== '') {
-            $x = $this->sectionOption($section, 'align_from_left');
-            $y = $this->sectionOption($section, 'align_from_top');
-            $x = is_numeric($x) ? max(12, min($w - 40, (float) $x)) : 22;
-            $y = is_numeric($y) ? max(12, min($h - 40, (float) $y)) : 60;
-            $this->SetAutoPageBreak(true, 20);
-            $this->writeHTMLCell($w - $x - 22, 0, $x, $y, $text, 0, 0);
-        } elseif ($image === '') {
-            // Designed defaults also work when uploaded images/settings are absent.
-            $this->SetFillColor(22, 43, 60);
-            $this->Rect(0, $h * .38, $w, $h * .55, 'F');
-            $this->SetFillColor(22, 137, 132);
-            $this->Rect(22, $h * .38 + 17, 26, 2, 'F');
-            $this->SetTextColor(255, 255, 255);
-            $this->SetFont($this->get_font_name(), 'B', 32);
-            $this->SetXY(22, $h * .38 + 28);
-            $isCover = $section === 'cover_page';
-            $this->MultiCell($w - 44, 16, $isCover ? 'Proposal' : 'Thank you.', 0, 'L');
-            $this->SetFont($this->get_font_name(), '', 13);
-            $this->Ln(5);
-            $this->SetX(22);
-            $this->MultiCell($w - 44, 7, $isCover ? (string) $this->proposal->subject : 'We look forward to bringing your project to life.', 0, 'L');
-            $this->Ln(10);
-            $this->SetFont($this->get_font_name(), '', 10);
-            $this->SetX(22);
-            $details = $isCover
-                ? 'Prepared for ' . $this->proposal->proposal_to . "\n" . $this->proposal_number . ' | ' . _d($this->proposal->date)
-                : "Next steps\nReview the scope, pricing and terms in this proposal.\nContact our team with questions or to discuss your project.";
-            $this->MultiCell($w - 44, 6, $details, 0, 'L');
-            $this->SetFont($this->get_font_name(), 'B', 11);
-            $this->SetXY(22, $h * .93 + 5);
-            $this->SetTextColor(22, 43, 60);
-            $this->MultiCell($w - 44, 6, (string) get_option('companyname'), 0, 'L');
-            if ($image === '') {
-                $this->SetXY(22, 22);
-                $this->writeHTMLCell($w - 44, 0, '', '', pdf_logo_url(), 0, 1);
-            }
-        }
-        $this->SetTextColor(35, 45, 55);
-        $this->SetFont($this->get_font_name(), '', $this->get_font_size());
-        $this->SetAutoPageBreak($auto, $margin);
-        $this->setPageMark();
-        $this->renderingPresentation = false;
-    }
-
     public function Close()
     {
-        if ($this->state == 3) {
-            return;
-        }
+        if ($this->state == 3) { return; }
         $ci = $this->ci;
-        $language = $this->previous_language;
-        $lastLanguage = $this->previous_last_language;
         try {
-            if (hooks()->apply_filters('process_pdf_signature_on_close', true)) {
-                $this->processSignature();
-            }
-            hooks()->do_action('pdf_close', ['pdf_instance' => $this, 'type' => $this->type()]);
-            $this->last_page_flag = true;
-            $this->closing_page_number = $this->getNumPages() + 1;
-            $this->AddPage();
-            $this->renderPresentationPage('closing_page');
-            TCPDF::Close();
+            parent::Close();
         } finally {
-            $ci->lang->language = $language;
-            $ci->lang->set_last_loaded_language($lastLanguage);
+            $ci->lang->language = $this->previous_language;
+            $ci->lang->set_last_loaded_language($this->previous_last_language);
         }
     }
 }

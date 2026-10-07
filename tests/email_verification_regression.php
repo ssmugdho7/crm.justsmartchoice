@@ -57,8 +57,12 @@ route(['137', ''], contact(['email_verification_key' => '']), 400); check(!$cont
 foreach ([null, '', 'invalid-date', date('Y-m-d H:i:s', time() - 3 * 86400)] as $date) {
     route(['137', str_repeat('a', 32)], contact(['email_verification_sent_at' => $date]), 410); check(!$controller->clients_model->marked, 'Missing/expired sent timestamp verified contact');
 }
-$response = route(['137'], contact(['email_verified_at' => '2026-10-07 12:00:00', 'email_verification_key' => null]), 302, 'redirect');
-check($alerts === [['info', 'email_already_verified']] && !$controller->clients_model->marked, 'Old keyless verified link not handled safely');
+for ($i = 0; $i < 2; ++$i) {
+    $loggedIn = (bool) $i;
+    $response = route(['137'], contact(['email_verified_at' => '2026-10-07 12:00:00', 'email_verification_key' => null]), 302, 'redirect');
+    check($alerts === [['info', 'email_already_verified']] && !$controller->clients_model->marked, 'Old keyless verified link not handled safely');
+    check($response->getMessage() === site_url($loggedIn ? 'clients' : 'authentication'), 'Already-verified notice consumed by extra login redirect');
+}
 foreach ([false, true] as $loggedIn) {
     foreach ([false, true] as $needsApproval) {
         $response = route(['137', str_repeat('a', 32)], contact(), 302, 'redirect');

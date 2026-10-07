@@ -307,7 +307,7 @@ body.sc-customer-enhanced #content,body.sc-customer-enhanced #sc-privacy-policy{
 .sc-knowledge-search .form-group{margin:0}
 #wrapper.sc-portal-layout .sc-knowledge-search .kb-search-input{height:46px!important;border:1px solid #d4e0d9!important;background:#fff!important;border-radius:8px 0 0 8px!important;font-size:14px;padding-left:38px!important;box-shadow:none!important;color:#304d3f}
 #wrapper.sc-portal-layout .sc-knowledge-search .kb-search-button{height:46px!important;background:#0e6f5b!important;border-color:#0e6f5b!important;color:#fff!important;border-radius:0 8px 8px 0!important;padding:10px 22px;font-weight:600}
-.sc-knowledge-search .kb-search-icon{color:#7c9185!important;z-index:4;left:2px;top:6px}
+.sc-knowledge-search .kb-search .kb-search-icon{color:#7c9185!important;z-index:4;left:6px!important;top:0!important;width:32px;height:46px;display:flex;align-items:center;justify-content:center;line-height:1!important;pointer-events:none}
 #wrapper.sc-portal-layout .sc-knowledge-page>.panel_s{background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;overflow:visible!important}
 #wrapper.sc-portal-layout .sc-knowledge-page>.panel_s>.panel-body{padding:0!important;background:transparent!important}
 .sc-knowledge-page .sc-kb-portal-shell{margin:0 0 28px}

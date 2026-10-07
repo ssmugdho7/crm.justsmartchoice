@@ -49,6 +49,7 @@ foreach ($documents as $slug => $type) {
     verify(sc_link_sales_document_email(fixture($slug, $raw), $fields)->message === $raw, "$slug does not corrupt URLs, addresses or partial words");
 }
 verify(sc_link_sales_document_email(fixture('contact-verification-email', '<p>Verify your email for the Proposal</p>'), ['{proposal_link}' => site_url('proposal/42/abc')])->message === '<p>Verify your email for the Proposal</p>', 'account verification cannot inherit an unrelated sales link');
+verify(sc_link_sales_document_email(fixture('proposal-send-to-customer', "Proposal\xff"), ['{proposal_link}' => site_url('proposal/42/abc')])->message === "Proposal\xff", 'invalid text encoding is preserved rather than dropping email content');
 verify(sc_link_sales_document_email(fixture('proposal-send-to-customer', '<p>Proposal Estimate Contract Invoice</p>'), ['{proposal_link}' => site_url('proposal/42/abc'), '{estimate_link}' => site_url('estimate/7/abc')])->message === '<p><a href="' . site_url('proposal/42/abc') . '">Proposal</a> Estimate Contract Invoice</p>', 'only the document belonging to the delivery template is linked');
 // The send modal allows an administrator to replace the stored template body.
 class emails_model { function get($where, $mode) { return fixture($where['slug'], '<p>Stored proposal</p>'); } }

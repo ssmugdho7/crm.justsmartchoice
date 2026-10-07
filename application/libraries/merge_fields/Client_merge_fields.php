@@ -460,7 +460,9 @@ class Client_merge_fields extends App_merge_fields
             $fields['{contact_phonenumber}']        = e($contact->phonenumber);
             $fields['{contact_title}']              = e($contact->title, false);
             $fields['{contact_public_consent_url}'] = contact_consent_url($contact->id);
-            $fields['{email_verification_url}']     = site_url('verification/verify/' . $contact->id . '/' . $contact->email_verification_key);
+            if (is_null($contact->email_verified_at) && !empty($contact->email_verification_key)) {
+                $fields['{email_verification_url}'] = site_url('verification/verify/' . $contact->id . '/' . $contact->email_verification_key);
+            }
         }
 
         if (!empty($client->vat)) {

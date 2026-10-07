@@ -1579,8 +1579,19 @@ class Clients_model extends App_Model
     {
         $contact = $this->get_contact($id);
 
-        if (empty($contact->email)) {
+        if (!$contact || empty($contact->email) || !is_null($contact->email_verified_at)) {
             return false;
+        }
+
+        // Legacy/imported unverified contacts may not yet have a key. Persist
+        // it before merge fields are built, without rotating an existing key.
+        if (empty($contact->email_verification_key)) {
+            $saved = $this->db->where('id', $id)->where('email_verified_at', null)
+                ->group_start()->where('email_verification_key', null)->or_where('email_verification_key', '')->group_end()
+                ->update(db_prefix() . 'contacts', ['email_verification_key' => app_generate_hash()]);
+            if (!$saved) { return false; }
+            $contact = $this->get_contact($id);
+            if (!$contact || !is_null($contact->email_verified_at) || empty($contact->email_verification_key)) { return false; }
         }
 
         $success = send_mail_template('customer_contact_verification', $contact);

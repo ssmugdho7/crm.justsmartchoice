@@ -1,5 +1,13 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php $scCustomerAttachments = sc_sales_customer_attachments('proposal', (int) $proposal->id); ?>
+<style>
+#proposal-wrapper .sc-proposal-toolbar{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+#proposal-wrapper .sc-proposal-title{float:none!important;flex:1 1 220px;min-width:0}
+#proposal-wrapper .proposal-html-subject{overflow-wrap:anywhere}
+#proposal-wrapper .sc-proposal-action-row{display:flex;align-items:center;gap:6px;flex-wrap:nowrap;max-width:100%;overflow-x:auto;padding:2px 0}
+#proposal-wrapper .sc-proposal-action-row>*{flex:0 0 auto;margin:0!important}
+#proposal-wrapper .sc-proposal-action-row .action-button{display:inline-flex;align-items:center;justify-content:center;gap:4px;white-space:nowrap;margin:0!important}
+</style>
 <div id="proposal-wrapper">
     <?php
       ob_start();
@@ -131,16 +139,13 @@ if (! $scProposalHadItemsToken) {
         <div class="top" data-sticky data-sticky-class="preview-sticky-header">
             <div class="container preview-sticky-container">
                 <div class="row">
-                    <div class="col-md-12">
-                        <div class="pull-left">
+                    <div class="col-md-12 sc-proposal-toolbar">
+                        <div class="sc-proposal-title">
                             <h4 class="tw-font-semibold tw-my-0 proposal-html-number">#
                                 <?= html_escape(format_proposal_number($proposal->id)); ?><br />
                                 <small
                                     class="proposal-html-subject"><?= html_escape($proposal->subject); ?></small>
                             </h4>
-                        </div>
-                        <div class="visible-xs">
-                            <div class="clearfix"></div>
                         </div>
                         <div class="sc-proposal-action-row">
                             <?php if (count($scCustomerAttachments) > 0) { ?>
@@ -179,7 +184,6 @@ if (! $scProposalHadItemsToken) {
                             <a href="<?= site_url('clients/proposals/'); ?>" class="btn btn-default action-button go-to-portal"><?= _l('client_go_to_dashboard'); ?></a>
                             <?php } ?>
                         </div>
-                        <div class="clearfix"></div>
                     </div>
                 </div>
             </div>

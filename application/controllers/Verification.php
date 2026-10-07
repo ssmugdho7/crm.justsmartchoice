@@ -32,7 +32,8 @@ class Verification extends ClientsController
 
         if (!is_null($contact->email_verified_at)) {
             set_alert('info', _l('email_already_verified'));
-            redirect(site_url('clients'));
+            // Avoid an extra customer-area redirect consuming the flash notice.
+            redirect(site_url(is_client_logged_in() ? 'clients' : 'authentication'));
         }
 
         // A missing key must never verify an unverified contact. Old links for

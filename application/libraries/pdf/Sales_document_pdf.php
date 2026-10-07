@@ -42,19 +42,22 @@ abstract class Sales_document_pdf extends App_pdf
             $value = $this->get_view_vars($name);
             if (is_string($value) && $value !== '') { return $value; }
         }
+        if ($this->type() === 'contract') { return _l('contract') . ' #' . $this->contract->id; }
+        if ($this->type() === 'payment') { return _l('payment') . ' #' . $this->payment->paymentid; }
         $formatter = 'format_' . $this->type() . '_number';
         return $formatter($this->presentationDocument()->id);
     }
 
     protected function presentationSubject()
     {
-        return $this->type() === 'proposal' ? (string) $this->presentationDocument()->subject : $this->presentationNumber();
+        return in_array($this->type(), ['proposal', 'contract'], true) ? (string) $this->presentationDocument()->subject : $this->presentationNumber();
     }
 
     protected function presentationCustomer()
     {
         $document = $this->presentationDocument();
         if ($this->type() === 'proposal') { return (string) $document->proposal_to; }
+        if ($this->type() === 'payment') { $document = $document->invoice_data; }
         return (string) ($document->client->company ?? $document->company ?? 'Customer');
     }
 
@@ -110,7 +113,7 @@ abstract class Sales_document_pdf extends App_pdf
         // Preserve text-only custom pages; supply branded defaults when artwork is absent.
         $text = $this->sectionOption($section, 'text');
         if (is_string($text) && trim($text) !== '') { return ''; }
-        if (!in_array($this->type(), ['proposal', 'estimate', 'invoice'], true)) { return ''; }
+        if (!in_array($this->type(), ['proposal', 'estimate', 'invoice', 'contract', 'payment'], true)) { return ''; }
         $root = realpath(FCPATH . 'modules/custom_pdf/assets/bookends');
         $name = $section === 'cover_page' ? $this->type() . '-cover.png' : 'closing-page.png';
         $path = $root ? realpath($root . '/' . $name) : false;
@@ -127,14 +130,16 @@ abstract class Sales_document_pdf extends App_pdf
     private function sectionText($section)
     {
         $text = $this->sectionOption($section, 'text');
-        if (!is_string($text)) { return ''; }
+        if (!is_string($text) || $text === '') { return ''; }
         if (function_exists('parsePDFMergeFields')) {
             return parsePDFMergeFields($this->settingsType(), $text, $this->presentationDocument());
         }
         // Native merge fields remain available when the Custom PDF module is inactive.
         if ($text !== '' && isset($this->ci->app_mail_template)) {
+            $mergeType = $this->type() === 'payment' ? 'invoice' : $this->settingsType();
+            $document = $this->type() === 'payment' ? $this->payment->invoice_data : $this->presentationDocument();
             $fields = $this->ci->app_mail_template
-                ->set_merge_fields($this->settingsType() . '_merge_fields', $this->presentationDocument()->id)->merge_fields;
+                ->set_merge_fields($mergeType . '_merge_fields', $document->id)->merge_fields;
             if (is_array($fields)) {
                 foreach ($fields as $key => $value) {
                     if (is_scalar($value) || $value === null) { $text = str_replace((string) $key, (string) $value, $text); }
@@ -246,8 +251,10 @@ abstract class Sales_document_pdf extends App_pdf
             $this->SetFont($this->get_font_name(), '', 10);
             $this->SetX(22);
             $details = $isCover
-                ? ($this->type() === 'invoice' ? 'Bill to ' : 'Prepared for ') . $this->presentationCustomer() . "\n" . $this->presentationNumber() . ' | ' . _d($this->presentationDocument()->date)
-                : "Next steps\nReview the scope, pricing and terms in this " . $this->type() . ".\nContact our team with questions or to discuss your project.";
+                ? ($this->type() === 'invoice' ? 'Bill to ' : 'Prepared for ') . $this->presentationCustomer() . "\n" . $this->presentationNumber() . ' | ' . _d($this->type() === 'contract' ? $this->contract->datestart : $this->presentationDocument()->date)
+                : ($this->type() === 'payment'
+                    ? "Keep this payment receipt for your records.\nContact our team with questions about your payment."
+                    : "Next steps\nReview the scope, pricing and terms in this " . $this->type() . ".\nContact our team with questions or to discuss your project.");
             $this->MultiCell($w - 44, 6, $details, 0, 'L');
             $this->SetFont($this->get_font_name(), 'B', 11);
             $this->SetXY(22, $h * .93 + 5);

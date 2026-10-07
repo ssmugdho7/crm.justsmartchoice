@@ -2,9 +2,9 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-include_once(__DIR__ . '/App_pdf.php');
+include_once(__DIR__ . '/Sales_document_pdf.php');
 
-class Contract_pdf extends App_pdf
+class Contract_pdf extends Sales_document_pdf
 {
     protected $contract;
 

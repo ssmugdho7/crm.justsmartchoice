@@ -2,17 +2,14 @@
 
 defined('BASEPATH') || exit('No direct script access allowed');
 
-include_once APPPATH.'/libraries/pdf/App_pdf.php';
+require_once APPPATH.'libraries/pdf/Sales_document_pdf.php';
 
-class Contract_pdf extends App_pdf
+class Contract_pdf extends Sales_document_pdf
 {
     protected $contract;
-    protected $is_ending_page = false;
 
     protected $page_width;
     protected $page_height;
-
-    protected $render_cover_page = false;
 
     public function __construct($contract)
     {
@@ -32,9 +29,6 @@ class Contract_pdf extends App_pdf
 
         # Don't remove these lines - important for the PDF layout
         $this->contract->content = $this->fix_editor_html($this->contract->content ?? '');
-
-        // Add Cover page
-        $this->getCoverPage();
     }
 
     public function prepare()
@@ -45,12 +39,8 @@ class Contract_pdf extends App_pdf
     }
 
     // Page header
-    public function Header()
+    protected function renderSalesBodyHeader()
     {
-        if (($this->render_cover_page === true && (int) $this->page === 1) || $this->is_ending_page === true) {
-            return;
-        }
-
         $header_text = parsePDFMergeFields('contract', getPdfOptions('contract', 'header', 'text'), $this->contract);
         $image_file  = custom_pdf_uploaded_image_path('contract', getPdfOptions('contract', 'header', 'image'));
 
@@ -66,12 +56,8 @@ class Contract_pdf extends App_pdf
     }
 
     // Page footer
-    public function Footer()
+    protected function renderSalesBodyFooter()
     {
-        if (($this->render_cover_page === true && (int) $this->page === 1) || $this->is_ending_page === true) {
-            return;
-        }
-
         $footer_text = parsePDFMergeFields('contract', getPdfOptions('contract', 'footer', 'text'), $this->contract);
         $image_file  = custom_pdf_uploaded_image_path('contract', getPdfOptions('contract', 'footer', 'image'));
 
@@ -86,80 +72,9 @@ class Contract_pdf extends App_pdf
         $this->SetFooterMargin(35);
     }
 
-    // Closing page
-    public function Close()
-    {
-        if (hooks()->apply_filters('process_pdf_signature_on_close', true)) {
-            $this->processSignature();
-        }
-
-        hooks()->do_action('pdf_close', ['pdf_instance' => $this, 'type' => $this->type()]);
-
-        $this->last_page_flag = true;
-
-        if (!empty(getPdfOptions('contract', 'closing_page', 'image')) || !empty(getPdfOptions('contract', 'closing_page', 'text'))) {
-            $this->AddPage();
-            $this->is_ending_page = true;
-            $bMargin              = $this->getBreakMargin();
-            $auto_page_break      = $this->getAutoPageBreak();
-            $this->SetAutoPageBreak(false, 0);
-
-            $pdf_cover_image = getPdfOptions('contract', 'closing_page', 'image');
-            $close_page_text = getPdfOptions('contract', 'closing_page', 'text');
-
-            $parsedClosePageText = parsePDFMergeFields('contract', $close_page_text, $this->contract);
-            $align_from_left     = getPdfOptions('contract', 'closing_page', 'align_from_left');
-            $align_from_top      = getPdfOptions('contract', 'closing_page', 'align_from_top');
-            $img_file            = custom_pdf_uploaded_image_path('contract', $pdf_cover_image);
-
-            if ($img_file !== '') {
-                $this->Image($img_file, 0, 0, $this->page_width, $this->page_height, '', '', '', false, 300, '', false, false, 0);
-            }
-            $this->writeHTMLCell(0, 0, $align_from_left, $align_from_top, $parsedClosePageText, 0, 0, 0, true, '', true);
-
-            $this->SetAutoPageBreak($auto_page_break, $bMargin);
-            $this->setPageMark();
-        }
-
-        TCPDF::Close();
-    }
-
     protected function type()
     {
         return 'contract';
-    }
-
-    // Cover page
-    protected function getCoverPage()
-    {
-        if (!empty(getPdfOptions('contract', 'cover_page', 'image')) || !empty(getPdfOptions('contract', 'cover_page', 'text'))) {
-            $this->render_cover_page = true;
-            $bMargin         = $this->getBreakMargin();
-            $auto_page_break = $this->getAutoPageBreak();
-            $this->SetAutoPageBreak(false, 0);
-
-            $pdf_cover_image = getPdfOptions('contract', 'cover_page', 'image');
-            $cover_page_text = getPdfOptions('contract', 'cover_page', 'text');
-
-            $parsedCoverPageText = parsePDFMergeFields('contract', $cover_page_text, $this->contract);
-
-            $align_from_left = getPdfOptions('contract', 'cover_page', 'align_from_left');
-            $align_from_top  = getPdfOptions('contract', 'cover_page', 'align_from_top');
-
-            $img_file = custom_pdf_uploaded_image_path('contract', $pdf_cover_image);
-
-            if ($img_file !== '') {
-                $this->Image($img_file, 0, 0, $this->page_width, $this->page_height, '', '', '', false, 300, '', false, false, 0);
-            }
-            $this->writeHTMLCell(0, 0, $align_from_left, $align_from_top, $parsedCoverPageText, 0, 0, 0, true, '', true);
-
-            // restore auto-page-break status
-            $this->SetAutoPageBreak($auto_page_break, $bMargin);
-            // set the starting point for the page content
-            $this->setPageMark();
-
-            $this->AddPage();
-        }
     }
 
     protected function file_path()

@@ -80,7 +80,8 @@ abstract class Sales_document_pdf extends App_pdf
         if ($path && strpos($path, $folder . DIRECTORY_SEPARATOR) === 0 && $this->isPresentationImage($path)) {
             return $path;
         }
-        if (!in_array($section, ['cover_page', 'closing_page'], true) || $this->type() === 'proposal') { return ''; }
+        if (!in_array($section, ['cover_page', 'closing_page'], true)) { return ''; }
+        if ($this->type() === 'proposal') { return $this->bundledPresentationImage($section); }
         // Preserve local legacy cover/end artwork without the old extra-page renderer.
         $kind = $section === 'cover_page' ? 'cover' : 'end';
         $type = $this->type();
@@ -101,7 +102,19 @@ abstract class Sales_document_pdf extends App_pdf
                 }
             }
         }
-        return '';
+        return $this->bundledPresentationImage($section);
+    }
+
+    private function bundledPresentationImage($section)
+    {
+        // Preserve text-only custom pages; supply branded defaults when artwork is absent.
+        $text = $this->sectionOption($section, 'text');
+        if (is_string($text) && trim($text) !== '') { return ''; }
+        if (!in_array($this->type(), ['proposal', 'estimate', 'invoice'], true)) { return ''; }
+        $root = realpath(FCPATH . 'modules/custom_pdf/assets/bookends');
+        $name = $section === 'cover_page' ? $this->type() . '-cover.png' : 'closing-page.png';
+        $path = $root ? realpath($root . '/' . $name) : false;
+        return $path && strpos($path, $root . DIRECTORY_SEPARATOR) === 0 && $this->isPresentationImage($path) ? $path : '';
     }
 
     private function isPresentationImage($path)

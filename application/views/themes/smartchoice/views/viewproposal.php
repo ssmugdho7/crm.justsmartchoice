@@ -6,7 +6,9 @@
 #proposal-wrapper .proposal-html-subject{overflow-wrap:anywhere}
 #proposal-wrapper .sc-proposal-action-row{display:flex;align-items:center;gap:6px;flex-wrap:nowrap;max-width:100%;overflow-x:auto;padding:2px 0}
 #proposal-wrapper .sc-proposal-action-row>*{flex:0 0 auto;margin:0!important}
-#proposal-wrapper .sc-proposal-action-row .action-button{display:inline-flex;align-items:center;justify-content:center;gap:4px;white-space:nowrap;margin:0!important}
+#proposal-wrapper .sc-proposal-action-row>form{display:flex;align-items:center}
+#proposal-wrapper .sc-proposal-action-row .action-button,
+#proposal-wrapper .sc-proposal-action-row>.label{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;height:36px;padding:0 10px;font-size:14px;line-height:20px;gap:4px;white-space:nowrap;vertical-align:middle;margin:0!important}
 </style>
 <div id="proposal-wrapper">
     <?php

@@ -65,6 +65,7 @@ function parse_email_template($template, $merge_fields = [])
     }
 
     $template = parse_email_template_merge_fields($template, $merge_fields);
+    $template = sc_link_sales_document_email($template, $merge_fields);
 
     // Used in hooks eq for emails tracking
     $template->tmp_id = app_generate_hash();
@@ -95,6 +96,90 @@ function parse_email_template_merge_fields($template, $merge_fields)
             : str_replace($key, '', $template->{$section});
         }
     }
+
+    return $template;
+}
+
+/**
+ * Link an unlinked sales document name in its customer delivery email.
+ * Run on the body only, before the shared header/footer are added. Template
+ * content and explicit links remain controlled by the administrator.
+ */
+function sc_link_sales_document_email($template, $merge_fields)
+{
+    $documents = [
+        'proposal-send-to-customer' => 'proposal',
+        'estimate-send-to-client'   => 'estimate',
+        'estimate-already-send'     => 'estimate',
+        'invoice-send-to-client'    => 'invoice',
+        'invoice-already-send'      => 'invoice',
+        'send-contract'            => 'contract',
+    ];
+    $type = $documents[$template->slug ?? ''] ?? null;
+    if (!$type || !empty($template->plaintext)) {
+        return $template;
+    }
+
+    $url = $merge_fields['{' . $type . '_link}'] ?? '';
+    // Accept only the secure public route generated for this document on this
+    // installation. Never infer a document from a word or another merge field.
+    if (!is_string($url) || !preg_match(
+        '#^' . preg_quote(rtrim(site_url($type), '/'), '#') . '/[1-9][0-9]*/[a-zA-Z0-9]+$#D',
+        $url
+    ) || !in_array(strtolower((string) parse_url($url, PHP_URL_SCHEME)), ['http', 'https'], true)) {
+        return $template;
+    }
+
+    // Keep markup byte-for-byte; only alter visible text outside existing links
+    // and non-content elements. Quoted attributes may themselves contain >.
+    $parts = preg_split(
+        '~(<!--.*?-->|<(?:[^>"\']|"[^"]*"|\'[^\']*\')*>)~s',
+        $template->message,
+        -1,
+        PREG_SPLIT_DELIM_CAPTURE
+    );
+    if ($parts === false) {
+        return $template;
+    }
+    $protected = [];
+    $href = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
+    foreach ($parts as &$part) {
+        if ($part === '') {
+            continue;
+        }
+        if ($part[0] === '<') {
+            if (preg_match('~^<\s*(/?)\s*(a|script|style|code|pre|textarea)\b~i', $part, $tag)) {
+                $name = strtolower($tag[2]);
+                if ($tag[1] === '/') {
+                    unset($protected[$name]);
+                } else {
+                    $protected[$name] = true;
+                }
+            }
+            continue;
+        }
+        if ($protected) {
+            continue;
+        }
+        // A raw URL or email address containing /proposal/, for example, must
+        // survive for the normal URL auto-linker later in the mail pipeline.
+        $text = preg_split('~((?:[a-z][a-z0-9+.-]*://|www\.)[^\s<>]+|[^\s<>]+@[^\s<>]+)~i', $part, -1, PREG_SPLIT_DELIM_CAPTURE);
+        foreach ($text as $index => &$segment) {
+            if ($index % 2 === 0) {
+                $segment = preg_replace_callback(
+                    '~(?<![\pL\pN_])' . $type . '(?![\pL\pN_])~iu',
+                    static function ($match) use ($href) {
+                        return '<a href="' . $href . '">' . $match[0] . '</a>';
+                    },
+                    $segment
+                );
+            }
+        }
+        unset($segment);
+        $part = implode('', $text);
+    }
+    unset($part);
+    $template->message = implode('', $parts);
 
     return $template;
 }

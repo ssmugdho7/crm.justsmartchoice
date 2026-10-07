@@ -50,7 +50,7 @@ $scStripeCheckoutAvailable = sc_active_online_gateway_supports_currency('stripe'
                     </button>
                     <?= form_close(); ?>
 
-                    <a href="<?= site_url('appointments'); ?>" class="btn btn-primary action-button sc-service-appointment-button"><i class="fa fa-calendar-check"></i> <?= _l('sc_make_service_appointment'); ?></a>
+                    <a href="<?= site_url('appointly/appointments'); ?>" class="btn btn-primary action-button sc-service-appointment-button"><i class="fa fa-calendar-check"></i> <?= _l('sc_make_service_appointment'); ?></a>
                     <?php if (($scPaypalCheckoutAvailable || $scStripeCheckoutAvailable || found_invoice_mode($payment_modes, $invoice->id, false))) { ?>
                     <a href="#online_payment_form" class="btn btn-success action-button invoice-html-pay-now-top pay-now-top sticky-hidden">
                         <i class="fa fa-credit-card"></i> <?= _l('invoice_html_online_payment_button_text'); ?>

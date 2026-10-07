@@ -11,7 +11,7 @@
   <div class="panel_s google-meet-card"><div class="panel-body">
     <?php echo form_open(admin_url('google_meet/reports'), ['method'=>'get']); ?>
     <div class="row gm-filter-row">
-      <div class="col-md-3"><label>Employee</label><select name="staff_id" class="form-control selectpicker" data-live-search="true" data-width="100%"><option value="">All Employees</option><?php foreach((array)$staff as $s){$sid=(int)$s['staffid'];?><option value="<?php echo $sid; ?>" <?php echo ((int)($filters['staff_id']??0)===$sid)?'selected':''; ?>><?php echo html_escape(trim(($s['firstname']??'').' '.($s['lastname']??''))); ?></option><?php } ?></select></div>
+      <div class="col-md-3"><label>Employee</label><select name="staff_id" <?php if (!has_permission('google_meet', '', 'view')) { echo 'disabled'; } ?> class="form-control selectpicker" data-live-search="true" data-width="100%"><option value="">All Employees</option><?php foreach((array)$staff as $s){$sid=(int)$s['staffid'];?><option value="<?php echo $sid; ?>" <?php echo ((int)($filters['staff_id']??0)===$sid)?'selected':''; ?>><?php echo html_escape(trim(($s['firstname']??'').' '.($s['lastname']??''))); ?></option><?php } ?></select></div>
       <div class="col-md-2"><?php echo render_input('date_from','From',$filters['date_from']??'','date'); ?></div>
       <div class="col-md-2"><?php echo render_input('date_to','To',$filters['date_to']??'','date'); ?></div>
       <div class="col-md-2"><label>Status</label><select name="status" class="form-control"><option value="">All</option><?php foreach(['scheduled','live','completed'] as $status){?><option value="<?php echo $status; ?>" <?php echo (($filters['status']??'')===$status)?'selected':''; ?>><?php echo ucfirst($status); ?></option><?php } ?></select></div>
@@ -24,10 +24,10 @@
   </div></div>
   <div class="panel_s google-meet-card"><div class="panel-body">
     <?php echo form_open(admin_url('google_meet/mass_delete'), ['id'=>'gm-report-mass-form']); ?>
-    <div class="gm-table-toolbar"><div><button type="button" class="btn btn-default btn-sm gm-check-all">Select</button><button type="submit" class="btn btn-danger btn-sm gm-mass-delete">Delete Selected</button><a class="btn btn-default btn-sm" href="<?php echo admin_url('google_meet/reports'); ?>">Reload</a></div><input type="text" class="form-control input-sm gm-table-search" placeholder="Search report rows..."></div>
+    <div class="gm-table-toolbar"><div><?php if (has_permission('google_meet', '', 'delete')) { ?><button type="button" class="btn btn-default btn-sm gm-check-all">Select</button><button type="submit" class="btn btn-danger btn-sm gm-mass-delete">Delete Selected</button><?php } ?><a class="btn btn-default btn-sm" href="<?php echo admin_url('google_meet/reports'); ?>">Reload</a></div><input type="text" class="form-control input-sm gm-table-search" placeholder="Search report rows..."></div>
     <div class="table-responsive"><table class="table table-striped gm-compact-table gm-filter-table"><thead><tr><th></th><th>Meeting</th><th>Employee</th><th>Start</th><th>Status</th><th>Notes</th><th>Join</th><th>Actions</th></tr></thead><tbody>
     <?php foreach((array)$meetings as $m){ ?><tr>
-      <td><input type="checkbox" name="ids[]" value="<?php echo (int)$m['id']; ?>"></td>
+      <td><?php if (has_permission('google_meet', '', 'delete')) { ?><input type="checkbox" name="ids[]" value="<?php echo (int)$m['id']; ?>"><?php } ?></td>
       <td class="gm-meeting-cell"><strong><?php echo html_escape($m['subject'] ?: $m['title'] ?: 'Google Meet Meeting'); ?></strong><small><?php echo html_escape($m['description'] ?? ''); ?></small></td>
       <td class="gm-nowrap"><?php echo html_escape($m['assigned_staff_name'] ?: $m['created_by_name'] ?: ''); ?></td>
       <td class="gm-nowrap"><?php echo !empty($m['start_time']) ? google_meet_display_datetime($m['start_time']) : ''; ?></td>

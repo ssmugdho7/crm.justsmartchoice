@@ -18,3 +18,7 @@ $route['google_meet/meeting_clients/join/(:num)'] = 'meeting_clients/join/$1';
 $route['google_meet/client'] = 'meeting_clients/meetings';
 $route['google_meet/client/view/(:num)'] = 'meeting_clients/view/$1';
 $route['google_meet/client/join/(:num)'] = 'meeting_clients/join/$1';
+
+$route['google_meet/meeting_clients/room/(:num)'] = 'meeting_clients/room/$1';
+$route['google_meet/meeting_clients/calendar/(:num)'] = 'meeting_clients/calendar/$1';
+$route['google_meet/meeting_clients/ajax_lifecycle'] = 'meeting_clients/ajax_lifecycle';

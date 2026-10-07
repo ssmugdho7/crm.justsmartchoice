@@ -5,15 +5,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /*
 Module Name: Google Meet
 Description: Google Meet connects Perfex CRM with meeting scheduling for staff and customers. Smart Choice Contractors USA can create instant or scheduled meetings, generate or save Meet links, invite employees/customers by CRM email, CRM notifications, and Twilio SMS when available, track attendees, comments, reports, health checks, and customer portal access without disrupting the existing CRM workflow.
-Version: 1.2.7
+Version: 1.3.0
 Author URI: https://justsmartchoice.com/webdeveloper.php
 Author: Smart Choice Contractors USA / Harold Cabrera
 Requires at least: 3.4.1
 */
 
 define('GOOGLE_MEET_MODULE_NAME', 'google_meet');
-define('GOOGLE_MEET_VERSION', '1.2.7');
+define('GOOGLE_MEET_VERSION', '1.3.0');
 require_once __DIR__ . '/helpers/google_meet_dates_helper.php';
+require_once __DIR__ . '/helpers/jitsi_helper.php';
 register_language_files(GOOGLE_MEET_MODULE_NAME, [GOOGLE_MEET_MODULE_NAME]);
 
 
@@ -83,20 +84,22 @@ function google_meet_admin_init()
 {
     $CI =& get_instance();
     if (function_exists('register_staff_capabilities')) {
-        register_staff_capabilities(GOOGLE_MEET_MODULE_NAME, [
+        register_staff_capabilities(GOOGLE_MEET_MODULE_NAME, ['capabilities' => [
             'view_own'           => 'View Own',
             'view'               => 'View(Permission Global)',
             'create'             => 'Create',
             'edit'               => 'Edit',
             'delete'             => 'Delete',
-            'view_all_templates' => 'View All Templates',
-        ], 'Google Meet');
+        ]], 'Google Meet');
     }
 
-    if (isset($CI->app_menu)) {
+    $canView = has_permission('google_meet', '', 'view') || has_permission('google_meet', '', 'view_own');
+    $canCreate = has_permission('google_meet', '', 'create');
+    $canSettings = has_permission('settings', '', 'view');
+    if (isset($CI->app_menu) && ($canView || $canCreate || $canSettings)) {
         $CI->app_menu->add_sidebar_menu_item('google-meet', [
             'name'     => 'Google Meet',
-            'href'     => admin_url('google_meet'),
+            'href'     => admin_url($canView ? 'google_meet' : ($canCreate ? 'google_meet/create' : 'google_meet/settings')),
             'icon'     => 'fa fa-video-camera',
             'position' => 57,
         ]);
@@ -113,6 +116,11 @@ function google_meet_admin_init()
         ];
 
         foreach ($items as $item) {
+            $allowed = $item[0] === 'google-meet-new-meeting' ? $canCreate : $canView;
+            if (in_array($item[0], ['google-meet-test-notifications', 'google-meet-settings', 'google-meet-health'], true)) {
+                $allowed = $canSettings;
+            }
+            if (!$allowed) { continue; }
             $CI->app_menu->add_sidebar_children_item('google-meet', [
                 'slug'     => $item[0],
                 'name'     => $item[1],

@@ -47,7 +47,7 @@ $summary = isset($summary) && is_array($summary) ? $summary : ['total'=>count((a
                 $meetingId = isset($meeting['id']) ? (int)$meeting['id'] : 0;
                 $meetingTitle = !empty($meeting['subject']) ? $meeting['subject'] : (!empty($meeting['title']) ? $meeting['title'] : 'Google Meet Meeting');
                 $status = strtolower(trim((string)($meeting['status'] ?? 'scheduled')));
-                $hasLink = $this->google_meet_model->is_real_meet_link($meeting['meet_link'] ?? '');
+                $hasLink = $this->google_meet_model->is_real_meet_link($meeting['meet_link'] ?? '', (object)$meeting);
                 $statusClass = $status === 'live' ? 'success' : (in_array($status,['completed','cancelled','canceled'],true) ? 'default' : 'info');
             ?>
               <tr>

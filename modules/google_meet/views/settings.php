@@ -1,35 +1,32 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php init_head(); ?>
 <div id="wrapper"><div class="content"><div class="google-meet-wrap smart-choice-normalized-module">
-  <div class="google-meet-header"><div><h1><i class="fa fa-cog"></i> Google Meet Settings</h1><p>Control Google Calendar, customer portal, staff/customer invitations, CRM popups, email, Twilio SMS bridge, and AI-ready meeting notes.</p></div></div>
+  <div class="google-meet-header"><div><h1><i class="fa fa-cog"></i> Google Meet Settings</h1><p>Control Jitsi video rooms, customer portal, staff/customer invitations, CRM popups, email, Twilio SMS bridge, and AI-ready meeting notes.</p></div></div>
   <?php $this->load->view('google_meet/_nav'); ?>
   <?php echo form_open(admin_url('google_meet/settings')); ?>
   <div class="gm-instruction-banner">
-    <h3><i class="fa fa-info-circle"></i> How Google Meet works in the CRM</h3>
+    <h3><i class="fa fa-info-circle"></i> How video meetings work in the CRM</h3>
     <p>Create or schedule a meeting from this module, assign the appropriate staff members and customer contacts, and save the record. Logged-in customers only see meetings specifically assigned to their own contact account. The customer navigation link is hidden from visitors and from anyone who is not authenticated.</p>
     <ul>
-      <li><strong>Google Calendar API enabled:</strong> the module can request a real Google Calendar event and Google Meet conference link using the saved Google credentials.</li>
+      <li><strong>Shared Jitsi rooms:</strong> the CRM generates a private room link without Google OAuth or API keys. The host signs in to meet.jit.si to start a public-service room.</li>
       <li><strong>Notifications enabled:</strong> assigned participants can receive CRM, email, popup, or available SMS notifications according to these settings.</li>
       <li><strong>No assigned meeting:</strong> the customer portal clearly reports that no meeting is currently scheduled instead of exposing an empty or public page.</li>
     </ul>
   </div>
   <div class="panel_s google-meet-card"><div class="panel-body gm-form-panel">
-    <div class="google-meet-settings-heading"><h4>Core Setup</h4><p>Keep the module active and configure Google Calendar API fallback behavior.</p></div>
+    <div class="google-meet-settings-heading"><h4>Core Setup</h4><p>New meetings use Jitsi. Existing saved Google Meet rooms remain available.</p></div>
     <div class="row"><div class="col-md-6">
       <div class="checkbox checkbox-primary"><input type="checkbox" id="google_meet_enabled" name="google_meet_enabled" value="1" <?php echo get_option('google_meet_enabled') == '1' ? 'checked' : ''; ?>><label for="google_meet_enabled">Enable Google Meet Module</label></div>
-      <div class="checkbox checkbox-primary"><input type="checkbox" id="google_meet_auto_create_link" name="google_meet_auto_create_link" value="1" <?php echo get_option('google_meet_auto_create_link') == '1' ? 'checked' : ''; ?>><label for="google_meet_auto_create_link">Auto Create Meet Link When Possible</label></div>
-      <div class="checkbox checkbox-primary"><input type="checkbox" id="google_meet_use_google_calendar_api" name="google_meet_use_google_calendar_api" value="1" <?php echo get_option('google_meet_use_google_calendar_api') == '1' ? 'checked' : ''; ?>><label for="google_meet_use_google_calendar_api">Use Google Calendar API</label></div>
-      <div class="checkbox checkbox-primary"><input type="checkbox" id="google_meet_allow_placeholder_links" name="google_meet_allow_placeholder_links" value="1" <?php echo get_option('google_meet_allow_placeholder_links') == '1' ? 'checked' : ''; ?>><label for="google_meet_allow_placeholder_links">Allow Safe Placeholder Link</label></div>
     </div><div class="col-md-6">
-      <?php echo render_input('google_meet_calendar_id', 'Google Calendar ID', get_option('google_meet_calendar_id') ?: 'primary'); ?>
+      <?php echo render_input('jitsi_server_domain', 'Jitsi server hostname', get_option('jitsi_server_domain') ?: 'meet.jit.si'); ?>
+      <?php echo render_input('jitsi_room_prefix', 'Room name prefix', get_option('jitsi_room_prefix') ?: 'SC'); ?>
+      <div class="checkbox checkbox-primary"><input id="jitsi_require_pin" type="checkbox" name="jitsi_require_pin" value="1" <?= get_option('jitsi_require_pin') === '1' ? 'checked' : ''; ?>><label for="jitsi_require_pin">Generate a room PIN</label></div>
+      <div class="checkbox checkbox-primary"><input id="jitsi_embedded_mode" type="checkbox" name="jitsi_embedded_mode" value="1" <?= get_option('jitsi_embedded_mode') !== '0' ? 'checked' : ''; ?>><label for="jitsi_embedded_mode">Embed meetings in the CRM</label></div>
       <?php echo render_input('google_meet_timezone', 'Timezone', get_option('google_meet_timezone') ?: 'America/New_York'); ?>
       <?php echo render_input('google_meet_default_duration', 'Default Duration Minutes', get_option('google_meet_default_duration') ?: '30', 'number'); ?>
     </div></div>
 
-    <hr><div class="google-meet-settings-heading"><h4>Google API Credentials</h4><p>Google Meet links are created through Google Calendar events with conference data.</p></div>
-    <div class="row"><div class="col-md-6"><?php echo render_input('google_meet_google_api_key','Google API Key / Project Key',get_option('google_meet_google_api_key')); ?></div><div class="col-md-6"><?php echo render_input('google_meet_google_access_token','Google OAuth Access Token',get_option('google_meet_google_access_token'),'password'); ?></div></div>
-
-    <hr><div class="google-meet-settings-heading"><h4>Meeting Options</h4><p>These preferences are stored in the CRM and included in meeting records. Some final enforcement is controlled by Google Workspace account permissions.</p></div>
+    <hr><div class="google-meet-settings-heading"><h4>Meeting Options</h4><p>These preferences are stored in the CRM and included in meeting records. Lobby, recording and moderator permissions depend on the configured Jitsi service. A CRM permission does not grant moderator rights on a third-party service.</p></div>
     <div class="row"><div class="col-md-6 gm-checkbox-grid">
       <div class="checkbox checkbox-primary"><input type="checkbox" id="google_meet_quick_access" name="google_meet_quick_access" value="1" <?php echo get_option('google_meet_quick_access') == '1' ? 'checked' : ''; ?>><label for="google_meet_quick_access">Quick Access Preference</label></div>
       <div class="checkbox checkbox-primary"><input type="checkbox" id="google_meet_waiting_room" name="google_meet_waiting_room" value="1" <?php echo get_option('google_meet_waiting_room') == '1' ? 'checked' : ''; ?>><label for="google_meet_waiting_room">Waiting Room Preference</label></div>

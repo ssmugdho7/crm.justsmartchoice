@@ -19,7 +19,7 @@ $subject = $meeting->subject ?? $meeting->title ?? '';
       <div class="gm-hero">
         <div>
           <h1><?php echo html_escape($title); ?></h1>
-          <p>Leave the link blank only when Google Calendar API is connected. The module will never send https://meet.google.com/new to attendees because that creates separate rooms.</p>
+          <p>Leave the link blank to generate one private Jitsi room automatically. Every attendee receives the same saved room link. Existing Google Meet rooms can still be used.</p>
         </div>
       </div>
 
@@ -58,7 +58,7 @@ $subject = $meeting->subject ?? $meeting->title ?? '';
                 </select>
               </div>
               <?php echo render_input('appointment_id', 'Appointment ID', $meeting->appointment_id ?? '', 'number'); ?>
-              <?php echo render_input('meet_link', 'Google Meet Link', $meeting->meet_link ?? '', 'text', ['placeholder' => 'Leave blank for automatic Google Meet link']); ?>
+              <?php echo render_input('meet_link', 'Shared Video Meeting Link', $meeting->meet_link ?? '', 'text', ['placeholder' => 'Leave blank for an automatic Jitsi room']); ?>
               <?php echo render_textarea('notes', 'Internal Notes', $meeting->notes ?? '', ['rows' => 3]); ?>
             </div>
             <div class="col-md-4">
@@ -79,7 +79,7 @@ $subject = $meeting->subject ?? $meeting->title ?? '';
                     <option value="ask_to_join" <?php echo $accessMode === 'ask_to_join' ? 'selected' : ''; ?>>Guests ask to join</option>
                     <option value="restricted" <?php echo $accessMode === 'restricted' ? 'selected' : ''; ?>>Restricted / host approval</option>
                   </select>
-                  <small class="text-muted">Google controls final access behavior through Calendar/Meet policies. Unsupported API features are saved as CRM preferences.</small>
+                  <small class="text-muted">The video provider controls its lobby and recording features. CRM access and participant permissions remain enforced separately.</small>
                 </div>
                 <div class="checkbox checkbox-primary"><input type="checkbox" name="quick_access" id="quick_access" value="1" <?php echo (($meeting->quick_access ?? get_option('google_meet_quick_access')) == '1') ? 'checked' : ''; ?>><label for="quick_access">Allow quick access when supported</label></div>
                 <div class="checkbox checkbox-primary"><input type="checkbox" name="waiting_room" id="waiting_room" value="1" <?php echo (($meeting->waiting_room ?? get_option('google_meet_waiting_room')) == '1') ? 'checked' : ''; ?>><label for="waiting_room">Use waiting room / ask to join when supported</label></div>
@@ -103,7 +103,7 @@ $subject = $meeting->subject ?? $meeting->title ?? '';
                 <div class="checkbox checkbox-primary"><input type="checkbox" name="notify_staff" id="notify_staff" value="1" <?php echo get_option('google_meet_notify_staff_default') == '1' ? 'checked' : ''; ?>><label for="notify_staff">Notify Staff</label></div>
                 <div class="checkbox checkbox-primary"><input type="checkbox" name="notify_customer" id="notify_customer" value="1" <?php echo get_option('google_meet_notify_customers_default') == '1' ? 'checked' : ''; ?>><label for="notify_customer">Notify Customers</label></div>
                 <div class="checkbox checkbox-primary"><input type="checkbox" name="send_notifications" id="send_notifications" value="1"><label for="send_notifications">Send invitations now</label></div>
-                <div class="alert alert-info">A real shared Meet URL is required before invitations are sent. If Google Calendar API is not connected, open Google Meet as the host, create one room, copy its final URL, and save that same URL here.</div>
+                <div class="alert alert-info">A shared Jitsi room is saved automatically before invitations are sent. No Google API keys or OAuth tokens are needed by this CRM.</div>
                 <button class="btn btn-info btn-block" type="submit">Save Meeting</button>
                 <a class="btn btn-default btn-block" href="<?php echo admin_url('google_meet'); ?>">Cancel</a>
               </div>

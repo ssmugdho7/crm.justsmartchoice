@@ -362,3 +362,9 @@ body.sc-customer-enhanced #content,body.sc-customer-enhanced #sc-privacy-policy{
 .sc-profile-page .last-password-change{font-size:12px;color:#61746c;padding:16px 24px;background:#f8fbf9;border-top:1px solid #e4ece7;border-radius:0 0 12px 12px}
 @media(max-width:1100px){.sc-profile-page .section-profile>.col-md-8,.sc-profile-page .section-profile>.col-md-4{width:100%;float:none}.sc-profile-page .contact-profile-change-password-section{margin-top:28px}}
 @media(max-width:600px){.sc-profile-fields,.sc-profile-notifications{grid-template-columns:1fr}.sc-profile-fields>*{grid-column:1!important}#wrapper.sc-portal-layout .sc-profile-page .panel-body{padding:18px!important}.sc-profile-page .contact-profile-save-section{padding:16px 18px}.sc-profile-page .contact-profile-save{width:100%}}
+
+/* Keep ticket attachment controls flush with the file field, including added rows. */
+.open-ticket-attachments-area .input-group{display:flex;align-items:stretch}
+.open-ticket-attachments-area .input-group>input[type="file"]{flex:1;min-width:0;height:34px!important}
+.open-ticket-attachments-area .input-group-btn{display:flex;width:auto;flex:none}
+.open-ticket-attachments-area .input-group-btn>.btn{display:flex;align-items:center;justify-content:center;height:34px!important;min-height:34px!important;width:38px;padding:0!important;line-height:1;margin-top:0!important;margin-bottom:0!important}

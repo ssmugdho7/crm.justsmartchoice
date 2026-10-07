@@ -17,8 +17,13 @@ class Verification extends ClientsController
         $this->layout();
     }
 
-    public function verify($id, $key)
+    public function verify($id = null, $key = null)
     {
+        if ((!is_string($id) && !is_int($id)) || !ctype_digit((string) $id) || (int) $id < 1) {
+            show_404();
+            return;
+        }
+
         $contact = $this->clients_model->get_contact($id);
 
         if (!$contact) {
@@ -30,18 +35,25 @@ class Verification extends ClientsController
             redirect(site_url('clients'));
         }
 
-        if ($contact->email_verification_key !== $key) {
-            show_error(_l('invalid_verification_key'));
+        // A missing key must never verify an unverified contact. Old links for
+        // already-verified contacts are handled by the branch above.
+        if (!is_string($key) || $key === '' || empty($contact->email_verification_key)
+            || !hash_equals((string) $contact->email_verification_key, $key)) {
+            show_error(_l('invalid_verification_key'), 400);
+            return;
         }
 
         $timestamp_now_minus_2_days = time() - (2 * 86400);
-        $contact_registered         = strtotime($contact->email_verification_sent_at);
+        $contact_registered         = strtotime((string) $contact->email_verification_sent_at);
 
-        if ($timestamp_now_minus_2_days > $contact_registered) {
-            show_error(_l('verification_key_expired'));
+        if ($contact_registered === false || $timestamp_now_minus_2_days > $contact_registered) {
+            show_error(_l('verification_key_expired'), 410);
         }
 
-        $this->clients_model->mark_email_as_verified($contact->id);
+        if (!$this->clients_model->mark_email_as_verified($contact->id)) {
+            show_error('Your email could not be verified. Please try again.', 503);
+            return;
+        }
 
         // User not yet confirmed
         // from option customers_register_require_confirmation

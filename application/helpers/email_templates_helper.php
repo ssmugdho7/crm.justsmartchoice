@@ -166,13 +166,16 @@ function sc_link_sales_document_email($template, $merge_fields)
         $text = preg_split('~((?:[a-z][a-z0-9+.-]*://|www\.)[^\s<>]+|[^\s<>]+@[^\s<>]+)~i', $part, -1, PREG_SPLIT_DELIM_CAPTURE);
         foreach ($text as $index => &$segment) {
             if ($index % 2 === 0) {
-                $segment = preg_replace_callback(
+                $linked = preg_replace_callback(
                     '~(?<![\pL\pN_])' . $type . '(?![\pL\pN_])~iu',
                     static function ($match) use ($href) {
                         return '<a href="' . $href . '">' . $match[0] . '</a>';
                     },
                     $segment
                 );
+                if ($linked !== null) {
+                    $segment = $linked;
+                }
             }
         }
         unset($segment);

@@ -59,6 +59,7 @@
           .addView(uploadView)
           .setOAuthToken(accessToken)
           .setDeveloperKey(settings.developerKey)
+          .setAppId(String(settings.clientId).split("-")[0])
           .setCallback(pickerCallback)
           .build()
           .setVisible(true);
@@ -118,7 +119,7 @@
 })(jQuery);
 
 $.fn.googleDrivePicker.defaults = {
-  scope: "https://www.googleapis.com/auth/drive",
+  scope: "https://www.googleapis.com/auth/drive.file",
   mimeTypes: null,
   // The Browser API key obtained from the Google API Console.
   developerKey: "",

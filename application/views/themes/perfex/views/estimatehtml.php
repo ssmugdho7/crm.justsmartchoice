@@ -32,7 +32,7 @@
                         <i class="fa-regular fa-file-pdf"></i> <?= _l('clients_invoice_html_btn_download'); ?>
                     </button>
                     <?= form_close(); ?>
-                    <a href="<?= site_url('appointments'); ?>" class="btn btn-primary action-button sc-service-appointment-button"><i class="fa fa-calendar-check"></i> <?= _l('sc_make_service_appointment'); ?></a>
+                    <a href="<?= site_url('appointly/appointments'); ?>" class="btn btn-primary action-button sc-service-appointment-button"><i class="fa fa-calendar-check"></i> <?= _l('sc_make_service_appointment'); ?></a>
                     <?php if (is_client_logged_in() && has_contact_permission('estimates')) { ?>
                     <a href="<?= site_url('clients/estimates/'); ?>"
                         class="btn btn-default action-button go-to-portal">

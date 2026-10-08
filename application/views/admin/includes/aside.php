@@ -10,6 +10,20 @@ if (!isset($sidebar_menu) || !is_array($sidebar_menu)) {
         $sidebar_menu = [];
     }
 }
+// A legacy, separately installed module also registers a standalone Video Meetings link.
+// Keep the permission-filtered Jitsi submenu and suppress only that redundant entry.
+$hasVideoMeetingSubmenu = false;
+foreach ($sidebar_menu as $menuItem) {
+    if (($menuItem['slug'] ?? '') === 'google-meet' && !empty($menuItem['children'])) {
+        $hasVideoMeetingSubmenu = true;
+        break;
+    }
+}
+if ($hasVideoMeetingSubmenu) {
+    $sidebar_menu = array_filter($sidebar_menu, static function ($menuItem) {
+        return ($menuItem['slug'] ?? '') !== 'video-meetings' || !empty($menuItem['children']);
+    });
+}
 ?>
 
 <aside id="menu" class="sidebar">

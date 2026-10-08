@@ -7,6 +7,7 @@ function _l($v) { return $v; }
 function _dt($v) { return $v; }
 function site_url($v='') { return 'https://portal.example/' . $v; }
 function form_open_multipart($url,$attrs) { return '<form action="'.e($url).'" method="post" id="files-upload"><input name="csrf_test" value="token">'; }
+function form_open($url,$attrs) { return '<form action="'.e($url).'" method="post" onsubmit="'.e($attrs['onsubmit']).'"><input name="csrf_test" value="token">'; }
 function form_close() { return '</form>'; }
 function get_option($v) { global $delete; return $v==='allow_contact_to_delete_files' ? $delete : ''; }
 function get_contact_user_id() { return 9; }
@@ -26,8 +27,8 @@ foreach ([0,1] as $delete) {
     verify($x->query('//img[contains(@src,"preview_image?path=")]')->length===0,'Thumbnail does not expose a filesystem path');
     verify($x->query('//a[contains(@class,"sc-file-view") and @target="_blank" and @rel="noopener noreferrer"]')->length===3,'View opens safely in a new tab');
     verify(strpos($html,'photo <example>')===false,'Filenames are escaped');
-    verify($x->query('//a[contains(@class,"file-delete")]')->length===($delete?4:0),'Delete option stays governed by existing permission');
-    verify($x->query('//form//input[@name="csrf_test"]')->length===1,'Native upload form remains intact');
+    verify($x->query('//button[contains(@class,"file-delete")]')->length===($delete?4:0),'Delete option stays governed by existing permission');
+    verify($x->query('//form//input[@name="csrf_test"]')->length===1+($delete?4:0),'Upload and removal forms include CSRF tokens');
 }
 class FakeFileDb {
     public $where=[];

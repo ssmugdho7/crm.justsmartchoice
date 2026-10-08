@@ -568,6 +568,31 @@ class Clients extends ClientsController
         }
     }
 
+    /** Remove only this contact's own customer upload; never accept a GET deletion. */
+    public function remove_uploaded_file($id)
+    {
+        if ($this->input->method() !== 'post') {
+            show_error('Method not allowed', 405);
+            return;
+        }
+        if (!is_client_logged_in() || get_option('allow_contact_to_delete_files') != 1
+            || !ctype_digit((string) $id) || (int) $id < 1) {
+            show_404();
+            return;
+        }
+        $file = $this->misc_model->get_file((int) $id);
+        if (!$file || $file->rel_type !== 'customer'
+            || (int) $file->rel_id !== (int) get_client_user_id()
+            || (int) $file->contact_id !== (int) get_contact_user_id()) {
+            show_404();
+            return;
+        }
+        if ($this->clients_model->delete_attachment((int) $id)) {
+            set_alert('success', _l('deleted', _l('file')));
+        }
+        redirect(site_url('clients/files'));
+    }
+
     public function delete_file($id, $type = '')
     {
         if (get_option('allow_contact_to_delete_files') == 1) {

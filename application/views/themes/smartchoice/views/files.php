@@ -33,11 +33,6 @@
                     <th class="th-files-date-uploaded">
                         <?= _l('file_date_uploaded'); ?>
                     </th>
-                    <?php if (get_option('allow_contact_to_delete_files') == 1) { ?>
-                    <th class="th-files-option">
-                        <?= _l('options'); ?>
-                    </th>
-                    <?php } ?>
                 </tr>
             </thead>
             <tbody>
@@ -92,20 +87,17 @@
                             <a class="btn sc-file-view" href="<?= e($view_url); ?>" target="_blank" rel="noopener noreferrer" aria-label="View <?= e($file['file_name']); ?>"><i class="fa fa-eye" aria-hidden="true"></i> View</a>
                             <?php } ?>
                             <a class="btn btn-default" href="<?= e($attachment_url); ?>" <?= $is_external ? 'target="_blank" rel="noopener noreferrer"' : ''; ?> aria-label="Download <?= e($file['file_name']); ?>"><i class="fa fa-download" aria-hidden="true"></i> Download</a>
+                            <?php if (get_option('allow_contact_to_delete_files') == 1 && (int) $file['contact_id'] === (int) get_contact_user_id()) { ?>
+                            <?= form_open(site_url('clients/remove_uploaded_file/' . (int) $file['id']), ['class' => 'sc-file-remove-form', 'onsubmit' => 'return confirm(' . json_encode(_l('confirm_action_prompt'), JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP) . ');']); ?>
+                            <button type="submit" class="btn btn-danger file-delete" aria-label="Remove <?= e($file['file_name']); ?>"><i class="fa fa-trash" aria-hidden="true"></i> Remove</button>
+                            <?= form_close(); ?>
+                            <?php } ?>
                         </div>
                     </td>
                     <td
                         data-order="<?= e($file['dateadded']); ?>">
                         <?= e(_dt($file['dateadded'])); ?>
                     </td>
-                    <?php if (get_option('allow_contact_to_delete_files') == 1) { ?>
-                    <td>
-                        <?php if ($file['contact_id'] == get_contact_user_id()) { ?>
-                        <a href="<?= site_url('clients/delete_file/' . $file['id'] . '/general'); ?>"
-                            class="btn btn-danger btn-icon _delete file-delete" aria-label="Delete <?= e($file['file_name']); ?>"><i class="fa fa-remove"></i></a>
-                        <?php } ?>
-                    </td>
-                    <?php } ?>
                 </tr>
                 <?php } ?>
             </tbody>

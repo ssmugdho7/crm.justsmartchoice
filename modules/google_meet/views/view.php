@@ -11,7 +11,7 @@ $statusStyle = in_array($status, ['scheduled', 'live', 'completed', 'cancelled']
 $attendeeList = (array) $attendees;
 $commentList = (array) $comments;
 ?>
-<link rel="stylesheet" href="<?= module_dir_url('google_meet', 'assets/css/meeting_details.css'); ?>?v=3">
+<link rel="stylesheet" href="<?= module_dir_url('google_meet', 'assets/css/meeting_details.css'); ?>?v=4">
 <script defer src="<?= module_dir_url('google_meet', 'assets/js/meeting_details.js'); ?>?v=1"></script>
 <div id="wrapper">
   <div class="content">

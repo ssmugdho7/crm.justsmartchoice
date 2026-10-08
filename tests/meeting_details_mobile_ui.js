@@ -1,0 +1,26 @@
+'use strict';
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const {JSDOM} = require('jsdom');
+const source = fs.readFileSync(path.join(__dirname, '../modules/google_meet/assets/js/meeting_details.js'), 'utf8');
+const dom = new JSDOM('<header id="header" style="z-index:1050"></header><nav class="gm-detail-breadcrumb"><a href="/admin/google_meet">Meetings</a></nav><form method="post" action="/admin/google_meet/add_comment/43"><input name="csrf" value="original"><textarea name="comment">Draft</textarea></form>', {runScripts: 'outside-only', url: 'https://crm.example/admin/google_meet/view/43'});
+const w = dom.window, d = w.document;
+let top = 100, checks = 0;
+function check(condition, label) {assert.ok(condition, label);checks++;}
+d.querySelector('#header').getBoundingClientRect = () => ({bottom: 62});
+d.querySelector('nav').getBoundingClientRect = () => ({top});
+Object.defineProperty(w, 'innerWidth', {value: 390, writable: true});
+Object.defineProperty(d, 'readyState', {value: 'complete'});
+w.requestAnimationFrame = callback => callback();
+w.fetch = () => {throw new Error('The layout helper must not make backend requests');};
+w.eval(source);
+check(d.querySelector('nav').style.zIndex === '1051', 'Phone breadcrumb is clickable over invisible header overflow');
+top = 30; w.dispatchEvent(new w.Event('scroll'));
+check(d.querySelector('nav').style.zIndex === 'auto', 'Sticky header covers breadcrumbs when scrolling under the bar');
+top = 100; w.dispatchEvent(new w.Event('scroll'));
+check(d.querySelector('nav').style.zIndex === '1051', 'Returning to the top restores the mobile navigation target');
+w.innerWidth = 1280; w.dispatchEvent(new w.Event('resize'));
+check(d.querySelector('nav').style.zIndex === 'auto', 'Desktop stacking remains unchanged');
+check(d.querySelector('textarea').value === 'Draft' && d.querySelector('input').value === 'original' && d.querySelector('form').getAttribute('action') === '/admin/google_meet/add_comment/43', 'Existing form, CSRF and unsaved notes preserved');
+w.close(); console.log(`PASS: ${checks} mobile breadcrumb, sticky header and form-preservation checks`);

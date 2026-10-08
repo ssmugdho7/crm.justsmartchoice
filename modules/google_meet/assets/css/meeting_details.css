@@ -1,6 +1,6 @@
 /* Meeting details only; existing CRM layouts and action handlers are unchanged. */
 .google-meet-wrap.gm-detail-page { max-width: 1380px; margin-inline: auto; color: #334155; }
-.gm-detail-page .gm-detail-breadcrumb { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; font-size: 13px; color: #64748b; }
+.gm-detail-page .gm-detail-breadcrumb { position: relative; display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; font-size: 13px; color: #64748b; }
 .gm-detail-page .gm-detail-breadcrumb a { display: inline-flex; align-items: center; gap: 8px; color: #0f766e; padding-block: 6px; }
 .gm-detail-page .gm-detail-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px; border-inline-start: 4px solid #0f766e; box-shadow: 0 2px 8px rgba(15,23,42,.04); }
 .gm-detail-page .gm-detail-heading { display: flex; align-items: flex-start; gap: 18px; min-width: 0; }
@@ -86,6 +86,7 @@
   .gm-detail-page .gm-detail-layout { grid-template-columns: minmax(0, 1fr) 260px; gap: 18px; }
 }
 @media (max-width: 767px) {
+  .gm-detail-page .gm-detail-breadcrumb a { min-height: 44px; }
   .gm-detail-page .gm-detail-header { padding: 20px; gap: 20px; }
   .gm-detail-page .gm-detail-heading { gap: 12px; }
   .gm-detail-page .gm-detail-icon { flex-basis: 42px; height: 42px; font-size: 19px; border-radius: 10px; }

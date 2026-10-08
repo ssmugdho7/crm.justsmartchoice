@@ -15,6 +15,15 @@
     </title>
 
     <?= app_compile_css(); ?>
+    <link rel="stylesheet" href="<?= base_url('assets/css/sc-sales-breadcrumbs.css?v=1'); ?>">
+    <script type="application/json" id="sc-sales-breadcrumbs-config"><?= json_encode([
+        'adminUrl' => admin_url(),
+        'dashboard' => _l('als_dashboard'),
+        'sales' => _l('als_sales'),
+        'title' => trim(strip_tags((string) ($title ?? ''))),
+        'view' => _l('view'),
+    ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?></script>
+    <script defer src="<?= base_url('assets/js/sc-sales-breadcrumbs.js?v=1'); ?>"></script>
     <?php render_admin_js_variables(); ?>
 
     <script>

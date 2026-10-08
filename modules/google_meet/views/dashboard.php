@@ -35,15 +35,16 @@
     <?php echo form_close(); ?>
   </div></div>
 </div></div></div>
-<div class="modal fade" id="gm-meeting-view-modal" tabindex="-1" role="dialog" aria-hidden="true">
+<link rel="stylesheet" href="<?= module_dir_url('google_meet', 'assets/css/meeting_details.css'); ?>?v=2">
+<div class="modal fade" id="gm-meeting-view-modal" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="gm-modal-title">
   <div class="modal-dialog modal-md"><div class="modal-content gm-meet-modal">
-    <div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button><h4 class="modal-title"><i class="fa fa-video-camera"></i> <span id="gm-modal-title">Video Meeting</span></h4></div>
+    <div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button><h4 class="modal-title"><i class="fa fa-video-camera" aria-hidden="true"></i> <span id="gm-modal-title">Video Meeting</span></h4></div>
     <div class="modal-body">
       <p class="text-muted" id="gm-modal-description"></p>
-      <div class="gm-modal-link-box"><i class="fa fa-television"></i><div><strong>Meeting Link</strong><a id="gm-modal-link" href="#"></a></div></div>
-      <p class="gm-modal-meta"><strong>Start:</strong> <span id="gm-modal-start"></span> &nbsp; <strong>Status:</strong> <span id="gm-modal-status"></span></p>
+      <div class="gm-modal-link-box"><i class="fa fa-link" aria-hidden="true"></i><div><strong>Shared meeting room</strong><a id="gm-modal-link" href="#" target="_blank" rel="noopener noreferrer"></a></div></div>
+      <dl class="gm-preview-facts"><div><dt>Starts</dt><dd id="gm-modal-start"></dd></div><div><dt>Status</dt><dd><span id="gm-modal-status" class="gm-preview-status"></span></dd></div></dl>
     </div>
-    <div class="modal-footer"><a id="gm-modal-join" href="#" class="btn btn-success btn-sm"><i class="fa fa-sign-in"></i> Join Meeting</a><button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button></div>
+    <div class="modal-footer"><a id="gm-modal-details" href="#" class="btn btn-default"><i class="fa fa-file-text-o" aria-hidden="true"></i> Full meeting details</a><a id="gm-modal-join" href="#" class="btn gm-preview-primary"><i class="fa fa-video-camera" aria-hidden="true"></i> Join meeting</a><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>
   </div></div>
 </div>
 <script>
@@ -51,17 +52,21 @@ document.addEventListener('DOMContentLoaded',function(){
   document.querySelectorAll('.gm-view-popup').forEach(function(btn){
     btn.addEventListener('click',function(){
       var id=this.getAttribute('data-id');
-      if(!id){return;}
+      if(!id || !/^[0-9]+$/.test(id)){return;}
       fetch('<?php echo admin_url('google_meet/meeting_modal/'); ?>'+id,{credentials:'same-origin'}).then(function(r){return r.json();}).then(function(data){
         if(!data || !data.success){ alert(data && data.message ? data.message : 'Meeting not found.'); return; }
         document.getElementById('gm-modal-title').textContent=data.title||'Video Meeting';
         document.getElementById('gm-modal-description').textContent=data.description||'No description saved for this meeting.';
         document.getElementById('gm-modal-start').textContent=data.start_time||'';
         document.getElementById('gm-modal-status').textContent=data.status||'';
-        var link=data.meet_link||'#';
-        document.getElementById('gm-modal-link').textContent=link;
-        document.getElementById('gm-modal-link').href=link;
-        document.getElementById('gm-modal-join').href=data.room_url || link;
+        var hasRoom=!!data.room_url;
+        var linkNode=document.getElementById('gm-modal-link');
+        linkNode.textContent=hasRoom ? data.meet_link : 'Meeting link pending';
+        if(hasRoom){linkNode.href=data.meet_link;}else{linkNode.removeAttribute('href');}
+        var join=document.getElementById('gm-modal-join');
+        join.setAttribute('aria-disabled',hasRoom ? 'false' : 'true');
+        if(hasRoom){join.href=data.room_url;join.removeAttribute('tabindex');}else{join.removeAttribute('href');join.setAttribute('tabindex','-1');}
+        document.getElementById('gm-modal-details').href='<?php echo admin_url('google_meet/view/'); ?>'+id;
         if(window.jQuery){ jQuery('#gm-meeting-view-modal').modal('show'); }
       });
     });

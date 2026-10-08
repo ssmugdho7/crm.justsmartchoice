@@ -104,7 +104,7 @@ if (!isset($sidebar_menu) || !is_array($sidebar_menu)) {
                     <?= _attributes_to_string($submenu['li_attributes'] ?? []); ?>>
                     <a href="<?= e($submenu['href']); ?>"
                         <?= _attributes_to_string($submenu['href_attributes'] ?? []); ?>>
-                        <i class="<?= e(!empty($submenu['icon']) ? $submenu['icon'] : 'fa fa-angle-right'); ?> menu-icon"></i>
+                        <i class="<?= e($submenu['slug'] === 'payments' ? 'fa-solid fa-credit-card' : (!empty($submenu['icon']) ? $submenu['icon'] : 'fa fa-angle-right')); ?> menu-icon" aria-hidden="true"></i>
                         <span class="sub-menu-text">
                             <?= _l($submenu['name'], '', false); ?>
                         </span>

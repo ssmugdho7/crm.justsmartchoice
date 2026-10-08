@@ -41,7 +41,12 @@ $manage=$renderer->render('manage',$data);check(strpos($manage,'href="/admin/goo
 $details=$renderer->render('client/view',$data);check(strpos($details,'Share meeting')!==false,'Customer details share modal');
 $meeting->meet_link='';$meeting->room_name=null;$pending=$renderer->render('client/view',$data);
 check(strpos($pending,'disabled>Share meeting')!==false&&strpos($pending,'>Join meeting</a>')===false,'Pending client room cannot join/share');
+$dashboard=$renderer->render('dashboard',$data);$join=$renderer->render('join',$data);$help=$renderer->render('help',$data);
+check(strpos($dashboard,'Video Meeting Dashboard')!==false&&strpos($dashboard,'Google Meet')===false,'Dashboard uses video meeting branding');
+check(strpos($join,'href="/admin/google_meet/room/7"')!==false,'Join screen opens the authorized CRM room');
+check(strpos($help,'host must sign in')!==false&&strpos($help,'Google Calendar API')===false,'Help explains Jitsi host workflow');
 $directory=getenv('JITSI_QA_DIR');
 if($directory){if(!is_dir($directory))mkdir($directory,0700,true);$head='<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Video meeting QA</title><link rel="stylesheet" href="/assets/plugins/bootstrap/css/bootstrap.min.css"><style>body{background:#f3f7f5;padding:24px;font-family:Arial,sans-serif}.content{max-width:1500px;margin:auto}.mtop10{margin-top:10px}.mtop15{margin-top:15px}</style><script src="/jquery.js"></script><script src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script></head><body>';
+    file_put_contents($directory.'/dashboard.html',$head.'<link rel="stylesheet" href="/modules/google_meet/assets/css/smart_choice_module_standard.css"><link rel="stylesheet" href="/modules/google_meet/assets/css/google_meet_smartchoice.css">'.$dashboard.'</body></html>');file_put_contents($directory.'/help.html',$head.'<link rel="stylesheet" href="/modules/google_meet/assets/css/google_meet_smartchoice.css">'.$help.'</body></html>');
     file_put_contents($directory.'/admin.html',$head.$admin.'</body></html>');file_put_contents($directory.'/client.html',$head.$client.'</body></html>');}
 echo "PASS: $checks Jitsi room, share, privacy, permission and escaping render checks\n";

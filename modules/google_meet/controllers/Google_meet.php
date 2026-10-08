@@ -18,12 +18,12 @@ class Google_meet extends AdminController
         $allowed = $capability === 'view'
             ? ($global || has_permission('google_meet', '', 'view_own'))
             : has_permission('google_meet', '', $capability);
-        if (!$allowed) { access_denied('Google Meet'); }
+        if (!$allowed) { access_denied('Video Meeting'); }
         if ($id !== null) {
             $meeting = $this->google_meet_model->get((int)$id);
             if (!$meeting) { show_404(); }
             if (!$global && !$this->google_meet_model->staff_has_meeting($meeting, get_staff_user_id())) {
-                access_denied('Google Meet');
+                access_denied('Video Meeting');
             }
         }
     }
@@ -46,7 +46,7 @@ class Google_meet extends AdminController
     {
         $this->require_access();
 
-        $data['title'] = 'Google Meet Dashboard';
+        $data['title'] = 'Video Meeting Dashboard';
         $data['summary'] = $this->google_meet_model->report_summary($this->staff_filters());
         $data['meetings'] = $this->google_meet_model->report_meetings($this->staff_filters());
         $this->load->view('dashboard', $data);
@@ -65,13 +65,13 @@ class Google_meet extends AdminController
                         redirect(admin_url('google_meet/create/' . (int)$id));
                         return;
                     }
-                    set_alert('success', 'Google Meet meeting updated successfully.');
+                    set_alert('success', 'video meeting updated successfully.');
                     redirect(admin_url('google_meet/view/' . (int)$id));
                 }
 
                 $meetingId = $this->google_meet_model->create($post);
                 if ($meetingId) {
-                    set_alert('success', 'Google Meet meeting created successfully.');
+                    set_alert('success', 'video meeting created successfully.');
                     redirect(admin_url('google_meet/view/' . $meetingId));
                 }
 
@@ -81,11 +81,11 @@ class Google_meet extends AdminController
                 return;
             }
 
-            set_alert('danger', 'Google Meet meeting could not be created. Please run Upgrade Database.');
+            set_alert('danger', 'video meeting could not be created. Please run Upgrade Database.');
             redirect(admin_url('google_meet/create'));
         }
 
-        $data['title'] = $id ? 'Edit Google Meet Meeting' : 'New Google Meet Meeting';
+        $data['title'] = $id ? 'Edit Video Meeting' : 'New Video Meeting';
         $data['meeting'] = $id ? $this->google_meet_model->get((int)$id) : null;
         $data['attendees'] = $id ? $this->google_meet_model->attendees((int)$id) : [];
         $data['staff'] = $this->google_meet_model->active_staff();
@@ -104,7 +104,7 @@ class Google_meet extends AdminController
             set_alert('warning', 'Meeting not found.');
             redirect(admin_url('google_meet'));
         }
-        $data['title'] = 'Google Meet Meeting';
+        $data['title'] = 'Video Meeting';
         $data['attendees'] = $this->google_meet_model->attendees((int)$id);
         $data['comments'] = $this->google_meet_model->comments((int)$id);
         $this->load->view('view', $data);
@@ -151,7 +151,7 @@ class Google_meet extends AdminController
         $event = $this->input->post('event', true);
         if ($event === 'joined') { $saved = $this->google_meet_model->record_participant_join($id, $host ? 'host' : 'guest'); }
         elseif (in_array($event, ['left', 'finish'], true)) {
-            if (!$host) { if ($event === 'left') { $this->json_room_response(['success' => true]); return; } access_denied('Google Meet'); }
+            if (!$host) { if ($event === 'left') { $this->json_room_response(['success' => true]); return; } access_denied('Video Meeting'); }
             $this->require_access('edit', $id);
             $saved = $this->google_meet_model->record_meeting_finish($id);
         } else { $this->json_room_response(['success' => false, 'message' => 'Invalid meeting event.'], 400); return; }
@@ -220,7 +220,7 @@ class Google_meet extends AdminController
         if ($this->google_meet_model->update_meet_link((int)$id, $this->input->post('meet_link', true))) {
             set_alert('success', 'The shared meeting link was saved. Every attendee will now join the same meeting.');
         } else {
-            set_alert('danger', 'Enter a shared Jitsi room URL or a complete existing Google Meet URL. Do not use /new as an attendee link.');
+            set_alert('danger', 'Enter a shared Jitsi room URL or a complete existing Video Meeting URL. Do not use /new as an attendee link.');
         }
         redirect(admin_url('google_meet/view/' . (int)$id));
     }
@@ -288,15 +288,15 @@ class Google_meet extends AdminController
             update_option('google_meet_browser_sound_enabled', $this->input->post('google_meet_browser_sound_enabled') ? '1' : '0');
             update_option('google_meet_sound_volume', $this->input->post('google_meet_sound_volume', true) ?: '0.85');
             update_option('google_meet_popup_enabled', $this->input->post('google_meet_popup_enabled') ? '1' : '0');
-            update_option('google_meet_recording_instruction', $this->input->post('google_meet_recording_instruction', true) ?: 'Google Meet recording is controlled by Google Workspace/Meet permissions.');
+            update_option('google_meet_recording_instruction', $this->input->post('google_meet_recording_instruction', true) ?: 'Recording availability depends on the configured Jitsi service and moderator permissions.');
             update_option('google_meet_ai_notes_enabled', $this->input->post('google_meet_ai_notes_enabled') ? '1' : '0');
             update_option('google_meet_ai_summary_prompt', $this->input->post('google_meet_ai_summary_prompt', true) ?: 'Summarize this meeting with action items, customer decisions, deadlines, and follow-up tasks for Smart Choice Contractors USA.');
 
-            set_alert('success', 'Google Meet settings saved.');
+            set_alert('success', 'Video Meeting settings saved.');
             redirect(admin_url('google_meet/settings'));
         }
 
-        $data['title'] = 'Google Meet Settings';
+        $data['title'] = 'Video Meeting Settings';
         $this->load->view('settings', $data);
     }
 
@@ -312,7 +312,7 @@ class Google_meet extends AdminController
             'status' => $this->input->get('status', true),
         ];
 
-        $data['title'] = 'Google Meet Reports';
+        $data['title'] = 'Video Meeting Reports';
         $data['filters'] = $this->staff_filters($filters);
         $data['staff'] = $this->google_meet_model->active_staff();
         $data['summary'] = $this->google_meet_model->report_summary($this->staff_filters());
@@ -325,7 +325,7 @@ class Google_meet extends AdminController
     {
         $this->require_access();
 
-        $data['title'] = 'Join Google Meet';
+        $data['title'] = 'Join Video Meeting';
         $data['meetings'] = $this->google_meet_model->report_meetings($this->staff_filters());
         $this->load->view('join', $data);
     }
@@ -334,7 +334,7 @@ class Google_meet extends AdminController
     {
         $this->require_settings();
 
-        $data['title'] = 'Google Meet Health';
+        $data['title'] = 'Video Meeting Health';
         $data['checks'] = $this->google_meet_model->health_checks();
         $this->load->view('health', $data);
     }
@@ -343,7 +343,7 @@ class Google_meet extends AdminController
     {
         $this->require_access();
 
-        $data['title'] = 'Google Meet Help';
+        $data['title'] = 'Video Meeting Help';
         $this->load->view('help', $data);
     }
 
@@ -384,7 +384,7 @@ class Google_meet extends AdminController
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename=google_meet_report_' . date('Ymd_His') . '.csv');
         $out = fopen('php://output', 'w');
-        fputcsv($out, ['ID','Meeting','Employee','Start','End','Status','Meet Link','Notes']);
+        fputcsv($out, ['ID','Meeting','Employee','Start','End','Status','Meeting Link','Notes']);
         foreach ($rows as $r) {
             fputcsv($out, [
                 $r['id'] ?? '',
@@ -411,7 +411,7 @@ class Google_meet extends AdminController
             echo json_encode(['success' => false, 'message' => 'Meeting not found.']);
             return;
         }
-        $title = $meeting->subject ?? $meeting->title ?? 'Google Meet Meeting';
+        $title = $meeting->subject ?? $meeting->title ?? 'Video Meeting';
         echo json_encode([
             'success' => true,
             'id' => (int)$meeting->id,
@@ -428,7 +428,7 @@ class Google_meet extends AdminController
     {
         $this->require_settings();
 
-        $data['title'] = 'Google Meet Test Notifications';
+        $data['title'] = 'Video Meeting Test Notifications';
         $data['staff'] = $this->google_meet_model->active_staff();
         $this->load->view('test_notifications', $data);
     }
@@ -443,7 +443,7 @@ class Google_meet extends AdminController
 
         $message = trim((string)$this->input->post('message', true));
         if ($message === '') {
-            $message = 'This is a Smart Choice Google Meet notification test.';
+            $message = 'This is a Smart Choice Video Meeting notification test.';
         }
 
         $result = $this->google_meet_model->send_test_notification([
@@ -463,7 +463,7 @@ class Google_meet extends AdminController
     {
         $this->require_settings('edit');
 
-        set_alert('success', 'Google Meet health repair executed. Tables, settings, and safe columns were checked.');
+        set_alert('success', 'Video Meeting health repair executed. Tables, settings, and safe columns were checked.');
         redirect(admin_url('google_meet/health'));
     }
 
@@ -473,7 +473,7 @@ class Google_meet extends AdminController
         $this->require_access('delete', $id);
 
         if (!has_permission('google_meet', '', 'delete')) {
-            access_denied('Google Meet');
+            access_denied('Video Meeting');
         }
 
         $deleted = $this->google_meet_model->delete_many([(int) $id]);

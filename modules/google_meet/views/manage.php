@@ -5,8 +5,8 @@
     <div class="google-meet-wrap gm-meetings-page">
       <div class="gm-hero">
         <div>
-          <h1><?php echo google_meet_lang('google_meet', 'Google Meet'); ?></h1>
-          <p><?php echo google_meet_lang('google_meet_dashboard_description', 'Schedule shared Google Meet sessions, invite participants, and manage every meeting from one table.'); ?></p>
+          <h1><?php echo google_meet_lang('google_meet', 'Video Meeting'); ?></h1>
+          <p><?php echo google_meet_lang('google_meet_dashboard_description', 'Schedule shared Video Meeting sessions, invite participants, and manage every meeting from one table.'); ?></p>
         </div>
         <a href="<?php echo admin_url('google_meet/create'); ?>" class="btn btn-info btn-sm">
           <i class="fa fa-plus-circle"></i> <?php echo google_meet_lang('google_meet_new_meeting', 'New Meeting'); ?>
@@ -36,7 +36,7 @@
               <tbody>
               <?php foreach ($meetings as $m) {
                   $meetingId = (int) ($m['id'] ?? 0);
-                  $meetingName = $m['subject'] ?: ($m['title'] ?? google_meet_lang('google_meet', 'Google Meet'));
+                  $meetingName = $m['subject'] ?: ($m['title'] ?? google_meet_lang('google_meet', 'Video Meeting'));
                   $organizer = $m['assigned_staff_name'] ?: ($m['created_by_name'] ?? '—');
                   $status = strtolower((string) ($m['status'] ?? 'scheduled'));
                   $statusClass = [

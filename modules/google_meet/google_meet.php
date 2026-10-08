@@ -3,8 +3,8 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
-Module Name: Google Meet
-Description: Google Meet connects Perfex CRM with meeting scheduling for staff and customers. Smart Choice Contractors USA can create instant or scheduled meetings, generate or save Meet links, invite employees/customers by CRM email, CRM notifications, and Twilio SMS when available, track attendees, comments, reports, health checks, and customer portal access without disrupting the existing CRM workflow.
+Module Name: Video Meeting
+Description: Video Meeting connects Perfex CRM with meeting scheduling for staff and customers. Smart Choice Contractors USA can create instant or scheduled meetings, generate or save meeting links, invite employees/customers by CRM email, CRM notifications, and Twilio SMS when available, track attendees, comments, reports, health checks, and customer portal access without disrupting the existing CRM workflow.
 Version: 1.3.0
 Author URI: https://justsmartchoice.com/webdeveloper.php
 Author: Smart Choice Contractors USA / Harold Cabrera
@@ -90,7 +90,7 @@ function google_meet_admin_init()
             'create'             => 'Create',
             'edit'               => 'Edit',
             'delete'             => 'Delete',
-        ]], 'Google Meet');
+        ]], 'Video Meeting');
     }
 
     $canView = has_permission('google_meet', '', 'view') || has_permission('google_meet', '', 'view_own');
@@ -98,7 +98,7 @@ function google_meet_admin_init()
     $canSettings = has_permission('settings', '', 'view');
     if (isset($CI->app_menu) && ($canView || $canCreate || $canSettings)) {
         $CI->app_menu->add_sidebar_menu_item('google-meet', [
-            'name'     => 'Google Meet',
+            'name'     => 'Video Meeting',
             'href'     => admin_url($canView ? 'google_meet' : ($canCreate ? 'google_meet/create' : 'google_meet/settings')),
             'icon'     => 'fa fa-video-camera',
             'position' => 57,
@@ -134,7 +134,7 @@ function google_meet_admin_init()
 
 function google_meet_admin_assets()
 {
-    echo '<link href="' . module_dir_url('google_meet', 'assets/css/google_meet_smartchoice.css') . '?v=127" rel="stylesheet" type="text/css" />';
+    echo '<link href="' . module_dir_url('google_meet', 'assets/css/google_meet_smartchoice.css') . '?v=131" rel="stylesheet" type="text/css" />';
 }
 
 function google_meet_smart_choice_standard_head()
@@ -154,15 +154,15 @@ function google_meet_client_navigation_item()
     }
 
     $label = trim((string) get_option('google_meet_client_portal_title'));
-    if ($label === '' || $label === 'My Video Meetings') {
+    if ($label === '' || in_array($label, ['My Video Meetings', 'Google Meet', 'Video Meeting'], true)) {
         $label = 'Meetings';
     }
 
     echo '<li class="customers-nav-item-google-meet">'
-        . '<a href="' . site_url('google_meet/meeting_clients/meetings') . '" aria-label="Google Meet meetings">'
+        . '<a href="' . site_url('google_meet/meeting_clients/meetings') . '" aria-label="video meetings">'
         . '<i class="fa fa-video-camera" aria-hidden="true"></i>'
         . '<span class="gm-client-nav-copy"><span class="gm-client-nav-title">' . html_escape($label) . '</span>'
-        . '<small class="gm-client-nav-subtitle">Google Meet</small></span>'
+        . '<small class="gm-client-nav-subtitle">Video Meeting</small></span>'
         . '</a></li>';
 }
 
@@ -173,7 +173,7 @@ function google_meet_customer_head()
     }
 
     echo '<link href="' . module_dir_url('google_meet', 'assets/css/google_meet.css') . '?v=127" rel="stylesheet" type="text/css" />';
-    echo '<link href="' . module_dir_url('google_meet', 'assets/css/google_meet_smartchoice.css') . '?v=127" rel="stylesheet" type="text/css" />';
+    echo '<link href="' . module_dir_url('google_meet', 'assets/css/google_meet_smartchoice.css') . '?v=131" rel="stylesheet" type="text/css" />';
     echo '<style>
     .customers-nav-item-google-meet>a{display:flex!important;align-items:center!important;gap:7px!important}
     .customers-nav-item-google-meet>a>i{font-size:15px!important;flex:0 0 auto!important}

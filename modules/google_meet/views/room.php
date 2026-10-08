@@ -9,7 +9,7 @@
     <?php if (has_permission('google_meet', '', 'delete')) { echo form_open(admin_url('google_meet/delete/' . (int)$meeting->id), ['onsubmit' => "return confirm('Delete this meeting and all its attendees, notes and notification history?');"]); ?><button class="btn btn-danger" type="submit">Delete</button><?= form_close(); } ?>
     <a class="btn btn-default" href="<?= admin_url('google_meet/view/' . (int)$meeting->id); ?>">Back to details</a>
   </div></header>
-  <?php if ($room['domain'] === 'meet.jit.si') { ?><p class="alert alert-info">The host must sign in to Jitsi to start the room. Guests join after the host starts it. No Google credentials are needed by this CRM.</p><?php } ?>
+  <?php if ($room['domain'] === 'meet.jit.si') { ?><p class="alert alert-info">The host must sign in to Jitsi to start the room. Guests join after the host starts it. No video-provider API credentials are needed by this CRM.</p><?php } ?>
   <?php if ($room['room_pin'] !== '') { ?><p class="alert alert-info">PIN protection is applied when the host becomes a Jitsi moderator. Share the full invitation with participants who open the room outside the CRM.</p><?php } ?>
   <div class="gm-room-grid"><section aria-label="Video conference"><div id="jitsi-meet-viewport"><p class="gm-room-loading">Loading your video room…</p></div><p id="gm-room-feedback" role="status" aria-live="polite"></p></section>
     <aside class="gm-notes-dock" aria-label="Private staff meeting notes"><h2>Meeting notes</h2><p>Notes stay in the CRM and are visible to authorized staff.</p>

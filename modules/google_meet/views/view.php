@@ -1,7 +1,7 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php init_head();
 $hasRoomLink = $this->google_meet_model->is_real_meet_link($meeting->meet_link ?? '', $meeting);
-$subject = $meeting->subject ?? $meeting->title ?? 'Google Meet Meeting';
+$subject = $meeting->subject ?? $meeting->title ?? 'Video Meeting';
 ?>
 <div id="wrapper">
   <div class="content">
@@ -85,7 +85,7 @@ $subject = $meeting->subject ?? $meeting->title ?? 'Google Meet Meeting';
 <?php if (has_permission('google_meet', '', 'edit')) { ?>
 <?php echo form_open(admin_url('google_meet/generate_room/' . (int)$meeting->id)); ?><button class="btn btn-info btn-sm" type="submit">Create shared Jitsi room</button><?= form_close(); ?>
 <?php echo form_open(admin_url('google_meet/save_shared_link/'.(int)$meeting->id), ['style'=>'margin-top:12px']); ?>
-<div class="input-group"><input class="form-control" type="url" name="meet_link" placeholder="Shared Jitsi or existing Google Meet room URL" required><span class="input-group-btn"><button class="btn btn-primary" type="submit">Save Shared Link</button></span></div>
+<div class="input-group"><input class="form-control" type="url" name="meet_link" placeholder="Shared Jitsi or existing Video Meeting room URL" required><span class="input-group-btn"><button class="btn btn-primary" type="submit">Save Shared Link</button></span></div>
 <?php echo form_close(); ?>
 <?php } ?>
 <?php } else { ?><p><strong>Every invitation uses this same room:</strong><br><a target="_blank" rel="noopener" href="<?php echo html_escape($meeting->meet_link); ?>"><?php echo html_escape($meeting->meet_link); ?></a></p><?php } ?>

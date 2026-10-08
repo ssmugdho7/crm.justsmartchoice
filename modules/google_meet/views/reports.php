@@ -1,7 +1,7 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php init_head(); ?>
 <div id="wrapper"><div class="content">
-  <div class="google-meet-header"><div><h1><i class="fa fa-bar-chart"></i> Google Meet Reports</h1><p>Filter meetings by employee, date, status, notes, and topic.</p></div></div>
+  <div class="google-meet-header"><div><h1><i class="fa fa-bar-chart"></i> Video Meeting Reports</h1><p>Filter meetings by employee, date, status, notes, and topic.</p></div></div>
   <?php $this->load->view('google_meet/_nav'); ?>
   <div class="row">
     <div class="col-md-4"><div class="panel_s google-meet-card"><div class="panel-body gm-stat"><span>Total Meetings</span><strong><?php echo (int)($summary['total'] ?? 0); ?></strong></div></div></div>
@@ -28,7 +28,7 @@
     <div class="table-responsive"><table class="table table-striped gm-compact-table gm-filter-table"><thead><tr><th></th><th>Meeting</th><th>Employee</th><th>Start</th><th>Status</th><th>Notes</th><th>Join</th><th>Actions</th></tr></thead><tbody>
     <?php foreach((array)$meetings as $m){ ?><tr>
       <td><?php if (has_permission('google_meet', '', 'delete')) { ?><input type="checkbox" name="ids[]" value="<?php echo (int)$m['id']; ?>"><?php } ?></td>
-      <td class="gm-meeting-cell"><strong><?php echo html_escape($m['subject'] ?: $m['title'] ?: 'Google Meet Meeting'); ?></strong><small><?php echo html_escape($m['description'] ?? ''); ?></small></td>
+      <td class="gm-meeting-cell"><strong><?php echo html_escape($m['subject'] ?: $m['title'] ?: 'Video Meeting'); ?></strong><small><?php echo html_escape($m['description'] ?? ''); ?></small></td>
       <td class="gm-nowrap"><?php echo html_escape($m['assigned_staff_name'] ?: $m['created_by_name'] ?: ''); ?></td>
       <td class="gm-nowrap"><?php echo !empty($m['start_time']) ? google_meet_display_datetime($m['start_time']) : ''; ?></td>
       <td><span class="gm-badge gm-badge-blue"><?php echo html_escape($m['status'] ?? ''); ?></span></td>

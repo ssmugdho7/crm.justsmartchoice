@@ -4,8 +4,8 @@ $summary = isset($summary) && is_array($summary) ? $summary : ['total'=>count((a
 <div class="google-meet-wrap smart-choice-normalized-module gm-client-portal-page">
   <div class="gm-hero gm-client-hero">
     <div>
-      <h2><i class="fa fa-video-camera" aria-hidden="true"></i> <?php echo html_escape(google_meet_lang('google_meet_my_meetings', 'Google Meet Meetings')); ?></h2>
-      <p><?php echo html_escape(google_meet_lang('google_meet_customer_dashboard_intro', 'See every Google Meet assigned to your account, including upcoming meetings, meetings available now, and meeting history.')); ?></p>
+      <h2><i class="fa fa-video-camera" aria-hidden="true"></i> <?php echo html_escape(google_meet_lang('google_meet_my_meetings', 'Video Meetings')); ?></h2>
+      <p><?php echo html_escape(google_meet_lang('google_meet_customer_dashboard_intro', 'See every video meeting assigned to your account, including upcoming meetings, meetings available now, and meeting history.')); ?></p>
     </div>
   </div>
 
@@ -21,8 +21,8 @@ $summary = isset($summary) && is_array($summary) ? $summary : ['total'=>count((a
       <div class="panel-body">
         <div class="gm-client-empty-state">
           <div class="gm-empty-icon"><i class="fa fa-calendar-check-o" aria-hidden="true"></i></div>
-          <h3><?php echo html_escape(google_meet_lang('google_meet_no_meeting_scheduled', 'You do not have any Google Meet meetings yet')); ?></h3>
-          <p><?php echo html_escape(google_meet_lang('google_meet_no_meeting_explanation', 'There are no Google Meet meetings assigned to your customer account right now. When our team schedules or starts a meeting for you, it will appear on this page automatically.')); ?></p>
+          <h3><?php echo html_escape(google_meet_lang('google_meet_no_meeting_scheduled', 'You do not have any video meetings yet')); ?></h3>
+          <p><?php echo html_escape(google_meet_lang('google_meet_no_meeting_explanation', 'There are no video meetings assigned to your customer account right now. When our team schedules or starts a meeting for you, it will appear on this page automatically.')); ?></p>
           <button type="button" class="btn btn-info" onclick="window.location.reload();"><i class="fa fa-refresh"></i> <?php echo html_escape(google_meet_lang('google_meet_check_again', 'Check Again')); ?></button>
         </div>
       </div>
@@ -31,7 +31,7 @@ $summary = isset($summary) && is_array($summary) ? $summary : ['total'=>count((a
     <div class="panel_s google-meet-card gm-client-list-panel">
       <div class="panel-body">
         <div class="gm-client-section-head">
-          <h3><i class="fa fa-list"></i> <?php echo html_escape(google_meet_lang('google_meet_all_customer_meetings', 'All Your Google Meet Meetings')); ?></h3>
+          <h3><i class="fa fa-list"></i> <?php echo html_escape(google_meet_lang('google_meet_all_customer_meetings', 'All Your Video Meetings')); ?></h3>
           <span><?php echo (int)$summary['total']; ?> <?php echo html_escape(google_meet_lang('google_meet_meetings_assigned', 'meeting(s) assigned')); ?></span>
         </div>
         <div class="table-responsive">
@@ -45,7 +45,7 @@ $summary = isset($summary) && is_array($summary) ? $summary : ['total'=>count((a
             <tbody>
             <?php foreach ((array)$meetings as $meeting) {
                 $meetingId = isset($meeting['id']) ? (int)$meeting['id'] : 0;
-                $meetingTitle = !empty($meeting['subject']) ? $meeting['subject'] : (!empty($meeting['title']) ? $meeting['title'] : 'Google Meet Meeting');
+                $meetingTitle = !empty($meeting['subject']) ? $meeting['subject'] : (!empty($meeting['title']) ? $meeting['title'] : 'Video Meeting');
                 $status = strtolower(trim((string)($meeting['status'] ?? 'scheduled')));
                 $hasLink = $this->google_meet_model->is_real_meet_link($meeting['meet_link'] ?? '', (object)$meeting);
                 $statusClass = $status === 'live' ? 'success' : (in_array($status,['completed','cancelled','canceled'],true) ? 'default' : 'info');

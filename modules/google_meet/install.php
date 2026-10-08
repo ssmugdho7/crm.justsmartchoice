@@ -137,7 +137,7 @@ if (!$CI->db->table_exists($comments)) {
 
 /* Smart Choice Google Meet v1.0.7 settings and schema */
 add_option('google_meet_access_mode', 'trusted');
-add_option('google_meet_guest_access_note', 'Google Meet access is controlled by Google account/calendar settings when the real API is used.');
+add_option('google_meet_guest_access_note', 'Room lobby and moderator access are controlled by the configured Jitsi service.');
 add_option('google_meet_quick_access', '1');
 add_option('google_meet_waiting_room', '0');
 add_option('google_meet_allow_screen_sharing', '1');
@@ -149,7 +149,7 @@ add_option('google_meet_push_enabled', '1');
 add_option('google_meet_email_enabled', '1');
 add_option('google_meet_client_portal_enabled', '1');
 add_option('google_meet_client_portal_title', 'Meetings');
-add_option('google_meet_client_portal_subtitle', 'Google Meet');
+add_option('google_meet_client_portal_subtitle', 'Video Meeting');
 add_option('google_meet_client_login_required', '1');
 
 if ($CI->db->table_exists($table)) {
@@ -175,10 +175,10 @@ add_option('google_meet_sms_enabled', '0');
 add_option('google_meet_browser_sound_enabled', '1');
 add_option('google_meet_sound_volume', '0.85');
 add_option('google_meet_popup_enabled', '1');
-add_option('google_meet_recording_instruction', 'Google Meet recording is controlled by Google Workspace/Meet permissions. Enable recording in Google Workspace and paste recording links into meeting notes after the call.');
+add_option('google_meet_recording_instruction', 'Recording availability depends on the configured Jitsi service and moderator permissions. Add an available recording link to meeting notes after the call.');
 add_option('google_meet_ai_notes_enabled', '0');
 add_option('google_meet_ai_summary_prompt', 'Summarize this meeting with action items, customer decisions, deadlines, and follow-up tasks for Smart Choice Contractors USA.');
-add_option('google_meet_default_notification_message', 'You have been invited to a Smart Choice Contractors USA Google Meet meeting.');
+add_option('google_meet_default_notification_message', 'You have been invited to a Smart Choice Contractors USA video meeting.');
 
 if ($CI->db->table_exists($table)) {
     $v109Columns = [
@@ -230,12 +230,12 @@ $emailTable = db_prefix() . 'emailtemplates';
 if ($CI->db->table_exists($emailTable)) {
     $templates = [
         'english' => [
-            'subject' => 'Google Meet Invitation: {meeting_name}',
-            'message' => '<div style="font-family:Arial,sans-serif;color:#333;max-width:640px;margin:auto"><p>Dear {recipient_name},</p><p>You have been invited to a Smart Choice Contractors USA video meeting.</p><div style="border-left:4px solid #f97316;background:#f8fafc;padding:15px;border-radius:8px"><p><strong>Meeting:</strong> {meeting_name}</p><p><strong>Start:</strong> {meeting_start}</p></div><p style="text-align:center"><a href="{meeting_link}" style="display:inline-block;background:#169179;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:bold">Join Google Meet</a></p>{email_signature}</div>',
+            'subject' => 'Video Meeting Invitation: {meeting_name}',
+            'message' => '<div style="font-family:Arial,sans-serif;color:#333;max-width:640px;margin:auto"><p>Dear {recipient_name},</p><p>You have been invited to a Smart Choice Contractors USA video meeting.</p><div style="border-left:4px solid #f97316;background:#f8fafc;padding:15px;border-radius:8px"><p><strong>Meeting:</strong> {meeting_name}</p><p><strong>Start:</strong> {meeting_start}</p></div><p style="text-align:center"><a href="{meeting_link}" style="display:inline-block;background:#169179;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:bold">Join Video Meeting</a></p>{email_signature}</div>',
         ],
         'spanish' => [
-            'subject' => 'Invitación de Google Meet: {meeting_name}',
-            'message' => '<div style="font-family:Arial,sans-serif;color:#333;max-width:640px;margin:auto"><p>Estimado/a {recipient_name},</p><p>Ha sido invitado/a a una videoconferencia de Smart Choice Contractors USA.</p><div style="border-left:4px solid #f97316;background:#f8fafc;padding:15px;border-radius:8px"><p><strong>Reunión:</strong> {meeting_name}</p><p><strong>Inicio:</strong> {meeting_start}</p></div><p style="text-align:center"><a href="{meeting_link}" style="display:inline-block;background:#169179;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:bold">Entrar a Google Meet</a></p>{email_signature}</div>',
+            'subject' => 'Invitación a videoconferencia: {meeting_name}',
+            'message' => '<div style="font-family:Arial,sans-serif;color:#333;max-width:640px;margin:auto"><p>Estimado/a {recipient_name},</p><p>Ha sido invitado/a a una videoconferencia de Smart Choice Contractors USA.</p><div style="border-left:4px solid #f97316;background:#f8fafc;padding:15px;border-radius:8px"><p><strong>Reunión:</strong> {meeting_name}</p><p><strong>Inicio:</strong> {meeting_start}</p></div><p style="text-align:center"><a href="{meeting_link}" style="display:inline-block;background:#169179;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:bold">Entrar a la videoconferencia</a></p>{email_signature}</div>',
         ],
     ];
     foreach ($templates as $language => $template) {
@@ -243,7 +243,7 @@ if ($CI->db->table_exists($emailTable)) {
         if ($CI->db->field_exists('language', $emailTable)) { $CI->db->where('language', $language); }
         $exists = $CI->db->get($emailTable)->row();
         if (!$exists) {
-            $row = ['type'=>'staff','slug'=>'google-meet-invitation','name'=>'Google Meet Invitation','subject'=>$template['subject'],'message'=>$template['message'],'active'=>1];
+            $row = ['type'=>'staff','slug'=>'google-meet-invitation','name'=>'Video Meeting Invitation','subject'=>$template['subject'],'message'=>$template['message'],'active'=>1];
             if ($CI->db->field_exists('language',$emailTable)) { $row['language']=$language; }
             if ($CI->db->field_exists('fromname',$emailTable)) { $row['fromname']=''; }
             if ($CI->db->field_exists('fromemail',$emailTable)) { $row['fromemail']=''; }

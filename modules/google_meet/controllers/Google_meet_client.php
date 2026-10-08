@@ -150,7 +150,7 @@ class Google_meet_client extends ClientsController
 
         $this->render_customer_view('view', [
             'meeting' => $meeting,
-            'title'   => !empty($meeting->subject) ? $meeting->subject : (!empty($meeting->title) ? $meeting->title : 'Google Meet'),
+            'title'   => !empty($meeting->subject) ? $meeting->subject : (!empty($meeting->title) ? $meeting->title : 'Video Meeting'),
         ]);
     }
 
@@ -169,7 +169,7 @@ class Google_meet_client extends ClientsController
         $meetLink = $meeting && isset($meeting->meet_link) ? trim((string) $meeting->meet_link) : '';
 
         if (!$meeting || !$this->google_meet_model->is_real_meet_link($meetLink)) {
-            set_alert('warning', google_meet_lang('google_meet_link_not_available', 'The Google Meet link has not been added yet.'));
+            set_alert('warning', google_meet_lang('google_meet_link_not_available', 'The Video Meeting link has not been added yet.'));
             redirect(site_url('google_meet/client/view/' . $id));
             exit;
         }

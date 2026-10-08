@@ -35,7 +35,7 @@
     <?php echo form_close(); ?>
   </div></div>
 </div></div></div>
-<link rel="stylesheet" href="<?= module_dir_url('google_meet', 'assets/css/meeting_details.css'); ?>?v=3">
+<link rel="stylesheet" href="<?= module_dir_url('google_meet', 'assets/css/meeting_details.css'); ?>?v=4">
 <div class="modal fade" id="gm-meeting-view-modal" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="gm-modal-title">
   <div class="modal-dialog modal-md"><div class="modal-content gm-meet-modal">
     <div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button><h4 class="modal-title"><i class="fa fa-video-camera" aria-hidden="true"></i> <span id="gm-modal-title">Video Meeting</span></h4></div>

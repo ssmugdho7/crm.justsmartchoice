@@ -51,7 +51,7 @@ $commentList = (array) $comments;
               <div><dt>Meeting platform</dt><dd><?= ($meeting->provider ?? '') === 'jitsi' ? 'Jitsi' : 'Video Meeting'; ?></dd></div>
               <div><dt>Room status</dt><dd><span class="gm-detail-room-state<?= $hasRoomLink ? ' is-ready' : ''; ?>"><?= $hasRoomLink ? 'Shared room ready' : 'Meeting link pending'; ?></span></dd></div>
             </dl>
-            <a class="gm-detail-text-link" href="<?= admin_url('google_meet/calendar/' . $meetingId); ?>"><i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Download calendar file</a>
+            <a class="gm-detail-text-link" href="<?= admin_url('google_meet/calendar/' . $meetingId); ?>"><i class="fa-regular fa-calendar-plus" aria-hidden="true"></i> Download calendar file</a>
           </section>
 
           <section class="gm-detail-card" aria-labelledby="gm-detail-room-title">
@@ -94,7 +94,7 @@ $commentList = (array) $comments;
           </section>
 
           <section class="gm-detail-card" aria-labelledby="gm-detail-notes-title">
-            <div class="gm-detail-card-heading"><h2 id="gm-detail-notes-title"><i class="fa fa-comment-o" aria-hidden="true"></i> Meeting notes</h2><span class="gm-detail-count"><?= count($commentList); ?></span></div>
+            <div class="gm-detail-card-heading"><h2 id="gm-detail-notes-title"><i class="fa-regular fa-comment" aria-hidden="true"></i> Meeting notes</h2><span class="gm-detail-count"><?= count($commentList); ?></span></div>
             <p id="gm-detail-note-help" class="gm-detail-muted">Notes here are visible to staff with access to this meeting.</p>
             <?= form_open(admin_url('google_meet/add_comment/' . $meetingId), ['class' => 'gm-detail-note-form']); ?>
               <?= render_textarea('comment', 'Add a meeting note', '', ['rows' => 3, 'placeholder' => 'Add an update, discussion point or next step…', 'aria-describedby' => 'gm-detail-note-help']); ?>
@@ -113,17 +113,17 @@ $commentList = (array) $comments;
           <section class="gm-detail-card gm-detail-actions" aria-labelledby="gm-detail-actions-title">
             <div class="gm-detail-card-heading"><h2 id="gm-detail-actions-title">Meeting actions</h2></div>
             <?php if ($canEdit) { ?>
-            <a class="btn gm-detail-secondary" href="<?= admin_url('google_meet/notify/' . $meetingId); ?>"><i class="fa fa-bell-o" aria-hidden="true"></i> Send notifications</a>
+            <a class="btn gm-detail-secondary" href="<?= admin_url('google_meet/notify/' . $meetingId); ?>"><i class="fa-regular fa-bell" aria-hidden="true"></i> Send notifications</a>
             <a class="btn gm-detail-secondary" href="<?= admin_url('google_meet/create/' . $meetingId); ?>"><i class="fa fa-pencil" aria-hidden="true"></i> Edit meeting</a>
             <div class="gm-detail-action-divider"></div>
-            <a class="gm-detail-action-link" href="<?= admin_url('google_meet/start/' . $meetingId); ?>"><i class="fa fa-play-circle-o" aria-hidden="true"></i> Mark started</a>
-            <a class="gm-detail-action-link" href="<?= admin_url('google_meet/finish/' . $meetingId); ?>"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Mark completed</a>
+            <a class="gm-detail-action-link" href="<?= admin_url('google_meet/start/' . $meetingId); ?>"><i class="fa-regular fa-circle-play" aria-hidden="true"></i> Mark started</a>
+            <a class="gm-detail-action-link" href="<?= admin_url('google_meet/finish/' . $meetingId); ?>"><i class="fa-regular fa-circle-check" aria-hidden="true"></i> Mark completed</a>
             <?php } ?>
             <a class="gm-detail-action-link" href="<?= admin_url('google_meet/reports'); ?>"><i class="fa fa-bar-chart" aria-hidden="true"></i> Meeting reports</a>
             <?php if ($canDelete) { ?>
             <details class="gm-detail-delete"><summary>Delete meeting</summary><p>Deletes this meeting, its attendees, notes and notification history.</p>
               <?= form_open(admin_url('google_meet/delete/' . $meetingId), ['onsubmit' => "return confirm('Delete this meeting and all its attendees, notes and notification history?');"]); ?>
-                <button class="btn gm-detail-danger" type="submit"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete meeting</button>
+                <button class="btn gm-detail-danger" type="submit"><i class="fa-regular fa-trash-can" aria-hidden="true"></i> Delete meeting</button>
               <?= form_close(); ?>
             </details>
             <?php } ?>

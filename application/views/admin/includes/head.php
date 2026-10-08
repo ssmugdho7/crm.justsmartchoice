@@ -23,7 +23,7 @@
         'title' => trim(strip_tags((string) ($title ?? ''))),
         'view' => _l('view'),
     ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?></script>
-    <script defer src="<?= base_url('assets/js/sc-sales-breadcrumbs.js?v=2'); ?>"></script>
+    <script defer src="<?= base_url('assets/js/sc-sales-breadcrumbs.js?v=3'); ?>"></script>
     <?php render_admin_js_variables(); ?>
 
     <script>

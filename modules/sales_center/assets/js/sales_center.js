@@ -119,26 +119,6 @@
 })();
 
 
-(function(){
-    function showTemplateEditorWhenReady(){
-        var wrap = document.querySelector('.smartsource-template-editor-wrap');
-        if(!wrap){ return; }
-        var tries = 0;
-        var timer = setInterval(function(){
-            tries++;
-            if((typeof tinymce !== 'undefined' && tinymce.get('content')) || tries > 20){
-                wrap.classList.add('smartsource-editor-ready');
-                clearInterval(timer);
-            }
-        }, 150);
-    }
-    if(document.readyState === 'loading'){
-        document.addEventListener('DOMContentLoaded', showTemplateEditorWhenReady);
-    } else {
-        showTemplateEditorWhenReady();
-    }
-})();
-
 /* SmartSource v13 client-side table filters and editor helpers */
 (function(){
     function norm(v){ return (v || '').toString().toLowerCase().trim(); }
@@ -375,8 +355,8 @@
         });
     }
     if(document.readyState === 'loading'){
-        document.addEventListener('DOMContentLoaded', function(){ setTimeout(init, 600); setTimeout(init, 1800); });
+        document.addEventListener('DOMContentLoaded', init);
     } else {
-        setTimeout(init, 600); setTimeout(init, 1800);
+        init();
     }
 })();

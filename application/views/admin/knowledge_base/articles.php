@@ -104,7 +104,7 @@ foreach ($groups as $group) {
                                                         <?= e($group['name']); ?>
                                                     </a>
                                                     <small class="tw-text-white"> -
-                                                        <?= total_rows(db_prefix() . 'knowledge_base', 'articlegroup=' . $group['groupid']); ?></small>
+                                                        <?= ($board['totals'][$group['groupid']] ?? 0); ?></small>
                                                     <?php if ($has_permission_edit) { ?>
                                                     <a href="#" onclick="return false;"
                                                         class="pull-right color-white kanban-color-picker"
@@ -116,11 +116,7 @@ foreach ($groups as $group) {
                                                     <?php } ?>
                                                 </div>
                                                 <?php
-                                         $this->db->select('*, (SELECT COUNT(*) FROM ' . db_prefix() . 'views_tracking WHERE rel_type="kb_article" AND rel_id=' . db_prefix() . 'knowledge_base.articleid) as total_views')->from(db_prefix() . 'knowledge_base')->where('articlegroup', $group['groupid'])->order_by('article_order', 'asc');
-    if (! $has_permission_create && ! $has_permission_edit) {
-        $this->db->where('active', 1);
-    }
-    $articles = $this->db->get()->result_array(); ?>
+                                         $articles = $board['articles'][$group['groupid']] ?? []; ?>
                                                 <div class="kan-ban-content-wrapper">
                                                     <div class="kan-ban-content">
                                                         <ul class="sortable article-group groups<?php if (! $has_permission_edit) {

@@ -37,6 +37,28 @@ class Knowledge_base_model extends App_Model
         return $this->db->get()->result_array();
     }
 
+    /** Fetch only the metadata used by the admin board in one query. */
+    public function get_admin_board($include_inactive = false)
+    {
+        $prefix = db_prefix();
+        $rows = $this->db->query(
+            'SELECT kb.articleid, kb.articlegroup, kb.subject, kb.slug, kb.active, kb.staff_article, '
+            . 'COALESCE(views.total_views, 0) AS total_views FROM ' . $prefix . 'knowledge_base kb '
+            . 'LEFT JOIN (SELECT rel_id, COUNT(*) AS total_views FROM ' . $prefix . 'views_tracking '
+            . 'WHERE rel_type="kb_article" GROUP BY rel_id) views ON views.rel_id=kb.articleid '
+            . 'ORDER BY kb.article_order ASC'
+        )->result_array();
+        $board = ['articles' => [], 'totals' => []];
+        foreach ($rows as $row) {
+            $group = $row['articlegroup'];
+            $board['totals'][$group] = ($board['totals'][$group] ?? 0) + 1;
+            if ($include_inactive || (int) $row['active'] === 1) {
+                $board['articles'][$group][] = $row;
+            }
+        }
+        return $board;
+    }
+
     /**
      * Get related artices based on article id
      * @param  mixed $current_id current article id

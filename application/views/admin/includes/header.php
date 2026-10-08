@@ -159,7 +159,8 @@
                         </li>
                         <?php } ?>
                         <li class="header-logout">
-                            <a href="#" onclick="logout(); return false;">
+                            <a href="<?= admin_url('authentication/logout'); ?>"
+                                onclick="if (typeof logout === 'function') { logout(); return false; }">
                                 <?= _l('nav_logout'); ?>
                             </a>
                         </li>

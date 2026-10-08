@@ -60,8 +60,8 @@ if (!isset($sidebar_menu) || !is_array($sidebar_menu)) {
             </li>
             <?php } ?>
             <li class="header-logout">
-                <a href="#"
-                    onclick="logout(); return false;"><?= _l('nav_logout'); ?></a>
+                <a href="<?= admin_url('authentication/logout'); ?>"
+                    onclick="if (typeof logout === 'function') { logout(); return false; }"><?= _l('nav_logout'); ?></a>
             </li>
         </ul>
     </div>

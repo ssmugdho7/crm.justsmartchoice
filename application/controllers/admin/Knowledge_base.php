@@ -20,6 +20,7 @@ class Knowledge_base extends AdminController
             $this->app->get_table_data('kb_articles');
         }
         $data['groups']    = $this->knowledge_base_model->get_kbg();
+        $data['board'] = $this->knowledge_base_model->get_admin_board(staff_can('create', 'knowledge_base') || staff_can('edit', 'knowledge_base'));
         $data['bodyclass'] = 'top-tabs kan-ban-body';
         $data['title']     = _l('kb_string');
         $this->load->view('admin/knowledge_base/articles', $data);

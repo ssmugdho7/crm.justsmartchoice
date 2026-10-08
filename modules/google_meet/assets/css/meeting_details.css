@@ -105,6 +105,7 @@
 @media print { .gm-detail-page .gm-detail-header-actions, .gm-detail-page .gm-detail-navigation, .gm-detail-page .gm-detail-actions, .gm-detail-page .gm-detail-note-form { display: none; } .gm-detail-page .gm-detail-layout { grid-template-columns: 1fr; } }
 
 /* The dashboard keeps a quick preview before opening the full details page. */
+#gm-meeting-view-modal, body.google_meet.view #shareMeetingModal { z-index: 10060 !important; }
 #gm-meeting-view-modal .modal-content { border: 1px solid #e2e8f0; border-radius: 14px !important; overflow: hidden; box-shadow: 0 18px 60px rgba(15,23,42,.18); }
 #gm-meeting-view-modal .modal-header { background: #fff !important; color: #0f172a !important; border-bottom: 1px solid #e2e8f0; padding: 20px 24px; }
 #gm-meeting-view-modal .modal-title { color: #0f172a !important; font-size: 18px; font-weight: 650; line-height: 1.5; overflow-wrap: anywhere; }

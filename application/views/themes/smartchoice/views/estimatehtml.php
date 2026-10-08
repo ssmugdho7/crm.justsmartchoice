@@ -369,6 +369,10 @@ label[for*="optional"],.optional-item label,.optional-item-checkbox-label{color:
 .sc-sales-edit-attachment-icon{height:80px;display:flex;align-items:center;justify-content:center;font-size:38px;color:#3598DB}
 .sc-sales-edit-attachment-name{font-size:12px;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .preview-top-wrapper .action-button{margin-bottom:6px}.preview-top-wrapper .tw-flex{flex-wrap:wrap;gap:6px}
+.preview-top-wrapper .sc-customer-sales-actions{align-items:center;flex-wrap:nowrap;gap:6px;max-width:100%;overflow-x:auto;padding:2px 0}
+.preview-top-wrapper .sc-customer-sales-actions>*{flex:0 0 auto;margin:0!important}
+.preview-top-wrapper .sc-customer-sales-actions>form{display:flex;align-items:center}
+.preview-top-wrapper .sc-customer-sales-actions .btn.action-button{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;height:36px;padding:0 10px;font-size:14px;line-height:20px;gap:4px;white-space:nowrap;margin:0!important}
 .sc-sales-document-sidebar{display:block!important}.sc-sales-summary-discussion{position:relative;z-index:1}
 @media(max-width:991px){.sc-sales-document-main,.sc-sales-document-sidebar{width:100%!important;float:none!important}.sc-sales-document-sidebar{margin-top:15px}}
 </style>

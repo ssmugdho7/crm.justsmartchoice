@@ -44,7 +44,7 @@
       <div class="gm-modal-link-box"><i class="fa fa-link" aria-hidden="true"></i><div><strong>Shared meeting room</strong><a id="gm-modal-link" href="#" target="_blank" rel="noopener noreferrer"></a></div></div>
       <dl class="gm-preview-facts"><div><dt>Starts</dt><dd id="gm-modal-start"></dd></div><div><dt>Status</dt><dd><span id="gm-modal-status" class="gm-preview-status"></span></dd></div></dl>
     </div>
-    <div class="modal-footer"><a id="gm-modal-details" href="#" class="btn btn-default"><i class="fa fa-file-text-o" aria-hidden="true"></i> Full meeting details</a><a id="gm-modal-join" href="#" class="btn gm-preview-primary"><i class="fa fa-video-camera" aria-hidden="true"></i> Join meeting</a><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>
+    <div class="modal-footer"><a id="gm-modal-details" href="#" class="btn btn-default"><i class="fa-regular fa-file-lines" aria-hidden="true"></i> Full meeting details</a><a id="gm-modal-join" href="#" class="btn gm-preview-primary"><i class="fa fa-video-camera" aria-hidden="true"></i> Join meeting</a><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>
   </div></div>
 </div>
 <script>

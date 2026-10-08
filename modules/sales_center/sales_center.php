@@ -357,5 +357,5 @@ function sales_center_admin_head()
 
 function sales_center_admin_footer()
 {
-    echo '<script src="' . module_dir_url(SALES_CENTER_MODULE_NAME, 'assets/js/sales_center.js') . '"></script>';
+    echo '<script src="' . module_dir_url(SALES_CENTER_MODULE_NAME, 'assets/js/sales_center.js?v=' . filemtime(__DIR__ . '/assets/js/sales_center.js')) . '"></script>';
 }

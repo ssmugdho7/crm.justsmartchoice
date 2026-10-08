@@ -27,7 +27,7 @@ class Meeting_clients extends ClientsController
         // Never return a 404 for an authenticated customer meeting page.
         // If the portal option is disabled, send the customer home instead.
         if (get_option('google_meet_client_portal_enabled') !== '1') {
-            set_alert('warning', google_meet_lang('google_meet_portal_disabled', 'Google Meet is not currently available in your portal.'));
+            set_alert('warning', google_meet_lang('google_meet_portal_disabled', 'Video Meeting is not currently available in your portal.'));
             redirect(site_url());
             exit;
         }
@@ -115,7 +115,7 @@ class Meeting_clients extends ClientsController
 
         $title = !empty($meeting->subject)
             ? $meeting->subject
-            : (!empty($meeting->title) ? $meeting->title : 'Google Meet Meeting');
+            : (!empty($meeting->title) ? $meeting->title : 'Video Meeting');
 
         $this->data(['meeting' => $meeting, 'title' => $title]);
         if (method_exists($this, 'title')) { $this->title($title); }
@@ -140,7 +140,7 @@ class Meeting_clients extends ClientsController
         $meetLink = $meeting && isset($meeting->meet_link) ? trim((string)$meeting->meet_link) : '';
 
         if (!$meeting || !$this->gmm->is_real_meet_link($meetLink, $meeting)) {
-            set_alert('warning', google_meet_lang('google_meet_link_not_available', 'The Google Meet link has not been added yet.'));
+            set_alert('warning', google_meet_lang('google_meet_link_not_available', 'The Video Meeting link has not been added yet.'));
             redirect(site_url('google_meet/meeting_clients/view/' . $id));
             exit;
         }

@@ -1,7 +1,7 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php init_head(); ?>
 <div id="wrapper"><div class="content"><div class="google-meet-wrap smart-choice-normalized-module">
-  <div class="google-meet-header"><div><h1><i class="fa fa-heartbeat"></i> Google Meet Health</h1><p>Checks module tables, settings, customer portal, API preferences, notification channels, and repair status.</p></div><div><a href="<?php echo admin_url('google_meet/health'); ?>" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i> Refresh</a> <a href="<?php echo admin_url('google_meet/fix_health'); ?>" class="btn btn-primary btn-sm"><i class="fa fa-wrench"></i> Fix Issues</a></div></div>
+  <div class="google-meet-header"><div><h1><i class="fa fa-heartbeat"></i> Video Meeting Health</h1><p>Checks module tables, settings, customer portal, API preferences, notification channels, and repair status.</p></div><div><a href="<?php echo admin_url('google_meet/health'); ?>" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i> Refresh</a> <a href="<?php echo admin_url('google_meet/fix_health'); ?>" class="btn btn-primary btn-sm"><i class="fa fa-wrench"></i> Fix Issues</a></div></div>
   <?php $this->load->view('google_meet/_nav'); ?>
   <div class="panel_s google-meet-card"><div class="panel-body">
     <div class="gm-table-toolbar"><input type="text" class="form-control input-sm gm-health-search" placeholder="Search health checks..."><select class="form-control input-sm gm-health-filter"><option value="all">All Statuses</option><option value="pass">Pass</option><option value="setup">Needs Setup</option></select></div>

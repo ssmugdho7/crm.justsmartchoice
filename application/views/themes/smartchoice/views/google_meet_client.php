@@ -1,18 +1,18 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<div class="sc-auto-page-heading"><i class="fa-solid fa-video"></i><span>Google Meet</span></div>
+<div class="sc-auto-page-heading"><i class="fa-solid fa-video"></i><span>Video Meeting</span></div>
 <div class="panel_s">
   <div class="panel-body">
     <?php if (empty($meetings)) { ?>
       <div class="text-center tw-py-8">
         <i class="fa-solid fa-video tw-text-4xl" style="color:#3598DB"></i>
-        <h4 class="tw-font-semibold tw-mt-3">No Google Meet sessions are currently available</h4>
+        <h4 class="tw-font-semibold tw-mt-3">No Video Meeting sessions are currently available</h4>
         <p class="text-muted">Scheduled meetings assigned to your account will appear here.</p>
       </div>
     <?php } else { ?>
       <div class="table-responsive"><table class="table table-hover">
         <thead><tr><th>Meeting</th><th>Date</th><th>Status</th><th class="text-right">Action</th></tr></thead><tbody>
         <?php foreach ($meetings as $meeting) {
-          $title = $meeting['title'] ?? $meeting['subject'] ?? $meeting['name'] ?? 'Google Meet';
+          $title = $meeting['title'] ?? $meeting['subject'] ?? $meeting['name'] ?? 'Video Meeting';
           $date = $meeting['start_time'] ?? $meeting['start_date'] ?? $meeting['meeting_date'] ?? '';
           $url = $meeting['meet_url'] ?? $meeting['meeting_url'] ?? $meeting['url'] ?? $meeting['link'] ?? '';
           $status = $meeting['status'] ?? 'Scheduled'; ?>

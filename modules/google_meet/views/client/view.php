@@ -1,5 +1,5 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<?php $meetingTitle = !empty($meeting->subject) ? $meeting->subject : (!empty($meeting->title) ? $meeting->title : 'Google Meet Meeting'); ?>
+<?php $meetingTitle = !empty($meeting->subject) ? $meeting->subject : (!empty($meeting->title) ? $meeting->title : 'Video Meeting'); ?>
 <div class="google-meet-wrap smart-choice-normalized-module">
   <div class="gm-hero">
     <div>
@@ -23,7 +23,7 @@
         <?php if ($this->google_meet_model->is_real_meet_link(isset($meeting->meet_link) ? $meeting->meet_link : '', $meeting)) { ?>
           <a href="<?php echo site_url('google_meet/meeting_clients/join/' . (int) $meeting->id); ?>">Open assigned meeting</a>
         <?php } else { ?>
-          <span class="text-muted"><?php echo html_escape(google_meet_lang('google_meet_link_not_available', 'The Google Meet link has not been added yet.')); ?></span>
+          <span class="text-muted"><?php echo html_escape(google_meet_lang('google_meet_link_not_available', 'The Video Meeting link has not been added yet.')); ?></span>
         <?php } ?>
       </p>
       <a class="btn btn-default btn-sm" href="<?php echo site_url('google_meet/meeting_clients/meetings'); ?>"><?php echo html_escape(google_meet_lang('google_meet_back_to_meetings', 'Back to Meetings')); ?></a>

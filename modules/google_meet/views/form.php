@@ -19,7 +19,7 @@ $subject = $meeting->subject ?? $meeting->title ?? '';
       <div class="gm-hero">
         <div>
           <h1><?php echo html_escape($title); ?></h1>
-          <p>Leave the link blank to generate one private Jitsi room automatically. Every attendee receives the same saved room link. Existing Google Meet rooms can still be used.</p>
+          <p>Leave the link blank to generate one private Jitsi room automatically. Every attendee receives the same saved room link. Previously saved external meeting links remain available.</p>
         </div>
       </div>
 
@@ -103,7 +103,7 @@ $subject = $meeting->subject ?? $meeting->title ?? '';
                 <div class="checkbox checkbox-primary"><input type="checkbox" name="notify_staff" id="notify_staff" value="1" <?php echo get_option('google_meet_notify_staff_default') == '1' ? 'checked' : ''; ?>><label for="notify_staff">Notify Staff</label></div>
                 <div class="checkbox checkbox-primary"><input type="checkbox" name="notify_customer" id="notify_customer" value="1" <?php echo get_option('google_meet_notify_customers_default') == '1' ? 'checked' : ''; ?>><label for="notify_customer">Notify Customers</label></div>
                 <div class="checkbox checkbox-primary"><input type="checkbox" name="send_notifications" id="send_notifications" value="1"><label for="send_notifications">Send invitations now</label></div>
-                <div class="alert alert-info">A shared Jitsi room is saved automatically before invitations are sent. No Google API keys or OAuth tokens are needed by this CRM.</div>
+                <div class="alert alert-info">A shared Jitsi room is saved automatically before invitations are sent. No video-provider API keys or OAuth tokens are needed by this CRM.</div>
                 <button class="btn btn-info btn-block" type="submit">Save Meeting</button>
                 <a class="btn btn-default btn-block" href="<?php echo admin_url('google_meet'); ?>">Cancel</a>
               </div>
@@ -138,7 +138,7 @@ $subject = $meeting->subject ?? $meeting->title ?? '';
                 // prevents bootstrap-select from initializing.
                 $select.css({display:'block', width:'100%', visibility:'visible', opacity:1});
                 if (window.console && console.warn) {
-                    console.warn('Google Meet selector fallback:', e);
+                    console.warn('Video Meeting selector fallback:', e);
                 }
             }
         });

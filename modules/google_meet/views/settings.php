@@ -1,22 +1,22 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php init_head(); ?>
 <div id="wrapper"><div class="content"><div class="google-meet-wrap smart-choice-normalized-module">
-  <div class="google-meet-header"><div><h1><i class="fa fa-cog"></i> Google Meet Settings</h1><p>Control Jitsi video rooms, customer portal, staff/customer invitations, CRM popups, email, Twilio SMS bridge, and AI-ready meeting notes.</p></div></div>
+  <div class="google-meet-header"><div><h1><i class="fa fa-cog"></i> Video Meeting Settings</h1><p>Control Jitsi video rooms, customer portal, staff/customer invitations, CRM popups, email, Twilio SMS bridge, and AI-ready meeting notes.</p></div></div>
   <?php $this->load->view('google_meet/_nav'); ?>
   <?php echo form_open(admin_url('google_meet/settings')); ?>
   <div class="gm-instruction-banner">
     <h3><i class="fa fa-info-circle"></i> How video meetings work in the CRM</h3>
     <p>Create or schedule a meeting from this module, assign the appropriate staff members and customer contacts, and save the record. Logged-in customers only see meetings specifically assigned to their own contact account. The customer navigation link is hidden from visitors and from anyone who is not authenticated.</p>
     <ul>
-      <li><strong>Shared Jitsi rooms:</strong> the CRM generates a private room link without Google OAuth or API keys. The host signs in to meet.jit.si to start a public-service room.</li>
+      <li><strong>Shared Jitsi rooms:</strong> the CRM generates a private room link without video-provider API keys. The host signs in to meet.jit.si to start a public-service room.</li>
       <li><strong>Notifications enabled:</strong> assigned participants can receive CRM, email, popup, or available SMS notifications according to these settings.</li>
       <li><strong>No assigned meeting:</strong> the customer portal clearly reports that no meeting is currently scheduled instead of exposing an empty or public page.</li>
     </ul>
   </div>
   <div class="panel_s google-meet-card"><div class="panel-body gm-form-panel">
-    <div class="google-meet-settings-heading"><h4>Core Setup</h4><p>New meetings use Jitsi. Existing saved Google Meet rooms remain available.</p></div>
+    <div class="google-meet-settings-heading"><h4>Core Setup</h4><p>New meetings use Jitsi. Previously saved external meeting links remain available.</p></div>
     <div class="row"><div class="col-md-6">
-      <div class="checkbox checkbox-primary"><input type="checkbox" id="google_meet_enabled" name="google_meet_enabled" value="1" <?php echo get_option('google_meet_enabled') == '1' ? 'checked' : ''; ?>><label for="google_meet_enabled">Enable Google Meet Module</label></div>
+      <div class="checkbox checkbox-primary"><input type="checkbox" id="google_meet_enabled" name="google_meet_enabled" value="1" <?php echo get_option('google_meet_enabled') == '1' ? 'checked' : ''; ?>><label for="google_meet_enabled">Enable Video Meeting Module</label></div>
     </div><div class="col-md-6">
       <?php echo render_input('jitsi_server_domain', 'Jitsi server hostname', get_option('jitsi_server_domain') ?: 'meet.jit.si'); ?>
       <?php echo render_input('jitsi_room_prefix', 'Room name prefix', get_option('jitsi_room_prefix') ?: 'SC'); ?>
@@ -36,7 +36,7 @@
       <div class="checkbox checkbox-primary"><input type="checkbox" id="google_meet_allow_recording" name="google_meet_allow_recording" value="1" <?php echo get_option('google_meet_allow_recording') == '1' ? 'checked' : ''; ?>><label for="google_meet_allow_recording">Allow Recording Preference</label></div>
       <?php echo render_select('google_meet_access_mode', [['id'=>'trusted','name'=>'Trusted Access'],['id'=>'restricted','name'=>'Restricted Access'],['id'=>'open','name'=>'Open Access']], ['id','name'], 'Access Mode', get_option('google_meet_access_mode') ?: 'trusted'); ?>
     </div></div>
-    <?php echo render_textarea('google_meet_recording_instruction', 'Recording Instructions', get_option('google_meet_recording_instruction'), ['rows'=>3]); ?>
+    <?php echo render_textarea('google_meet_recording_instruction', 'Recording Instructions', ((strpos((string)get_option('google_meet_recording_instruction'), 'Google Meet recording is controlled by Google Workspace/Meet permissions.') === 0) ? 'Recording availability depends on the configured Jitsi service and moderator permissions. Add an available recording link to meeting notes after the call.' : get_option('google_meet_recording_instruction')), ['rows'=>3]); ?>
 
     <hr><div class="google-meet-settings-heading"><h4>Notifications</h4><p>Send meeting invitations through CRM email, CRM screen notifications, and Twilio SMS bridge when available.</p></div>
     <div class="row"><div class="col-md-6 gm-checkbox-grid">
@@ -57,7 +57,7 @@
     <?php echo render_textarea('google_meet_ai_summary_prompt', 'AI Summary Prompt', get_option('google_meet_ai_summary_prompt'), ['rows'=>3]); ?>
 
     <hr><div class="google-meet-settings-heading"><h4>Customer Portal</h4><p>This link is available only after a customer contact successfully signs in. Each contact can view only meetings assigned to that contact record. Visitors and logged-out users are redirected to the standard CRM customer login and cannot access meeting data.</p></div>
-    <div class="checkbox checkbox-primary"><input type="checkbox" id="google_meet_client_portal_enabled" name="google_meet_client_portal_enabled" value="1" <?php echo get_option('google_meet_client_portal_enabled') == '1' ? 'checked' : ''; ?>><label for="google_meet_client_portal_enabled">Show Google Meet in Customer Portal</label></div>
+    <div class="checkbox checkbox-primary"><input type="checkbox" id="google_meet_client_portal_enabled" name="google_meet_client_portal_enabled" value="1" <?php echo get_option('google_meet_client_portal_enabled') == '1' ? 'checked' : ''; ?>><label for="google_meet_client_portal_enabled">Show Video Meeting in Customer Portal</label></div>
     <p><strong>Client Link:</strong> <a href="<?php echo site_url('google-meet-client'); ?>"><?php echo site_url('google-meet-client'); ?></a></p>
     <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-save"></i> Save Settings</button>
     <a href="<?php echo admin_url('google_meet'); ?>" class="btn btn-default btn-sm">Back</a>

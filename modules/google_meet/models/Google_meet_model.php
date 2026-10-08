@@ -52,7 +52,7 @@ class Google_meet_model extends App_Model
         $now = date('Y-m-d H:i:s');
         $subject = trim((string)($data['subject'] ?? $data['title'] ?? ''));
         if ($subject === '') {
-            $subject = 'Google Meet Meeting - ' . date('m/d/Y g:i A');
+            $subject = 'Video Meeting - ' . date('m/d/Y g:i A');
         }
 
         $duration = max(15, (int)($data['duration_minutes'] ?? get_option('google_meet_default_duration') ?: 30));
@@ -116,7 +116,7 @@ class Google_meet_model extends App_Model
             return false;
         }
 
-        $subject = trim((string)($data['subject'] ?? $data['title'] ?? $existing->subject ?? $existing->title ?? 'Google Meet Meeting'));
+        $subject = trim((string)($data['subject'] ?? $data['title'] ?? $existing->subject ?? $existing->title ?? 'Video Meeting'));
         $duration = max(15, (int)($data['duration_minutes'] ?? $existing->duration_minutes ?? get_option('google_meet_default_duration') ?: 30));
         $startTime = !empty($data['start_time']) ? google_meet_parse_datetime($data['start_time']) : ($existing->start_time ?? date('Y-m-d H:i:s'));
         $endTime = !empty($data['end_time']) ? google_meet_parse_datetime($data['end_time']) : date('Y-m-d H:i:s', strtotime($startTime . ' +' . $duration . ' minutes'));
@@ -443,7 +443,7 @@ class Google_meet_model extends App_Model
             return false;
         }
 
-        $subject = $meeting->subject ?? $meeting->title ?? 'Google Meet Meeting';
+        $subject = $meeting->subject ?? $meeting->title ?? 'Video Meeting';
         $attendees = $this->attendees((int)$id);
         $results = ['email' => 0, 'sms' => 0, 'crm' => 0, 'failed' => 0];
 
@@ -514,13 +514,13 @@ class Google_meet_model extends App_Model
         $staffId = !empty($payload['staff_id']) ? (int)$payload['staff_id'] : 0;
         $email = trim((string)($payload['email'] ?? ''));
         $phone = trim((string)($payload['phone'] ?? ''));
-        $message = trim((string)($payload['message'] ?? '')) ?: 'This is a Smart Choice Google Meet notification test.';
+        $message = trim((string)($payload['message'] ?? '')) ?: 'This is a Smart Choice Video Meeting notification test.';
         $link = trim((string)($payload['link'] ?? '')) ?: 'https://meet.google.com/new';
         $result = ['email' => 0, 'sms' => 0, 'crm' => 0, 'failed' => 0];
 
         if ($email !== '') {
-            $html = '<div style="font-family:Arial,sans-serif;background:#f8fafc;padding:20px;color:#111827"><div style="max-width:620px;margin:auto;background:#fff;border:1px solid #d1d5db;border-radius:12px;overflow:hidden"><div style="background:#169179;color:#fff;padding:16px 20px"><h2 style="margin:0;color:#fff">Smart Choice Google Meet Test</h2></div><div style="padding:20px"><p>' . html_escape($message) . '</p><p><a href="' . html_escape($link) . '" style="display:inline-block;background:#169179;color:#fff;text-decoration:none;padding:10px 16px;border-radius:6px;font-weight:bold">Open Test Meet Link</a></p><p style="font-size:12px;color:#4b5563">' . html_escape($link) . '</p></div></div></div>';
-            if ($this->send_crm_email($email, 'Smart Choice Google Meet Test Notification', $html, $message . "\n" . $link)) {
+            $html = '<div style="font-family:Arial,sans-serif;background:#f8fafc;padding:20px;color:#111827"><div style="max-width:620px;margin:auto;background:#fff;border:1px solid #d1d5db;border-radius:12px;overflow:hidden"><div style="background:#169179;color:#fff;padding:16px 20px"><h2 style="margin:0;color:#fff">Smart Choice Video Meeting Test</h2></div><div style="padding:20px"><p>' . html_escape($message) . '</p><p><a href="' . html_escape($link) . '" style="display:inline-block;background:#169179;color:#fff;text-decoration:none;padding:10px 16px;border-radius:6px;font-weight:bold">Open Test Meeting Link</a></p><p style="font-size:12px;color:#4b5563">' . html_escape($link) . '</p></div></div></div>';
+            if ($this->send_crm_email($email, 'Smart Choice Video Meeting Test Notification', $html, $message . "\n" . $link)) {
                 $result['email']++;
             } else {
                 $result['failed']++;
@@ -528,7 +528,7 @@ class Google_meet_model extends App_Model
         }
 
         if ($staffId > 0) {
-            if ($this->create_crm_notification(0, $staffId, 'Google Meet Test Notification', $link)) {
+            if ($this->create_crm_notification(0, $staffId, 'Video Meeting Test Notification', $link)) {
                 $result['crm']++;
             } else {
                 $result['failed']++;
@@ -567,7 +567,7 @@ class Google_meet_model extends App_Model
             }
         }
         $replacements = [
-            '{meeting_name}' => $meeting->subject ?? $meeting->title ?? 'Google Meet Meeting',
+            '{meeting_name}' => $meeting->subject ?? $meeting->title ?? 'Video Meeting',
             '{meeting_start}' => !empty($meeting->start_time) ? google_meet_display_datetime($meeting->start_time) : '',
             '{meeting_link}' => $meeting->meet_link ?? '',
             '{recipient_name}' => $attendee['name'] ?? 'Team Member',
@@ -585,9 +585,9 @@ class Google_meet_model extends App_Model
 
     private function build_invitation_plain_text($meeting, $name)
     {
-        $subject = $meeting->subject ?? $meeting->title ?? 'Google Meet Meeting';
+        $subject = $meeting->subject ?? $meeting->title ?? 'Video Meeting';
         $start = !empty($meeting->start_time) ? google_meet_display_datetime($meeting->start_time) : '';
-        return trim((get_option('google_meet_default_notification_message') ?: 'You have been invited to a Smart Choice Contractors USA Google Meet meeting.') . "\n\n" .
+        return trim((((get_option('google_meet_default_notification_message') === 'You have been invited to a Smart Choice Contractors USA Google Meet meeting.') ? 'You have been invited to a Smart Choice Contractors USA video meeting.' : get_option('google_meet_default_notification_message')) ?: 'You have been invited to a Smart Choice Contractors USA video meeting.') . "\n\n" .
             'Hello ' . $name . ",\n" .
             'Meeting: ' . $subject . "\n" .
             'Start: ' . $start . "\n" .
@@ -596,7 +596,7 @@ class Google_meet_model extends App_Model
 
     private function build_invitation_html($meeting, $name)
     {
-        $subject = html_escape($meeting->subject ?? $meeting->title ?? 'Google Meet Meeting');
+        $subject = html_escape($meeting->subject ?? $meeting->title ?? 'Video Meeting');
         $start = !empty($meeting->start_time) ? google_meet_display_datetime($meeting->start_time) : '';
         $link = html_escape($meeting->meet_link ?? '');
         return '<div style="font-family:Arial,sans-serif;color:#111827;background:#f8fafc;padding:20px">'
@@ -659,7 +659,7 @@ class Google_meet_model extends App_Model
     private function create_crm_notification($meetingId, $staffId, $subject, $link)
     {
         if (!$this->db->table_exists(db_prefix() . 'notifications')) { return false; }
-        $description = 'Google Meet invitation: ' . $subject;
+        $description = 'Video Meeting invitation: ' . $subject;
         $data = [
             'isread' => 0,
             'isread_inline' => 0,
@@ -769,7 +769,7 @@ class Google_meet_model extends App_Model
             ['name' => 'CRM Push Enabled', 'status' => get_option('google_meet_push_enabled') === '1', 'detail' => 'Creates staff screen notifications inside Perfex CRM.'],
             ['name' => 'Twilio SMS Bridge Enabled', 'status' => get_option('google_meet_twilio_enabled') === '1' || get_option('google_meet_sms_enabled') === '1', 'detail' => 'Uses existing CRM SMS infrastructure when available and fires a hook for Twilio modules.'],
             ['name' => 'Client Portal Enabled', 'status' => get_option('google_meet_client_portal_enabled') === '1', 'detail' => 'Customer portal route: ' . site_url('google_meet/meeting_clients/meetings')],
-            ['name' => 'Jitsi Server', 'status' => $validDomain, 'detail' => $domain . '. CRM room creation uses no Google OAuth or API key. The public meet.jit.si service requires host sign-in.'],
+            ['name' => 'Jitsi Server', 'status' => $validDomain, 'detail' => $domain . '. CRM room creation needs no video-provider API key. The public meet.jit.si service requires host sign-in.'],
             ['name' => 'Jitsi Schema', 'status' => $this->db->field_exists('host_joined_at', db_prefix() . 'google_meet_meetings') && $this->db->field_exists('room_note_key', db_prefix() . 'google_meet_comments'), 'detail' => 'Shared rooms, attendance timestamps and retry-safe live notes.'],
             ['name' => 'Embedded Rooms', 'status' => get_option('jitsi_embedded_mode') !== '0', 'detail' => 'Opens the same saved room inside the CRM. External links remain available.'],
             ['name' => 'Recording Preference', 'status' => get_option('google_meet_allow_recording') === '1', 'detail' => 'Recording availability and moderation are controlled by the video provider.'],

@@ -19,7 +19,7 @@ $subject = $meeting->subject ?? $meeting->title ?? '';
       <div class="gm-hero">
         <div>
           <h1><?php echo html_escape($title); ?></h1>
-          <p>Leave the Google Meet link blank to create it automatically. If the Google API is not connected, the module will save a safe placeholder link instead of failing.</p>
+          <p>Leave the meeting link blank to generate a shared Jitsi room automatically. Every attendee uses the same saved room link.</p>
         </div>
         <a href="<?php echo admin_url('google_meet'); ?>" class="btn btn-default">Dashboard</a>
       </div>
@@ -57,7 +57,7 @@ $subject = $meeting->subject ?? $meeting->title ?? '';
                 </select>
               </div>
               <?php echo render_input('appointment_id', 'Appointment ID', $meeting->appointment_id ?? '', 'number'); ?>
-              <?php echo render_input('meet_link', 'Google Meet Link', $meeting->meet_link ?? '', 'text', ['placeholder' => 'Leave blank for automatic Google Meet link']); ?>
+              <?php echo render_input('meet_link', 'Video Meeting Link', $meeting->meet_link ?? '', 'text', ['placeholder' => 'Leave blank for automatic Video Meeting link']); ?>
               <?php echo render_textarea('notes', 'Internal Notes', $meeting->notes ?? '', ['rows' => 3]); ?>
             </div>
             <div class="col-md-4">
@@ -87,7 +87,7 @@ $subject = $meeting->subject ?? $meeting->title ?? '';
                 <div class="checkbox checkbox-primary"><input type="checkbox" name="notify_staff" id="notify_staff" value="1" <?php echo get_option('google_meet_notify_staff_default') == '1' ? 'checked' : ''; ?>><label for="notify_staff">Notify Staff</label></div>
                 <div class="checkbox checkbox-primary"><input type="checkbox" name="notify_customer" id="notify_customer" value="1" <?php echo get_option('google_meet_notify_customers_default') == '1' ? 'checked' : ''; ?>><label for="notify_customer">Notify Customers</label></div>
                 <div class="checkbox checkbox-primary"><input type="checkbox" name="send_notifications" id="send_notifications" value="1"><label for="send_notifications">Send invitations now</label></div>
-                <div class="alert alert-info">Automatic links require Google Calendar API + access token. If not connected, the module saves <strong>https://meet.google.com/new</strong> so the meeting still creates.</div>
+                <div class="alert alert-info">Jitsi rooms are generated automatically before invitations are sent. On meet.jit.si, the host signs in to start the room.</div>
                 <button class="btn btn-info btn-block" type="submit">Save Meeting</button>
                 <a class="btn btn-default btn-block" href="<?php echo admin_url('google_meet'); ?>">Cancel</a>
               </div>

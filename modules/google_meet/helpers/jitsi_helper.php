@@ -79,7 +79,7 @@ function jitsi_prepare_meeting_link($link, $existing = null)
     if (preg_match('~^https://meet\.google\.com/[a-z]{3}-[a-z]{4}-[a-z]{3}(?:[/?#].*)?$~i', $link)) {
         return ['provider' => 'google_meet', 'room_name' => null, 'room_pin' => null, 'meet_link' => $link];
     }
-    throw new InvalidArgumentException('Enter a shared Jitsi room URL or an existing complete Google Meet room URL.');
+    throw new InvalidArgumentException('Enter a shared Jitsi room URL or a supported saved legacy meeting URL.');
 }
 
 function jitsi_build_invitation_payload($meeting, $client = false)

@@ -220,7 +220,7 @@ class Google_meet extends AdminController
         if ($this->google_meet_model->update_meet_link((int)$id, $this->input->post('meet_link', true))) {
             set_alert('success', 'The shared meeting link was saved. Every attendee will now join the same meeting.');
         } else {
-            set_alert('danger', 'Enter a shared Jitsi room URL or a complete existing Video Meeting URL. Do not use /new as an attendee link.');
+            set_alert('danger', 'Enter a shared Jitsi room URL or a supported saved legacy meeting URL. Do not use /new as an attendee link.');
         }
         redirect(admin_url('google_meet/view/' . (int)$id));
     }

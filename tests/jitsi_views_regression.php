@@ -1,12 +1,12 @@
 <?php
 if(PHP_SAPI!=='cli'){http_response_code(404);exit;}
-define('BASEPATH',__DIR__);$root=dirname(__DIR__);$checks=0;$canDelete=true;
+define('BASEPATH',__DIR__);$root=dirname(__DIR__);$checks=0;$canDelete=true;$canEdit=true;
 function check($value,$label){if(!$value)throw new RuntimeException($label);$GLOBALS['checks']++;}
 function get_option($name){return ['jitsi_server_domain'=>'meet.jit.si','google_meet_timezone'=>'America/New_York'][$name]??'';}
 function site_url($path=''){return '/'.$path;}function admin_url($path=''){return '/admin/'.$path;}
 function module_dir_url($module,$path=''){return '/modules/'.$module.'/'.$path;}
 function html_escape($value){return htmlspecialchars((string)$value,ENT_QUOTES,'UTF-8');}
-function has_permission($feature,$staff='',$cap='view'){return $cap==='delete'?$GLOBALS['canDelete']:true;}
+function has_permission($feature,$staff='',$cap='view'){return $cap==='delete'?$GLOBALS['canDelete']:($cap==='edit'?$GLOBALS['canEdit']:true);}
 function google_meet_lang($key,$fallback){return $fallback;}function _l($key){return $key;}
 function _dt($value){return $value;}
 function init_head(){}function init_tail(){}
@@ -45,8 +45,40 @@ $dashboard=$renderer->render('dashboard',$data);$join=$renderer->render('join',$
 check(strpos($dashboard,'Video Meeting Dashboard')!==false&&strpos($dashboard,'Google Meet')===false,'Dashboard uses video meeting branding');
 check(strpos($join,'href="/admin/google_meet/room/7"')!==false,'Join screen opens the authorized CRM room');
 check(strpos($help,'host must sign in')!==false&&strpos($help,'Google Calendar API')===false,'Help explains Jitsi host workflow');
+// Detail-page presentation must retain the existing room, POST forms and permission gates.
+foreach($values as $key=>$value)$meeting->{$key}=$value;
+$data['attendees']=[['name'=>'Test Customer','email'=>'customer@example.test','attendee_type'=>'customer','notified'=>1]];
+$adminDetails=$renderer->render('view',$data);
+$document=new DOMDocument();$document->loadHTML($adminDetails,LIBXML_NOERROR|LIBXML_NOWARNING);$xpath=new DOMXPath($document);
+check($xpath->query('//div[@id="wrapper"]//section[@aria-labelledby="gm-detail-room-title"]')->length===1,'Shared-room section is inside the admin content layout');
+check(strpos($adminDetails,'href="/admin/google_meet/room/7"')!==false&&strpos($adminDetails,'data-target="#shareMeetingModal"')!==false,'Detail Join and Share retain authorized CRM room and existing modal');
+check(strpos($adminDetails,html_escape($meeting->meet_link))!==false,'Detail and invitation share exact saved room');
+check($xpath->query('//form[@action="/admin/google_meet/delete/7"][@method="post"]/input[@name="csrf"]')->length===1,'Detail delete retains CSRF POST and confirmation');
+check(strpos($xpath->query('//form[@action="/admin/google_meet/delete/7"]')->item(0)->getAttribute('onsubmit'),"return confirm('Delete this meeting")!==false,'Delete still requires explicit browser confirmation');
+check($xpath->query('//form[@action="/admin/google_meet/add_comment/7"][@method="post"]//textarea[@name="comment"]')->length===1,'Comment field name and existing POST handler retained');
+check(strpos($adminDetails,'google_meet/start/7')!==false&&strpos($adminDetails,'google_meet/finish/7')!==false&&strpos($adminDetails,'google_meet/notify/7')!==false&&strpos($adminDetails,'google_meet/create/7')!==false&&strpos($adminDetails,'google_meet/calendar/7')!==false,'Management and calendar routes preserved');
+check($xpath->query('//table[contains(@class,"gm-detail-attendees")]//tbody/tr')->length===1&&strpos($adminDetails,'is-notified')!==false,'Populated attendees retain notification flags');
+$canEdit=false;$canDelete=false;$readOnlyDetails=$renderer->render('view',$data);
+check(strpos($readOnlyDetails,'google_meet/delete/7')===false&&strpos($readOnlyDetails,'google_meet/notify/7')===false&&strpos($readOnlyDetails,'google_meet/start/7')===false&&strpos($readOnlyDetails,'google_meet/create/7')===false,'Read-only staff do not gain management controls');
+check(strpos($readOnlyDetails,'google_meet/add_comment/7')!==false,'Existing viewer comment workflow remains available');$canEdit=true;$canDelete=true;
+$emptyData=$data;$emptyData['attendees']=[];$emptyData['comments']=[];$emptyDetails=$renderer->render('view',$emptyData);
+check(strpos($emptyDetails,'No attendees yet')!==false&&strpos($emptyDetails,'Add attendees')!==false&&strpos($emptyDetails,'No notes yet')!==false,'Empty states explain next steps');
+$savedRoom=$meeting->meet_link;$meeting->meet_link='';$meeting->room_name=null;$pendingDetails=$renderer->render('view',$emptyData);
+check(strpos($pendingDetails,'href="/admin/google_meet/room/7"')===false&&strpos($pendingDetails,'disabled><i class="fa fa-share-alt"')!==false,'Pending room cannot join or share');
+check(strpos($pendingDetails,'method="post" action="/admin/google_meet/generate_room/7"')!==false&&strpos($pendingDetails,'method="post" action="/admin/google_meet/save_shared_link/7"')!==false,'Room generation and manual link retain protected POST forms');
+$canEdit=false;$pendingReadOnly=$renderer->render('view',$emptyData);
+check(strpos($pendingReadOnly,'google_meet/generate_room/7')===false&&strpos($pendingReadOnly,'google_meet/save_shared_link/7')===false,'Read-only staff cannot generate or change rooms');$canEdit=true;
+$meeting->meet_link=$savedRoom;foreach($values as $key=>$value)$meeting->{$key}=$value;
+$savedSubject=$meeting->subject;$savedDescription=$meeting->description;
+$meeting->subject='<img src=x onerror=alert(1)>';$meeting->description='<script>alert(1)</script>';
+$maliciousData=$data;$maliciousData['comments'][0]['comment']='<img src=x onerror=alert(1)>';$maliciousData['attendees'][0]['name']='<script>alert(1)</script>';
+$unsafeDetails=$renderer->render('view',$maliciousData);
+check(strpos($unsafeDetails,'<img src=x')===false&&strpos($unsafeDetails,'<script>alert(1)</script>')===false,'Subject, description, attendees and notes are escaped');
+$meeting->subject=$savedSubject;$meeting->description=$savedDescription;
 $directory=getenv('JITSI_QA_DIR');
 if($directory){if(!is_dir($directory))mkdir($directory,0700,true);$head='<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Video meeting QA</title><link rel="stylesheet" href="/assets/plugins/bootstrap/css/bootstrap.min.css"><style>body{background:#f3f7f5;padding:24px;font-family:Arial,sans-serif}.content{max-width:1500px;margin:auto}.mtop10{margin-top:10px}.mtop15{margin-top:15px}</style><script src="/jquery.js"></script><script src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script></head><body>';
     file_put_contents($directory.'/dashboard.html',$head.'<link rel="stylesheet" href="/modules/google_meet/assets/css/smart_choice_module_standard.css"><link rel="stylesheet" href="/modules/google_meet/assets/css/google_meet_smartchoice.css">'.$dashboard.'</body></html>');file_put_contents($directory.'/help.html',$head.'<link rel="stylesheet" href="/modules/google_meet/assets/css/google_meet_smartchoice.css">'.$help.'</body></html>');
-    file_put_contents($directory.'/admin.html',$head.$admin.'</body></html>');file_put_contents($directory.'/client.html',$head.$client.'</body></html>');}
+    file_put_contents($directory.'/admin.html',$head.$admin.'</body></html>');file_put_contents($directory.'/client.html',$head.$client.'</body></html>');
+    $detailHead=$head.'<link rel="stylesheet" href="/assets/plugins/font-awesome/css/all.min.css"><link rel="stylesheet" href="/assets/plugins/font-awesome/css/v4-shims.min.css"><link rel="stylesheet" href="/modules/google_meet/assets/css/smart_choice_module_standard.css"><link rel="stylesheet" href="/modules/google_meet/assets/css/google_meet_smartchoice.css">';
+    file_put_contents($directory.'/details.html',$detailHead.$adminDetails.'</body></html>');file_put_contents($directory.'/details-empty.html',$detailHead.$emptyDetails.'</body></html>');file_put_contents($directory.'/details-pending.html',$detailHead.$pendingDetails.'</body></html>');}
 echo "PASS: $checks Jitsi room, share, privacy, permission and escaping render checks\n";

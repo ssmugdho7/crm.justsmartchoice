@@ -328,16 +328,7 @@ class Googlecalendar extends App_Model
             ]
         );
 
-        if (get_option('appointly_auto_enable_google_meet') == '1') {
-            $event->setConferenceData(new Google\Service\Calendar\ConferenceData([
-                'createRequest' => new Google\Service\Calendar\CreateConferenceRequest([
-                    'requestId' => uniqid(),
-                    'conferenceSolutionKey' => new Google\Service\Calendar\ConferenceSolutionKey([
-                        'type' => 'hangoutsMeet'
-                    ])
-                ])
-            ]));
-        }
+        // Video rooms are provisioned by Jitsi; calendar sync must not create another room.
 
         return $event;
     }

@@ -1,7 +1,7 @@
 <?php
 // Native CodeIgniter/MySQL verification. Every database mutation targets connection-local TEMPORARY tables.
 if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
-$root=dirname(__DIR__);define('BASEPATH',$root.'/system/');define('APPPATH',$root.'/application/');define('ENVIRONMENT','testing');
+$root=getenv('JITSI_CODE_ROOT') ?: dirname(__DIR__);define('BASEPATH',$root.'/system/');define('APPPATH',$root.'/application/');define('ENVIRONMENT','testing');
 function log_message(...$args){}function is_php($version){return version_compare(PHP_VERSION,$version,'>=');}
 function show_error($message){throw new RuntimeException($message);}function db_prefix(){return 'audit_jitsi_';}
 function &get_instance(){return $GLOBALS['ci'];}
@@ -81,4 +81,67 @@ check($model->get($pending)!==null&&$db->where('meeting_id',$pending)->count_all
 check(!$model->save_room_note($id,'After deletion',$key),'No notes after deletion');
 $db->failChildDelete=true;check($model->delete_many([$pending])===0,'Failure reports no deletion');
 check($model->get($pending)!==null&&$db->where('meeting_id',$pending)->count_all_results(db_prefix().'google_meet_attendees')===1&&$db->where('meeting_id',$pending)->count_all_results(db_prefix().'google_meet_notifications')===1,'Cascade failure rolls back parent and children');
+// Real model notification path, using only temporary rows and recording transports.
+function _dt($value) { return $value; }
+function site_url($path='') { return 'https://crm.example/'.$path; }
+function admin_url($path='') { return site_url('admin/'.$path); }
+function hooks() { return new class { function do_action(...$args) {} }; }
+function app_sms() { return $GLOBALS['smsFixture']; }
+$ci->email = new class {
+    public $sent=[], $success=true, $current=[];
+    function clear($attachments=true) { $this->current=[]; }
+    function from($email,$name) { $this->current['from']=$email; }
+    function to($to) { $this->current['to']=$to; }
+    function subject($subject) { $this->current['subject']=$subject; }
+    function message($message) { $this->current['message']=$message; }
+    function set_alt_message($plain) { $this->current['plain']=$plain; }
+    function send($clear=false) { $this->sent[]=$this->current;return $this->success; }
+};
+$smsFixture = new class { public $sent=[];function send($phone,$message) { $this->sent[]=$message;return false; } };
+$db->failChildDelete=false;
+$db->query('CREATE TABLE audit_jitsi_contacts (id INT PRIMARY KEY, phonenumber VARCHAR(50), default_language VARCHAR(50))');
+$db->query('CREATE TABLE audit_jitsi_staff (staffid INT PRIMARY KEY, phonenumber VARCHAR(50), default_language VARCHAR(50))');
+$db->query('CREATE TABLE audit_jitsi_emailtemplates (id INT PRIMARY KEY, slug VARCHAR(100), language VARCHAR(50), subject TEXT, message TEXT)');
+$db->insert(db_prefix().'contacts',['id'=>87,'phonenumber'=>'+15555550123','default_language'=>'english']);
+$db->insert(db_prefix().'staff',['staffid'=>42,'phonenumber'=>'+15555550124','default_language'=>'english']);
+$db->insert(db_prefix().'emailtemplates',['id'=>1,'slug'=>'google-meet-invitation','language'=>'english','subject'=>'Google Meeting: {meeting_name}','message'=>'<p>Join Google Meet</p><a href="{meeting_link}">{recipient_name}</a>']);
+$invite=$model->create(['subject'=>'Scope <review>','duration_minutes'=>30]);$inviteRoom=$model->get($invite);
+$db->insert(db_prefix().'google_meet_attendees',['meeting_id'=>$invite,'attendee_type'=>'customer','contact_id'=>87,'email'=>'customer@example.test','name'=>'<Customer>']);
+$options['google_meet_email_enabled']='1';$options['google_meet_push_enabled']='0';$options['google_meet_sms_enabled']='0';
+check($model->notify_attendees($invite),'Native invitation transport reports accepted email');
+$email=end($ci->email->sent);
+check(strpos($email['subject'],'Video Meeting:')===0&&strpos($email['message'],'Google Meet')===false,'Saved invitation branding normalized during send');
+check(strpos($email['message'],$inviteRoom->meet_link)!==false&&strpos($email['plain'],$inviteRoom->meet_link)!==false,'HTML and plaintext use exact saved room');
+check(strpos($email['message'],'&lt;Customer&gt;')!==false&&strpos($email['message'],$inviteRoom->room_pin)!==false,'Recipient HTML escaped and room PIN included');
+check($db->where('meeting_id',$invite)->get(db_prefix().'google_meet_attendees')->row()->notified==1,'Successful delivery marks attendee notified');
+check($db->where('meeting_id',$invite)->where('channel','email')->where('status','sent')->count_all_results(db_prefix().'google_meet_notifications')===1,'Successful email logged');
+$ci->email->success=false;
+check(!$model->notify_attendees($invite),'Failed email does not report success');
+$delivery=json_decode($model->get($invite)->notification_status,true);
+check($delivery['failed']===1&&$db->where('meeting_id',$invite)->get(db_prefix().'google_meet_attendees')->row()->notified==0,'Failed email counts and notified state accurate');
+$options['google_meet_email_enabled']='0';$options['google_meet_sms_enabled']='1';
+check(!$model->notify_attendees($invite)&&json_decode($model->get($invite)->notification_status,true)['failed']===1,'Failed SMS counted and not successful');
+$options['google_meet_sms_enabled']='0';$options['google_meet_push_enabled']='1';
+$db->where('meeting_id',$invite)->update(db_prefix().'google_meet_attendees',['staff_id'=>42,'contact_id'=>null,'attendee_type'=>'staff']);
+check(!$model->notify_attendees($invite)&&json_decode($model->get($invite)->notification_status,true)['failed']===1,'Unavailable CRM notification counted as failed');
+$ci->email->success=true;
+$result=$model->send_test_notification(['email'=>'test@example.test','phone'=>'+15555550123']);$email=end($ci->email->sent);
+preg_match('~https://meet\.jit\.si/[A-Za-z0-9_-]+~',$email['plain'],$match);
+check($result['email']===1&&$result['failed']===1&&isset($match[0])&&strpos(end($smsFixture->sent),$match[0])!==false,'Blank test link creates one Jitsi room for every channel');
+check($db->where('id',1)->get(db_prefix().'emailtemplates')->row()->subject==='Google Meeting: {meeting_name}','Stored custom email template preserved');
+// Approval runs its actual transaction and notification trigger, preserving the video room.
+require $root.'/modules/appointly/models/Appointly_model.php';
+class ApprovalFixture extends Appointly_model {
+    public $triggered=[];
+    function __construct() {}
+    public function appointment_approve_notification_and_sms_triggers($id): void { $this->triggered[]=$id; }
+}
+$db->query('CREATE TABLE audit_jitsi_appointly_appointments (id INT PRIMARY KEY, status VARCHAR(30), cancel_notes TEXT, external_notification_date DATE, google_meet_link VARCHAR(191))');
+$db->insert(db_prefix().'appointly_appointments',['id'=>91,'status'=>'pending','google_meet_link'=>$inviteRoom->meet_link]);
+$approval=new ApprovalFixture();
+check($approval->approve_appointment(91),'Appointment approval transaction succeeds');
+$approved=$db->where('id',91)->get(db_prefix().'appointly_appointments')->row();
+check($approved->status==='approved'&&$approved->google_meet_link===$inviteRoom->meet_link&&$approval->triggered===[91],'Approval keeps same room and runs notification hook');
+check(!$approval->approve_appointment(9999),'Missing appointment cannot be accepted');
+
 $db->close();echo "PASS: $checks native MySQL migration, room persistence, attendance, notes and cascade checks (temporary tables only)\n";

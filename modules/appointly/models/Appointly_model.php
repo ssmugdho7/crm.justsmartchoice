@@ -23,7 +23,6 @@ class Appointly_model extends App_Model
      */
     private function prepare_jitsi_appointment($data, $providedLink = null)
     {
-        if ((get_option('video_meeting_provider') ?: 'jitsi') !== 'jitsi') { return $data; }
         require_once dirname(__DIR__, 2) . '/google_meet/helpers/jitsi_helper.php';
         $link = $providedLink !== null ? trim((string)$providedLink) : trim((string)($data['google_meet_link'] ?? ''));
         if ($link === '' || preg_match('~^https://meet\.google\.com/new(?:[/?#].*)?$~i', $link)) {
@@ -230,7 +229,7 @@ class Appointly_model extends App_Model
         $sharedVideoLink = $data['google_meet_link'] ?? '';
 
         // Google Calendar integration
-        if ((isset($data['google']) && $data['google'] && appointlyGoogleAuth()) || (get_option('appointly_auto_enable_google_meet') == '1' && (get_option('video_meeting_provider') ?: 'jitsi') !== 'jitsi' && appointlyGoogleAuth())) {
+        if ((isset($data['google']) && $data['google'] && appointlyGoogleAuth())) {
             // For staff-only, ensure each attendee has a valid email before adding to Google
             if ($relation == 'internal_staff' && ! empty($attendees)) {
                 // Validate attendee emails before trying to add to Google Calendar
@@ -250,9 +249,6 @@ class Appointly_model extends App_Model
                     if ($googleEvent) {
                         $data['google_event_id']      = $googleEvent['google_event_id'];
                         $data['google_calendar_link'] = $googleEvent['htmlLink'];
-                        if (isset($googleEvent['hangoutLink']) && (get_option('video_meeting_provider') ?: 'jitsi') !== 'jitsi') {
-                            $data['google_meet_link'] = $googleEvent['hangoutLink'];
-                        }
                         $data['google_added_by_id'] = get_staff_user_id();
                     }
                 }
@@ -262,9 +258,6 @@ class Appointly_model extends App_Model
                 if ($googleEvent) {
                     $data['google_event_id']      = $googleEvent['google_event_id'];
                     $data['google_calendar_link'] = $googleEvent['htmlLink'];
-                    if (isset($googleEvent['hangoutLink']) && (get_option('video_meeting_provider') ?: 'jitsi') !== 'jitsi') {
-                        $data['google_meet_link'] = $googleEvent['hangoutLink'];
-                    }
                     $data['google_added_by_id'] = get_staff_user_id();
                 }
             }
@@ -555,9 +548,6 @@ class Appointly_model extends App_Model
         $googleEvent                              = insertAppointmentToGoogleCalendar($data, $attendees);
         $googleInsertData['google_event_id']      = $googleEvent['google_event_id'];
         $googleInsertData['google_calendar_link'] = $googleEvent['htmlLink'];
-        if (isset($googleEvent['hangoutLink']) && (get_option('video_meeting_provider') ?: 'jitsi') !== 'jitsi') {
-            $googleInsertData['google_meet_link'] = $googleEvent['hangoutLink'];
-        }
 
         return $googleInsertData;
     }
@@ -638,10 +628,7 @@ class Appointly_model extends App_Model
                     'google_added_by_id'   => get_staff_user_id(),
                 ];
 
-                // Add Google Meet link if available
-                if (isset($googleEvent['hangoutLink']) && (get_option('video_meeting_provider') ?: 'jitsi') !== 'jitsi') {
-                    $googleUpdateData['google_meet_link'] = $googleEvent['hangoutLink'];
-                }
+                // Add Video Meeting link if available
 
                 $this->db->where('id', $data['appointment_id']);
                 $this->db->update(db_prefix() . 'appointly_appointments', $googleUpdateData);
@@ -654,7 +641,7 @@ class Appointly_model extends App_Model
                         'message'              => _l('appointments_added_to_google_calendar'),
                         'google_event_id'      => $googleEvent['google_event_id'],
                         'google_calendar_link' => $googleEvent['htmlLink'],
-                        'google_meet_link'     => (get_option('video_meeting_provider') ?: 'jitsi') === 'jitsi' ? ($appointment['google_meet_link'] ?? null) : ($googleEvent['hangoutLink'] ?? null),
+                        'google_meet_link'     => ($appointment['google_meet_link'] ?? null),
                     ];
                 }
             }
@@ -2356,8 +2343,9 @@ class Appointly_model extends App_Model
         $attendees = isset($data['attendees']) && !empty($data['attendees'])
             ? (is_array($data['attendees']) ? $data['attendees'] : json_decode($data['attendees'], true))
             : [];
-        $message   = $data['message'];
-        $subject   = _l('appointment_connect_via_google_meet');
+        require_once dirname(__DIR__, 2) . '/google_meet/helpers/jitsi_helper.php';
+        $message   = video_meeting_display_text($data['message']);
+        $subject   = video_meeting_display_text(_l('appointment_connect_via_google_meet'));
 
         $sent_emails = [];
         $failed_emails = [];
@@ -2375,10 +2363,10 @@ class Appointly_model extends App_Model
                 $sent_emails[] = $data['to'];
 
                 // Log activity for primary recipient
-                log_activity('Google Meet Invitation Sent [' . $subject . '] to primary recipient: ' . $data['to']);
+                log_activity('Video Meeting Invitation Sent [' . $subject . '] to primary recipient: ' . $data['to']);
             } else {
                 $failed_emails[] = $data['to'];
-                log_activity('Failed to send Google Meet Invitation [' . $subject . '] to primary recipient: ' . $data['to']);
+                log_activity('Failed to send Video Meeting Invitation [' . $subject . '] to primary recipient: ' . $data['to']);
             }
         }
         // Send to attendees only if requested and available
@@ -2401,10 +2389,10 @@ class Appointly_model extends App_Model
                         $attendees_sent++;
 
                         // Log activity for each attendee
-                        log_activity('Google Meet Invitation Sent [' . $subject . '] to attendee: ' . $attendee_email);
+                        log_activity('Video Meeting Invitation Sent [' . $subject . '] to attendee: ' . $attendee_email);
                     } else {
                         $failed_emails[] = $attendee_email;
-                        log_activity('Failed to send Google Meet Invitation [' . $subject . '] to attendee: ' . $attendee_email);
+                        log_activity('Failed to send Video Meeting Invitation [' . $subject . '] to attendee: ' . $attendee_email);
                     }
                 }
             }
@@ -2415,7 +2403,7 @@ class Appointly_model extends App_Model
         $total_failed = count($failed_emails);
 
         if ($total_sent > 0) {
-            log_activity('Google Meet Invitation Campaign: ' . $total_sent . ' emails sent successfully' .
+            log_activity('Video Meeting Invitation Campaign: ' . $total_sent . ' emails sent successfully' .
                 ($total_failed > 0 ? ', ' . $total_failed . ' failed' : ''));
         }
 
@@ -2428,8 +2416,8 @@ class Appointly_model extends App_Model
             'sent_emails' => $sent_emails,
             'failed_emails' => $failed_emails,
             'message' => $total_sent > 0 ?
-                'Google Meet invitation sent to ' . $total_sent . ' recipient(s)' :
-                'Failed to send Google Meet invitation'
+                'Video Meeting invitation sent to ' . $total_sent . ' recipient(s)' :
+                'Failed to send Video Meeting invitation'
         ];
     }
 

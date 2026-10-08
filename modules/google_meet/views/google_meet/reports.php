@@ -3,7 +3,7 @@
 <div id="wrapper">
     <div class="content">
         <div class="google-meet-header">
-            <h1><i class="fa fa-video-camera"></i> Google Meet Reports</h1>
+            <h1><i class="fa fa-video-camera"></i> Video Meeting Reports</h1>
             <p>Search meetings by employee, date, topic, meeting name, comments, and internal notes.</p>
         </div>
 
@@ -52,7 +52,7 @@
                     <tbody>
                     <?php foreach ((array)$meetings as $m) { ?>
                         <tr>
-                            <td><strong><?php echo html_escape($m['subject'] ?: $m['title'] ?: 'Google Meet Meeting'); ?></strong><br><small><?php echo html_escape($m['description'] ?? ''); ?></small></td>
+                            <td><strong><?php echo html_escape($m['subject'] ?: $m['title'] ?: 'Video Meeting Meeting'); ?></strong><br><small><?php echo html_escape($m['description'] ?? ''); ?></small></td>
                             <td><?php echo html_escape($m['assigned_staff_name'] ?: $m['created_by_name'] ?: ''); ?></td>
                             <td><?php echo !empty($m['start_time']) ? google_meet_display_datetime($m['start_time']) : ''; ?></td>
                             <td><?php echo html_escape($m['status'] ?? ''); ?><br><small><?php echo html_escape($m['google_api_status'] ?? 'manual'); ?></small></td>

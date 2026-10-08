@@ -89,7 +89,7 @@ class Client extends ClientsController
             if ($query !== false) {
                 $meetings = $query->result_array();
             } else {
-                log_message('error', 'Google Meet customer list query failed: ' . json_encode($this->db->error()));
+                log_message('error', 'Video Meeting customer list query failed: ' . json_encode($this->db->error()));
             }
         }
 

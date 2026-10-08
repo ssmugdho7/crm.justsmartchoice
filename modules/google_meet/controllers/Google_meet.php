@@ -446,13 +446,20 @@ class Google_meet extends AdminController
             $message = 'This is a Smart Choice Video Meeting notification test.';
         }
 
-        $result = $this->google_meet_model->send_test_notification([
-            'staff_id' => (int)$this->input->post('staff_id'),
-            'email'    => trim((string)$this->input->post('email', true)),
-            'phone'    => trim((string)$this->input->post('phone', true)),
-            'message'  => $message,
-            'link'     => trim((string)$this->input->post('meet_link', true)) ?: jitsi_build_room_url(jitsi_generate_room_name('Test')),
-        ]);
+        try {
+            $result = $this->google_meet_model->send_test_notification([
+                'staff_id' => (int)$this->input->post('staff_id'),
+                'email'    => trim((string)$this->input->post('email', true)),
+                'phone'    => trim((string)$this->input->post('phone', true)),
+                'message'  => $message,
+                'link'     => trim((string)$this->input->post('meet_link', true)) ?: jitsi_build_room_url(jitsi_generate_room_name('Test')),
+            ]);
+
+        } catch (InvalidArgumentException $e) {
+            set_alert('danger', $e->getMessage());
+            redirect(admin_url('google_meet/test_notifications'));
+            return;
+        }
 
         set_alert(!empty($result['failed']) ? 'warning' : 'success', 'Test complete. Email: ' . (int)$result['email'] . ', CRM: ' . (int)$result['crm'] . ', SMS: ' . (int)$result['sms'] . ', Failed: ' . (int)$result['failed']);
         redirect(admin_url('google_meet/test_notifications'));

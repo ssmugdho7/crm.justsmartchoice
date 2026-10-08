@@ -28,10 +28,10 @@ if (!function_exists('google_meet_lang')) {
     {
         $translated = function_exists('_l') ? _l($key) : '';
         if ($translated === '' || $translated === null || $translated === $key) {
-            return $fallback !== '' ? $fallback : $key;
+            return video_meeting_display_text($fallback !== '' ? $fallback : $key);
         }
 
-        return $translated;
+        return video_meeting_display_text($translated);
     }
 }
 
@@ -153,7 +153,7 @@ function google_meet_client_navigation_item()
         return;
     }
 
-    $label = trim((string) get_option('google_meet_client_portal_title'));
+    $label = video_meeting_display_text(trim((string) get_option('google_meet_client_portal_title')));
     if ($label === '' || in_array($label, ['My Video Meetings', 'Google Meet', 'Video Meeting'], true)) {
         $label = 'Meetings';
     }

@@ -33,7 +33,7 @@ class Appointly_merge_fields extends App_merge_fields
                 'available' => ['appointly'],
             ],
             [
-                'name'      => 'Appointment Google Meet Link',
+                'name'      => 'Appointment Video Meeting Link',
                 'key'       => '{appointment_google_meet_link}',
                 'available' => [],
                 'templates' => [

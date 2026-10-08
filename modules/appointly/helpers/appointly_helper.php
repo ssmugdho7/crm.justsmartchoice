@@ -773,7 +773,7 @@ if (!function_exists('insertAppointmentToGoogleCalendar')) {
             $params = [
                 'summary'     => $data['subject'] ?? 'CRM Appointment',
                 'location'    => $data['address'] ?? '',
-                'description' => $data['description'] ?? '',
+                'description' => appointly_video_calendar_description($data),
                 'start'       => [
                     'dateTime' => $startDateTime->format('Y-m-d\TH:i:s'),
                     'timeZone' => $timezone
@@ -984,7 +984,7 @@ if (!function_exists('updateAppointmentToGoogleCalendar')) {
             $params = [
                 'summary'     => $data['subject'],
                 'location'    => $data['address'] ?? '',
-                'description' => $data['description'] ?? '',
+                'description' => appointly_video_calendar_description($data),
                 'start'       => [
                     'dateTime' => $startDateTime->format('Y-m-d\TH:i:s'),
                     'timeZone' => $timezone
@@ -2145,11 +2145,17 @@ function appointly_jitsi_invitation_link($template)
         'appointment-cron-reminder-to-contact', 'appointment-cron-reminder-to-staff',
         'appointment-updated-to-contact', 'appointment-updated-to-staff'];
     if (!$template || !$mailer || !method_exists($mailer, 'get_merge_fields')
-        || !in_array($mailer->slug ?? '', $invitationSlugs, true)
-        || (get_option('video_meeting_provider') ?: 'jitsi') !== 'jitsi') { return $template; }
+        || !in_array($mailer->slug ?? '', $invitationSlugs, true)) { return $template; }
+    require_once dirname(__DIR__, 2) . '/google_meet/helpers/jitsi_helper.php';
+    $message = video_meeting_display_text($template->message);
+    $subject = isset($template->subject) ? video_meeting_display_text($template->subject) : null;
+    if ($message !== $template->message || (isset($template->subject) && $subject !== $template->subject)) {
+        $template = clone $template;
+        $template->message = $message;
+        if ($subject !== null) { $template->subject = $subject; }
+    }
     $fields = $mailer->get_merge_fields();
     $link = trim((string)($fields['{appointment_google_meet_link}'] ?? ''));
-    require_once dirname(__DIR__, 2) . '/google_meet/helpers/jitsi_helper.php';
     if (!jitsi_meeting_room((object)['meet_link' => $link])
         || strpos($template->message, '{appointment_google_meet_link}') !== false
         || strpos($template->message, $link) !== false
@@ -2159,4 +2165,16 @@ function appointly_jitsi_invitation_link($template)
         ? "\nJoin video meeting: " . $link
         : '<p><strong>Join video meeting:</strong> <a href="' . html_escape($link) . '">' . html_escape($link) . '</a></p>';
     return $template;
+}
+
+/** Keep a calendar invitation on the same saved video room as the CRM invitation. */
+function appointly_video_calendar_description($appointment)
+{
+    $description = (string)($appointment['description'] ?? '');
+    $link = trim((string)($appointment['google_meet_link'] ?? ''));
+    require_once dirname(__DIR__, 2) . '/google_meet/helpers/jitsi_helper.php';
+    if (jitsi_meeting_room((object)['meet_link' => $link]) && strpos($description, $link) === false) {
+        $description .= "\nJoin video meeting: " . $link;
+    }
+    return $description;
 }

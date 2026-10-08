@@ -29,7 +29,7 @@ $filters                        = get_appointments_table_filters();
 $appointly_default_table_filter = get_option('appointly_default_table_filter');
 
 
-// Google Meet settings
+// Video Meeting settings
 $appointly_auto_enable_google_meet = get_option('appointly_auto_enable_google_meet');
 $appointly_google_meet_recording = get_option('appointly_google_meet_recording');
 $appointly_google_meet_waiting_room = get_option('appointly_google_meet_waiting_room');
@@ -429,7 +429,7 @@ $appointly_disable_google_meeting_emails = get_option('appointly_disable_google_
                 </div>
             </div>
 
-            <!-- Enhanced Google Meet Settings Panel -->
+            <!-- Enhanced Video Meeting Settings Panel -->
             <div class="panel panel-default" style="margin-bottom: 20px;">
                 <div class="panel-heading tw-font-medium" style="cursor: pointer; border-radius: 7px;" data-toggle="collapse" data-target="#google-meet-settings" aria-expanded="false">
                     <h4 class="panel-title tw-font-medium" style="margin: 0; display: flex; justify-content: space-between; align-items: center;">
@@ -443,31 +443,16 @@ $appointly_disable_google_meeting_emails = get_option('appointly_disable_google_
                 <div id="google-meet-settings" class="panel-collapse collapse">
                     <div class="panel-body" style="padding: 20px;">
 
-                        <!-- Auto-enable Google Meet for all appointments -->
-                        <div class="form-group">
-                            <label class="control-label clearfix" style="font-weight: 600; margin-bottom: 8px;">
-                                <?= _l('appointly_auto_enable_google_meet') ?>
-                            </label>
-                            <div class="radio radio-primary radio-inline">
-                                <input type="radio" id="appointly_auto_enable_google_meet_yes"
-                                    name="settings[appointly_auto_enable_google_meet]"
-                                    value="1" <?= ($appointly_auto_enable_google_meet == '1') ? ' checked' : '' ?>>
-                                <label for="appointly_auto_enable_google_meet_yes"><?= _l('settings_yes') ?></label>
-                            </div>
-                            <div class="radio radio-primary radio-inline">
-                                <input type="radio" id="appointly_auto_enable_google_meet_no"
-                                    name="settings[appointly_auto_enable_google_meet]"
-                                    value="0" <?= ($appointly_auto_enable_google_meet == '0' || $appointly_auto_enable_google_meet == '') ? ' checked' : '' ?>>
-                                <label for="appointly_auto_enable_google_meet_no"><?= _l('settings_no') ?></label>
-                            </div>
-                            <div class="mtop5">
-                                <small class="text-muted"><?= _l('appointly_auto_enable_google_meet_help') ?></small>
-                            </div>
+                        <div class="alert alert-info">
+                            <strong>Video Meeting uses Jitsi.</strong> New appointments receive one saved room link without calendar authentication.
+                            Lobby and recording controls depend on the Jitsi service; the options below store CRM preferences.
+                            <a href="<?= admin_url('google_meet/settings'); ?>">Open Video Meeting settings</a>
                         </div>
+                        <input type="hidden" name="settings[appointly_auto_enable_google_meet]" value="<?= html_escape($appointly_auto_enable_google_meet); ?>">
 
                         <hr style="margin: 20px 0;">
 
-                        <!-- Google Meet default settings -->
+                        <!-- Video Meeting default settings -->
                         <div class="form-group">
                             <label class="control-label clearfix" style="font-weight: 600; margin-bottom: 12px;">
                                 <?= _l('appointly_google_meet_default_settings') ?>
@@ -498,7 +483,7 @@ $appointly_disable_google_meeting_emails = get_option('appointly_disable_google_
 
                         <hr style="margin: 20px 0;">
 
-                        <!-- Google Meet reminder settings -->
+                        <!-- Video Meeting reminder settings -->
                         <div class="form-group">
                             <label for="appointly_google_meet_reminder_minutes" style="font-weight: 600; margin-bottom: 8px;">
                                 <i class="fa fa-bell tw-mr-1" style="color: #17a2b8;"></i>
@@ -530,7 +515,7 @@ $appointly_disable_google_meeting_emails = get_option('appointly_disable_google_
 
                         <hr style="margin: 20px 0;">
 
-                        <!-- Disable Google Meet email notifications -->
+                        <!-- Disable Video Meeting email notifications -->
                         <div class="form-group" style="margin-bottom: 0;">
                             <label class="control-label clearfix" style="font-weight: 600; margin-bottom: 8px;">
                                 <i class="fa fa-envelope-slash tw-mr-1" style="color: #6c757d;"></i>

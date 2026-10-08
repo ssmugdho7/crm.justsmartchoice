@@ -179,7 +179,7 @@ init_head(); ?>
                             <div class="horizontal-tabs">
                                 <!-- Action Buttons -->
                                 <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-2" style="float:right;">
-                                    <!-- Enhanced Google Meet Button with Dropdown -->
+                                    <!-- Enhanced Video Meeting Button with Dropdown -->
                                     <?php if (!empty($appointment['google_meet_link'])): ?>
                                         <div class="btn-group">
                                             <a href="<?= $appointment['google_meet_link'] ?>" target="_blank" class="btn btn-success btn-sm">
@@ -1186,7 +1186,7 @@ init_head(); ?>
     </div><!-- /.content -->
 </div><!-- /#wrapper -->
 
-<!-- Google Meet Custom Email Modal -->
+<!-- Video Meeting Custom Email Modal -->
 <?php
 if (! empty($appointment['google_meet_link'])): ?>
     <div class="modal fade" id="customEmailModal" tabindex="-1" role="dialog">

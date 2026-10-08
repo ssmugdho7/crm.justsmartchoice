@@ -204,16 +204,16 @@ $lang['appointment_logout_from_outlook'] = 'Выйти из Outlook <i class=\'f
 $lang['appointment_open_outlook_calendar'] = 'Открыть в календаре Outlook';
 $lang['appointment_is_added_to_outlook'] = 'Добавлено в Outlook';
 $lang['appointments_outlook_revoke'] = 'Отозвать текущую сессию Календаря Outlook и удалить все разрешения, предоставленные для вашего аккаунта Outlook.';
-$lang['appointment_google_meet_info'] = 'Эта встреча добавлена в Google Календарь, вы можете использовать Google Meet для онлайн-встречи с вашим клиентом';
-$lang['appointment_google_client_meet_info'] = 'Видео/аудио чат в Google Meet';
-$lang['appointment_connect_via_google_meet'] = 'Я хочу подключиться через Google Meet';
-$lang['appointment_meet_message'] = 'Здравствуйте<br><br> Пожалуйста, перейдите по этому URL, чтобы подключиться ко мне через Google Meet: ';
+$lang['appointment_google_meet_info'] = 'Эта встреча добавлена в Google Календарь, вы можете использовать Video Meeting для онлайн-встречи с вашим клиентом';
+$lang['appointment_google_client_meet_info'] = 'Видео/аудио чат в Video Meeting';
+$lang['appointment_connect_via_google_meet'] = 'Я хочу подключиться через Video Meeting';
+$lang['appointment_meet_message'] = 'Здравствуйте<br><br> Пожалуйста, перейдите по этому URL, чтобы подключиться ко мне через Video Meeting: ';
 $lang['appointment_meeting_request_sent'] = 'Ваше сообщение с запросом на встречу успешно отправлено';
 $lang['appointment_leave_a_comment'] = 'Хотите оставить комментарий';
 $lang['appointment_redirect_url_logout'] = 'URI перенаправления авторизации Outlook';
 $lang['appointment_outlook_api_label'] = 'API Календаря Outlook';
 $lang['appointment_outlook_client_id'] = 'ID приложения (клиент)';
-$lang['appointment_google_meet_connect_message'] = 'Отправить email клиенту и участникам с запросом на подключение через Google Meet';
+$lang['appointment_google_meet_connect_message'] = 'Отправить email клиенту и участникам с запросом на подключение через Video Meeting';
 $lang['appointment_want_to_go_back'] = 'Вернуться на главную панель';
 $lang['appointly_current_version'] = 'Текущая версия: ';
 $lang['appointment_outlook_not_added_yet'] = 'Похоже, эта встреча еще не добавлена в календарь Outlook ни одним сотрудником. Хотите добавить эту встречу в свой календарь Outlook?';
@@ -222,7 +222,7 @@ $lang['appointment_edit_history_notes'] = 'Редактировать замет
 $lang['appointment_history_label'] = 'Прошлые встречи';
 $lang['appointment_notes_updated'] = 'Заметки встречи успешно обновлены';
 $lang['appointment_viewing_notes'] = 'Просмотр заметок для встречи';
-$lang['appointment_google_meet_modal_custom_label'] = 'Пригласить сотрудников и клиента на Google Meet через email';
+$lang['appointment_google_meet_modal_custom_label'] = 'Пригласить сотрудников и клиента на Video Meeting через email';
 
 # Version 1.1.6
 $lang['appointly_integrations'] = 'Интеграции';

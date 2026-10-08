@@ -674,28 +674,28 @@ $lang['appointment_googlesync_show_all'] = 'Tümü';
 $lang['appointly_not_including_two_way_synced_appointments'] = 'İki yönlü senkronize randevular dahil değildir';
 $lang['appointment_external_calendar_event'] = 'Harici Takvim Etkinliği';
 
-// Google Meet
-$lang['appointment_google_meet_info'] = 'Bu randevu Google Takvim\'e eklendi, müşterilerinizle çevrimiçi görüşmek için Google Meet\'i kullanabilirsiniz';
+// Video Meeting
+$lang['appointment_google_meet_info'] = 'Bu randevu Google Takvim\'e eklendi, müşterilerinizle çevrimiçi görüşmek için Video Meeting\'i kullanabilirsiniz';
 $lang['appointment_google_meet_info_2'] = 'Bu randevu Google Takvim\'e eklendi';
-$lang['appointment_google_client_meet_info'] = 'Google Meet aracılığıyla bağlan';
-$lang['appointment_connect_via_google_meet'] = 'Google Meet aracılığıyla bağlanmak istiyorum';
-$lang['appointment_meet_message'] = 'Merhaba<br><br>Benimle Google Meet aracılığıyla bağlanmak için lütfen bu URL\'yi takip edin: ';
+$lang['appointment_google_client_meet_info'] = 'Video Meeting aracılığıyla bağlan';
+$lang['appointment_connect_via_google_meet'] = 'Video Meeting aracılığıyla bağlanmak istiyorum';
+$lang['appointment_meet_message'] = 'Merhaba<br><br>Benimle Video Meeting aracılığıyla bağlanmak için lütfen bu URL\'yi takip edin: ';
 $lang['appointment_meeting_request_sent'] = 'Toplantı isteği mesajınız başarıyla gönderildi';
 $lang['appointment_leave_a_comment'] = 'Yorum bırakmak ister misiniz?';
-$lang['appointment_google_meet_connect_message'] = 'Katılımcılara e-posta gönderin ve Google Meet aracılığıyla bağlanmalarını isteyin';
-$lang['appointment_google_meet_modal_custom_label'] = 'Personeli ve müşterileri E-posta ile Google Meet\'e davet et';
-$lang['appointment_google_meet'] = 'Google Meet';
+$lang['appointment_google_meet_connect_message'] = 'Katılımcılara e-posta gönderin ve Video Meeting aracılığıyla bağlanmalarını isteyin';
+$lang['appointment_google_meet_modal_custom_label'] = 'Personeli ve müşterileri E-posta ile Video Meeting\'e davet et';
+$lang['appointment_google_meet'] = 'Video Meeting';
 $lang['appointment_google_calendar'] = 'Google Takvim';
 
-// Enhanced Google Meet Settings
-$lang['appointment_google_meet_enhanced_settings'] = 'Gelişmiş Google Meet Ayarları';
-$lang['appointly_auto_enable_google_meet'] = 'Tüm randevular için Google Meet\'i otomatik olarak etkinleştir';
-$lang['appointly_auto_enable_google_meet_help'] = 'Etkinleştirildiğinde, tüm yeni randevular Google Takvim ile senkronize edildiğinde otomatik olarak Google Meet bağlantıları içerecektir';
-$lang['appointly_google_meet_default_settings'] = 'Varsayılan Google Meet Ayarları';
+// Enhanced Video Meeting Settings
+$lang['appointment_google_meet_enhanced_settings'] = 'Gelişmiş Video Meeting Ayarları';
+$lang['appointly_auto_enable_google_meet'] = 'Tüm randevular için Video Meeting\'i otomatik olarak etkinleştir';
+$lang['appointly_auto_enable_google_meet_help'] = 'Etkinleştirildiğinde, tüm yeni randevular Google Takvim ile senkronize edildiğinde otomatik olarak Video Meeting bağlantıları içerecektir';
+$lang['appointly_google_meet_default_settings'] = 'Varsayılan Video Meeting Ayarları';
 $lang['appointly_google_meet_enable_recording'] = 'Varsayılan olarak kaydı etkinleştir';
 $lang['appointly_google_meet_enable_waiting_room'] = 'Varsayılan olarak bekleme odasını etkinleştir';
 $lang['appointly_google_meet_reminder_minutes'] = 'Toplantıdan önceki varsayılan hatırlatma süresi';
-$lang['appointly_google_meet_reminder_help'] = 'Google Meet randevuları için varsayılan hatırlatma süresini ayarlayın';
+$lang['appointly_google_meet_reminder_help'] = 'Video Meeting randevuları için varsayılan hatırlatma süresini ayarlayın';
 $lang['appointly_disable_google_meeting_emails'] = 'Google Takvim e-posta bildirimlerini devre dışı bırak';
 $lang['appointly_disable_google_meeting_emails_help'] = 'Etkinleştirildiğinde, Google takvim etkinlikleri için otomatik e-posta bildirimleri göndermeyecektir';
 $lang['appointly_minutes'] = 'dakika';
@@ -703,23 +703,23 @@ $lang['appointly_hour'] = 'saat';
 $lang['appointly_hours'] = 'saat';
 $lang['appointly_day'] = 'gün';
 
-// Enhanced Google Meet Features
-$lang['appointment_google_meet_join_before_start'] = 'Google Meet\'e Katıl';
-$lang['appointment_google_meet_copy_link'] = 'Google Meet Bağlantısını Kopyala';
-$lang['appointment_google_meet_link_copied'] = 'Google Meet bağlantısı panoya kopyalandı';
-$lang['appointment_google_meet_test_connection'] = 'Google Meet Bağlantısını Test Et';
-$lang['appointment_google_meet_connection_success'] = 'Google Meet bağlantı testi başarılı';
-$lang['appointment_google_meet_connection_failed'] = 'Google Meet bağlantı testi başarısız oldu';
+// Enhanced Video Meeting Features
+$lang['appointment_google_meet_join_before_start'] = 'Video Meeting\'e Katıl';
+$lang['appointment_google_meet_copy_link'] = 'Video Meeting Bağlantısını Kopyala';
+$lang['appointment_google_meet_link_copied'] = 'Video Meeting bağlantısı panoya kopyalandı';
+$lang['appointment_google_meet_test_connection'] = 'Video Meeting Bağlantısını Test Et';
+$lang['appointment_google_meet_connection_success'] = 'Video Meeting bağlantı testi başarılı';
+$lang['appointment_google_meet_connection_failed'] = 'Video Meeting bağlantı testi başarısız oldu';
 $lang['appointment_google_meet_quick_join'] = 'Hızlı Toplantıya Katıl';
 $lang['appointment_google_meet_meeting_details'] = 'Toplantı Detayları';
 $lang['appointment_google_meet_dial_in'] = 'Çevirmeli Bilgiler';
 $lang['appointment_google_meet_share_screen'] = 'Ekran Paylaşımı Mevcut';
 $lang['appointment_google_meet_record_meeting'] = 'Kayıt Mevcut';
 $lang['appointment_google_meet_waiting_room_enabled'] = 'Bekleme Odası Etkin';
-$lang['appointment_google_meet_testing_connection'] = 'Google Meet bağlantısı test ediliyor...';
+$lang['appointment_google_meet_testing_connection'] = 'Video Meeting bağlantısı test ediliyor...';
 $lang['appointment_google_meet_copy_failed'] = 'Bağlantı kopyalanamadı. Lütfen manuel olarak kopyalayın.';
 $lang['appointment_google_meet_email_message'] = 'E-posta Mesajı';
-$lang['appointment_google_meet_send_invitation'] = 'Google Meet Davetiyesi Gönder';
+$lang['appointment_google_meet_send_invitation'] = 'Video Meeting Davetiyesi Gönder';
 $lang['appointment_google_meet_message_required'] = 'Lütfen gönderilecek bir mesaj girin';
 $lang['sending'] = 'Gönderiliyor...';
 $lang['appointment_email_send_failed'] = 'E-posta gönderilemedi. Lütfen e-posta ayarlarınızı kontrol edin.';
@@ -734,7 +734,7 @@ $lang['appointment_google_meet_recording_disabled'] = 'Kayıt Devre Dışı';
 $lang['appointment_google_meet_waiting_room_enabled_status'] = 'Bekleme Odası Etkin Durumda';
 $lang['appointment_google_meet_waiting_room_disabled'] = 'Bekleme Odası Devre Dışı';
 $lang['appointment_google_meet_quick_actions'] = 'Hızlı Eylemler';
-$lang['appointment_google_meet_join_meeting'] = 'Google Meet\'e Katıl';
+$lang['appointment_google_meet_join_meeting'] = 'Video Meeting\'e Katıl';
 $lang['appointment_google_meet_send_invitation_btn'] = 'Davetiye Gönder';
 
 // Google Maps

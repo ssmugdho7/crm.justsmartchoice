@@ -3,7 +3,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
- * Authenticated Google Meet customer portal controller.
+ * Authenticated Video Meeting customer portal controller.
  *
  * This controller is routed explicitly through the google_meet module and
  * renders with Perfex's native ClientsController header/footer pipeline.
@@ -82,7 +82,7 @@ class Google_meet_client extends ClientsController
 
         if ($query === false) {
             $error = $this->db->error();
-            log_message('error', 'Google Meet customer meeting list query failed: ' . json_encode($error));
+            log_message('error', 'Video Meeting customer meeting list query failed: ' . json_encode($error));
             return [];
         }
 

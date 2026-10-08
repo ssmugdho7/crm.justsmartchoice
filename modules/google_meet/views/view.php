@@ -81,7 +81,7 @@ $subject = $meeting->subject ?? $meeting->title ?? 'Video Meeting';
 <div class="panel_s google-meet-card"><div class="panel-body">
 <h4><i class="fa fa-link"></i> Shared Meeting Room</h4>
 <?php if (empty($meeting->meet_link) || rtrim($meeting->meet_link,'/') === 'https://meet.google.com/new') { ?>
-<div class="alert alert-warning">No shared room has been saved. Do not send <strong>meet.google.com/new</strong> to attendees because each person can receive a different room.</div>
+<div class="alert alert-warning">No shared room has been saved. Generate a shared Jitsi room before inviting attendees so everyone joins the same room.</div>
 <?php if (has_permission('google_meet', '', 'edit')) { ?>
 <?php echo form_open(admin_url('google_meet/generate_room/' . (int)$meeting->id)); ?><button class="btn btn-info btn-sm" type="submit">Create shared Jitsi room</button><?= form_close(); ?>
 <?php echo form_open(admin_url('google_meet/save_shared_link/'.(int)$meeting->id), ['style'=>'margin-top:12px']); ?>

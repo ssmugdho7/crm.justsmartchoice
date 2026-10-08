@@ -674,28 +674,28 @@ $lang['appointment_googlesync_show_all'] = 'Tutti';
 $lang['appointly_not_including_two_way_synced_appointments'] = 'Non include appuntamenti sincronizzati bidirezionalmente';
 $lang['appointment_external_calendar_event'] = 'Evento calendario esterno';
 
-// Google Meet
-$lang['appointment_google_meet_info'] = 'Questo appuntamento è aggiunto a Google Calendar, puoi usare Google Meet per incontrare i tuoi clienti online';
+// Video Meeting
+$lang['appointment_google_meet_info'] = 'Questo appuntamento è aggiunto a Google Calendar, puoi usare Video Meeting per incontrare i tuoi clienti online';
 $lang['appointment_google_meet_info_2'] = 'Questo appuntamento è aggiunto a Google Calendar';
-$lang['appointment_google_client_meet_info'] = 'Connettiti tramite Google Meet';
-$lang['appointment_connect_via_google_meet'] = 'Desidero connettermi tramite Google Meet';
-$lang['appointment_meet_message'] = 'Ciao<br><br>Segui questo URL per connetterti con me tramite Google Meet: ';
+$lang['appointment_google_client_meet_info'] = 'Connettiti tramite Video Meeting';
+$lang['appointment_connect_via_google_meet'] = 'Desidero connettermi tramite Video Meeting';
+$lang['appointment_meet_message'] = 'Ciao<br><br>Segui questo URL per connetterti con me tramite Video Meeting: ';
 $lang['appointment_meeting_request_sent'] = 'Il tuo messaggio di richiesta riunione è stato inviato con successo';
 $lang['appointment_leave_a_comment'] = 'Vuoi lasciare un commento';
-$lang['appointment_google_meet_connect_message'] = 'Invia email ai partecipanti e chiedi di connettersi tramite Google Meet';
-$lang['appointment_google_meet_modal_custom_label'] = 'Invita personale e clienti a Google Meet via Email';
-$lang['appointment_google_meet'] = 'Google Meet';
+$lang['appointment_google_meet_connect_message'] = 'Invia email ai partecipanti e chiedi di connettersi tramite Video Meeting';
+$lang['appointment_google_meet_modal_custom_label'] = 'Invita personale e clienti a Video Meeting via Email';
+$lang['appointment_google_meet'] = 'Video Meeting';
 $lang['appointment_google_calendar'] = 'Google Calendar';
 
-// Enhanced Google Meet Settings
-$lang['appointment_google_meet_enhanced_settings'] = 'Impostazioni Google Meet avanzate';
-$lang['appointly_auto_enable_google_meet'] = 'Abilita automaticamente Google Meet per tutti gli appuntamenti';
-$lang['appointly_auto_enable_google_meet_help'] = 'Quando abilitato, tutti i nuovi appuntamenti includeranno automaticamente i link di Google Meet quando sincronizzati con Google Calendar';
-$lang['appointly_google_meet_default_settings'] = 'Impostazioni predefinite di Google Meet';
+// Enhanced Video Meeting Settings
+$lang['appointment_google_meet_enhanced_settings'] = 'Impostazioni Video Meeting avanzate';
+$lang['appointly_auto_enable_google_meet'] = 'Abilita automaticamente Video Meeting per tutti gli appuntamenti';
+$lang['appointly_auto_enable_google_meet_help'] = 'Quando abilitato, tutti i nuovi appuntamenti includeranno automaticamente i link di Video Meeting quando sincronizzati con Google Calendar';
+$lang['appointly_google_meet_default_settings'] = 'Impostazioni predefinite di Video Meeting';
 $lang['appointly_google_meet_enable_recording'] = 'Abilita la registrazione per impostazione predefinita';
 $lang['appointly_google_meet_enable_waiting_room'] = 'Abilita la sala d\'attesa per impostazione predefinita';
 $lang['appointly_google_meet_reminder_minutes'] = 'Tempo di promemoria predefinito prima della riunione';
-$lang['appointly_google_meet_reminder_help'] = 'Imposta il tempo di promemoria predefinito per gli appuntamenti di Google Meet';
+$lang['appointly_google_meet_reminder_help'] = 'Imposta il tempo di promemoria predefinito per gli appuntamenti di Video Meeting';
 $lang['appointly_disable_google_meeting_emails'] = 'Disabilita le notifiche email di Google Calendar';
 $lang['appointly_disable_google_meeting_emails_help'] = 'Quando abilitato, Google non invierà notifiche email automatiche per gli eventi del calendario';
 $lang['appointly_minutes'] = 'minuti';
@@ -703,23 +703,23 @@ $lang['appointly_hour'] = 'ora';
 $lang['appointly_hours'] = 'ore';
 $lang['appointly_day'] = 'giorno';
 
-// Enhanced Google Meet Features
-$lang['appointment_google_meet_join_before_start'] = 'Partecipa a Google Meet';
-$lang['appointment_google_meet_copy_link'] = 'Copia link Google Meet';
-$lang['appointment_google_meet_link_copied'] = 'Link Google Meet copiato negli appunti';
-$lang['appointment_google_meet_test_connection'] = 'Test connessione Google Meet';
-$lang['appointment_google_meet_connection_success'] = 'Test connessione Google Meet riuscito';
-$lang['appointment_google_meet_connection_failed'] = 'Test connessione Google Meet fallito';
+// Enhanced Video Meeting Features
+$lang['appointment_google_meet_join_before_start'] = 'Partecipa a Video Meeting';
+$lang['appointment_google_meet_copy_link'] = 'Copia link Video Meeting';
+$lang['appointment_google_meet_link_copied'] = 'Link Video Meeting copiato negli appunti';
+$lang['appointment_google_meet_test_connection'] = 'Test connessione Video Meeting';
+$lang['appointment_google_meet_connection_success'] = 'Test connessione Video Meeting riuscito';
+$lang['appointment_google_meet_connection_failed'] = 'Test connessione Video Meeting fallito';
 $lang['appointment_google_meet_quick_join'] = 'Partecipa rapidamente alla riunione';
 $lang['appointment_google_meet_meeting_details'] = 'Dettagli riunione';
 $lang['appointment_google_meet_dial_in'] = 'Informazioni di accesso telefonico';
 $lang['appointment_google_meet_share_screen'] = 'Condivisione schermo disponibile';
 $lang['appointment_google_meet_record_meeting'] = 'Registrazione disponibile';
 $lang['appointment_google_meet_waiting_room_enabled'] = 'Sala d\'attesa abilitata';
-$lang['appointment_google_meet_testing_connection'] = 'Test connessione Google Meet...';
+$lang['appointment_google_meet_testing_connection'] = 'Test connessione Video Meeting...';
 $lang['appointment_google_meet_copy_failed'] = 'Copia fallita. Copia manualmente.';
 $lang['appointment_google_meet_email_message'] = 'Messaggio email';
-$lang['appointment_google_meet_send_invitation'] = 'Invia invito Google Meet';
+$lang['appointment_google_meet_send_invitation'] = 'Invia invito Video Meeting';
 $lang['appointment_google_meet_message_required'] = 'Inserisci un messaggio da inviare';
 $lang['sending'] = 'Invio...';
 $lang['appointment_email_send_failed'] = 'Invio email fallito. Controlla le tue impostazioni email.';
@@ -734,7 +734,7 @@ $lang['appointment_google_meet_recording_disabled'] = 'Registrazione disabilitat
 $lang['appointment_google_meet_waiting_room_enabled_status'] = 'Stato sala d\'attesa abilitata';
 $lang['appointment_google_meet_waiting_room_disabled'] = 'Sala d\'attesa disabilitata';
 $lang['appointment_google_meet_quick_actions'] = 'Azioni rapide';
-$lang['appointment_google_meet_join_meeting'] = 'Partecipa a Google Meet';
+$lang['appointment_google_meet_join_meeting'] = 'Partecipa a Video Meeting';
 $lang['appointment_google_meet_send_invitation_btn'] = 'Invia invito';
 
 // Google Maps

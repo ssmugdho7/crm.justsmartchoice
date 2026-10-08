@@ -17,6 +17,8 @@
         var groups = document.querySelectorAll('#side-menu > .menu-item-sales, #side-menu > .menu-item-sales-center-main');
         var entries = [], seen = Object.create(null);
         groups.forEach(function (group) {
+            var groupName = group.querySelector('.menu-text');
+            var groupLabel = groupName ? groupName.textContent.trim() : config.sales;
             group.querySelectorAll('.nav-second-level > li > a[href]').forEach(function (link) {
                 var url;
                 if (!link.getAttribute('href').trim() || link.getAttribute('href').trim().charAt(0) === '#') return;
@@ -27,7 +29,7 @@
                 var label = (nameNode ? nameNode.textContent : link.textContent).trim();
                 if (!label || path === root.slice(0, -1) || seen[path]) return;
                 seen[path] = true;
-                entries.push({ path: path, href: url.href, label: label });
+                entries.push({ path: path, href: url.href, label: label, group: group, groupLabel: groupLabel });
             });
         });
         var matches = entries.filter(function (entry) {
@@ -54,11 +56,11 @@
         }
         var nav = element('nav', 'sc-sales-breadcrumbs');
         nav.id = 'sc-sales-breadcrumbs';
-        nav.setAttribute('aria-label', config.sales + ' — ' + config.dashboard);
+        nav.setAttribute('aria-label', active.groupLabel);
         var trail = element('ol', 'sc-sales-breadcrumbs__trail');
         addLink(trail, config.dashboard, admin.href);
         var salesItem = element('li', 'sc-sales-breadcrumbs__sales');
-        var toggle = element('button', 'sc-sales-breadcrumbs__toggle', config.sales);
+        var toggle = element('button', 'sc-sales-breadcrumbs__toggle', active.groupLabel);
         toggle.type = 'button';
         toggle.setAttribute('aria-expanded', 'false');
         toggle.setAttribute('aria-controls', 'sc-sales-breadcrumbs-links');
@@ -66,6 +68,7 @@
         links.id = 'sc-sales-breadcrumbs-links';
         links.hidden = true;
         entries.forEach(function (entry) {
+            if (entry.group !== active.group) return;
             var link = addLink(links, entry.label, entry.href);
             if (entry.path === active.path) link.setAttribute('aria-current', 'true');
         });

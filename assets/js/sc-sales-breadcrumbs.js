@@ -92,6 +92,29 @@
             toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
             if (returnFocus) toggle.focus();
         }
+        // The compact CRM header can have invisible children extending below its visible bar.
+        // Keep this navigation clickable below the bar, but let the sticky header cover it on scroll.
+        var header = document.getElementById('header');
+        function updateLayer() {
+            var layer = 'auto';
+            if (header && window.innerWidth <= 767 && nav.getBoundingClientRect().top >= header.getBoundingClientRect().bottom) {
+                layer = String((parseInt(window.getComputedStyle(header).zIndex, 10) || 1000) + 1);
+            }
+            if (nav.style.zIndex !== layer) nav.style.zIndex = layer;
+        }
+        updateLayer();
+        var framePending = false;
+        function reposition() {
+            setOpen(false);
+            if (framePending) return;
+            framePending = true;
+            (window.requestAnimationFrame || window.setTimeout)(function () {
+                framePending = false;
+                updateLayer();
+            });
+        }
+        window.addEventListener('resize', reposition);
+        window.addEventListener('scroll', reposition, { passive: true });
         toggle.addEventListener('click', function () { setOpen(links.hidden); });
         nav.addEventListener('keydown', function (event) {
             if (event.key === 'Escape' && !links.hidden) {

@@ -24,7 +24,8 @@ $custom=jitsi_prepare_meeting_link('');$options['jitsi_server_domain']='another.
 check(jitsi_prepare_meeting_link('',(object)$custom)===$custom,'Stored custom domain survives domain change');
 check(jitsi_meeting_room((object)['meet_link'=>'https://untrusted.example/SC-123456789'])===null,'Unapproved manual embed rejected');
 foreach(['https://meet.google.com/new','https://meet.google.com/new/'] as $link){check(jitsi_prepare_meeting_link($link)['provider']==='jitsi','Google new URL replaced');}
-check(jitsi_prepare_meeting_link('https://meet.google.com/abc-defg-hij')['provider']==='google_meet','Existing Google room retained');
+check(jitsi_prepare_meeting_link('https://meet.google.com/abc-defg-hij',(object)['meet_link'=>'https://meet.google.com/abc-defg-hij'])['provider']==='google_meet','Existing Google room retained');
+try { jitsi_prepare_meeting_link('https://meet.google.com/abc-defg-hij'); throw new RuntimeException('New Google room accepted'); } catch (InvalidArgumentException $e) { check(true,'New rooms use Jitsi only'); }
 $payload=jitsi_build_invitation_payload($meeting,true);
 parse_str(parse_url($payload['whatsapp_url'],PHP_URL_QUERY),$wa);
 check($wa['text']===$payload['plain_text']&&strpos($payload['plain_text'],$new['meet_link'])!==false&&strpos($payload['plain_text'],$new['room_pin'])!==false,'Share payload includes exact room and PIN');

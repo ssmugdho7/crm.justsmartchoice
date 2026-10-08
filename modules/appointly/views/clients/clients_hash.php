@@ -248,7 +248,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         <!-- Calendar Buttons -->
                                         <div style="float:right;" class="tw-flex tw-gap-2">
                                             <?php if (!empty($appointment['google_meet_link'])) : ?>
-                                                <!-- Google Meet Button -->
+                                                <!-- Video Meeting Button -->
                                                 <button
                                                     class="tw-bg-neutral-100 tw-text-neutral-700 tw-rounded-md tw-text-sm tw-font-medium hover:tw-bg-neutral-200 tw-transition-colors tw-shadow-sm hover:tw-shadow-md tw-border tw-border-neutral-300 tw-px-2.5"
                                                     data-toggle="tooltip"
@@ -884,7 +884,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
         <?php require 'modules/appointly/assets/js/clients_hash_js.php'; ?>
 
-        <!-- Google Meet Modal -->
+        <!-- Video Meeting Modal -->
         <div id="googleMeetModal" class="modal fade" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-md" role="document">
                 <div class="modal-content tw-rounded-lg tw-shadow-lg tw-overflow-hidden" style="margin-top:35%;">
@@ -904,7 +904,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
                     <div class="tw-p-5" id="googleMeetContent">
                         <div class="tw-grid tw-grid-cols-1 tw-gap-4">
-                            <!-- Enhanced Google Meet -->
+                            <!-- Enhanced Video Meeting -->
                             <?php
                             if (! empty($appointment['google_meet_link'])) : ?>
                                 <div class="tw-bg-white tw-p-4 tw-rounded-lg tw-border tw-border-neutral-200 tw-shadow-sm">
@@ -1003,12 +1003,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     </div>
                                 </div>
 
-                                <!-- Client-side JavaScript for Google Meet -->
+                                <!-- Client-side JavaScript for Video Meeting -->
                                 <script>
                                     function copyClientGoogleMeetLink(meetLink) {
                                         if (navigator.clipboard && window.isSecureContext) {
                                             navigator.clipboard.writeText(meetLink).then(function() {
-                                                showClientNotification('Google Meet link copied to clipboard!', 'success');
+                                                showClientNotification('Video Meeting link copied to clipboard!', 'success');
                                             }).catch(function(err) {
                                                 fallbackCopyTextToClipboard(meetLink);
                                             });
@@ -1027,12 +1027,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         textArea.focus();
                                         textArea.select();
 
-                                        showClientNotification('Google Meet link copied to clipboard!', 'success');
+                                        showClientNotification('Video Meeting link copied to clipboard!', 'success');
 
                                         document.body.removeChild(textArea);
                                     }
 
-                                    // Google Meet modal functions
+                                    // Video Meeting modal functions
                                     function openGoogleMeetModal() {
                                         $('#googleMeetModal').modal('show');
                                     }

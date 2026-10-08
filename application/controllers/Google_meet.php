@@ -3,9 +3,9 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
- * Customer-safe Google Meet fallback.
+ * Customer-safe Video Meeting fallback.
  *
- * The full Google Meet module may override this route when installed. This
+ * The full Video Meeting module may override this route when installed. This
  * controller prevents a client-facing HTTP 500 when the module source is not
  * present or its customer controller cannot be loaded.
  */
@@ -23,7 +23,7 @@ class Google_meet extends ClientsController
         }
 
         $data = [
-            'title'    => 'Google Meet',
+            'title'    => 'Video Meeting',
             'meetings' => [],
         ];
 

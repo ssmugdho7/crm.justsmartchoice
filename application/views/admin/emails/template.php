@@ -1,4 +1,13 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<?php
+// Rename meeting branding for the editor without changing stored templates.
+if (($template->slug ?? '') === 'google-meet-invitation' || strpos($template->slug ?? '', 'appointment-') === 0) {
+    $template = clone $template;
+    foreach (['name', 'subject', 'message'] as $field) {
+        if (isset($template->$field)) { $template->$field = preg_replace('/\bGoogle\s+Meet(?:ing)?(s)?\b/i', 'Video Meeting$1', $template->$field); }
+    }
+}
+?>
 <?php init_head(); ?>
 <div id="wrapper">
     <div class="content">

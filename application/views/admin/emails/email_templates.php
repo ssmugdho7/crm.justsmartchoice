@@ -484,7 +484,7 @@
                                                 <td
                                                     class="<?= $staff_template['active'] == 0 ? 'tw-line-through' : ''; ?>">
                                                     <a
-                                                        href="<?= admin_url('emails/email_template/' . $staff_template['emailtemplateid']); ?>"><?= e($staff_template['name']); ?></a>
+                                                        href="<?= admin_url('emails/email_template/' . $staff_template['emailtemplateid']); ?>"><?= e(($staff_template['slug'] ?? '') === 'google-meet-invitation' ? preg_replace('/\bGoogle\s+Meet(?:ing)?(s)?\b/i', 'Video Meeting$1', $staff_template['name']) : $staff_template['name']); ?></a>
                                                     <?php if (ENVIRONMENT !== 'production') { ?>
                                                     <br /><small><?= e($staff_template['slug']); ?></small>
                                                     <?php } ?>

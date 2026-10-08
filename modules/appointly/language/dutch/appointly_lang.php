@@ -674,28 +674,28 @@ $lang['appointment_googlesync_show_all'] = 'Alles';
 $lang['appointly_not_including_two_way_synced_appointments'] = 'Exclusief tweeweg gesynchroniseerde afspraken';
 $lang['appointment_external_calendar_event'] = 'Extern agenda-evenement';
 
-// Google Meet
-$lang['appointment_google_meet_info'] = 'Deze afspraak is toegevoegd aan Google Agenda, u kunt Google Meet gebruiken om online met uw klanten te vergaderen';
+// Video Meeting
+$lang['appointment_google_meet_info'] = 'Deze afspraak is toegevoegd aan Google Agenda, u kunt Video Meeting gebruiken om online met uw klanten te vergaderen';
 $lang['appointment_google_meet_info_2'] = 'Deze afspraak is toegevoegd aan Google Agenda';
-$lang['appointment_google_client_meet_info'] = 'Verbinden via Google Meet';
-$lang['appointment_connect_via_google_meet'] = 'Ik wil verbinding maken via Google Meet';
-$lang['appointment_meet_message'] = 'Hallo<br><br>Volg deze URL om verbinding met mij te maken via Google Meet: ';
+$lang['appointment_google_client_meet_info'] = 'Verbinden via Video Meeting';
+$lang['appointment_connect_via_google_meet'] = 'Ik wil verbinding maken via Video Meeting';
+$lang['appointment_meet_message'] = 'Hallo<br><br>Volg deze URL om verbinding met mij te maken via Video Meeting: ';
 $lang['appointment_meeting_request_sent'] = 'Uw vergaderverzoek is succesvol verzonden';
 $lang['appointment_leave_a_comment'] = 'Wilt u een opmerking achterlaten';
-$lang['appointment_google_meet_connect_message'] = 'E-mail verzenden naar deelnemers en vragen om verbinding te maken via Google Meet';
-$lang['appointment_google_meet_modal_custom_label'] = 'Personeel en klanten uitnodigen voor Google Meet via e-mail';
-$lang['appointment_google_meet'] = 'Google Meet';
+$lang['appointment_google_meet_connect_message'] = 'E-mail verzenden naar deelnemers en vragen om verbinding te maken via Video Meeting';
+$lang['appointment_google_meet_modal_custom_label'] = 'Personeel en klanten uitnodigen voor Video Meeting via e-mail';
+$lang['appointment_google_meet'] = 'Video Meeting';
 $lang['appointment_google_calendar'] = 'Google Agenda';
 
-// Enhanced Google Meet Settings
-$lang['appointment_google_meet_enhanced_settings'] = 'Verbeterde Google Meet-instellingen';
-$lang['appointly_auto_enable_google_meet'] = 'Google Meet automatisch inschakelen voor alle afspraken';
-$lang['appointly_auto_enable_google_meet_help'] = 'Indien ingeschakeld, zullen alle nieuwe afspraken automatisch Google Meet-links bevatten wanneer ze worden gesynchroniseerd met Google Agenda';
-$lang['appointly_google_meet_default_settings'] = 'Standaard Google Meet-instellingen';
+// Enhanced Video Meeting Settings
+$lang['appointment_google_meet_enhanced_settings'] = 'Verbeterde Video Meeting-instellingen';
+$lang['appointly_auto_enable_google_meet'] = 'Video Meeting automatisch inschakelen voor alle afspraken';
+$lang['appointly_auto_enable_google_meet_help'] = 'Indien ingeschakeld, zullen alle nieuwe afspraken automatisch Video Meeting-links bevatten wanneer ze worden gesynchroniseerd met Google Agenda';
+$lang['appointly_google_meet_default_settings'] = 'Standaard Video Meeting-instellingen';
 $lang['appointly_google_meet_enable_recording'] = 'Opname standaard inschakelen';
 $lang['appointly_google_meet_enable_waiting_room'] = 'Wachtruimte standaard inschakelen';
 $lang['appointly_google_meet_reminder_minutes'] = 'Standaard herinneringstijd voor vergadering';
-$lang['appointly_google_meet_reminder_help'] = 'Stel de standaard herinneringstijd in voor Google Meet-afspraken';
+$lang['appointly_google_meet_reminder_help'] = 'Stel de standaard herinneringstijd in voor Video Meeting-afspraken';
 $lang['appointly_disable_google_meeting_emails'] = 'Google Agenda e-mailmeldingen uitschakelen';
 $lang['appointly_disable_google_meeting_emails_help'] = 'Indien ingeschakeld, stuurt Google geen automatische e-mailmeldingen voor agenda-evenementen';
 $lang['appointly_minutes'] = 'minuten';
@@ -703,23 +703,23 @@ $lang['appointly_hour'] = 'uur';
 $lang['appointly_hours'] = 'uren';
 $lang['appointly_day'] = 'dag';
 
-// Enhanced Google Meet Features
-$lang['appointment_google_meet_join_before_start'] = 'Deelnemen aan Google Meet';
-$lang['appointment_google_meet_copy_link'] = 'Google Meet-link kopiëren';
-$lang['appointment_google_meet_link_copied'] = 'Google Meet-link gekopieerd naar klembord';
-$lang['appointment_google_meet_test_connection'] = 'Google Meet-verbinding testen';
-$lang['appointment_google_meet_connection_success'] = 'Google Meet-verbindingstest succesvol';
-$lang['appointment_google_meet_connection_failed'] = 'Google Meet-verbindingstest mislukt';
+// Enhanced Video Meeting Features
+$lang['appointment_google_meet_join_before_start'] = 'Deelnemen aan Video Meeting';
+$lang['appointment_google_meet_copy_link'] = 'Video Meeting-link kopiëren';
+$lang['appointment_google_meet_link_copied'] = 'Video Meeting-link gekopieerd naar klembord';
+$lang['appointment_google_meet_test_connection'] = 'Video Meeting-verbinding testen';
+$lang['appointment_google_meet_connection_success'] = 'Video Meeting-verbindingstest succesvol';
+$lang['appointment_google_meet_connection_failed'] = 'Video Meeting-verbindingstest mislukt';
 $lang['appointment_google_meet_quick_join'] = 'Snel deelnemen aan vergadering';
 $lang['appointment_google_meet_meeting_details'] = 'Vergaderdetails';
 $lang['appointment_google_meet_dial_in'] = 'Inbelinformatie';
 $lang['appointment_google_meet_share_screen'] = 'Scherm delen beschikbaar';
 $lang['appointment_google_meet_record_meeting'] = 'Opname beschikbaar';
 $lang['appointment_google_meet_waiting_room_enabled'] = 'Wachtruimte ingeschakeld';
-$lang['appointment_google_meet_testing_connection'] = 'Google Meet-verbinding testen...';
+$lang['appointment_google_meet_testing_connection'] = 'Video Meeting-verbinding testen...';
 $lang['appointment_google_meet_copy_failed'] = 'Kopiëren mislukt. Kopieer handmatig.';
 $lang['appointment_google_meet_email_message'] = 'E-mailbericht';
-$lang['appointment_google_meet_send_invitation'] = 'Google Meet-uitnodiging verzenden';
+$lang['appointment_google_meet_send_invitation'] = 'Video Meeting-uitnodiging verzenden';
 $lang['appointment_google_meet_message_required'] = 'Voer een bericht in om te verzenden';
 $lang['sending'] = 'Verzenden...';
 $lang['appointment_email_send_failed'] = 'E-mail verzenden mislukt. Controleer uw e-mailinstellingen.';
@@ -734,7 +734,7 @@ $lang['appointment_google_meet_recording_disabled'] = 'Opname uitgeschakeld';
 $lang['appointment_google_meet_waiting_room_enabled_status'] = 'Wachtruimte ingeschakeld';
 $lang['appointment_google_meet_waiting_room_disabled'] = 'Wachtruimte uitgeschakeld';
 $lang['appointment_google_meet_quick_actions'] = 'Snelle acties';
-$lang['appointment_google_meet_join_meeting'] = 'Deelnemen aan Google Meet';
+$lang['appointment_google_meet_join_meeting'] = 'Deelnemen aan Video Meeting';
 $lang['appointment_google_meet_send_invitation_btn'] = 'Uitnodiging verzenden';
 
 // Google Maps

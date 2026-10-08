@@ -135,7 +135,7 @@ if (!$CI->db->table_exists($comments)) {
 }
 
 
-/* Smart Choice Google Meet v1.0.7 settings and schema */
+/* Smart Choice Video Meeting v1.0.7 settings and schema */
 add_option('google_meet_access_mode', 'trusted');
 add_option('google_meet_guest_access_note', 'Room lobby and moderator access are controlled by the configured Jitsi service.');
 add_option('google_meet_quick_access', '1');
@@ -170,7 +170,7 @@ if ($CI->db->table_exists($table)) {
 }
 
 
-/* Smart Choice Google Meet v1.0.9 notification and AI-ready settings */
+/* Smart Choice Video Meeting v1.0.9 notification and AI-ready settings */
 add_option('google_meet_sms_enabled', '0');
 add_option('google_meet_browser_sound_enabled', '1');
 add_option('google_meet_sound_volume', '0.85');
@@ -213,7 +213,7 @@ if (!$CI->db->table_exists($notifications)) {
 }
 
 
-/* Smart Choice Google Meet v1.1.2 shared-room and native template repair */
+/* Smart Choice Video Meeting v1.1.2 shared-room and native template repair */
 update_option('google_meet_allow_placeholder_links', '0');
 add_option('google_meet_reminder_minutes', '15');
 if ($CI->db->table_exists($table)) {

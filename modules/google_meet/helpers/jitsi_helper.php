@@ -76,7 +76,7 @@ function jitsi_prepare_meeting_link($link, $existing = null)
     if ($room) {
         return ['provider' => 'jitsi', 'room_name' => $room['room_name'], 'room_pin' => $room['room_pin'] ?: null, 'meet_link' => $link];
     }
-    if (preg_match('~^https://meet\.google\.com/[a-z]{3}-[a-z]{4}-[a-z]{3}(?:[/?#].*)?$~i', $link)) {
+    if ($existing && $link === ($existing->meet_link ?? '') && preg_match('~^https://meet\.google\.com/[a-z]{3}-[a-z]{4}-[a-z]{3}(?:[/?#].*)?$~i', $link)) {
         return ['provider' => 'google_meet', 'room_name' => null, 'room_pin' => null, 'meet_link' => $link];
     }
     throw new InvalidArgumentException('Enter a shared Jitsi room URL or a supported saved legacy meeting URL.');
@@ -121,4 +121,10 @@ function jitsi_calendar_content($meeting)
         $folded[] = $line;
     }
     return implode("\r\n", $folded) . "\r\n";
+}
+
+/** Rename provider branding in displayed/sent text without changing route identifiers or URLs. */
+function video_meeting_display_text($text)
+{
+    return preg_replace('/\bGoogle\s+Meet(?:ing)?(s)?\b/i', 'Video Meeting$1', (string)$text);
 }

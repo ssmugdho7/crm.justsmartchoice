@@ -29,4 +29,15 @@ check(appointly_jitsi_invitation_link($result)->message===$result->message,'Repe
 $template->message='{appointment_google_meet_link}';check(appointly_jitsi_invitation_link($template)===$template,'Existing merge token preserved');
 $mailer->slug='invoice-send-to-client';$template->message='Invoice';check(appointly_jitsi_invitation_link($template)===$template,'Unrelated email untouched');
 $mailer->slug='appointment-submitted-to-contact';$template->plaintext=1;$result=appointly_jitsi_invitation_link($template);check(strpos($result->message,'<a')===false&&strpos($result->message,"\nJoin video meeting:")!==false,'Plaintext invitation remains plaintext');
+$template=(object)['message'=>'Join Google Meet: {appointment_google_meet_link}', 'subject'=>'Google Meeting Invitation', 'plaintext'=>0];
+$result=appointly_jitsi_invitation_link($template);
+check($result->subject==='Video Meeting Invitation'&&strpos($result->message,'Join Video Meeting:')!==false&&$template->subject==='Google Meeting Invitation','Existing branded templates normalized without modifying stored copy');
+$description=appointly_video_calendar_description(['description'=>'Review scope','google_meet_link'=>$staff['google_meet_link']]);
+check(strpos($description,$staff['google_meet_link'])!==false,'Calendar description uses shared saved Jitsi URL');
+check(appointly_video_calendar_description(['description'=>$description,'google_meet_link'=>$staff['google_meet_link']])===$description,'Calendar update does not duplicate video URL');
+eval('namespace Google\\Service\\Calendar; class Event { public $values; public function __construct($values) { $this->values=$values; } public function setConferenceData($value) { throw new \\RuntimeException("Unexpected Google video room creation"); } }');
+require $root.'/modules/appointly/models/Googlecalendar.php';
+$calendar=(new ReflectionClass('Googlecalendar'))->newInstanceWithoutConstructor();
+$event=$calendar->fillGoogleCalendarEvent(['summary'=>'Planning','description'=>$description,'location'=>'','start'=>[],'end'=>[],'attendees'=>[]]);
+check($event->values['description']===$description&&$event->values['summary']==='Planning','Google calendar keeps Jitsi description and never creates a competing room');
 echo "PASS: $checks Appointly create-path, OAuth independence, calendar and email payload checks (no notifications sent)\n";

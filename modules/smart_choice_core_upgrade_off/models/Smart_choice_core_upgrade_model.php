@@ -31,7 +31,7 @@ class Smart_choice_core_upgrade_model extends App_Model
             'prchat' => 'Smart Choice Office Stream',
             'training_manual' => 'Training Manual',
             'custom_pdf' => 'Custom PDF',
-            'google_meet' => 'Google Meet',
+            'google_meet' => 'Video Meeting',
             'favorite_links' => 'Favorite Links',
             'video_library' => 'Video Library',
             'smart_choice_field_connector' => 'Smart Choice Field Connector',

@@ -674,28 +674,28 @@ $lang['appointment_googlesync_show_all'] = 'Semua';
 $lang['appointly_not_including_two_way_synced_appointments'] = 'Tidak termasuk janji temu yang disinkronkan dua arah';
 $lang['appointment_external_calendar_event'] = 'Acara Kalender Eksternal';
 
-// Google Meet
-$lang['appointment_google_meet_info'] = 'Janji temu ini ditambahkan ke Google Kalender, Anda dapat menggunakan Google Meet untuk bertemu online dengan klien Anda';
+// Video Meeting
+$lang['appointment_google_meet_info'] = 'Janji temu ini ditambahkan ke Google Kalender, Anda dapat menggunakan Video Meeting untuk bertemu online dengan klien Anda';
 $lang['appointment_google_meet_info_2'] = 'Janji temu ini ditambahkan ke Google Kalender';
-$lang['appointment_google_client_meet_info'] = 'Terhubung melalui Google Meet';
-$lang['appointment_connect_via_google_meet'] = 'Saya ingin terhubung melalui Google Meet';
-$lang['appointment_meet_message'] = 'Halo<br><br>Silakan ikuti URL ini untuk terhubung dengan saya melalui Google Meet: ';
+$lang['appointment_google_client_meet_info'] = 'Terhubung melalui Video Meeting';
+$lang['appointment_connect_via_google_meet'] = 'Saya ingin terhubung melalui Video Meeting';
+$lang['appointment_meet_message'] = 'Halo<br><br>Silakan ikuti URL ini untuk terhubung dengan saya melalui Video Meeting: ';
 $lang['appointment_meeting_request_sent'] = 'Pesan permintaan rapat Anda berhasil dikirim';
 $lang['appointment_leave_a_comment'] = 'Apakah Anda ingin meninggalkan komentar';
-$lang['appointment_google_meet_connect_message'] = 'Kirim email ke peserta dan minta untuk terhubung melalui Google Meet';
-$lang['appointment_google_meet_modal_custom_label'] = 'Undang staf dan klien ke Google Meet melalui Email';
-$lang['appointment_google_meet'] = 'Google Meet';
+$lang['appointment_google_meet_connect_message'] = 'Kirim email ke peserta dan minta untuk terhubung melalui Video Meeting';
+$lang['appointment_google_meet_modal_custom_label'] = 'Undang staf dan klien ke Video Meeting melalui Email';
+$lang['appointment_google_meet'] = 'Video Meeting';
 $lang['appointment_google_calendar'] = 'Google Kalender';
 
-// Enhanced Google Meet Settings
-$lang['appointment_google_meet_enhanced_settings'] = 'Pengaturan Google Meet yang Ditingkatkan';
-$lang['appointly_auto_enable_google_meet'] = 'Aktifkan Google Meet secara otomatis untuk semua janji temu';
-$lang['appointly_auto_enable_google_meet_help'] = 'Saat diaktifkan, semua janji temu baru akan secara otomatis menyertakan tautan Google Meet saat disinkronkan ke Google Kalender';
-$lang['appointly_google_meet_default_settings'] = 'Pengaturan Google Meet Default';
+// Enhanced Video Meeting Settings
+$lang['appointment_google_meet_enhanced_settings'] = 'Pengaturan Video Meeting yang Ditingkatkan';
+$lang['appointly_auto_enable_google_meet'] = 'Aktifkan Video Meeting secara otomatis untuk semua janji temu';
+$lang['appointly_auto_enable_google_meet_help'] = 'Saat diaktifkan, semua janji temu baru akan secara otomatis menyertakan tautan Video Meeting saat disinkronkan ke Google Kalender';
+$lang['appointly_google_meet_default_settings'] = 'Pengaturan Video Meeting Default';
 $lang['appointly_google_meet_enable_recording'] = 'Aktifkan perekaman secara default';
 $lang['appointly_google_meet_enable_waiting_room'] = 'Aktifkan ruang tunggu secara default';
 $lang['appointly_google_meet_reminder_minutes'] = 'Waktu pengingat default sebelum rapat';
-$lang['appointly_google_meet_reminder_help'] = 'Atur waktu pengingat default untuk janji temu Google Meet';
+$lang['appointly_google_meet_reminder_help'] = 'Atur waktu pengingat default untuk janji temu Video Meeting';
 $lang['appointly_disable_google_meeting_emails'] = 'Nonaktifkan notifikasi email Google Kalender';
 $lang['appointly_disable_google_meeting_emails_help'] = 'Saat diaktifkan, Google tidak akan mengirim notifikasi email otomatis untuk acara kalender';
 $lang['appointly_minutes'] = 'menit';
@@ -703,23 +703,23 @@ $lang['appointly_hour'] = 'jam';
 $lang['appointly_hours'] = 'jam';
 $lang['appointly_day'] = 'hari';
 
-// Enhanced Google Meet Features
-$lang['appointment_google_meet_join_before_start'] = 'Gabung Google Meet';
-$lang['appointment_google_meet_copy_link'] = 'Salin Tautan Google Meet';
-$lang['appointment_google_meet_link_copied'] = 'Tautan Google Meet disalin ke papan klip';
-$lang['appointment_google_meet_test_connection'] = 'Uji Koneksi Google Meet';
-$lang['appointment_google_meet_connection_success'] = 'Uji koneksi Google Meet berhasil';
-$lang['appointment_google_meet_connection_failed'] = 'Uji koneksi Google Meet gagal';
+// Enhanced Video Meeting Features
+$lang['appointment_google_meet_join_before_start'] = 'Gabung Video Meeting';
+$lang['appointment_google_meet_copy_link'] = 'Salin Tautan Video Meeting';
+$lang['appointment_google_meet_link_copied'] = 'Tautan Video Meeting disalin ke papan klip';
+$lang['appointment_google_meet_test_connection'] = 'Uji Koneksi Video Meeting';
+$lang['appointment_google_meet_connection_success'] = 'Uji koneksi Video Meeting berhasil';
+$lang['appointment_google_meet_connection_failed'] = 'Uji koneksi Video Meeting gagal';
 $lang['appointment_google_meet_quick_join'] = 'Gabung Rapat Cepat';
 $lang['appointment_google_meet_meeting_details'] = 'Detail Rapat';
 $lang['appointment_google_meet_dial_in'] = 'Informasi Panggilan';
 $lang['appointment_google_meet_share_screen'] = 'Berbagi Layar Tersedia';
 $lang['appointment_google_meet_record_meeting'] = 'Perekaman Tersedia';
 $lang['appointment_google_meet_waiting_room_enabled'] = 'Ruang Tunggu Diaktifkan';
-$lang['appointment_google_meet_testing_connection'] = 'Menguji koneksi Google Meet...';
+$lang['appointment_google_meet_testing_connection'] = 'Menguji koneksi Video Meeting...';
 $lang['appointment_google_meet_copy_failed'] = 'Gagal menyalin tautan. Harap salin secara manual.';
 $lang['appointment_google_meet_email_message'] = 'Pesan Email';
-$lang['appointment_google_meet_send_invitation'] = 'Kirim Undangan Google Meet';
+$lang['appointment_google_meet_send_invitation'] = 'Kirim Undangan Video Meeting';
 $lang['appointment_google_meet_message_required'] = 'Harap masukkan pesan untuk dikirim';
 $lang['sending'] = 'Mengirim...';
 $lang['appointment_email_send_failed'] = 'Gagal mengirim email. Harap periksa pengaturan email Anda.';
@@ -734,7 +734,7 @@ $lang['appointment_google_meet_recording_disabled'] = 'Perekaman Dinonaktifkan';
 $lang['appointment_google_meet_waiting_room_enabled_status'] = 'Status Ruang Tunggu Diaktifkan';
 $lang['appointment_google_meet_waiting_room_disabled'] = 'Ruang Tunggu Dinonaktifkan';
 $lang['appointment_google_meet_quick_actions'] = 'Tindakan Cepat';
-$lang['appointment_google_meet_join_meeting'] = 'Gabung Google Meet';
+$lang['appointment_google_meet_join_meeting'] = 'Gabung Video Meeting';
 $lang['appointment_google_meet_send_invitation_btn'] = 'Kirim Undangan';
 
 // Google Maps

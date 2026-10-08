@@ -478,6 +478,9 @@ class Google_meet_model extends App_Model
                     $results['crm']++;
                     $attendeeNotified = true;
                     $this->record_notification((int)$id, $a, 'crm', (string)$staffId, 'sent', $messageText);
+                } else {
+                    $results['failed']++;
+                    $this->record_notification((int)$id, $a, 'crm', (string)$staffId, 'failed', $messageText);
                 }
             }
 
@@ -487,6 +490,7 @@ class Google_meet_model extends App_Model
                     $attendeeNotified = true;
                     $this->record_notification((int)$id, $a, 'sms', $phone, 'sent', $messageText);
                 } else {
+                    $results['failed']++;
                     $this->record_notification((int)$id, $a, 'sms', $phone, 'failed', $messageText);
                 }
             }
@@ -515,7 +519,8 @@ class Google_meet_model extends App_Model
         $email = trim((string)($payload['email'] ?? ''));
         $phone = trim((string)($payload['phone'] ?? ''));
         $message = trim((string)($payload['message'] ?? '')) ?: 'This is a Smart Choice Video Meeting notification test.';
-        $link = trim((string)($payload['link'] ?? '')) ?: 'https://meet.google.com/new';
+        $room = jitsi_prepare_meeting_link($payload['link'] ?? '');
+        $link = $room['meet_link'];
         $result = ['email' => 0, 'sms' => 0, 'crm' => 0, 'failed' => 0];
 
         if ($email !== '') {
@@ -580,18 +585,18 @@ class Google_meet_model extends App_Model
         // Subjects are plain text; template substitutions in HTML must be escaped.
         $htmlReplacements = array_map('html_escape', $replacements);
         $htmlReplacements['{email_signature}'] = get_option('email_signature');
-        return [strtr($subject, $replacements), strtr($message, $htmlReplacements)];
+        return [video_meeting_display_text(strtr($subject, $replacements)), video_meeting_display_text(strtr($message, $htmlReplacements))];
     }
 
     private function build_invitation_plain_text($meeting, $name)
     {
         $subject = $meeting->subject ?? $meeting->title ?? 'Video Meeting';
         $start = !empty($meeting->start_time) ? google_meet_display_datetime($meeting->start_time) : '';
-        return trim((((get_option('google_meet_default_notification_message') === 'You have been invited to a Smart Choice Contractors USA Google Meet meeting.') ? 'You have been invited to a Smart Choice Contractors USA video meeting.' : get_option('google_meet_default_notification_message')) ?: 'You have been invited to a Smart Choice Contractors USA video meeting.') . "\n\n" .
+        return video_meeting_display_text(trim((((get_option('google_meet_default_notification_message') === 'You have been invited to a Smart Choice Contractors USA Google Meet meeting.') ? 'You have been invited to a Smart Choice Contractors USA video meeting.' : get_option('google_meet_default_notification_message')) ?: 'You have been invited to a Smart Choice Contractors USA video meeting.') . "\n\n" .
             'Hello ' . $name . ",\n" .
             'Meeting: ' . $subject . "\n" .
             'Start: ' . $start . "\n" .
-            'Join: ' . ($meeting->meet_link ?? '') . "\n" . (!empty($meeting->room_pin) ? 'Room PIN: ' . $meeting->room_pin . "\n" : ''));
+            'Join: ' . ($meeting->meet_link ?? '') . "\n" . (!empty($meeting->room_pin) ? 'Room PIN: ' . $meeting->room_pin . "\n" : '')));
     }
 
     private function build_invitation_html($meeting, $name)

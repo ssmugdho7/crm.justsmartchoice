@@ -20,7 +20,7 @@
         <div class="col-md-4"><?php echo render_input('email', 'Test Email Address', '', 'email', ['placeholder'=>'name@example.com']); ?></div>
         <div class="col-md-4"><?php echo render_input('phone', 'Test SMS Phone Number', '', 'text', ['placeholder'=>'+17275553786']); ?></div>
       </div>
-      <?php echo render_input('meet_link', 'Test Meeting Link', 'https://meet.google.com/new', 'url'); ?>
+      <?php echo render_input('meet_link', 'Test Meeting Link', '', 'url', ['placeholder' => 'Leave blank to generate one shared Jitsi test room']); ?>
       <?php echo render_textarea('message', 'Test Message', 'This is a Smart Choice Video Meeting notification test. Please confirm that email, SMS, and CRM popup notifications are working.', ['rows'=>4]); ?>
       <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-paper-plane"></i> Send Test</button>
       <a href="<?php echo admin_url('google_meet/settings'); ?>" class="btn btn-default btn-sm"><i class="fa fa-cog"></i> Settings</a>

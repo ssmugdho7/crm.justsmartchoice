@@ -411,13 +411,13 @@ $config['encryption_key'] = APP_ENC_KEY;
 */
 $config['sess_driver']             = SESS_DRIVER;
 $config['sess_cookie_name']        = (defined('APP_SESSION_COOKIE_NAME') ? APP_SESSION_COOKIE_NAME : 'sp_session');
-$config['sess_expiration']         = (defined('APP_SESSION_EXPIRATION') ? APP_SESSION_EXPIRATION : 2592000);
+$config['sess_expiration']         = (defined('APP_SESSION_EXPIRATION') ? APP_SESSION_EXPIRATION : 28800); // One workday; Remember me restores a fresh session.
 $config['sess_save_path']          = SESS_SAVE_PATH;
 $config['sess_match_ip']           = (defined('APP_SESSION_MATCH_IP') ? APP_SESSION_MATCH_IP : false);
-$config['sess_time_to_update']     = (defined('APP_SESSION_TIME_TO_UPDATE') ? APP_SESSION_TIME_TO_UPDATE : 86400);
+$config['sess_time_to_update']     = (defined('APP_SESSION_TIME_TO_UPDATE') ? APP_SESSION_TIME_TO_UPDATE : 300);
 $config['sess_regenerate_destroy'] = (defined('APP_SESSION_REGENERATE_DESTROY') ? APP_SESSION_REGENERATE_DESTROY : false);
 // Work only on php 7.3 or later
-$config['sess_cookie_samesite'] = (defined('APP_SESSION_COOKIE_SAME_SITE') ? APP_SESSION_COOKIE_SAME_SITE : '');
+$config['sess_cookie_samesite'] = (defined('APP_SESSION_COOKIE_SAME_SITE') ? APP_SESSION_COOKIE_SAME_SITE : 'Lax');
 
 /*
 |--------------------------------------------------------------------------
@@ -437,7 +437,7 @@ $config['sess_cookie_samesite'] = (defined('APP_SESSION_COOKIE_SAME_SITE') ? APP
 $config['cookie_prefix']   = (defined('APP_COOKIE_PREFIX') ? APP_COOKIE_PREFIX : '');
 $config['cookie_domain']   = (defined('APP_COOKIE_DOMAIN') ? APP_COOKIE_DOMAIN : '');
 $config['cookie_path']     = (defined('APP_COOKIE_PATH') ? APP_COOKIE_PATH : '/');
-$config['cookie_secure']   = (defined('APP_COOKIE_SECURE') ? APP_COOKIE_SECURE : false);
+$config['cookie_secure']   = (defined('APP_COOKIE_SECURE') ? APP_COOKIE_SECURE : parse_url(APP_BASE_URL, PHP_URL_SCHEME) === 'https');
 $config['cookie_httponly'] = (defined('APP_COOKIE_HTTPONLY') ? APP_COOKIE_HTTPONLY : false);
 
 /*

@@ -35,11 +35,20 @@ class User_Autologin extends App_Model
             $_id   = 'id';
             $staff = false;
         }
-        $this->db->select($table . '.' . $_id);
+        $this->db->select($table . '.' . $_id . ', ' . $table . '.password');
+        if ($staff) {
+            $this->db->select($table . '.two_factor_auth_enabled');
+        }
         $this->db->from($table);
         $this->db->join(db_prefix() . 'user_auto_login', db_prefix() . 'user_auto_login.user_id = ' . $table . '.' . $_id);
         $this->db->where(db_prefix() . 'user_auto_login.user_id', $user_id);
         $this->db->where(db_prefix() . 'user_auto_login.key_id', $key);
+        $this->db->where(db_prefix() . 'user_auto_login.staff', $staff ? 1 : 0);
+        $this->db->where($table . '.active', 1);
+        if (!$staff) {
+            $this->db->join(db_prefix() . 'clients', db_prefix() . 'clients.userid = ' . $table . '.userid');
+            $this->db->where(db_prefix() . 'clients.active', 1);
+        }
         $query = $this->db->get();
         if ($query) {
             if ($query->num_rows() == 1) {

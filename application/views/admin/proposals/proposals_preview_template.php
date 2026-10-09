@@ -421,38 +421,12 @@ if (count($tags) > 0) {
                         } ?>
                         <?php } ?>
                         <div class="clearfix"></div>
-                        <?php if (isset($proposal_merge_fields)) { ?>
-                        <p class="bold text-right"><a href="#"
-                                onclick="slideToggle('.avilable_merge_fields'); return false;"><?= _l('available_merge_fields'); ?></a>
-                        </p>
-                        <hr class="hr-panel-separator" />
-                        <div class="hide avilable_merge_fields mtop15">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <ul class="list-group">
-                                        <?php
-                                    foreach ($proposal_merge_fields as $field) {
-                                        foreach ($field as $f) {
-                                            echo '<li class="list-group-item"><b>' . $f['name'] . '</b> <a href="#" class="pull-right" onclick="insert_proposal_merge_field(this); return false;">' . $f['key'] . '</a></li>';
-                                        }
-                                    }
-                            ?>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <?php } ?>
                         <?php if (!empty($proposal->clientnote)) { ?><div class="panel_s"><div class="panel-body"><h4><?= _l('client_note'); ?></h4><div><?= $proposal->clientnote; ?></div></div></div><?php } ?>
                     <?php if (!empty($proposal->terms)) { ?><div class="panel_s"><div class="panel-body"><h4><?= _l('terms_and_conditions'); ?></h4><div><?= $proposal->terms; ?></div></div></div><?php } ?>
-                    <div class="editable proposal tc-content" id="proposal_content_area"
-                            style="border:1px solid #d2d2d2;min-height:70px;border-radius:4px;">
-                            <?php if (empty($proposal->content)) {
-                                echo '<span class="text-danger text-uppercase mtop15 editor-add-content-notice"> ' . _l('click_to_add_content') . '</span>';
-                            } else {
-                                echo $proposal->content;
-                            }
-?>
-                        </div>
+                        <?php $this->load->view('admin/proposals/content_preview', [
+                            'proposal' => $proposal,
+                            'proposal_merge_fields' => $proposal_merge_fields ?? [],
+                        ]); ?>
                         <?php if (! empty($proposal->signature)) { ?>
                         <div class="row mtop25">
                             <div class="col-md-6 col-md-offset-6 text-right">
@@ -577,7 +551,7 @@ foreach ($views_activity as $activity) { ?>
     init_tabs_scrollable();
     // defined in manage proposals
     proposal_id = '<?= e($proposal->id); ?>';
-    init_proposal_editor();
+    // The template editor initializes when its Edit disclosure is opened.
 
     <?php if (staff_can('edit','proposals')) { ?>
     (function(){

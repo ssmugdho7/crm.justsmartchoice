@@ -4352,3 +4352,5 @@ $lang['todo_title'] = 'Title';
 $lang['todo_share_with_staff'] = 'Share with employees';
 $lang['todo_share_help'] = 'Selected employees can view this To Do, mark it complete, and receive a CRM notification.';
 $lang['todo_shared_notification'] = 'A To Do was shared with you: %s';
+
+$lang['sc_proposal_items_location'] = 'Items are shown in the Proposal Items section above.';

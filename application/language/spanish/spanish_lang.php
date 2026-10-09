@@ -4163,3 +4163,5 @@ $lang['todo_title'] = 'Título';
 $lang['todo_share_with_staff'] = 'Compartir con empleados';
 $lang['todo_share_help'] = 'Los empleados seleccionados pueden ver esta tarea, marcarla como completada y recibir una notificación del CRM.';
 $lang['todo_shared_notification'] = 'Se compartió una tarea contigo: %s';
+
+$lang['sc_proposal_items_location'] = 'Los artículos se muestran en la sección Elementos de la propuesta de arriba.';

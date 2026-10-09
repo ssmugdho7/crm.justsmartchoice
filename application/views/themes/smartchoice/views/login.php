@@ -76,7 +76,6 @@ body.customers,body{--sc-green:#00A651;--sc-orange:#F96302;--sc-yellow:#F5B400;-
                 </div>
 
                 <div class="form-group tw-mt-6">
-                    <p class="text-muted">Remember me keeps this device signed in for up to <?= (int) (app_remember_login_lifetime() / 86400); ?> days. Use it only on a device you trust.</p>
                     <button type="submit" class="btn btn-primary btn-block">
                         <?= _l('clients_login_login_string'); ?>
                     </button>

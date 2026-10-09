@@ -24,6 +24,7 @@
             <?= form_close(); ?>
         </div>
     </div>
+<?php $this->load->view('authentication/includes/password_visibility', ['password_autocomplete' => 'new-password']); ?>
 </body>
 
 </html>

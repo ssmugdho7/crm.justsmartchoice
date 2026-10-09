@@ -50,7 +50,7 @@ body.customers,body{--sc-green:#00A651;--sc-orange:#F96302;--sc-yellow:#F5B400;-
                 <div class="form-group">
                     <label
                         for="email"><?= _l('clients_login_email'); ?></label>
-                    <input type="text" autofocus="true" class="form-control" name="email" id="email">
+                    <input type="email" autofocus="true" class="form-control" name="email" id="email" autocomplete="username">
                     <?= form_error('email'); ?>
                 </div>
 
@@ -69,13 +69,14 @@ body.customers,body{--sc-green:#00A651;--sc-orange:#F96302;--sc-yellow:#F5B400;-
                 <?php } ?>
 
                 <div class="checkbox">
-                    <input type="checkbox" name="remember" id="remember">
+                    <input type="checkbox" name="remember" id="remember" value="1">
                     <label for="remember">
                         <?= _l('clients_login_remember'); ?>
                     </label>
                 </div>
 
                 <div class="form-group tw-mt-6">
+                    <p class="text-muted">Remember me keeps this device signed in for up to <?= (int) (app_remember_login_lifetime() / 86400); ?> days. Use it only on a device you trust.</p>
                     <button type="submit" class="btn btn-primary btn-block">
                         <?= _l('clients_login_login_string'); ?>
                     </button>
@@ -98,3 +99,4 @@ body.customers,body{--sc-green:#00A651;--sc-orange:#F96302;--sc-yellow:#F5B400;-
         </div>
     </div>
 </div>
+<?php $this->load->view('authentication/includes/password_visibility'); ?>

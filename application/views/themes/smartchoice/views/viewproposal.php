@@ -296,6 +296,10 @@ if (! $scProposalHadItemsToken) {
                                 if ($attachment['visible_to_customer'] == 0) {
                                     continue;
                                 }
+                                if (!sc_sales_attachment_available($attachment)) {
+                                    echo sc_sales_attachment_unavailable_html($attachment);
+                                    continue;
+                                }
                                 $attachment_url = sc_sales_attachment_download_url($attachment);
                             $attachment_preview_url = sc_sales_attachment_preview_url($attachment);
                                 if (! empty($attachment['external'])) {

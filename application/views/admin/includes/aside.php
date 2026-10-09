@@ -33,7 +33,7 @@ if ($hasVideoMeetingSubmenu) {
     <div class="dropdown sidebar-user-profile tw-mt-0 tw-mx-1.5 ">
         <a href="#"
             class="dropdown-toggle profile -tw-mt-1 tw-font-medium tw-border tw-border-solid tw-rounded-lg tw-bg-white tw-py-2 tw-px-2.5 tw-block tw-shadow-xs <?= $isSidebarDark ? 'tw-text-white tw-border-white/10 hover:tw-border-white/30 focus:tw-border-white/30 hover:tw-text-white focus:tw-text-white hover:tw-bg-neutral-900/10 focus:tw-bg-neutral-900/10' : 'tw-border-neutral-300 tw-text-neutral-700 hover:tw-text-neutral-800 focus:tw-text-neutral-800 hover:tw-bg-neutral-900/5 focus:tw-bg-neutral-900/5'; ?>"
-            data-toggle="dropdown" aria-expanded="false">
+            data-toggle="dropdown" aria-expanded="false" aria-controls="sc-staff-profile-actions">
             <span class="tw-inline-flex tw-items-center tw-gap-x-3 tw-pt-0.5">
                 <span class="sc-profile-avatar"><?= staff_profile_image($current_user->staffid, ['img', 'img-responsive', 'staff-profile-image-small']); ?></span>
                 <span>
@@ -46,7 +46,7 @@ if ($hasVideoMeetingSubmenu) {
                 </span>
             </span>
         </a>
-        <ul class="dropdown-menu tw-w-full">
+        <ul class="dropdown-menu tw-w-full" id="sc-staff-profile-actions">
             <li class="header-my-profile"><a
                     href="<?= admin_url('profile'); ?>"><?= _l('nav_my_profile'); ?></a>
             </li>
@@ -59,9 +59,8 @@ if ($hasVideoMeetingSubmenu) {
             </li>
             <?php if (! is_language_disabled()) { ?>
             <li class="dropdown-submenu pull-left header-languages">
-                <a href="#"
-                    tabindex="-1"><?= _l('language'); ?></a>
-                <ul class="dropdown-menu dropdown-menu">
+                <button type="button" class="sc-staff-language-toggle" aria-expanded="false" aria-controls="sc-staff-profile-languages"><?= _l('language'); ?> <i class="fa fa-angle-down" aria-hidden="true"></i></button>
+                <ul class="dropdown-menu" id="sc-staff-profile-languages">
                     <?php foreach ($this->app->get_available_languages() as $user_lang) { ?>
                     <li
                         class="<?= $current_user->default_language == $user_lang ? 'active' : ''; ?>">
@@ -69,6 +68,7 @@ if ($hasVideoMeetingSubmenu) {
                             href="<?= admin_url('staff/change_language/' . $user_lang); ?>">
                             <?= e(ucfirst($user_lang)); ?>
                         </a>
+                    </li>
                         <?php } ?>
                 </ul>
             </li>

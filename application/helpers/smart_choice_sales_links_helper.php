@@ -72,9 +72,9 @@ function sc_sales_attachment_available(array $attachment): bool
 
 function sc_sales_attachment_unavailable_html(array $attachment): string
 {
-    return '<div class="col-md-12 mbot15 sc-attachment-unavailable"><div class="alert alert-warning">'
+    return '<div class="col-md-12 mbot15 sc-attachment-unavailable"><div class="panel panel-default"><div class="panel-body">'
         . '<p class="bold">' . html_escape((string) ($attachment['file_name'] ?? '')) . '</p>'
-        . '<p>' . html_escape(_l('sc_attachment_unavailable')) . '</p></div></div>';
+        . '<p class="text-muted">' . html_escape(_l('sc_attachment_unavailable')) . '</p></div></div></div>';
 }
 
 // Sales-document translation controls were retired in CRM 4.2.0.

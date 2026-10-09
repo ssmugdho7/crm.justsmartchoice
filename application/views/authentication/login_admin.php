@@ -41,7 +41,7 @@
                 <label for="email" class="control-label !tw-mb-3">
                     <?= _l('admin_auth_login_email'); ?>
                 </label>
-                <input type="email" id="email" name="email" class="form-control" autofocus="1">
+                <input type="email" id="email" name="email" class="form-control" autofocus="1" autocomplete="username">
             </div>
 
             <div class="form-group tw-mt-8">
@@ -66,12 +66,13 @@
 
             <div class="form-group">
                 <div class="checkbox checkbox-inline">
-                    <input type="checkbox" id="remember" name="remember">
+                    <input type="checkbox" id="remember" name="remember" value="1">
                     <label for="remember">
                         <?= _l('admin_auth_login_remember_me'); ?></label>
                 </div>
             </div>
 
+            <p class="text-muted">Remember me keeps this device signed in for up to <?= (int) (app_remember_login_lifetime() / 86400); ?> days. Use it only on a device you trust.</p>
             <div class="tw-mt-6">
                 <button type="submit" class="btn btn-primary btn-block tw-font-semibold tw-py-2">
                     <?= _l('admin_auth_login_button'); ?>
@@ -84,6 +85,7 @@
         </div>
     </div>
 
+<?php $this->load->view('authentication/includes/password_visibility'); ?>
 </body>
 
 </html>

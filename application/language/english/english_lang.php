@@ -4354,3 +4354,5 @@ $lang['todo_share_help'] = 'Selected employees can view this To Do, mark it comp
 $lang['todo_shared_notification'] = 'A To Do was shared with you: %s';
 
 $lang['sc_proposal_items_location'] = 'Items are shown in the Proposal Items section above.';
+
+$lang['sc_attachment_unavailable'] = 'This attachment is currently unavailable. Please ask the team to upload it again.';

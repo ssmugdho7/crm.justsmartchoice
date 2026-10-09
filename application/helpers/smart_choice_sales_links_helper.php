@@ -49,6 +49,34 @@ function sc_sales_attachment_download_url(array $attachment): string
     return $identifier === '' ? '' : site_url('download/file/sales_attachment/' . rawurlencode((string) $identifier));
 }
 
+/** Check storage before embedding an attachment in a customer document. */
+function sc_sales_attachment_available(array $attachment): bool
+{
+    if (!empty($attachment['external'])) {
+        return !empty($attachment['external_link']);
+    }
+    $type = (string) ($attachment['rel_type'] ?? '');
+    $name = (string) ($attachment['file_name'] ?? '');
+    $id = (int) ($attachment['rel_id'] ?? 0);
+    if (!in_array($type, ['proposal', 'estimate', 'invoice'], true) || $id <= 0 || $name === '') {
+        return false;
+    }
+    $path = get_upload_path_by_type($type) . $id . '/' . $name;
+    // Match the download handler's configured storage path, including custom storage hooks.
+    $path = hooks()->apply_filters('download_file_path', $path, [
+        'folder' => 'sales_attachment',
+        'attachmentid' => (string) (!empty($attachment['attachment_key']) ? $attachment['attachment_key'] : ($attachment['id'] ?? '')),
+    ]);
+    return is_string($path) && is_file($path) && is_readable($path);
+}
+
+function sc_sales_attachment_unavailable_html(array $attachment): string
+{
+    return '<div class="col-md-12 mbot15 sc-attachment-unavailable"><div class="alert alert-warning">'
+        . '<p class="bold">' . html_escape((string) ($attachment['file_name'] ?? '')) . '</p>'
+        . '<p>' . html_escape(_l('sc_attachment_unavailable')) . '</p></div></div>';
+}
+
 // Sales-document translation controls were retired in CRM 4.2.0.
 // Customer language remains the native Perfex English/Spanish profile language.
 

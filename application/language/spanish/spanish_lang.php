@@ -4165,3 +4165,5 @@ $lang['todo_share_help'] = 'Los empleados seleccionados pueden ver esta tarea, m
 $lang['todo_shared_notification'] = 'Se compartió una tarea contigo: %s';
 
 $lang['sc_proposal_items_location'] = 'Los artículos se muestran en la sección Elementos de la propuesta de arriba.';
+
+$lang['sc_attachment_unavailable'] = 'Este archivo adjunto no está disponible actualmente. Pida al equipo que lo cargue de nuevo.';

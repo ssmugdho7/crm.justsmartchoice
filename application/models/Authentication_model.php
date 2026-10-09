@@ -12,6 +12,7 @@ class Authentication_model extends App_Model
     public function __construct()
     {
         parent::__construct();
+        $this->load->helper('remember_login');
         $this->load->model('user_autologin');
         $this->autologin();
     }
@@ -90,6 +91,7 @@ class Authentication_model extends App_Model
                         'staff_logged_in' => true,
                     ];
                 } else {
+                    $this->session->unset_userdata('tfa_remember');
                     $user_data                = [];
                     $user_data['tfa_staffid'] = $user->staffid;
                     if ($remember) {
@@ -112,6 +114,8 @@ class Authentication_model extends App_Model
             $this->session->set_userdata($user_data);
 
             if (! $twoFactorAuth) {
+                $this->begin_login_session();
+                $this->delete_autologin($staff);
                 if ($remember) {
                     $this->create_autologin($user->{$_id}, $staff);
                 }
@@ -163,22 +167,26 @@ class Authentication_model extends App_Model
     private function create_autologin($user_id, $staff)
     {
         $this->load->helper('cookie');
-        $key = bin2hex(random_bytes(32));
-        $this->user_autologin->delete($user_id, $key, $staff);
-
-        if ($this->user_autologin->set($user_id, hash('sha256', $key), $staff)) {
-            set_cookie([
-                'name'  => 'autologin',
-                'value' => json_encode([
-                    'user_id' => $user_id,
-                    'key'     => $key,
-                ]),
-                'expire' => 60 * 60 * 24 * 31 * 2, // 2 months
-            ]);
-
-            return true;
+        $table = db_prefix() . ($staff ? 'staff' : 'contacts');
+        $this->db->select($staff ? 'password, two_factor_auth_enabled' : 'password');
+        $this->db->where($staff ? 'staffid' : 'id', $user_id);
+        $account = $this->db->get($table)->row();
+        if (!$account || !$account->password) {
+            return false;
         }
-
+        $key = bin2hex(random_bytes(32));
+        $data = [
+            'version' => 2, 'user_id' => (int) $user_id, 'staff' => $staff ? 1 : 0,
+            'key' => $key, 'expires' => time() + app_remember_login_lifetime(),
+            'credential' => hash_hmac('sha256', $account->password . '.' . ($staff ? (int) $account->two_factor_auth_enabled : 0), $key),
+        ];
+        $storedKey = app_remember_login_key($data);
+        if ($this->user_autologin->set($user_id, $storedKey, $staff)) {
+            if (app_set_remember_cookie(json_encode($data), app_remember_login_lifetime())) {
+                return true;
+            }
+            $this->user_autologin->delete($user_id, $storedKey, $staff);
+        }
         return false;
     }
 
@@ -192,25 +200,18 @@ class Authentication_model extends App_Model
     {
         $this->load->helper('cookie');
         if ($cookie = get_cookie('autologin', true)) {
-            $data = json_decode($cookie, true);
-
-            // Validate decoded data
-            if (! is_array($data) || ! isset($data['user_id']) || ! isset($data['key'])) {
-                delete_cookie('autologin', 'aal');
-
-                return;
+            $data = app_remember_login_data($cookie, null, false);
+            if ($data) {
+                $this->user_autologin->delete($data['user_id'], app_remember_login_key($data), $data['staff']);
+            } else {
+                // Remove a pre-upgrade token too; old cookies had no server-bound expiry.
+                $legacy = json_decode($cookie, true);
+                if (is_array($legacy) && is_numeric($legacy['user_id'] ?? null) && is_string($legacy['key'] ?? null)) {
+                    $this->user_autologin->delete($legacy['user_id'], hash('sha256', $legacy['key']), $staff);
+                }
             }
-
-            // Validate data types
-            if (! is_numeric($data['user_id']) || ! is_string($data['key'])) {
-                delete_cookie('autologin', 'aal');
-
-                return;
-            }
-
-            $this->user_autologin->delete($data['user_id'], hash('sha256', $data['key']), $staff);
-            delete_cookie('autologin', 'aal');
         }
+        app_set_remember_cookie('', -3600);
     }
 
     /**
@@ -219,61 +220,57 @@ class Authentication_model extends App_Model
      */
     public function autologin()
     {
+        // Enforce the workday limit on the server, even while AJAX polling is active.
+        if (is_logged_in()) {
+            $started = $this->session->userdata('auth_started_at');
+            $lifetime = (int) $this->config->item('sess_expiration');
+            if (!$started) {
+                $this->session->set_userdata('auth_started_at', time());
+            } elseif ($lifetime > 0 && time() - (int) $started >= $lifetime) {
+                $this->session->unset_userdata(['staff_user_id', 'staff_logged_in', 'client_user_id', 'contact_user_id', 'client_logged_in', 'logged_in_as_client', 'auth_started_at']);
+            }
+        }
         if (! is_logged_in()) {
             $this->load->helper('cookie');
             if ($cookie = get_cookie('autologin', true)) {
-                $data = json_decode($cookie, true);
-
-                // Validate decoded data is an array and has required keys
-                if (! is_array($data)) {
-                    delete_cookie('autologin', 'aal');
-
+                $data = app_remember_login_data($cookie);
+                if (!$data) {
+                    $this->delete_autologin(false);
                     return false;
                 }
-
-                if (isset($data['key']) and isset($data['user_id'])) {
-                    // Validate data types
-                    if (! is_numeric($data['user_id']) || ! is_string($data['key'])) {
-                        delete_cookie('autologin', 'aal');
-
+                $user = $this->user_autologin->get($data['user_id'], app_remember_login_key($data));
+                if (!$user || (int) $user->staff !== $data['staff']
+                    || !hash_equals($data['credential'], hash_hmac('sha256', $user->password . '.' . ($user->staff ? (int) $user->two_factor_auth_enabled : 0), $data['key']))) {
+                    $this->delete_autologin($data['staff']);
+                    return false;
+                }
+                if ($user->staff) {
+                    $user_data = ['staff_user_id' => $user->id, 'staff_logged_in' => true];
+                } else {
+                    $this->db->select('userid');
+                    $this->db->where('id', $user->id);
+                    $contact = $this->db->get(db_prefix() . 'contacts')->row();
+                    if (!$contact) {
+                        $this->delete_autologin(false);
                         return false;
                     }
-
-                    if (! is_null($user = $this->user_autologin->get($data['user_id'], hash('sha256', $data['key'])))) {
-                        // Login user
-                        if ($user->staff == 1) {
-                            $user_data = [
-                                'staff_user_id'   => $user->id,
-                                'staff_logged_in' => true,
-                            ];
-                        } else {
-                            // Get the customer id
-                            $this->db->select('userid');
-                            $this->db->where('id', $user->id);
-                            $contact = $this->db->get(db_prefix() . 'contacts')->row();
-
-                            $user_data = [
-                                'client_user_id'   => $contact->userid,
-                                'contact_user_id'  => $user->id,
-                                'client_logged_in' => true,
-                            ];
-                        }
-                        $this->session->set_userdata($user_data);
-                        // Renew users cookie to prevent it from expiring
-                        set_cookie([
-                            'name'   => 'autologin',
-                            'value'  => $cookie,
-                            'expire' => 60 * 60 * 24 * 31 * 2, // 2 months
-                        ]);
-                        $this->update_login_info($user->id, $user->staff);
-
-                        return true;
-                    }
+                    $user_data = ['client_user_id' => $contact->userid, 'contact_user_id' => $user->id, 'client_logged_in' => true];
                 }
+                $this->session->set_userdata($user_data);
+                $this->begin_login_session();
+                // Keep the original expiry: a stolen cookie cannot renew itself forever.
+                app_set_remember_cookie($cookie, $data['expires'] - time());
+                $this->update_login_info($user->id, $user->staff);
+                return true;
             }
         }
-
         return false;
+    }
+
+    private function begin_login_session()
+    {
+        $this->session->sess_regenerate(true);
+        $this->session->set_userdata('auth_started_at', time());
     }
 
     /**
@@ -623,6 +620,8 @@ class Authentication_model extends App_Model
             $this->session->unset_userdata('tfa_remember');
         }
 
+        $this->begin_login_session();
+        $this->delete_autologin(true);
         if ($remember) {
             $this->create_autologin($user->staffid, true);
         }

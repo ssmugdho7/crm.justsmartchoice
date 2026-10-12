@@ -567,18 +567,13 @@
                 service_id: serviceId
             };
 
-            // Add CSRF token if available
-            if (typeof csrfData !== 'undefined') {
-                ajaxData[csrfData.token_name] = csrfData.hash;
-            } else if (typeof csrfTokenName !== 'undefined' && typeof csrfTokenValue !== 'undefined') {
-                ajaxData[csrfTokenName] = csrfTokenValue;
-            }
-
-            // Send AJAX request
+            // This public lookup does not change state. A serialized GET payload
+            // also prevents global ajaxSetup from placing CSRF tokens in the URL.
             $.ajax({
                 url: site_url + 'appointly/appointments_public/get_service_staff_public',
-                type: 'POST',
-                data: ajaxData,
+                type: 'GET',
+                data: $.param(ajaxData),
+                cache: false,
                 dataType: 'json',
                 success: function(response) {
                     if (response && response.success) {
@@ -1459,18 +1454,12 @@
                 timezone: timezone
             };
 
-            // Add CSRF token if available
-            if (typeof csrfData !== 'undefined') {
-                ajaxData[csrfData.token_name] = csrfData.hash;
-            } else if (typeof csrfTokenName !== 'undefined' && typeof csrfTokenValue !== 'undefined') {
-                ajaxData[csrfTokenName] = csrfTokenValue;
-            }
-
-            // Send AJAX request to get available time slots
+            // Availability is also a public read-only lookup.
             $.ajax({
                 url: site_url + 'appointly/appointments_public/get_available_time_slots',
-                type: 'POST',
-                data: ajaxData,
+                type: 'GET',
+                data: $.param(ajaxData),
+                cache: false,
                 dataType: 'json',
                 success: function(response) {
                     console.log('Time slots response:', response);

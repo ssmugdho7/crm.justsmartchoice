@@ -782,12 +782,8 @@ class Appointments_public extends ClientsController
             show_404();
         }
 
-        $service_id = $this->input->post('service_id');
-
-        // Also check GET parameters for testing/compatibility
-        if (!$service_id) {
-            $service_id = $this->input->get('service_id');
-        }
+        // Public read-only lookup; retain POST compatibility for existing clients.
+        $service_id = $this->input->get_post('service_id');
 
         if (!$service_id) {
             echo json_encode([
@@ -996,10 +992,10 @@ class Appointments_public extends ClientsController
         }
 
         // Get required parameters
-        $service_id = $this->input->post('service_id');
-        $provider_id = $this->input->post('provider_id') ?: $this->input->post('staff_id');
-        $date = $this->input->post('date');
-        $timezone = $this->input->post('timezone') ?: date_default_timezone_get();
+        $service_id = $this->input->get_post('service_id');
+        $provider_id = $this->input->get_post('provider_id') ?: $this->input->get_post('staff_id');
+        $date = $this->input->get_post('date');
+        $timezone = $this->input->get_post('timezone') ?: date_default_timezone_get();
 
         // Validate required parameters
         if (!$service_id || !$provider_id || !$date) {

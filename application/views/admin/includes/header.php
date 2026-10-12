@@ -7,7 +7,7 @@
 #header .sc-admin-search-actions>#top_search #top_search_button{top:50%;transform:translateY(-50%)}
 #header .sc-admin-search-actions>.navbar-nav{display:flex;align-items:center;height:57px;margin-top:0!important;margin-bottom:0!important}
 #header .sc-admin-search-actions>.navbar-nav>li{margin-top:0!important;margin-bottom:0!important}
-#header .sc-admin-search-actions>.navbar-nav>li>a{display:flex;align-items:center;height:57px;padding-top:0!important;padding-bottom:0!important}
+#header .sc-admin-search-actions>.navbar-nav>li>a{display:flex;align-items:center;height:57px!important;min-height:0!important;max-height:57px;box-sizing:border-box;padding-top:0!important;padding-bottom:0!important}
 #header .sc-admin-search-actions>.navbar-nav>li>a>span{margin-top:0!important}
 }
 </style>

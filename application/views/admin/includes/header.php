@@ -1,4 +1,16 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<style>
+@media(min-width:992px){
+#header .sc-admin-search-actions{align-items:center;height:57px}
+#header .sc-admin-search-actions>#top_search{align-items:center;height:57px}
+#header .sc-admin-search-actions #search_input{margin-top:0!important}
+#header .sc-admin-search-actions>#top_search #top_search_button{top:50%;transform:translateY(-50%)}
+#header .sc-admin-search-actions>.navbar-nav{display:flex;align-items:center;height:57px;margin-top:0!important;margin-bottom:0!important}
+#header .sc-admin-search-actions>.navbar-nav>li{margin-top:0!important;margin-bottom:0!important}
+#header .sc-admin-search-actions>.navbar-nav>li>a{display:flex;align-items:center;height:57px;padding-top:0!important;padding-bottom:0!important}
+#header .sc-admin-search-actions>.navbar-nav>li>a>span{margin-top:0!important}
+}
+</style>
 <div id="header">
     <button type="button"
         class="hide-menu tw-inline-flex tw-bg-transparent tw-border-0 tw-p-1 tw-mt-4 hover:tw-bg-neutral-600/10 tw-text-neutral-600 hover:tw-text-neutral-800 focus:tw-text-neutral-800 focus:tw-outline-none tw-rounded-md tw-mx-4 ltr:md:tw-ml-4 rtl:md:tw-mr-4 ltr:tw-float-left  rtl:tw-float-right">
@@ -28,7 +40,7 @@
                     <?php } ?>
                 </div>
             </div>
-            <div class="tw-flex tw-flex-1 sm:tw-flex-initial">
+            <div class="tw-flex tw-flex-1 sm:tw-flex-initial sc-admin-search-actions">
                 <div id="top_search"
                     class="tw-inline-flex tw-relative dropdown sm:tw-ml-1.5 sm:tw-mr-3 tw-max-w-xl tw-flex-auto tw-group/top-search"
                     data-toggle="tooltip" data-placement="bottom"

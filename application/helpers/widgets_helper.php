@@ -2,6 +2,30 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
+/** Shared clock list for the navbar and dashboard; configured in Manage Team Clocks. */
+function sc_get_team_clocks()
+{
+    $configured = json_decode((string) get_option('sc_world_clocks'), true);
+    $clocks = [];
+    if (is_array($configured)) {
+        foreach (array_slice($configured, 0, 20) as $clock) {
+            if (!is_array($clock) || !is_string($clock['label'] ?? null) || !is_string($clock['zone'] ?? null)) {
+                continue;
+            }
+            if (trim($clock['label']) !== '' && in_array($clock['zone'], timezone_identifiers_list(), true)) {
+                $clocks[] = ['label' => $clock['label'], 'zone' => $clock['zone']];
+            }
+        }
+    }
+    return $clocks ?: [
+        ['label' => 'Florida (Eastern)', 'zone' => 'America/New_York'],
+        ['label' => 'India', 'zone' => 'Asia/Kolkata'],
+        ['label' => 'Pakistan', 'zone' => 'Asia/Karachi'],
+        ['label' => 'Philippines', 'zone' => 'Asia/Manila'],
+        ['label' => 'Bangladesh', 'zone' => 'Asia/Dhaka'],
+    ];
+}
+
 /**
  * Admin dashboard widgets
  * We are registering all widgets here

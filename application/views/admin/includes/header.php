@@ -184,17 +184,7 @@
                 <?php do_action_deprecated('after_render_top_search', [], '3.0.0', 'admin_navbar_start'); ?>
                 <?php hooks()->do_action('admin_navbar_start'); ?>
                 <?php
-                $scClockJson = (string) get_option('sc_world_clocks');
-                $scClocks = json_decode($scClockJson, true);
-                if (!is_array($scClocks) || !$scClocks) {
-                    $scClocks = [
-                        ['label'=>'Florida (Eastern)','zone'=>'America/New_York'],
-                        ['label'=>'India','zone'=>'Asia/Kolkata'],
-                        ['label'=>'Pakistan','zone'=>'Asia/Karachi'],
-                        ['label'=>'Philippines','zone'=>'Asia/Manila'],
-                        ['label'=>'Bangladesh','zone'=>'Asia/Dhaka'],
-                    ];
-                }
+                $scClocks = sc_get_team_clocks();
                 ?>
                 <li class="dropdown sc-header-world-clock" title="<?= e(_l('sc_manage_world_clocks')); ?>" data-toggle="tooltip" data-placement="bottom">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-earth-americas fa-lg"></i></a>

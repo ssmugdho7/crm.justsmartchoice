@@ -34,13 +34,12 @@ if ($hasVideoMeetingSubmenu) {
         <a href="#"
             class="dropdown-toggle profile -tw-mt-1 tw-font-medium tw-border tw-border-solid tw-rounded-lg tw-bg-white tw-py-2 tw-px-2.5 tw-block tw-shadow-xs <?= $isSidebarDark ? 'tw-text-white tw-border-white/10 hover:tw-border-white/30 focus:tw-border-white/30 hover:tw-text-white focus:tw-text-white hover:tw-bg-neutral-900/10 focus:tw-bg-neutral-900/10' : 'tw-border-neutral-300 tw-text-neutral-700 hover:tw-text-neutral-800 focus:tw-text-neutral-800 hover:tw-bg-neutral-900/5 focus:tw-bg-neutral-900/5'; ?>"
             data-toggle="dropdown" aria-expanded="false" aria-controls="sc-staff-profile-actions">
-            <span class="tw-inline-flex tw-items-center tw-gap-x-3 tw-pt-0.5">
+            <span class="sc-staff-profile-row">
                 <span class="sc-profile-avatar"><?= staff_profile_image($current_user->staffid, ['img', 'img-responsive', 'staff-profile-image-small']); ?></span>
-                <span>
+                <span class="sc-staff-profile-copy">
+                    <span class="sc-staff-profile-name tw-font-semibold" title="<?= e(get_staff_full_name()); ?>"><?= e(get_staff_full_name()); ?></span>
                     <span
-                        class="tw-truncate tw-block tw-w-[140px] tw-font-semibold"><?= get_staff_full_name(); ?></span>
-                    <span
-                        class="tw-font-normal tw-truncate tw-block tw-w-[140px] tw-text-xs <?= $isSidebarDark ? 'tw-text-neutral-300' : 'tw-text-neutral-500' ?>">
+                        class="sc-staff-profile-email tw-font-normal <?= $isSidebarDark ? 'tw-text-neutral-300' : 'tw-text-neutral-500' ?>">
                         <?= e(get_staff()->email); ?>
                     </span>
                 </span>

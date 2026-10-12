@@ -19,7 +19,7 @@ $config = [
         'gradient_from' => 'emerald-500',    // Header gradient start color
         'gradient_to' => 'emerald-600',      // Header gradient end color
         'text_color' => 'white',             // Header text color
-        'icon_size' => 'w-10 h-10',          // Success icon size
+        'icon_size' => 'tw-w-10 tw-h-10',          // Success icon size
     ],
 
     // STATUS BADGE SETTINGS
@@ -133,7 +133,7 @@ $config = [
                     <?= _l('appointment_pending_approval_message') ?: 'Your appointment request has been received and is pending approval.' ?>
                 </p>
                 <div class="inline-flex items-center px-4 py-2 bg-<?= $config['status_badge']['bg_color'] ?> text-<?= $config['status_badge']['text_color'] ?> rounded-full text-sm font-medium">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="tw-w-4 tw-h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                     <?= $config['status_badge']['text'] ?>
@@ -146,7 +146,7 @@ $config = [
                 <?php if (isset($appointment) && $appointment): ?>
                     <div class="<?= $config['layout']['padding'] ?> border-b border-gray-100">
                         <div class="flex items-center mb-6">
-                            <svg class="w-6 h-6 text-<?= $config['header']['gradient_from'] ?> mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="tw-w-6 tw-h-6 text-<?= $config['header']['gradient_from'] ?> mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
                             <h2 class="<?= $config['typography']['section_title_size'] ?> font-bold text-gray-900">Appointment Details</h2>
@@ -156,7 +156,7 @@ $config = [
                             <!-- Subject -->
                             <div class="bg-<?= $config['appointment_cards']['subject']['bg_color'] ?> rounded-xl p-6 border-l-4 border-<?= $config['appointment_cards']['subject']['border_color'] ?>">
                                 <div class="flex items-start">
-                                    <svg class="w-5 h-5 text-<?= $config['appointment_cards']['subject']['icon_color'] ?> mt-1 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="tw-w-5 tw-h-5 text-<?= $config['appointment_cards']['subject']['icon_color'] ?> mt-1 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
                                     </svg>
                                     <div>
@@ -169,7 +169,7 @@ $config = [
                             <!-- Date & Time -->
                             <div class="bg-<?= $config['appointment_cards']['datetime']['bg_color'] ?> rounded-xl p-6 border-l-4 border-<?= $config['appointment_cards']['datetime']['border_color'] ?>">
                                 <div class="flex items-start">
-                                    <svg class="w-5 h-5 text-<?= $config['appointment_cards']['datetime']['icon_color'] ?> mt-1 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="tw-w-5 tw-h-5 text-<?= $config['appointment_cards']['datetime']['icon_color'] ?> mt-1 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                     </svg>
                                     <div>
@@ -191,7 +191,7 @@ $config = [
                             <?php if (isset($appointment['service_name']) && $appointment['service_name']): ?>
                                 <div class="bg-<?= $config['appointment_cards']['service']['bg_color'] ?> rounded-xl p-6 border-l-4 border-<?= $config['appointment_cards']['service']['border_color'] ?>">
                                     <div class="flex items-start">
-                                        <svg class="w-5 h-5 text-<?= $config['appointment_cards']['service']['icon_color'] ?> mt-1 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="tw-w-5 tw-h-5 text-<?= $config['appointment_cards']['service']['icon_color'] ?> mt-1 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V8a2 2 0 012-2V6z"></path>
                                         </svg>
                                         <div>
@@ -206,7 +206,7 @@ $config = [
                             <?php if (isset($appointment['provider_name']) && $appointment['provider_name']): ?>
                                 <div class="bg-<?= $config['appointment_cards']['provider']['bg_color'] ?> rounded-xl p-6 border-l-4 border-<?= $config['appointment_cards']['provider']['border_color'] ?>">
                                     <div class="flex items-start">
-                                        <svg class="w-5 h-5 text-<?= $config['appointment_cards']['provider']['icon_color'] ?> mt-1 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="tw-w-5 tw-h-5 text-<?= $config['appointment_cards']['provider']['icon_color'] ?> mt-1 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                         </svg>
                                         <div>
@@ -221,7 +221,7 @@ $config = [
                             <?php if (isset($appointment['address']) && $appointment['address']): ?>
                                 <div class="bg-<?= $config['appointment_cards']['location']['bg_color'] ?> rounded-xl p-6 border-l-4 border-<?= $config['appointment_cards']['location']['border_color'] ?> md:col-span-2">
                                     <div class="flex items-start">
-                                        <svg class="w-5 h-5 text-<?= $config['appointment_cards']['location']['icon_color'] ?> mt-1 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="tw-w-5 tw-h-5 text-<?= $config['appointment_cards']['location']['icon_color'] ?> mt-1 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                         </svg>
@@ -253,7 +253,7 @@ $config = [
                 ?>
                     <div class="<?= $config['layout']['padding'] ?> border-b border-gray-100">
                         <div class="flex items-center mb-6">
-                            <svg class="w-6 h-6 text-<?= $config['header']['gradient_from'] ?> mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="tw-w-6 tw-h-6 text-<?= $config['header']['gradient_from'] ?> mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
                             <h2 class="<?= $config['typography']['section_title_size'] ?> font-bold text-gray-900">Invoice</h2>
@@ -261,7 +261,7 @@ $config = [
 
                         <div class="bg-blue-50 rounded-xl p-6 border-l-4 border-blue-500">
                             <div class="flex items-start">
-                                <svg class="w-5 h-5 text-blue-600 mt-1 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="tw-w-5 tw-h-5 text-blue-600 mt-1 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                 </svg>
                                 <div class="flex-1">
@@ -273,7 +273,7 @@ $config = [
                                         <a href="<?= site_url('invoice/' . $appointment['invoice_id'] . '/' . $invoice_hash); ?>"
                                             target="_blank"
                                             class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 hover:text-white transition-colors">
-                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg class="tw-w-4 tw-h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
                                             </svg>
                                             View Invoice
@@ -288,7 +288,7 @@ $config = [
                 <!-- Next Steps -->
                 <div class="<?= $config['layout']['padding'] ?> border-b border-gray-100">
                     <div class="flex items-center mb-6">
-                        <svg class="w-6 h-6 text-<?= $config['next_steps']['icon_color'] ?> mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="tw-w-6 tw-h-6 text-<?= $config['next_steps']['icon_color'] ?> mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                         <h2 class="<?= $config['typography']['section_title_size'] ?> font-bold text-gray-900">What Happens Next?</h2>
@@ -314,7 +314,7 @@ $config = [
                 <div class="<?= $config['layout']['padding'] ?> text-center">
                     <a href="<?= site_url('appointly/appointments_public/book') ?>"
                         class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-<?= $config['button']['gradient_from'] ?> to-<?= $config['button']['gradient_to'] ?> text-<?= $config['button']['text_color'] ?> hover:text-<?= $config['button']['text_color'] ?> font-semibold rounded-xl hover:from-<?= $config['button']['hover_from'] ?> hover:to-<?= $config['button']['hover_to'] ?> transform hover:-translate-y-1 transition-all duration-200 shadow-lg hover:shadow-xl">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="tw-w-5 tw-h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                         </svg>
                         <?= _l('appointment_schedule_another') ?>

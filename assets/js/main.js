@@ -26,10 +26,7 @@ if (app.options.enable_google_picker == "1") {
 Dropzone.options.newsFeedDropzone = false;
 Dropzone.options.salesUpload = false;
 
-// Check for desktop notifications permissions
-if ("Notification" in window && app.options.desktop_notifications == "1") {
-  Notification.requestPermission();
-}
+// Desktop notification permission is requested explicitly in Settings, never on page load.
 
 // Predefined global variables
 var original_top_search_val,
@@ -8617,7 +8614,8 @@ function fetch_notifications(callback) {
       nIds.push(lastNotification);
     }
     setTimeout(function () {
-      if (nIds.length > 0) {
+      if (nIds.length > 0 && app.options.desktop_notifications == "1" &&
+          "Notification" in window && Notification.permission === "granted") {
         $.each(nIds, function (i, notId) {
           var nSelector = 'li[data-notification-id="' + notId + '"]';
           var $not = nw.find(nSelector);

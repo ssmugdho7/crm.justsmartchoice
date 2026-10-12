@@ -134,9 +134,11 @@ function products_add_head_components()
 hooks()->add_action('app_admin_footer', 'products_load_js');
 function products_load_js()
 {
-    if ('1' == get_option('products_enabled')) {
-        $CI = &get_instance();
-
+    // Only the order report uses Highcharts. Loading it on every admin page
+    // conflicts with the commission module's dashboard charts.
+    $CI = &get_instance();
+    if ('1' == get_option('products_enabled') && strtolower($CI->router->fetch_class()) === 'products'
+        && $CI->router->fetch_method() === 'order_report') {
         echo '<script src="'.module_dir_url('products', 'assets/highcharts/highcharts.js').'?v='.$CI->app_scripts->core_version().'"></script>';
         echo '<script src="'.module_dir_url('products', 'assets/highcharts/variable-pie.js').'?v='.$CI->app_scripts->core_version().'"></script>';
         echo '<script src="'.module_dir_url('products', 'assets/highcharts/export-data.js').'?v='.$CI->app_scripts->core_version().'"></script>';

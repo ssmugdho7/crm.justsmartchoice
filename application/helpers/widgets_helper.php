@@ -93,15 +93,15 @@ function get_dashboard_widgets()
         'path'      => 'admin/dashboard/widgets/smart_choice_clock',
         'container' => 'right-4',
     ];
-    $widgets[] = [
-        'path'      => 'admin/dashboard/widgets/smart_choice_calculator',
-        'container' => 'middle-right-6',
-    ];
     $widgets[] = ['path'=>'admin/dashboard/widgets/sc_new_leads_today','container'=>'right-4'];
     $widgets[] = ['path'=>'admin/dashboard/widgets/sc_open_proposals','container'=>'right-4'];
     $widgets[] = ['path'=>'admin/dashboard/widgets/sc_unpaid_invoices','container'=>'left-8'];
     $widgets[] = ['path'=>'admin/dashboard/widgets/sc_active_projects','container'=>'right-4'];
     $widgets[] = ['path'=>'admin/dashboard/widgets/sc_staff_activity','container'=>'right-4'];
+    $widgets[] = [
+        'path'      => 'admin/dashboard/widgets/smart_choice_calculator',
+        'container' => 'right-4',
+    ];
 
     return hooks()->apply_filters('get_dashboard_widgets', $widgets);
 }
@@ -160,7 +160,7 @@ function render_dashboard_widgets($container)
     $staff_dashboard = get_staff_meta(get_staff_user_id(), 'dashboard_widgets_order');
     $staff_dashboard = !$staff_dashboard ? [] : unserialize($staff_dashboard);
 
-    // Move only the calculator to the requested right-middle slot, retaining
+    // Move only the calculator to the right column below Active Staff, retaining
     // every other saved widget position and visibility preference.
     if (is_array($staff_dashboard) && $staff_dashboard) {
         foreach ($staff_dashboard as &$savedWidgets) {
@@ -169,7 +169,11 @@ function render_dashboard_widgets($container)
             }
         }
         unset($savedWidgets);
-        $staff_dashboard['middle-right-6'][] = 'widget-smart-choice-calculator';
+        $rightWidgets = $staff_dashboard['right-4'] ?? [];
+        $staffIndex = array_search('widget-sc_staff_activity', $rightWidgets, true);
+        $position = $staffIndex === false ? count($rightWidgets) : $staffIndex + 1;
+        array_splice($rightWidgets, $position, 0, ['widget-smart-choice-calculator']);
+        $staff_dashboard['right-4'] = $rightWidgets;
     }
 
     if (count($staff_dashboard) == 0) {

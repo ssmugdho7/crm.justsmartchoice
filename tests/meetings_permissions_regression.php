@@ -40,6 +40,7 @@ function load_function($path,$name){
 require $root.'/modules/google_meet/controllers/Google_meet.php';
 require $root.'/modules/google_meet/models/Google_meet_model.php';
 load_function($root.'/modules/google_meet/google_meet.php','google_meet_admin_init');
+load_function($root.'/modules/products/products.php','products_module_permissions_for_staff');
 define('GOOGLE_MEET_MODULE_NAME','google_meet');
 class MenuFixture {
     public $items=[];public $children=[];
@@ -53,6 +54,8 @@ $permissions=['google_meet'=>['view_own']];google_meet_admin_init();
 check(in_array('google-meet-dashboard',$ci->app_menu->children,true) && !in_array('google-meet-settings',$ci->app_menu->children,true) && !in_array('google-meet-new-meeting',$ci->app_menu->children,true),'View Own menu excludes create and settings');
 $ci->app_menu=new MenuFixture();$permissions=['google_meet'=>['create']];google_meet_admin_init();
 check($ci->app_menu->items['google-meet']['href']==='google_meet/create' && $ci->app_menu->children===['google-meet-new-meeting'],'Create-only menu opens allowed form');
+$definition=products_module_permissions_for_staff([]);
+check(array_keys($definition['products']['capabilities'])===['view','create','edit','delete'],'Product Edit/Delete are assignable');
 class InputFixture {public $posted=[],$query=[],$requestMethod='post';function method(){return $this->requestMethod;}function post($key=null,$xss=false){return $key===null?$this->posted:($this->posted[$key]??null);}function get($key,$xss=false){return $this->query[$key]??null;}}
 class LoadFixture {public $data=[];function view($view,$data){$this->data=$data;throw new Flow('render '.$view);}}
 class MeetingFixture {

@@ -10,10 +10,14 @@ $rResult = $result['rResult'];
 
 foreach ($rResult as $aRow) {
     $row = [];
-    $name = '<a href="' . admin_url('products/product_notifications/edit/' . $aRow['id']) . '">' . htmlspecialchars($aRow['name']) . '</a>';
+    $name = htmlspecialchars($aRow['name']);
     $name .= '<div class="row-options">';
+    if (has_permission('products', '', 'edit')) {
     $name .= ' <a href="' . admin_url('products/product_notifications/edit/' . $aRow['id']) . '">' . _l('edit') . '</a>';
+    }
+    if (has_permission('products', '', 'delete')) {
     $name .= ' | <a href="' . admin_url('products/product_notifications/delete/' . $aRow['id']) . '" class="text-danger _delete">' . _l('delete') . '</a>';
+    }
     $name .= '</div>';
     $row[] = $name;
     $row[] = _l('product_notification_channel_' . $aRow['channel']);

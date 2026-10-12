@@ -213,24 +213,15 @@ class Dashboard_model extends App_Model
         $_data['statusLink']           = [];
 
 
-        $has_permission = staff_can('view',  'projects');
-        $sql            = '';
-        foreach ($statuses as $status) {
-            $sql .= ' SELECT COUNT(*) as total';
-            $sql .= ' FROM ' . db_prefix() . 'projects';
-            $sql .= ' WHERE status=' . $status['id'];
-            if (!$has_permission) {
-                $sql .= ' AND id IN (SELECT project_id FROM ' . db_prefix() . 'project_members WHERE staff_id=' . get_staff_user_id() . ')';
+        $totals = [];
+        if ($statuses) {
+            $this->db->select('status, COUNT(*) AS total', false);
+            if (!staff_can('view', 'projects')) {
+                // Keep the existing project-member scope for restricted staff.
+                $this->db->where('id IN (SELECT project_id FROM ' . db_prefix() . 'project_members WHERE staff_id=' . (int) get_staff_user_id() . ')', null, false);
             }
-            $sql .= ' UNION ALL ';
-            $sql = trim($sql);
-        }
-
-        $result = [];
-        if ($sql != '') {
-            // Remove the last UNION ALL
-            $sql    = substr($sql, 0, -10);
-            $result = $this->db->query($sql)->result();
+            $rows = $this->db->group_by('status')->get(db_prefix() . 'projects')->result_array();
+            $totals = array_column($rows, 'total', 'status');
         }
 
         foreach ($statuses as $key => $status) {
@@ -238,7 +229,7 @@ class Dashboard_model extends App_Model
             array_push($chart['labels'], $status['name']);
             array_push($_data['backgroundColor'], $status['color']);
             array_push($_data['hoverBackgroundColor'], adjust_color_brightness($status['color'], -20));
-            array_push($_data['data'], $result[$key]->total);
+            array_push($_data['data'], $totals[$status['id']] ?? 0);
         }
 
         $chart['datasets'][]           = $_data;

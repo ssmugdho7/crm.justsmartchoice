@@ -24,7 +24,7 @@ class Product_reviews extends AdminController
 
     public function approve($id)
     {
-        if (!has_permission('products', '', 'create')) {
+        if (!has_permission('products', '', 'edit')) {
             access_denied();
         }
         if ($this->product_reviews_model->edit(['approved' => 1], $id)) {
@@ -35,7 +35,7 @@ class Product_reviews extends AdminController
 
     public function unapprove($id)
     {
-        if (!has_permission('products', '', 'create')) {
+        if (!has_permission('products', '', 'edit')) {
             access_denied();
         }
         if ($this->product_reviews_model->edit(['approved' => 0], $id)) {
@@ -46,7 +46,7 @@ class Product_reviews extends AdminController
 
     public function delete($id)
     {
-        if (!has_permission('products', '', 'create')) {
+        if (!has_permission('products', '', 'delete')) {
             access_denied();
         }
         if ($this->product_reviews_model->delete($id)) {

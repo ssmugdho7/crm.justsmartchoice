@@ -24,8 +24,10 @@ foreach ($rResult as $aRow) {
     $row        = [];
     $outputCode = '<a href="#">'.$aRow['code'].'</a>';
     $outputCode .= '<div class="row-options">';
-    if (has_permission('products', '', 'delete')) {
+    if (has_permission('products', '', 'edit')) {
         $outputCode .= ' <a href="'.admin_url('products/coupons/edit/'.$aRow['id']).'" class="_edit">'._l('edit').'</a>';
+    }
+    if (has_permission('products', '', 'delete')) {
         $outputCode .= '| <a href="'.admin_url('products/coupons/delete/'.$aRow['id']).'" class="text-danger _delete">'._l('delete').'</a>';
     }
     $outputCode .= '</div>';

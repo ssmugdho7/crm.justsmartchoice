@@ -106,19 +106,18 @@ class Reports_model extends CI_Model
 
     public function chart_custom_date_range($selected_products, $from, $to)
     {
-        $qry='SELECT order_date,
-                SUM(qty) AS total_sales, product_name
-                FROM '.db_prefix().'order_master
-                join '.db_prefix().'order_items on '.db_prefix().'order_items.order_id = '.db_prefix().'order_master.id 
-                join '.db_prefix().'product_master on '.db_prefix().'order_items.product_id = '.db_prefix().'product_master.id 
-                where (
-                (`order_date` BETWEEN "'.$from.'" AND "'.$to.'")
-                AND
-                product_name IN ("'.$selected_products.'")
-                )
-                GROUP BY order_date, product_id
-                ORDER BY order_date';
-        $query           = $this->db->query($qry);
+        if (empty($selected_products) || !is_array($selected_products)) {
+            return ['date_range' => [], 'series' => null];
+        }
+        $query = $this->db->select('om.order_date, SUM(oi.qty) AS total_sales, pm.product_name', false)
+            ->from(db_prefix() . 'order_master om')
+            ->join(db_prefix() . 'order_items oi', 'oi.order_id = om.id')
+            ->join(db_prefix() . 'product_master pm', 'oi.product_id = pm.id')
+            ->where('om.order_date >=', $from)
+            ->where('om.order_date <=', $to)
+            ->where_in('pm.product_name', $selected_products)
+            ->group_by(['om.order_date', 'oi.product_id', 'pm.product_name'])
+            ->order_by('om.order_date')->get();
         $array           = $query->result_array();
         $chart_data      = [];
         $date_range      = [];

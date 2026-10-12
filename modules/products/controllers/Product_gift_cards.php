@@ -33,7 +33,7 @@ class Product_gift_cards extends AdminController
 
     public function template($id = null)
     {
-        if (!has_permission('products', '', 'create')) {
+        if (!has_permission('products', '', $id ? 'edit' : 'create')) {
             access_denied();
         }
         if ($this->input->post()) {

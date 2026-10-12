@@ -7,7 +7,7 @@
         <div class="panel_s">
           <div class="panel-body">
             <h4 class="no-margin"><?php echo _l('product_gift_card_templates'); ?></h4>
-            <a href="<?php echo admin_url('products/product_gift_cards/template'); ?>" class="btn btn-success mtop15"><?php echo _l('product_gift_card_add_template'); ?></a>
+            <?php if (has_permission('products', '', 'create')) { ?><a href="<?php echo admin_url('products/product_gift_cards/template'); ?>" class="btn btn-success mtop15"><?php echo _l('product_gift_card_add_template'); ?></a><?php } ?>
             <a href="<?php echo admin_url('products/product_gift_cards'); ?>" class="btn btn-default mtop15"><?php echo _l('product_gift_cards'); ?></a>
             <div class="table-responsive mtop15">
               <table class="table table-bordered">
@@ -37,8 +37,8 @@
                     </td>
                     <td><?php echo $t['active'] ? _l('active') : _l('inactive'); ?></td>
                     <td>
-                      <a href="<?php echo admin_url('products/product_gift_cards/template/' . $t['id']); ?>" class="btn btn-default btn-sm"><?php echo _l('edit'); ?></a>
-                      <a href="<?php echo admin_url('products/product_gift_cards/delete_template/' . $t['id']); ?>" class="btn btn-danger btn-sm _delete"><?php echo _l('delete'); ?></a>
+                      <?php if (has_permission('products', '', 'edit')) { ?><a href="<?php echo admin_url('products/product_gift_cards/template/' . $t['id']); ?>" class="btn btn-default btn-sm"><?php echo _l('edit'); ?></a><?php } ?>
+                      <?php if (has_permission('products', '', 'delete')) { ?><a href="<?php echo admin_url('products/product_gift_cards/delete_template/' . $t['id']); ?>" class="btn btn-danger btn-sm _delete"><?php echo _l('delete'); ?></a><?php } ?>
                     </td>
                   </tr>
                   <?php } ?>

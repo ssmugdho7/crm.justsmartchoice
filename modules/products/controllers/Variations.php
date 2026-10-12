@@ -14,6 +14,10 @@ class Variations extends AdminController
 
     public function index()
     {
+        if (!has_permission('products', '', 'view')) {
+            access_denied('products');
+        }
+
 
         close_setup_menu();
         if ($this->input->is_ajax_request()) {
@@ -25,11 +29,11 @@ class Variations extends AdminController
 
     public function add()
     {
-        if (!has_permission('products', '', 'view')) {
-            access_denied('products View');
+        if (!has_permission('products', '', 'create')) {
+            access_denied('products Create');
         }
         close_setup_menu();
-        if (has_permission('products', '', 'view')) {
+        if (has_permission('products', '', 'create')) {
             $post          = $this->input->post();
             if (!empty($post)) {
                 $this->form_validation->set_rules('variation_name', 'variation name', 'required|is_unique[variations.name]');
@@ -65,11 +69,11 @@ class Variations extends AdminController
 
     public function edit($id)
     {
-        if (!has_permission('products', '', 'view')) {
-            access_denied('products View');
+        if (!has_permission('products', '', 'edit')) {
+            access_denied('products Edit');
         }
         close_setup_menu();
-        if (has_permission('products', '', 'view')) {
+        if (has_permission('products', '', 'edit')) {
             $original_variation = $data['variation'] = $this->variations_model->get($id, true);
             if (empty($original_variation)) {
                 set_alert('danger', _l('not_found_products'));
@@ -110,6 +114,10 @@ class Variations extends AdminController
 
     public function values()
     {
+        if (!has_permission('products', '', 'view') && !has_permission('products', '', 'create') && !has_permission('products', '', 'edit')) {
+            access_denied('products');
+        }
+
         $variation_id     = $this->input->post('variation_id');
         $variation_values = $this->variations_model->get_values($variation_id);
         echo json_encode($variation_values);
@@ -117,6 +125,10 @@ class Variations extends AdminController
 
     public function delete($id)
     {
+        if (!has_permission('products', '', 'delete')) {
+            access_denied('products');
+        }
+
 
         if (!$id) {
             redirect(admin_url('products/variations'));

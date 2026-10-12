@@ -150,11 +150,29 @@ class Order_model extends CI_Model
     public function add_invoice_order($post)
     {
         if (empty($post)) {
-            return ['status' => false, 'message' => "Post data cannot be empty`"];
+            return ['status' => false, 'message' => "Post data cannot be empty."];
+        }
+
+        if (!isset($post['clientid']) || !is_scalar($post['clientid']) || !ctype_digit((string)$post['clientid']) || (int)$post['clientid'] < 1) {
+            return ['status' => false, 'message' => 'Select a valid customer.'];
+        }
+        if (empty($post['product_items']) || !is_array($post['product_items'])) {
+            return ['status' => false, 'message' => 'Select at least one valid product.'];
+        }
+        $post['product_items'] = array_values($post['product_items']);
+        foreach ($post['product_items'] as $item) {
+            $productId = is_array($item) ? ($item['product_id'] ?? null) : null;
+            $variationId = is_array($item) ? ($item['product_variation_id'] ?? '') : null;
+            $qty = is_array($item) ? ($item['qty'] ?? null) : null;
+            if (!is_scalar($productId) || !ctype_digit((string)$productId) || (int)$productId < 1
+                || !is_scalar($variationId) || ($variationId !== '' && (!ctype_digit((string)$variationId) || (int)$variationId < 1))
+                || !is_numeric($qty) || !is_finite((float)$qty) || (float)$qty <= 0 || (float)$qty > PHP_INT_MAX) {
+                return ['status' => false, 'message' => 'Check the product options and enter a quantity greater than zero.'];
+            }
         }
 
         $coupon_description = '';
-        if (!$post['coupon_id']) {
+        if (empty($post['coupon_id'])) {
             $post['coupon_id'] = NULL;
         }
         if ($post['coupon_id']) {
@@ -174,6 +192,9 @@ class Order_model extends CI_Model
             ];
         }
         $data['products'] = $product = $this->products_model->get_by_id_product_afflect_variation($product_items);
+        if (count($product) !== count($post['product_items'])) {
+            return ['status' => false, 'message' => 'A selected product or option is no longer available. Please update your cart.'];
+        }
         $message          = '';
         foreach ($product as $key => $value) {
             unset($post['newitems'][$key]['product_id']);
@@ -196,7 +217,7 @@ class Order_model extends CI_Model
                     $message .= '- <u>'.$value->product_name.'</u> is out of stock <br>';
                     continue;
                 }
-                if ((int) $post['product_items'][$key]['qty'] > (int) $value->quantity_number) {
+                if ((float) $post['product_items'][$key]['qty'] > (float) $value->quantity_number) {
                     $message .= '- <u>'.$value->product_name.'</u> is only <u>'.$value->quantity_number.'</u> in stock <br>';
                 }
             }
@@ -208,6 +229,9 @@ class Order_model extends CI_Model
             return ['status' => false, 'message' => $message];
         }
         $billing_shipping = $this->clients_model->get_customer_billing_and_shipping_details($post['clientid']);
+        if (empty($billing_shipping) || !is_array($billing_shipping) || !is_array(reset($billing_shipping))) {
+            return ['status' => false, 'message' => 'The selected customer is no longer available.'];
+        }
         $post             = array_merge($post, reset($billing_shipping));
         unset($post['billing_country']);
         unset($post['shipping_country']);

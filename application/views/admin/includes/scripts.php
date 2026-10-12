@@ -50,7 +50,7 @@ if (get_option('pusher_realtime_notifications') == 1) { ?>
 <link rel="stylesheet" href="<?= base_url('assets/css/sc-crm-391.css?v=4.0.6'); ?>">
 <script>window.scDefaultValidityMonths=<?= (int)(get_option('smart_choice_sales_default_validity_months') ?: 3); ?>;</script>
 <script src="<?= base_url('assets/js/sc-crm-391.js?v=4.0.6'); ?>"></script>
-<link rel="stylesheet" href="<?= base_url('assets/css/staff-profile-menu.css?v=1'); ?>">
+<link rel="stylesheet" href="<?= base_url('assets/css/staff-profile-menu.css?v=2'); ?>">
 <script src="<?= base_url('assets/js/staff-profile-menu.js?v=1'); ?>"></script>
 
 <style>.sc-status-wrap{display:flex;gap:6px;align-items:center}.sc-status-wrap .bootstrap-select{flex:1}.sc-status-add{min-width:38px}</style>

@@ -68,8 +68,8 @@ class Product_notifications extends AdminController
 
     public function edit($id)
     {
-        if (!has_permission('products', '', 'create')) {
-            access_denied('products Create');
+        if (!has_permission('products', '', 'edit')) {
+            access_denied('products Edit');
         }
         close_setup_menu();
         $tpl = $this->product_notifications_model->get($id);
@@ -113,7 +113,7 @@ class Product_notifications extends AdminController
 
     public function delete($id)
     {
-        if (!has_permission('products', '', 'create')) {
+        if (!has_permission('products', '', 'delete')) {
             access_denied();
         }
         if (!$id) {

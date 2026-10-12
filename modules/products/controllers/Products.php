@@ -35,13 +35,13 @@ class Products extends AdminController
 
     public function add_product()
     {
-        if (!has_permission('products', '', 'view')) {
-            access_denied('products View');
+        if (!has_permission('products', '', 'create')) {
+            access_denied('products Create');
         }
         close_setup_menu();
 		\modules\products\core\Apiinit::ease_of_mind('products');
 		\modules\products\core\Apiinit::the_da_vinci_code('products');
-        if (has_permission('products', '', 'view')) {
+        if (has_permission('products', '', 'create')) {
             $data['taxes'] = $this->taxes_model->get();
             $post          = $this->input->post();
             if (!empty($post)) {
@@ -109,13 +109,13 @@ class Products extends AdminController
 
     public function edit($id)
     {
-        if (!has_permission('products', '', 'view')) {
-            access_denied('products View');
+        if (!has_permission('products', '', 'edit')) {
+            access_denied('products Edit');
         }
         close_setup_menu();
 		\modules\products\core\Apiinit::ease_of_mind('products');
 		\modules\products\core\Apiinit::the_da_vinci_code('products');
-        if (has_permission('products', '', 'view')) {
+        if (has_permission('products', '', 'edit')) {
             $original_product = $data['product'] = $this->products_model->get_by_id_product($id);
             if (empty($original_product)) {
                 set_alert('danger', _l('not_found_products'));
@@ -195,6 +195,10 @@ class Products extends AdminController
 
     public function delete($id)
     {
+        if (!has_permission('products', '', 'delete')) {
+            access_denied('products');
+        }
+
 
         if (!$id) {
             redirect(admin_url('products'));
@@ -210,6 +214,10 @@ class Products extends AdminController
 
     public function order_history()
     {
+        if (!has_permission('products', '', 'view')) {
+            access_denied('products');
+        }
+
 
         if ($this->input->is_ajax_request()) {
             $this->app->get_table_data(module_views_path('products', 'tables/order_history'));
@@ -222,6 +230,10 @@ class Products extends AdminController
 
     public function order_report()
     {
+        if (!has_permission('products', '', 'view')) {
+            access_denied('products');
+        }
+
         $chart_week_data = $this->Reports_model->chart_orders_of_the_week();
         $this->load->vars('categories', toPlainArray($chart_week_data['days']));
         if (!empty($chart_week_data['series'])) {
@@ -249,16 +261,33 @@ class Products extends AdminController
 
     public function custom_report()
     {
+        if (!has_permission('products', '', 'view')) {
+            access_denied('products');
+        }
+
         $posted_data       = $this->input->post();
-        $selected_products = implode('", "', $posted_data['products_name']);
-        $from_date         = $posted_data['from'];
-        $to_date           = $posted_data['to'];
-        $from_date_st      = strtotime($from_date);
-        $to_date_st        = strtotime($to_date);
-        if ($from_date_st > $to_date_st) {
-            $return_data['status'] = 'error';
+        $selected_products = $posted_data['products_name'] ?? [];
+        $from = $posted_data['from'] ?? '';
+        $to = $posted_data['to'] ?? '';
+        if (!is_array($selected_products) || empty($selected_products)
+            || count(array_filter($selected_products, 'is_string')) !== count($selected_products)
+            || !is_string($from) || !is_string($to) || preg_match('/[\x00-\x1f]/', $from . $to)) {
+            echo json_encode(['status' => 'error', 'message' => 'Select products and a valid date range.']);
+            return;
+        }
+        $from_date = to_sql_date($from);
+        $to_date = to_sql_date($to);
+        $from_parsed = DateTime::createFromFormat('!Y-m-d', $from_date ?? '');
+        $from_errors = DateTime::getLastErrors();
+        $to_parsed = DateTime::createFromFormat('!Y-m-d', $to_date ?? '');
+        $to_errors = DateTime::getLastErrors();
+        if (!$from_parsed || !$to_parsed
+            || ($from_errors && ($from_errors['warning_count'] || $from_errors['error_count']))
+            || ($to_errors && ($to_errors['warning_count'] || $to_errors['error_count']))
+            || $from_parsed > $to_parsed) {
+            $return_data = ['status' => 'error', 'message' => 'Select valid dates, with the end on or after the start.'];
         } else {
-            $custom_chart_data              = $this->Reports_model->chart_custom_date_range($selected_products, $from_date, $to_date);
+            $custom_chart_data              = $this->Reports_model->chart_custom_date_range($selected_products, $from_parsed->format('Y-m-d'), $to_parsed->format('Y-m-d'));
             $return_data['date_series']     = null;
             $return_data['date_categories'] = null;
             if (count($custom_chart_data['date_range']) > 0) {
@@ -309,7 +338,7 @@ class Products extends AdminController
 
     public function mass_delete()
     {
-        if (!has_permission('products', '', 'view')) { access_denied('products'); }
+        if (!has_permission('products', '', 'delete')) { access_denied('products'); }
         $ids = $this->input->post('ids');
         if (!is_array($ids)) { $ids = []; }
         foreach ($ids as $id) {
@@ -321,13 +350,24 @@ class Products extends AdminController
 
     public function import_products()
     {
-        if (!has_permission('products', '', 'view')) { access_denied('products'); }
+        if (!has_permission('products', '', 'create')) { access_denied('products'); }
         if (!empty($_FILES['import_file']['tmp_name'])) {
             $file = fopen($_FILES['import_file']['tmp_name'], 'r');
-            $header = fgetcsv($file);
+            if (!$file) {
+                set_alert('danger', 'The import file could not be read.');
+                redirect(admin_url('products'));
+            }
+            $header = fgetcsv($file, 0, ',', '"', '\\');
+            if (!is_array($header) || !in_array('product_name', $header, true)) {
+                fclose($file);
+                set_alert('danger', 'Use the sample CSV header, including product_name.');
+                redirect(admin_url('products'));
+            }
             $count = 0;
+            $skipped = 0;
             $this->load->model('product_category_model');
-            while (($row = fgetcsv($file)) !== false) {
+            while (($row = fgetcsv($file, 0, ',', '"', '\\')) !== false) {
+                if (count($row) > count($header)) { $skipped++; continue; }
                 $data = array_combine($header, array_pad($row, count($header), ''));
                 if (empty($data['product_name'])) { continue; }
                 $category_id = 0;
@@ -347,14 +387,13 @@ class Products extends AdminController
                 $count++;
             }
             fclose($file);
-            set_alert('success', $count.' products imported successfully.');
+            set_alert($skipped ? 'warning' : 'success', $count.' products imported successfully.'.($skipped ? ' '.$skipped.' malformed rows skipped. Check the sample CSV header.' : ''));
         }
         redirect(admin_url('products'));
     }
 
     public function test()
     {
-        $this->load->model('order_model');
-        $this->order_model->update_quantity_on_invoice(45);
+        show_404();
     }
 }

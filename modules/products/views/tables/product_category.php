@@ -11,9 +11,12 @@ foreach ($rResult as $aRow) {
     $row = [];
     for ($i = 0; $i < count($aColumns); ++$i) {
         $_data = '<a href="#" data-toggle="modal" data-target="#product_category_modal" data-id="'.$aRow['p_category_id'].'">'.$aRow[$aColumns[$i]].'</a>';
-        $row[] = $_data;
+        $row[] = has_permission('products', '', 'edit') ? $_data : html_escape($aRow[$aColumns[$i]]);
     }
-    $options            = icon_btn('#', 'fa fa-pencil-square', 'btn-default', ['data-toggle' => 'modal', 'data-target' => '#product_category_modal', 'data-id' => $aRow['p_category_id']]);
-    $row[]              = $options .= icon_btn('products/products_categories/delete_category/'.$aRow['p_category_id'], 'fa fa-remove', 'btn-danger _delete');
+    $options            = has_permission('products', '', 'edit') ? icon_btn('#', 'fa fa-pencil-square', 'btn-default', ['data-toggle' => 'modal', 'data-target' => '#product_category_modal', 'data-id' => $aRow['p_category_id']]) : '';
+    if (has_permission('products', '', 'delete')) {
+        $options .= icon_btn('products/products_categories/delete_category/'.$aRow['p_category_id'], 'fa fa-remove', 'btn-danger _delete');
+    }
+    $row[] = $options;
     $output['aaData'][] = $row;
 }

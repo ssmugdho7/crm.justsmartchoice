@@ -167,6 +167,8 @@ function products_module_permissions_for_staff($permissions)
     $allPermissionsArray = [
         'view'     => $viewGlobalName,
         'create'   => _l('permission_create'),
+        'edit'     => _l('permission_edit'),
+        'delete'   => _l('permission_delete'),
     ];
     $permissions['products'] = [
         'name'         => _l('products'),
@@ -181,7 +183,7 @@ hooks()->add_action('admin_init', 'products_module_init_menu_items');
 function products_module_init_menu_items()
 {
     $CI = &get_instance();
-    if (has_permission('products', '', 'view')) {
+    if (has_permission('products', '', 'view') || has_permission('products', '', 'create')) {
         $CI->app_menu->add_sidebar_menu_item('products', [
             'slug'     => 'Products',
             'name'     => 'Online Shopping',
@@ -218,7 +220,7 @@ function products_module_init_menu_items()
         ]);
     }
 
-    if (has_permission('products', '', 'view')) {
+    if (has_permission('products', '', 'create')) {
         $CI->app_menu->add_sidebar_children_item('products', [
             'slug'     => 'add_new_order',
             'name'     => _l('add_new_order'),
@@ -248,7 +250,7 @@ function products_module_init_menu_items()
     }
 
     
-    if (has_permission('products', '', 'view')) {
+    if (has_permission('settings', '', 'view')) {
         $CI->app_menu->add_sidebar_children_item('products', [
             'slug'     => 'products_settings',
             'name'     => _l('products_module_settings'),
@@ -267,7 +269,7 @@ function products_module_init_menu_items()
     }
 
     
-    if (has_permission('products', '', 'view')) {
+    if (has_permission('settings', '', 'view')) {
         $CI->app_menu->add_sidebar_children_item('products', [
             'slug'     => 'products_settings',
             'name'     => _l('products_module_settings'),

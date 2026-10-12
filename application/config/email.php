@@ -25,7 +25,7 @@ if (!empty($googleClientId) && !empty($googleClientSecret) && get_option('email_
 }
 
 $config['protocol']  = get_option('email_protocol');
-$config['mailpath']  = '/usr/bin/sendmail'; // or "/usr/sbin/sendmail"
+$config['mailpath']  = is_executable('/usr/sbin/sendmail') ? '/usr/sbin/sendmail' : '/usr/bin/sendmail';
 $config['smtp_host'] = trim(get_option('smtp_host'));
 
 if (get_option('smtp_username') == '') {

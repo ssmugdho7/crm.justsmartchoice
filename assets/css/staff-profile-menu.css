@@ -35,3 +35,27 @@
 @media (prefers-reduced-motion:reduce) {
     #menu .sidebar-user-profile .sc-staff-language-toggle i { transition:none; }
 }
+
+/* Natural profile height keeps both text lines inside the card. The menu scrolls
+ * below it instead of reserving obsolete fixed offsets above its search field. */
+#menu.sidebar { display:flex!important; flex-direction:column; }
+#menu > .sidebar-user-profile {
+    position:relative!important; top:auto!important; left:auto!important; right:auto!important;
+    height:auto!important; min-height:0!important; flex:0 0 auto;
+    margin:8px 6px 4px!important; padding:0!important;
+}
+#menu .sidebar-user-profile > .profile { margin-top:0!important; padding:10px!important; }
+#menu .sc-staff-profile-row { display:flex; align-items:center; gap:10px; width:100%; min-width:0; }
+#menu .sc-profile-avatar { flex:0 0 42px; width:42px; }
+#menu .sc-profile-avatar img { margin:0!important; }
+#menu .sc-staff-profile-copy { flex:1 1 auto; min-width:0; }
+#menu .sc-staff-profile-name { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; line-height:1.35; }
+#menu .sc-staff-profile-email { display:block; font-size:11px; line-height:1.35; overflow-wrap:anywhere; white-space:normal; margin-top:2px; }
+#menu #side-menu {
+    position:relative!important; top:auto!important; bottom:auto!important; left:auto!important; right:auto!important;
+    flex:1 1 auto; min-height:0; width:100%!important; margin:0!important; padding-top:0!important;
+    overflow-y:auto!important;
+}
+#menu #side-menu > li.smart-choice-links-menu-search-wrap:has(input[type="search"]) {
+    position:sticky!important; top:0!important; padding:6px 8px!important;
+}

@@ -1,4 +1,6 @@
-<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<?php defined('BASEPATH') or exit('No direct script access allowed');
+$projectStatusCounts = $projectStatusCounts ?? sc_customer_status_counts('projects');
+?>
 <dl class="tw-grid tw-grid-cols-1 md:tw-grid-cols-5 tw-gap-2 sm:tw-gap-4 tw-mb-10">
     <?php foreach ($project_statuses as $status) { ?>
     <a href="<?= site_url('clients/projects/' . $status['id']); ?>"
@@ -10,7 +12,7 @@
             </dt>
             <dd class="tw-mt-1 tw-flex tw-items-baseline tw-justify-between md:tw-block lg:tw-flex">
                 <div class="tw-flex tw-items-baseline tw-text-base tw-font-semibold tw-text-primary-600">
-                    <?= e(total_rows(db_prefix() . 'projects', ['status' => $status['id'], 'clientid' => get_client_user_id()])); ?>
+                    <?= e($projectStatusCounts[$status['id']] ?? 0); ?>
                 </div>
             </dd>
         </div>

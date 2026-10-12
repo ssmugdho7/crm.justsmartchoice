@@ -35,5 +35,6 @@ Run with PHP 8.x and Node with `jsdom`/`jquery` available:
 - `php tests/meetings_permissions_regression.php`
 - `php tests/customer_meeting_query.php`
 - `php tests/customer_meeting_render.php`
+- `CRM_SITE_ROOT=/path/to/private/local/site php tests/catalog_meetings_database_regression.php`
 
 Database tests mutate only connection-local temporary tables, including rollback failure tests. Appointly notification tests intercept insertion before sending any messages. Browser QA can render the real views with `JITSI_QA_DIR` set; that fixture verifies layout/provider loading separately from native SQL and permission tests. It is not evidence of a completed two-party audio/video call.

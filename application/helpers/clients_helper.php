@@ -719,15 +719,38 @@ function has_contact_permission($permission, $contact_id = '')
 
     foreach ($permissions as $_permission) {
         if ($_permission['short_name'] == $permission) {
-            return total_rows(db_prefix() . 'contact_permissions', [
-                'permission_id' => $_permission['id'],
-                'userid'        => $contact_id,
-            ]) > 0;
+            $key = 'contact-permissions-' . $contact_id;
+            $ids = $CI->app_object_cache->get($key);
+            if ($ids === false) {
+                $rows = $CI->db->select('permission_id')->where('userid', $contact_id)
+                    ->get(db_prefix() . 'contact_permissions')->result_array();
+                $ids = array_column($rows, 'permission_id');
+                $CI->app_object_cache->set($key, $ids);
+            }
+            return in_array($_permission['id'], $ids);
         }
     }
 
     return false;
 }
+// App_object_cache is request-local; never persist access decisions across requests.
+function clear_contact_permission_cache($contact_id)
+{
+    get_instance()->app_object_cache->delete('contact-permissions-' . $contact_id);
+}
+
+// Dashboard counts retain the logged-in customer's existing ownership scope.
+function sc_customer_status_counts($table)
+{
+    if (!in_array($table, ['invoices', 'projects'], true)) {
+        throw new InvalidArgumentException('Unsupported customer summary table');
+    }
+    $rows = get_instance()->db->select('status, COUNT(*) AS total', false)
+        ->where('clientid', get_client_user_id())->group_by('status')
+        ->get(db_prefix() . $table)->result_array();
+    return array_column($rows, 'total', 'status');
+}
+
 /**
  * Load customers area language
  *

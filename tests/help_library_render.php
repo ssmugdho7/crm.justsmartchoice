@@ -14,10 +14,11 @@ $books = [
  ['name'=>'Our Project Process', 'short_description'=>'Process', 'articles'=>[
   ['id'=>57,'title'=>'Employee training','description'=>'Trains employees in contracts'],
   ['id'=>47,'title'=>'How Our Project Process Works','description'=>'Plan <b>your</b> project']]],
- ['name'=>'How to Use the Client Portal','articles'=>[['id'=>32,'title'=>'Using your portal','description'=>'Documents and files']]],
+ ['name'=>'How to Use the Client Portal','articles'=>[['id'=>32,'title'=>'Using your portal','description'=>'Documents and files','thumbnail'=>'https://cdn.example.test/broken-cover.png']]],
  ['name'=>'Future & <script>alert(1)</script>', 'articles'=>[['id'=>100,'title'=>'A <script>bad()</script> title','description'=>'Quote " & <b>notes</b>']]],
 ];
 $html = render_library($books);
+if (getenv('HELP_LIBRARY_RENDER_HTML')) { echo $html; exit; }
 $doc = new DOMDocument(); @$doc->loadHTML($html);
 $xpath = new DOMXPath($doc);
 $checks = [
@@ -29,14 +30,17 @@ $checks = [
  'fallback categories retain new content'=> $xpath->query('//*[@data-guide and @href="/training_manual/customer-books/article/100"]')->length === 1,
  'search progressive enhancement'=> $xpath->query('//*[contains(@class,"sc-help-controls") and @hidden]')->length === 1,
  'empty account has no inert controls'=> strpos(render_library([]), 'id="help-library-search"') === false,
- 'every cover has bounded topic and generic fallbacks'=> $xpath->query('//img[@data-fallback and @data-generic-fallback]')->length === 6,
- 'bundled database cover bypasses stale browser cache'=> training_manual_customer_image_url('modules/training_manual/assets/img/customer-guides/support-system.svg') === '/modules/training_manual/assets/img/customer-guides/support-system.svg?v=3',
- 'missing cover uses refreshed topic artwork'=> strpos(training_manual_customer_image_url('missing.png', 'Documents'), 'documents-payments.svg?v=3') !== false,
- 'custom remote cover retained'=> training_manual_customer_image_url('https://example.test/cover.png') === 'https://example.test/cover.png',
+ 'every card has topic and generic image fallbacks'=> $xpath->query('//img[@data-fallback and @data-generic-fallback]')->length === 6,
+ 'every card has an offline category cover'=> $xpath->query('//*[contains(@class,"sc-help-cover-placeholder")]')->length === 6,
+ 'missing upload uses support cover'=> strpos(training_manual_customer_image_url('missing-cover.png', 'Using the Support Ticket System'), 'support-system.svg?v=6') !== false,
+ 'missing records cover uses document artwork'=> strpos(training_manual_customer_image_url('', 'Your Project Records'), 'documents-payments.svg?v=6') !== false,
+ 'unknown topic has generic artwork'=> strpos(training_manual_customer_image_url('', 'Unknown'), 'default-cover.svg?v=6') !== false,
+ 'valid custom cover retained'=> training_manual_customer_image_url('modules/training_manual/assets/img/customer-guides/client-portal.svg', 'Support') === '/modules/training_manual/assets/img/customer-guides/client-portal.svg?v=6',
+ 'remote cover retained for browser validation'=> training_manual_customer_image_url('https://example.com/cover.png', 'Support') === 'https://example.com/cover.png',
 ];
 foreach (glob(FCPATH . TRAINING_MANUAL_ASSETS_PATH . '/img/customer-guides/*.svg') as $asset) {
  $svg = new DOMDocument();
- $checks['browser-parseable SVG: ' . basename($asset)] = @$svg->loadXML(file_get_contents($asset));
+ $checks['valid SVG: ' . basename($asset)] = @$svg->loadXML(file_get_contents($asset));
 }
 foreach ($checks as $name=>$pass) { echo ($pass ? 'PASS ' : 'FAIL ') . $name . PHP_EOL; }
 exit(in_array(false, $checks, true) ? 1 : 0);

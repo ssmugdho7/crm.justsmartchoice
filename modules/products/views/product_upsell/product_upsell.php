@@ -42,15 +42,15 @@
                     <td><?php echo implode(', ', $upsell_names) . (count($upsells) > 3 ? '...' : ''); ?></td>
                     <td><?php echo $r['active'] ? _l('active') : _l('inactive'); ?></td>
                     <td>
-                      <a href="#" class="btn btn-default btn-sm edit-upsell" data-id="<?php echo $r['id']; ?>" data-name="<?php echo htmlspecialchars($r['name']); ?>" data-trigger="<?php echo htmlspecialchars($r['trigger_product_ids'] ?? ''); ?>" data-upsell="<?php echo htmlspecialchars($r['upsell_product_ids'] ?? ''); ?>" data-active="<?php echo $r['active']; ?>" data-sort="<?php echo $r['sort_order']; ?>"><?php echo _l('edit'); ?></a>
-                      <a href="<?php echo admin_url('products/product_upsell/delete/' . $r['id']); ?>" class="btn btn-danger btn-sm _delete"><?php echo _l('delete'); ?></a>
+                      <?php if (has_permission('products', '', 'edit')) { ?><a href="#" class="btn btn-default btn-sm edit-upsell" data-id="<?php echo $r['id']; ?>" data-name="<?php echo htmlspecialchars($r['name']); ?>" data-trigger="<?php echo htmlspecialchars($r['trigger_product_ids'] ?? ''); ?>" data-upsell="<?php echo htmlspecialchars($r['upsell_product_ids'] ?? ''); ?>" data-active="<?php echo $r['active']; ?>" data-sort="<?php echo $r['sort_order']; ?>"><?php echo _l('edit'); ?></a><?php } ?>
+                      <?php if (has_permission('products', '', 'delete')) { ?><a href="<?php echo admin_url('products/product_upsell/delete/' . $r['id']); ?>" class="btn btn-danger btn-sm _delete"><?php echo _l('delete'); ?></a><?php } ?>
                     </td>
                   </tr>
                   <?php } ?>
                 </tbody>
               </table>
             </div>
-            <button type="button" class="btn btn-success mtop15" data-toggle="modal" data-target="#upsellRuleModal"><?php echo _l('product_upsell_add'); ?></button>
+            <?php if (has_permission('products', '', 'create')) { ?><button type="button" class="btn btn-success mtop15" data-toggle="modal" data-target="#upsellRuleModal"><?php echo _l('product_upsell_add'); ?></button><?php } ?>
           </div>
         </div>
       </div>

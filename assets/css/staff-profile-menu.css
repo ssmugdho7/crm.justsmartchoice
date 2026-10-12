@@ -59,3 +59,13 @@
 #menu #side-menu > li.smart-choice-links-menu-search-wrap:has(input[type="search"]) {
     position:sticky!important; top:0!important; padding:6px 8px!important;
 }
+
+/* Bootstrap dialogs must cover sticky navigation, including the mobile drawer. */
+body.modal-open #header,
+body.modal-open #menu,
+body.modal-open #side-menu,
+body.modal-open.show-sidebar:after {
+    z-index:1040!important;
+}
+body.modal-open .modal-backdrop { z-index:1045!important; }
+body.modal-open .modal { z-index:1050!important; }

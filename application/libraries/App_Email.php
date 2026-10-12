@@ -206,7 +206,19 @@ class App_Email extends App_mailer
             $this->message($email->message);
             $this->set_alt_message($email->alt_message);
 
-            $status = ($this->send(true) ? 'sent' : 'failed');
+            $sent = $this->send(true);
+            // SMTP can accept some recipients even when the overall send fails.
+            // Retrying those recipients would send duplicate notifications.
+            $accepted = $this->get_accepted_recipients();
+            $remaining = static function ($addresses) use ($accepted) {
+                return array_values(array_filter($addresses, static function ($address) use ($accepted) {
+                    return !in_array(strtolower(trim($address)), $accepted, true);
+                }));
+            };
+            $recipients = $remaining($recipients);
+            $cc = $remaining($cc);
+            $bcc = $remaining($bcc);
+            $status = ($sent || (count($recipients) + count($cc) + count($bcc) === 0)) ? 'sent' : 'failed';
             $this->clear(true);
 
             if ($email->engine == 'codeigniter') {
@@ -218,6 +230,11 @@ class App_Email extends App_mailer
             $this->clear(true);
 
             $this->CI->db->where('id', $email->id);
+            if ($status === 'failed' && count($accepted) > 0) {
+                $this->CI->db->set('email', implode(', ', $recipients));
+                $this->CI->db->set('cc', implode(', ', $cc));
+                $this->CI->db->set('bcc', implode(', ', $bcc));
+            }
             $this->CI->db->set('status', $status);
             $this->CI->db->set('date', date('Y-m-d H:i:s'));
             $this->CI->db->update($this->email_queue_table);

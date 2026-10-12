@@ -35,7 +35,8 @@
 </div>
 
 <script>
-$(function(){
+document.addEventListener('DOMContentLoaded', function(){
+  var $ = window.jQuery;
   $('#__todo').on('hidden.bs.modal.smartChoiceTodo', function(){
     var $m=$(this);
     $m.find('input[name="todoid"]').val('');

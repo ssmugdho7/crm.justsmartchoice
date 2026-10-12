@@ -106,8 +106,8 @@ function commission_add_footer_components() {
 	}
 
 	if ($viewuri == '/admin' || $viewuri == '/admin/') {
-		echo '<script src="' . module_dir_url(COMMISSION_MODULE_NAME, 'assets/js/commission_dashboard.js') . '?v=' . COMMISSION_REVISION.'"></script>';
 		echo '<script src="' . module_dir_url(COMMISSION_MODULE_NAME, 'assets/plugins/highcharts/highcharts.js') . '"></script>';
+		echo '<script src="' . module_dir_url(COMMISSION_MODULE_NAME, 'assets/js/commission_dashboard.js') . '?v=' . COMMISSION_REVISION.'"></script>';
 	}
 }
 

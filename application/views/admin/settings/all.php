@@ -257,6 +257,20 @@ echo form_open_multipart($actionUrl, $formAttributes);
             $('#pusherHelper').html(
                 '<div class="alert alert-danger">Desktop notifications not allowed in browser settings, search on Google "How to allow desktop notifications for <?= $this->agent->browser(); ?>"</div>'
             );
+        } else if (Notification.permission == "default") {
+            // Permission must be requested through an explicit user action.
+            var $enableNotifications = $('<button type="button" class="btn btn-default"></button>')
+                .text(<?= json_encode(_l('enable_desktop_notifications')); ?>);
+            $('#pusherHelper').empty().append($enableNotifications);
+            $enableNotifications.on('click', function() {
+                Notification.requestPermission().then(function(permission) {
+                    if (permission === 'granted') {
+                        $('#pusherHelper').empty();
+                    }
+                }).catch(function() {
+                    alert_float('warning', 'Desktop notifications could not be enabled. Check your browser notification settings.');
+                });
+            });
         }
         <?php } ?>
         <?php if (get_option('pusher_realtime_notifications') == '0') { ?>

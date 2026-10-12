@@ -95,7 +95,7 @@ function get_dashboard_widgets()
     ];
     $widgets[] = [
         'path'      => 'admin/dashboard/widgets/smart_choice_calculator',
-        'container' => 'right-4',
+        'container' => 'middle-right-6',
     ];
     $widgets[] = ['path'=>'admin/dashboard/widgets/sc_new_leads_today','container'=>'right-4'];
     $widgets[] = ['path'=>'admin/dashboard/widgets/sc_open_proposals','container'=>'right-4'];
@@ -159,6 +159,18 @@ function render_dashboard_widgets($container)
 
     $staff_dashboard = get_staff_meta(get_staff_user_id(), 'dashboard_widgets_order');
     $staff_dashboard = !$staff_dashboard ? [] : unserialize($staff_dashboard);
+
+    // Move only the calculator to the requested right-middle slot, retaining
+    // every other saved widget position and visibility preference.
+    if (is_array($staff_dashboard) && $staff_dashboard) {
+        foreach ($staff_dashboard as &$savedWidgets) {
+            if (is_array($savedWidgets)) {
+                $savedWidgets = array_values(array_diff($savedWidgets, ['widget-smart-choice-calculator']));
+            }
+        }
+        unset($savedWidgets);
+        $staff_dashboard['middle-right-6'][] = 'widget-smart-choice-calculator';
+    }
 
     if (count($staff_dashboard) == 0) {
         // Default widgets order and containers

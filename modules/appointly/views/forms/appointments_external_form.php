@@ -13,28 +13,7 @@
 
     <link href="<?= module_dir_url('appointly', 'assets/css/appointments_external_form.css'); ?>" rel="stylesheet" type="text/css">
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#f7fbf8',
-                            100: '#eaf4ee',
-                            200: '#d5e8db',
-                            300: '#b8d5c1',
-                            400: '#8fb99f',
-                            500: '#679c7b',
-                            600: '#497f60',
-                            700: '#34654b',
-                            800: '#254c39',
-                            900: '#193629'
-                        }
-                    }
-                }
-            }
-        };
-    </script>
+    <!-- Tailwind is supplied by app_external_form_header as compiled CSS. -->
 
     <style>
     /* Smart Choice public appointment-page branding */

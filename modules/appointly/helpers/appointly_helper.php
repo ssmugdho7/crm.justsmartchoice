@@ -2140,7 +2140,7 @@ function escape_ics_text($text)
 function appointly_jitsi_invitation_link($template)
 {
     $mailer = $GLOBALS['SENDING_EMAIL_TEMPLATE_CLASS'] ?? null;
-    $invitationSlugs = ['appointment-submitted-to-contact', 'appointment-submitted-to-staff',
+    $invitationSlugs = ['appointly-dispatch-customer-status', 'appointment-submitted-to-contact', 'appointment-submitted-to-staff',
         'appointment-approved-to-contact', 'appointment-approved-to-staff',
         'appointment-cron-reminder-to-contact', 'appointment-cron-reminder-to-staff',
         'appointment-updated-to-contact', 'appointment-updated-to-staff'];

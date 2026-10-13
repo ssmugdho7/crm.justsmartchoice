@@ -7,6 +7,7 @@ class QueueRecordingDb {
     function set($key, $value) { $this->values[$key] = $value; return $this; }
     function update($table) { $this->updates[] = $this->values; $this->values = []; return true; }
 }
+
 class QueueDeliveryFixture extends App_Email {
     public $rows = [];
     function clean_up_old_queue() {}
@@ -31,3 +32,33 @@ foreach (['cc-only', false, true] as $outcome) {
         check(!isset($update['email']), 'complete failure retains original recipients');
     }
 }
+
+// Follow two actual PHPMailer SMTP attempts: DATA succeeds for CC/BCC while
+// the primary recipient is rejected. Neither accepted copy may be sent again.
+class QueueRetrySmtpFixture extends PartialSmtpFixture {
+    public $accepted = [], $deliveries = [];
+    function mail($from) { $this->accepted = []; return parent::mail($from); }
+    function recipient($address, $dsn = '') {
+        $ok = parent::recipient($address, $dsn);
+        if ($ok) $this->accepted[] = $address;
+        return $ok;
+    }
+    function data($message) { $this->deliveries[] = $this->accepted; return parent::data($message); }
+}
+$ci->db = new QueueRecordingDb();
+$queue = new QueueDeliveryFixture(['useragent'=>'phpmailer','protocol'=>'smtp','mailtype'=>'html']);
+$queue->phpmailer = new PHPMailer\PHPMailer\PHPMailer();
+$queue->initialize(['useragent'=>'phpmailer','protocol'=>'smtp','smtp_host'=>'test.invalid','smtp_auto_tls'=>false,'mailtype'=>'html']);
+$smtp = new QueueRetrySmtpFixture();
+$queue->phpmailer->setSMTPInstance($smtp);
+$queue->rows = [(object)[
+    'id'=>2, 'engine'=>'phpmailer', 'email'=>'bad@example.test', 'cc'=>'cc@example.test',
+    'bcc'=>'copy@example.test', 'headers'=>serialize(['from'=>'sender@example.test','fromName'=>'Test','subject'=>'One-time event']),
+    'attachments'=>'', 'message'=>'Synthetic queue retry test', 'alt_message'=>'Synthetic queue retry test',
+]];
+$queue->send_queue();
+$remaining = end($ci->db->updates);
+check($remaining['email'] === 'bad@example.test' && $remaining['cc'] === '' && $remaining['bcc'] === '', 'real SMTP queue preserves rejected primary and removes accepted CC/BCC');
+foreach (['email','cc','bcc'] as $field) $queue->rows[0]->$field = $remaining[$field];
+$queue->send_queue();
+check($smtp->deliveries === [['cc@example.test','copy@example.test']], 'repeated queue processing delivers each accepted copy exactly once');

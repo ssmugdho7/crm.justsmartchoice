@@ -39,6 +39,8 @@
                     <?php if (scl_can('delete')): ?><button class="btn btn-danger btn-sm" type="submit" name="action" value="delete" onclick="return confirm(<?= html_escape(json_encode(_l('scl_delete_confirm'))); ?>)"><?= _l('scl_delete'); ?></button><?php endif; ?>
                 <?= form_close(); ?><?php endif; ?></td>
             </tr><?php endforeach; ?></tbody></table></div>
+            <a class="btn btn-default" href="<?= admin_url('sc_module_licensing/licenses'); ?>"><?= _l('scl_latest'); ?></a>
+            <?php if (count($licenses) === 100): ?><a class="btn btn-default" href="<?= admin_url('sc_module_licensing/licenses?before=' . (int) end($licenses)['id']); ?>"><?= _l('scl_older'); ?></a><?php endif; ?>
         <?php else: ?>
             <h2 class="h4"><?= _l('scl_help_title'); ?></h2><p><?= _l('scl_help_keys'); ?></p><p><?= _l('scl_help_trust'); ?></p><p><?= _l('scl_help_future'); ?></p>
         <?php endif; ?>

@@ -6,7 +6,11 @@
         <li class="<?= $page===$item?'active':''; ?>"><a href="<?= admin_url('sc_social_login/'.$item); ?>" <?= $page===$item?'aria-current="page"':''; ?>><?= _l('scsl_'.$item); ?></a></li>
     <?php endforeach; ?></ul>
     <?php if(!scsl_license()): ?><div class="alert alert-warning"><?= _l('scsl_license_required'); ?></div><?php endif; ?>
-    <?php if($page==='connections'): $this->load->view('sc_social_login/connections',['audience'=>$audience,'identities'=>$identities]); ?>
+    <?php if($page==='connections'): ?>
+        <?php if(scsl_can('view')): ?><a class="btn btn-default" href="<?= admin_url('sc_social_login/connections'); ?>"><?= _l('scsl_own_accounts'); ?></a>
+        <a class="btn btn-default" href="<?= admin_url('sc_social_login/connections?scope=all'); ?>"><?= _l('scsl_all_accounts'); ?></a><?php endif; ?>
+        <?php $this->load->view('sc_social_login/connections',['audience'=>$audience,'identities'=>$identities]); ?>
+        <?php if(count($identities)===100): ?><a class="btn btn-default" href="<?= admin_url('sc_social_login/connections?scope=' . ($global?'all':'own') . '&before=' . (int) end($identities)['id']); ?>"><?= _l('scsl_older'); ?></a><?php endif; ?>
     <?php elseif($page==='settings'): ?>
         <p><?= _l('scsl_settings_hint'); ?></p>
         <?= form_open(admin_url('sc_social_login/settings'),['autocomplete'=>'off']); ?>

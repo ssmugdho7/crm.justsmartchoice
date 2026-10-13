@@ -171,4 +171,6 @@ docs/crm-module-standards.md
 docs/module-licensing-and-social-signin.md
 ```
 
-Local results: 144 license/OAuth/translation assertions, 63 native database/authorization/session assertions per migration run (both modules), 34 PHP files syntax checked, and private configuration/Apple ES256 utility checks passed. No mail, provider accounts, or customer records were submitted. Browser layout and real provider tests remain unperformed.
+Local results: 149 license/OAuth/translation assertions, 69 native database/authorization/session assertions per migration run (both modules), 34 PHP files syntax checked, and private configuration/Apple ES256 utility checks passed. No mail, provider accounts, or customer records were submitted. Browser layout and real provider tests remain unperformed.
+
+Lists use keyset pagination in batches of 100. Global social-connection viewers can switch between their own connections and all authorized connections.

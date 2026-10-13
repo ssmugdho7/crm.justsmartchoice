@@ -45,3 +45,5 @@ $lang['scl_help_keys'] = 'The owner server issues a random activation key for a 
 $lang['scl_help_trust'] = 'Customer installations verify short-lived confirmations with the owner public key. The signing private key must remain outside the public web directory on the owner server. A failed or expired confirmation disables the licensed feature while password login remains available.';
 $lang['scl_help_future'] = 'Future Smart Choice modules must declare their license identifier and check the license before activation and every protected backend action. Do not change or bypass another vendor’s license checks. See the source delivery guide for setup and examples.';
 $lang['scl_install_failed'] = 'Module installation could not be completed. Review the database permissions and schema before retrying.';
+$lang['scl_latest'] = 'Latest licenses';
+$lang['scl_older'] = 'Older licenses';

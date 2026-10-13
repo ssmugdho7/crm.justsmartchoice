@@ -40,7 +40,7 @@ class Sc_module_licensing extends AdminController
                     $this->input->post('years', true));
             } catch (Throwable $e) { set_alert('danger', _l('scl_issue_failed')); }
         }
-        $rows = (scl_can('view') || scl_can('view_own')) ? $this->sc_license_model->scoped() : [];
+        $rows = (scl_can('view') || scl_can('view_own')) ? $this->sc_license_model->scoped(null, (int) $this->input->get('before')) : [];
         $this->page('licenses', ['licenses'=>$rows, 'issued_key'=>$key]);
     }
     public function change($id)

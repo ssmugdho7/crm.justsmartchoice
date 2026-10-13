@@ -14,7 +14,8 @@ class Sc_social_login extends AdminController
     public function connections()
     {
         if (!(scsl_can('view') || scsl_can('view_own') || scsl_can('create'))) { access_denied('sc_social_login'); }
-        $this->page('connections',['identities'=>$this->sc_identity_model->rows('staff',get_staff_user_id(),scsl_can('view'))]);
+        $global=scsl_can('view') && $this->input->get('scope')==='all';
+        $this->page('connections',['global'=>$global,'identities'=>$this->sc_identity_model->rows('staff',get_staff_user_id(),$global,(int)$this->input->get('before'))]);
     }
     public function remove($id)
     {

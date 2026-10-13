@@ -81,7 +81,7 @@ class Sc_license_model extends App_Model
         return $key;
     }
 
-    public function scoped($id = null)
+    public function scoped($id = null, $before = 0)
     {
         if (!scl_issuer() || !(scl_can('view') || scl_can('view_own'))) {
             throw new RuntimeException('scl_denied');
@@ -89,6 +89,7 @@ class Sc_license_model extends App_Model
         $this->db->select('id,company,module,site,expires,active,created_by,created_at');
         if (!scl_can('view')) { $this->db->where('created_by', get_staff_user_id()); }
         if ($id !== null) { return $this->db->where('id', (int) $id)->get(db_prefix() . 'scl_licenses')->row_array(); }
+        if ($before > 0) { $this->db->where('id <', (int) $before); }
         return $this->db->order_by('id', 'desc')->limit(100)->get(db_prefix() . 'scl_licenses')->result_array();
     }
 

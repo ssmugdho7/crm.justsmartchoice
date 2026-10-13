@@ -54,9 +54,10 @@ require BASEPATH.'database/DB_forge.php';require BASEPATH.'database/drivers/mysq
 require BASEPATH.'libraries/Encryption.php';
 $ci=(object)['db'=>$db,'dbforge'=>new CI_DB_mysqli_forge($db),'encryption'=>new CI_Encryption(['key'=>random_bytes(32)]),
     'input'=>new class {
-        public $body='',$headers=[],$posts=[],$method='post';
+        public $body='',$headers=[],$posts=[],$gets=[],$method='post';
         function ip_address(){return '192.0.2.1';}function method(){return $this->method;}
         function post($k,$clean=false){return $this->posts[$k]??null;}
+        function get($k,$clean=false){return $this->gets[$k]??null;}
         function get_request_header($k,$clean=false){return $this->headers[$k]??'';}
         function __get($k){return $k==='raw_input_stream'?$this->body:null;}
     },'output'=>new class {
@@ -198,6 +199,20 @@ $ci->input->method='post';$loggedStaff=false;
 denied(function()use($oauthController){$oauthController->start('google','staff','link');},'Anonymous linking rejected');
 $loggedStaff=true;$permissions=[];
 denied(function()use($oauthController){$oauthController->start('google','staff','link');},'Staff linking requires Create permission');
+$admin=true;
+for($i=0;$i<202;$i++)$db->insert(db_prefix().'scl_licenses',['key_hash'=>hash('sha256','pagination-fixture-'.$i),
+    'company'=>'Pagination fixture','module'=>'sc_social_login','site'=>base_url(),'expires'=>time()+86400,
+    'created_by'=>$i%2?42:43,'created_at'=>time(),'active'=>1]);
+$first=$model->scoped();$second=$model->scoped(null,(int)end($first)['id']);$third=$model->scoped(null,(int)end($second)['id']);
+check(count($first)===100 && count($second)===100 && count($third)===3,'Global licenses accessible across cursor pages');
+check(count(array_unique(array_column(array_merge($first,$second,$third),'id')))===203,'Pagination has no duplicates or omissions');
+$admin=false;$permissions=['sc_module_licensing:view_own'];
+$own=$model->scoped();$rest=$model->scoped(null,(int)end($own)['id']);
+check(count($own)+count($rest)===102,'Own-scope pagination');
+check(count(array_filter(array_merge($own,$rest),function($r){return (int)$r['created_by']!==42;}))===0,'Cursor cannot leak another issuer employee licenses');
+$permissions=['sc_social_login:view'];$ci->input->gets=['scope'=>'all'];$socialController->connections();
+check($GLOBALS['last_view'][1]['global']===true,'Global connection view is explicit');
+$ci->input->gets=[];$socialController->connections();check($GLOBALS['last_view'][1]['global']===false,'Own connections remain default for global viewers');
 $migrationModule=($argv[1]??'sc_module_licensing');
 if(!in_array($migrationModule,['sc_module_licensing','sc_social_login'],true))throw new RuntimeException('invalid fixture module');
 $db->where('module_name',$migrationModule)->update(db_prefix().'modules',['installed_version'=>'0.9.9']);

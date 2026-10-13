@@ -26,6 +26,7 @@ class Sc_identity_model extends App_Model
             [hash('sha256',$state),hash('sha256',$browser),$provider,time()-600])->row_array();
         if (!$row) { $this->db->trans_rollback(); throw new RuntimeException('scsl_failed'); }
         $this->db->where('state_hash',$row['state_hash'])->delete($table);
+        if (!$this->db->trans_status()) { $this->db->trans_rollback(); throw new RuntimeException('scsl_failed'); }
         $this->db->trans_commit();
         return $row;
     }
@@ -113,9 +114,10 @@ class Sc_identity_model extends App_Model
         hooks()->do_action($audience==='staff'?'after_staff_login':'after_contact_login');
         return $audience==='staff'?admin_url():site_url();
     }
-    public function rows($audience, $id, $global=false)
+    public function rows($audience, $id, $global=false, $before=0)
     {
         if (!$global) { $this->db->where(['audience'=>$audience,'user_id'=>$id]); }
+        if ($before>0) { $this->db->where('id <',(int)$before); }
         return $this->db->select('id,audience,user_id,provider,enabled,created_at')->order_by('id','desc')
             ->limit(100)->get(db_prefix().'scsl_identities')->result_array();
     }

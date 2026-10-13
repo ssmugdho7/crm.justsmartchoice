@@ -67,3 +67,6 @@ $lang['scsl_help_accounts'] = 'Los empleados y clientes existentes confirman el 
 $lang['scsl_help_providers'] = 'Google necesita un cliente web OAuth y una pantalla de consentimiento. Facebook necesita Facebook Login, permiso de correo, URLs de retorno válidas y el modo de aplicación o revisión adecuado. Habilite solo proveedores que haya configurado y probado con credenciales reales de desarrollador.';
 $lang['scsl_help_apple'] = 'El acceso web con Apple requiere configuración de Apple Developer. Su retorno entre sitios valida un estado de un solo uso, una cookie del navegador y un token de identidad firmado. En navegadores que no puedan conservar la cookie requerida, use el acceso con contraseña. El CRM nunca guarda la contraseña del proveedor.';
 $lang['scsl_install_failed'] = 'No se pudo completar la instalación del módulo. Revise los permisos de la base de datos y el esquema antes de volver a intentarlo.';
+$lang['scsl_own_accounts'] = 'Mis conexiones';
+$lang['scsl_all_accounts'] = 'Todas las conexiones autorizadas';
+$lang['scsl_older'] = 'Conexiones anteriores';

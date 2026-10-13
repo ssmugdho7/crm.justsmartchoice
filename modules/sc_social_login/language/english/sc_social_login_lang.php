@@ -67,3 +67,6 @@ $lang['scsl_help_accounts'] = 'Existing employees and clients prove CRM account 
 $lang['scsl_help_providers'] = 'Google needs an OAuth web client and consent screen. Facebook needs Facebook Login, email permission, valid redirect URLs and the appropriate app mode or review. Enable only providers you have configured and tested with real developer credentials.';
 $lang['scsl_help_apple'] = 'Apple web sign-in requires Apple Developer configuration. Its cross-site callback validates a single-use state, browser cookie and signed identity token. On browsers that cannot retain the required callback cookie, use password login. No provider password is ever stored in the CRM.';
 $lang['scsl_install_failed'] = 'Module installation could not be completed. Review the database permissions and schema before retrying.';
+$lang['scsl_own_accounts'] = 'My connections';
+$lang['scsl_all_accounts'] = 'All authorized connections';
+$lang['scsl_older'] = 'Older connections';

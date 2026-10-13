@@ -45,3 +45,5 @@ $lang['scl_help_keys'] = 'El servidor del propietario emite una clave aleatoria 
 $lang['scl_help_trust'] = 'Las instalaciones de clientes verifican confirmaciones de corta duración con la clave pública del propietario. La clave privada de firma debe permanecer fuera del directorio web público en el servidor del propietario. Una confirmación fallida o vencida desactiva la función autorizada; el acceso con contraseña sigue disponible.';
 $lang['scl_help_future'] = 'Los futuros módulos de Smart Choice deben declarar su identificador de licencia y comprobarla antes de la activación y de cada acción protegida del servidor. No modifique ni evada las comprobaciones de otro proveedor. Consulte la guía entregada con el código para ver la configuración y ejemplos.';
 $lang['scl_install_failed'] = 'No se pudo completar la instalación del módulo. Revise los permisos de la base de datos y el esquema antes de volver a intentarlo.';
+$lang['scl_latest'] = 'Licencias recientes';
+$lang['scl_older'] = 'Licencias anteriores';

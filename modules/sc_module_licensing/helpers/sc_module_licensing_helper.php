@@ -10,7 +10,6 @@ function scl_config()
     // Set this environment variable in the host configuration; the file stays outside public_html.
     $path = getenv('SC_LICENSING_CONFIG');
     if ($path && is_file($path)) {
-        $root = realpath(FCPATH);
         $real = realpath($path);
         if ($real && scl_private_path($real) && is_readable($real)) {
             $loaded = require $real;

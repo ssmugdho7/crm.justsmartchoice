@@ -17,7 +17,10 @@
 .sc-portal-toolbar{display:flex;align-items:center;gap:12px;min-height:48px;border-bottom:1px solid var(--portal-border);margin:0 0 22px;padding-bottom:12px;color:var(--portal-muted);font-size:13px}
 .sc-portal-account{margin-inline-start:auto;color:var(--portal-green);max-width:60%;overflow-wrap:anywhere}
 .sc-portal-account i{margin-inline-end:5px}
-.sc-portal-close,.sc-portal-menu-button,.sc-portal-backdrop{display:none}
+/* Theme-wide button styling must not expose inactive navigation controls as grid items. */
+#wrapper.sc-portal-layout .sc-portal-close,#wrapper.sc-portal-layout .sc-portal-menu-button,#wrapper.sc-portal-layout .sc-portal-backdrop{display:none!important}
+#wrapper.sc-portal-layout .sc-portal-backdrop[hidden]{display:none!important}
+@media(min-width:768px){body.customers:has(#wrapper.sc-portal-layout) .navbar.header .navbar-toggle{display:none!important}}
 #wrapper.sc-portal-collapsed{grid-template-columns:76px minmax(0,1fr)}
 .sc-portal-collapsed .sc-portal-sidebar-title strong,.sc-portal-collapsed .sc-portal-nav-group h2,.sc-portal-collapsed .sc-portal-nav-group a span{display:none}
 .sc-portal-collapsed .sc-portal-sidebar-title{padding-inline:0;justify-content:center}
@@ -92,13 +95,13 @@
 @media(max-width:1199px){#wrapper.sc-portal-layout{gap:20px;padding-inline:16px;grid-template-columns:220px minmax(0,1fr)}#wrapper.sc-portal-collapsed{grid-template-columns:76px minmax(0,1fr)}.sc-dashboard-columns{grid-template-columns:1fr}}
 @media(max-width:991px){
   #wrapper.sc-portal-layout,#wrapper.sc-portal-collapsed{display:block;padding-inline:12px}
-  .sc-portal-enhanced .sc-portal-menu-button,.sc-portal-enhanced .sc-portal-close{display:block}
-  .sc-portal-collapse{display:none}
+  #wrapper.sc-portal-enhanced .sc-portal-menu-button,#wrapper.sc-portal-enhanced .sc-portal-close{display:block!important}
+  #wrapper.sc-portal-layout .sc-portal-collapse{display:none!important}
   .sc-portal-sidebar{position:static;max-height:none;margin-bottom:20px}
   .sc-portal-enhanced .sc-portal-sidebar{position:fixed;top:0;bottom:0;inset-inline-start:0;width:min(300px,85vw);max-height:100dvh;border-radius:0;z-index:1040;visibility:hidden;transform:translateX(-100%);transition:transform .18s ease,visibility .18s}
   [dir="rtl"] .sc-portal-enhanced .sc-portal-sidebar{transform:translateX(100%)}
   .sc-portal-enhanced.sc-portal-open .sc-portal-sidebar{transform:translateX(0);visibility:visible}
-  .sc-portal-open .sc-portal-backdrop:not([hidden]){display:block;position:fixed;inset:0;z-index:1039;background:rgba(15,30,23,.4);border:0}
+  #wrapper.sc-portal-open .sc-portal-backdrop:not([hidden]){display:block!important;position:fixed;inset:0;z-index:1039;background:rgba(15,30,23,.4);border:0}
   .sc-portal-collapsed .sc-portal-sidebar-title strong,.sc-portal-collapsed .sc-portal-nav-group h2,.sc-portal-collapsed .sc-portal-nav-group a span{display:block}
   .sc-portal-collapsed .sc-portal-nav-group a{justify-content:start;padding-inline:10px}
   .sc-portal-collapsed .sc-portal-sidebar-title{padding-inline:8px}

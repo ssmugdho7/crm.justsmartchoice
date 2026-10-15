@@ -1,8 +1,12 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <style>
 .sc-auth-password { position:relative; }
-.sc-auth-password .form-control { padding-inline-end:48px; }
+.sc-auth-password .form-control { padding-inline-end:48px !important; }
 .sc-auth-password button { position:absolute; inset-inline-end:2px; top:2px; bottom:2px; width:42px; border:0; border-radius:5px; background:transparent; color:#526865; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+/* Login themes make form buttons full width; the eye must never cover the input. */
+body.customers .login-form .sc-auth-password > button,
+body.authentication form .sc-auth-password > button,
+.sc-auth-password > button { width:42px !important; min-width:42px !important; max-width:42px !important; padding:0; margin:0; }
 .sc-auth-password button:hover { background:#edf6f2; color:#17685d; }
 .sc-auth-password button:focus-visible { outline:2px solid #17685d; outline-offset:2px; }
 .sc-auth-password svg { width:20px; height:20px; }
@@ -29,7 +33,14 @@
             button.innerHTML = visible ? hiddenEye : eye;
         }
         mask(false);
-        button.addEventListener('click', function () { mask(input.type === 'password'); });
+        button.addEventListener('click', function () {
+            var start = input.selectionStart;
+            var end = input.selectionEnd;
+            mask(input.type === 'password');
+            // Keep typing in the field after revealing or hiding its contents.
+            input.focus({ preventScroll: true });
+            if (start !== null && end !== null) input.setSelectionRange(start, end);
+        });
         wrapper.appendChild(button);
         if (input.form) ['submit', 'reset'].forEach(function (event) {
             input.form.addEventListener(event, function () { mask(false); });

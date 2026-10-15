@@ -29,14 +29,7 @@
             button.innerHTML = visible ? hiddenEye : eye;
         }
         mask(false);
-        button.addEventListener('click', function () {
-            var start = input.selectionStart;
-            var end = input.selectionEnd;
-            mask(input.type === 'password');
-            // Keep typing in the field after revealing or hiding its contents.
-            input.focus({ preventScroll: true });
-            if (start !== null && end !== null) input.setSelectionRange(start, end);
-        });
+        button.addEventListener('click', function () { mask(input.type === 'password'); });
         wrapper.appendChild(button);
         if (input.form) ['submit', 'reset'].forEach(function (event) {
             input.form.addEventListener(event, function () { mask(false); });

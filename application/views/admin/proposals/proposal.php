@@ -360,8 +360,8 @@ echo render_select('assigned', $staff, ['staffid', ['firstname', 'lastname']], '
                     </div>
 
                 </div>
+                <?php $this->load->view('admin/includes/smart_choice_sales_links', ['sc_rel_type'=>'proposal','sc_rel_id'=>isset($proposal)?$proposal->id:0]); ?>
             </div>
-            <?php $this->load->view('admin/includes/smart_choice_sales_links', ['sc_rel_type'=>'proposal','sc_rel_id'=>isset($proposal)?$proposal->id:0]); ?>
             <?= form_close(); ?>
             <?php $this->load->view('admin/invoice_items/item'); ?>
         </div>

@@ -82,3 +82,13 @@ $lang['smart_daily_productivity_permission_department_reports'] = 'Department Re
 $lang['smart_daily_productivity_item'] = 'Item';
 $lang['smart_daily_productivity_module_files'] = 'Module Files';
 $lang['smart_daily_productivity_module_options'] = 'Module Options';
+
+$lang['smart_daily_productivity_filter_entries'] = 'Filter';
+
+$lang['smart_daily_productivity_all_entries'] = 'All dates';
+
+$lang['smart_daily_productivity_recent_entries_help'] = 'Showing the latest 500 entries. Use the date filter to find reports for a specific day.';
+
+$lang['smart_daily_productivity_no_entries'] = 'No daily entries found.';
+
+$lang['smart_daily_productivity_entry_save_failed'] = 'The daily entry could not be saved. Please try again.';

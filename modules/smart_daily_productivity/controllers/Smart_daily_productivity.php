@@ -34,13 +34,14 @@ class Smart_daily_productivity extends AdminController
     {
         $this->require_any_permission(['view', 'view_own']);
         $staffId = $this->can_view_global() && $this->input->get('staff_id', true) ? (int) $this->input->get('staff_id', true) : (int) get_staff_user_id();
-        $date = $this->input->get('date', true) ?: date('Y-m-d');
+        $selectedDate = $this->input->get('date', true);
+        $date = $selectedDate ? to_sql_date($selectedDate) : date('Y-m-d');
 
         if ($this->input->post()) {
             if (!has_permission('smart_daily_productivity', '', 'create')) {
                 access_denied('Smart Daily Productivity');
             }
-            $this->Smart_daily_productivity_model->add_entry([
+            $entryId = $this->Smart_daily_productivity_model->add_entry([
                 'staff_id' => $staffId,
                 'entry_date' => $this->input->post('entry_date', true),
                 'title' => $this->input->post('title', true),
@@ -50,16 +51,17 @@ class Smart_daily_productivity extends AdminController
                 'source_type' => 'manual',
                 'status' => 'completed',
             ]);
-            set_alert('success', smart_daily_productivity_label('smart_daily_productivity_entry_saved'));
+            set_alert($entryId ? 'success' : 'danger', smart_daily_productivity_label($entryId ? 'smart_daily_productivity_entry_saved' : 'smart_daily_productivity_entry_save_failed'));
             redirect(admin_url('smart_daily_productivity/my_day?date=' . urlencode((string) $this->input->post('entry_date', true))));
         }
 
         $data = [
             'title' => smart_daily_productivity_label('smart_daily_productivity_my_day'),
             'date' => $date,
+            'selected_date' => $selectedDate ? $date : '',
             'staff_id' => $staffId,
             'staff' => $this->staff_model->get('', ['active' => 1]),
-            'entries' => $this->Smart_daily_productivity_model->get_entries(['staff_id' => $staffId, 'date_from' => $date, 'date_to' => $date]),
+            'entries' => $this->Smart_daily_productivity_model->get_entries(['staff_id' => $staffId, 'date_from' => $selectedDate ? $date : null, 'date_to' => $selectedDate ? $date : null]),
         ];
         $this->load->view('my_day', $data);
     }

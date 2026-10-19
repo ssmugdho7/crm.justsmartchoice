@@ -18,3 +18,13 @@ $lang['import'] = 'Importar';
 $lang['export'] = 'Exportar';
 $lang['sample_header'] = 'Encabezado de Muestra';
 $lang['mass_delete'] = 'Eliminar en Masa';
+
+$lang['smart_daily_productivity_filter_entries'] = 'Filtrar';
+
+$lang['smart_daily_productivity_all_entries'] = 'Todas las fechas';
+
+$lang['smart_daily_productivity_recent_entries_help'] = 'Se muestran las últimas 500 entradas. Use el filtro de fecha para buscar informes de un día específico.';
+
+$lang['smart_daily_productivity_no_entries'] = 'No se encontraron entradas diarias.';
+
+$lang['smart_daily_productivity_entry_save_failed'] = 'No se pudo guardar la entrada diaria. Inténtelo de nuevo.';

@@ -32,7 +32,9 @@ class Smart_daily_productivity_model extends App_Model
             return 0;
         }
 
-        $this->db->insert(db_prefix() . 'smart_daily_productivity_entries', $insert);
+        if (!$this->db->insert(db_prefix() . 'smart_daily_productivity_entries', $insert)) {
+            return 0;
+        }
         $id = (int) $this->db->insert_id();
         $this->recalculate_score($insert['staff_id'], $insert['entry_date']);
         $this->write_log('entry_created', 'Daily productivity entry created.', $insert['staff_id']);
@@ -457,7 +459,7 @@ class Smart_daily_productivity_model extends App_Model
 
     private function clean_date(string $date): string
     {
-        $time = strtotime($date);
+        $time = strtotime((string) to_sql_date($date));
         return $time ? date('Y-m-d', $time) : date('Y-m-d');
     }
 

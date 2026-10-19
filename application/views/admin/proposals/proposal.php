@@ -1,5 +1,9 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<?php init_head(); ?>
+<?php
+$this->load->helper('smart_choice_sales_links');
+$this->app_css->add('sc-sales-form-layout', 'assets/css/sales-form-layout.css?v=1');
+init_head();
+?>
 <div id="wrapper">
     <div class="content accounting-template proposal">
         <div class="row">
@@ -30,7 +34,7 @@ if ($this->input->get('estimate_request_id')) {
                 <div class="tw-flex tw-flex-wrap tw-items-start tw-justify-between tw-gap-4 tw-mb-3">
                 <h4 class="tw-mt-0 tw-font-bold tw-text-lg tw-text-neutral-700 tw-flex tw-items-center tw-space-x-2">
                     <span>
-                        <?= isset($proposal) ? e(_l('proposal') . ' ' . format_proposal_number($proposal->id)) : _l('new_proposal'); ?>
+                        <?= isset($proposal) ? e(sc_sales_document_heading('proposal', format_proposal_number($proposal->id))) : _l('new_proposal'); ?>
                     </span>
                     <?= isset($proposal) ? format_proposal_status($proposal->status) : ''; ?>
                 </h4>
@@ -296,9 +300,7 @@ echo render_select('assigned', $staff, ['staffid', ['firstname', 'lastname']], '
 
                             </div>
                         </div>
-                        <div class="sc-proposal-custom-fields-fullwidth">
-                            <?php $scProposalCustomFields = render_custom_fields('proposal', $fc_rel_id); echo preg_replace('/col-md-\d+/', 'col-md-6', $scProposalCustomFields); ?>
-                        </div>
+                        <?php $this->load->view('admin/includes/smart_choice_sales_custom_fields', ['sc_custom_fields_type' => 'proposal', 'sc_custom_fields_rel_id' => $fc_rel_id]); ?>
                         <div class="panel-body sc-proposal-content-editor">
                             <p class="text-muted"><?= e(_l('sc_proposal_items_editor_help')); ?></p>
                             <?php

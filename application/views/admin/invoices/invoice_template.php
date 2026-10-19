@@ -250,10 +250,9 @@ $data_original_number = isset($invoice) ? $invoice->number : 'false';
                 <?php if (isset($custom_fields_rel_transfer)) {
                     $rel_id = $custom_fields_rel_transfer;
                 } ?>
-                <?= render_custom_fields('invoice', $rel_id); ?>
             </div>
             <div class="col-md-6">
-                <div class="tw-ml-3">
+                <div class="sc-sales-secondary-fields">
                     <div class="form-group">
                         <label for="tags" class="control-label"><i class="fa fa-tag" aria-hidden="true"></i>
                             <?= _l('tags'); ?></label>
@@ -509,6 +508,7 @@ echo render_select('sale_agent', $staff, ['staffid', ['firstname', 'lastname']],
                 </div>
             </div>
         </div>
+        <?php $this->load->view('admin/includes/smart_choice_sales_custom_fields', ['sc_custom_fields_type' => 'invoice', 'sc_custom_fields_rel_id' => $rel_id]); ?>
     </div>
 
     <hr class="hr-panel-separator" />

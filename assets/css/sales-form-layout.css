@@ -1,0 +1,28 @@
+/* Preserve native controls and configured field widths; align rows below both columns. */
+.sc-sales-custom-fields { clear: both; margin-top: 16px; }
+@media (min-width: 992px) {
+  .sc-sales-custom-fields > .custom-fields-form-row {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 16px 30px;
+    margin: 0;
+  }
+  .sc-sales-custom-fields > .custom-fields-form-row::before,
+  .sc-sales-custom-fields > .custom-fields-form-row::after { display: none; }
+  .sc-sales-custom-fields > .custom-fields-form-row > [class*="col-md-"] {
+    width: auto; min-width: 0; padding: 0; float: none;
+  }
+  .sc-sales-custom-fields .custom-fields-form-row > .col-md-1 { grid-column: span 1; }
+  .sc-sales-custom-fields .custom-fields-form-row > .col-md-2 { grid-column: span 2; }
+  .sc-sales-custom-fields .custom-fields-form-row > .col-md-3 { grid-column: span 3; }
+  .sc-sales-custom-fields .custom-fields-form-row > .col-md-4 { grid-column: span 4; }
+  .sc-sales-custom-fields .custom-fields-form-row > .col-md-5 { grid-column: span 5; }
+  .sc-sales-custom-fields .custom-fields-form-row > .col-md-6 { grid-column: span 6; }
+  .sc-sales-custom-fields .custom-fields-form-row > .col-md-7 { grid-column: span 7; }
+  .sc-sales-custom-fields .custom-fields-form-row > .col-md-8 { grid-column: span 8; }
+  .sc-sales-custom-fields .custom-fields-form-row > .col-md-9 { grid-column: span 9; }
+  .sc-sales-custom-fields .custom-fields-form-row > .col-md-10 { grid-column: span 10; }
+  .sc-sales-custom-fields .custom-fields-form-row > .col-md-11 { grid-column: span 11; }
+  .sc-sales-custom-fields .custom-fields-form-row > .col-md-12 { grid-column: span 12; }
+  .sc-sales-custom-fields > .custom-fields-form-row > [class*="col-md-"] > .form-group { margin-bottom: 0; }
+}

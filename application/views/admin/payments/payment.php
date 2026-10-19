@@ -1,13 +1,13 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<?php init_head(); ?>
+<?php $this->load->helper('smart_choice_sales_links'); init_head(); ?>
 <div id="wrapper">
     <div class="content">
         <div class="tw-max-w-4xl tw-mx-auto">
             <h4 class="tw-mt-0 tw-font-bold tw-text-lg tw-text-neutral-700">
-                <?= _l('payment_edit_for_invoice'); ?>
+                <?= _l('sc_payment_for_document'); ?>
                 <a
                     href="<?= admin_url('invoices/list_invoices/' . $payment->invoiceid); ?>">
-                    <?= e(format_invoice_number($payment->invoice->id)); ?>
+                    <?= e(sc_sales_document_heading('invoice', format_invoice_number($payment->invoice->id))); ?>
                 </a>
             </h4>
             <div class="horizontal-scrollable-tabs">

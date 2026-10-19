@@ -1,5 +1,9 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<?php init_head(); ?>
+<?php
+$this->load->helper('smart_choice_sales_links');
+$this->app_css->add('sc-sales-form-layout', 'assets/css/sales-form-layout.css?v=1');
+init_head();
+?>
 <div id="wrapper">
     <div class="content">
         <div class="row">
@@ -7,7 +11,7 @@
             <?php if (isset($invoice)) { echo form_hidden('isedit'); } ?>
             <div class="col-md-12">
                 <h4 class="tw-mt-0 tw-font-bold tw-text-lg tw-text-neutral-700 tw-flex tw-items-center tw-space-x-2">
-                    <span><?= isset($invoice) ? e(_l('invoice') . ' ' . format_invoice_number($invoice)) : _l('create_new_invoice'); ?></span>
+                    <span><?= isset($invoice) ? e(sc_sales_document_heading('invoice', format_invoice_number($invoice))) : _l('create_new_invoice'); ?></span>
                     <?= isset($invoice) ? format_invoice_status($invoice->status) : ''; ?>
                 </h4>
                 <?php $this->load->view('admin/invoices/invoice_template'); ?>

@@ -4168,4 +4168,5 @@ $lang['sc_proposal_items_location'] = 'Los artículos se muestran en la sección
 
 $lang['sc_attachment_unavailable'] = 'Este archivo adjunto no está disponible actualmente. Pida al equipo que lo cargue de nuevo.';
 $lang['sc_proposal_items_editor_label'] = 'Artículos de la propuesta — tabla automática';
+$lang['sc_payment_for_document'] = 'Pago de';
 $lang['sc_proposal_items_editor_help'] = 'Edite las descripciones, cantidades y precios en la tabla de artículos de abajo. Este marcador inserta la tabla actual en la propuesta del cliente y el PDF; no guarda una copia de los precios.';

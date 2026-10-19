@@ -1,5 +1,25 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
+/** Add the document type to admin headings without repeating configured prefixes. */
+function sc_sales_document_heading(string $type, string $number): string
+{
+    $aliases = [
+        'proposal' => ['Proposal', 'Propuesta'],
+        'estimate' => ['Estimate', 'Presupuesto'],
+        'invoice' => ['Invoice', 'Factura'],
+        'credit_note' => ['Credit Note', 'Nota de crédito'],
+    ];
+    $label = _l($type);
+    $names = array_unique(array_merge([$label], $aliases[$type] ?? []));
+    usort($names, function ($a, $b) { return strlen($b) <=> strlen($a); });
+    $pattern = '~^(?:' . implode('|', array_map(function ($name) { return preg_quote($name, '~'); }, $names)) . ')(?=$|[\\s#:\\-|])\\s*~iu';
+    $number = trim($number);
+    while (preg_match($pattern, $number)) {
+        $number = trim(preg_replace($pattern, '', $number, 1));
+    }
+    return $label . ($number !== '' ? ' ' . $number : '');
+}
+
 function sc_sales_links_get($rel_type, $rel_id)
 {
     $CI = &get_instance();

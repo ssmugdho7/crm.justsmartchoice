@@ -1,5 +1,9 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<?php init_head(); ?>
+<?php
+$this->load->helper('smart_choice_sales_links');
+$this->app_css->add('sc-sales-form-layout', 'assets/css/sales-form-layout.css?v=1');
+init_head();
+?>
 <div id="wrapper">
     <div class="content">
         <div class="row">
@@ -13,19 +17,18 @@
                 <h4
                     class="tw-mt-0 tw-font-bold tw-text-lg tw-text-neutral-700 tw-flex tw-items-center tw-space-x-2">
                     <span>
-                        <?php echo isset($estimate) ? e(_l('estimate') . ' ' . format_estimate_number($estimate)) : _l('create_new_estimate'); ?>
+                        <?php echo isset($estimate) ? e(sc_sales_document_heading('estimate', format_estimate_number($estimate))) : _l('create_new_estimate'); ?>
                     </span>
                     <?php echo isset($estimate) ? format_estimate_status($estimate->status) : ''; ?>
                 </h4>
                 <?php $this->load->view('admin/estimates/estimate_template'); ?>
-            </div>
             <?php $this->load->view('admin/includes/smart_choice_sales_attachments', ['sc_rel_type'=>'estimate','sc_rel_id'=>isset($estimate)?(int)$estimate->id:0]); ?>
             <?php $this->load->view('admin/includes/smart_choice_sales_links', ['sc_rel_type'=>'estimate','sc_rel_id'=>isset($estimate)?$estimate->id:0]); ?>
-                        <?php echo form_close(); ?>
+            </div>
+            <?php echo form_close(); ?>
             <?php $this->load->view('admin/invoice_items/item'); ?>
         </div>
     </div>
-</div>
 </div>
 <?php init_tail(); ?>
 <script>

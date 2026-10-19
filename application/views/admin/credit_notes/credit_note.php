@@ -1,5 +1,9 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<?php init_head(); ?>
+<?php
+$this->load->helper('smart_choice_sales_links');
+$this->app_css->add('sc-sales-form-layout', 'assets/css/sales-form-layout.css?v=1');
+init_head();
+?>
 <div id="wrapper">
     <div class="content">
         <div class="row">
@@ -11,7 +15,7 @@ if (isset($credit_note)) {
             <div class="col-md-12">
                 <h4 class="tw-mt-0 tw-font-bold tw-text-lg tw-text-neutral-700 tw-flex tw-items-center tw-space-x-2">
                     <span>
-                        <?= isset($credit_note) ? e(_l('credit_note') . ' ' . format_credit_note_number($credit_note->id)) : _l('new_credit_note'); ?>
+                        <?= isset($credit_note) ? e(sc_sales_document_heading('credit_note', format_credit_note_number($credit_note->id))) : _l('new_credit_note'); ?>
                     </span>
                     <?= isset($credit_note) ? format_credit_note_status($credit_note->status) : ''; ?>
                 </h4>
@@ -215,7 +219,7 @@ $data_original_number = isset($credit_note) ? $credit_note->number : 'false';
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="tw-ml-3">
+                                <div class="sc-sales-secondary-fields">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <?php
@@ -272,10 +276,10 @@ $credit_note_currency_attr = hooks()->apply_filters('credit_note_currency_attrib
                                     <?php $value = (isset($credit_note) ? $credit_note->adminnote : ''); ?>
                                     <?= render_textarea('adminnote', 'credit_note_admin_note', $value); ?>
                                     <?php $rel_id = (isset($credit_note) ? $credit_note->id : false); ?>
-                                    <?= render_custom_fields('credit_note', $rel_id); ?>
                                 </div>
                             </div>
                         </div>
+                        <?php $this->load->view('admin/includes/smart_choice_sales_custom_fields', ['sc_custom_fields_type' => 'credit_note', 'sc_custom_fields_rel_id' => $rel_id]); ?>
                     </div>
                     <hr class="hr-panel-separator" />
                     <div class="panel-body">

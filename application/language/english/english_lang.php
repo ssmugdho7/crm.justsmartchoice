@@ -4357,4 +4357,5 @@ $lang['sc_proposal_items_location'] = 'Items are shown in the Proposal Items sec
 
 $lang['sc_attachment_unavailable'] = 'This attachment is currently unavailable. Please ask the team to upload it again.';
 $lang['sc_proposal_items_editor_label'] = 'Proposal items — automatic table';
+$lang['sc_payment_for_document'] = 'Payment for';
 $lang['sc_proposal_items_editor_help'] = 'Edit item descriptions, quantities and prices in the items table below. This marker inserts the current table in the customer proposal and PDF; it does not store a copy of the prices.';

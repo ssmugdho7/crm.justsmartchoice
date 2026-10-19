@@ -221,10 +221,9 @@
     $scpsDocumentId = isset($estimate) ? (int) ($estimate->id) : 0;
     include module_dir_path('smart_choice_payment_schedule', 'views/partials/payment_fields.php');
 } ?>
-                <?php echo render_custom_fields('estimate', $rel_id); ?>
             </div>
             <div class="col-md-6">
-                <div class="tw-ml-3">
+                <div class="sc-sales-secondary-fields">
                     <div class="form-group">
                         <label for="tags" class="control-label"><i class="fa fa-tag" aria-hidden="true"></i>
                             <?php echo _l('tags'); ?></label>
@@ -320,10 +319,10 @@
                 </div>
             </div>
         </div>
+        <?php $this->load->view('admin/includes/smart_choice_sales_custom_fields', ['sc_custom_fields_type' => 'estimate', 'sc_custom_fields_rel_id' => $rel_id]); ?>
     </div>
 
     <hr class="hr-panel-separator" />
-</div>
 
     <?php $this->load->view('admin/estimates/_add_edit_items'); ?>
 

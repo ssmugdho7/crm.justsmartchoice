@@ -186,9 +186,9 @@ class Smart_daily_productivity extends AdminController
         $allowedCategories = ['Project Task', 'Contract Task', 'Client Task', 'Research Task', 'Client Ticket', 'Other Process'];
         $updated = in_array($category, $allowedCategories, true) && $this->Smart_daily_productivity_model->update_entry((int) $id, [
             'entry_date' => $this->input->post('entry_date', true),
-            'title' => $this->input->post('title', true),
-            'description' => $this->input->post('description', true),
-            'minutes_spent' => (int) $this->input->post('minutes_spent', true),
+            'title' => $this->input->post('edit_title', true),
+            'description' => $this->input->post('edit_description', true),
+            'minutes_spent' => (int) $this->input->post('edit_minutes_spent', true),
             'category' => $category,
         ]);
         set_alert($updated ? 'success' : 'danger', smart_daily_productivity_label($updated ? 'smart_daily_productivity_entry_updated' : 'smart_daily_productivity_entry_update_failed'));

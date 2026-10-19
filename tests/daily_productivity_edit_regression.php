@@ -28,14 +28,14 @@ $controller = new EditControllerFixture();
 $controller->input = new InputEditFixture();
 $controller->Smart_daily_productivity_model = new EntryEditFixture();
 $controller->Smart_daily_productivity_model->entry = (object)['staff_id'=>17, 'source_type'=>'manual'];
-$controller->input->body = ['entry_date'=>'2026-10-16','title'=>'Updated title','description'=>'Updated notes','minutes_spent'=>'45','category'=>'Project Task'];
+$controller->input->body = ['entry_date'=>'2026-10-16','edit_title'=>'Updated title','edit_description'=>'Updated notes','edit_minutes_spent'=>'45','category'=>'Project Task'];
 $permissions = ['edit', 'view_own'];
 try { $controller->update_entry(4); throw new RuntimeException('Expected redirect'); }
 catch (RedirectEditFixture $redirect) {
     check_edit(strpos($redirect->getMessage(), 'staff_id=17') !== false && strpos($redirect->getMessage(), 'date=2026-10-16') !== false, 'Successful edit returns to entry date and staff');
 }
 check_edit(count($controller->Smart_daily_productivity_model->updated) === 1, 'Own manual entry is updated');
-check_edit($controller->Smart_daily_productivity_model->updated[0][1]['minutes_spent'] === 45, 'Submitted entry fields are passed to update');
+check_edit($controller->Smart_daily_productivity_model->updated[0][1]['minutes_spent'] === 45 && $controller->Smart_daily_productivity_model->updated[0][1]['title'] === 'Updated title', 'Submitted entry fields are passed to update');
 
 $controller->Smart_daily_productivity_model->entry = (object)['staff_id'=>18, 'source_type'=>'manual'];
 $permissions = ['edit', 'view_own'];

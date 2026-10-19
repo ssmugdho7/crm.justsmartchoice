@@ -20,6 +20,28 @@ function hooks() {
 function html_escape($text) { return htmlspecialchars((string) $text, ENT_QUOTES, 'UTF-8'); }
 function _l($key) { global $lang; return $lang[$key] ?? $key; }
 function site_url($path) { return 'https://example.test/' . $path; }
+function e($text) { return html_escape($text); }
+function db_prefix() { return 'tbl'; }
+function get_mime_class($mime) { return 'fa-file'; }
+class AttachmentViewFixture {
+    public $db;
+    public function __construct($rows) {
+        $this->db = new class($rows) {
+            private $rows;
+            public function __construct($rows) { $this->rows = $rows; }
+            public function where(...$args) { return $this; }
+            public function order_by(...$args) { return $this; }
+            public function get(...$args) { return $this; }
+            public function result_array() { return $this->rows; }
+        };
+    }
+    public function render() {
+        $sc_rel_type = 'proposal'; $sc_rel_id = 2;
+        ob_start();
+        include dirname(__DIR__) . '/application/views/admin/includes/smart_choice_sales_attachments.php';
+        return ob_get_clean();
+    }
+}
 function check($condition, $message) { if (!$condition) { throw new RuntimeException($message); } }
 $paths = [];
 try {
@@ -32,6 +54,15 @@ try {
         file_put_contents($path, '%PDF-1.4 synthetic test');
         $paths[] = $path;
         check(sc_sales_attachment_available($row), 'Readable local file was hidden');
+        if ($type === 'proposal') {
+            $row['filetype'] = 'application/pdf';
+            $existingHtml = (new AttachmentViewFixture([$row]))->render();
+            check(strpos($existingHtml, '<iframe') !== false, 'Readable PDF preview missing from admin editor');
+            $missingRow = $row; $missingRow['file_name'] = 'missing.pdf';
+            $missingHtml = (new AttachmentViewFixture([$missingRow]))->render();
+            check(strpos($missingHtml, '<iframe') === false && strpos($missingHtml, 'href=') === false, 'Admin editor embeds an unavailable file');
+            check(strpos($missingHtml, 'upload it again') !== false, 'Admin editor does not explain missing storage');
+        }
         check(sc_sales_attachment_preview_url($row) === 'https://example.test/download/file/sales_attachment/fixture-key?preview=1', 'Preview URL changed');
         check(sc_sales_attachment_download_url($row) === 'https://example.test/download/file/sales_attachment/fixture-key', 'Download URL changed');
         $missing = $row;

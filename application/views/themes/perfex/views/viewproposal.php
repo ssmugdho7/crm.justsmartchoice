@@ -111,11 +111,8 @@ if ($scPaymentMeta) {
     <?php }
       $items = ob_get_contents();
 ob_end_clean();
-$scProposalHadItemsToken = strpos((string) $proposal->content, '{proposal_items}') !== false;
-$proposal->content = str_replace('{proposal_items}', $items, $proposal->content);
-if (! $scProposalHadItemsToken) {
-    $proposal->content .= '<div class="sc-proposal-public-items mtop20">' . $items . '</div>';
-}
+require_once APPPATH . 'helpers/proposal_pdf_helper.php';
+$proposal->content = sc_proposal_items_content($proposal->content, $items);
 ?>
     <div class="mtop15 preview-top-wrapper">
         <div class="row">

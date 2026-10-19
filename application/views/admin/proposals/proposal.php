@@ -300,11 +300,12 @@ echo render_select('assigned', $staff, ['staffid', ['firstname', 'lastname']], '
                             <?php $scProposalCustomFields = render_custom_fields('proposal', $fc_rel_id); echo preg_replace('/col-md-\d+/', 'col-md-6', $scProposalCustomFields); ?>
                         </div>
                         <div class="panel-body sc-proposal-content-editor">
+                            <p class="text-muted"><?= e(_l('sc_proposal_items_editor_help')); ?></p>
                             <?php
                             $scProposalDefaultContent = '';
                             $scProposalContent = isset($proposal) && trim((string)$proposal->content) !== '' ? $proposal->content : $scProposalDefaultContent;
                             ?>
-                            <?= render_textarea('content', 'proposal_content', $scProposalContent, ['rows'=>12], [], '', 'tinymce'); ?>
+                            <?= render_textarea('content', 'proposal_content', $scProposalContent, ['rows'=>12], [], '', 'tinymce-manual'); ?>
                             <div class="sc-proposal-merge-fields-box mtop10">
                                 <strong><?= _l('sc_proposal_merge_fields_help'); ?></strong>
                                 <div class="mtop5">
@@ -370,6 +371,7 @@ echo render_select('assigned', $staff, ['staffid', ['firstname', 'lastname']], '
 </div>
 
 <?php init_tail(); ?>
+<script src="<?= base_url('assets/js/proposal-items-editor.js?v=1'); ?>"></script>
 <script>
     var _rel_id = $('#rel_id'),
         _rel_type = $('#rel_type'),
@@ -379,7 +381,27 @@ echo render_select('assigned', $staff, ['staffid', ['firstname', 'lastname']], '
 
     $(function() {
         // Client note and terms are always rich-text editors. No duplicate enable/disable controls.
-        init_editor('#content,#clientnote,#terms', { height: 220 });
+        init_editor('#clientnote,#terms', { height: 220 });
+        var itemsPlaceholderLabel = <?= json_encode(_l('sc_proposal_items_editor_label'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+        init_editor('#content', {
+            height: 220,
+            setup: function (editor) {
+                editor.on('BeforeSetContent', function (event) {
+                    event.content = SCProposalItemsEditor.toEditor(event.content, itemsPlaceholderLabel);
+                });
+                editor.on('PostProcess', function (event) {
+                    if (event.get) { event.content = SCProposalItemsEditor.toTemplate(event.content); }
+                });
+                editor.on('init', function () { editor.getDoc().body.style.fontSize = '12pt'; });
+            }
+        });
+        $(document).on('click', '.sc-insert-proposal-merge-field', function () {
+            var editor = tinymce.get('content');
+            if (editor) {
+                editor.focus();
+                editor.insertContent(SCProposalItemsEditor.toEditor($(this).attr('data-merge'), itemsPlaceholderLabel));
+            }
+        });
 
         // Some legacy hooks can render the proposal optional checkbox twice. Keep exactly one per item row.
         function scNormalizeProposalOptionalCheckboxes() {

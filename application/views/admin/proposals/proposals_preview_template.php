@@ -367,6 +367,10 @@ if (count($tags) > 0) {
                             <?= _l('proposal_files'); ?>
                         </p>
                         <?php foreach ($proposal->attachments as $attachment) {
+                            if (!sc_sales_attachment_available($attachment)) {
+                                echo '<div class="row">' . sc_sales_attachment_unavailable_html($attachment) . '</div>';
+                                continue;
+                            }
                             $attachment_url = sc_sales_attachment_download_url($attachment);
                                 $attachment_preview_url = sc_sales_attachment_preview_url($attachment); ?>
                         <div class="mbot15 row"

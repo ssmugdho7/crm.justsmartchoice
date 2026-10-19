@@ -19,6 +19,10 @@ if ($scRelType && $scRelId) {
         <?php if ($rows) { ?>
         <div class="row mtop15">
             <?php foreach ($rows as $a) {
+                if (!sc_sales_attachment_available($a)) {
+                    echo sc_sales_attachment_unavailable_html($a);
+                    continue;
+                }
                 $url = sc_sales_attachment_download_url($a);
                 $preview = sc_sales_attachment_preview_url($a);
                 $ext  = strtolower(pathinfo((string) $a['file_name'], PATHINFO_EXTENSION));

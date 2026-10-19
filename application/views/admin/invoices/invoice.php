@@ -7,7 +7,7 @@
             <?php if (isset($invoice)) { echo form_hidden('isedit'); } ?>
             <div class="col-md-12">
                 <h4 class="tw-mt-0 tw-font-bold tw-text-lg tw-text-neutral-700 tw-flex tw-items-center tw-space-x-2">
-                    <span><?= e(isset($invoice) ? format_invoice_number($invoice) : _l('create_new_invoice')); ?></span>
+                    <span><?= isset($invoice) ? e(_l('invoice') . ' ' . format_invoice_number($invoice)) : _l('create_new_invoice'); ?></span>
                     <?= isset($invoice) ? format_invoice_status($invoice->status) : ''; ?>
                 </h4>
                 <?php $this->load->view('admin/invoices/invoice_template'); ?>

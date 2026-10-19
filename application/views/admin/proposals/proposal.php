@@ -29,7 +29,7 @@ if ($this->input->get('estimate_request_id')) {
             <div class="col-md-12">
                 <h4 class="tw-mt-0 tw-font-bold tw-text-lg tw-text-neutral-700 tw-flex tw-items-center tw-space-x-2">
                     <span>
-                        <?= e(isset($proposal) ? format_proposal_number($proposal->id) : _l('new_proposal')); ?>
+                        <?= isset($proposal) ? e(_l('proposal') . ' ' . format_proposal_number($proposal->id)) : _l('new_proposal'); ?>
                     </span>
                     <?= isset($proposal) ? format_proposal_status($proposal->status) : ''; ?>
                 </h4>
@@ -187,13 +187,6 @@ $currency_attr = hooks()->apply_filters('proposal_currency_attributes', $currenc
                                     $scpsDocumentId = isset($proposal) ? (int) $proposal->id : 0;
                                     include module_dir_path('smart_choice_payment_schedule', 'views/partials/payment_fields.php');
                                 } ?>
-                                <div class="form-group no-mbot">
-                                    <label for="tags" class="control-label"><i class="fa fa-tag" aria-hidden="true"></i>
-                                        <?= _l('tags'); ?></label>
-                                    <input type="text" class="tagsinput" id="tags" name="tags"
-                                        value="<?= isset($proposal) ? prep_tags_input(get_tags_in($proposal->id, 'proposal')) : ''; ?>"
-                                        data-role="tagsinput">
-                                </div>
                                 <div class="form-group mtop10 no-mbot">
                                     <p><?= _l('proposal_allow_comments'); ?>
                                     </p>
@@ -207,6 +200,17 @@ $currency_attr = hooks()->apply_filters('proposal_currency_attributes', $currenc
                                 </div>
                             </div>
                             <div class="col-md-6">
+                                <div class="panel_s">
+                                    <div class="panel-body">
+                                        <div class="form-group no-mbot">
+                                            <label for="tags" class="control-label"><i class="fa fa-tag" aria-hidden="true"></i>
+                                                <?= _l('tags'); ?></label>
+                                            <input type="text" class="tagsinput" id="tags" name="tags"
+                                                value="<?= isset($proposal) ? prep_tags_input(get_tags_in($proposal->id, 'proposal')) : ''; ?>"
+                                                data-role="tagsinput">
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="panel_s sc-proposal-customer-edit-card">
                                     <div class="panel-body tw-bg-neutral-50">
                                         <h4 class="tw-font-semibold tw-mt-0 tw-mb-3"><i class="fa-regular fa-address-card tw-mr-1"></i> <?= _l('sc_customer_information'); ?></h4>

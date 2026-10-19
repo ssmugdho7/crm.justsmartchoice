@@ -11,7 +11,7 @@ if (isset($credit_note)) {
             <div class="col-md-12">
                 <h4 class="tw-mt-0 tw-font-bold tw-text-lg tw-text-neutral-700 tw-flex tw-items-center tw-space-x-2">
                     <span>
-                        <?= e(isset($credit_note) ? format_credit_note_number($credit_note->id) : _l('new_credit_note')); ?>
+                        <?= isset($credit_note) ? e(_l('credit_note') . ' ' . format_credit_note_number($credit_note->id)) : _l('new_credit_note'); ?>
                     </span>
                     <?= isset($credit_note) ? format_credit_note_status($credit_note->status) : ''; ?>
                 </h4>

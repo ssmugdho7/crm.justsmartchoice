@@ -477,26 +477,15 @@ class Appointly_model extends App_Model
             }
 
             $template = null;
-            // Send email to customer if by_email is enabled
-            if (! empty($appointment['email'])) {
-                try {
-                    $template = mail_template(
-                        'appointly_appointment_approved_to_contact',
-                        'appointly',
-                        array_to_object($appointment)
-                    );
-
-                    // Send the email
-                    $template->send();
-                } catch (Exception $e) {
-                    // Log the error but continue
-                    log_message('error', 'Failed to send appointment email: ' . $e->getMessage());
-                }
+            $this->load->model('appointly/appointly_dispatch_model', 'dispatch_notifications');
+            if ($appointment) {
+                $this->dispatch_notifications->scheduled(array_to_object($appointment));
             }
 
             // Send SMS to customer if by_sms is enabled
-            if (! empty($appointment['phone'])) {
+            if (! empty($appointment['phone']) && !empty($appointment['by_sms'])) {
                 try {
+                    $template = mail_template('appointly_appointment_approved_to_contact', 'appointly', array_to_object($appointment));
                     // Trigger SMS
                     $this->app_sms->trigger(
                         APPOINTLY_SMS_APPOINTMENT_APPROVED_TO_CLIENT,
@@ -899,17 +888,8 @@ class Appointly_model extends App_Model
                 return;
             }
 
-            // Send confirmation email to client
-            $template = mail_template(
-                'appointly_appointment_submitted_to_contact',
-                'appointly',
-                array_to_object($appointment)
-            );
-
-            if ($template) {
-                $template->send();
-                log_message('info', 'Client confirmation email sent for appointment ID: ' . $appointment_id);
-            }
+            $this->load->model('appointly/appointly_dispatch_model', 'dispatch_notifications');
+            $this->dispatch_notifications->scheduled(array_to_object($appointment));
         } catch (Exception $e) {
             // Log the error but don't interrupt the appointment creation
             log_message('error', 'Failed to send client confirmation email for appointment ID ' . $appointment_id . ': ' . $e->getMessage());
@@ -1182,21 +1162,11 @@ class Appointly_model extends App_Model
                     }
                 }
 
-                // Send email notification if by_email is enabled to contact
-                $template = mail_template('appointly_appointment_updated_to_contact', 'appointly', array_to_object($updateAppointment));
-
-                if ($template) {
-                    $template->send();
-
-                    // Send SMS notification if by_sms is enabled
-                    if (! empty($updateAppointment['phone'])) {
-                        $merge_fields = $template->get_merge_fields();
-                        $this->app_sms->trigger(
-                            APPOINTLY_SMS_APPOINTMENT_UPDATED_TO_CLIENT,
-                            $updateAppointment['phone'],
-                            $merge_fields
-                        );
-                    }
+                // Preserve explicitly enabled legacy SMS; dispatch customer notices use email only.
+                if (!empty($updateAppointment['phone']) && !empty($updateAppointment['by_sms'])) {
+                    $template = mail_template('appointly_appointment_updated_to_contact', 'appointly', array_to_object($updateAppointment));
+                    $this->app_sms->trigger(APPOINTLY_SMS_APPOINTMENT_UPDATED_TO_CLIENT,
+                        $updateAppointment['phone'], $template->get_merge_fields());
                 }
 
                 // Trigger notifications
@@ -1231,6 +1201,11 @@ class Appointly_model extends App_Model
                 'end_hour'   => $updateData['end_hour'],
             ]));
         }
+
+        // Also cover appointments saved without an attendees array. Dedupe unchanged schedules.
+        $this->load->model('appointly/appointly_dispatch_model', 'dispatch_notifications');
+        $saved = $this->get_appointment_data($data['appointment_id']);
+        if ($saved) { $this->dispatch_notifications->scheduled(array_to_object($saved)); }
 
         return true;
     }

@@ -87,8 +87,12 @@ class Smartchoice extends AdminController
             return [];
         }
 
-        $this->db->select('id, subject, date, start_hour, end_hour, status, provider_id');
-        $this->db->from(db_prefix() . 'appointly_appointments');
+        $this->db->select('a.id, a.subject, a.date, a.start_hour, a.end_hour, a.status, a.provider_id');
+        $this->db->from(db_prefix() . 'appointly_appointments a');
+        if ($this->db->table_exists(db_prefix().'appointly_installer_tracking_bridge')) {
+            $this->db->select('dispatch.tracking_status AS dispatch_status');
+            $this->db->join(db_prefix().'appointly_installer_tracking_bridge dispatch', 'dispatch.appointment_id = a.id', 'left');
+        }
         $this->db->where('date', date('Y-m-d'));
         $this->db->where_in('status', ['pending', 'in-progress']);
         if ($staff_id) {
@@ -99,7 +103,7 @@ class Smartchoice extends AdminController
             }
             $this->db->group_end();
         }
-        $this->db->order_by('start_hour', 'ASC');
+        $this->db->order_by('a.start_hour', 'ASC');
         $this->db->limit(50);
 
         return $this->db->get()->result_array();
@@ -140,36 +144,52 @@ class Smartchoice extends AdminController
     public function update_dispatch_status()
     {
         if (!staff_can('edit', 'appointments')) { access_denied('appointments'); }
+        if (strtoupper($this->input->method()) !== 'POST') { show_404(); return; }
         $id = (int) $this->input->post('appointment_id');
         $status = trim((string) $this->input->post('status'));
+        $eta = filter_var($this->input->post('eta_minutes'), FILTER_VALIDATE_INT);
         $allowed = ['confirmed','on-the-way','15-minutes-away','arrived','in-progress','completed','follow-up','cancelled','no-show'];
-        if (!$id || !in_array($status, $allowed, true)) {
-            set_alert('danger', 'Invalid appointment or dispatch status.');
-            redirect(admin_url('appointly/smartchoice/dispatch'));
-        }
         $appointment = $this->db->where('id', $id)->get(db_prefix().'appointly_appointments')->row();
-        if (!$appointment) {
-            set_alert('danger', 'Appointment not found.');
+        if (!$appointment || !in_array($status, $allowed, true)
+            || ($status === 'on-the-way' && ($eta === false || $eta < 1 || $eta > 240))
+            || (in_array($status, ['on-the-way','15-minutes-away'], true) && empty($appointment->provider_id))) {
+            set_alert('danger', 'Select a valid appointment, assigned installer and ETA (1–240 minutes).');
             redirect(admin_url('appointly/smartchoice/dispatch'));
+            return;
         }
-        $this->load->model('appointly/appointly_model', 'apm');
-        $ok = $this->apm->change_appointment_status($id, $status);
-        if ($ok) {
-            $message = $this->dispatch_message($appointment, $status);
-            $this->log_dispatch_notification($appointment, $status, $message, 'crm', 'sent');
-            if (!empty($appointment->email) && get_option('appointly_sc_email_enabled') === '1') {
-                try {
-                    $template = mail_template('appointly-dispatch-customer-status', 'appointly', $appointment, $status, $message);
-                    $sent = (bool) $template->send();
-                    $this->log_dispatch_notification($appointment, $status, $message, 'email', $sent ? 'sent' : 'failed');
-                } catch (Throwable $e) {
-                    log_activity('Appointly dispatch email failed: '.$e->getMessage());
-                    $this->log_dispatch_notification($appointment, $status, $message, 'email', 'failed');
-                }
-            }
-            set_alert('success', 'Appointment status updated to '.ucwords(str_replace('-', ' ', $status)).'. Customer notification was recorded.');
+        $bridge = db_prefix().'appointly_installer_tracking_bridge';
+        if (!$this->db->table_exists($bridge)) {
+            set_alert('danger', 'Please upgrade the Appointment Manager module before using dispatch.');
+            redirect(admin_url('appointly/smartchoice/dispatch'));
+            return;
+        }
+        // Dispatch progress must not replace the lifecycle statuses used by reminders.
+        $lifecycle = ['confirmed'=>'approved', 'arrived'=>'in-progress', 'in-progress'=>'in-progress',
+            'completed'=>'completed', 'cancelled'=>'cancelled', 'no-show'=>'no-show'];
+        $this->db->trans_start();
+        if (isset($lifecycle[$status])) {
+            $this->db->where('id', $id)->update(db_prefix().'appointly_appointments', ['status'=>$lifecycle[$status]]);
+        }
+        $now = date('Y-m-d H:i:s');
+        $existing = $this->db->where('appointment_id', $id)->get($bridge)->row();
+        $state = ['staff_id'=>$appointment->provider_id ?: null, 'tracking_status'=>$status, 'updated_at'=>$now];
+        if ($existing) { $this->db->where('appointment_id', $id)->update($bridge, $state); }
+        else { $this->db->insert($bridge, array_merge($state, ['appointment_id'=>$id, 'created_at'=>$now])); }
+        $this->db->trans_complete();
+        if (!$this->db->trans_status()) {
+            set_alert('danger', 'Dispatch status could not be saved. No email was sent.');
         } else {
-            set_alert('danger', 'Appointment status could not be updated.');
+            $this->load->model('appointly/appointly_dispatch_model', 'dispatch_notifications');
+            try { $result = $this->dispatch_notifications->notify($appointment, $status, $eta === false ? null : $eta); }
+            catch (Throwable $e) { $result = 'failed'; log_message('error', 'Dispatch notification failed for appointment #' . $id . '.'); }
+            $messages = ['accepted'=>'Email accepted by the mail server.', 'duplicate'=>'This email was already sent; no duplicate was sent.',
+                'disabled'=>'Customer dispatch emails are disabled in settings.', 'no-recipient'=>'No valid customer email address is configured.',
+                'failed'=>'Email failed. Check Email Settings and the dispatch template, then retry.',
+                'processing'=>'A previous send is unresolved. Check the mail log before retrying.',
+                'busy'=>'Another notification is being processed. Try again shortly.',
+                'unavailable'=>'Notification logging is unavailable. Upgrade the module before retrying.'];
+            set_alert(in_array($result, ['accepted','duplicate'], true) ? 'success' : 'warning',
+                'Dispatch status saved. '.($messages[$result] ?? 'Customer email could not be sent.'));
         }
         redirect(admin_url('appointly/smartchoice/dispatch'));
     }
@@ -185,52 +205,20 @@ class Smartchoice extends AdminController
         $this->load->view('appointly/smart_choice/notification_log', $data);
     }
 
-    private function dispatch_message($appointment, $status)
-    {
-        $staffName = !empty($appointment->provider_id) ? get_staff_full_name($appointment->provider_id) : 'Your Smart Choice representative';
-        $messages = [
-            'confirmed' => 'Your appointment has been confirmed.',
-            'on-the-way' => $staffName.' is on the way to your appointment.',
-            '15-minutes-away' => $staffName.' is approximately 15 minutes away.',
-            'arrived' => $staffName.' has arrived for your appointment.',
-            'in-progress' => 'Your appointment is now in progress.',
-            'completed' => 'Your appointment has been completed. Thank you for choosing Smart Choice Contractors USA.',
-            'follow-up' => 'Your appointment is ready for follow-up.',
-            'cancelled' => 'Your appointment has been cancelled.',
-            'no-show' => 'This appointment was marked as no-show.',
-        ];
-        return $messages[$status] ?? 'Your appointment status has been updated.';
-    }
-
-    private function log_dispatch_notification($appointment, $status, $message, $channel, $deliveryStatus)
-    {
-        $table = db_prefix().'appointly_smartchoice_notifications';
-        if (!$this->db->table_exists($table)) { return; }
-        $row = [
-            'appointment_id' => (int) $appointment->id,
-            'staff_id' => !empty($appointment->provider_id) ? (int) $appointment->provider_id : null,
-            'channel' => $channel,
-            'event_type' => $status,
-            'message' => $message,
-            'status' => $deliveryStatus,
-            'created_at' => date('Y-m-d H:i:s'),
-            'sent_at' => $deliveryStatus === 'sent' ? date('Y-m-d H:i:s') : null,
-        ];
-        if ($this->db->field_exists('customer_email', $table)) { $row['customer_email'] = $appointment->email ?? null; }
-        if ($this->db->field_exists('customer_id', $table)) { $row['customer_id'] = $appointment->contact_id ?? null; }
-        $this->db->insert($table, $row);
-    }
-
     private function get_today_and_upcoming()
     {
         if (!$this->db->table_exists(db_prefix() . 'appointly_appointments')) {
             return [];
         }
-        $this->db->select('id, subject, date, start_hour, end_hour, status, provider_id');
-        $this->db->from(db_prefix() . 'appointly_appointments');
-        $this->db->where('date >=', date('Y-m-d'));
-        $this->db->order_by('date', 'ASC');
-        $this->db->order_by('start_hour', 'ASC');
+        $this->db->select('a.id, a.subject, a.date, a.start_hour, a.end_hour, a.status, a.provider_id');
+        $this->db->from(db_prefix() . 'appointly_appointments a');
+        if ($this->db->table_exists(db_prefix().'appointly_installer_tracking_bridge')) {
+            $this->db->select('dispatch.tracking_status AS dispatch_status');
+            $this->db->join(db_prefix().'appointly_installer_tracking_bridge dispatch', 'dispatch.appointment_id = a.id', 'left');
+        }
+        $this->db->where('a.date >=', date('Y-m-d'));
+        $this->db->order_by('a.date', 'ASC');
+        $this->db->order_by('a.start_hour', 'ASC');
         $this->db->limit(100);
         return $this->db->get()->result_array();
     }

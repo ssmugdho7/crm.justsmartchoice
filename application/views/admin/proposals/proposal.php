@@ -27,12 +27,33 @@ if ($this->input->get('estimate_request_id')) {
 ?>
 
             <div class="col-md-12">
+                <div class="tw-flex tw-flex-wrap tw-items-start tw-justify-between tw-gap-4 tw-mb-3">
                 <h4 class="tw-mt-0 tw-font-bold tw-text-lg tw-text-neutral-700 tw-flex tw-items-center tw-space-x-2">
                     <span>
                         <?= isset($proposal) ? e(_l('proposal') . ' ' . format_proposal_number($proposal->id)) : _l('new_proposal'); ?>
                     </span>
                     <?= isset($proposal) ? format_proposal_status($proposal->status) : ''; ?>
                 </h4>
+                    <div class="tw-flex tw-flex-wrap tw-items-start tw-gap-4 tw-ml-auto">
+                        <div class="form-group no-mbot" style="width: 260px; max-width: 100%;">
+                            <label for="tags" class="control-label"><i class="fa fa-tag" aria-hidden="true"></i> <?= _l('tags'); ?></label>
+                            <input type="text" class="tagsinput" id="tags" name="tags"
+                                value="<?= isset($proposal) ? prep_tags_input(get_tags_in($proposal->id, 'proposal')) : ''; ?>"
+                                data-role="tagsinput">
+                        </div>
+                                <div class="form-group mtop10 no-mbot">
+                                    <label for="allow_comments"><?= _l('proposal_allow_comments'); ?>
+                                    </label>
+                                    <div class="onoffswitch">
+                                        <input type="checkbox" id="allow_comments" class="onoffswitch-checkbox" <?php if ((isset($proposal) && $proposal->allow_comments == 1) || ! isset($proposal)) {
+                                            echo 'checked';
+                                        } ?> value="on" name="allow_comments">
+                                        <label class="onoffswitch-label" for="allow_comments" data-toggle="tooltip"
+                                            title="<?= _l('proposal_allow_comments_help'); ?>"></label>
+                                    </div>
+                                </div>
+                    </div>
+                </div>
                 <div class="panel_s">
                     <div class="panel-body">
                         <div class="row">
@@ -179,7 +200,6 @@ $currency_attr = hooks()->apply_filters('proposal_currency_attributes', $currenc
                                         </div>
                                     </div>
                                 </div>
-</div>
                                 <?php $fc_rel_id = (isset($proposal) ? $proposal->id : false); ?>
                                 <!-- SMART CHOICE PAYMENT SCHEDULE PROPOSAL -->
                                 <?php if (function_exists('module_active') && module_active('smart_choice_payment_schedule') && is_file(module_dir_path('smart_choice_payment_schedule', 'views/partials/payment_fields.php'))) {
@@ -187,30 +207,8 @@ $currency_attr = hooks()->apply_filters('proposal_currency_attributes', $currenc
                                     $scpsDocumentId = isset($proposal) ? (int) $proposal->id : 0;
                                     include module_dir_path('smart_choice_payment_schedule', 'views/partials/payment_fields.php');
                                 } ?>
-                                <div class="form-group mtop10 no-mbot">
-                                    <p><?= _l('proposal_allow_comments'); ?>
-                                    </p>
-                                    <div class="onoffswitch">
-                                        <input type="checkbox" id="allow_comments" class="onoffswitch-checkbox" <?php if ((isset($proposal) && $proposal->allow_comments == 1) || ! isset($proposal)) {
-                                            echo 'checked';
-                                        } ?> value="on" name="allow_comments">
-                                        <label class="onoffswitch-label" for="allow_comments" data-toggle="tooltip"
-                                            title="<?= _l('proposal_allow_comments_help'); ?>"></label>
-                                    </div>
-                                </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="panel_s">
-                                    <div class="panel-body">
-                                        <div class="form-group no-mbot">
-                                            <label for="tags" class="control-label"><i class="fa fa-tag" aria-hidden="true"></i>
-                                                <?= _l('tags'); ?></label>
-                                            <input type="text" class="tagsinput" id="tags" name="tags"
-                                                value="<?= isset($proposal) ? prep_tags_input(get_tags_in($proposal->id, 'proposal')) : ''; ?>"
-                                                data-role="tagsinput">
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="panel_s sc-proposal-customer-edit-card">
                                     <div class="panel-body tw-bg-neutral-50">
                                         <h4 class="tw-font-semibold tw-mt-0 tw-mb-3"><i class="fa-regular fa-address-card tw-mr-1"></i> <?= _l('sc_customer_information'); ?></h4>

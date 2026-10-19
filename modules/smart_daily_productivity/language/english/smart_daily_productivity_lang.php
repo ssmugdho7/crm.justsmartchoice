@@ -92,3 +92,4 @@ $lang['smart_daily_productivity_recent_entries_help'] = 'Showing the latest 500 
 $lang['smart_daily_productivity_no_entries'] = 'No daily entries found.';
 
 $lang['smart_daily_productivity_entry_save_failed'] = 'The daily entry could not be saved. Please try again.';
+$lang['smart_daily_productivity_entry_details'] = 'Daily Entry Details';

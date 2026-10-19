@@ -28,3 +28,4 @@ $lang['smart_daily_productivity_recent_entries_help'] = 'Se muestran las última
 $lang['smart_daily_productivity_no_entries'] = 'No se encontraron entradas diarias.';
 
 $lang['smart_daily_productivity_entry_save_failed'] = 'No se pudo guardar la entrada diaria. Inténtelo de nuevo.';
+$lang['smart_daily_productivity_entry_details'] = 'Detalles de la entrada diaria';

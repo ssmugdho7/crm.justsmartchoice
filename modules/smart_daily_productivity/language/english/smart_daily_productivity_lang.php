@@ -93,3 +93,12 @@ $lang['smart_daily_productivity_no_entries'] = 'No daily entries found.';
 
 $lang['smart_daily_productivity_entry_save_failed'] = 'The daily entry could not be saved. Please try again.';
 $lang['smart_daily_productivity_entry_details'] = 'Daily Entry Details';
+$lang['smart_daily_productivity_edit_entry'] = 'Edit Entry';
+$lang['smart_daily_productivity_entry_updated'] = 'Daily entry updated successfully.';
+$lang['smart_daily_productivity_entry_update_failed'] = 'The daily entry could not be updated. Please check the title and try again.';
+$lang['smart_daily_productivity_category_project_task'] = 'Project Task';
+$lang['smart_daily_productivity_category_contract_task'] = 'Contract Task';
+$lang['smart_daily_productivity_category_client_task'] = 'Client Task';
+$lang['smart_daily_productivity_category_research_task'] = 'Research Task';
+$lang['smart_daily_productivity_category_client_ticket'] = 'Client Ticket';
+$lang['smart_daily_productivity_category_other_process'] = 'Other Process';

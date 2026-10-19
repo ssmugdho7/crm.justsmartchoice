@@ -164,6 +164,40 @@ class Smart_daily_productivity extends AdminController
         redirect(admin_url('smart_daily_productivity/my_day'));
     }
 
+    public function update_entry($id): void
+    {
+        if (!has_permission('smart_daily_productivity', '', 'edit')) {
+            access_denied('Smart Daily Productivity Edit');
+        }
+        if (!$this->input->post()) {
+            access_denied('Smart Daily Productivity Edit');
+        }
+
+        $entry = $this->Smart_daily_productivity_model->get_entry((int) $id);
+        if (!$entry || $entry->source_type !== 'manual') {
+            set_alert('danger', smart_daily_productivity_label('smart_daily_productivity_entry_update_failed'));
+            redirect(admin_url('smart_daily_productivity/my_day'));
+        }
+        if (!$this->can_view_global() && (int) $entry->staff_id !== (int) get_staff_user_id()) {
+            access_denied('Smart Daily Productivity Edit');
+        }
+
+        $category = (string) $this->input->post('category', true);
+        $allowedCategories = ['Project Task', 'Contract Task', 'Client Task', 'Research Task', 'Client Ticket', 'Other Process'];
+        $updated = in_array($category, $allowedCategories, true) && $this->Smart_daily_productivity_model->update_entry((int) $id, [
+            'entry_date' => $this->input->post('entry_date', true),
+            'title' => $this->input->post('title', true),
+            'description' => $this->input->post('description', true),
+            'minutes_spent' => (int) $this->input->post('minutes_spent', true),
+            'category' => $category,
+        ]);
+        set_alert($updated ? 'success' : 'danger', smart_daily_productivity_label($updated ? 'smart_daily_productivity_entry_updated' : 'smart_daily_productivity_entry_update_failed'));
+        redirect(admin_url('smart_daily_productivity/my_day?' . http_build_query([
+            'staff_id' => (int) $entry->staff_id,
+            'date' => (string) $this->input->post('entry_date', true),
+        ])));
+    }
+
     private function can_view_global(): bool
     {
         return has_permission('smart_daily_productivity', '', 'view');

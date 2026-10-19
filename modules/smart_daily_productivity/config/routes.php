@@ -10,3 +10,4 @@ $route['admin/smart_daily_productivity/help'] = 'smart_daily_productivity/smart_
 $route['admin/smart_daily_productivity/health'] = 'smart_daily_productivity/smart_daily_productivity/health';
 $route['admin/smart_daily_productivity/database_checker'] = 'smart_daily_productivity/smart_daily_productivity/database_checker';
 $route['admin/smart_daily_productivity/delete_entry/(:num)'] = 'smart_daily_productivity/smart_daily_productivity/delete_entry/$1';
+$route['admin/smart_daily_productivity/update_entry/(:num)'] = 'smart_daily_productivity/smart_daily_productivity/update_entry/$1';

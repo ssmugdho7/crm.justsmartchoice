@@ -44,7 +44,7 @@ class Smart_daily_productivity_model extends App_Model
     public function update_entry(int $id, array $data): bool
     {
         $existing = $this->get_entry($id);
-        if (!$existing) {
+        if (!$existing || $existing->source_type !== 'manual') {
             return false;
         }
 
@@ -58,7 +58,13 @@ class Smart_daily_productivity_model extends App_Model
             'updated_at'          => date('Y-m-d H:i:s'),
         ];
 
-        $this->db->where('id', $id)->update(db_prefix() . 'smart_daily_productivity_entries', $update);
+        if ($update['title'] === '') {
+            return false;
+        }
+
+        if (!$this->db->where('id', $id)->update(db_prefix() . 'smart_daily_productivity_entries', $update)) {
+            return false;
+        }
         $this->recalculate_score((int) $existing->staff_id, (string) $existing->entry_date);
         $this->recalculate_score((int) $existing->staff_id, $update['entry_date']);
         $this->write_log('entry_updated', 'Daily productivity entry updated.', (int) $existing->staff_id);

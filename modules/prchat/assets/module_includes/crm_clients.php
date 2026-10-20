@@ -18,7 +18,7 @@
     var lang_contact = "<?= _l('chat_lang_contact'); ?>";
     var l_say_hi = "<?= _l('chat_say_hi'); ?>";
     var checkForNewClientUnreadMessages = prchatSettings.getClientUnreadMessages;
-    var myCustomers = "";
+    var myCustomers = {customers: []};
 
     var f = {
       fetchClients: function() {
@@ -193,6 +193,7 @@
 
     // Get clients and contacts list
     var customerData = f.fetchClients();
+    myCustomers = customerData;
     if (customerData.customers !== "none") f.chatAppendCustomers(customerData.customers);
 
 
@@ -1039,50 +1040,12 @@
 
     /*---------------* Pusher Trigger user connected *---------------*/
     clientsChannel.bind("pusher:member_added", function(member) {
-      /**
-       * Check if clients is in my own list clients
-       */
-      var ownClient = myCustomers.customers.find(function(client) {
-        if (client.client_id !== undefined) {
-          return client.client_id == member.info.client_id;
-        }
+      var identity = String(member.id || '');
+      if (identity.indexOf('client_') !== 0) return;
+      var ownClient = myCustomers.customers.some(function(client) {
+        return String(client.contact_id) === identity.substring(7);
       });
-
-      if (ownClient == undefined) {
-        return false;
-      }
-
-      var contact = member.info;
-
-      // Use attribute selector for reliable matching (numeric IDs break #id syntax)
-      var contactIsLoggedIn = $(".chat_clients_list > li.contact_name[id='" + contact.contact_id + "']");
-
-      if (member.info.justLoggedIn == true) {
-        appendClientIfNotInOnlineClients();
-      }
-
-      if (typeof contact.company !== "undefined" && contact.contact_id !== "undefined") {
-        if (contactIsLoggedIn.length === 0) {
-          var companyName = (typeof contact.company === 'object') ? contact.company.name : contact.company;
-          var rtContactHtml = '<li class="contact_name contactActive" id="' + contact.contact_id + '" data-client-id="' + contact.client_id + '" data-company="' + (companyName || '').replace(/"/g, '&quot;') + '" data-presence-status="online">' +
-            '<div class="contact_name_content">' +
-            '<img class="chatContactImage online" src="' + (contact.profile_image_url || site_url + '/assets/images/user-placeholder.jpg') + '"/>' +
-            '<div class="contact_info">' +
-            '<div class="contact_name_main">' + contact.name + '</div>';
-
-          if (companyName) {
-            rtContactHtml += '<small class="contact_company">' + companyName + '</small>';
-          }
-
-          rtContactHtml += '<div class="contact_preview" style="display: none;"></div>' +
-            '</div>' +
-            '<div class="contact_meta"><div class="contact_time"></div></div>' +
-            '</div></li>';
-
-          $(rtContactHtml).prependTo(".chat_clients_list");
-        }
-        addClientMember(member);
-      }
+      if (ownClient) addClientMember(member);
     });
 
     /*---------------* New staff member activity online / offline  *---------------*/
@@ -1484,54 +1447,15 @@
       }
     });
 
-    function checkIfContactIsActive(member) {
-      member.each(function(m) {
-
-        // Only process client members (skip staff members)
-        if (!m.id.startsWith("client")) {
-          return;
-        }
-        var contact = m.info;
-
-        // Check if this client is in the authorized list for this staff member
-        var isAuthorized = myCustomers.customers.find(function(client) {
-          if (client.client_id !== undefined) {
-            return client.client_id == contact.client_id;
-          }
+    function checkIfContactIsActive(members) {
+      members.each(function(member) {
+        var id = String(member.id || '');
+        if (id.indexOf('client_') !== 0) return;
+        var contactId = id.substring(7);
+        var authorized = myCustomers.customers.some(function(contact) {
+          return String(contact.contact_id) === contactId;
         });
-
-        // If staff doesn't have access to this client, skip it
-        if (isAuthorized == undefined) {
-          return;
-        }
-
-        // Use attribute selector for reliable matching (numeric IDs break #id syntax)
-        var contactIsLoggedIn = $(".chat_clients_list > li.contact_name[id='" + contact.contact_id + "']");
-        if (typeof contact.company !== "undefined" && contact.company != null) {
-          if (contactIsLoggedIn.length === 0) {
-            var companyName = (typeof contact.company === 'object') ? contact.company.name : contact.company;
-            var memberContactHtml = '<li class="contact_name contactActive" id="' + contact.contact_id + '" data-client-id="' + contact.client_id + '" data-company="' + (companyName || '').replace(/"/g, '&quot;') + '" data-presence-status="online">' +
-              '<div class="contact_name_content">' +
-              '<img class="chatContactImage online" src="' + (contact.profile_image_url || site_url + '/assets/images/user-placeholder.jpg') + '"/>' +
-              '<div class="contact_info">' +
-              '<div class="contact_name_main">' + contact.name + '</div>';
-
-            if (companyName) {
-              memberContactHtml += '<small class="contact_company">' + companyName + '</small>';
-            }
-            if (contact.title && contact.title.trim() !== "") {
-              memberContactHtml += '<small class="contact_title">' + contact.title + '</small>';
-            }
-
-            memberContactHtml += '<div class="contact_preview">' + l_say_hi + ' ' + contact.name + '</div>' +
-              '</div>' +
-              '<div class="contact_meta"><div class="contact_time"></div></div>' +
-              '<span class="unread-notifications" data-badge="0"></span>' +
-              '</div></li>';
-
-            $(memberContactHtml).prependTo(".chat_clients_list");
-          }
-        }
+        if (authorized) updateClientContactStatus(contactId, true);
       });
     }
 

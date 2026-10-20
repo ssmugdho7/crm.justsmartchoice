@@ -10,6 +10,7 @@ The unrepaired code failed isolated behavior checks for (1) numeric sender IDs i
 ## Changes
 
 - Initialize presentation and the selected staff conversation from database readiness, independently of realtime presence. Embed the permission-filtered initial contact list with an AJAX fallback; batch its lookups.
+- Initialize the authorized client-presence list and use namespaced contact identities, avoiding undefined-list errors during realtime membership updates.
 - Guard stale history responses and duplicate pagination; complete empty/error states and retain the selected pane/composer when background groups arrive.
 - Scope seen events by sender namespace, conversation and message ID. Preserve first-seen database values and broadcast the saved timestamp, including concurrent reads.
 - Serialize dates with the CRM timezone's historical UTC offset. Existing database dates are unchanged; browser presentation converts the supplied instant.
@@ -22,6 +23,7 @@ The unrepaired code failed isolated behavior checks for (1) numeric sender IDs i
 - `modules/prchat/models/Prchat_model.php`
 - `modules/prchat/views/chat_full_view.php`
 - `modules/prchat/assets/module_includes/groups.php`
+- `modules/prchat/assets/module_includes/crm_clients.php`
 - `modules/prchat/assets/module_includes/mutual_and_helper_functions.php`
 - `modules/prchat/language/english/chat_lang.php`
 - `modules/prchat/language/spanish/chat_lang.php`
@@ -32,8 +34,8 @@ The existing Staff/Groups/Clients navigation and backend permission gates remain
 
 ## Executed checks before release
 
-- PHP syntax for all seven modified module files: passed.
-- `NODE_PATH=/tmp/prchat-audit-tools/node_modules node tests/chat_loading_receipts_ui.js`: 15 behavior checks passed; inline scripts parse. Uses jsdom, jquery and moment from temporary test tooling outside the application.
+- PHP syntax for all eight modified module files: passed.
+- `NODE_PATH=/tmp/prchat-audit-tools/node_modules node tests/chat_loading_receipts_ui.js`: 18 behavior checks passed; inline scripts parse. Uses jsdom, jquery and moment from temporary test tooling outside the application.
 - `php tests/chat_loading_receipts_database.php`: passed native MySQL temporary-table fixtures for permission-filtered contacts, scoped read updates, first-seen retention, concurrent staff/client receipts, summer/winter offsets and missing timestamps. Contact lookup measured six queries for 40 fixture users; this is query-count evidence, not a production timing claim.
 - `php tests/chat_access_regression.php`: existing menu, saved-menu, effective-permission, endpoint-bootstrap and private call-channel access checks passed.
 - `git diff --check`: passed.

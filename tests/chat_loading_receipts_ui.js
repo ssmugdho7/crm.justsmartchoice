@@ -77,6 +77,19 @@ function harness() {
     const row=$('.messages .modern-message-sent').last();
     check(response.id ? row.attr('data-message-id')==='201'&&row.find('.modern-status-delivered').length===1 : row.hasClass('modern-message-failed'), 'Composer accepts only a persisted message ID, and visibly fails invalid/rejected responses');
   }
+  // Presence must tolerate an empty authorized list and need no private broadcast profile data.
+  const client=fs.readFileSync('modules/prchat/assets/module_includes/crm_clients.php','utf8');
+  let joined=[],online=[];w.myCustomers={customers:[]};w.addClientMember=m=>joined.push(m.id);
+  let onJoin;w.clientsChannel={bind:(event,fn)=>{onJoin=fn;}};
+  w.eval(between(client,'    clientsChannel.bind("pusher:member_added"','    /*---------------* New staff member activity'));
+  onJoin({id:'client_33'});
+  check(joined.length===0,'Empty authorized contacts safely ignores presence');
+  w.myCustomers={customers:[{contact_id:33}]};onJoin({id:'client_33'});onJoin({id:'client_34'});onJoin({id:33});
+  check(joined.join(',')==='client_33','Presence namespaces and contact authorization remain isolated');
+  w.updateClientContactStatus=(id,active)=>online.push(id);
+  w.eval(between(client,'    function checkIfContactIsActive','    function pushDesktopOnlineNotification'));
+  w.checkIfContactIsActive({each:fn=>[{id:'client_33'},{id:'client_34'},{id:33}].forEach(fn)});
+  check(online.join(',')==='33','Initial presence requires only the authorized contact identity');
   const helper=fs.readFileSync('modules/prchat/assets/module_includes/mutual_and_helper_functions.php','utf8');
   const uploadHelper=between(helper,'  function prchatAppendUploadCsrf','  /**\n   * Main Settings').replace(/<\?=([\s\S]*?)\?>/g,(_,expression)=>JSON.stringify(expression.includes('get_csrf_token_name')?'fixture_csrf':'fallback'));
   w.eval(uploadHelper);$('body').append('<input type="hidden" name="fixture_csrf" value="current-token">');
@@ -104,7 +117,7 @@ function harness() {
   check(groupLoads===1,'First group selection works before Bootstrap updates the nav active class');
   h.dom.window.close();
   // Parse all inline scripts after substituting PHP expression values; runtime behavior is checked above and in the real browser.
-  for (const file of ['modules/prchat/views/chat_full_view.php','modules/prchat/assets/module_includes/groups.php','modules/prchat/assets/module_includes/mutual_and_helper_functions.php']) {
+  for (const file of ['modules/prchat/views/chat_full_view.php','modules/prchat/assets/module_includes/crm_clients.php','modules/prchat/assets/module_includes/groups.php','modules/prchat/assets/module_includes/mutual_and_helper_functions.php']) {
     let n=0;
     const rendered=fs.readFileSync(file,'utf8').replace(/<\?=([\s\S]*?)\?>/g,'null').replace(/<\?php\s+echo[\s\S]*?\?>/g,'null').replace(/<\?php[\s\S]*?\?>/g,'');
     for (const match of rendered.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)) {

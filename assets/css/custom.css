@@ -119,3 +119,24 @@ body.customers .navbar-nav>li>a i{min-width:18px;text-align:center}
 }
 
 .todo-item-title{margin-bottom:3px;font-size:13px}.todo-shared{margin-top:4px}.todo-description{font-size:12.5px}
+
+/* Reserve dashboard toolbar space below the navbar and above the widgets. */
+#wrapper > .screen-options-btn {
+  position: relative;
+  top: 12px;
+  right: auto;
+  left: auto;
+  display: flex;
+  width: max-content;
+  max-width: calc(100% - 62px);
+  margin: 0 31px 12px auto;
+  border-top: 1px solid #e5e7eb;
+  border-radius: 6px;
+}
+#wrapper > .screen-options-btn + .content {
+  padding-top: 0;
+}
+[dir="rtl"] #wrapper > .screen-options-btn {
+  margin-right: auto;
+  margin-left: 31px;
+}

@@ -622,6 +622,7 @@ class Misc_model extends App_Model
 
     public function _search_proposals($q, $limit = 0)
     {
+        $prefixQuery = $q;
         $result = [
             'result'         => [],
             'type'           => 'proposals',
@@ -653,7 +654,8 @@ class Misc_model extends App_Model
             }
 
             $this->db->where('(
-                ' . db_prefix() . 'proposals.id LIKE "' . $q . '%"
+                ' . sc_proposal_number_sql() . ' LIKE ' . sc_numbering_like_pattern($prefixQuery) . ' ESCAPE \'!\'
+                OR ' . db_prefix() . 'proposals.id LIKE ' . sc_numbering_like_pattern($q) . ' ESCAPE \'!\'
                 OR ' . db_prefix() . 'proposals.subject LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
                 OR ' . db_prefix() . 'proposals.content LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
                 OR ' . db_prefix() . 'proposals.proposal_to LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
@@ -893,7 +895,7 @@ class Misc_model extends App_Model
                 $this->db->where(db_prefix() . 'contracts.addedfrom', get_staff_user_id());
             }
 
-            $this->db->where('(description LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\' OR subject LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\')');
+            $this->db->where('(' . sc_contract_number_sql() . ' LIKE ' . sc_numbering_like_pattern($q) . ' ESCAPE \'!\' OR description LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\' OR subject LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\')');
 
             if ($limit != 0) {
                 $this->db->limit($limit);

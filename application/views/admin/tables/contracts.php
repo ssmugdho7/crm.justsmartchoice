@@ -9,7 +9,7 @@ return App_table::find('contracts')
         $base_currency = get_base_currency();
 
         $aColumns = [
-            db_prefix() . 'contracts.id as id',
+            sc_contract_number_sql() . ' as sc_formatted_number',
             'subject',
             get_sql_select_client_company(),
             db_prefix() . 'contracts_types.name as type_name',
@@ -71,15 +71,18 @@ return App_table::find('contracts')
             @$this->ci->db->query('SET SQL_BIG_SELECTS=1');
         }
 
-        $result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, [db_prefix() . 'contracts.id', 'trash', 'client', 'hash', 'marked_as_signed', 'project_id']);
+        $result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, [
+            ($this->ci->db->field_exists('prefix', db_prefix() . 'contracts') ? db_prefix() . 'contracts.prefix' : 'NULL') . ' as sc_document_prefix',
+            db_prefix() . 'contracts.id', 'trash', 'client', 'hash', 'marked_as_signed', 'project_id']);
 
         $output  = $result['output'];
         $rResult = $result['rResult'];
 
         foreach ($rResult as $aRow) {
+            $this->ci->app_object_cache->set('sc-number-prefix-contract-' . (int) $aRow['id'], ['prefix' => $aRow['sc_document_prefix']]);
             $row = [];
 
-            $row[] = $aRow['id'];
+            $row[] = e(format_contract_number($aRow['id']));
 
             $subjectOutput = '<a href="' . admin_url('contracts/contract/' . $aRow['id']) . '"' . ($projectId ? ' target="_blank"' : '') . ' class="tw-truncate tw-max-w-xs tw-block tw-w-full tw-font-medium" title="' . e($aRow['subject']) . '">' . e($aRow['subject']) . '</a>';
 

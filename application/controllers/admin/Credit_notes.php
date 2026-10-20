@@ -46,27 +46,11 @@ class Credit_notes extends AdminController
 
     public function update_number_settings($id)
     {
-        $response = [
-            'success' => false,
-            'message' => '',
-        ];
-
-        if (staff_can('edit',  'credit_notes')) {
-            if ($this->input->post('prefix')) {
-                $this->db->where('id', $id);
-                $this->db->update(db_prefix() . 'creditnotes', [
-                    'prefix' => $this->input->post('prefix'),
-                ]);
-
-                if ($this->db->affected_rows() > 0) {
-                    $this->credit_notes_model->save_formatted_number($id);
-                    $response['success'] = true;
-                    $response['message'] = _l('updated_successfully', _l('credit_note'));
-                }
-            }
-        }
-        echo json_encode($response);
-        die;
+        if ($this->input->method() !== 'post') { show_404(); return; }
+        $this->load->helper(['smart_choice_numbering', 'smart_choice_sales_links']);
+        $response = sc_update_document_prefix('credit_note', $id, $this->input->post('prefix'));
+        // Keep the legacy response type expected by Perfex's $.post callback.
+        $this->output->set_output(json_encode($response));
     }
 
     public function validate_number()

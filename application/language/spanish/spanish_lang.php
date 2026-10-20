@@ -4170,3 +4170,8 @@ $lang['sc_attachment_unavailable'] = 'Este archivo adjunto no está disponible a
 $lang['sc_proposal_items_editor_label'] = 'Artículos de la propuesta — tabla automática';
 $lang['sc_payment_for_document'] = 'Pago de';
 $lang['sc_proposal_items_editor_help'] = 'Edite las descripciones, cantidades y precios en la tabla de artículos de abajo. Este marcador inserta la tabla actual en la propuesta del cliente y el PDF; no guarda una copia de los precios.';
+
+// Per-document sales numbering.
+$lang['sc_edit_document_prefix'] = 'Editar prefijo';
+$lang['sc_document_prefix'] = 'Prefijo del documento';
+$lang['sc_document_prefix_help'] = 'Actualiza solo este documento. El número, las fechas y los enlaces se mantienen. Guarde los demás cambios del formulario por separado.';

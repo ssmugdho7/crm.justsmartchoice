@@ -30,10 +30,16 @@ if ($this->input->get('estimate_request_id')) {
 }
 ?>
 
+            <?php if (isset($proposal)) { ?>
+            <div class="col-md-12">
+                <p><strong><?= e(_l('proposal_number')); ?>:</strong> <span data-sc-document-number><?= e(format_proposal_number($proposal->id)); ?></span></p>
+                <?php sc_render_prefix_editor('proposal', $proposal); ?>
+            </div>
+            <?php } ?>
             <div class="col-md-12">
                 <div class="tw-flex tw-flex-wrap tw-items-start tw-justify-between tw-gap-4 tw-mb-3">
                 <h4 class="tw-mt-0 tw-font-bold tw-text-lg tw-text-neutral-700 tw-flex tw-items-center tw-space-x-2">
-                    <span>
+                    <span data-sc-document-heading>
                         <?= isset($proposal) ? e(sc_sales_document_heading('proposal', format_proposal_number($proposal->id))) : _l('new_proposal'); ?>
                     </span>
                     <?= isset($proposal) ? format_proposal_status($proposal->status) : ''; ?>

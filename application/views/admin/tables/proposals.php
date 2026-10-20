@@ -66,12 +66,13 @@ return App_table::find('proposals')
         }
 
         $result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, [
+            ($this->ci->db->field_exists('prefix', db_prefix() . 'proposals') ? db_prefix() . 'proposals.prefix' : 'NULL') . ' as sc_document_prefix',
             'currency',
             'rel_id',
             'rel_type',
             'invoice_id',
             'hash',
-            'CONCAT("'.get_option('proposal_number_prefix').'", \'\', LPAD('.db_prefix().'proposals.id, '.get_option('number_padding_prefixes').', 0)) as formatted_number',
+            sc_proposal_number_sql() . ' as formatted_number',
             db_prefix() . 'projects.name as project_name',
         ]);
 
@@ -79,6 +80,7 @@ return App_table::find('proposals')
         $rResult = $result['rResult'];
 
         foreach ($rResult as $aRow) {
+            $this->ci->app_object_cache->set('sc-number-prefix-proposal-' . (int) $aRow[db_prefix() . 'proposals.id'], ['prefix' => $aRow['sc_document_prefix']]);
             $row = [];
 
             $numberOutput = '<a href="' . admin_url('proposals/list_proposals/' . $aRow[db_prefix() . 'proposals.id']) . '"' . ($project_id ? 'target="_blank"' : 'onclick="init_proposal(' . $aRow[db_prefix() . 'proposals.id'] . '); return false;"') . ' class="tw-font-medium">' . e(format_proposal_number($aRow[db_prefix() . 'proposals.id'])) . '</a>';

@@ -15,6 +15,11 @@ class Contract_merge_fields extends App_merge_fields
                     ],
                 ],
                 [
+                    'name'      => 'Contract Number',
+                    'key'       => '{contract_number}',
+                    'available' => ['contract'],
+                ],
+                [
                     'name'      => 'Contract Subject',
                     'key'       => '{contract_subject}',
                     'available' => [
@@ -104,6 +109,7 @@ class Contract_merge_fields extends App_merge_fields
 
         $currency = get_base_currency();
 
+        $fields['{contract_number}'] = e(format_contract_number($contract_id));
         $fields['{contract_id}']             = e($contract->id);
         $fields['{contract_subject}']        = e($contract->subject);
         $fields['{contract_type}']           = e($contract->type_name);

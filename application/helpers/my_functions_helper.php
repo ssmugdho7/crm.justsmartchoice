@@ -2,6 +2,8 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
+require_once __DIR__ . '/smart_choice_numbering_helper.php';
+
 // Perfex already registers custom.css. Render it once, after the other head assets.
 hooks()->add_action('app_admin_assets_added', 'smartchoice_prepare_modern_theme');
 hooks()->add_action('app_admin_head', 'smartchoice_enqueue_modern_theme');
@@ -28,6 +30,7 @@ function smartchoice_enqueue_modern_theme()
 
 function smartchoice_enqueue_modern_scripts()
 {
+    echo '<script src="' . html_escape(smartchoice_theme_asset_url('assets/js/sc-document-prefixes.js')) . '"></script>' . PHP_EOL;
     echo '<script id="smartchoice-custom-js" src="' . html_escape(smartchoice_theme_asset_url('assets/js/custom.js')) . '"></script>' . PHP_EOL;
 }
 

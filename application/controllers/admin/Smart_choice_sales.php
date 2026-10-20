@@ -12,6 +12,14 @@ class Smart_choice_sales extends AdminController
         }
     }
 
+    public function update_number_settings($type = '', $id = '')
+    {
+        if ($this->input->method() !== 'post') { show_404(); return; }
+        $this->load->helper(['smart_choice_numbering', 'smart_choice_sales_links']);
+        $response = sc_update_document_prefix($type, $id, $this->input->post('prefix'));
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
     public function add_status()
     {
         if (!$this->input->is_ajax_request() || !$this->input->post()) {

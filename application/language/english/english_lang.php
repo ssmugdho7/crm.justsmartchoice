@@ -4359,3 +4359,8 @@ $lang['sc_attachment_unavailable'] = 'This attachment is currently unavailable. 
 $lang['sc_proposal_items_editor_label'] = 'Proposal items — automatic table';
 $lang['sc_payment_for_document'] = 'Payment for';
 $lang['sc_proposal_items_editor_help'] = 'Edit item descriptions, quantities and prices in the items table below. This marker inserts the current table in the customer proposal and PDF; it does not store a copy of the prices.';
+
+// Per-document sales numbering.
+$lang['sc_edit_document_prefix'] = 'Edit prefix';
+$lang['sc_document_prefix'] = 'Document prefix';
+$lang['sc_document_prefix_help'] = 'Updates this document only. The number, dates and links stay the same. Save other form changes separately.';

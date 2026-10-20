@@ -2,6 +2,10 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
+if (sc_numbering_prefix('contract', $contract->id) !== '') {
+    $pdf->writeHTML('<p><strong>' . e(_l('contract_number')) . ':</strong> ' . e(format_contract_number($contract->id)) . '</p>', true, false, true, false, '');
+}
+
 // Theese lines should aways at the end of the document left side. Dont indent these lines
 $html = <<<EOF
     <div style="width:680px !important;">

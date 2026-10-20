@@ -14,7 +14,7 @@ if (isset($credit_note)) {
 ?>
             <div class="col-md-12">
                 <h4 class="tw-mt-0 tw-font-bold tw-text-lg tw-text-neutral-700 tw-flex tw-items-center tw-space-x-2">
-                    <span>
+                    <span data-sc-document-number class="hide"><?= isset($credit_note) ? e(format_credit_note_number($credit_note->id)) : ''; ?></span><span data-sc-document-heading>
                         <?= isset($credit_note) ? e(sc_sales_document_heading('credit_note', format_credit_note_number($credit_note->id))) : _l('new_credit_note'); ?>
                     </span>
                     <?= isset($credit_note) ? format_credit_note_status($credit_note->status) : ''; ?>
@@ -182,17 +182,13 @@ $_credit_note_number  = str_pad($__number, get_option('number_padding_prefixes')
 $isedit               = isset($credit_note) ? 'true' : 'false';
 $data_original_number = isset($credit_note) ? $credit_note->number : 'false';
 ?>
+                                        <?php if (isset($credit_note)) sc_render_prefix_editor('credit_note', $credit_note); ?>
                                         <div class="form-group">
                                             <label
                                                 for="number"><?= _l('credit_note_number'); ?></label>
                                             <div class="input-group">
                                                 <span class="input-group-addon">
-                                                    <?php if (isset($credit_note)) { ?>
-                                                    <a href="#" onclick="return false;" data-toggle="popover"
-                                                        data-container='._transaction_form' data-html="true"
-                                                        data-content="<label class='control-label'><?= _l('credit_note_prefix'); ?></label><div class='input-group'><input name='s_prefix' type='text' class='form-control' value='<?= e($credit_note->prefix); ?>'></div><button type='button' onclick='save_sales_number_settings(this); return false;' data-url='<?= admin_url('credit_notes/update_number_settings/' . $credit_note->id); ?>' class='btn btn-primary btn-block mtop15'><?= _l('submit'); ?></button>"><i
-                                                            class="fa fa-cog"></i></a>
-                                                    <?php } ?>
+
                                                     <?= $prefix; ?></span>
                                                 <input type="text" name="number" class="form-control"
                                                     value="<?= e($_credit_note_number); ?>"

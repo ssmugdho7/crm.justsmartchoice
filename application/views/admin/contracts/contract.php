@@ -241,6 +241,10 @@
                             id="tab_info">
 
                             <?= form_open($this->uri->uri_string(), ['id' => 'contract-form', 'enctype' => 'multipart/form-data']); ?>
+                            <?php if (isset($contract)) { ?>
+                            <p><strong><?= e(_l('contract_number')); ?>:</strong> <span data-sc-document-number><?= e(format_contract_number($contract->id)); ?></span></p>
+                            <?php sc_render_prefix_editor('contract', $contract); ?>
+                            <?php } ?>
                             <div class="form-group">
                                 <div class="checkbox checkbox-primary no-mtop checkbox-inline">
                                     <input type="checkbox" id="trash" name="trash"

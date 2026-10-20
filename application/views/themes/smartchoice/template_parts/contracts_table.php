@@ -36,7 +36,7 @@ foreach ($custom_fields as $field) { ?>
         ?>
     <tr class="<?= $expiry_class; ?>">
       <td>
-        <?= '<a href="' . site_url('contract/' . $contract['id'] . '/' . $contract['hash']) . '" class="td-contract-url">' . e($contract['subject']) . '</a>';
+        <?= '<a href="' . site_url('contract/' . $contract['id'] . '/' . $contract['hash']) . '" class="td-contract-url">' . e($contract['subject']) . '</a><div class="text-muted">' . e(format_contract_number($contract['id'])) . '</div>';
         ?>
       </td>
       <td>

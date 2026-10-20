@@ -109,7 +109,7 @@
                             <?= _l('contract_number'); ?>
                         </div>
                         <div class="tw-text-normal col-md-7 contract-number tw-text-neutral-700">
-                            <?= e($contract->id); ?>
+                            <?= e(format_contract_number($contract->id)); ?>
                         </div>
                         <div class="tw-text-normal col-md-5 text-muted contract-start-date">
                             <?= _l('contract_start_date'); ?>

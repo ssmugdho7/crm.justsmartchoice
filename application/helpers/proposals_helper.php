@@ -173,7 +173,7 @@ function format_proposal_status($status, $classes = '', $label = true)
  */
 function format_proposal_number($id)
 {
-    $format = get_option('proposal_number_prefix') . str_pad($id, get_option('number_padding_prefixes'), '0', STR_PAD_LEFT);
+    $format = sc_numbering_prefix('proposal', $id) . str_pad($id, get_option('number_padding_prefixes'), '0', STR_PAD_LEFT);
 
     return hooks()->apply_filters('proposal_number_format', $format, $id);
 }

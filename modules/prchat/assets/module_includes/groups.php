@@ -506,8 +506,10 @@
 
         if (response && response.noChannels) {
           window.hasNoGroups = true;
-          $("#frame form[name=groupMessagesForm]").hide();
-          showEmptyGroupsMessage();
+          if ($("#sidepanel .chat_nav li.groups").hasClass('active')) {
+            $("#frame form[name=groupMessagesForm]").hide();
+            showEmptyGroupsMessage();
+          }
         } else {
           if (response && response.groups) {
             // Append groups to sidebar (only if user is a member)
@@ -523,16 +525,21 @@
             if ($actualGroups.length === 0) {
               // User is not a member of any groups - show empty message
               window.hasNoGroups = true;
-              $("#frame form[name=groupMessagesForm]").hide();
-              showEmptyGroupsMessage();
+              if ($("#sidepanel .chat_nav li.groups").hasClass('active')) {
+                $("#frame form[name=groupMessagesForm]").hide();
+                showEmptyGroupsMessage();
+              }
             } else {
               // User has groups - show content
               window.hasNoGroups = false;
-              $("#frame .content .group_messages, #frame form[name=groupMessagesForm]").show();
-              $("#add_group_btn").show();
-
+              var groupsActive = $("#sidepanel .chat_nav li.groups").hasClass('active');
+              if (groupsActive) {
+                $("#frame .content .group_messages, #frame form[name=groupMessagesForm]").show();
+                $("#add_group_btn").show();
+              }
               window._bulkLoadingGroups = false;
-              if (!window.matchMedia('only screen and (max-width: 735px)').matches) {
+              var deepGroup = new URLSearchParams(window.location.search).get('group');
+              if (groupsActive && !deepGroup && !window.matchMedia('only screen and (max-width: 735px)').matches) {
                 var $firstGroup = $actualGroups.first();
                 $firstGroup.click();
               }
@@ -562,11 +569,12 @@
         }
 
         // Mark as loaded AFTER async response is processed
+        window._bulkLoadingGroups = false;
         window._groupsLoaded = true;
         window._groupsFetching = false;
 
         setTimeout(function () {
-          if (typeof window.prchatSyncGroupContactHeader === "function") {
+          if ($('.chat_nav li.groups').hasClass('active') && typeof window.prchatSyncGroupContactHeader === "function") {
             window.prchatSyncGroupContactHeader();
           }
         }, 0);
@@ -661,6 +669,7 @@
 
 
   /*---------------* Check for messages history and append to main chat window in group messages *---------------*/
+  var groupHistoryLoading = false;
   function loadGroupMessages(el) {
     var pos = $(el).scrollTop();
     var messagesScrollbar = $(el).find(".chat_group_messages");
@@ -669,21 +678,26 @@
     var from = userSessionId;
 
     if ($(messagesScrollbar).children().length !== 0) {
-      if (pos == 0 && groupOffsetPush >= 10) {
-
+      if (pos == 0 && groupOffsetPush >= 10 && !groupEndOfScroll && !groupHistoryLoading) {
+        groupHistoryLoading = true;
+        var generation = groupConversationGeneration;
+        var previousHeight = el.scrollHeight;
         $.get(prchatSettings.getGroupMessagesHistory, {
           group_id: to_group,
           offset: groupOffsetPush,
         })
           .done(function (message) {
-            messages = JSON.parse(message);
-            if (Array.isArray(messages) == false) {
+            if (generation !== groupConversationGeneration) return;
+            messages = typeof message === 'string' ? JSON.parse(message) : message;
+            if (!Array.isArray(messages) || messages.length === 0) {
               groupEndOfScroll = true;
               if ($(".group_messages").hasScrollBar() && groupEndOfScroll == true) {
                 prchat_setNoMoreGroupMessages();
               }
+              return;
             } else {
-              groupOffsetPush += 10;
+              groupOffsetPush += messages.length;
+              groupEndOfScroll = messages.length < 10;
             }
 
             $(messages).each(function (i, value) {
@@ -718,16 +732,15 @@
                 $("<div class=\"modern-date-separator\">" + formatDateSeparatorLabel(value.time_sent) + "</div>").prependTo($(".chat_group_messages#" + to_group + " .modern-messages-container"));
               }
             });
-            if (groupEndOfScroll == false) {
-              $(el).scrollTop(200);
-            }
-          });
+            $(el).scrollTop(el.scrollHeight - previousHeight);
+          }).always(function() { groupHistoryLoading = false; });
       }
     }
   }
 
   /*---------------* Main function that renders the messages and created view for group chat messages  *---------------*/
   function renderChatGroupMessages(data) {
+    if (!$("body").hasClass('groups-tab')) return;
     groupEndOfScroll = false;
     groupOffsetPush = 0;
     var group_id = $(data).attr("id");
@@ -752,8 +765,10 @@
 
   /*---------------* Main function for fetching messages for specific group and appends into view  *---------------*/
   var createGroupBoxRequest = null;
+  var groupConversationGeneration = 0;
 
   function getGroupMessages(group_id) {
+    var generation = ++groupConversationGeneration;
 
     var groupMessages;
     chat_group_messages.html("");
@@ -772,20 +787,22 @@
       limit: 20
     })
       .done(function (r) {
-        groupOffsetPush = 10;
-        r = JSON.parse(r);
+        if (generation !== groupConversationGeneration) return;
+        try { r = typeof r === 'string' ? JSON.parse(r) : r; }
+        catch (e) { dfd.reject(); return; }
         groupMessages = r;
-        groupOffsetPush += 10;
+        groupOffsetPush = r && Array.isArray(r.messages) ? r.messages.length : 0;
+        groupEndOfScroll = groupOffsetPush < 20;
         dfd.resolve(groupMessages);
       })
-      .fail(function () {
-        dfd.resolve([]);
+      .fail(function (xhr, status) {
+        if (status !== 'abort') dfd.reject();
       })
       .always(function () {
         if ($("#no_messages").length) {
           $("#no_messages").remove();
         }
-        createGroupBoxRequest = null;
+        if (generation === groupConversationGeneration) createGroupBoxRequest = null;
       });
 
 
@@ -910,7 +927,13 @@
     };
 
     /*---------------* After users are fetched from database -> continue with loading *---------------*/
+    groupMessagesPromises.fail(function () {
+      if (generation !== groupConversationGeneration) return;
+      $(".group_messages .messages-skeleton").addClass('hidden');
+      chat_group_messages.html('<p role="alert">' + <?= json_encode(_l('chat_messages_load_failed')); ?> + '</p>');
+    });
     groupMessagesPromises.then(function (data) {
+      if (generation !== groupConversationGeneration || !$("#sidepanel .chat_nav li.groups").hasClass('active')) return;
       // Handle empty/failed response
       if (!data || !data.users) {
         $(".group_messages .messages-skeleton").addClass("hidden");
@@ -985,7 +1008,7 @@
 
         $(".group_messages .modern-messages-container").prepend(window.createModernGroupMessage(messageData));
 
-        if (previous_time !== current_time) {
+        if (!data.messages[i + 1] || previous_time !== current_time) {
           $("<div class=\"modern-date-separator\">" + formatDateSeparatorLabel(value.time_sent) + "</div>").prependTo($(".group_messages .modern-messages-container"));
         }
 
@@ -1193,7 +1216,7 @@
       $(".no-groups-message").remove();
 
       // Only auto-select when a single group is added (not during bulk load)
-      if (!window._bulkLoadingGroups && !window.matchMedia("only screen and (max-width: 735px)").matches) {
+      if (!window._bulkLoadingGroups && $("#sidepanel .chat_nav li.groups").hasClass('active') && !window.matchMedia("only screen and (max-width: 735px)").matches) {
         $("#frame #sidepanel #groups .chat_groups_list li#" + data_group_id).click();
       }
     }
@@ -1201,6 +1224,7 @@
 
   /*---------------* Handles sidebar groups click also handles active classes and notifications  *---------------*/
   $("body").on("click", "#frame .group_selector", function () {
+    if (!$("body").hasClass('groups-tab')) return;
     if (typeof prchatResetGroupsListSearch === "function") {
       prchatResetGroupsListSearch();
     }
@@ -1683,6 +1707,11 @@
         value: group_id
       });
 
+      var $pendingGroupMessage = $(".group_messages .modern-messages-container").find('[data-message-id="' + groupTempId + '"]');
+      function failGroupSend() {
+        $pendingGroupMessage.addClass('modern-message-failed').attr('title', <?= json_encode(_l('chat_send_failed')); ?>);
+        alert_float('danger', <?= json_encode(_l('chat_send_failed')); ?>);
+      }
       $.post(prchatSettings.groupMessagePath, formData).done(function (response) {
         try {
           var result = typeof response === 'string' ? JSON.parse(response) : response;
@@ -1693,9 +1722,9 @@
 
             // CRITICAL: Also update the optionsMore data-id attribute (used for delete)
             $message.find('.optionsMore').attr('data-id', result.id);
-          }
-        } catch (e) { }
-      });
+          } else { failGroupSend(); }
+        } catch (e) { failGroupSend(); }
+      }).fail(failGroupSend);
       $(this).val("");
       $(this).focus();
       scrollToBottom();
@@ -1745,7 +1774,7 @@
     formData.append("userfile", file);
     formData.append("to_group", to_group);
     formData.append("send_from", userSessionId);
-    formData.append("csrf_token_name", token_name);
+    prchatAppendUploadCsrf(formData);
 
     $.ajax({
       type: "POST",

@@ -1389,3 +1389,5 @@ $lang['chat_task_created_success'] = 'Task created successfully.';
 $lang['chat_task_create_failed'] = 'Task could not be created.';
 
 $lang['chat_access_requirements_help'] = 'Messaging Chat requires View or View own, or an Administrator account, with Chat enabled in settings. View own allows your conversations and joined groups, with customer chat limited to assigned customers. Create, Edit, Delete, and AI Assistant control their respective actions and do not enable chat by themselves. Chatbot Support and Chatbot Manage grant their separate chatbot screens. Staff access uses the permissions saved on the staff account; changing a role does not update existing staff unless you select the option to update staff permissions.';
+
+$lang['chat_messages_load_failed'] = 'Unable to load messages. Select the conversation to retry.';

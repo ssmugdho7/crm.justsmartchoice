@@ -25,6 +25,14 @@ class Prchat_model extends App_Model
     return $this->current_staff_id;
   }
 
+  /** Database dates use the CRM timezone; include its historical UTC offset for browsers. */
+  private function chatTimestamp($value): ?string
+  {
+    if (!$value || strpos((string) $value, '0000-00-00') === 0) { return null; }
+    try { return (new DateTimeImmutable($value))->format(DATE_ATOM); }
+    catch (Exception $e) { return null; }
+  }
+
   /**
    * Process chat messages
    *
@@ -35,6 +43,7 @@ class Prchat_model extends App_Model
    */
   private function process_chat_messages(array $messages, bool $include_user_image = true, bool $include_client_data = false): array
   {
+    $senderImages = [];
     foreach ($messages as &$chat) {
       $chat->message = html_entity_decode($chat->message, ENT_QUOTES, 'UTF-8');
 
@@ -50,6 +59,7 @@ class Prchat_model extends App_Model
       }
       $chat->message = clickable($chat->message);
       $chat->time_sent_formatted = _dt($chat->time_sent);
+      $chat->time_sent = $this->chatTimestamp($chat->time_sent);
 
       // Format viewed_at timestamp if message has been seen using Perfex CRM date/time settings
       if (isset($chat->viewed_at) && !empty($chat->viewed_at) && $chat->viewed_at !== '0000-00-00 00:00:00') {
@@ -58,16 +68,24 @@ class Prchat_model extends App_Model
         $chat->viewed_at_formatted = '';
       }
 
+      if (isset($chat->viewed_at)) { $chat->viewed_at = $this->chatTimestamp($chat->viewed_at); }
+
       // User image processing
       if ($include_user_image && isset($chat->sender_id)) {
         $sender_id = $include_client_data ? str_replace('staff_', '', $chat->sender_id) : $chat->sender_id;
-        $chat->user_image = $this->getUserImage($sender_id);
+        if (!array_key_exists($sender_id, $senderImages)) {
+          $senderImages[$sender_id] = strpos((string) $sender_id, 'client_') === 0
+            ? $this->db->select('profile_image')->where('id', (int) substr($sender_id, 7))->get(db_prefix().'contacts')->row('profile_image')
+            : $this->getUserImage($sender_id);
+        }
+        $chat->user_image = $senderImages[$sender_id];
       }
 
       // Client-specific data processing
       if ($include_client_data && isset($chat->sender_id)) {
-        $chat->sender_fullname = get_staff_full_name(str_replace('staff_', '', $chat->sender_id));
-        $chat->client_image_path = contact_profile_image_url(str_replace('client_', '', $chat->sender_id));
+        $isContact = strpos($chat->sender_id, 'client_') === 0;
+        $chat->sender_fullname = $isContact ? get_contact_full_name(substr($chat->sender_id, 7)) : get_staff_full_name(substr($chat->sender_id, 6));
+        $chat->client_image_path = $isContact ? contact_profile_image_url(substr($chat->sender_id, 7)) : '';
       }
     }
 
@@ -92,8 +110,36 @@ class Prchat_model extends App_Model
       $users = $this->filterStaffByPermissions($users);
     }
 
+    if (!$users) { return false; }
+    $currentId = $this->get_current_staff_id();
+    $ids = array_column($users, 'staffid');
+    $roles = array_column($this->db->select('roleid,name')->get(db_prefix() . 'roles')->result_array(), 'name', 'roleid');
+    $statuses = array_column($this->db->select('user_id,value')->where('name', 'chat_status')
+      ->where_in('user_id', $ids)->get(db_prefix() . 'chatsettings')->result_array(), 'value', 'user_id');
+    // Aggregate both directions once, rather than scanning the conversation per contact.
+    $table = db_prefix() . 'chatmessages';
+    $latestIds = array_column($this->db->select("MAX(id) AS id", false)
+      ->group_start()->where('sender_id', $currentId)->or_where('reciever_id', $currentId)->group_end()
+      ->group_by("CASE WHEN sender_id = {$currentId} THEN reciever_id ELSE sender_id END", false)
+      ->get($table)->result_array(), 'id');
+    $latest = $latestIds ? $this->db->select('id,message,sender_id,reciever_id,time_sent')
+      ->where_in('id', $latestIds)->get($table)->result() : [];
+    $previews = [];
+    foreach ($latest as $message) {
+      $peer = (int) $message->sender_id === $currentId ? $message->reciever_id : $message->sender_id;
+      if (!isset($previews[$peer])) { $previews[$peer] = $message; }
+    }
+    $unread = array_column($this->db->select('sender_id, COUNT(*) AS total', false)
+      ->where('reciever_id', $currentId)->where('viewed', 0)->group_by('sender_id')
+      ->get($table)->result_array(), 'total', 'sender_id');
     foreach ($users as $key => $user) {
-      $users[$key] = $this->enrichUserWithChatData($user);
+      $id = $user['staffid'];
+      $user['role'] = !empty($user['is_not_staff']) ? trim(_l('is_not_staff_member'))
+        : (!empty($user['admin']) ? trim(_l('chat_role_administrator')) : ($roles[$user['role']] ?? trim(_l('chat_role_staff'))));
+      $user['status'] = $statuses[$id] ?? CHAT_DEFAULT_USER_STATUS;
+      $user['unread_count'] = (int) ($unread[$id] ?? 0);
+      $user['last_activity'] = $this->chatTimestamp($user['last_activity'] ?? null);
+      $users[$key] = $this->enrichUserWithChatData($user, $previews[$id] ?? null);
     }
 
     // Keep pinned contacts first, then order by the latest existing conversation.
@@ -152,10 +198,8 @@ class Prchat_model extends App_Model
    * @param array $user User data array
    * @return array Enriched user data
    */
-  private function enrichUserWithChatData(array $user): array
+  private function enrichUserWithChatData(array $user, ?object $latestMessage): array
   {
-    $user['role'] = $this->processUserRole($user);
-    $user['status'] = ($this->getChatStatus($user['staffid'])) ? $this->getChatStatus($user['staffid']) : CHAT_DEFAULT_USER_STATUS;
 
     // Generate proper profile image URL with file existence validation
     $placeholder = base_url('assets/images/user-placeholder.jpg');
@@ -173,77 +217,11 @@ class Prchat_model extends App_Model
       $user['profile_image_url'] = $placeholder;
     }
 
-    $latestMessage = $this->getLatestMessageWithUser($user['staffid']);
     if ($latestMessage) {
       $user = array_merge($user, $this->processLatestMessage($latestMessage, $user['staffid']));
     }
 
-    // Count unread messages from this user to current user
-    $current_user_id = $this->get_current_staff_id();
-    $user['unread_count'] = (int) $this->db
-      ->where('sender_id', $user['staffid'])
-      ->where('reciever_id', $current_user_id)
-      ->where('viewed', 0)
-      ->count_all_results(db_prefix() . 'chatmessages');
-
     return $user;
-  }
-
-  /**
-   * Process user role information with admin/role hierarchy
-   *
-   * @param array $user User data array
-   * @return string Processed role string
-   */
-    private function processUserRole(array $user): string
-    {
-        // Perfex staff profile: "Not Staff Member" — same label as CRM (core language string)
-        if (!empty($user['is_not_staff']) && (int) $user['is_not_staff'] === 1) {
-            return trim(_l('is_not_staff_member'));
-        }
-
-        // If user is admin, they are ONLY Administrator (no role needed)
-        if ($user['admin']) {
-            return trim(_l('chat_role_administrator'));
-        }
-
-        // If user is not admin but has a role, show the role
-        if ($user['role']) {
-            $role = get_staff_userrole($user['role']);
-            if ($role) {
-                return trim($role);
-            }
-        }
-
-        // Fallback: if no role and not admin, show as Staff
-        return trim(_l('chat_role_staff'));
-    }
-
-  /**
-   * Get latest message between current user and specified user
-   *
-   * @param int $user_id Target user ID
-   * @return object|null Latest message or null if none found
-   */
-  private function getLatestMessageWithUser(int $user_id): ?object
-  {
-    $current_user_id = $this->get_current_staff_id();
-
-    $this->db->select('message, sender_id, time_sent');
-    $this->db->from(db_prefix() . 'chatmessages');
-    $this->db->group_start();
-    $this->db->where('sender_id', $current_user_id);
-    $this->db->where('reciever_id', $user_id);
-    $this->db->group_end();
-    $this->db->or_group_start();
-    $this->db->where('sender_id', $user_id);
-    $this->db->where('reciever_id', $current_user_id);
-    $this->db->group_end();
-    $this->db->order_by('id', 'DESC');
-    $this->db->limit(1);
-
-    $result = $this->db->get()->row();
-    return $result ?: null;
   }
 
   /**
@@ -256,7 +234,7 @@ class Prchat_model extends App_Model
   private function processLatestMessage(object $message, int $user_id): array
   {
     $data = [];
-    $data['time_sent'] = $message->time_sent;
+    $data['time_sent'] = $this->chatTimestamp($message->time_sent);
     $data['time_sent_formatted'] = time_ago($message->time_sent);
     $data['message_sender_id'] = (int) $message->sender_id;
 
@@ -695,7 +673,7 @@ class Prchat_model extends App_Model
         $numeric_id = str_replace('client_', '', $contact_key);
         $results[$numeric_id] = [
           'message' => $row->message,
-          'time_sent' => $row->time_sent,
+          'time_sent' => $this->chatTimestamp($row->time_sent),
           'sender_id' => $row->sender_id,
           'time_sent_formatted' => _dt($row->time_sent),
         ];
@@ -748,7 +726,7 @@ class Prchat_model extends App_Model
       foreach ($query->result() as $row) {
         $results[$row->group_id] = [
           'message' => $row->message,
-          'time_sent' => $row->time_sent,
+          'time_sent' => $this->chatTimestamp($row->time_sent),
           'sender_id' => $row->sender_id,
           'sender_fullname' => $row->sender_fullname ?? '',
           'time_sent_formatted' => _dt($row->time_sent),
@@ -800,6 +778,7 @@ class Prchat_model extends App_Model
         $chat->user_image = $this->getUserImage($chat->sender_id);
         $chat->sender_fullname = get_staff_full_name($chat->sender_id);
         $chat->time_sent_formatted = _dt($chat->time_sent);
+        $chat->time_sent = $this->chatTimestamp($chat->time_sent);
         $chat->created_by_id = $created_by;
       }
 
@@ -975,6 +954,7 @@ class Prchat_model extends App_Model
       $chat->user_image = $this->getUserImage($chat->sender_id);
       $chat->sender_fullname = get_staff_full_name($chat->sender_id);
       $chat->time_sent_formatted = _dt($chat->time_sent);
+      $chat->time_sent = $this->chatTimestamp($chat->time_sent);
       $chat->created_by_id = $created_by;
     }
 
@@ -1040,27 +1020,16 @@ class Prchat_model extends App_Model
     if ($query) {
       $result = $query->result_array();
 
-      // Get authorized clients for this staff member
-      $authorizedClients = get_staff_customers(30, 0, true);
-
-      // Build a quick lookup array of authorized contact IDs
       $authorizedContactIds = [];
-      if (is_array($authorizedClients)) {
-        foreach ($authorizedClients as $client) {
-          if (isset($client['contact_id'])) {
-            $authorizedContactIds[$client['contact_id']] = true;
-          }
-        }
-      }
-
       foreach ($result as $sender) {
         $sender_id = '_' . $sender['sender_id'];
         $contact_id = str_replace('client_', '', $sender['sender_id']);
 
-        // Check if staff has access to this client (admins see all)
-        if (!is_admin($current_staff_id) && !isset($authorizedContactIds[$contact_id])) {
-          continue; // Skip this unread message if staff doesn't have access
+        // Authorization is independent of which 30 contacts happen to be on the first page.
+        if (!array_key_exists($contact_id, $authorizedContactIds)) {
+          $authorizedContactIds[$contact_id] = prchat_staff_can_contact($contact_id);
         }
+        if (!$authorizedContactIds[$contact_id]) { continue; }
 
         if (array_key_exists($sender_id, $unreadMessages)) {
           $unreadMessages['' . $sender_id . '']['count_messages'] = $unreadMessages['' . $sender_id . '']['count_messages'] + 1;
@@ -1140,6 +1109,7 @@ class Prchat_model extends App_Model
       $this->db->where('viewed', 0);
       $this->db->where('reciever_id', $staff_id);
       $this->db->where('sender_id', $id);
+      $this->db->where_in('id', array_column($messages, 'msg_id'));
       $update_data = [
         'viewed' => 1,
         'viewed_at' => $viewed_at
@@ -1147,10 +1117,14 @@ class Prchat_model extends App_Model
       $query = $this->db->update(db_prefix() . 'chatmessages', $update_data);
 
       if ($query) {
-        // Add viewed_at to each message for Pusher event using Perfex CRM date/time settings
+        // A concurrent reader may have committed first; publish the saved timestamp.
+        $messages = $this->db->select('id as msg_id, sender_id, reciever_id, viewed_at')
+          ->where_in('id', array_column($messages, 'msg_id'))
+          ->where('viewed', 1)->get(db_prefix() . 'chatmessages')->result();
         foreach ($messages as &$msg) {
-          $msg->viewed_at = $viewed_at;
-          $msg->viewed_at_formatted = _dt($viewed_at);
+          $savedViewedAt = $msg->viewed_at;
+          $msg->viewed_at = $this->chatTimestamp($savedViewedAt);
+          $msg->viewed_at_formatted = _dt($savedViewedAt);
         }
         $this->setMessageAsViewed($pusher, $messages);
         return true;
@@ -1226,10 +1200,14 @@ class Prchat_model extends App_Model
 
 
       if ($query) {
-        // Add viewed_at to each message for Pusher event using Perfex CRM date/time settings
+        // A concurrent reader may have committed first; publish the saved timestamp.
+        $messages = $this->db->select('id as msg_id, sender_id, reciever_id, viewed_at')
+          ->where_in('id', array_column($messages, 'msg_id'))
+          ->where('viewed', 1)->get(db_prefix() . 'chatclientmessages')->result();
         foreach ($messages as &$msg) {
-          $msg->viewed_at = $viewed_at;
-          $msg->viewed_at_formatted = _dt($viewed_at);
+          $savedViewedAt = $msg->viewed_at;
+          $msg->viewed_at = $this->chatTimestamp($savedViewedAt);
+          $msg->viewed_at_formatted = _dt($savedViewedAt);
         }
         $this->setMessageAsViewed($pusher, $messages);
         return true;

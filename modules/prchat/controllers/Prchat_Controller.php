@@ -118,6 +118,7 @@ class Prchat_Controller extends AdminController
       @ob_flush();
       @flush();
     }
+    if (session_status() === PHP_SESSION_ACTIVE) { session_write_close(); }
     ignore_user_abort(true);
   }
 
@@ -1411,7 +1412,10 @@ strpos($channel_name, 'private-') === 0
   public function chat_full_view()
   {
     $result = $this->chat_model->getUnread();
-    $this->load->view('prchat/chat_full_view', ['unreadMessages' => $result]);
+    $staffContacts = null;
+    try { $staffContacts = $this->chat_model->getUsers() ?: []; }
+    catch (Throwable $e) { log_message('error', 'PRChat initial staff lookup failed; using AJAX fallback'); }
+    $this->load->view('prchat/chat_full_view', ['unreadMessages' => $result, 'staffContacts' => $staffContacts]);
   }
 
   /**

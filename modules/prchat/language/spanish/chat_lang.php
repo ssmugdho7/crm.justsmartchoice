@@ -1387,3 +1387,5 @@ $lang['chat_task_title_prompt'] = 'Título de la tarea:';
 $lang['chat_task_default_title'] = 'Tarea desde mensaje de chat';
 $lang['chat_task_created_success'] = 'Tarea creada correctamente.';
 $lang['chat_task_create_failed'] = 'No se pudo crear la tarea.';
+
+$lang['chat_messages_load_failed'] = 'No se pudieron cargar los mensajes. Seleccione la conversación para reintentar.';

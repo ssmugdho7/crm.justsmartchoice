@@ -5,6 +5,17 @@
   window.prchatI18n.chat_new_file_uploaded = <?php echo json_encode(_l('chat_new_file_uploaded')); ?>;
   window.prchatI18n.chat_new_photo_uploaded = <?php echo json_encode(_l('chat_new_photo_uploaded')); ?>;
 
+  // Multipart requests need the configured token name, not the literal "csrf_token_name".
+  function prchatAppendUploadCsrf(formData) {
+    var name = <?= json_encode(get_instance()->security->get_csrf_token_name()); ?>;
+    var token = <?= json_encode(get_instance()->security->get_csrf_hash()); ?>;
+    var field = Array.prototype.find.call(document.querySelectorAll('input[type="hidden"]'), function(input) {
+      return input.name === name && input.value;
+    });
+    formData.set(name, field ? field.value : token);
+    return formData;
+  }
+
   /**
    * Main Settings for clients chat
    * Used in chat_clients_view.php

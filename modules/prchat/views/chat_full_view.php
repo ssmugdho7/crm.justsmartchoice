@@ -1,6 +1,20 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <?php init_head(); ?>
+<script>
+  // Apply the initial layout before the chat shell can paint.
+  document.body.classList.add('staff-tab');
+  try {
+    var initialChatTheme = localStorage.getItem('prChatThemeMode');
+    if (initialChatTheme === 'dark' || initialChatTheme === 'light') {
+      document.body.classList.add('chat_' + initialChatTheme);
+    }
+  } catch (e) {}
+  if (window.innerWidth > 733) {
+    document.body.classList.remove('hide-sidebar');
+    document.body.classList.add('show-sidebar');
+  }
+</script>
 
 <div id="wrapper" class="desktop_chat">
 
@@ -66,12 +80,10 @@
     generateMessageSkeleton('.client_messages .messages-skeleton', 8);
 
     /*---------------* Main first thing get users/staff from database *---------------*/
-    var users = $.ajax({
-      url: prchatSettings.usersList,
-      method: "GET",
-      dataType: "json",
-      cache: false
-    });
+    var initialStaffContacts = <?= json_encode($staffContacts ?? null, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+    var users = Array.isArray(initialStaffContacts)
+      ? $.Deferred().resolve(initialStaffContacts).promise()
+      : $.ajax({url: prchatSettings.usersList, method: "GET", dataType: "json", cache: false, timeout: 15000});
 
     var prchatBootstrapFinished = false;
     function prchatFinishBootstrap(message, isError) {
@@ -107,7 +119,7 @@
     var userSessionId = "<?= get_staff_user_id(); ?>";
     window.userSessionId = userSessionId;
     var isAdmin = app.user_is_admin;
-    var staffCanCreateGroups = "<?= get_option('chat_members_can_create_groups'); ?>";
+    var staffCanCreateGroups = "<?= (get_option('chat_members_can_create_groups') == '1' && staff_can('create', 'prchat')) ? '1' : '0'; ?>";
     var staffCanDelete = <?= chatStaffCanDelete() ? 'true' : 'false' ?>;
     var staffCanDeleteGroups = <?= chatStaffCanDeleteGroups() ? 'true' : 'false' ?>;
 
@@ -453,7 +465,7 @@
       formData.append("userfile", file);
       formData.append("send_to", sentTo);
       formData.append("send_from", userSessionId);
-      formData.append("csrf_token_name", token_name);
+      prchatAppendUploadCsrf(formData);
 
       $.ajax({
         type: "POST",
@@ -522,28 +534,34 @@
 
 
     /*---------------* Check for messages history and append to main chat window *---------------*/
+    var staffHistoryLoading = false;
     function loadMessages(el) {
       var pos = $(el).scrollTop();
       var id = $(el).attr("id");
       var to = $("#contacts ul li.contact").children("a.active_chat").attr("id");
       var from = userSessionId;
 
-      if (pos == 0 && offsetPush >= 10) {
-
+      if (pos == 0 && offsetPush >= 10 && !endOfScroll && !staffHistoryLoading) {
+        staffHistoryLoading = true;
+        var generation = staffConversationGeneration;
+        var previousHeight = el.scrollHeight;
         $.get(prchatSettings.getMessages, {
             from: from,
             to: to,
             offset: offsetPush,
           })
           .done(function(message) {
-            message = JSON.parse(message);
-            if (Array.isArray(message) == false) {
+            if (generation !== staffConversationGeneration) return;
+            message = typeof message === 'string' ? JSON.parse(message) : message;
+            if (Array.isArray(message) == false || message.length === 0) {
               endOfScroll = true;
               if ($(el).hasScrollBar() && endOfScroll == true) {
                 prchat_setNoMoreMessages();
               }
+              return;
             } else {
-              offsetPush += 10;
+              offsetPush += message.length;
+              endOfScroll = message.length < 10;
             }
             $(message).each(function(i, value) {
 
@@ -569,7 +587,7 @@
                 user_image: value.user_image,
                 reactions: value.reactions || null
               });
-              $(".modern-messages-container").prepend(modernMessage);
+              $(".messages .modern-messages-container").prepend(modernMessage);
 
               if (message[i + 1] !== undefined) {
                 if (previous_time !== current_time) {
@@ -578,11 +596,9 @@
                 }
               }
             });
-            if (endOfScroll == false) {
-              $(el).scrollTop(200);
-            }
-            $('.modern-messages-container .reaction-pill[data-toggle="tooltip"]').tooltip();
-          });
+            $(el).scrollTop(el.scrollHeight - previousHeight);
+            $('.messages .modern-messages-container .reaction-pill[data-toggle="tooltip"]').tooltip();
+          }).always(function() { staffHistoryLoading = false; });
       }
     }
 
@@ -923,23 +939,7 @@
     presenceChannel.bind("pusher:subscription_succeeded", function(members) {
       chatMemberUpdate();
       updateOnlineCounter();
-      var redirect_staff_id = localStorage.staff_to_redirect;
-      users.then(function() {
-        if (localStorage.touchClientsTab) {
-          $("li.crm_clients a").click();
-          localStorage.touchClientsTab = "";
-        }
-        if (redirect_staff_id != "") {
-          $(".chat_nav li.staff a").trigger("click");
-          var safeRedirectStaffId = String(redirect_staff_id).replace(/\\/g, "\\\\").replace(/'/g, "\\'");
-          $("#contacts a[id='" + safeRedirectStaffId + "']").trigger("click");
-          localStorage.staff_to_redirect = "";
-        } else {
-          if (!window.matchMedia("only screen and (max-width: 735px)").matches) {
-            $("#frame #sidepanel ul.nav.nav-tabs li.staff.active a").click();
-          }
-        }
-      });
+
     });
 
     <?php if ($prchat_calls_staff_signaling): ?>
@@ -2232,43 +2232,9 @@
             data[idx] = user;
           });
         } else {
-          $(".message-input, .contact-profile").remove();
-
-          $(".content .messages").html(
-            '<div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-min-h-[400px] tw-p-8">' +
-            '<div class="tw-max-w-2xl tw-w-full">' +
-            '<div class="tw-border-l-4 tw-border-primary-500 tw-bg-primary-50 tw-rounded-lg tw-p-6 tw-mb-4">' +
-            '<div class="tw-flex tw-items-start tw-gap-3">' +
-            '<div class="tw-flex-shrink-0 tw-w-6 tw-h-6 tw-rounded-full tw-bg-primary-500 tw-flex tw-items-center tw-justify-center tw-mt-0.5">' +
-            '<i class="fa fa-info tw-text-white tw-text-xs"></i>' +
-            '</div>' +
-            '<div class="tw-flex-1">' +
-            '<h4 class="tw-text-lg tw-font-semibold tw-text-neutral-800 tw-mb-3">No staff users with valid permissions found</h4>' +
-            '<p class="tw-text-sm tw-text-neutral-700 tw-mb-3">Try adding <strong>new staff users</strong> or grant Chat Access to existing staff users.</p>' +
-            '<div class="tw-text-sm tw-text-neutral-600 tw-space-y-2">' +
-            '<p><strong>To manage staff permissions:</strong></p>' +
-            '<ol class="tw-list-decimal tw-list-inside tw-space-y-1 tw-ml-2">' +
-            '<li>Navigate to <strong>Setup → Staff</strong></li>' +
-            '<li>Select a staff member and click <strong>Permissions</strong></li>' +
-            '<li>Scroll down to <strong>Chat Module</strong> and assign chat access</li>' +
-            '<li>Or disable "Show only users with chat permissions" in <strong>Setup → Settings → Chat Settings</strong></li>' +
-            '</ol>' +
-            '<p class="tw-mt-3 tw-text-xs tw-text-neutral-500"><i class="fa fa-info-circle tw-mr-1"></i> Administrators do not need any permissions.</p>' +
-            '</div>' +
-            '</div>' +
-            '</div>' +
-            '</div>' +
-            '<div class="tw-border-l-4 tw-border-warning-500 tw-bg-warning-50 tw-rounded-lg tw-p-4">' +
-            '<div class="tw-flex tw-items-start tw-gap-3">' +
-            '<div class="tw-flex-shrink-0 tw-w-5 tw-h-5 tw-rounded-full tw-bg-warning-500 tw-flex tw-items-center tw-justify-center tw-mt-0.5">' +
-            '<i class="fa fa-exclamation-triangle tw-text-white tw-text-xs"></i>' +
-            '</div>' +
-            '<p class="tw-text-sm tw-font-medium tw-text-neutral-800"><strong>Important:</strong> You must create at least one staff member (including yourself)!</p>' +
-            '</div>' +
-            '</div>' +
-            '</div>' +
-            '</div>'
-          );
+          $("#frame .nav.nav-tabs .events_disabled, #frame .nav.nav-tabs li.groups").removeClass('events_disabled');
+          $("#contacts .contacts-skeleton, .messages .messages-skeleton").addClass('hidden');
+          $("#contacts ul").html('<li class="prchat-empty-contacts"><?= addslashes(_l('chat_assigned_contacts')); ?></li>');
           clearTimeout(prchatBootstrapWatchdog);
           prchatFinishBootstrap("", false);
           prchatStaffContactsLoaded = true;
@@ -2435,6 +2401,22 @@
           });
         }
         prchatStaffContactsLoaded = true;
+        // Database readiness drives initial selection. Reconnects must not reset a user's conversation.
+        var initialParams = new URLSearchParams(window.location.search);
+        var initialTab = initialParams.get('tab');
+        if (!initialTab || initialTab === 'staff') {
+          var redirectStaff = localStorage.getItem('staff_to_redirect');
+          if (redirectStaff && /^\d+$/.test(redirectStaff)) {
+            $("#contacts a[id='" + redirectStaff + "']").trigger('click');
+            localStorage.removeItem('staff_to_redirect');
+          } else if (!initialParams.get('contact') && !window.matchMedia('(max-width: 735px)').matches) {
+            $("#contacts li.contact a").first().trigger('click');
+          }
+        }
+        if (localStorage.getItem('touchClientsTab')) {
+          $("li.crm_clients a").trigger('click');
+          localStorage.removeItem('touchClientsTab');
+        }
         if (typeof updateOnlineCounter === "function") {
           updateOnlineCounter();
         }
@@ -2530,8 +2512,10 @@
 
     /*---------------* Creating chat box from the html template to the DOM *---------------*/
     var createChatBoxRequest = null;
+    var staffConversationGeneration = 0;
 
     function createChatBox(obj) {
+      var generation = ++staffConversationGeneration;
       // Generate dynamic skeleton while messages load, clear old messages
       $(".messages ul").empty();
       generateMessageSkeleton('.messages .messages-skeleton', 12);
@@ -2652,26 +2636,34 @@
             limit: 20
           })
           .done(function(r) {
-            offsetPush = 10;
-            r = JSON.parse(r);
-            offsetPush += 10;
-            dfd.resolve(r);
+            try { r = typeof r === 'string' ? JSON.parse(r) : r; }
+            catch (e) { dfd.reject(); return; }
+            if (generation !== staffConversationGeneration) return;
+            offsetPush = Array.isArray(r) ? r.length : 0;
+            endOfScroll = offsetPush < 20;
+            dfd.resolve(Array.isArray(r) ? r : []);
           })
-          .fail(function() {
-            dfd.resolve([]);
+          .fail(function(xhr, status) {
+            if (status !== 'abort') dfd.reject();
           })
           .always(function() {
             if ($("#no_messages").length) {
               $("#no_messages").remove();
             }
-            createChatBoxRequest = null;
+            if (generation === staffConversationGeneration) createChatBoxRequest = null;
           });
       } else {
         dfd.resolve([]);
       }
 
       /*---------------* After users are fetched from database -> continue with loading *---------------*/
+      promise.fail(function() {
+        if (generation !== staffConversationGeneration) return;
+        $(".messages .messages-skeleton").addClass('hidden');
+        $(".messages ul").html('<li class="prchat-load-error" role="alert">' + <?= json_encode(_l('chat_messages_load_failed')); ?> + '</li>');
+      });
       promise.then(function(message) {
+        if (generation !== staffConversationGeneration || ($("#sidepanel .chat_nav").length && !$("#sidepanel .chat_nav li.staff").hasClass('active'))) return;
         var sliderimg = obj.find("img").prop("currentSrc");
         $("#frame .content .contact-profile img").prop("src", sliderimg);
 
@@ -2709,9 +2701,6 @@
               reactions: value.reactions || null,
               edited_at: value.edited_at || null
             });
-            if (previous_time !== current_time) {
-              msgHtml = "<div class=\"modern-date-separator\">" + formatDateSeparatorLabel(value.time_sent) + "</div>" + msgHtml;
-            }
           } else {
             if (!isViewed) {
               $(".has_newmessages").val("true").attr("id", value.sender_id);
@@ -2727,6 +2716,9 @@
               reactions: value.reactions || null,
               edited_at: value.edited_at || null
             });
+          }
+          if (!message[i + 1] || previous_time !== current_time) {
+            msgHtml = '<div class="modern-date-separator">' + formatDateSeparatorLabel(value.time_sent) + '</div>' + msgHtml;
           }
           batchHtml = msgHtml + batchHtml;
         });
@@ -2882,6 +2874,15 @@
 
         $.post(prchatSettings.serverPath, formData)
           .done(function(response) {
+            var storedResult;
+            try { storedResult = typeof response === 'string' ? JSON.parse(response) : response; } catch (e) { storedResult = null; }
+            if (!storedResult || storedResult.success === false || !storedResult.id) {
+              var $failed = $(".messages .modern-messages-container").find('[data-message-id="' + tempMessageId + '"]');
+              $failed.removeClass('modern-message-sending').addClass('modern-message-failed');
+              $failed.find('.modern-status-sending').removeClass('modern-status-sending fa-clock').addClass('modern-status-failed fa-exclamation-circle text-danger');
+              return;
+            }
+
             var $sentMessage = $(".modern-messages-container").find('[data-message-id="' + tempMessageId + '"]');
             $sentMessage.removeClass('modern-message-sending');
 
@@ -3720,6 +3721,7 @@
           var $activeGroup = $("#frame ul.chat_groups_list li.active");
           if ($activeGroup.length) {
             $("#frame form[name=groupMessagesForm]").show();
+            $activeGroup.click();
           } else if (!window.matchMedia("only screen and (max-width: 735px)").matches) {
             chat_group_messages.html("");
             $activeGroup = $(".chat_groups_list li.group_selector").first();
@@ -3937,131 +3939,31 @@
      * Mark messages as seen pusher event
      */
     user_messages_events.bind("message_seen", function(messages) {
-
-      var recieverId, senderId;
-
-      if (Array.isArray(messages)) {
-        for (var i = 0; i < messages.length; i++) {
-
-          recieverId = messages[i].reciever_id;
-          senderId = messages[i].sender_id;
-
-          // Build tooltip with seen time using unified format
-          var seenTooltip = formatSeenTooltip(messages[i].viewed_at, messages[i].viewed_at_formatted);
-
-          /** Staff to Client messages - when client reads staff's message */
-          if (senderId && senderId.startsWith("staff_")) {
-            // Only process if current staff is the sender
-            var staffSenderId = senderId.replace("staff_", "");
-            if (staffSenderId == userSessionId) {
-              // Get the currently active client conversation
-              var activeClientId = $(".chat_clients_list > li.contact_name.selected").attr("id");
-              var messageReceiverId = recieverId ? recieverId.replace("client_", "") : "";
-
-              // Only update if viewing the same client conversation
-              if (activeClientId && (activeClientId == messageReceiverId || !messageReceiverId)) {
-                var $clientMessageContainer = $(".client_messages");
-                var $modernClientMessages = $clientMessageContainer.find('.modern-message-sent');
-
-                $modernClientMessages.each(function() {
-                  var $statusIcon = $(this).find('.modern-status-delivered, .modern-status-sending');
-                  if ($statusIcon.length > 0) {
-                    $statusIcon.removeClass('modern-status-delivered modern-status-sending fa-check fa-clock')
-                      .addClass('modern-status-read fa-check-double text-primary')
-                      .attr('data-toggle', 'tooltip')
-                      .attr('title', seenTooltip)
-                      .attr('data-original-title', seenTooltip);
-                    // Reinitialize tooltip (destroy for Bootstrap 3, dispose for Bootstrap 4+)
-                    try {
-                      $statusIcon.tooltip('destroy');
-                    } catch (e) {}
-                    try {
-                      $statusIcon.tooltip('dispose');
-                    } catch (e) {}
-                    $statusIcon.tooltip();
-                  }
-                });
-
-                // Also update messages that were already marked as read but without timestamp
-                $clientMessageContainer.find('.modern-status-read').each(function() {
-                  var $el = $(this);
-                  var currentTitle = $el.attr('data-original-title') || $el.attr('title') || '';
-                  if (currentTitle && !currentTitle.match(/\d{2}[:\-\/]\d{2}/)) {
-                    $el.attr('title', seenTooltip).attr('data-original-title', seenTooltip);
-                    try {
-                      $el.tooltip('destroy');
-                    } catch (e) {}
-                    try {
-                      $el.tooltip('dispose');
-                    } catch (e) {}
-                    $el.tooltip();
-                  }
-                });
-
-                // Remove old-style indicators
-                $clientMessageContainer.find("i.circle-unseen").remove();
-              }
-              userSeenNotify(userSessionId);
-            }
-            continue;
-          }
-
-
-          /** Staff to Staff - Update modern message status */
-          if (messages[i].reciever_id == $("li.contact a.active_chat").attr("id") && messages[i].sender_id == userSessionId) {
-            // Update modern message structure
-            var $messageContainer = $(".messages#id_" + messages[i].reciever_id);
-            var $modernMessages = $messageContainer.find('.modern-message-sent');
-
-            $modernMessages.each(function() {
-              var $statusIcon = $(this).find('.modern-status-delivered, .modern-status-sending');
-              if ($statusIcon.length > 0) {
-                $statusIcon.removeClass('modern-status-delivered modern-status-sending fa-check fa-clock')
-                  .addClass('modern-status-read fa-check-double text-primary')
-                  .attr('data-toggle', 'tooltip')
-                  .attr('title', seenTooltip)
-                  .attr('data-original-title', seenTooltip);
-                // Reinitialize tooltip (destroy for Bootstrap 3, dispose for Bootstrap 4+)
-                try {
-                  $statusIcon.tooltip('destroy');
-                } catch (e) {}
-                try {
-                  $statusIcon.tooltip('dispose');
-                } catch (e) {}
-                $statusIcon.tooltip();
-              }
-            });
-
-            // Also update messages that were already marked as read but without timestamp
-            $messageContainer.find('.modern-status-read').each(function() {
-              var $el = $(this);
-              var currentTitle = $el.attr('data-original-title') || $el.attr('title') || '';
-              if (currentTitle && !currentTitle.match(/\d{2}[:\-\/]\d{2}/)) {
-                $el.attr('title', seenTooltip).attr('data-original-title', seenTooltip);
-                try {
-                  $el.tooltip('destroy');
-                } catch (e) {}
-                try {
-                  $el.tooltip('dispose');
-                } catch (e) {}
-                $el.tooltip();
-              }
-            });
-          }
-        };
-
-        if (senderId && senderId.startsWith("staff")) {
-          if (senderId.replace("staff_", "") == userSessionId) {
-            userSeenNotify(userSessionId);
-          }
-        } else if (senderId) {
-          if (senderId == userSessionId) {
-            userSeenNotify(userSessionId);
-          }
-        }
-      }
+      if (!Array.isArray(messages)) return;
+      messages.forEach(function(receipt) {
+        var sender = String(receipt.sender_id || '');
+        var receiver = String(receipt.reciever_id || '');
+        var id = String(receipt.msg_id || '');
+        if (!/^\d+$/.test(id)) return;
+        var $container;
+        if (sender === 'staff_' + userSessionId) {
+          var client = $(".chat_clients_list > li.contact_name.selected").attr('id');
+          if (receiver !== 'client_' + client) return;
+          $container = $(".client_messages");
+        } else if (sender === String(userSessionId)) {
+          if (receiver !== String($("li.contact a.active_chat").attr('id'))) return;
+          $container = $(".messages#id_" + receiver);
+        } else { return; }
+        var tooltip = formatSeenTooltip(receipt.viewed_at, receipt.viewed_at_formatted);
+        var $icon = $container.find('.modern-message-sent[data-message-id="' + id + '"]')
+          .find('.modern-status-delivered, .modern-status-sending, .modern-status-read');
+        $icon.removeClass('modern-status-delivered modern-status-sending fa-check fa-clock')
+          .addClass('modern-status-read fa-check-double text-primary')
+          .attr('title', tooltip).attr('data-original-title', tooltip);
+        try { $icon.tooltip('destroy'); } catch (e) {}
+        $icon.tooltip({container: 'body'});
+      });
     });
-
 
 
     // Create new task from chat related to staff

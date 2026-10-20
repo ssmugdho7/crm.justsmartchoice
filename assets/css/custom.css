@@ -713,3 +713,16 @@ body.admin .accounting-template .table.items > :is(thead, tbody) > tr > :is(th, 
   body.admin .btn { transition: none !important; }
   body.admin .top_stats_wrapper:hover { transform: none !important; }
 }
+/* Legacy header/module styles used a white hamburger on the old gradient. */
+body.admin #header .hide-menu,
+body.admin #header .hide-menu svg,
+body.admin #header .hide-menu i {
+  color: var(--text-muted) !important;
+  stroke: currentColor !important;
+}
+body.admin #header .hide-menu:hover,
+body.admin #header .hide-menu:focus,
+body.admin #header .hide-menu:hover svg,
+body.admin #header .hide-menu:focus svg {
+  color: var(--emerald-800) !important;
+}

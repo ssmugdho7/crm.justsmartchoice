@@ -28,8 +28,12 @@ class AdminController extends App_Controller
             redirect(admin_url('authentication'));
         }
 
-        if ($this->uri->segment(3) != 'notifications_check') {
-            // In case staff have setup logged in as client - This is important don't change it
+        if ($this->uri->segment(3) != 'notifications_check'
+            && !(($this->input->is_ajax_request() || strtolower($this->router->fetch_method()) === 'pusher_auth')
+                && strcasecmp($this->router->fetch_class(), 'Prchat_Controller') === 0
+                && in_array(strtolower($this->router->fetch_method()), ['users', 'pusher_auth', 'getmessages', 'getgroupmessages'], true))) {
+            // End customer preview on admin navigation/actions. Read-only chat polls can
+            // run in another tab during a customer recording/upload and must not end it.
             foreach (['client_user_id', 'contact_user_id', 'client_logged_in', 'logged_in_as_client'] as $sk) {
                 if ($this->session->has_userdata($sk)) {
                     $this->session->unset_userdata($sk);

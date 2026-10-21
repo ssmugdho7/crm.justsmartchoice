@@ -240,7 +240,7 @@
       console.error("[prchat-call] Invalid peerId", peerId);
       return Promise.reject(new Error("Invalid peer id – select a contact"));
     }
-    if (selfId === peerId) {
+    if (selfId === peerId && ((opts && opts.callerType) || 'staff') === ((opts && opts.recipientType) || 'staff')) {
       return Promise.reject(new Error("Cannot call yourself"));
     }
 
@@ -310,9 +310,15 @@
           }
           var json;
           try { json = JSON.parse(t); } catch (e) { json = { success: false, _raw: t }; }
+          if (!json || json.success !== true) throw new Error((json && json.error) || ((window.prchatI18n || {}).chat_call_not_accepted || 'chat_call_not_accepted'));
+          if (self.hasEnded) throw new Error(((window.prchatI18n || {}).chat_call_cancelled || 'chat_call_cancelled'));
           prchatCallTrace("startCall OK", json);
           return json;
         });
+      }).catch(function (error) {
+        self.hasEnded = true;
+        self._cleanup();
+        throw error;
       });
   };
 
@@ -372,6 +378,7 @@
         });
       })
       .then(function (answer) {
+        if (self.hasEnded || !self.pc) throw new Error(((window.prchatI18n || {}).chat_call_cancelled || 'chat_call_cancelled'));
         var url = getUrl("answer");
         if (!url) return Promise.reject(new Error("PRCHAT_CALLS.answer not set"));
         var body =
@@ -390,9 +397,15 @@
           if (!res.ok) return Promise.reject(new Error("answerCall HTTP " + res.status));
           var json;
           try { json = JSON.parse(t); } catch (e) { json = { success: false, _raw: t }; }
+          if (!json || json.success !== true) throw new Error((json && json.error) || ((window.prchatI18n || {}).chat_call_answer_not_accepted || 'chat_call_answer_not_accepted'));
+          if (self.hasEnded) throw new Error(((window.prchatI18n || {}).chat_call_cancelled || 'chat_call_cancelled'));
           prchatCallTrace("answerCall OK", json);
           return json;
         });
+      }).catch(function (error) {
+        self.hasEnded = true;
+        self._cleanup();
+        throw error;
       });
   };
 

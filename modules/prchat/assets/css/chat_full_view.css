@@ -12904,3 +12904,22 @@ textarea.prchat-editing {
 #frame .chat-list-toolbar,#frame .chat-list-filters,#frame #sidepanel #search{min-height:44px!important;height:auto!important;align-items:center!important;}
 #frame .chat-list-toolbar .btn,#frame .chat-list-filters .btn,#frame .actions .btn{font-size:12px!important;padding:5px 9px!important;line-height:1.2!important;}
 #frame table,#frame .table{table-layout:auto!important;}
+
+/* The photo frame stays square through remove/replace and responsive sidebars. */
+#frame #sidepanel .chat_groups_list .groups_image.sc-chat-group-avatar-frame {
+  flex: 0 0 42px !important;
+  width: 42px !important;
+  height: 42px !important;
+  min-height: 42px !important;
+  max-height: 42px !important;
+  aspect-ratio: 1 / 1;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+}
+#frame #sidepanel .chat_groups_list .sc-chat-group-avatar-frame > img {
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+}

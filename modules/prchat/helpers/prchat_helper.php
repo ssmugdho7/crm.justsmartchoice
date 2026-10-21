@@ -172,14 +172,14 @@ function pr_chat_add_js_before_admin_render()
     echo '<script src="' . base_url('modules/prchat/assets/js/jscolor.js' . '?v=' . VERSIONING . '') . '"></script>';
   }
   echo '<script src="' . base_url('modules/prchat/assets/js/inline-video-embed.js' . '?v=' . VERSIONING . '') . '"></script>';
-  echo '<script src="' . base_url('modules/prchat/assets/js/voice-recorder.js' . '?v=' . VERSIONING . '') . '"></script>';
+  echo '<script src="' . base_url('modules/prchat/assets/js/voice-recorder.js' . '?v=' . VERSIONING . '-' . filemtime(__DIR__ . '/../assets/js/voice-recorder.js')) . '"></script>';
 
   // Calls scaffolding (feature-flagged)
   if (get_option('chat_staff_calls_enabled') == '1' || get_option('chat_calls_video_enabled') == '1') {
     echo '<script src="' . base_url('modules/prchat/assets/js/calls/signaling-client.js' . '?v=' . VERSIONING . '') . '"></script>';
     echo '<script src="' . base_url('modules/prchat/assets/js/calls/media-manager.js' . '?v=' . VERSIONING . '') . '"></script>';
     echo '<script src="' . base_url('modules/prchat/assets/js/calls/call-ui.js' . '?v=' . VERSIONING . '') . '"></script>';
-    echo '<script src="' . base_url('modules/prchat/assets/js/calls/call-manager.js' . '?v=' . VERSIONING . '') . '"></script>';
+    echo '<script src="' . base_url('modules/prchat/assets/js/calls/call-manager.js' . '?v=' . VERSIONING . '-' . filemtime(__DIR__ . '/../assets/js/calls/call-manager.js')) . '"></script>';
   }
 }
 
@@ -191,7 +191,7 @@ function pr_chat_add_js_before_admin_render()
 function chat_check_theme_options()
 {
   // Dark mode is handled via body.chat_dark class in the same CSS file
-  echo '<link href="' . base_url('modules/prchat/assets/css/chat_full_view.css' . '?v=' . VERSIONING . '') . '"  rel="stylesheet" type="text/css" />';
+  echo '<link href="' . base_url('modules/prchat/assets/css/chat_full_view.css' . '?v=' . VERSIONING . '-' . filemtime(__DIR__ . '/../assets/css/chat_full_view.css')) . '"  rel="stylesheet" type="text/css" />';
   echo '<link href="' . base_url('modules/prchat/assets/css/inline-video-embed.css' . '?v=' . VERSIONING . '') . '"  rel="stylesheet" type="text/css" />';
 }
 
@@ -208,7 +208,7 @@ function pr_chat_init_checkView()
   // Do NOT unset it here — the footer renders before the async Pusher auth AJAX fires.
 
   $CI->load->model('prchat/prchat_model', 'chat_model');
-  $unreadMessages = $CI->chat_model->getUnread();
+  $unreadMessages = strpos(CHAT_CURRENT_URI ?? '', 'chat_full_view') !== false ? [] : $CI->chat_model->getUnread();
 
   echo $CI->load->view('prchat/initViewCheck', ['unreadMessages' => $unreadMessages], true);
 }

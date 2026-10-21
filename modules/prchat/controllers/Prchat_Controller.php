@@ -223,6 +223,7 @@ class Prchat_Controller extends AdminController
           ];
 
           $last_id = $this->chat_model->createMessage($message_data, db_prefix() . 'chatmessages');
+          if (!$last_id) { $this->jsonError(_l('chat_save_failed'), 500); return; }
 
           $display_message = $this->chat_model->process_message_for_display($stored_message);
           $display_message = htmlspecialchars($display_message, ENT_QUOTES, 'UTF-8');
@@ -295,6 +296,8 @@ class Prchat_Controller extends AdminController
       $group_name = $this->db->get_where(TABLE_CHATGROUPS, ['id' => $group_id])->row('group_name');
 
       if ($this->input->post('typing') == 'false') {
+        $raw = $this->input->post('g_message', false);
+        if (!is_string($raw) || trim($raw) === '') { $this->jsonError(_l('chat_invalid_message'), 422); return; }
         $imageData['sender_image'] = $this->chat_model->getUserImage($from);
 
         $stored_message = $this->chat_model->process_message_for_storage($this->input->post('g_message', false));
@@ -307,6 +310,7 @@ class Prchat_Controller extends AdminController
         ];
 
         $last_id = $this->chat_model->createGroupMessage($message_data);
+        if (!$last_id) { $this->jsonError(_l('chat_save_failed'), 500); return; }
 
         $group_display_message = $this->chat_model->process_message_for_display($stored_message);
 
@@ -848,9 +852,10 @@ strpos($channel_name, 'private-') === 0
       if ($isVoiceUpload) {
         $data['subfolder'] = 'staff';
       }
-      echo json_encode(['upload_data' => $data]);
+      unset($data['full_path'], $data['file_path']);
+      $this->jsonResponse(['upload_data' => $data]);
     } else {
-      echo json_encode(['error' => strip_tags($this->upload->display_errors())]);
+      $this->jsonResponse(['error' => strip_tags($this->upload->display_errors())], 422);
     }
   }
 
@@ -898,7 +903,8 @@ strpos($channel_name, 'private-') === 0
       $from = get_staff_user_id();
       $to_group = $this->input->post()['to_group'];
 
-      $this->db->insert(
+      try {
+      $saved = $this->db->insert(
         db_prefix() . 'chatgroupsharedfiles',
         [
           'sender_id' => $from,
@@ -907,7 +913,12 @@ strpos($channel_name, 'private-') === 0
         ]
       );
 
+      } catch (Throwable $e) { log_message('error', 'PRChat shared file database save failed'); $saved = false; }
       $data = $this->upload->data();
+      if (!$saved) {
+        @unlink($data['full_path']);
+        $this->jsonResponse(['error' => _l('chat_upload_failed')], 500); return;
+      }
       if (!$isVoiceUpload && get_option('prchat_copy_group_uploads_to_project_media') == '1') {
         $copied = pr_chat_copy_group_upload_to_project_media($data['full_path'], $data['file_name'], (int) $to_group);
         $data['project_media_copied'] = $copied ? 1 : 0;
@@ -916,9 +927,10 @@ strpos($channel_name, 'private-') === 0
       if ($isVoiceUpload) {
         $data['subfolder'] = 'groups';
       }
-      echo json_encode(['upload_data' => $data, 'message' => 'File uploaded successfully']);
+      unset($data['full_path'], $data['file_path']);
+      $this->jsonResponse(['upload_data' => $data]);
     } else {
-      echo json_encode(['error' => strip_tags($this->upload->display_errors())]);
+      $this->jsonResponse(['error' => strip_tags($this->upload->display_errors())], 422);
     }
   }
 
@@ -1223,7 +1235,7 @@ strpos($channel_name, 'private-') === 0
 
     if ($group_id) {
       $table = db_prefix() . 'chatgroupmessages';
-      $editResult = $this->chat_model->editMessage($id, $final, $table, 'sender_id', $staff_id, ['sender_type' => 'staff']);
+      $editResult = $this->chat_model->editMessage($id, $final, $table, 'sender_id', $staff_id, ['group_id' => (int) $group_id]);
     } else {
       $table = db_prefix() . 'chatmessages';
       $editResult = $this->chat_model->editMessage($id, $final, $table, 'sender_id', $staff_id);
@@ -1653,10 +1665,22 @@ strpos($channel_name, 'private-') === 0
       return;
     }
 
-    if ($this->input->post('group_name')) {
-      $data = [];
-
-      $data['group_name'] = CHAT_GROUP_PRESENCE_PREFIX . slugifyGroupName($this->input->post('group_name'));
+    $name = $this->input->post('group_name');
+    if (!is_string($name) || trim($name) === '') {
+      $this->jsonResponse(['success' => false, 'message' => _l('chat_group_name_required')], 422);
+      return;
+    }
+    $channel = CHAT_GROUP_PRESENCE_PREFIX . slugifyGroupName($name);
+    if ($channel === CHAT_GROUP_PRESENCE_PREFIX || strlen($channel) > 200) {
+      $this->jsonResponse(['success' => false, 'message' => _l('chat_group_name_invalid')], 422);
+      return;
+    }
+    if ($this->db->where('group_name', $channel)->count_all_results(TABLE_CHATGROUPS)) {
+      $this->jsonResponse(['success' => false, 'message' => _l('chat_group_name_duplicate')], 409);
+      return;
+    }
+    {
+      $data = ['group_name' => $channel];
 
       $data['members'] = $this->input->post('members');
 
@@ -2258,12 +2282,14 @@ strpos($channel_name, 'private-') === 0
   {
     header('Content-Type: application/json');
 
-    $q = $this->input->get('q') ?: '';
+    $q = $this->input->get_post('q');
+    $q = is_string($q) ? mb_substr(trim($q), 0, 200) : '';
     $excludeIds = [];
 
-    $excludeGroup = (int) $this->input->get('exclude_group');
+    $excludeGroup = (int) $this->input->get_post('exclude_group');
     if ($excludeGroup > 0) {
-      $members = $this->getCurrentGroupUsers($excludeGroup);
+      if (!prchat_staff_can_group($excludeGroup)) { $this->jsonError('Forbidden', 403); return; }
+      $members = $this->chat_model->getCurrentGroupUsers($excludeGroup) ?: [];
       foreach ($members as $m) {
         $excludeIds[] = (int) $m['member_id'];
       }
@@ -2280,8 +2306,10 @@ strpos($channel_name, 'private-') === 0
   {
     header('Content-Type: application/json');
 
-    $q = $this->input->get('q') ?: '';
-    echo json_encode($this->chat_model->searchClientsAjax($q));
+    $q = $this->input->get_post('q');
+    $q = is_string($q) ? mb_substr(trim($q), 0, 200) : '';
+    $rows = $this->chat_model->searchClientsAjax($q);
+    echo json_encode(array_values(array_filter($rows, static function ($row) { return prchat_staff_can_contact($row['id']); })));
   }
 
   /**
@@ -2660,80 +2688,80 @@ strpos($channel_name, 'private-') === 0
   public function uploadGroupAvatar()
   {
     if ($this->input->method(true) !== 'POST') {
-      return $this->output->set_status_header(405)->set_content_type('application/json')->set_output(json_encode(['success' => false, 'message' => 'POST required.']));
+      $this->jsonResponse(['success' => false, 'message' => _l('chat_post_required')], 405); return;
     }
-    if (!is_admin() && !staff_can('edit', PR_CHAT_MODULE_NAME)) {
-      access_denied(PR_CHAT_MODULE_NAME);
-    }
-
     $groupId = (int) $this->input->post('group_id');
-    if ($groupId <= 0) {
-      header('Content-Type: application/json');
-      echo json_encode(['success' => false, 'message' => 'Missing group.']);
-      return;
+    if ((!is_admin() && !staff_can('edit', PR_CHAT_MODULE_NAME)) || !prchat_staff_can_group($groupId)) {
+      $this->jsonResponse(['success' => false, 'message' => _l('chat_forbidden')], 403); return;
     }
-
     $group = $this->db->where('id', $groupId)->get(TABLE_CHATGROUPS)->row();
-    if (!$group) {
-      header('Content-Type: application/json');
-      echo json_encode(['success' => false, 'message' => 'Group not found.']);
-      return;
+    if (!$this->db->field_exists('group_image', TABLE_CHATGROUPS)) {
+      $this->jsonResponse(['success' => false, 'message' => _l('chat_module_upgrade_required')], 409); return;
     }
-
+    // SVG is active content, and HEIC is not a browser-displayable avatar.
+    // Check real image bytes as well as the upload library's extension/MIME checks.
+    $temporary = $_FILES['group_avatar']['tmp_name'] ?? '';
+    $image = is_string($temporary) && is_uploaded_file($temporary) ? @getimagesize($temporary) : false;
+    if (!$image || !in_array($image[2], [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_GIF, IMAGETYPE_WEBP, IMAGETYPE_BMP], true)) {
+      $this->jsonResponse(['success' => false, 'message' => _l('chat_photo_type_invalid')], 422); return;
+    }
     pr_chat_patch_upload_mimes_for_crm_files();
     $path = PR_CHAT_MODULE_GROUPS_UPLOAD_FOLDER . '/avatars';
-    if (!is_dir($path)) {
-      @mkdir($path, 0755, true);
-      @file_put_contents($path . '/index.html', '');
+    if (!is_dir($path) && !mkdir($path, 0755, true) && !is_dir($path)) {
+      $this->jsonResponse(['success' => false, 'message' => _l('chat_storage_unavailable')], 500); return;
     }
-
-    $config = [
-      'upload_path' => $path,
-      'allowed_types' => 'jpg|jpeg|png|gif|webp|heic|bmp|svg',
-      'max_size' => pr_chat_max_upload_size_kb(),
-      'file_ext_tolower' => true,
-      'remove_spaces' => true,
-    ];
-    $this->load->library('upload', $config);
-
+    $this->load->library('upload', [
+      'upload_path' => $path, 'allowed_types' => 'jpg|jpeg|png|gif|webp|bmp',
+      'max_size' => pr_chat_max_upload_size_kb(), 'file_ext_tolower' => true,
+      'remove_spaces' => true, 'encrypt_name' => true,
+    ]);
     if (!$this->upload->do_upload('group_avatar')) {
-      header('Content-Type: application/json');
-      echo json_encode(['success' => false, 'message' => strip_tags($this->upload->display_errors())]);
-      return;
+      $this->jsonResponse(['success' => false, 'message' => strip_tags($this->upload->display_errors())], 422); return;
     }
-
     $data = $this->upload->data();
     $relative = 'avatars/' . $data['file_name'];
-    if (!$this->db->field_exists('group_image', TABLE_CHATGROUPS)) {
-      $this->db->query("ALTER TABLE `" . TABLE_CHATGROUPS . "` ADD `group_image` VARCHAR(255) NULL DEFAULT NULL AFTER `group_name`");
+    try { $saved = $this->db->where('id', $groupId)->update(TABLE_CHATGROUPS, ['group_image' => $relative]); }
+    catch (Throwable $e) { log_message('error', 'PRChat group photo database update failed'); $saved = false; }
+    if (!$saved) {
+      $this->deleteManagedGroupAvatar($relative);
+      $this->jsonResponse(['success' => false, 'message' => _l('chat_group_photo_update_failed')], 500); return;
     }
-    $this->db->where('id', $groupId)->update(TABLE_CHATGROUPS, ['group_image' => $relative]);
-
-    header('Content-Type: application/json');
-    echo json_encode([
-      'success' => true,
+    $this->deleteManagedGroupAvatar($group->group_image ?? null);
+    $this->jsonResponse(['success' => true,
       'image' => module_dir_url('prchat', 'uploads/groups/' . $relative),
-      'message' => 'Group photo updated successfully.',
-    ]);
+      'message' => _l('chat_group_photo_updated')]);
   }
 
-  /**
-   * Remove a group avatar without changing the chat background.
-   */
+  /** Remove only this module's managed avatars, after the database change succeeds. */
+  private function deleteManagedGroupAvatar($relative): void
+  {
+    if (!is_string($relative) || !preg_match('#^avatars/[a-zA-Z0-9_.-]+$#D', $relative)) { return; }
+    $base = realpath(PR_CHAT_MODULE_GROUPS_UPLOAD_FOLDER . '/avatars');
+    $file = realpath(PR_CHAT_MODULE_GROUPS_UPLOAD_FOLDER . '/' . $relative);
+    if ($base && $file && dirname($file) === $base && is_file($file)) { @unlink($file); }
+  }
+
+  /** Remove a group avatar without changing the chat background. */
   public function removeGroupAvatar()
   {
-    if (!$this->input->is_ajax_request()) { show_404(); return; }
-    if (!is_admin() && !staff_can('edit', PR_CHAT_MODULE_NAME)) { access_denied(PR_CHAT_MODULE_NAME); }
-    $groupId = (int) $this->input->post('group_id');
-    $group = $this->db->where('id', $groupId)->get(TABLE_CHATGROUPS)->row();
-    if (!$group) { echo json_encode(['success' => false, 'message' => _l('chat_group_not_found')]); return; }
-    if ($this->db->field_exists('group_image', TABLE_CHATGROUPS) && !empty($group->group_image)) {
-      $path = PR_CHAT_MODULE_GROUPS_UPLOAD_FOLDER . '/' . ltrim($group->group_image, '/');
-      if (is_file($path)) { @unlink($path); }
-      $this->db->where('id', $groupId)->update(TABLE_CHATGROUPS, ['group_image' => null]);
+    if ($this->input->method(true) !== 'POST') {
+      $this->jsonResponse(['success' => false, 'message' => _l('chat_post_required')], 405); return;
     }
-    header('Content-Type: application/json');
-    echo json_encode(['success' => true, 'message' => _l('chat_group_photo_removed')]);
+    $groupId = (int) $this->input->post('group_id');
+    if ((!is_admin() && !staff_can('edit', PR_CHAT_MODULE_NAME)) || !prchat_staff_can_group($groupId)) {
+      $this->jsonResponse(['success' => false, 'message' => _l('chat_forbidden')], 403); return;
+    }
+    $group = $this->db->where('id', $groupId)->get(TABLE_CHATGROUPS)->row();
+    if (!$this->db->field_exists('group_image', TABLE_CHATGROUPS)) {
+      $this->jsonResponse(['success' => false, 'message' => _l('chat_module_upgrade_required')], 409); return;
+    }
+    try { $saved = $this->db->where('id', $groupId)->update(TABLE_CHATGROUPS, ['group_image' => null]); }
+    catch (Throwable $e) { log_message('error', 'PRChat group photo database removal failed'); $saved = false; }
+    if (!$saved) {
+      $this->jsonResponse(['success' => false, 'message' => _l('chat_group_photo_remove_failed')], 500); return;
+    }
+    $this->deleteManagedGroupAvatar($group->group_image ?? null);
+    $this->jsonResponse(['success' => true, 'message' => _l('chat_group_photo_removed')]);
   }
 
   /**

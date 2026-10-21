@@ -305,10 +305,7 @@
       formData.append("send_from", userSessionId);
 
       // Get CSRF token from the 3rd input element
-      const csrfInput = form.querySelector('input[type="hidden"]:nth-child(3)');
-      if (csrfInput) {
-        formData.append(csrfInput.name, csrfInput.value);
-      }
+      prchatAppendUploadCsrf(formData);
 
       // Setup cleanup
       const cleanup = () => {
@@ -334,24 +331,10 @@
         processData: false,
         contentType: false,
         success: function (r) {
-          if (!r.error) {
-            var uploadSend = $.Event("keypress", {
-              which: 13
-            });
-            var basePath = "<?php echo base_url('modules/prchat/uploads/'); ?>";
-            $("#frame textarea.chatbox").val(basePath + r.upload_data.file_name);
-            setTimeout(function () {
-              if ($("#frame textarea.chatbox").trigger(uploadSend)) {
-                // Success
-              }
-            }, 100);
-            if (typeof getSharedFiles === 'function') {
-              getSharedFiles(userSessionId, sentTo);
-            }
-          } else {
-            alert_float("danger", r.error);
-          }
-          cleanup();
+          if (r && !r.error && r.upload_data && r.upload_data.file_name) {
+            var fileUrl = <?= json_encode(base_url('modules/prchat/uploads/')); ?> + r.upload_data.file_name;
+            prchatPersistAttachment(prchatSettings.serverPath, {from:userSessionId,to:sentTo,msg:fileUrl,typing:'false'}, 'staff', sentTo).always(cleanup);
+          } else { alert_float('danger', (r && r.error) || <?= json_encode(_l('chat_upload_failed')); ?>); cleanup(); }
         },
         error: function () {
           alert_float("danger", "<?= _l('chat_upload_failed'); ?>");
@@ -406,10 +389,7 @@
       formData.append("send_from", "staff_" + userSessionId);
 
       // Get CSRF token from the 3rd input element
-      const csrfInput = form.querySelector('input[type="hidden"]:nth-child(3)');
-      if (csrfInput) {
-        formData.append(csrfInput.name, csrfInput.value);
-      }
+      prchatAppendUploadCsrf(formData);
 
       // Setup cleanup
       const cleanup = () => {
@@ -429,27 +409,16 @@
       // Upload directly via AJAX to avoid duplicate handlers
       $.ajax({
         type: "POST",
-        url: prchatSettings.uploadMethod,
+        url: customerSettings.uploadMethod,
         data: formData,
         dataType: "json",
         processData: false,
         contentType: false,
         success: function (r) {
-          if (!r.error) {
-            var uploadSend = $.Event("keypress", {
-              which: 13
-            });
-            var basePath = "<?php echo base_url('modules/prchat/uploads/'); ?>";
-            $("#frame textarea.client_chatbox").val(basePath + r.upload_data.file_name);
-            setTimeout(function () {
-              if ($("#frame textarea.client_chatbox").trigger(uploadSend)) {
-                // Success
-              }
-            }, 100);
-          } else {
-            alert_float("danger", r.error);
-          }
-          cleanup();
+          if (r && !r.error && r.upload_data && r.upload_data.file_name) {
+            var fileUrl = <?= json_encode(base_url('modules/prchat/uploads/clients/')); ?> + r.upload_data.file_name;
+            prchatPersistAttachment(prchatSettings.clientsMessagesPath, {from:'staff_'+userSessionId,to:'client_'+clientSentTo,client_message:fileUrl,typing:'false'}, 'client', clientSentTo).always(cleanup);
+          } else { alert_float('danger', (r && r.error) || <?= json_encode(_l('chat_upload_failed')); ?>); cleanup(); }
         },
         error: function () {
           alert_float("danger", "<?= _l('chat_upload_failed'); ?>");
@@ -504,10 +473,7 @@
       formData.append("send_from", userSessionId);
 
       // Get CSRF token from the 3rd input element
-      const csrfInput = form.querySelector('input[type="hidden"]:nth-child(3)');
-      if (csrfInput) {
-        formData.append(csrfInput.name, csrfInput.value);
-      }
+      prchatAppendUploadCsrf(formData);
 
       // Setup cleanup
       const cleanup = () => {
@@ -533,21 +499,10 @@
         processData: false,
         contentType: false,
         success: function (r) {
-          if (!r.error) {
-            var uploadSend = $.Event("keypress", {
-              which: 13
-            });
-            var basePath = "<?php echo base_url('modules/prchat/uploads/groups/'); ?>";
-            $("#frame textarea.group_chatbox").val(basePath + r.upload_data.file_name);
-            setTimeout(function () {
-              if ($("#frame textarea.group_chatbox").trigger(uploadSend)) {
-                // Success
-              }
-            }, 100);
-          } else {
-            alert_float("danger", r.error);
-          }
-          cleanup();
+          if (r && !r.error && r.upload_data && r.upload_data.file_name) {
+            var fileUrl = <?= json_encode(base_url('modules/prchat/uploads/groups/')); ?> + r.upload_data.file_name;
+            prchatPersistAttachment(prchatSettings.groupMessagePath, {from:userSessionId,group_id:groupId,g_message:fileUrl,typing:'false'}, 'group', groupId).always(cleanup);
+          } else { alert_float('danger', (r && r.error) || <?= json_encode(_l('chat_upload_failed')); ?>); cleanup(); }
         },
         error: function () {
           alert_float("danger", "<?= _l('chat_upload_failed'); ?>");

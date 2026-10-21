@@ -484,14 +484,7 @@
                 $(".content .chat-module-loader").fadeIn();
               }
             }
-            var Regex = new RegExp("\[~%:\()@]");
-            if (Regex.test(file.name)) {
-              alert_float("warning", "<?php echo _l('chat_permitted_files') ?>");
-              if (currentIndex === 0) {
-                $(".content .chat-module-loader").remove();
-              }
-              return false;
-            }
+
           } else {
             if (currentIndex === 0) {
               $(".m-area .chat-module-loader").remove();
@@ -500,20 +493,11 @@
           }
         },
         success: function(r) {
-          if (!r.error) {
-            var uploadSend = $.Event("keypress", {
-              which: 13
-            });
-
-            var basePath = "<?php echo base_url('modules/prchat/uploads/'); ?>";
-            $("#frame textarea.chatbox").val(basePath + r.upload_data.file_name);
-            $("#frame textarea.chatbox").trigger(uploadSend);
-
-            // Wait a bit then upload next file
-            setTimeout(function() {
-              uploadFilesSequentially(files, sentTo, token_name, currentIndex + 1);
-            }, 500);
-          } else {
+          if (r && !r.error && r.upload_data && r.upload_data.file_name) {
+          var fileUrl = <?= json_encode(base_url('modules/prchat/uploads/')); ?> + r.upload_data.file_name;
+          prchatPersistAttachment(prchatSettings.serverPath, {from: userSessionId, to: sentTo, msg: fileUrl, typing: 'false'}, 'staff', sentTo)
+            .always(function(){ uploadFilesSequentially(files, sentTo, token_name, currentIndex + 1); });
+        } else {
             if (window.prchatUploadToast) { window.prchatUploadToast(r.error, true); } else { alert_float("danger", r.error); }
             // Continue with next file even if this one failed
             setTimeout(function() {
@@ -522,6 +506,7 @@
           }
         },
         error: function() {
+          alert_float('danger', <?= json_encode(_l('chat_upload_failed')); ?>);
           // Continue with next file even if this one failed
           setTimeout(function() {
             uploadFilesSequentially(files, sentTo, token_name, currentIndex + 1);
@@ -2940,6 +2925,12 @@
       }
     });
 
+    $(document).on('prchat:attachment-saved', function(event, file) {
+      if (file.kind !== 'staff' || !$('body').hasClass('staff-tab')) return;
+      var $contact = $('#contacts li.contact.active').filter(function(){ return String(this.id) === file.recipient; });
+      if ($contact.length) { createChatBox($contact.find('a').first()); getSharedFiles(userSessionId, file.recipient); }
+    });
+
     // Also handle keyup to stop typing when user stops
     $("#frame").on("keyup", "textarea.chatbox", function(e) {
       var textareaValue = $(this).val().trim();
@@ -4860,18 +4851,18 @@
 
       if (action === 'group-avatar-remove') {
         if (!window.confirm('<?php echo addslashes(_l('chat_confirm_remove_group_photo')); ?>')) return;
-        $.post(prchatSettings.removeGroupAvatar, {group_id: targetId}, function(resp){
+        $.post(prchatSettings.removeGroupAvatar, prchatCsrfPayload({group_id: targetId}), function(resp){
           if (resp && resp.success) {
             var $g = $('#frame .chat_groups_list .group_selector#' + targetId + ' .groups_image');
-            $g.empty().append('<i class="fa fa-users"></i>');
+            prchatRenderGroupAvatar($g, null);
             alert_float('success', resp.message || '<?php echo addslashes(_l('chat_group_photo_removed')); ?>');
           } else { alert_float('danger', (resp && resp.message) || '<?php echo addslashes(_l('chat_group_photo_remove_failed')); ?>'); }
-        }, 'json');
+        }, 'json').fail(function(){ alert_float('danger', <?= json_encode(_l('chat_group_photo_remove_failed')); ?>); });
         return;
       }
 
       if (action === 'group-avatar') {
-        var input = $('<input type="file" accept="image/*" style="display:none">');
+        var input = $('<input type="file" accept="image/jpeg,image/png,image/gif,image/webp,image/bmp" style="display:none">');
         $('body').append(input);
         input.on('change', function(){
           var file = this.files && this.files[0];
@@ -4879,15 +4870,16 @@
           var fd = new FormData();
           fd.append('group_id', targetId);
           fd.append('group_avatar', file);
+          prchatAppendUploadCsrf(fd);
           $.ajax({url: prchatSettings.uploadGroupAvatar, method: 'POST', data: fd, processData: false, contentType: false, dataType: 'json'}).done(function(resp){
             if (resp && resp.success) {
               var $g = $('#frame .chat_groups_list .group_selector#' + targetId + ' .groups_image');
-              if ($g.length && resp.image) $g.html('<img class="sc-chat-group-avatar" src="' + resp.image + '" alt="Group">');
-              alert_float('success', resp.message || 'Group photo updated.');
+              if ($g.length && resp.image) prchatRenderGroupAvatar($g, resp.image);
+              alert_float('success', resp.message || <?= json_encode(_l('chat_group_photo_updated')); ?>);
             } else {
-              alert_float('danger', (resp && resp.message) || 'Group photo could not be updated.');
+              alert_float('danger', (resp && resp.message) || <?= json_encode(_l('chat_group_photo_update_failed')); ?>);
             }
-          }).always(function(){ input.remove(); });
+          }).fail(function(){ alert_float('danger', <?= json_encode(_l('chat_group_photo_update_failed')); ?>); }).always(function(){ input.remove(); });
         });
         input.trigger('click');
         return;
@@ -5172,7 +5164,7 @@
       var csrfName = '<?= $this->security->get_csrf_token_name(); ?>';
       var csrfVal = '<?= $this->security->get_csrf_hash(); ?>';
 
-      function sendAsMessage(fileUrl, target) {
+      function sendAsMessage(fileUrl, target, recipient) {
         if (typeof PrchatSafeRenderer === 'undefined') return;
 
         var rendered = PrchatSafeRenderer.renderFromText(fileUrl);
@@ -5181,22 +5173,26 @@
 
         function voiceCsrfPayload(obj) {
           obj = obj || {};
-          if (csrfName) {
-            obj[csrfName] = csrfVal;
-          }
-          return obj;
+          return prchatCsrfPayload(obj);
         }
 
         function markVoiceSent($root, tempId, responseText) {
           var $sentMessage = $root.find('[data-message-id="' + tempId + '"]');
-          $sentMessage.removeClass('modern-message-sending');
+          var result;
           try {
-            var result = typeof responseText === 'string' ? JSON.parse(responseText) : responseText;
+            result = typeof responseText === 'string' ? JSON.parse(responseText) : responseText;
             if (result && result.id) {
               $sentMessage.attr('data-message-id', result.id);
               $sentMessage.find('.optionsMore').attr('data-id', result.id);
             }
           } catch (e) {}
+          $sentMessage.removeClass('modern-message-sending');
+          if (!result || result.success === false || result.error || !/^[1-9][0-9]*$/.test(String(result.id || ''))) {
+            $sentMessage.addClass('modern-message-failed').find('.modern-status-sending')
+              .removeClass('modern-status-sending fa-clock').addClass('modern-status-failed fa-exclamation-circle text-danger');
+            alert_float('danger', <?= json_encode(_l('chat_send_failed')); ?>);
+            return;
+          }
           var $statusIcon = $sentMessage.find('.modern-status-sending');
           if ($statusIcon.length) {
             $statusIcon
@@ -5215,7 +5211,7 @@
         }
 
         if (target === 'staff') {
-          var to = $('li.contact.active').attr('id');
+          var to = recipient || $('li.contact.active').attr('id');
           if (!to) return;
           var tempMessageId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
           var $pane = $(".messages#id_" + to);
@@ -5240,7 +5236,7 @@
             window.scrollToBottom(true);
           }
           var activeContactId = to;
-          $("#contacts .contact.active").find(".wrap .meta .preview").text('<?php echo _l('chat_message_you'); ?>' + ' ' + sidebarPreview);
+          $("#contacts li.contact").filter(function(){ return String(this.id) === String(to); }).find(".wrap .meta .preview").text('<?php echo _l('chat_message_you'); ?>' + ' ' + sidebarPreview);
           var sendTimeLabel = moment().fromNow();
           var $activeTimeAgo = $("#contacts .contact a#" + activeContactId).find(".wrap .meta .pull-right.time_ago");
           if ($activeTimeAgo.length === 0) {
@@ -5269,13 +5265,14 @@
           });
         } else if (target === 'client') {
           var form = $("form[name=clientMessagesForm]");
-          var clientTo = form.find('input.to').val();
+          var clientTo = String(recipient || form.find('input.to').val() || '').replace(/^client_/, '');
           if (!clientTo) return;
           var tempMessageId = 'client_msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
           if ($(".client_messages .modern-messages-container").length === 0) {
             $(".client_messages .chat_client_messages ul").html('<div class="modern-messages-container"></div>');
           }
-          var $cmc = $(".client_messages .modern-messages-container");
+          var $cmc = String(form.find('input.to').val()).replace(/^client_/, '') === clientTo
+            ? $(".client_messages .modern-messages-container") : $('<div>');
           if (typeof window.createModernClientMessage === 'function') {
             $cmc.append(window.createModernClientMessage({
               id: tempMessageId,
@@ -5287,41 +5284,12 @@
               user_image: null
             }));
           }
-          var activeContact = $(".chat_clients_list > li.contact_name.selected");
+          var activeContact = $(".chat_clients_list > li.contact_name").filter(function(){ return String(this.id) === clientTo; });
           if (activeContact.length > 0 && typeof updateContactPreview === 'function') {
             updateContactPreview(activeContact.attr("id"), sidebarPreview, true, moment().format("YYYY-MM-DD HH:mm:ss"));
           }
-          var formData = form.serializeArray();
-          var clientId = '';
-          var contactFullName = '';
-          var companyName = '';
-          if (activeContact.length > 0) {
-            clientId = activeContact.attr("id");
-            contactFullName = activeContact.find(".contact_name_main").text();
-            companyName = activeContact.attr("data-company") || "";
-          }
-          var toFieldIndex = formData.findIndex(function(field) {
-            return field.name === 'to';
-          });
-          if (toFieldIndex !== -1) {
-            formData[toFieldIndex].value = "client_" + clientId;
-          }
-          formData = formData.filter(function(field) {
-            return field.name !== 'client_message';
-          });
-          formData.push({
-            name: "client_message",
-            value: fileUrl
-          }, {
-            name: "client_id",
-            value: clientId
-          }, {
-            name: "contact_full_name",
-            value: contactFullName
-          }, {
-            name: "company",
-            value: companyName
-          });
+          var formData = voiceCsrfPayload({from: 'staff_' + userSessionId, to: 'client_' + clientTo,
+            typing: 'false', client_message: fileUrl});
           $.post(prchatSettings.clientsMessagesPath, formData).done(function(response) {
             markVoiceSent($cmc, tempMessageId, response);
           }).fail(function() {
@@ -5336,9 +5304,9 @@
             window.scrollToBottom(true);
           }
         } else if (target === 'group') {
-          var gid = localStorage.getItem('prchat_active_group');
+          var gid = recipient || localStorage.getItem('prchat_active_group');
           var $gm = $('#frame .group_messages .chat_group_messages:visible').first();
-          if ($gm.length) {
+          if (!recipient && $gm.length) {
             gid = $gm.attr('id') || gid;
           }
           if (!gid) return;
@@ -5370,15 +5338,8 @@
             g_message: fileUrl,
             typing: false
           })).done(function(response) {
-            try {
-              var result = typeof response === 'string' ? JSON.parse(response) : response;
-              if (result && result.id) {
-                var $message = $gmc.find('[data-message-id="' + groupTempId + '"]');
-                $message.attr('data-message-id', result.id);
-                $message.find('.optionsMore').attr('data-id', result.id);
-              }
-            } catch (e) {}
-          });
+            markVoiceSent($gmc, groupTempId, response);
+          }).fail(function(){ markVoiceSent($gmc, groupTempId, null); });
         }
       }
 
@@ -5393,11 +5354,12 @@
           csrfValue: csrfVal,
           extraFormData: function() {
             return {
-              from: userSessionId
+              from: userSessionId,
+              send_to: $('li.contact.active').attr('id')
             };
           },
-          onSend: function(filename) {
-            sendAsMessage(filename, 'staff');
+          onSend: function(filename, context) {
+            sendAsMessage(filename, 'staff', context && context.send_to);
           },
           onError: function(msg) {
             alert_float('danger', msg);
@@ -5416,11 +5378,12 @@
           csrfValue: csrfVal,
           extraFormData: function() {
             return {
-              from: 'staff_' + userSessionId
+              from: 'staff_' + userSessionId,
+              send_to: 'client_' + String($('form[name=clientMessagesForm] input.to').val() || '').replace(/^client_/, '')
             };
           },
-          onSend: function(filename) {
-            sendAsMessage(filename, 'client');
+          onSend: function(filename, context) {
+            sendAsMessage(filename, 'client', context && context.send_to);
           },
           onError: function(msg) {
             alert_float('danger', msg);
@@ -5447,8 +5410,8 @@
               send_from: String(typeof userSessionId !== 'undefined' ? userSessionId : '')
             };
           },
-          onSend: function(filename) {
-            sendAsMessage(filename, 'group');
+          onSend: function(filename, context) {
+            sendAsMessage(filename, 'group', context && context.to_group);
           },
           onError: function(msg) {
             alert_float('danger', msg);

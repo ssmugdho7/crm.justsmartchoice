@@ -1208,6 +1208,11 @@
     group += "</div>";
 
     if (main_selector.prepend(group)) {
+      var photo = typeof data.group_image === 'string' && /^avatars\/[a-zA-Z0-9_.-]+$/.test(data.group_image)
+        ? <?= json_encode(module_dir_url('prchat', 'uploads/groups/')); ?> + data.group_image : null;
+      if (typeof prchatRenderGroupAvatar === 'function') {
+        prchatRenderGroupAvatar(main_selector.children('li').filter(function(){ return String(this.id) === String(data_group_id); }).find('.groups_image'), photo);
+      }
       // Reset the no groups flag since we now have a group
       window.hasNoGroups = false;
       // Show the add_group_btn since we have groups
@@ -1745,6 +1750,13 @@
     }
   });
 
+  $(document).on('prchat:attachment-saved', function(event, file) {
+    if (file.kind !== 'group') return;
+    if (typeof updateGroupPreview === 'function') updateGroupPreview(file.recipient, file.message, true, moment().format());
+    var $group = $('#frame .chat_groups_list li.active').filter(function(){ return String(this.id) === file.recipient; });
+    if ($group.length && $('body').hasClass('groups-tab')) { renderChatGroupMessages($group[0]); getGroupSharedFiles(file.recipient); }
+  });
+
   // Handles group file form uploads
   function uploadGroupFileForm(form) {
     var fileInput = $(form).children("input[type=file]")[0];
@@ -1793,14 +1805,7 @@
               $(".content .chat-module-loader").fadeIn();
             }
           }
-          var Regex = new RegExp("\[~%:\()@]");
-          if (Regex.test(file.name)) {
-            alert_float("warning", '<?php echo _l('chat_permitted_files') ?>');
-            if (currentIndex === 0) {
-              $(".content .chat-module-loader").remove();
-            }
-            return false;
-          }
+
         } else {
           if (currentIndex === 0) {
             $(".content .chat-module-loader").remove();
@@ -1809,25 +1814,10 @@
         }
       },
       success: function (r) {
-        if (!r.error) {
-          var uploadSend = $.Event("keypress", {
-            which: 13
-          });
-
-          var basePath = "<?php echo base_url('modules/prchat/uploads/groups/'); ?>";
-          $("#frame textarea.group_chatbox").val(basePath + r.upload_data.file_name);
-
-          setTimeout(function () {
-            if ($("#frame textarea.group_chatbox").trigger(uploadSend)) {
-              // Update shared files after message is sent
-              getGroupSharedFiles(to_group);
-            }
-
-            // Wait a bit then upload next file
-            setTimeout(function () {
-              uploadGroupFilesSequentially(files, to_group, token_name, currentIndex + 1);
-            }, 300);
-          }, 100);
+        if (r && !r.error && r.upload_data && r.upload_data.file_name) {
+          var fileUrl = <?= json_encode(base_url('modules/prchat/uploads/groups/')); ?> + r.upload_data.file_name;
+          prchatPersistAttachment(prchatSettings.groupMessagePath, {from: userSessionId, group_id: to_group, g_message: fileUrl, typing: 'false'}, 'group', to_group)
+            .always(function(){ uploadGroupFilesSequentially(files, to_group, token_name, currentIndex + 1); });
         } else {
           alert_float("danger", r.error);
           // Continue with next file even if this one failed
@@ -1837,6 +1827,7 @@
         }
       },
       error: function () {
+          alert_float('danger', <?= json_encode(_l('chat_upload_failed')); ?>);
         // Continue with next file even if this one failed
         setTimeout(function () {
           uploadGroupFilesSequentially(files, to_group, token_name, currentIndex + 1);

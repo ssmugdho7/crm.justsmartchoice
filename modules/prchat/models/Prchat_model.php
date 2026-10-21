@@ -912,7 +912,9 @@ class Prchat_model extends App_Model
 
     $newRaw = empty($reactions) ? null : json_encode($reactions);
 
-    $this->db->where('id', $messageId)->update($table, ['reactions' => $newRaw]);
+    if (!$this->db->where('id', $messageId)->update($table, ['reactions' => $newRaw])) {
+      throw new RuntimeException('PRChat reaction database save failed');
+    }
 
     return $newRaw;
   }
@@ -1935,14 +1937,24 @@ class Prchat_model extends App_Model
   {
     $own_id = $this->session->userdata('staff_user_id');
 
-    $this->db->insert(TABLE_CHATGROUPS, $insertData);
-
-    $insert_id = $this->db->insert_id();
-
-    $presence_data = $data;
-
-    foreach ($data['members'] as $member_id) {
-      $this->db->insert(TABLE_CHATGROUPMEMBERS, ['group_name' => $data['group_name'], 'member_id' => $member_id, 'group_id' => $insert_id]);
+    try {
+      $this->db->trans_start();
+      $this->db->insert(TABLE_CHATGROUPS, $insertData);
+      $insert_id = $this->db->insert_id();
+      $presence_data = $data;
+      $presence_data['members'] = array_values(array_unique(array_map('intval', $data['members'])));
+      foreach ($presence_data['members'] as $member_id) {
+        $this->db->insert(TABLE_CHATGROUPMEMBERS, ['group_name' => $data['group_name'], 'member_id' => $member_id, 'group_id' => $insert_id]);
+      }
+      $saved = $this->db->trans_complete();
+    } catch (Throwable $e) {
+      $this->db->trans_rollback();
+      log_message('error', 'PRChat group creation transaction failed');
+      $saved = false;
+    }
+    if (!$saved) {
+      echo json_encode(['success' => false, 'message' => _l('chat_error_table')]);
+      return;
     }
 
     $presence_data['group_id'] = $insert_id;
@@ -1950,11 +1962,9 @@ class Prchat_model extends App_Model
     $presence_data['created_by_id'] = $own_id;
     $presence_data['message'] = _l('chat_new_group_created_text');
 
-    if (prchat_trigger_event($pusher, 'group-chat', 'group-chat', $presence_data)) {
-      echo json_encode(['data' => $presence_data]);
-    } else {
-      echo json_encode(['result' => 'error']);
-    }
+    // Persistence is authoritative; an unavailable realtime provider must not invite duplicate creation.
+    prchat_trigger_event($pusher, 'group-chat', 'group-chat', $presence_data);
+    echo json_encode(['data' => $presence_data]);
   }
 
   /**
@@ -2465,11 +2475,10 @@ class Prchat_model extends App_Model
       $this->db->group_end();
       $this->db->order_by('firstname', 'ASC');
     } else {
-      $this->db->where('active', 1);
       $this->db->order_by('last_activity', 'DESC');
     }
 
-    $rows = $this->db->get(db_prefix() . 'staff')->result_array();
+    $rows = $this->db->where('active', 1)->get(db_prefix() . 'staff')->result_array();
 
     $result = [];
     foreach ($rows as $row) {

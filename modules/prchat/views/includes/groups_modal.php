@@ -261,21 +261,23 @@ $association_only = !empty($association_only);
         return false;
       }
 
+      var $createButton = $(this).find('button[type="submit"]');
+      if ($createButton.prop('disabled')) return false;
       $.ajax({
         url: prchatSettings.addChatGroup,
         method: "POST",
         data: formData,
         beforeSend: function() {
-          $('.btn-primary').attr('disabled', 'disabled');
+          $createButton.prop('disabled', true);
         },
         success: function(r) {
           if (r !== '') {
-            r = JSON.parse(r)
+            try { r = typeof r === 'string' ? JSON.parse(r) : r; } catch (e) { r = {}; }
             if (r.message) {
               alert_float('warning', r.message);
               return false;
             }
-            if (r.data.result === 'success') {
+            if (r.data && r.data.result === 'success') {
               $('#members option:selected').each(function() {
                 $(this).prop('selected', false);
               });
@@ -286,15 +288,19 @@ $association_only = !empty($association_only);
               prchatRebuildRelatedIdSelect();
 
               $('#chat_groups_custom_modal').modal('hide');
-              $('#chat_groups_custom_modal').on('hidden.bs.modal', function() {
+              $('#chat_groups_custom_modal').one('hidden.bs.modal', function() {
                 alert_float('warning', r.data.message);
                 $('#frame #sidepanel .groups a').click();
                 $('.message-input.group_msg_input').show();
               });
               appendChatGroup(r.data);
+            } else {
+              alert_float('danger', <?= json_encode(_l('chat_error_float')); ?>);
             }
           }
-        }
+        },
+        error: function() { alert_float('danger', <?= json_encode(_l('chat_error_float')); ?>); },
+        complete: function() { $createButton.prop('disabled', false); }
       });
     });
   })(jQuery);

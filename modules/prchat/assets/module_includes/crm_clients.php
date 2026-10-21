@@ -360,7 +360,7 @@
               "search": $("#search_clients_field").val()
             },
             success: function(response) {
-              var obj = JSON.parse(response);
+              var obj = typeof response === 'string' ? JSON.parse(response) : response;
               if (obj.length > 0) {
                 try {
                   var items = [];
@@ -529,6 +529,15 @@
 
         $.post(prchatSettings.clientsMessagesPath, formData)
           .done(function(response) {
+            var storedResult;
+            try { storedResult = typeof response === 'string' ? JSON.parse(response) : response; } catch (e) { storedResult = null; }
+            if (!storedResult || storedResult.success === false || !/^[1-9][0-9]*$/.test(String(storedResult.id || ''))) {
+              var $failed = $(".client_messages .modern-messages-container").find('[data-message-id="' + currentTempMessageId + '"]');
+              $failed.removeClass('modern-message-sending').addClass('modern-message-failed');
+              $failed.find('.modern-status-sending').removeClass('modern-status-sending fa-clock').addClass('modern-status-failed fa-exclamation-circle text-danger');
+              return;
+            }
+
             var $sentMessage = $(".client_messages .modern-messages-container").find('[data-message-id="' + currentTempMessageId + '"]');
             $sentMessage.removeClass('modern-message-sending');
 
@@ -602,10 +611,10 @@
           from: "staff_" + userSessionId,
           to: "client_" + clientId,
           typing: "true",
-          ci_csrf_token: $("input[name='ci_csrf_token']").val() || ""
+
         };
 
-        $.post(prchatSettings.clientsMessagesPath, typingData);
+        $.post(prchatSettings.clientsMessagesPath, prchatCsrfPayload(typingData));
       }
     });
 
@@ -635,6 +644,7 @@
 
 
     var createChatBoxClientRequest = null;
+    var clientConversationGeneration = 0;
 
     function getClientMessages(staff_id, client_id, contact) {
       var not_seen_icon = "";
@@ -650,10 +660,10 @@
       var deferred = $.Deferred();
       var promise = deferred.promise();
 
-      if (createChatBoxClientRequest) {
-        createChatBoxClientRequest.abort();
-        deferred.resolve([]);
-      } else {
+      var generation = ++clientConversationGeneration;
+      clientEndOfScroll = false;
+      if (createChatBoxClientRequest) createChatBoxClientRequest.abort();
+      {
         createChatBoxClientRequest = $.get(prchatSettings.getMutualMessages, {
             reciever_id: "staff_" + staff_id,
             sender_id: "client_" + client_id,
@@ -661,18 +671,18 @@
             limit: 20
           })
           .done(function(messages) {
-            clientOffsetPush = 10;
-            clientOffsetPush += 10;
-            deferred.resolve(messages);
+            if (generation !== clientConversationGeneration) return;
+            clientOffsetPush = Array.isArray(messages) ? messages.length : 0;
+            deferred.resolve(Array.isArray(messages) ? messages : []);
           })
-          .fail(function() {
-            deferred.resolve([]);
+          .fail(function(xhr, status) {
+            if (status !== 'abort') deferred.reject();
           })
           .always(function() {
             if ($("#no_messages").length > 0) {
               $("#no_messages").remove();
             }
-            createChatBoxClientRequest = null;
+            if (generation === clientConversationGeneration) createChatBoxClientRequest = null;
           });
       }
 
@@ -785,7 +795,13 @@
       };
 
       /*---------------* After users are fetched from database -> continue with loading *---------------*/
+      promise.fail(function() {
+        if (generation !== clientConversationGeneration) return;
+        $(".client_messages .messages-skeleton").addClass('hidden');
+        $(".client_messages .chat_client_messages ul").html('<li role="alert">' + <?= json_encode(_l('chat_messages_load_failed')); ?> + '</li>');
+      });
       promise.then(function(messages) {
+        if (generation !== clientConversationGeneration || ($("#sidepanel .chat_nav").length && !$("#sidepanel .chat_nav li.crm_clients").hasClass('active'))) return;
         var clientUl = $(".client_messages .chat_client_messages ul");
 
         // Hide skeleton, create modern container
@@ -837,7 +853,17 @@
     }
 
 
+    $(document).on('prchat:attachment-saved', function(event, file) {
+      if (file.kind !== 'client') return;
+      var $contact = $('.chat_clients_list > li.contact_name').filter(function(){ return String(this.id) === file.recipient; });
+      if (typeof updateContactPreview === 'function') updateContactPreview(file.recipient, file.message, true, moment().format());
+      if ($contact.hasClass('selected') && $('#sidepanel .chat_nav li.crm_clients').hasClass('active')) {
+        getClientMessages(userSessionId, file.recipient, $contact); getSharedFiles('staff_' + userSessionId, 'client_' + file.recipient);
+      }
+    });
+
     /*---------------* Check for messages history and append to main chat window *---------------*/
+    var clientHistoryLoading = false;
     $(".client_messages").on("scroll", function() {
 
       var pos = $(this).scrollTop();
@@ -848,21 +874,27 @@
       var defScroll = $.Deferred();
       var promise = defScroll.promise();
 
-      if (pos == 0 && clientOffsetPush >= 10) {
-
+      if (pos == 0 && clientOffsetPush >= 10 && !clientEndOfScroll && !clientHistoryLoading) {
+        clientHistoryLoading = true;
+        var generation = clientConversationGeneration;
+        var previousHeight = this.scrollHeight;
+        var scroller = this;
         $.get(prchatSettings.getMutualMessages, {
             reciever_id: "staff_" + userSessionId,
             sender_id: client_id,
             offset: clientOffsetPush,
           })
           .done(function(messages) {
-            if (Array.isArray(messages) === false) {
+            if (generation !== clientConversationGeneration) return;
+            if (!Array.isArray(messages) || messages.length === 0) {
               clientEndOfScroll = true;
               if ($(".client_messages").hasScrollBar() && clientEndOfScroll == true) {
                 prchat_setNoMoreMessages();
               }
+              return;
             } else {
-              clientOffsetPush += 10;
+              clientOffsetPush += messages.length;
+              clientEndOfScroll = messages.length < 10;
               defScroll.resolve(messages);
             }
             $(messages).each(function(i, value) {
@@ -895,10 +927,8 @@
               }
 
             });
-            if (clientEndOfScroll === false) {
-              $(".client_messages").scrollTop(200);
-            }
-          });
+            $(scroller).scrollTop(scroller.scrollHeight - previousHeight);
+          }).always(function() { clientHistoryLoading = false; });
       }
     });
 
@@ -1613,7 +1643,7 @@
     formData.append("userfile", file);
     formData.append("send_to", sentTo);
     formData.append("send_from", "staff_" + userSessionId);
-    formData.append("csrf_token_name", token_name);
+    prchatAppendUploadCsrf(formData);
 
     // Use client controller for client uploads
     var clientUploadUrl = "<?php echo site_url('prchat/Prchat_ClientsController/uploadMethod'); ?>";
@@ -1635,14 +1665,7 @@
               $(".content .chat-module-loader").fadeIn();
             }
           }
-          var Regex = new RegExp("\[~%:\()@]");
-          if (Regex.test(file.name)) {
-            alert_float("warning", '<?php echo _l('chat_permitted_files') ?>');
-            if (currentIndex === 0) {
-              $(".content .chat-module-loader").remove();
-            }
-            return false;
-          }
+
         } else {
           if (currentIndex === 0) {
             $(".content .chat-module-loader").remove();
@@ -1651,27 +1674,10 @@
         }
       },
       success: function(r) {
-        if (!r.error) {
-          var uploadSend = $.Event("keypress", {
-            which: 13
-          });
-          var basePath = "<?php echo base_url('modules/prchat/uploads/clients/'); ?>";
-          $("#frame textarea.client_chatbox").val(basePath + r.upload_data.file_name);
-
-          setTimeout(function() {
-            if ($("#frame textarea.client_chatbox").trigger(uploadSend)) {
-              // Get the selected contact ID for shared files update
-              var contact_name_id = $("#clients_container li.contact_name.selected").attr("id");
-              if (contact_name_id) {
-                getSharedFiles(contact_name_id, sentTo);
-              }
-            }
-
-            // Wait a bit then upload next file
-            setTimeout(function() {
-              uploadClientFilesSequentially(files, sentTo, token_name, formId, currentIndex + 1);
-            }, 300);
-          }, 100);
+        if (r && !r.error && r.upload_data && r.upload_data.file_name) {
+          var fileUrl = <?= json_encode(base_url('modules/prchat/uploads/clients/')); ?> + r.upload_data.file_name;
+          prchatPersistAttachment(prchatSettings.clientsMessagesPath, {from: 'staff_' + userSessionId, to: 'client_' + sentTo, client_message: fileUrl, typing: 'false'}, 'client', sentTo)
+            .always(function(){ uploadClientFilesSequentially(files, sentTo, token_name, formId, currentIndex + 1); });
         } else {
           alert_float("danger", r.error);
           // Continue with next file even if this one failed
@@ -1681,6 +1687,7 @@
         }
       },
       error: function() {
+          alert_float('danger', <?= json_encode(_l('chat_upload_failed')); ?>);
         // Continue with next file even if this one failed
         setTimeout(function() {
           uploadClientFilesSequentially(files, sentTo, token_name, formId, currentIndex + 1);

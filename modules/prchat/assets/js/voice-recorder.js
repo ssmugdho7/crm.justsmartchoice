@@ -39,6 +39,8 @@
     return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
   }
 
+  function label(key) { return (root.prchatI18n || {})[key] || key; }
+
   function createRecorderUI() {
     var el = document.createElement("div");
     el.className = "prchat-voice-recorder";
@@ -58,8 +60,8 @@
     var cancelBtn = document.createElement("button");
     cancelBtn.type = "button";
     cancelBtn.className = "pvr-cancel";
-    cancelBtn.setAttribute("aria-label", "Cancel");
-    cancelBtn.title = "Cancel";
+    cancelBtn.setAttribute("aria-label", label('chat_voice_cancel'));
+    cancelBtn.title = label('chat_voice_cancel');
     var cancelIcon = document.createElement("i");
     cancelIcon.className = "fa fa-times";
     cancelBtn.appendChild(cancelIcon);
@@ -67,14 +69,14 @@
     var sendBtn = document.createElement("button");
     sendBtn.type = "button";
     sendBtn.className = "pvr-send";
-    sendBtn.setAttribute("aria-label", "Stop and send");
-    sendBtn.title = "Stop and send";
+    sendBtn.setAttribute("aria-label", label('chat_voice_stop_send'));
+    sendBtn.title = label('chat_voice_stop_send');
     var sendIcon = document.createElement("i");
     sendIcon.className = "fa fa-stop";
     sendBtn.appendChild(sendIcon);
     var sendLabel = document.createElement("span");
     sendLabel.className = "pvr-send-label";
-    sendLabel.textContent = "Send";
+    sendLabel.textContent = label('chat_send');
     sendBtn.appendChild(sendLabel);
 
     actions.appendChild(cancelBtn);
@@ -107,13 +109,16 @@
 
   Instance.prototype.start = function() {
     if (!MIME || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      this.cfg.onError && this.cfg.onError("Voice recording is not supported in this browser.");
+      this.cfg.onError && this.cfg.onError(label('chat_voice_not_supported'));
       return;
     }
     var self = this;
+    self.active = true;
+    self.context = Object.assign({}, typeof self.cfg.extraFormData === 'function' ? self.cfg.extraFormData() : self.cfg.extraFormData);
     var micId = null;
     try { micId = root.localStorage.getItem('prchat_audio_input'); } catch (_) {}
     navigator.mediaDevices.getUserMedia({ audio: micId ? { deviceId: { exact: micId } } : true }).then(function(stream) {
+      if (!self.active) { stream.getTracks().forEach(function(track) { track.stop(); }); return; }
       self.stream = stream;
       self.chunks = [];
       self.seconds = 0;
@@ -139,8 +144,8 @@
       if (self.stream) self.stream.getTracks().forEach(function(track) { track.stop(); });
       self.active = false;
       var message = error.name === 'NotFoundError' || error.name === 'OverconstrainedError'
-        ? 'Selected microphone is unavailable. Choose a connected microphone in Audio devices.'
-        : 'Unable to record. Allow microphone access and close other applications using it.';
+        ? label('chat_voice_mic_unavailable')
+        : label('chat_voice_record_failed');
       self.cfg.onError && self.cfg.onError(message);
     });
   };
@@ -213,18 +218,16 @@
 
     var blob = new Blob(this.chunks, { type: MIME });
     var ext = EXT_MAP[MIME] || "webm";
-    var userId = (this.cfg.extraFormData && typeof this.cfg.extraFormData === "function") 
-      ? (this.cfg.extraFormData().send_from || this.cfg.extraFormData().from || '') 
-      : '';
+    var userId = this.context && (this.context.send_from || this.context.from) || '';
     var userPart = userId ? String(userId).replace(/[^a-zA-Z0-9]/g, '_') : 'unknown';
     var filename = userPart + "_voice_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8) + "." + ext;
     var file = new File([blob], filename, { type: MIME });
 
-    this._upload(file);
+    this._upload(file, this.context);
     this._hideUI();
   };
 
-  Instance.prototype._upload = function(file) {
+  Instance.prototype._upload = function(file, context) {
     var cfg = this.cfg;
     var fd = new FormData();
     fd.append("userfile", file);
@@ -232,7 +235,7 @@
     if (cfg.csrfName && cfg.csrfValue) {
       fd.append(cfg.csrfName, cfg.csrfValue);
     }
-    var ex = (typeof cfg.extraFormData === "function") ? cfg.extraFormData() : cfg.extraFormData;
+    var ex = context || ((typeof cfg.extraFormData === "function") ? cfg.extraFormData() : cfg.extraFormData);
     if (ex && typeof ex === "object") {
       for (var k in ex) {
         if (Object.prototype.hasOwnProperty.call(ex, k) && ex[k] != null && ex[k] !== "") {
@@ -241,6 +244,7 @@
       }
     }
 
+    if (typeof root.prchatAppendUploadCsrf === 'function') root.prchatAppendUploadCsrf(fd);
     var xhr = new XMLHttpRequest();
     xhr.open("POST", cfg.uploadUrl, true);
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
@@ -255,17 +259,17 @@
             var fullPath = res.upload_data.subfolder 
               ? res.upload_data.subfolder + '/' + res.upload_data.file_name
               : res.upload_data.file_name;
-            cfg.onSend && cfg.onSend(fullPath);
-          }
+            cfg.onSend && cfg.onSend(fullPath, ex);
+          } else { cfg.onError && cfg.onError(label('chat_upload_failed')); }
         } catch (e) {
-          cfg.onError && cfg.onError("Upload failed.");
+          cfg.onError && cfg.onError(label('chat_upload_failed'));
         }
       } else {
-        cfg.onError && cfg.onError("Upload failed (HTTP " + xhr.status + ").");
+        cfg.onError && cfg.onError(label('chat_voice_upload_http').replace('%s', xhr.status));
       }
     };
     xhr.onerror = function() {
-      cfg.onError && cfg.onError("Upload network error.");
+      cfg.onError && cfg.onError(label('chat_voice_upload_network'));
     };
     xhr.send(fd);
   };

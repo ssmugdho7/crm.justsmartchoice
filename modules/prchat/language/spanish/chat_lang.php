@@ -1389,3 +1389,33 @@ $lang['chat_task_created_success'] = 'Tarea creada correctamente.';
 $lang['chat_task_create_failed'] = 'No se pudo crear la tarea.';
 
 $lang['chat_messages_load_failed'] = 'No se pudieron cargar los mensajes. Seleccione la conversación para reintentar.';
+
+$lang['chat_not_enabled'] = 'El chat no está habilitado.';
+$lang['chat_forbidden'] = 'No tiene acceso a esta conversación.';
+$lang['chat_invalid_message'] = 'Escriba un mensaje antes de enviarlo.';
+$lang['chat_save_failed'] = 'No se pudo guardar el mensaje. Inténtelo de nuevo.';
+$lang['chat_storage_unavailable'] = 'El almacenamiento de archivos no está disponible. Contacte con un administrador.';
+$lang['chat_invalid_reaction'] = 'Esta reacción no es compatible.';
+$lang['chat_reaction_save_failed'] = 'No se pudo guardar la reacción.';
+$lang['chat_auth_fields_required'] = 'Se requieren el canal y el socket.';
+$lang['chat_client_login_required'] = 'Debe iniciar sesión como cliente.';
+$lang['chat_realtime_auth_failed'] = 'La autenticación en tiempo real no está disponible.';
+$lang['chat_group_name_invalid'] = 'Escriba un nombre de grupo válido (máximo 200 caracteres de canal).';
+$lang['chat_group_name_duplicate'] = 'Ya existe un grupo con este nombre.';
+$lang['chat_post_required'] = 'Esta acción requiere una solicitud POST.';
+$lang['chat_photo_type_invalid'] = 'Seleccione una foto JPG, PNG, GIF, WebP o BMP.';
+$lang['chat_group_photo_updated'] = 'Foto del grupo actualizada.';
+$lang['chat_group_photo_update_failed'] = 'No se pudo actualizar la foto del grupo.';
+$lang['chat_module_upgrade_required'] = 'Pida a un administrador que complete la actualización del módulo Chat.';
+$lang['chat_group_photo_label'] = 'Foto del grupo';
+$lang['chat_voice_cancel'] = 'Cancelar grabación';
+$lang['chat_voice_stop_send'] = 'Detener y enviar';
+$lang['chat_voice_not_supported'] = 'Este navegador no admite la grabación de voz.';
+$lang['chat_voice_mic_unavailable'] = 'El micrófono seleccionado no está disponible. Seleccione uno conectado en Dispositivos de audio.';
+$lang['chat_voice_record_failed'] = 'No se pudo grabar. Permita el acceso al micrófono y cierre otras aplicaciones que lo usen.';
+$lang['chat_voice_upload_http'] = 'Error al subir el archivo (HTTP %s).';
+$lang['chat_voice_upload_network'] = 'Error de red al subir el archivo. Inténtelo de nuevo.';
+
+$lang['chat_call_not_accepted'] = 'No se aceptó la señalización de la llamada.';
+$lang['chat_call_answer_not_accepted'] = 'No se aceptó la respuesta de la llamada.';
+$lang['chat_call_cancelled'] = 'Llamada cancelada.';

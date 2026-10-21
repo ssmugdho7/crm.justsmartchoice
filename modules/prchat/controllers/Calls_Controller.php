@@ -56,7 +56,8 @@ class Calls_Controller extends AdminController
     private function triggerCallEvent($channel, $event, array $payload)
     {
         try {
-            $this->app_pusher->trigger($channel, $event, $payload);
+            $result = $this->app_pusher->trigger($channel, $event, $payload);
+            if (!$result) { throw new RuntimeException('Call signaling unavailable'); }
             return true;
         } catch (\Throwable $e) {
             $this->jsonError('Pusher trigger failed for ' . $event . ': ' . $e->getMessage(), 500, [

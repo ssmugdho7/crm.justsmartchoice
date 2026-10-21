@@ -64,7 +64,7 @@ $currentChatColor = !empty($color) ? $color : '#546bf1';
     "groupDeleteMembers": "<?php echo site_url('prchat/Prchat_Controller/groupDeleteMembers'); ?>",
     "editMessagePath": "<?php echo site_url('prchat/Prchat_Controller/editMessage'); ?>",
     "editClientMessagePath": "<?php echo site_url('prchat/Prchat_Controller/editClientMessage'); ?>",
-    "getClientUnreadMessages": '<?php echo site_url('prchat/Prchat_Controller/getUnreadCounts'); ?>',
+    "getClientUnreadMessages": '<?php echo site_url('prchat/Prchat_ClientsController/getClientUnreadMessages'); ?>',
     "addClientReaction": '<?php echo site_url('prchat/Prchat_ClientsController/addReaction'); ?>',
     "chatGroups": '<?php echo site_url('prchat/Prchat_Controller/chatGroups'); ?>',
     "addChatGroupMembers": '<?php echo site_url('prchat/Prchat_Controller/addChatGroupMembers'); ?>',

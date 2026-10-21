@@ -9,7 +9,7 @@ $route['admin/prchat/improve-message'] = 'prchat/Prchat_Controller/improve_messa
 $route['prchat/improve-message'] = 'Prchat_Controller/improve_message';
 
 // Smart Choice v2.1.8 compatibility routes.
-$route['prchat/Prchat_ClientsController/getClientUnreadMessages'] = 'Prchat_Controller/getUnreadCounts';
+$route['prchat/Prchat_ClientsController/getClientUnreadMessages'] = 'Prchat_ClientsController/getClientUnreadMessages';
 $route['prchat/Prchat_Controller/improve_message'] = 'Prchat_Controller/improve_message';
 
 $route['prchat/Prchat_ClientsController/getClientContactPreviews'] = 'Prchat_Controller/getClientContactPreviews';

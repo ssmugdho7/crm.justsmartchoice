@@ -1391,3 +1391,33 @@ $lang['chat_task_create_failed'] = 'Task could not be created.';
 $lang['chat_access_requirements_help'] = 'Messaging Chat requires View or View own, or an Administrator account, with Chat enabled in settings. View own allows your conversations and joined groups, with customer chat limited to assigned customers. Create, Edit, Delete, and AI Assistant control their respective actions and do not enable chat by themselves. Chatbot Support and Chatbot Manage grant their separate chatbot screens. Staff access uses the permissions saved on the staff account; changing a role does not update existing staff unless you select the option to update staff permissions.';
 
 $lang['chat_messages_load_failed'] = 'Unable to load messages. Select the conversation to retry.';
+
+$lang['chat_not_enabled'] = 'Chat is not enabled.';
+$lang['chat_forbidden'] = 'You do not have access to this conversation.';
+$lang['chat_invalid_message'] = 'Enter a message before sending.';
+$lang['chat_save_failed'] = 'The message could not be saved. Please try again.';
+$lang['chat_storage_unavailable'] = 'Upload storage is unavailable. Please contact an administrator.';
+$lang['chat_invalid_reaction'] = 'This reaction is not supported.';
+$lang['chat_reaction_save_failed'] = 'The reaction could not be saved.';
+$lang['chat_auth_fields_required'] = 'The channel and socket are required.';
+$lang['chat_client_login_required'] = 'Client login is required.';
+$lang['chat_realtime_auth_failed'] = 'Realtime authentication is unavailable.';
+$lang['chat_group_name_invalid'] = 'Enter a valid group name (maximum 200 channel characters).';
+$lang['chat_group_name_duplicate'] = 'A group with this name already exists.';
+$lang['chat_post_required'] = 'This action requires a POST request.';
+$lang['chat_photo_type_invalid'] = 'Choose a JPG, PNG, GIF, WebP or BMP photo.';
+$lang['chat_group_photo_updated'] = 'Group photo updated.';
+$lang['chat_group_photo_update_failed'] = 'The group photo could not be updated.';
+$lang['chat_module_upgrade_required'] = 'Ask an administrator to complete the Chat module upgrade.';
+$lang['chat_group_photo_label'] = 'Group photo';
+$lang['chat_voice_cancel'] = 'Cancel recording';
+$lang['chat_voice_stop_send'] = 'Stop and send';
+$lang['chat_voice_not_supported'] = 'Voice recording is not supported in this browser.';
+$lang['chat_voice_mic_unavailable'] = 'Selected microphone is unavailable. Choose a connected microphone in Audio devices.';
+$lang['chat_voice_record_failed'] = 'Unable to record. Allow microphone access and close other applications using it.';
+$lang['chat_voice_upload_http'] = 'Upload failed (HTTP %s).';
+$lang['chat_voice_upload_network'] = 'Upload network error. Please try again.';
+
+$lang['chat_call_not_accepted'] = 'Call signaling was not accepted.';
+$lang['chat_call_answer_not_accepted'] = 'The call answer was not accepted.';
+$lang['chat_call_cancelled'] = 'Call cancelled.';

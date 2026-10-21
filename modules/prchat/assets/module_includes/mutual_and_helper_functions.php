@@ -5,6 +5,21 @@
   window.prchatI18n.chat_new_file_uploaded = <?php echo json_encode(_l('chat_new_file_uploaded')); ?>;
   window.prchatI18n.chat_new_photo_uploaded = <?php echo json_encode(_l('chat_new_photo_uploaded')); ?>;
 
+  window.prchatI18n.chat_group_photo_label = <?= json_encode(_l('chat_group_photo_label')); ?>;
+  window.prchatI18n.chat_voice_cancel = <?= json_encode(_l('chat_voice_cancel')); ?>;
+  window.prchatI18n.chat_voice_stop_send = <?= json_encode(_l('chat_voice_stop_send')); ?>;
+  window.prchatI18n.chat_voice_not_supported = <?= json_encode(_l('chat_voice_not_supported')); ?>;
+  window.prchatI18n.chat_voice_mic_unavailable = <?= json_encode(_l('chat_voice_mic_unavailable')); ?>;
+  window.prchatI18n.chat_voice_record_failed = <?= json_encode(_l('chat_voice_record_failed')); ?>;
+  window.prchatI18n.chat_voice_upload_http = <?= json_encode(_l('chat_voice_upload_http')); ?>;
+  window.prchatI18n.chat_voice_upload_network = <?= json_encode(_l('chat_voice_upload_network')); ?>;
+  window.prchatI18n.chat_upload_failed = <?= json_encode(_l('chat_upload_failed')); ?>;
+  window.prchatI18n.chat_send = <?= json_encode(_l('chat_send')); ?>;
+
+  window.prchatI18n.chat_call_not_accepted = <?= json_encode(_l('chat_call_not_accepted')); ?>;
+  window.prchatI18n.chat_call_answer_not_accepted = <?= json_encode(_l('chat_call_answer_not_accepted')); ?>;
+  window.prchatI18n.chat_call_cancelled = <?= json_encode(_l('chat_call_cancelled')); ?>;
+
   // Multipart requests need the configured token name, not the literal "csrf_token_name".
   function prchatAppendUploadCsrf(formData) {
     var name = <?= json_encode(get_instance()->security->get_csrf_token_name()); ?>;
@@ -14,6 +29,39 @@
     });
     formData.set(name, field ? field.value : token);
     return formData;
+  }
+
+  function prchatCsrfPayload(payload) {
+    payload = payload || {};
+    prchatAppendUploadCsrf(new FormData()).forEach(function(value, key) { payload[key] = value; });
+    return payload;
+  }
+
+  // Upload completion must never submit the currently selected composer's draft.
+  // Persist against the recipient captured when the file was selected instead.
+  function prchatPersistAttachment(endpoint, payload, kind, recipient) {
+    return $.ajax({url: endpoint, method: 'POST', dataType: 'json', data: prchatCsrfPayload(payload)})
+      .then(function(result) {
+        if (!result || result.error || result.success === false || !/^[1-9][0-9]*$/.test(String(result.id || ''))) {
+          return $.Deferred().reject().promise();
+        }
+        try {
+          $(document).trigger('prchat:attachment-saved', [{kind: kind, recipient: String(recipient), message: payload.msg || payload.client_message || payload.g_message}]);
+        } catch (error) { console.error('PRChat attachment view refresh failed'); }
+        return result;
+      }).fail(function() { alert_float('danger', <?= json_encode(_l('chat_send_failed')); ?>); });
+  }
+
+  // Build an image node rather than interpolating a URL into HTML. Keep the same
+  // circular frame for initial load, replacement and removal.
+  function prchatRenderGroupAvatar(container, image) {
+    var $frame = $(container);
+    var icon = $frame.find('i').attr('class') || $frame.data('group-avatar-icon') || 'fa fa-users';
+    $frame.empty().addClass('sc-chat-group-avatar-frame').data('group-avatar-icon', icon);
+    if (image) {
+      $('<img>').addClass('sc-chat-group-avatar').attr({src: image, alt: window.prchatI18n.chat_group_photo_label || ''})
+        .on('error', function() { prchatRenderGroupAvatar($frame, null); }).appendTo($frame);
+    } else { $frame.append($('<i>').addClass(icon).attr('aria-hidden', 'true')); }
   }
 
   /**

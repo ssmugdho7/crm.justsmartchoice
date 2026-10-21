@@ -1910,7 +1910,7 @@ $is24Hour_client = get_option('time_format') == '24';
                     </div>
                 </li>`;
 
-      $(".m-area .chat").append(messageToAppend);
+      var $pendingMessage = $(messageToAppend).appendTo(".m-area .chat");
       clearClientChatOptionsPosition();
 
       form.find('input[name="typing"]').val("false");
@@ -1935,8 +1935,8 @@ $is24Hour_client = get_option('time_format') == '24';
       // send event (expect JSON { id } from server for DB message row)
       $.post(customerSettings.clientsMessagesPath, formData, null, 'json')
         .done(function(resp) {
-          var $li = $(".m-area ol.chat li.client.sending:last");
-          if (resp && resp.error) {
+          var $li = $pendingMessage;
+          if (!resp || resp.error || resp.success === false || !/^[1-9][0-9]*$/.test(String(resp.id || ''))) {
             $li.find(".msg-status")
               .removeClass("sending")
               .addClass("failed")
@@ -1960,13 +1960,13 @@ $is24Hour_client = get_option('time_format') == '24';
         })
         .fail(function() {
           // Mark as failed
-          $(".m-area ol.chat li.sending:last")
+          $pendingMessage
             .find(".msg-status")
             .removeClass("sending")
             .addClass("failed")
             .attr("title", "<?= _l('chat_send_failed'); ?>")
             .html('<i class="fa fa-exclamation-circle"></i>');
-          $(".m-area ol.chat li.sending:last").removeClass("sending");
+          $pendingMessage.removeClass("sending");
         });
       $(this).val("").focus();
       scrollBottom(300);
@@ -2396,6 +2396,12 @@ $is24Hour_client = get_option('time_format') == '24';
     loadMessages(this);
   });
 
+  $(document).on('prchat:attachment-saved', function(event, file) {
+    if (file.kind !== 'portal') return;
+    var current = 'staff_' + String($('.m-area').attr('data-staffid') || '').replace(/^staff_/, '');
+    if (current === file.recipient) appendMutualMessages(file.recipient, contact_id);
+  });
+
   // Handles client file form upload
   function uploadClientFileForm(form) {
     var fileInput = $(form).children("input[type=file]")[0];
@@ -2425,7 +2431,7 @@ $is24Hour_client = get_option('time_format') == '24';
     formData.append("userfile", file);
     formData.append("send_to", sentTo);
     formData.append("send_from", contact_name_id);
-    formData.append("csrf_token_name", token_name);
+    prchatAppendUploadCsrf(formData);
 
     $.ajax({
       type: "POST",
@@ -2444,14 +2450,7 @@ $is24Hour_client = get_option('time_format') == '24';
               $(".m-area .chat-module-loader").fadeIn();
             }
           }
-          var Regex = new RegExp("\[~%:\()@]");
-          if (Regex.test(file.name)) {
-            alert_float("warning", '<?php echo _l('chat_permitted_files') ?>');
-            if (currentIndex === 0) {
-              $(".m-area .chat-module-loader").remove();
-            }
-            return false;
-          }
+
         } else {
           if (currentIndex === 0) {
             $(".m-area .chat-module-loader").remove();
@@ -2460,18 +2459,11 @@ $is24Hour_client = get_option('time_format') == '24';
         }
       },
       success: function(r) {
-        if (!r.error) {
-          var basePath = "<?php echo base_url('modules/prchat/uploads/clients/'); ?>";
-          var clientTextArea = $("#clientChat textarea.clients_textarea");
-          clientTextArea.val(basePath + r.upload_data.file_name);
-
-          // Auto-send the file message (keypress handler will run and call scrollBottom(300))
-          setTimeout(function() {
-            $(".send_client_message").trigger("click");
-            setTimeout(function() {
-              uploadClientFilesSequentially(files, sentTo, token_name, currentIndex + 1);
-            }, 500);
-          }, 100);
+        if (r && !r.error && r.upload_data && r.upload_data.file_name) {
+          var fileUrl = <?= json_encode(base_url('modules/prchat/uploads/clients/')); ?> + r.upload_data.file_name;
+          var staffRecipient = 'staff_' + String(sentTo).replace(/^staff_/, '');
+          prchatPersistAttachment(customerSettings.clientsMessagesPath, {from: contact_name_id, to: staffRecipient, client_message: fileUrl, typing: 'false'}, 'portal', staffRecipient)
+            .always(function(){ uploadClientFilesSequentially(files, sentTo, token_name, currentIndex + 1); });
         } else {
           alert_float("danger", r.error);
           // Continue with next file even if this one failed
@@ -2481,6 +2473,7 @@ $is24Hour_client = get_option('time_format') == '24';
         }
       },
       error: function() {
+          alert_float('danger', <?= json_encode(_l('chat_upload_failed')); ?>);
         // Continue with next file even if this one failed
         setTimeout(function() {
           uploadClientFilesSequentially(files, sentTo, token_name, currentIndex + 1);
@@ -3214,13 +3207,14 @@ $is24Hour_client = get_option('time_format') == '24';
         var form = $('#staffMessagesForm');
         var fromVal = form.find('input.from').val();
         return {
-          from: fromVal || (typeof contact_name_id !== 'undefined' ? contact_name_id : '')
+          from: fromVal || (typeof contact_name_id !== 'undefined' ? contact_name_id : ''),
+          send_to: form.find('input.to').val()
         };
       },
-      onSend: function(filename) {
+      onSend: function(filename, context) {
         var form = $('#staffMessagesForm');
         var from = form.find('input.from').val();
-        var to = form.find('input.to').val();
+        var to = (context && context.send_to) || form.find('input.to').val();
         if (!from || !to) return;
 
         // Append optimistic message to UI
@@ -3246,16 +3240,17 @@ $is24Hour_client = get_option('time_format') == '24';
                     </div>
                 </li>`;
 
-        $(".m-area .chat").append(messageToAppend);
+        var $pendingMessage = $(messageToAppend);
+        if (form.find('input.to').val() === to) $pendingMessage.appendTo(".m-area .chat");
         clearClientChatOptionsPosition();
         scrollBottom(300);
 
         // Send message with all required data
         var fd = form.serializeArray();
         fd = fd.filter(function(item) {
-          return item.name !== 'client_message';
+          return !['client_message','to','from','typing'].includes(item.name);
         });
-        fd.push({
+        fd.push({name:'from',value:from},{name:'to',value:to},{
           name: 'client_message',
           value: filename
         }, {
@@ -3274,8 +3269,8 @@ $is24Hour_client = get_option('time_format') == '24';
 
         $.post(customerSettings.clientsMessagesPath, fd, null, 'json')
           .done(function(resp) {
-            var $li = $(".m-area ol.chat li.client.sending:last");
-            if (resp && resp.error) {
+            var $li = $pendingMessage;
+            if (!resp || resp.error || resp.success === false || !/^[1-9][0-9]*$/.test(String(resp.id || ''))) {
               $li.find(".msg-status")
                 .removeClass("sending")
                 .addClass("failed")
@@ -3295,13 +3290,13 @@ $is24Hour_client = get_option('time_format') == '24';
               .html('<i class="fa fa-check"></i>');
           })
           .fail(function() {
-            $(".m-area ol.chat li.sending:last")
+            $pendingMessage
               .find(".msg-status")
               .removeClass("sending")
               .addClass("failed")
               .attr("title", "<?= _l('chat_send_failed'); ?>")
               .html('<i class="fa fa-exclamation-circle"></i>');
-            $(".m-area ol.chat li.sending:last").removeClass("sending");
+            $pendingMessage.removeClass("sending");
           });
       },
       onError: function(msg) {

@@ -2969,7 +2969,7 @@ $is24Hour_client = get_option('time_format') == '24';
 <script>
   (function() {
     "use strict";
-    var addReactionUrl = "<?= site_url('prchat/Prchat_ClientsController/addReaction'); ?>";
+    var addReactionUrl = customerSettings.addReaction;
 
     function parseReactions(raw) {
       if (!raw) return {};

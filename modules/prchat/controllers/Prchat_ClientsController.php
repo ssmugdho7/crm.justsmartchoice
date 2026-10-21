@@ -20,6 +20,15 @@ class Prchat_ClientsController extends ClientsController
         catch (Throwable $e) { log_message('error', 'PRChat client realtime unavailable'); }
     }
 
+    /** Portal preview shares a cookie with admin; the authenticated contact still owns portal actions. */
+    private function isStaffActor(): bool
+    {
+        $preview = is_client_logged_in()
+            && $this->input->get('chat_context') === 'client'
+            && get_instance()->session->userdata('logged_in_as_client') === true;
+        return is_staff_logged_in() && !$preview;
+    }
+
     private function respond(array $data, int $status = 200): void
     {
         $this->output->set_status_header($status)->set_content_type('application/json')->set_output(json_encode($data));
@@ -36,7 +45,7 @@ class Prchat_ClientsController extends ClientsController
             else { return null; }
         }
         if (!$staff || !$contact) { return null; }
-        if (is_staff_logged_in()) {
+        if ($this->isStaffActor()) {
             if ($staff !== (int) get_staff_user_id() || !prchat_staff_can_contact($contact)) { return null; }
             return ['staff' => $staff, 'contact' => $contact, 'own' => 'staff_'.$staff, 'peer' => 'client_'.$contact];
         }
@@ -81,10 +90,10 @@ class Prchat_ClientsController extends ClientsController
         $payload = ['from' => $pair['own'], 'to' => $pair['peer'], 'message' => clickable(pr_chat_convertLinkImageToString(htmlspecialchars($display, ENT_QUOTES, 'UTF-8'))),
             'last_insert_id' => $id, 'time_sent' => date(DATE_ATOM),
             'client_image_path' => contact_profile_image_url($pair['contact']),
-            'from_name' => is_staff_logged_in() ? get_staff_full_name($pair['staff']) : get_contact_full_name($pair['contact']),
-            'sender_image' => is_staff_logged_in() ? $this->chat_model->getUserImage($pair['staff']) : null,
+            'from_name' => $this->isStaffActor() ? get_staff_full_name($pair['staff']) : get_contact_full_name($pair['contact']),
+            'sender_image' => $this->isStaffActor() ? $this->chat_model->getUserImage($pair['staff']) : null,
             'is_call' => (bool) preg_match('/^\[CALL:(voice|video|missed_voice|missed_video):\d+:\d+:\d+\]$/', $raw)];
-        if (is_staff_logged_in()) {
+        if ($this->isStaffActor()) {
             $staff = $this->db->select('staffid,firstname,lastname,profile_image,admin,role')->where('staffid', $pair['staff'])->get(db_prefix().'staff')->row_array();
             if ($staff) {
                 $staff['role'] = !empty($staff['admin']) ? _l('chat_role_administrator') : (get_staff_userrole($staff['role']) ?: _l('chat_role_staff'));
@@ -100,36 +109,36 @@ class Prchat_ClientsController extends ClientsController
     public function updateClientUnreadMessages()
     {
         $peer = $this->input->post('id');
-        if (is_staff_logged_in() && is_scalar($peer)) { $peer = 'client_'.str_replace('client_', '', (string) $peer); }
-        $own = is_staff_logged_in() ? 'staff_'.get_staff_user_id() : 'client_'.get_contact_user_id();
+        if ($this->isStaffActor() && is_scalar($peer)) { $peer = 'client_'.str_replace('client_', '', (string) $peer); }
+        $own = $this->isStaffActor() ? 'staff_'.get_staff_user_id() : 'client_'.get_contact_user_id();
         $pair = $this->conversation($own, $peer);
         if (!$pair) { $this->respond(['error' => _l('chat_forbidden')], 403); return; }
-        $ok = $this->chat_model->updateClientUnreadMessages(is_staff_logged_in() ? $pair['contact'] : 'staff_'.$pair['staff'],
-            $this->app_pusher ?? null, is_staff_logged_in() ? null : true, $pair['contact']);
+        $ok = $this->chat_model->updateClientUnreadMessages($this->isStaffActor() ? $pair['contact'] : 'staff_'.$pair['staff'],
+            $this->app_pusher ?? null, $this->isStaffActor() ? null : true, $pair['contact']);
         $this->respond(['success' => (bool) $ok]);
     }
 
     public function getStaffUnreadMessages()
     {
-        if (!is_client_logged_in() || is_staff_logged_in()) { $this->respond(['error' => _l('chat_forbidden')], 403); return; }
+        if (!is_client_logged_in() || $this->isStaffActor()) { $this->respond(['error' => _l('chat_forbidden')], 403); return; }
         $this->respond($this->chat_model->getStaffUnreadMessages(null) ?: []);
     }
 
     public function getClientUnreadMessages()
     {
-        if (!is_staff_logged_in() || !prchat_staff_can_chat() || !staffCanAccessClientsTab()) { $this->respond(['error' => _l('chat_forbidden')], 403); return; }
+        if (!$this->isStaffActor() || !prchat_staff_can_chat() || !staffCanAccessClientsTab()) { $this->respond(['error' => _l('chat_forbidden')], 403); return; }
         $this->respond($this->chat_model->getClientUnreadMessages() ?: ['result' => false]);
     }
 
     public function loadMoreClients()
     {
-        if (!is_staff_logged_in() || !prchat_staff_can_chat() || !staffCanAccessClientsTab()) { $this->respond(['error' => _l('chat_forbidden')], 403); return; }
+        if (!$this->isStaffActor() || !prchat_staff_can_chat() || !staffCanAccessClientsTab()) { $this->respond(['error' => _l('chat_forbidden')], 403); return; }
         $this->respond(['customers' => get_staff_customers(30, max(0, (int) $this->input->get('offset')), true)]);
     }
 
     public function searchClients()
     {
-        if (!is_staff_logged_in() || !prchat_staff_can_chat() || !staffCanAccessClientsTab()) { $this->respond(['error' => _l('chat_forbidden')], 403); return; }
+        if (!$this->isStaffActor() || !prchat_staff_can_chat() || !staffCanAccessClientsTab()) { $this->respond(['error' => _l('chat_forbidden')], 403); return; }
         $search = $this->input->post('search');
         if (!is_string($search)) { $this->respond([]); return; }
         $rows = $this->chat_model->searchClients(mb_substr(trim($search), 0, 200));
@@ -138,10 +147,10 @@ class Prchat_ClientsController extends ClientsController
 
     public function uploadMethod()
     {
-        $own = is_staff_logged_in() ? 'staff_'.get_staff_user_id() : 'client_'.get_contact_user_id();
+        $own = $this->isStaffActor() ? 'staff_'.get_staff_user_id() : 'client_'.get_contact_user_id();
         $peer = $this->input->post('send_to');
-        if (is_staff_logged_in() && is_scalar($peer)) { $peer = 'client_'.str_replace('client_', '', (string) $peer); }
-        if (!is_staff_logged_in() && is_scalar($peer) && ctype_digit((string) $peer)) { $peer = 'staff_'.$peer; }
+        if ($this->isStaffActor() && is_scalar($peer)) { $peer = 'client_'.str_replace('client_', '', (string) $peer); }
+        if (!$this->isStaffActor() && is_scalar($peer) && ctype_digit((string) $peer)) { $peer = 'staff_'.$peer; }
         if (!$this->conversation($own, $peer)) { $this->respond(['error' => _l('chat_forbidden')], 403); return; }
         $voice = (string) $this->input->post('prchat_voice_upload') === '1';
         if ($voice) { pr_chat_patch_upload_mimes_for_voice(); }
@@ -171,7 +180,7 @@ class Prchat_ClientsController extends ClientsController
         $row = $this->authorizedMessage($id);
         if (!$row) { $this->respond(['error' => _l('chat_forbidden')], 403); return; }
         if (!in_array($emoji, ['👍','❤️','😂','😮','😢','😡','🎉','🔥'], true)) { $this->respond(['error' => _l('chat_invalid_reaction')], 422); return; }
-        $key = is_staff_logged_in() ? 'staff_'.get_staff_user_id() : 'client_'.get_contact_user_id();
+        $key = $this->isStaffActor() ? 'staff_'.get_staff_user_id() : 'client_'.get_contact_user_id();
         try { $reactions = $this->chat_model->toggleMessageReaction($id, $emoji, $key, 'client'); }
         catch (Throwable $e) {
             log_message('error', 'PRChat client reaction database save failed');
@@ -186,8 +195,8 @@ class Prchat_ClientsController extends ClientsController
     {
         $id = (int) ($this->input->post('message_id') ?: $this->input->post('id'));
         $row = $this->authorizedMessage($id);
-        $key = is_staff_logged_in() ? 'staff_'.get_staff_user_id() : 'client_'.get_contact_user_id();
-        if (!$row || $row->sender_id !== $key || (is_staff_logged_in() && !staff_can('edit', 'prchat'))) { $this->respond(['error' => _l('chat_forbidden')], 403); return; }
+        $key = $this->isStaffActor() ? 'staff_'.get_staff_user_id() : 'client_'.get_contact_user_id();
+        if (!$row || $row->sender_id !== $key || ($this->isStaffActor() && !staff_can('edit', 'prchat'))) { $this->respond(['error' => _l('chat_forbidden')], 403); return; }
         $raw = $this->input->post('message', false) ?? $this->input->post('new_message', false);
         if (!is_string($raw) || trim($raw) === '') { $this->respond(['error' => _l('chat_invalid_message')], 422); return; }
         $stored = $this->chat_model->process_message_for_storage($raw);

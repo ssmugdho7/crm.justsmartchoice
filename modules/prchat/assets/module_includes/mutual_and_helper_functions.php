@@ -11,7 +11,7 @@
   window.prchatI18n.chat_voice_not_supported = <?= json_encode(_l('chat_voice_not_supported')); ?>;
   window.prchatI18n.chat_voice_mic_unavailable = <?= json_encode(_l('chat_voice_mic_unavailable')); ?>;
   window.prchatI18n.chat_voice_record_failed = <?= json_encode(_l('chat_voice_record_failed')); ?>;
-  window.prchatI18n.chat_voice_upload_http = <?= json_encode(_l('chat_voice_upload_http')); ?>;
+  window.prchatI18n.chat_voice_upload_http = <?= json_encode(_l('chat_voice_upload_http', '%s')); ?>;
   window.prchatI18n.chat_voice_upload_network = <?= json_encode(_l('chat_voice_upload_network')); ?>;
   window.prchatI18n.chat_upload_failed = <?= json_encode(_l('chat_upload_failed')); ?>;
   window.prchatI18n.chat_send = <?= json_encode(_l('chat_send')); ?>;
@@ -69,18 +69,19 @@
    * Used in chat_clients_view.php
    */
   var customerSettings = {
-    "clientPusherAuth": '<?php echo site_url('prchat/Prchat_ClientsController/pusherCustomersAuth'); ?>',
-    "getMutualMessages": '<?php echo site_url('prchat/Prchat_ClientsController/getMutualMessages'); ?>',
-    "clientsMessagesPath": '<?php echo site_url('prchat/Prchat_ClientsController/initClientChat'); ?>',
-    "getStaffUnreadMessages": '<?php echo site_url('prchat/Prchat_ClientsController/getStaffUnreadMessages'); ?>',
-    "updateStaffUnread": '<?php echo site_url('prchat/Prchat_ClientsController/updateClientUnreadMessages'); ?>',
+    "clientPusherAuth": '<?php echo site_url('prchat/Prchat_ClientsController/pusherCustomersAuth') . '?chat_context=client'; ?>',
+    "getMutualMessages": '<?php echo site_url('prchat/Prchat_ClientsController/getMutualMessages') . '?chat_context=client'; ?>',
+    "clientsMessagesPath": '<?php echo site_url('prchat/Prchat_ClientsController/initClientChat') . '?chat_context=client'; ?>',
+    "getStaffUnreadMessages": '<?php echo site_url('prchat/Prchat_ClientsController/getStaffUnreadMessages') . '?chat_context=client'; ?>',
+    "updateStaffUnread": '<?php echo site_url('prchat/Prchat_ClientsController/updateClientUnreadMessages') . '?chat_context=client'; ?>',
     "hasComeOnlineText": "<?php echo _l('chat_user_is_online'); ?>",
     "groupNameChanged": "<?php echo _l('chat_group_renamed'); ?>",
     "groupNewName": "<?php echo _l('chat_group_newname'); ?>",
     "chatRenameLabel": "<?php echo _l('chat_rename_label'); ?>",
     "noMoreMessagesText": "<?php echo _l('chat_no_more_messages_to_show'); ?>",
-    "uploadMethod": '<?php echo site_url('prchat/Prchat_ClientsController/uploadMethod'); ?>',
-    "editClientMessage": '<?php echo site_url('prchat/Prchat_ClientsController/editClientMessage'); ?>',
+    "uploadMethod": '<?php echo site_url('prchat/Prchat_ClientsController/uploadMethod') . '?chat_context=client'; ?>',
+    "addReaction": '<?php echo site_url('prchat/Prchat_ClientsController/addReaction') . '?chat_context=client'; ?>',
+    "editClientMessage": '<?php echo site_url('prchat/Prchat_ClientsController/editClientMessage') . '?chat_context=client'; ?>',
     "clientUploadsBase": '<?php echo rtrim(base_url('modules/prchat/uploads/clients/'), '/') . '/'; ?>',
     "debug": false,
   };

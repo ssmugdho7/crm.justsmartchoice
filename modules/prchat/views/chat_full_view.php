@@ -1323,18 +1323,29 @@
                 answerOpts.isVideo = isVideoCall;
                 answerOpts.recipientType = payload.caller_type || 'staff';
                 answerOpts.callerType = 'staff';
-                window.__chatCallManager.answer(userSessionId, payload.from_id, offer, answerOpts);
+                var answeringManager = window.__chatCallManager;
+                answeringManager.answer(userSessionId, payload.from_id, offer, answerOpts).then(function() {
+                  if (window.__chatCallManager !== answeringManager || answeringManager.hasEnded || window.__CHAT_CALL_STATE !== 'inCall') return;
 
-                ChatCallUI.showInCall((payload.from_name || ''), function() {
-                  window.__chatCallManager.hangup();
-                  endCallWithSummary();
-                  if (isVideoCall) {
-                    var pipEl = document.getElementById('chat-call-pip');
-                    if (pipEl) pipEl.parentNode.removeChild(pipEl);
-                  }
-                }, {
-                  avatarUrl: avatarUrlIn,
-                  isVideo: isVideoCall
+                  ChatCallUI.showInCall((payload.from_name || ''), function() {
+                    window.__chatCallManager.hangup();
+                    endCallWithSummary();
+                    if (isVideoCall) {
+                      var pipEl = document.getElementById('chat-call-pip');
+                      if (pipEl) pipEl.parentNode.removeChild(pipEl);
+                    }
+                  }, {
+                    avatarUrl: avatarUrlIn,
+                    isVideo: isVideoCall
+                  });
+                }).catch(function(err) {
+                  if (window.__chatCallManager !== answeringManager || window.__CHAT_CALL_STATE !== 'inCall') return;
+                  window.__CHAT_CALL_STATE = 'idle';
+                  window.__CHAT_CALL_PEER = null;
+                  localStorage.removeItem('prchat_call_state');
+                  ChatCallUI.stopRingtone();
+                  ChatCallUI.closeModal();
+                  alert_float('danger', '<?= _l('chat_call_failed'); ?>');
                 });
               }, function() {
                 // Decline

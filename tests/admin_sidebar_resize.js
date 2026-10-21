@@ -7,7 +7,7 @@ function element(classes = []) {
   return {className: classes.join(' '), handlers: {}, attributes: {}, style: {setProperty(key, value) { this[key] = value; }},
     classList: {contains: key => set.has(key), add: key => set.add(key), remove: key => set.delete(key)},
     addEventListener(key, fn) { this.handlers[key] = fn; }, setAttribute(key, value) { this.attributes[key] = value; },
-    appendChild(child) { this.child = child; }, setPointerCapture(id) { this.pointer = id; },
+    appendChild(child) { this.child = child; }, focus() { this.focused = true; }, setPointerCapture(id) { this.pointer = id; },
     hasPointerCapture(id) { return this.pointer === id; }, releasePointerCapture() { this.pointer = null; }};
 }
 function fixture({saved, blockedStorage, rtl, mobile, nonAdmin} = {}) {
@@ -31,6 +31,7 @@ function fixture({saved, blockedStorage, rtl, mobile, nonAdmin} = {}) {
 let f = fixture();
 assert.equal(f.width(), 230); assert.equal(f.handle.attributes.role, 'separator');
 f.down(); f.move({clientX: 310}); assert.equal(f.width(), 310);
+assert.equal(f.handle.focused, true);
 f.move({clientX: 1400}); assert.equal(f.width(), 380);
 f.move({clientX: -500}); assert.equal(f.width(), 200); f.up();
 assert.equal(f.storage.get('sc.admin.sidebar.width.18'), '200');

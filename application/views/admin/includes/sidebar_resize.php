@@ -78,6 +78,7 @@ body.sc-sidebar-dragging #menu,body.sc-sidebar-dragging #wrapper{transition:none
         handle.addEventListener('pointerdown', function (event) {
             if (event.button !== 0 || !visible() || drag) return;
             event.preventDefault();
+            handle.focus({preventScroll: true});
             drag = {id: event.pointerId, x: event.clientX, width: width(), preferred: preferred};
             try { handle.setPointerCapture(event.pointerId); }
             catch (error) { drag = null; return; }

@@ -49,10 +49,10 @@
                             <button type="button" class="btn btn-success" data-sc-filter="active">Activated</button>
                             <button type="button" class="btn btn-default" data-sc-filter="inactive">Deactivated</button>
                             <button type="button" class="btn btn-warning" data-sc-filter="update">Needs Update</button>
-                            <button type="button" class="btn btn-danger" data-sc-filter="error">Errors</button>
+                            <button type="button" class="btn btn-danger" data-sc-filter="error">Errors <span class="badge" id="sc_count_error">0</span></button>
                             <a href="#" class="btn btn-info" data-sc-filter="update"><i class="fa fa-database"></i> Review Upgrades</a>
                             <a href="<?= admin_url('modules/clear_cache'); ?>" class="btn btn-default"><i class="fa fa-broom"></i> Clean Cache</a>
-                            <a href="<?= admin_url('modules/upgrade_all_database'); ?>" class="btn btn-success" onclick="return confirm('Perfex will upgrade only modules with a pending database migration. Modules without pending upgrades will be skipped. Continue?');"><i class="fa fa-arrow-up"></i> Upgrade All Dependencies</a>
+                            <a href="<?= admin_url('modules/upgrade_all_database'); ?>" class="btn btn-success"><i class="fa fa-arrow-up"></i> Upgrade All Dependencies</a>
                         </div>
                         <div class="alert alert-info"><b>Smart Choice Core Governance:</b> Modules can be downloaded after installation. New modules should include an impact manifest declaring affected core tables, CSS, JavaScript, and files.<br>
                             Fast mode is enabled. External module version checks, module listing hooks, ratings, and help-guide listing links are bypassed so this page does not freeze on shared hosting.
@@ -68,24 +68,9 @@
                                 <tbody>
                                     <?php foreach ($modules as $module) {
                                         $system_name = $module['system_name'];
-                                        $database_upgrade_is_required = false;
-                                        $versionRequirementMet = true;
-
-                                        try {
-                                            $database_upgrade_is_required = $this->app_modules->is_database_upgrade_required($system_name);
-                                        } catch (Throwable $e) {
-                                            $database_upgrade_is_required = false;
-                                        } catch (Exception $e) {
-                                            $database_upgrade_is_required = false;
-                                        }
-
-                                        try {
-                                            $versionRequirementMet = $this->app_modules->is_minimum_version_requirement_met($system_name);
-                                        } catch (Throwable $e) {
-                                            $versionRequirementMet = true;
-                                        } catch (Exception $e) {
-                                            $versionRequirementMet = true;
-                                        }
+                                        $status = $module['maintenance'];
+                                        $database_upgrade_is_required = $status['upgrade_required'];
+                                        $versionRequirementMet = $status['compatible'];
 
                                         $action_links = [];
                                         $action_links[] = '<a href="' . admin_url('modules/download/' . $system_name) . '"><i class="fa fa-download"></i> Download</a>';
@@ -98,7 +83,7 @@
                                             $action_links[] = '<a href="' . admin_url('modules/deactivate/' . $system_name) . '">' . _l('module_deactivate') . '</a>';
                                         }
 
-                                        if ($database_upgrade_is_required) {
+                                        if ($status['can_upgrade']) {
                                             $action_links[] = '<a href="' . admin_url('modules/upgrade_database/' . $system_name) . '" class="text-success bold">' . _l('module_upgrade_database') . '</a>';
                                         }
 
@@ -110,14 +95,12 @@
                                         $author = $module['headers']['author'] ?? '';
                                         $version = $module['headers']['version'] ?? '';
                                         ?>
-                                        <tr data-active="<?= $module['activated'] === 1 ? '1' : '0'; ?>" data-update="<?= $database_upgrade_is_required ? '1' : '0'; ?>" data-error="<?= !$versionRequirementMet ? '1' : '0'; ?>" class="<?= $module['activated'] === 1 && !$database_upgrade_is_required ? 'info' : ''; ?><?= $database_upgrade_is_required ? ' warning' : ''; ?>">
+                                        <tr data-active="<?= $module['activated'] === 1 ? '1' : '0'; ?>" data-update="<?= $database_upgrade_is_required ? '1' : '0'; ?>" data-error="<?= $status['errors'] ? '1' : '0'; ?>" class="<?= $module['activated'] === 1 && !$database_upgrade_is_required ? 'info' : ''; ?><?= $database_upgrade_is_required ? ' warning' : ''; ?>">
                                             <td data-order="<?= e($system_name); ?>">
                                                 <div class="sc-module-name"><?= e($module['headers']['module_name']); ?></div>
                                                 <div class="sc-module-actions"><?= implode('', $action_links); ?></div>
-                                                <?php if (!$versionRequirementMet) { ?>
-                                                    <div class="alert alert-warning mtop5">
-                                                        This module requires at least v<?= e($module['headers']['requires_at_least']); ?> of the CRM.<?= $module['activated'] === 0 ? ' Hence, cannot be activated' : ''; ?>
-                                                    </div>
+                                                <?php foreach ($status['errors'] as $error) { ?>
+                                                    <div class="alert alert-danger mtop5"><?= e($error); ?></div>
                                                 <?php } ?>
                                             </td>
                                             <td>
@@ -131,6 +114,7 @@
                                     <?php } ?>
                                 </tbody>
                             </table>
+                            <div id="sc_module_empty" class="alert alert-info mtop10" role="status" aria-live="polite" style="display:none"></div>
                         </div>
                     </div>
                 </div>
@@ -138,18 +122,7 @@
         </div>
     </div>
 </div>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
- var input=document.getElementById('sc_module_search'), table=document.getElementById('sc_modules_table'); if(!table)return;
- var rows=Array.prototype.slice.call(table.querySelectorAll('tbody tr')), current='all';
- function matches(row){var q=input?input.value.toLowerCase():'';if(q&&row.textContent.toLowerCase().indexOf(q)===-1)return false;if(current==='active')return row.dataset.active==='1';if(current==='inactive')return row.dataset.active==='0';if(current==='update')return row.dataset.update==='1';if(current==='error')return row.dataset.error==='1';return true;}
- function apply(){rows.forEach(function(r){r.style.display=matches(r)?'':'none';});}
- function count(name,test){var el=document.getElementById('sc_count_'+name);if(el)el.textContent=rows.filter(test).length;}
- count('all',function(){return true});
- document.querySelectorAll('[data-sc-filter]').forEach(function(b){b.addEventListener('click',function(e){e.preventDefault();current=b.dataset.scFilter;document.querySelectorAll('.sc-module-tools [data-sc-filter]').forEach(function(x){x.classList.remove('active')});var target=document.querySelector('.sc-module-tools [data-sc-filter="'+current+'"]');if(target)target.classList.add('active');apply();});});
- if(input)input.addEventListener('input',apply); apply();
-});
-</script>
+<?php $this->load->view('admin/modules/filters'); ?>
 <style>
 .sc-crm-brandbar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:1px solid #dce8f1;border-left:4px solid #168dde;border-radius:7px;padding:10px 12px;margin-bottom:12px}.sc-crm-brandbar strong{font-size:18px;color:#1f3c88}.sc-module-tools{display:flex!important;align-items:center!important;gap:4px!important;flex-wrap:nowrap!important;overflow-x:auto!important;padding-bottom:4px!important}.sc-module-tools .btn{padding:3px 7px!important;min-height:27px!important;height:27px!important;font-size:10.5px!important;white-space:nowrap!important;border-radius:5px!important}.sc-module-tools .badge{font-size:9px!important;padding:1px 4px!important}.sc-module-tools #sc_module_search{min-width:220px!important;height:31px!important}.sc-module-actions a{display:inline-block;margin-right:8px;font-size:12px}@media(max-width:900px){.sc-module-tools{overflow-x:auto!important}.sc-module-tools #sc_module_search{min-width:180px!important}.sc-crm-brandbar{align-items:flex-start}}
 </style>

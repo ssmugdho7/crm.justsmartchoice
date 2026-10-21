@@ -6,6 +6,8 @@ Customer-widget endpoints now explicitly select portal context. The server honor
 
 The voice HTTP-error translation also lost its status placeholder because Perfex formats language strings before JavaScript uses them. Passing the placeholder through `_l` preserves the actual HTTP status in failures.
 
+The final browser check also found that the customer widget sends a numeric staff ID when marking messages read. The receipt endpoint now normalizes that numeric peer before applying the existing conversation authorization, matching uploads. Hidden staff and malformed IDs remain rejected.
+
 ## Validation
 
 - `php tests/chat_portal_context_regression.php`: native dual-session send, stored contact identity, edit ownership, reaction identity, unread receipts, forbidden contacts/staff, customer-enumeration denial, staff coexistence and forged-context denials. The initial test reproduced the failure before the repair.

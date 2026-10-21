@@ -110,6 +110,7 @@ class Prchat_ClientsController extends ClientsController
     {
         $peer = $this->input->post('id');
         if ($this->isStaffActor() && is_scalar($peer)) { $peer = 'client_'.str_replace('client_', '', (string) $peer); }
+        if (!$this->isStaffActor() && is_scalar($peer) && ctype_digit((string) $peer)) { $peer = 'staff_'.$peer; }
         $own = $this->isStaffActor() ? 'staff_'.get_staff_user_id() : 'client_'.get_contact_user_id();
         $pair = $this->conversation($own, $peer);
         if (!$pair) { $this->respond(['error' => _l('chat_forbidden')], 403); return; }

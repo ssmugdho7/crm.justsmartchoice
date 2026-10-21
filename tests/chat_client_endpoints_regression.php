@@ -108,9 +108,10 @@ for($i=0;$i<25;$i++) $messages[]=$model->createMessage(['sender_id'=>'client_33'
 $page1=request('getMutualMessages',['sender_id'=>'client_33','reciever_id'=>'staff_7','limit'=>20]);
 $page2=request('getMutualMessages',['sender_id'=>'client_33','reciever_id'=>'staff_7','limit'=>10,'offset'=>20]);
 check(count($page1->data)===20&&count($page2->data)>0&&!array_intersect(array_column($page1->data,'id'),array_column($page2->data,'id')),'History pagination returns older rows without duplicates');
-$db->query("ALTER TABLE audit_chatclientmessages ADD CONSTRAINT fixture_reject_message CHECK (message != 'RejectFixture')");
+check($db->query('CREATE UNIQUE INDEX fixture_unique_message ON audit_chatclientmessages (message(200))'), 'Portable message failure fixture');
+$model->createMessage(['sender_id'=>'staff_7','reciever_id'=>'client_33','message'=>'RejectFixture'], 'audit_chatclientmessages');
 $failure=request('initClientChat',['from'=>'staff_7','to'=>'client_33','typing'=>'false','client_message'=>'RejectFixture']);
-check($failure->status===500&&!isset($failure->data['id']),'Native DB exception cannot fabricate send success');
+check($failure->status===500&&!isset($failure->data['id']),'Native duplicate-key failure cannot fabricate send success');
 echo "PASS typing, empty-send validation, client search/pagination and failed-save checks\n";
 
 $fixtureStaffLoggedIn=false;$fixtureClientLoggedIn=true;
@@ -118,7 +119,7 @@ $clearReaction=request('addReaction',['message_id'=>$id,'emoji'=>'👍']);
 check($clearReaction->status===200&&$clearReaction->data['success']===true&&$clearReaction->data['reactions']===null,'Clicking an existing reaction clears it successfully');
 $fixtureStaffLoggedIn=true;$fixtureClientLoggedIn=false;
 
-$db->query('ALTER TABLE audit_chatclientmessages ADD CONSTRAINT fixture_reject_reaction CHECK (reactions IS NULL)');
+check($db->query('ALTER TABLE audit_chatclientmessages MODIFY reactions VARCHAR(1) NULL'), 'Portable reaction failure fixture');
 $reactionFailure=request('addReaction',['message_id'=>$id,'emoji'=>'🔥']);
 check($reactionFailure->status===500&&!isset($reactionFailure->data['success']),'Reaction database failures do not report a saved reaction');
 echo "PASS reaction removal and rejected-save response checks\n";

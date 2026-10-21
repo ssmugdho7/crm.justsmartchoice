@@ -55,7 +55,7 @@ if (isset($_POST['group_id']) && $_POST['group_id']==='fixture') $_POST['group_i
 if (isset($_POST['to_group']) && $_POST['to_group']==='fixture') $_POST['to_group']=$groupId;
 if (($_GET['scope']??'')==='client-portal') { $fixtureStaffLoggedIn=false;$fixtureClientLoggedIn=true; }
 if (($_GET['fail']??'')==='db') {
- $db->query('ALTER TABLE audit_chatgroups ADD CONSTRAINT fixture_reject_photo CHECK (group_image IS NULL)');
+ $db->query('ALTER TABLE audit_chatgroups MODIFY group_image VARCHAR(1) NULL');
 }
 $startFiles=count(glob($storage.'/groups/avatars/*')?:[]);
 if ($isAvatar || ($_GET['scope']??'')==='group') {

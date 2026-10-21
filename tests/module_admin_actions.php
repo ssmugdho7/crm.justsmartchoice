@@ -113,6 +113,8 @@ foreach (['admin/modules/list', 'admin/modules_list'] as $view) {
     $html = $renderer->view($view, $data);
     check(strpos($html, 'data-error="1"') !== false && strpos($html, 'id="sc_module_empty"') !== false, $view . ' renders error rows and empty-state feedback');
     check(strpos($html, '<script>fixture_attack()') === false && strpos($html, '&lt;script&gt;fixture_attack()') !== false, $view . ' escapes diagnostic messages');
+    $doc = new DOMDocument(); @$doc->loadHTML($html); $xpath = new DOMXPath($doc);
+    check($xpath->query('//*[@id="sc_module_empty" and contains(concat(" ",normalize-space(@class)," ")," alert ")]')->length === 0, 'empty-state feedback is not converted into a spurious global alert toast');
 }
 $c = controller_fixture(); $c->upgrade_all_database();
 $html = $renderer->view('admin/modules/upgrades', $c->load->data);

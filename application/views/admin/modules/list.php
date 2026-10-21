@@ -114,7 +114,7 @@
                                     <?php } ?>
                                 </tbody>
                             </table>
-                            <div id="sc_module_empty" class="alert alert-info mtop10" role="status" aria-live="polite" style="display:none"></div>
+                            <div id="sc_module_empty" class="sc-module-empty mtop10" role="status" aria-live="polite" style="display:none"></div>
                         </div>
                     </div>
                 </div>

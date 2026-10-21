@@ -13,6 +13,10 @@ share the filter script. Zero results have an explicit message. Failed checks an
 failed upgrade attempts are marked as errors, while exception payloads remain
 private. Minimum CRM requirements remain enforced.
 
+The empty-state panel deliberately uses a scoped presentation class rather than
+the global `.alert` selector: the dev notification module otherwise creates a
+spurious “No modules match” toast even while the empty-state panel is hidden.
+
 The bulk action now opens a read-only review showing installed/file versions,
 eligible upgrades, and blocked/skipped explanations. Execution requires explicit
 confirmation and a framework POST with the existing CSRF field. Each selected

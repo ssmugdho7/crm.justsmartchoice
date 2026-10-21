@@ -1,4 +1,5 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<style>.sc-module-empty{padding:15px;border:1px solid #bce8f1;border-radius:4px;color:#31708f;background:#d9edf7}</style>
 <script>
 (function () {
     function initModuleFilters() {

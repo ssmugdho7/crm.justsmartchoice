@@ -178,7 +178,7 @@ function pr_chat_add_js_before_admin_render()
   if (get_option('chat_staff_calls_enabled') == '1' || get_option('chat_calls_video_enabled') == '1') {
     echo '<script src="' . base_url('modules/prchat/assets/js/calls/signaling-client.js' . '?v=' . VERSIONING . '') . '"></script>';
     echo '<script src="' . base_url('modules/prchat/assets/js/calls/media-manager.js' . '?v=' . VERSIONING . '') . '"></script>';
-    echo '<script src="' . base_url('modules/prchat/assets/js/calls/call-ui.js' . '?v=' . VERSIONING . '') . '"></script>';
+    echo '<script src="' . base_url('modules/prchat/assets/js/calls/call-ui.js' . '?v=' . VERSIONING . '-' . filemtime(__DIR__ . '/../assets/js/calls/call-ui.js')) . '"></script>';
     echo '<script src="' . base_url('modules/prchat/assets/js/calls/call-manager.js' . '?v=' . VERSIONING . '-' . filemtime(__DIR__ . '/../assets/js/calls/call-manager.js')) . '"></script>';
   }
 }

@@ -34,7 +34,7 @@
     _iceRequest = withTimeout(window.fetch(url, { credentials: "same-origin" }), 3000)
       .then(function (r) { return r.text(); })
       .then(function (text) {
-        prchatCallTrace("get_call_token raw:", text.substring(0, 500));
+        prchatCallTrace("get_call_token response received");
         var data;
         try { data = JSON.parse(text); } catch (e) {
           prchatCallTrace("get_call_token response is NOT valid JSON");
@@ -521,26 +521,35 @@
     try { window.localStorage.setItem('prchat_audio_input', this.audioInputId || ''); } catch (_) {}
     var self = this;
     if (!this.pc) return Promise.resolve();
+    var peer = this.pc;
+    var acquired = null;
+    var attached = false;
+    function discardStream() {
+      if (acquired) acquired.getTracks().forEach(function (track) { track.stop(); });
+      acquired = null;
+    }
     return navigator.mediaDevices
       .getUserMedia({ audio: self.audioInputId ? { deviceId: { exact: self.audioInputId } } : true })
       .then(function (stream) {
+        acquired = stream;
+        if (self.pc !== peer || self.hasEnded) { discardStream(); return; }
         var newTrack = stream.getAudioTracks()[0];
-        if (!newTrack) return;
-        self.localStream = self.localStream || new MediaStream();
-        var sender = self.pc.getSenders().find(function (s) {
+        if (!newTrack) throw new Error('The selected device did not provide a microphone track');
+        var sender = peer.getSenders().find(function (s) {
           return s.track && s.track.kind === "audio";
+        }) || findSenderForTrack(peer, newTrack);
+        var replacement = sender ? sender.replaceTrack(newTrack) : peer.addTrack(newTrack, stream);
+        return Promise.resolve(replacement).then(function () {
+          if (self.pc !== peer || self.hasEnded) { discardStream(); return; }
+          self.localStream = self.localStream || new MediaStream();
+          self.localStream.getAudioTracks().forEach(function (t) { t.stop(); self.localStream.removeTrack(t); });
+          self.localStream.addTrack(newTrack);
+          newTrack.enabled = !self.muted;
+          attached = true;
+          stream.getTracks().forEach(function (track) { if (track !== newTrack) track.stop(); });
         });
-        if (sender) {
-          return sender.replaceTrack(newTrack).then(function () {
-            self.localStream.getAudioTracks().forEach(function (t) { t.stop(); self.localStream.removeTrack(t); });
-            self.localStream.addTrack(newTrack);
-            newTrack.enabled = !self.muted;
-          });
-        }
-        self.pc.addTrack(newTrack, stream);
-        self.localStream.addTrack(newTrack);
-        newTrack.enabled = !self.muted;
       }).catch(function (error) {
+        if (!attached) discardStream();
         self.audioInputId = previous;
         try { window.localStorage.setItem('prchat_audio_input', previous || ''); } catch (_) {}
         throw error;

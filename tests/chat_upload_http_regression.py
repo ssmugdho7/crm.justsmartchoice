@@ -46,6 +46,15 @@ with tempfile.TemporaryDirectory(prefix='prchat-upload-') as tmp:
                 status,r=upload(scope,'voice.wav',wav.getvalue(),dict(fields,prchat_voice_upload='1'),action)
                 check(status==200 and r.get('upload_data',{}).get('subfolder')==sub,f'{scope} voice upload: {status} {r}')
                 check((store/'audio'/sub/r['upload_data']['file_name']).read_bytes()==wav.getvalue(),f'{scope} recorded audio bytes retained')
+            for duration in [8,30]:
+                recording=io.BytesIO()
+                with wave.open(recording,'wb') as f:
+                    f.setnchannels(1);f.setsampwidth(2);f.setframerate(16000)
+                    f.writeframes(b'\x10\x01'*(16000*duration))
+                for scope in ['client-portal','client-preview']:
+                    status,r=upload(scope,f'voice-{duration}s.wav',recording.getvalue(),{'send_to':'staff_7','prchat_voice_upload':'1'})
+                    check(status==200 and r.get('upload_data',{}).get('file_name'),f'{scope} {duration}-second voice upload succeeds: {status} {r}')
+                    check((store/'audio/clients'/r['upload_data']['file_name']).read_bytes()==recording.getvalue(),f'{scope} {duration}-second audio retained completely')
             for name,content in [('bad.php',b'<?php echo 1;'),('fake.png',b'not an image')]:
                 status,r=upload('client',name,content,{'send_to':'33'})
                 check(status==422 and r.get('error'),f'Unsafe attachment rejected: {name}')

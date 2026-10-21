@@ -1141,6 +1141,7 @@
     var invisibleCounter = 1;
 
     clientMessageChannel.bind("send-event", function(data) {
+      if (!data || !/^client_[1-9][0-9]*$/.test(String(data.from || '')) || data.to !== "staff_" + userSessionId) return;
       $("#frame .client_messages").find(".typing-indicator").removeClass("show");
       var clientMessages = $(".chat_client_messages");
       var selectedContact = $(".chat_clients_list > li.contact_name.selected");
@@ -1175,26 +1176,27 @@
 
       } else if (data.to == "staff_" + userSessionId) {
         data.from = data.from.replace("client_", "");
-        var contactNotification = $("body").find(".contact_name#" + data.from);
-        var contactNotificationParent = $("body").find(".contact_name#" + data.from).parent();
+        var contactNotification = $(".chat_clients_list > li.contact_name[id='" + data.from + "']");
+        var contactNotificationParent = contactNotification.parent();
         var contactNotificationClass = ".unread-notifications";
-        var topLi = $(".chat_clients_list ul li").first();
+        var topLi = $(".chat_clients_list > li").first();
 
-        var isClientLoaded = $(".chat_clients_list > li.contact_name#" + data.from);
+        var isClientLoaded = contactNotification;
 
         if (isClientLoaded.length === 0) {
-          var profile_image_url = data.client_image_path || contact_profile_image_url(data.from) || site_url + "/assets/images/user-placeholder.jpg";
-          var nmContactHtml = '<li class="contact_name" id="' + data.from + '" data-client-id="' + data.client_id + '" data-company="' + (data.company || '').replace(/"/g, '&quot;') + '" data-presence-status="online">' +
+          var profile_image_url = data.client_image_path || site_url + "/assets/images/user-placeholder.jpg";
+          var escapeContactText = function(value) { return $('<span>').text(value == null ? '' : String(value)).html(); };
+          var nmContactHtml = '<li class="contact_name" id="' + data.from + '" data-client-id="' + escapeContactText(data.client_id).replace(/"/g, '&quot;') + '" data-company="' + escapeContactText(data.company).replace(/"/g, '&quot;') + '" data-presence-status="online">' +
             '<div class="contact_name_content">' +
-            '<img class="chatContactImage" src="' + profile_image_url + '"/>' +
+            '<img class="chatContactImage" src="' + escapeContactText(profile_image_url).replace(/"/g, '&quot;') + '"/>' +
             '<div class="contact_info">' +
-            '<div class="contact_name_main">' + data.contact_full_name + '</div>';
+            '<div class="contact_name_main">' + escapeContactText(data.contact_full_name || data.from_name || 'Client') + '</div>';
 
           if (data.company) {
-            nmContactHtml += '<small class="contact_company">' + data.company + '</small>';
+            nmContactHtml += '<small class="contact_company">' + escapeContactText(data.company) + '</small>';
           }
           if (data.contact_title && data.contact_title.trim() !== "") {
-            nmContactHtml += '<small class="contact_title">' + data.contact_title + '</small>';
+            nmContactHtml += '<small class="contact_title">' + escapeContactText(data.contact_title) + '</small>';
           }
 
           nmContactHtml += '<div class="contact_preview"><?= _l('chat_new_message_received'); ?></div>' +
@@ -1317,7 +1319,7 @@
         }
 
         // Find the specific contact that sent the message (not any other contact)
-        var messageSender = $("body").find(".contact_name#" + data.from);
+        var messageSender = $(".chat_clients_list > li.contact_name[id='" + data.from + "']");
 
         if (messageSender.length > 0) {
           var existingBadge = messageSender.find(".unread-notifications");
@@ -1342,7 +1344,7 @@
         updateContactPreview(data.from, rendered.sidebar, false, moment().format("YYYY-MM-DD HH:mm:ss"));
 
         // Update raw timestamp for accurate sorting
-        var senderContact = $(".contact_name#" + data.from.replace("client_", ""));
+        var senderContact = $(".chat_clients_list > li.contact_name[id='" + data.from + "']");
         if (senderContact.length) {
           senderContact.attr("data-last-message-time", new Date().toISOString());
         }

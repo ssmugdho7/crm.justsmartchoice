@@ -8,6 +8,8 @@ The voice HTTP-error translation also lost its status placeholder because Perfex
 
 The final browser check also found that the customer widget sends a numeric staff ID when marking messages read. The receipt endpoint now normalizes that numeric peer before applying the existing conversation authorization, matching uploads. Hidden staff and malformed IDs remain rejected.
 
+Incoming customer events also used numeric CSS ID selectors that failed to match loaded contacts, creating duplicate unnamed sidebar entries. Attribute selectors now reuse those contacts, customer events include the existing contact/company metadata, and dynamically added names/company labels are escaped. A realtime DOM regression covers repeated messages, an unloaded contact, unread counts and hostile metadata.
+
 ## Validation
 
 - `php tests/chat_portal_context_regression.php`: native dual-session send, stored contact identity, edit ownership, reaction identity, unread receipts, forbidden contacts/staff, customer-enumeration denial, staff coexistence and forged-context denials. The initial test reproduced the failure before the repair.

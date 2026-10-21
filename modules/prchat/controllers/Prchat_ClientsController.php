@@ -100,6 +100,11 @@ class Prchat_ClientsController extends ClientsController
                 unset($staff['admin']);
                 $payload['from_staff_data'] = $staff;
             }
+        } else {
+            $contact = getOwnClient($pair['contact']);
+            $payload['contact_full_name'] = $payload['from_name'];
+            $payload['client_id'] = $contact['client_id'] ?? null;
+            $payload['company'] = $contact['company'] ?? '';
         }
         $this->respond(['success' => true, 'id' => $id, 'time_sent' => $payload['time_sent']]);
         $this->deliver('send-event', $payload);

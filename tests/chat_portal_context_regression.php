@@ -24,6 +24,9 @@ check(request('getMutualMessages', $context + ['sender_id'=>'client_33','recieve
 check(request('uploadMethod', $context + ['send_to'=>'staff_8'])->status === 403, 'Preview cannot upload to hidden staff');
 check(request('searchClients', $context + ['search'=>'Findable'])->status === 403, 'Client preview context cannot enumerate customers');
 check(request('updateClientUnreadMessages', $context + ['id'=>'staff_7'])->status === 200, 'Preview receipts use contact identity');
+check(request('updateClientUnreadMessages', $context + ['id'=>'7'])->status === 200, 'Customer widget numeric staff IDs mark messages read');
+check(request('updateClientUnreadMessages', $context + ['id'=>'8'])->status === 403, 'Numeric receipt IDs cannot access hidden staff');
+check(request('updateClientUnreadMessages', $context + ['id'=>['7']])->status === 403, 'Malformed receipt IDs are rejected');
 check(request('initClientChat', ['from'=>'staff_7','to'=>'client_33','typing'=>'false','client_message'=>'Staff still works during preview'])->status === 200, 'Admin chat retains staff identity without portal context');
 $fixtureClientPreview = false;
 check(request('initClientChat', $context + ['from'=>'client_33','to'=>'staff_7','typing'=>'false','client_message'=>'Unapproved preview'])->status === 403, 'A context flag alone cannot switch a staff request to a contact');

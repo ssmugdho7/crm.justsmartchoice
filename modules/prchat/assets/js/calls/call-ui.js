@@ -13,6 +13,36 @@
   var Z_CALL_FLOAT = 10050000;
   var Z_CALL_PERM_ARROW = 10050035;
 
+  // A delayed permission grant belongs only to the peer that requested it.
+  function requestCallMedia(constraints, manager, peer, timeoutMs) {
+    if (!manager || !peer || manager.hasEnded || manager.pc !== peer || window.__chatCallManager !== manager) {
+      return Promise.reject(new Error('Call ended before media access'));
+    }
+    return new Promise(function (resolve, reject) {
+      var pending = true;
+      var timer = timeoutMs ? setTimeout(function () {
+        pending = false;
+        reject(new Error('Camera/mic permission timeout'));
+      }, timeoutMs) : null;
+      navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
+        if (!pending || manager.hasEnded || manager.pc !== peer || window.__chatCallManager !== manager) {
+          stream.getTracks().forEach(function (track) { track.stop(); });
+          if (pending) { pending = false; clearTimeout(timer); reject(new Error('Call ended before media access')); }
+          return;
+        }
+        pending = false;
+        clearTimeout(timer);
+        stream.getAudioTracks().forEach(function (track) { track.enabled = !manager.isMuted(); });
+        resolve(stream);
+      }, function (error) {
+        if (!pending) return;
+        pending = false;
+        clearTimeout(timer);
+        reject(error);
+      });
+    });
+  }
+
   function ensureStyles() {
     if (document.getElementById("chat-call-ui-styles")) return;
     var style = document.createElement("style");
@@ -390,10 +420,11 @@
     (function acquireVoiceMedia() {
       var m = window.__chatCallManager;
       if (m && m.localStream) return;
-      navigator.mediaDevices.getUserMedia({ audio: preferredAudio() })
+      var peer = m && m.pc;
+      requestCallMedia({ audio: preferredAudio() }, m, peer)
         .then(function (stream) {
           var mgr = window.__chatCallManager;
-          if (!mgr || !mgr.pc) { stream.getTracks().forEach(function (t) { t.stop(); }); return; }
+          if (mgr !== m || mgr.pc !== peer || mgr.hasEnded) { stream.getTracks().forEach(function (t) { t.stop(); }); return; }
           mgr.localStream = stream;
           stream.getTracks().forEach(function (track) {
             var senders = mgr.pc.getSenders();
@@ -419,6 +450,7 @@
           }
         })
         .catch(function (err) {
+          if (!m || window.__chatCallManager !== m || m.hasEnded || m.pc !== peer) return;
           console.warn("[prchat-call] voice getUserMedia failed:", err);
         });
     })();
@@ -465,6 +497,8 @@
   function showVideoCallControls(targetLabel, onEnd, opts) {
     opts = opts || {};
     ensureStyles();
+    var callManager = window.__chatCallManager;
+    var callPeer = callManager && callManager.pc;
 
     // Clean up any previous PiP
     var oldPip = document.getElementById("chat-call-pip");
@@ -555,7 +589,7 @@
     cameraBtn.onclick = function () {
       try {
         var mgr = window.__chatCallManager;
-        if (!mgr) return;
+        if (!mgr || mgr !== callManager || mgr.pc !== callPeer || mgr.hasEnded) return;
 
         if (mgr.localStream) {
           var videoTrack = mgr.localStream.getVideoTracks()[0];
@@ -576,11 +610,8 @@
         cameraBtn.title = "Requesting camera access…";
         var hasAudio = mgr.localStream && mgr.localStream.getAudioTracks().length > 0;
         var constraints = hasAudio ? { video: true } : { audio: preferredAudio(), video: true };
-        Promise.race([
-          navigator.mediaDevices.getUserMedia(constraints),
-          new Promise(function (_, rej) { setTimeout(function () { rej(new Error("timeout")); }, 8000); })
-        ]).then(function (stream) {
-          if (!mgr.pc) { stream.getTracks().forEach(function (t) { t.stop(); }); return; }
+        requestCallMedia(constraints, callManager, callPeer, 8000).then(function (stream) {
+          if (mgr.pc !== callPeer || mgr.hasEnded) { stream.getTracks().forEach(function (t) { t.stop(); }); return; }
           if (mgr.localStream) {
             var vt = stream.getVideoTracks()[0];
             if (vt) {
@@ -639,7 +670,7 @@
     // ── Shared helper: attach a getUserMedia stream to the peer connection ──
     function attachStreamToPC(stream) {
       var m = window.__chatCallManager;
-      if (!m || !m.pc) { stream.getTracks().forEach(function (t) { t.stop(); }); return; }
+      if (!m || m !== callManager || m.pc !== callPeer || m.hasEnded) { stream.getTracks().forEach(function (t) { t.stop(); }); return; }
       m.localStream = stream;
       var transceivers = m.pc.getTransceivers();
       stream.getTracks().forEach(function (track) {
@@ -667,6 +698,7 @@
       var promptId = "chat-call-media-prompt";
       var mgr = window.__chatCallManager;
       if (mgr && mgr.localStream) return;
+      var mediaRequestPending = false;
       var old = document.getElementById(promptId);
       if (old) old.parentNode.removeChild(old);
 
@@ -719,8 +751,11 @@
       }
 
       function fallbackToAudioOnly() {
-        navigator.mediaDevices.getUserMedia({ audio: preferredAudio() })
+        if (mediaRequestPending) return;
+        mediaRequestPending = true;
+        requestCallMedia({ audio: preferredAudio() }, callManager, callPeer)
           .then(function (audioStream) {
+            mediaRequestPending = false;
             dismissPrompt();
             attachStreamToPC(audioStream);
             var ci = cameraBtn.querySelector("i");
@@ -728,18 +763,24 @@
             cameraBtn.title = "Turn on camera (no camera detected)";
           })
           .catch(function () {
+            mediaRequestPending = false;
+            if (!callManager || window.__chatCallManager !== callManager || callManager.hasEnded || callManager.pc !== callPeer) return;
             dismissPrompt();
           });
       }
 
       function requestMedia() {
-        navigator.mediaDevices
-          .getUserMedia({ audio: preferredAudio(), video: true })
+        if (mediaRequestPending) return;
+        mediaRequestPending = true;
+        requestCallMedia({ audio: preferredAudio(), video: true }, callManager, callPeer)
           .then(function (stream) {
+            mediaRequestPending = false;
             dismissPrompt();
             attachStreamToPC(stream);
           })
           .catch(function (err) {
+            mediaRequestPending = false;
+            if (!callManager || window.__chatCallManager !== callManager || callManager.hasEnded || callManager.pc !== callPeer) return;
             console.error("[prchat-call] media request error:", err);
 
             if (err.name === "NotFoundError" || err.name === "DevicesNotFoundError" ||

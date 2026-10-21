@@ -53,5 +53,10 @@ let checks=0;function check(ok,label){assert.ok(ok,label);checks++;}
   response={success:true};rejectNetwork=true;
   const offline=new w.ChatCallManager();await assert.rejects(()=>offline.call(7,8,false),/Offline/);
   check(offline.pc===null&&offline.hasEnded,'Network error also releases the peer');
+  const traces=[];w.console.log=(...args)=>traces.push(args);w.localStorage.setItem('prchat_debug_calls','1');
+  w.PRCHAT_GET_CALL_TOKEN_URL='/ice-config';rejectNetwork=false;
+  const normalFetch=w.fetch;w.fetch=async(url,options)=>url==='/ice-config'?{text:async()=>JSON.stringify({iceServers:[{urls:['turn:fixture.invalid'],username:'qa',credential:'qa-turn-secret'}]})}:normalFetch(url,options);
+  w.eval(source);const configured=new w.ChatCallManager();await configured.call(7,8,false);configured.endFromRemote();
+  check(!JSON.stringify(traces).includes('qa-turn-secret'),'Call diagnostics do not log TURN credentials');
   dom.window.close();console.log(`PASS ${checks} isolated voice/video, answer, ICE, mute, hangup and failure checks (no devices or live recipients)`);
 })().catch(error=>{dom.window.close();console.error(error);process.exitCode=1;});

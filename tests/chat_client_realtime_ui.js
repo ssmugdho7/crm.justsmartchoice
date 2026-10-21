@@ -1,0 +1,25 @@
+'use strict';
+const fs=require('node:fs'),assert=require('node:assert/strict'),{JSDOM}=require('jsdom'),jquery=require('jquery'),moment=require('moment');
+const dom=new JSDOM('<div id="crm_clients"><ul class="chat_clients_list"><li class="contact_name" id="32"><div class="contact_name_content"><div class="contact_name_main">Harold Fixture</div></div></li></ul></div>',{runScripts:'outside-only',url:'https://fixture.test'});
+const w=dom.window,$=jquery(w);w.$=$;w.moment=moment;w.userSessionId='18';w.site_url='https://fixture.test/';
+w.app={options:{desktop_notifications:false}};w.mutedClients=[];w.user_chat_status='offline';w.invisibleCounter=1;
+w.updateContactPreview=w.updateClientContactStatus=w.reorderContactList=w.incrementTabBadge=()=>{};
+w.PrchatSafeRenderer={render:value=>({sidebar:value,display:value})};
+let receive;w.clientMessageChannel={bind:(event,handler)=>{receive=handler;}};
+const source=fs.readFileSync('modules/prchat/assets/module_includes/crm_clients.php','utf8');
+const start=source.indexOf('    clientMessageChannel.bind("send-event"');
+const end=source.indexOf('    clientMessageChannel.bind("message-hidden"',start);
+w.eval(source.slice(start,end).replace(/<\?(?:php|=)[\s\S]*?\?>/g,''));
+function incoming(id,extra={}){receive({from:'client_'+id,to:'staff_18',message:'QA message',contact_full_name:'Harold Fixture',client_id:100,...extra});}
+incoming(32);incoming(32);
+assert.equal($('.contact_name[id="32"]').length,1,'Repeated incoming messages reuse a loaded numeric contact ID');
+assert.equal($('.contact_name[id="32"] .unread-notifications').attr('data-badge'),'2','Unread badge updates the existing customer');
+incoming(33,{contact_full_name:'<img src=x onerror=bad()>',company:'<script>bad()</script>"'});
+assert.equal($('.contact_name[id="33"]').length,1,'An unloaded contact is added once');
+assert.equal($('.contact_name[id="33"] .contact_name_main').text(),'<img src=x onerror=bad()>','Contact name renders as text');
+assert.equal($('.contact_name[id="33"] script, .contact_name_main img').length,0,'Realtime metadata cannot create markup');
+assert.equal($('.contact_name[id="33"]').attr('data-client-id'),'100','Company identity is retained');
+incoming(33);assert.equal($('.contact_name[id="33"]').length,1,'Newly added contact is reused on another message');
+incoming(34,{to:'staff_99'});incoming('32\" onclick=bad()');
+assert.equal($('.contact_name').length,2,'Other recipients and malformed contact IDs are ignored');
+console.log('PASS realtime numeric client reuse, unread counts, unloaded contacts and escaped metadata');

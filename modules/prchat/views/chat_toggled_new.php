@@ -2382,18 +2382,29 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     recipientType: payload.caller_type || 'staff',
                     callerType: 'staff'
                   });
-                  window.__chatCallManager.answer(window.chatConfig.currentUserId, payload.from_id, offer, answerOpts);
+                  const answeringManager = window.__chatCallManager;
+                  answeringManager.answer(window.chatConfig.currentUserId, payload.from_id, offer, answerOpts).then(() => {
+                    if (window.__chatCallManager !== answeringManager || answeringManager.hasEnded || window.__CHAT_CALL_STATE !== 'inCall') return;
 
-                  ChatCallUI.showInCall((payload.from_name || ''), () => {
-                    window.__chatCallManager.hangup();
-                    this.endCallWithSummary();
-                    if (isVideoCall) {
-                      const pipEl = document.getElementById('chat-call-pip');
-                      if (pipEl) pipEl.parentNode.removeChild(pipEl);
-                    }
-                  }, {
-                    avatarUrl,
-                    isVideo: isVideoCall
+                    ChatCallUI.showInCall((payload.from_name || ''), () => {
+                      window.__chatCallManager.hangup();
+                      this.endCallWithSummary();
+                      if (isVideoCall) {
+                        const pipEl = document.getElementById('chat-call-pip');
+                        if (pipEl) pipEl.parentNode.removeChild(pipEl);
+                      }
+                    }, {
+                      avatarUrl,
+                      isVideo: isVideoCall
+                    });
+                  }).catch(() => {
+                    if (window.__chatCallManager !== answeringManager || window.__CHAT_CALL_STATE !== 'inCall') return;
+                    window.__CHAT_CALL_STATE = 'idle';
+                    window.__CHAT_CALL_PEER = null;
+                    localStorage.removeItem('prchat_call_state');
+                    ChatCallUI.stopRingtone();
+                    ChatCallUI.closeModal();
+                    alert_float('danger', '<?= _l('chat_call_failed'); ?>');
                   });
                 }, () => {
                   // Decline

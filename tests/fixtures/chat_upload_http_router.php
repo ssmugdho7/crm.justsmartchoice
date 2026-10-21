@@ -54,6 +54,10 @@ $db->where('id',$groupId)->update('audit_chatgroups',['group_image'=>is_file($st
 if (isset($_POST['group_id']) && $_POST['group_id']==='fixture') $_POST['group_id']=$groupId;
 if (isset($_POST['to_group']) && $_POST['to_group']==='fixture') $_POST['to_group']=$groupId;
 if (($_GET['scope']??'')==='client-portal') { $fixtureStaffLoggedIn=false;$fixtureClientLoggedIn=true; }
+if (($_GET['scope']??'')==='client-preview') {
+ $fixtureStaffLoggedIn=true;$fixtureClientLoggedIn=true;
+ $ci->session=new class { function userdata($key) { return $key==='logged_in_as_client' ? true : 7; } };
+}
 if (($_GET['fail']??'')==='db') {
  $db->query('ALTER TABLE audit_chatgroups MODIFY group_image VARCHAR(1) NULL');
 }

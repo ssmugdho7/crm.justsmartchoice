@@ -22,6 +22,7 @@ with tempfile.TemporaryDirectory(prefix='prchat-upload-') as tmp:
                     with socket.create_connection(('127.0.0.1',port),timeout=.2):break
                 except OSError:time.sleep(.1)
             def upload(scope,name,content,fields=None,action='uploadMethod',field='userfile',extra=''):
+                if scope=='client-preview': extra+='&chat_context=client'
                 boundary='PRChatFixtureBoundary';parts=[]
                 for key,value in (fields or {}).items():
                     parts.append(f'--{boundary}\r\nContent-Disposition: form-data; name="{key}"\r\n\r\n{value}\r\n'.encode())
@@ -34,14 +35,14 @@ with tempfile.TemporaryDirectory(prefix='prchat-upload-') as tmp:
                 try:return status,json.loads(raw)
                 except Exception:raise AssertionError(f'Non-JSON response ({status}): {raw[:1200]!r}')
             pdf=b'%PDF-1.4\n1 0 obj\n<< /Type /Catalog >>\nendobj\n%%EOF\n'
-            for scope,path,fields,action in [('staff','staff',{},'uploadMethod'),('client','modules/prchat/uploads/clients',{'send_to':'33'},'uploadMethod'),('client-portal','modules/prchat/uploads/clients',{'send_to':'7'},'uploadMethod'),('group','groups',{'to_group':'fixture'},'groupUploadMethod')]:
+            for scope,path,fields,action in [('staff','staff',{},'uploadMethod'),('client','modules/prchat/uploads/clients',{'send_to':'33'},'uploadMethod'),('client-portal','modules/prchat/uploads/clients',{'send_to':'7'},'uploadMethod'),('client-preview','modules/prchat/uploads/clients',{'send_to':'7'},'uploadMethod'),('group','groups',{'to_group':'fixture'},'groupUploadMethod')]:
                 status,r=upload(scope,'sample.pdf',pdf,fields,action)
                 check(status==200 and r.get('upload_data',{}).get('file_name'),f'{scope} PDF upload: {status} {r}')
                 check((store/path/r['upload_data']['file_name']).read_bytes()==pdf,f'{scope} original bytes retained')
                 check('full_path' not in r['upload_data'] and 'file_path' not in r['upload_data'],f'{scope} no server path disclosure')
             wav=io.BytesIO()
             with wave.open(wav,'wb') as f:f.setnchannels(1);f.setsampwidth(2);f.setframerate(8000);f.writeframes(b'\0\0'*8000)
-            for scope,sub,fields,action in [('staff','staff',{},'uploadMethod'),('client','clients',{'send_to':'33'},'uploadMethod'),('client-portal','clients',{'send_to':'staff_7'},'uploadMethod'),('group','groups',{'to_group':'fixture'},'groupUploadMethod')]:
+            for scope,sub,fields,action in [('staff','staff',{},'uploadMethod'),('client','clients',{'send_to':'33'},'uploadMethod'),('client-portal','clients',{'send_to':'staff_7'},'uploadMethod'),('client-preview','clients',{'send_to':'staff_7'},'uploadMethod'),('group','groups',{'to_group':'fixture'},'groupUploadMethod')]:
                 status,r=upload(scope,'voice.wav',wav.getvalue(),dict(fields,prchat_voice_upload='1'),action)
                 check(status==200 and r.get('upload_data',{}).get('subfolder')==sub,f'{scope} voice upload: {status} {r}')
                 check((store/'audio'/sub/r['upload_data']['file_name']).read_bytes()==wav.getvalue(),f'{scope} recorded audio bytes retained')
@@ -55,6 +56,8 @@ with tempfile.TemporaryDirectory(prefix='prchat-upload-') as tmp:
             check(status==403,'Nonexistent client upload denied')
             status,r=upload('client-portal','sample.pdf',pdf,{'send_to':'staff_8'})
             check(status==403,'Client portal upload to hidden staff denied')
+            status,r=upload('client-preview','sample.pdf',pdf,{'send_to':'staff_8'})
+            check(status==403,'Client preview cannot use the concurrent admin session to upload to hidden staff')
             # A wide PNG exercises circular cover rendering without needing a production photo.
             def png(w,h):
                 def chunk(t,b):return struct.pack('>I',len(b))+t+b+struct.pack('>I',zlib.crc32(t+b)&0xffffffff)

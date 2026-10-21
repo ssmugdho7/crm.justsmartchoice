@@ -19,6 +19,10 @@ class Mods extends AdminController
     public function index()
     {
         $data['modules'] = $this->app_modules->get();
+        foreach ($data['modules'] as &$module) {
+            $module['maintenance'] = $this->module_status($module);
+        }
+        unset($module);
         $data['title']   = _l('modules');
         $this->load->view('admin/modules/list', $data);
     }
@@ -117,49 +121,117 @@ class Mods extends AdminController
 
     public function upgrade_all_database()
     {
-        $modules  = $this->app_modules->get();
-        $upgraded = [];
-        $errors   = [];
-        $skipped  = [];
-
-        foreach ($modules as $module) {
-            $system_name = $module['system_name'];
-
-            try {
-                if ($this->app_modules->is_database_upgrade_required($system_name)) {
-                    $result = $this->app_modules->upgrade_database($system_name);
-                    if (is_string($result)) {
-                        $errors[] = $module['headers']['module_name'] . ': ' . $result;
-                    } else {
-                        $upgraded[] = $module['headers']['module_name'];
-                    }
-                } else {
-                    $skipped[] = $module['headers']['module_name'] . ': no database upgrade required';
-                }
-            } catch (Throwable $e) {
-                $errors[] = $module['headers']['module_name'] . ': ' . $e->getMessage();
-            } catch (Exception $e) {
-                $errors[] = $module['headers']['module_name'] . ': ' . $e->getMessage();
+        // GET is a read-only review. Run each migration in a separate POST request:
+        // module migrations can reuse PHP class names, and a fatal error or hosting
+        // timeout in one module must not hide the results for the entire batch.
+        if ($this->input->method() !== 'post') {
+            $data = ['modules' => $this->app_modules->get(), 'title' => 'Module Database Upgrades'];
+            foreach ($data['modules'] as &$module) {
+                $module['maintenance'] = $this->module_status($module);
             }
+            unset($module);
+            $this->load->view('admin/modules/upgrades', $data);
+            return;
         }
 
-        if (!empty($upgraded)) {
-            set_alert('success', 'Upgraded modules: ' . implode(', ', $upgraded));
+        $name = $this->input->post('module');
+        $module = is_string($name) ? $this->app_modules->get($name) : null;
+        if (!$module) {
+            return $this->upgrade_response('error', 'Unknown module.', 404);
+        }
+        if ($this->input->post('version') !== (string) $module['headers']['version']
+            || $this->input->post('installed_version') !== (string) $module['installed_version']) {
+            return $this->upgrade_response('error', 'Module versions changed. Reload the review before continuing.', 409);
         }
 
-        if (!empty($errors)) {
-            set_alert('danger', 'Some modules could not be upgraded: ' . implode(' | ', $errors));
+        $status = $this->module_status($module);
+        if (!$status['can_upgrade']) {
+            return $this->upgrade_response($status['errors'] ? 'error' : 'skipped',
+                $status['errors'] ? implode(' ', $status['errors']) : $status['note']);
         }
 
-        $report = ['upgraded' => $upgraded, 'skipped' => $skipped, 'errors' => $errors, 'created_at' => date('c')];
-        @file_put_contents(APPPATH . 'logs/module_upgrade_' . date('Ymd_His') . '.json', json_encode($report, JSON_PRETTY_PRINT));
-        if (empty($upgraded) && empty($errors)) {
-            set_alert('info', 'No module database upgrades are pending. Checked ' . count($skipped) . ' modules.');
-        } elseif (!empty($skipped)) {
-            set_alert('info', 'Skipped modules: ' . implode(' | ', $skipped));
+        try {
+            $result = $this->app_modules->upgrade_database($name);
+            if ($result !== true) {
+                // Never treat false/null/empty error strings as a successful upgrade.
+                $message = is_string($result) && trim($result) !== ''
+                    ? 'Database upgrade failed: ' . mb_substr(strip_tags($result), 0, 500)
+                    : 'Database upgrade failed. Review this module\'s migration and CRM error log.';
+                return $this->record_upgrade_result($module, 'error', $message);
+            }
+            return $this->record_upgrade_result($module, 'upgraded', 'Database upgraded successfully.');
+        } catch (Throwable $e) {
+            $this->log_module_check_error($name, 'migration', $e);
+            return $this->record_upgrade_result($module, 'error', 'Database upgrade failed. Review the CRM error log before retrying.');
         }
+    }
 
-        $this->to_modules();
+    private function module_status($module)
+    {
+        $name = $module['system_name'];
+        $status = ['upgrade_required' => false, 'compatible' => false, 'can_upgrade' => false,
+            'errors' => [], 'note' => 'No pending database upgrade.'];
+        try {
+            $status['compatible'] = $this->app_modules->is_minimum_version_requirement_met($name);
+            if (!$status['compatible']) {
+                $status['errors'][] = 'Requires CRM version ' . ($module['headers']['requires_at_least'] ?? 'newer than the installed version') . '.';
+            }
+        } catch (Throwable $e) {
+            $status['errors'][] = 'CRM compatibility check failed. Review the CRM error log.';
+            $this->log_module_check_error($name, 'compatibility', $e);
+        }
+        try {
+            $status['upgrade_required'] = $this->app_modules->is_database_upgrade_required($name);
+        } catch (Throwable $e) {
+            $status['errors'][] = 'Database upgrade check failed. Review the CRM error log.';
+            $this->log_module_check_error($name, 'database version', $e);
+        }
+        if ($status['upgrade_required'] && version_compare((string) $module['installed_version'], (string) $module['headers']['version'], '>')) {
+            $status['errors'][] = 'Installed database version is newer than the module files. Automatic downgrade is blocked.';
+        }
+        if ($module['installed_version'] === false) {
+            $status['note'] = 'Not installed; activate the module separately if needed.';
+        }
+        $status['can_upgrade'] = $status['upgrade_required'] && !$status['errors'];
+        if ($status['can_upgrade']) {
+            $status['note'] = 'Ready for database upgrade.';
+        }
+        $failures = $this->session->userdata('module_upgrade_failures');
+        $last = is_array($failures) ? ($failures[$name] ?? null) : null;
+        if ($last && $last['version'] === $module['headers']['version']
+            && $last['installed_version'] === $module['installed_version'] && $status['upgrade_required']) {
+            $status['errors'][] = $last['message'];
+        }
+        return $status;
+    }
+
+    private function log_module_check_error($name, $check, Throwable $e)
+    {
+        // Exception messages can contain SQL or credentials. Log the location/type,
+        // not the private payload, and keep the diagnostic visible to the admin.
+        log_message('error', 'Module ' . $name . ' ' . $check . ' failed: ' . get_class($e)
+            . ' at ' . $e->getFile() . ':' . $e->getLine());
+    }
+
+    private function record_upgrade_result($module, $result, $message)
+    {
+        $failures = $this->session->userdata('module_upgrade_failures');
+        $failures = is_array($failures) ? $failures : [];
+        if ($result === 'error') {
+            $failures[$module['system_name']] = ['version' => $module['headers']['version'],
+                'installed_version' => $module['installed_version'], 'message' => $message];
+        } else {
+            unset($failures[$module['system_name']]);
+        }
+        $this->session->set_userdata('module_upgrade_failures', $failures);
+        log_message($result === 'error' ? 'error' : 'info', 'Module database upgrade ' . $result . ': ' . $module['system_name']);
+        return $this->upgrade_response($result, $message);
+    }
+
+    private function upgrade_response($status, $message, $http_status = 200)
+    {
+        return $this->output->set_status_header($http_status)->set_content_type('application/json')
+            ->set_output(json_encode(['status' => $status, 'message' => $message]));
     }
 
     public function update_version($name)

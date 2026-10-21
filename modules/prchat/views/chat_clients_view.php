@@ -2245,18 +2245,11 @@ $is24Hour_client = get_option('time_format') == '24';
     var statusIcon = "";
     var statusClass = "";
 
-    // Extract only time from the formatted date (like staff side does)
+    // Keep the clock time and optional meridiem when stripping a formatted date.
     var timeOnly = value.time_sent_formatted;
     if (value.time_sent_formatted) {
-      var parts = value.time_sent_formatted.trim().split(' ');
-      if (parts.length >= 2) {
-        // Get the time part (last part or last 2 parts for AM/PM)
-        timeOnly = parts.slice(-1)[0];
-        // If it's HH:mm:ss format, trim to HH:mm
-        if (timeOnly.match(/^\d{2}:\d{2}:\d{2}$/)) {
-          timeOnly = timeOnly.substring(0, 5);
-        }
-      }
+      var clockMatch = value.time_sent_formatted.trim().match(/(\d{1,2}:\d{2})(?::\d{2})?(\s*[AP]M)?$/i);
+      if (clockMatch) timeOnly = clockMatch[1] + (clockMatch[2] || '');
     }
 
     // Status icons for outgoing messages (from client)

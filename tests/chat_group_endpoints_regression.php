@@ -29,7 +29,7 @@ check($db->where('group_id',$groupId)->count_all_results('audit_chatgroupmembers
 $groupsController->output=new ChatFixtureOutput();$groupsController->addChatGroup();
 check($groupsController->output->status===409&&$db->where('group_name','presence-New-Fixture-Group')->count_all_results('audit_chatgroups')===1,'Repeated group creation returns conflict instead of duplicate channel');
 // A database failure must roll back the group as well as the member rows.
-$db->query('ALTER TABLE audit_chatgroupmembers ADD CONSTRAINT fixture_positive_member CHECK (member_id > 0)');
+check($db->query('ALTER TABLE audit_chatgroupmembers MODIFY member_id INT UNSIGNED NOT NULL'), 'Portable membership failure fixture');
 $beforeGroups=$db->count_all_results('audit_chatgroups');$beforeMembers=$db->count_all_results('audit_chatgroupmembers');
 ob_start();$model->addChatGroup(['created_by_id'=>7,'group_name'=>'presence-Failure'],['group_name'=>'presence-Failure','members'=>[7,-1]],null);$failed=json_decode(ob_get_clean(),true);
 check(($failed['success']??true)===false&&$db->count_all_results('audit_chatgroups')===$beforeGroups&&$db->count_all_results('audit_chatgroupmembers')===$beforeMembers,'Failed membership insert rolls back the whole group');

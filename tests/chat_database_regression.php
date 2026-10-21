@@ -22,6 +22,7 @@ class App_Model extends CI_Model {}
 function check($ok, $message) { if (!$ok) { throw new RuntimeException($message); } }
 require $root.'/application/config/app-config.php'; require $root.'/system/database/DB.php';
 $db = DB(['hostname'=>APP_DB_HOSTNAME,'username'=>APP_DB_USERNAME,'password'=>APP_DB_PASSWORD,'database'=>APP_DB_NAME,'dbdriver'=>'mysqli','dbprefix'=>'audit_','pconnect'=>false,'db_debug'=>false,'char_set'=>'utf8mb4','dbcollat'=>'utf8mb4_general_ci','save_queries'=>true], true);
+check($db->query("SET SESSION sql_mode='STRICT_ALL_TABLES'"), 'Fixture connection uses strict write checks');
 $ci = (object) ['db'=>$db, 'session'=>new class { function userdata($key) { return 7; } function set_userdata($key,$value) {} }];
 foreach ([
  'staff'=>'staffid INT PRIMARY KEY, firstname VARCHAR(60), lastname VARCHAR(60), email VARCHAR(100), phonenumber VARCHAR(30), profile_image VARCHAR(100), last_login DATETIME, last_activity DATETIME, facebook TEXT, linkedin TEXT, skype TEXT, admin INT DEFAULT 0, role INT DEFAULT 0, is_not_staff INT DEFAULT 0, active INT DEFAULT 1',

@@ -49,7 +49,7 @@
                                             <?php } ?>
                                         </select>
                                     </div>
-                                    <?php echo render_input('settings[toast_master_volume]', 'toast_master_volume', get_option('toast_master_volume') ?: 55, 'number', ['min' => 0, 'max' => 100]); ?>
+                                    <?php echo render_input('settings[toast_master_volume]', 'toast_master_volume', get_option('toast_master_volume') === '' ? 55 : get_option('toast_master_volume'), 'number', ['min' => 0, 'max' => 100]); ?>
                                     <div class="form-group">
                                         <label for="toast_master_animation"><?php echo _l('toast_master_animation'); ?></label>
                                         <select name="settings[toast_master_animation]" id="toast_master_animation" class="form-control selectpicker">
@@ -85,6 +85,7 @@
 
                         <hr>
                         <h5><?php echo _l('toast_master_channels'); ?></h5>
+                        <p class="text-muted"><?php echo _l('toast_master_channels_scope'); ?></p>
                         <div class="table-responsive">
                             <table class="table table-bordered table-hover toast-master-table">
                                 <thead>
@@ -100,7 +101,7 @@
                                             <td><?php echo html_escape($label); ?></td>
                                             <td class="text-center">
                                                 <div class="onoffswitch">
-                                                    <input type="checkbox" id="<?php echo html_escape($option); ?>" class="onoffswitch-checkbox" name="settings[<?php echo html_escape($option); ?>]" <?php echo get_option($option) == '1' ? 'checked' : ''; ?>>
+                                                    <input type="checkbox" value="1" id="<?php echo html_escape($option); ?>" class="onoffswitch-checkbox" name="settings[<?php echo html_escape($option); ?>]" <?php echo get_option($option) == '1' ? 'checked' : ''; ?> <?php echo $option === 'toast_master_intercept_unsaved_warning' ? 'disabled' : ''; ?>>
                                                     <label class="onoffswitch-label" for="<?php echo html_escape($option); ?>"></label>
                                                 </div>
                                             </td>
@@ -122,6 +123,7 @@
         </div>
     </div>
 </div>
+<?php init_tail(); ?>
 <script>
 (function($){
     'use strict';
@@ -130,30 +132,24 @@
         return {
             style: String(style),
             position: $('#toaster_position').val() || 'top-right',
-            soundEnabled: $('input[name="settings[toast_master_sound_enable]"]').is(':checked'),
+            preview: true,
+            soundEnabled: $('input[name="settings[toast_master_sound_enable]"]:checked').val() === '1',
             soundName: $('#toast_master_sound_name').val() || 'soft_click',
             volume: parseInt($('input[name="settings[toast_master_volume]"]').val() || 55, 10),
             duration: parseInt($('input[name="settings[toast_master_duration]"]').val() || 4500, 10),
-            pauseOnHover: $('input[name="settings[toast_master_pause_on_hover]"]').is(':checked'),
-            progressBar: $('input[name="settings[toast_master_progress_bar]"]').is(':checked'),
+            pauseOnHover: $('input[name="settings[toast_master_pause_on_hover]"]:checked').val() === '1',
+            progressBar: $('input[name="settings[toast_master_progress_bar]"]:checked').val() === '1',
             animation: $('#toast_master_animation').val() || 'fade'
         };
     }
     window.smartChoiceToastPreview = function(type, message){
-        if (typeof window.smartChoiceToastConfigure === 'function') {
-            window.smartChoiceToastConfigure(currentToastSettings());
-        }
         if (typeof window.smartChoiceNotify === 'function') {
             window.smartChoiceNotify(type, message, null, currentToastSettings());
         }
     };
     $(document).on('change input', '#toaster_position,#toast_master_sound_name,#toast_master_animation,input[name="settings[toaster_style]"],input[name="settings[toast_master_volume]"],input[name="settings[toast_master_duration]"],input[name="settings[toast_master_sound_enable]"],input[name="settings[toast_master_pause_on_hover]"],input[name="settings[toast_master_progress_bar]"]', function(){
-        if (typeof window.smartChoiceToastConfigure === 'function') {
-            window.smartChoiceToastConfigure(currentToastSettings());
-        }
         $('.toast-master-style-option').removeClass('active');
         $('input[name="settings[toaster_style]"]:checked').closest('.toast-master-style-option').addClass('active');
     });
 })(jQuery);
 </script>
-<?php init_tail(); ?>

@@ -31,8 +31,6 @@ $options = [
 foreach ($options as $name => $value) {
     if (get_option($name) === '') {
         add_option($name, $value);
-    } else {
-        update_option($name, get_option($name) ?: $value);
     }
 }
 

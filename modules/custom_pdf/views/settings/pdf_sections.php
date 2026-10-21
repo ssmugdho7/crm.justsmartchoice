@@ -35,8 +35,10 @@
                 <i class="fa-regular fa-circle-question pull-left tw-mt-0.5 tw-mr-1" data-toggle="tooltip" data-title="<?php echo _l('cover_image_tooltip'); ?>"></i>
                 <?php echo _l('cover_image'); ?>
                 <small class="text-muted"><?php echo _l('allowed_extensions'); ?></small>
-                <?php if ('' != $cover_image) {
-                    echo anchor_popup(base_url('uploads/custom_pdf/' . $pdf_type . '/' . $cover_image . '?=' . time()), _l('preview_image'), ['window_name' => 'cover_image', 'class' => 'pull-right btn btn-xs btn-warning', 'style' => 'margin: 0 0 0 5px']);
+                <?php if ($preview_url = custom_pdf_section_image_url($pdf_type, 'cover_page')) {
+                    echo anchor_popup($preview_url, _l('preview_image'), ['window_name' => 'cover_image', 'class' => 'pull-right btn btn-xs btn-warning', 'style' => 'margin: 0 0 0 5px']);
+                }
+                if ('' != $cover_image) {
                     echo anchor(admin_url('custom_pdf/remove_pdf_image/' . $pdf_type . '/' . 'cover_page'), _l('remove'), ['class' => 'pull-right _delete btn btn-xs btn-danger']);
                 } ?>
             </label>
@@ -87,8 +89,10 @@
                 <i class="fa-regular fa-circle-question pull-left tw-mt-0.5 tw-mr-1" data-toggle="tooltip" data-title="<?php echo _l('header_image_tooltip'); ?>"></i>
                 <?php echo _l('header_image'); ?>
                 <small class="text-muted"><?php echo _l('allowed_extensions'); ?></small>
-                <?php if ('' != $header_image) {
-                    echo anchor_popup(base_url('uploads/custom_pdf/' . $pdf_type . '/' . $header_image . '?=' . time()), _l('preview_image'), ['window_name' => 'header_image', 'class' => 'pull-right btn btn-xs btn-warning', 'style' => 'margin: 0 0 0 5px']);
+                <?php if ($preview_url = custom_pdf_section_image_url($pdf_type, 'header')) {
+                    echo anchor_popup($preview_url, _l('preview_image'), ['window_name' => 'header_image', 'class' => 'pull-right btn btn-xs btn-warning', 'style' => 'margin: 0 0 0 5px']);
+                }
+                if ('' != $header_image) {
                     echo anchor(admin_url('custom_pdf/remove_pdf_image/' . $pdf_type . '/' . 'header'), _l('remove'), ['class' => 'pull-right _delete btn btn-xs btn-danger']);
                 } ?>
             </label>
@@ -115,8 +119,10 @@
                 <i class="fa-regular fa-circle-question pull-left tw-mt-0.5 tw-mr-1" data-toggle="tooltip" data-title="<?php echo _l('footer_image_tooltip'); ?>"></i>
                 <?php echo _l('footer_image'); ?>
                 <small class="text-muted"><?php echo _l('allowed_extensions'); ?></small>
-                <?php if ('' != $footer_image) {
-                    echo anchor_popup(base_url('uploads/custom_pdf/' . $pdf_type . '/' . $footer_image . '?=' . time()), _l('preview_image'), ['window_name' => 'footer_image', 'class' => 'pull-right btn btn-xs btn-warning', 'style' => 'margin: 0 0 0 5px']);
+                <?php if ($preview_url = custom_pdf_section_image_url($pdf_type, 'footer')) {
+                    echo anchor_popup($preview_url, _l('preview_image'), ['window_name' => 'footer_image', 'class' => 'pull-right btn btn-xs btn-warning', 'style' => 'margin: 0 0 0 5px']);
+                }
+                if ('' != $footer_image) {
                     echo anchor(admin_url('custom_pdf/remove_pdf_image/' . $pdf_type . '/' . 'footer'), _l('remove'), ['class' => 'pull-right _delete btn btn-xs btn-danger']);
                 } ?>
             </label>
@@ -143,8 +149,10 @@
                 <i class="fa-regular fa-circle-question pull-left tw-mt-0.5 tw-mr-1" data-toggle="tooltip" data-title="<?php echo _l('closing_image_tooltip'); ?>"></i>
                 <?php echo _l('closing_image'); ?>
                 <small class="text-muted"><?php echo _l('allowed_extensions'); ?></small>
-                <?php if ('' != $closing_image) {
-                    echo anchor_popup(base_url('uploads/custom_pdf/' . $pdf_type . '/' . $closing_image . '?=' . time()), _l('preview_image'), ['window_name' => 'closing_page', 'class' => 'pull-right btn btn-xs btn-warning', 'style' => 'margin: 0 0 0 5px']);
+                <?php if ($preview_url = custom_pdf_section_image_url($pdf_type, 'closing_page')) {
+                    echo anchor_popup($preview_url, _l('preview_image'), ['window_name' => 'closing_page', 'class' => 'pull-right btn btn-xs btn-warning', 'style' => 'margin: 0 0 0 5px']);
+                }
+                if ('' != $closing_image) {
                     echo anchor(admin_url('custom_pdf/remove_pdf_image/' . $pdf_type . '/' . 'closing_page'), _l('remove'), ['class' => 'pull-right _delete btn btn-xs btn-danger']);
                 } ?>
             </label>

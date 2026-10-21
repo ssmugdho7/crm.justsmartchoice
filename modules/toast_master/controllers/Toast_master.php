@@ -39,11 +39,30 @@ class Toast_master extends AdminController
             ];
 
             foreach ($checkboxes as $checkbox) {
-                $settings[$checkbox] = isset($settings[$checkbox]) ? '1' : '0';
+                // Yes/No radios submit "0" as well; presence alone does not mean enabled.
+                $settings[$checkbox] = in_array($settings[$checkbox] ?? null, ['1', 1, 'on'], true) ? '1' : '0';
             }
 
+            $choices = [
+                'toaster_style' => array_keys(toast_master_styles()),
+                'toaster_position' => array_keys(toast_master_positions()),
+                'toast_master_sound_name' => array_keys(toast_master_sounds()),
+                'toast_master_animation' => array_keys(toast_master_animations()),
+            ];
+            foreach ($choices as $name => $allowed) {
+                $value = $settings[$name] ?? get_option($name);
+                $settings[$name] = is_scalar($value) && in_array((string)$value, array_map('strval', $allowed), true)
+                    ? (string)$value : (string)reset($allowed);
+            }
+            foreach (['toast_master_volume' => [0, 100, 55], 'toast_master_duration' => [1200, 60000, 4500]] as $name => $range) {
+                $value = filter_var($settings[$name] ?? $range[2], FILTER_VALIDATE_INT);
+                $settings[$name] = (string)max($range[0], min($range[1], $value === false ? $range[2] : $value));
+            }
+            // A settings form for this module must not update unrelated CRM options.
+            $settings = array_intersect_key($settings, array_flip(array_merge($checkboxes, array_keys($choices), ['toast_master_volume', 'toast_master_duration'])));
+
             $settings['toast_master_version'] = '2.0.2';
-            $post_data['settings'] = $settings;
+            $post_data = ['settings' => $settings];
 
             $success = $this->settings_model->update($post_data);
             if ($success > 0) {

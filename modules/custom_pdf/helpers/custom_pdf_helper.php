@@ -21,6 +21,40 @@ if (!function_exists('custom_pdf_uploaded_image_path')) {
     }
 }
 
+/** Resolve settings/sample artwork, including the branded defaults used by sales PDFs. */
+function custom_pdf_section_image_path($type, $section)
+{
+    if (!in_array($type, ['proposals', 'estimate', 'invoice', 'credit_note', 'contract', 'payment'], true)
+        || !in_array($section, ['cover_page', 'header', 'footer', 'closing_page'], true)) {
+        return '';
+    }
+    $image = getPdfOptions($type, $section, 'image');
+    $root = realpath(FCPATH . 'uploads/custom_pdf/' . $type);
+    $path = is_string($image) && $image !== '' && basename($image) === $image && $root
+        ? realpath($root . '/' . $image) : false;
+    if ($path && strpos($path, $root . DIRECTORY_SEPARATOR) === 0 && is_readable($path) && @getimagesize($path)) {
+        return $path;
+    }
+    // Headers/footers and text-only custom pages have no default artwork.
+    if (!in_array($section, ['cover_page', 'closing_page'], true)
+        || trim((string) getPdfOptions($type, $section, 'text')) !== '' || $type === 'credit_note') {
+        return '';
+    }
+    $name = $section === 'closing_page' ? 'closing-page.png' : ($type === 'proposals' ? 'proposal' : $type) . '-cover.png';
+    $path = realpath(FCPATH . 'modules/custom_pdf/assets/bookends/' . $name);
+    return $path && is_file($path) && is_readable($path) && @getimagesize($path) ? $path : '';
+}
+
+function custom_pdf_section_image_url($type, $section)
+{
+    $path = custom_pdf_section_image_path($type, $section);
+    if ($path === '') { return ''; }
+    $root = realpath(FCPATH) . DIRECTORY_SEPARATOR;
+    if (strpos($path, $root) !== 0) { return ''; }
+    $relative = substr($path, strlen($root));
+    return base_url(implode('/', array_map('rawurlencode', explode('/', $relative)))) . '?v=' . filemtime($path);
+}
+
 if (!function_exists('custom_pdf_safe_html')) {
     function custom_pdf_safe_html($html)
     {

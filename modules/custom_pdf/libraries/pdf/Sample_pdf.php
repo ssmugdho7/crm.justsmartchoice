@@ -87,14 +87,13 @@ class Sample_pdf extends App_pdf
         $auto_page_break = $this->getAutoPageBreak();
         $this->SetAutoPageBreak(false, 0);
 
-        $pdf_cover_image = getPdfOptions($this->pdfType, 'closing_page', 'image');
         $close_page_text = getPdfOptions($this->pdfType, 'closing_page', 'text');
 
         $parsedClosePageText = parsePDFMergeFields($this->pdfType, $close_page_text);
 
         $align_from_left = getPdfOptions($this->pdfType, 'closing_page', 'align_from_left');
         $align_from_top  = getPdfOptions($this->pdfType, 'closing_page', 'align_from_top');
-        $img_file        = custom_pdf_uploaded_image_path($this->pdfType, $pdf_cover_image);
+        $img_file        = custom_pdf_section_image_path($this->pdfType, 'closing_page');
 
         if ($img_file !== '') {
             $this->Image($img_file, 0, 0, $this->page_width, $this->page_height, '', '', '', false, 300, '', false, false, 0);
@@ -119,7 +118,6 @@ class Sample_pdf extends App_pdf
         $auto_page_break = $this->getAutoPageBreak();
         $this->SetAutoPageBreak(false, 0);
 
-        $pdf_cover_image = getPdfOptions($this->pdfType, 'cover_page', 'image');
         $cover_page_text = getPdfOptions($this->pdfType, 'cover_page', 'text');
 
         $parsedCoverPageText = parsePDFMergeFields($this->pdfType, $cover_page_text);
@@ -127,7 +125,7 @@ class Sample_pdf extends App_pdf
         $align_from_left = getPdfOptions($this->pdfType, 'cover_page', 'align_from_left');
         $align_from_top  = getPdfOptions($this->pdfType, 'cover_page', 'align_from_top');
 
-        $img_file = custom_pdf_uploaded_image_path($this->pdfType, $pdf_cover_image);
+        $img_file = custom_pdf_section_image_path($this->pdfType, 'cover_page');
 
         if ($img_file !== '') {
             $this->Image($img_file, 0, 0, $this->page_width, $this->page_height, '', '', '', false, 300, '', false, false, 0);

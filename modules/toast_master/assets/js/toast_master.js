@@ -5,6 +5,20 @@
     var userInteracted = false;
     var audioCtx = null;
     var queuedSoundType = null;
+    var lastRenderedAt = 0;
+
+    function sourceFor(url){
+        var path = String(url || window.location.pathname).split('?')[0];
+        if(/\/(prchat|chat|messages)(\/|$)/i.test(path)) return 'messages';
+        if(/\/announcements(\/|$)/i.test(path)) return 'announcements';
+        if(/\/(modules|module_installer|module_dependencies)(\/|$)/i.test(path)) return 'moduleUpdates';
+        if(/\/(cron|cronjob|imports|exports)(\/|$)/i.test(path)) return 'cron';
+        return 'alertFloat';
+    }
+
+    function allowed(source, preview){
+        return preview === true || (cfg.enabled !== false && (!cfg.channels || cfg.channels[source] !== false));
+    }
 
     function ensureAudio(){
         try{
@@ -22,7 +36,7 @@
         if(queuedSoundType){
             var t = queuedSoundType;
             queuedSoundType = null;
-            setTimeout(function(){ makeSound(t, true); }, 60);
+            setTimeout(function(){ makeSound(t.type, true, t.settings); }, 60);
         }
     }
 
@@ -75,12 +89,13 @@
     function makeSound(type, forced, settings){
         settings = settings || cfg;
         if(!settings.soundEnabled || settings.soundName === 'none') return;
-        if(!userInteracted && !forced){ queuedSoundType = type || 'info'; return; }
+        if(!userInteracted && !forced){ queuedSoundType = {type:type || 'info', settings:settings}; return; }
         try{
             var ctx = ensureAudio();
             if(!ctx) return;
             var now = ctx.currentTime + 0.015;
-            var vol = Math.max(0, Math.min(1, (parseInt(settings.volume || 80, 10) / 100))) * 0.28;
+            var vol = Math.max(0, Math.min(1, (parseInt(settings.volume == null ? 80 : settings.volume, 10) / 100))) * 0.28;
+            if(vol === 0) return;
             var sound = settings.soundName || 'soft_click';
             var base = 620;
             if(type === 'success') base = 820;
@@ -134,11 +149,11 @@
         }catch(e){}
     }
 
-    function logNotification(type, message, title){
-        if(!window.jQuery || !cfg.channels || !cfg.channels.ajax) return;
+    function logNotification(type, message, title, source){
+        if(!window.jQuery || !cfg.historyEnabled || !window.admin_url) return;
         try{
             var token = window.csrfData || {};
-            var data = {type:type, message:message, title:title, source:'crm', url:window.location.href};
+            var data = {type:type, message:message, title:title, source:source, url:window.location.origin + window.location.pathname};
             if(token.token_name && token.hash){ data[token.token_name] = token.hash; }
             window.jQuery.post((window.admin_url || '/admin/') + 'toast_master/log', data);
         }catch(e){}
@@ -150,6 +165,8 @@
 
     function render(type, message, title, options){
         options = options || {};
+        var source = options.source || sourceFor();
+        if(!allowed(source, options.preview)) return null;
         type = (type || 'info').replace('danger','error');
         message = cleanMessage(message);
         title = title || options.title || titleFor(type);
@@ -174,11 +191,12 @@
         }
         container(settings).appendChild(el);
         makeSound(type, false, settings);
-        logNotification(type, message, title);
+        if(!options.preview){ lastRenderedAt = Date.now(); logNotification(type, message, title, source); }
         return el;
     }
 
     function modalAlert(message, title, type){
+        if(!allowed('browserAlert')) return null;
         type = type || 'warning';
         title = title || titleFor(type);
         var old = document.getElementById('sc-notification-alert-modal');
@@ -195,7 +213,8 @@
         document.body.appendChild(wrap);
         setTimeout(function(){ var b = wrap.querySelector('.sc-notification-modal-ok'); if(b) b.focus(); }, 30);
         makeSound(type);
-        logNotification(type, message, title);
+        logNotification(type, message, title, 'browserAlert');
+        return wrap;
     }
 
 
@@ -212,22 +231,26 @@
     window.showInfoToast = function(msg, title, options){ return render('info', msg, title, options); };
     window.smartChoiceNotify = function(type, msg, title, options){ return render(type, msg, title, options); };
     window.smartChoiceAlert = function(msg, title, type){ return modalAlert(msg, title, type || 'warning'); };
-    window.smartChoiceTestSound = function(type, settings){ userInteracted = true; if(settings){ window.smartChoiceToastConfigure(settings); } makeSound(type || 'info', true, settings || cfg); };
+    window.smartChoiceTestSound = function(type, settings){ userInteracted = true; makeSound(type || 'info', true, settings || cfg); };
 
     var originalAlertFloat = window.alert_float;
-    if(!cfg.channels || cfg.channels.alertFloat !== false){
-        window.alert_float = function(type, msg){
+    window.alert_float = function(type, msg, timeout){
+            if(!allowed('alertFloat') || !allowed(sourceFor())){
+                if(typeof originalAlertFloat === 'function') return originalAlertFloat.apply(this, arguments);
+                return;
+            }
             var mapped = type === 'danger' ? 'error' : (type || 'info');
-            render(mapped, msg, titleFor(mapped));
+            var result = render(mapped, msg, titleFor(mapped), {source:sourceFor(), duration:timeout || cfg.duration});
             if(typeof originalAlertFloat === 'function' && cfg.keepOriginalAlerts){ originalAlertFloat(type, msg); }
-        };
-    }
+            return result;
+    };
 
-    if(!cfg.channels || cfg.channels.browserAlert !== false){
-        var originalAlert = window.alert;
-        window.alert = function(message){ modalAlert(message, 'CRM Notice', 'warning'); };
-        window.smartChoiceOriginalAlert = originalAlert;
-    }
+    var originalAlert = window.alert;
+    window.alert = function(message){
+        if(!allowed('browserAlert')) return originalAlert.apply(this, arguments);
+        return modalAlert(message, 'CRM Notice', 'warning');
+    };
+    window.smartChoiceOriginalAlert = originalAlert;
 
     if(window.jQuery){
         window.jQuery(function(){
@@ -241,9 +264,24 @@
                 if($el.hasClass('alert-success')) type = 'success';
                 if($el.hasClass('alert-danger')) type = 'error';
                 if($el.hasClass('alert-warning')) type = 'warning';
-                render(type, text, titleFor(type));
-                $el.data('scToastRead', 1);
+                var source = $el.attr('data-toast-source') || ($el.hasClass('announcement') ? 'announcements' : sourceFor());
+                if(allowed('alertFloat') && render(type, text, titleFor(type), {source:source})) $el.data('scToastRead', 1);
             });
+        });
+
+        window.jQuery(document).on('invalid-form.validate.smartChoiceToast', function(event, validator){
+            if(!allowed('validation')) return;
+            var messages = (validator.errorList || []).slice(0, 3).map(function(item){ return cleanMessage(item.message); });
+            if(messages.length) render('warning', messages.join(' '), null, {source:'validation'});
+        });
+        window.jQuery(document).on('ajaxError.smartChoiceToast', function(event, xhr, settings){
+            // Ignore cancellation, polling, and the history logger; never expose raw response bodies.
+            if(!allowed('ajax') || !xhr.status || /toast_master\/log|notifications_check|prchat/i.test(settings.url || '')
+                || Date.now() - lastRenderedAt < 800) return;
+            var source = sourceFor(settings.url);
+            if(!allowed(source)) return;
+            render('error', 'The request could not be completed (HTTP ' + xhr.status + '). Please try again.', null,
+                {source:source === 'alertFloat' ? 'ajax' : source});
         });
     }
 

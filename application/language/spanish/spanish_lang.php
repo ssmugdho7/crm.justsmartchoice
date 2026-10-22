@@ -4179,3 +4179,4 @@ $lang['sc_document_prefix_help'] = 'Actualiza solo este documento. El número, l
 // Admin Sales workspace.
 $lang['sc_sales_workspace_title'] = 'Gestión de ventas';
 $lang['sc_sales_workspace_subtitle'] = 'Operaciones de ventas y flujo financiero';
+$lang['sc_sales_invoices_title'] = 'Facturas';

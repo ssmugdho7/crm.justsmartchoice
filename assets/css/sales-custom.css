@@ -38,7 +38,7 @@
 }
 .sc-sales-workspace-page .sales-subnav {
     display: flex;
-    gap: 6px;
+    gap: 4px;
     overflow-x: auto;
     margin-bottom: 24px;
     padding: 6px;
@@ -150,7 +150,7 @@
     display: flex !important;
     flex-wrap: wrap;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
     height: auto !important;
     max-height: none !important;
     margin-top: 6px !important;
@@ -315,6 +315,14 @@
 .sc-sales-workspace-page #wrapper #invoices_total .sales-financial-stat-content > div:last-child {
     font-size: 21px;
     font-weight: 700;
+}
+.sc-sales-workspace-page #wrapper #invoices_total .bootstrap-select > .dropdown-toggle {
+    min-height: 32px !important;
+    height: auto !important;
+    padding: 6px 10px !important;
+    border-radius: 6px;
+    background: #fff !important;
+    color: var(--sales-forest) !important;
 }
 .sc-sales-workspace-page #wrapper .sales-credit-balance {
     color: var(--sales-hover);

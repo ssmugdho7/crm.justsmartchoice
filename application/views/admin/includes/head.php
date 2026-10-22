@@ -61,7 +61,7 @@
     echo $scAdminHead;
     ?>
     <?php if ($scSalesWorkspace) { ?>
-    <link rel="stylesheet" href="<?= base_url('assets/css/sales-custom.css?v=1'); ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/sales-custom.css?v=2'); ?>">
     <?php } ?>
 </head>
 

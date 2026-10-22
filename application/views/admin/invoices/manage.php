@@ -9,7 +9,7 @@
 					<div class="sales-invoice-overview md:tw-flex md:tw-items-center">
 						<div class="tw-grow">
 							<h4 class="tw-my-0 tw-font-bold tw-text-xl">
-								<?= _l('invoices'); ?>
+								<?= _l('sc_sales_invoices_title'); ?>
 							</h4>
 							<?php if (! isset($project)) { ?>
 							<a href="<?= admin_url('invoices/recurring'); ?>"

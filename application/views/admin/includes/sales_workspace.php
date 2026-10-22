@@ -6,8 +6,9 @@ $scSalesLinks = [];
 $scCollectSalesLinks = static function (array $items) use (&$scCollectSalesLinks, &$scSalesLinks, $scSalesSections) {
     foreach ($items as $item) {
         foreach ($scSalesSections as $section) {
-            if (rtrim((string) ($item['href'] ?? ''), '/') === rtrim(admin_url($section), '/')) {
-                $scSalesLinks[$section] = ['name' => _l($section), 'href' => admin_url($section)];
+            if (!isset($scSalesLinks[$section]) && rtrim((string) ($item['href'] ?? ''), '/') === rtrim(admin_url($section), '/')) {
+                $label = trim(strip_tags((string) ($item['name'] ?? '')));
+                $scSalesLinks[$section] = ['name' => $label !== '' ? $label : _l($section), 'href' => admin_url($section)];
             }
         }
         if (!empty($item['children']) && is_array($item['children'])) {

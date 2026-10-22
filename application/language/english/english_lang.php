@@ -4368,3 +4368,4 @@ $lang['sc_document_prefix_help'] = 'Updates this document only. The number, date
 // Admin Sales workspace.
 $lang['sc_sales_workspace_title'] = 'Sales Management';
 $lang['sc_sales_workspace_subtitle'] = 'Sales Operations & Financial Pipeline';
+$lang['sc_sales_invoices_title'] = 'Invoices';

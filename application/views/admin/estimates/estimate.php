@@ -6,6 +6,7 @@ init_head();
 ?>
 <div id="wrapper">
     <div class="content">
+        <?php $this->load->view('admin/includes/sales_workspace'); ?>
         <div class="row">
             <?php
             echo form_open($this->uri->uri_string(), ['id' => 'estimate-form', 'class' => '_transaction_form estimate-form', 'enctype' => 'multipart/form-data']);

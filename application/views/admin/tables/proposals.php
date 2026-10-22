@@ -87,7 +87,7 @@ return App_table::find('proposals')
 
             $numberOutput .= '<div class="row-options">';
 
-            $numberOutput .= '<a href="' . site_url('proposal/' . $aRow[db_prefix() . 'proposals.id'] . '/' . $aRow['hash']) . '" target="_blank">' . _l('view') . '</a>';
+            $numberOutput .= '<a href="' . site_url('proposal/' . $aRow[db_prefix() . 'proposals.id'] . '/' . $aRow['hash']) . '" target="_blank" class="row-btn-view">' . _l('view') . '</a>';
             if (staff_can('edit', 'proposals')) {
                 $numberOutput .= ' | <a href="' . admin_url('proposals/proposal/' . $aRow[db_prefix() . 'proposals.id']) . '"' . ($project_id ? 'target="_blank"' : '') . '>' . _l('edit') . '</a>';
             }

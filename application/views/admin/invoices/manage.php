@@ -2,10 +2,11 @@
 <?php init_head(); ?>
 <div id="wrapper">
 	<div class="content">
+	    <?php $this->load->view('admin/includes/sales_workspace'); ?>
 		<div id="vueApp">
 			<div class="row">
 				<div class="col-md-12 tw-mb-3 md:tw-mb-6">
-					<div class="md:tw-flex md:tw-items-center">
+					<div class="sales-invoice-overview md:tw-flex md:tw-items-center">
 						<div class="tw-grow">
 							<h4 class="tw-my-0 tw-font-bold tw-text-xl">
 								<?= _l('invoices'); ?>

@@ -6,6 +6,7 @@ init_head();
 ?>
 <div id="wrapper">
     <div class="content accounting-template proposal">
+        <?php $this->load->view('admin/includes/sales_workspace'); ?>
         <div class="row">
             <?php
          if (isset($proposal)) {

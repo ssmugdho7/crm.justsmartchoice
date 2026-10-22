@@ -4175,3 +4175,7 @@ $lang['sc_proposal_items_editor_help'] = 'Edite las descripciones, cantidades y 
 $lang['sc_edit_document_prefix'] = 'Editar prefijo';
 $lang['sc_document_prefix'] = 'Prefijo del documento';
 $lang['sc_document_prefix_help'] = 'Actualiza solo este documento. El número, las fechas y los enlaces se mantienen. Guarde los demás cambios del formulario por separado.';
+
+// Admin Sales workspace.
+$lang['sc_sales_workspace_title'] = 'Gestión de ventas';
+$lang['sc_sales_workspace_subtitle'] = 'Operaciones de ventas y flujo financiero';

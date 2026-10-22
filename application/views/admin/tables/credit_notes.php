@@ -97,9 +97,11 @@ return App_table::find('credit_notes')
             }
 
             $numberOutput .= '<div class="row-options">';
+            $numberOutput .= '<a href="' . admin_url('credit_notes/list_credit_notes/' . $aRow['id']) . '"' . ((is_numeric($clientid) || $project_id) ? ' target="_blank"' : ' onclick="init_credit_note(' . $aRow['id'] . '); return false;"') . ' class="row-btn-view">' . _l('view') . '</a>';
+
 
             if (staff_can('edit', 'credit_notes')) {
-                $numberOutput .= '<a href="' . admin_url('credit_notes/credit_note/' . $aRow['id']) . '">' . _l('edit') . '</a>';
+                $numberOutput .= ' | <a href="' . admin_url('credit_notes/credit_note/' . $aRow['id']) . '">' . _l('edit') . '</a>';
             }
             $numberOutput .= '</div>';
 
@@ -122,7 +124,7 @@ return App_table::find('credit_notes')
 
             $row[] = '<span class="tw-font-medium">' . e(app_format_money($aRow['total'], $aRow['currency_name'])) . '</span>';
 
-            $row[] = '<span class="tw-font-medium">' . e(app_format_money($aRow['remaining_amount'], $aRow['currency_name'])) . '</span>';
+            $row[] = '<span class="tw-font-medium sales-credit-balance">' . e(app_format_money($aRow['remaining_amount'], $aRow['currency_name'])) . '</span>';
 
             // Custom fields add values
             foreach ($customFieldsColumns as $customFieldColumn) {

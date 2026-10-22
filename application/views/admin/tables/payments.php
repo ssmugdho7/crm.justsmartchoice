@@ -67,7 +67,10 @@ foreach ($rResult as $aRow) {
     $numberOutput = '<a href="' . $link . '" class="tw-font-medium">' . e($aRow['id']) . '</a>';
 
     $numberOutput .= '<div class="row-options">';
-    $numberOutput .= '<a href="' . $link . '">' . _l('view') . '</a>';
+    $numberOutput .= '<a href="' . $link . '" class="row-btn-view">' . _l('view') . '</a>';
+    if (staff_can('edit', 'payments')) {
+        $numberOutput .= ' | <a href="' . $link . '#tab_payment">' . _l('edit') . '</a>';
+    }
     if ($hasPermissionDelete) {
         $numberOutput .= ' | <a href="' . admin_url('payments/delete/' . $aRow['id']) . '" class="_delete">' . _l('delete') . '</a>';
     }
@@ -94,7 +97,7 @@ foreach ($rResult as $aRow) {
     }
     $row[] = $outputPaymentMode;
 
-    $row[] = e($aRow['transactionid']);
+    $row[] = '<span class="sales-transaction-id">' . e($aRow['transactionid']) . '</span>';
 
     $row[] = '<a href="' . admin_url('clients/client/' . $aRow['clientid']) . '">' . e($aRow['company']) . '</a>';
 

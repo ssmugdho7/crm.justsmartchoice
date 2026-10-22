@@ -1,5 +1,6 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php $isRTL = (is_rtl() ? 'true' : 'false'); ?>
+<?php $scSalesWorkspace = in_array(strtolower($this->router->fetch_class()), ['proposals', 'estimates', 'invoices', 'payments', 'credit_notes'], true); ?>
 
 <!DOCTYPE html>
 <html lang="<?= e($locale); ?>"
@@ -59,7 +60,10 @@
     );
     echo $scAdminHead;
     ?>
+    <?php if ($scSalesWorkspace) { ?>
+    <link rel="stylesheet" href="<?= base_url('assets/css/sales-custom.css?v=1'); ?>">
+    <?php } ?>
 </head>
 
-<body <?= admin_body_class($bodyclass ?? ''); ?>>
+<body <?= admin_body_class(trim(($bodyclass ?? '') . ($scSalesWorkspace ? ' sc-sales-workspace-page' : ''))); ?>>
     <?php hooks()->do_action('after_body_start'); ?>

@@ -6,6 +6,7 @@ init_head();
 ?>
 <div id="wrapper">
     <div class="content">
+        <?php $this->load->view('admin/includes/sales_workspace'); ?>
         <div class="row">
             <?= form_open($this->uri->uri_string(), ['id'=>'invoice-form','class'=>'_transaction_form invoice-form','enctype'=>'multipart/form-data']); ?>
             <?php if (isset($invoice)) { echo form_hidden('isedit'); } ?>

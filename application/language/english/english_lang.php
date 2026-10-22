@@ -4364,3 +4364,7 @@ $lang['sc_proposal_items_editor_help'] = 'Edit item descriptions, quantities and
 $lang['sc_edit_document_prefix'] = 'Edit prefix';
 $lang['sc_document_prefix'] = 'Document prefix';
 $lang['sc_document_prefix_help'] = 'Updates this document only. The number, dates and links stay the same. Save other form changes separately.';
+
+// Admin Sales workspace.
+$lang['sc_sales_workspace_title'] = 'Sales Management';
+$lang['sc_sales_workspace_subtitle'] = 'Sales Operations & Financial Pipeline';

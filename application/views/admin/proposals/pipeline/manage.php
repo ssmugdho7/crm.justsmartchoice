@@ -2,6 +2,7 @@
 <?php init_head(); ?>
 <div id="wrapper">
     <div class="content">
+        <?php $this->load->view('admin/includes/sales_workspace'); ?>
         <div class="row">
             <div class="col-md-12">
                 <div class="_buttons tw-mb-3 sm:tw-mb-5">

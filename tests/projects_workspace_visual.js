@@ -1,0 +1,10 @@
+const {chromium}=require('playwright');const {execFileSync}=require('node:child_process');const assert=require('node:assert/strict');const fs=require('node:fs');
+(async()=>{const browser=await chromium.launch({executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',headless:true});const out=process.env.SC_PROJECT_EVIDENCE||'/tmp/sc-project-evidence';fs.mkdirSync(out,{recursive:true});
+for(const pageType of ['directory','workspace']) for(const width of [1440,768,390]){
+ const page=await browser.newPage({viewport:{width,height:1000}});const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.setContent(execFileSync('php',['tests/fixtures/projects_workspace.php',pageType],{encoding:'utf8'}));
+ assert.equal(await page.locator('.scpr-nav').count(),1);assert.equal(await page.locator('body').evaluate(el=>el.scrollWidth<=innerWidth),true,pageType+' no page overflow at '+width);
+ if(pageType==='workspace'){assert.equal(await page.locator('.scpr-tabs > li').count(),10);assert.equal(await page.locator('.scpr-task-toggle').count(),2);assert.equal(await page.locator('[role=progressbar]').getAttribute('aria-valuenow'),'75');}
+ assert.deepEqual(errors,[]);await page.screenshot({path:out+'/'+pageType+'-'+width+'.png',fullPage:true});await page.close();
+}
+const page=await browser.newPage();await page.setContent(execFileSync('php',['tests/fixtures/projects_workspace.php','workspace','--restricted','--spanish'],{encoding:'utf8'}));assert.equal(await page.locator('.scpr-tabs > li').count(),9);assert.equal(await page.locator('.scpr-nav a').count(),3);assert.equal(await page.locator('.scpr-project-metrics').innerText().then(x=>x.includes('18,400')),false);assert.match(await page.locator('.scpr-punchlist').innerText(),/Lista de tareas/);await browser.close();console.log('PASS: rendered PHP components at 1440/768/390px, 10 tabs, feature-hidden tab, permission-hidden financials/actions, Spanish and no page overflow; screenshots: '+out);
+})().catch(e=>{console.error(e);process.exit(1)});

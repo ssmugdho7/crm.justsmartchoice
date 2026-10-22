@@ -1,0 +1,16 @@
+{
+  "module": "sc_projects_workspace",
+  "version": "1.0.0",
+  "core_files_modified": [],
+  "database_tables_created": [],
+  "core_tables_modified": [],
+  "core_tables_read": ["projects", "project_members", "tasks", "taskstimers", "clients", "milestones"],
+  "permissions_reused": {"projects": ["view_own", "view", "create", "edit", "delete", "create_milestones", "edit_milestones", "delete_milestones"], "tasks": ["view", "edit"]},
+  "view_own_policy": "Native Projects membership, including the native not-applicable View Own permission behavior. Existing assignments and grants remain unchanged.",
+  "license_module": "sc_module_licensing",
+  "license_product": "sc_projects_workspace",
+  "global_css": false,
+  "global_javascript": false,
+  "hooks": ["app_view_data", "admin_body_class", "projects_table_columns", "projects_table_sql_columns", "projects_table_row_data", "app_admin_head", "app_admin_footer"],
+  "uninstall_deletes_data": false
+}

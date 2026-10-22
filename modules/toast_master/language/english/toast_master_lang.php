@@ -37,6 +37,7 @@ $lang['toast_master_sound_name'] = 'Notification Sound';
 $lang['toast_master_volume'] = 'Sound Volume';
 $lang['toast_master_channels'] = 'Notification Channels';
 $lang['toast_master_channels_scope'] = 'These switches control Smart Notification popups, not the underlying CRM messages, validation, chat sounds, or desktop notifications.';
+$lang['toast_master_browser_controlled'] = 'Browser controlled';
 $lang['toast_master_notification_source'] = 'Notification Source';
 $lang['toast_master_controlled_message'] = 'Controlled Message';
 $lang['toast_master_history'] = 'Notification History';

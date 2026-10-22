@@ -60,6 +60,8 @@ class Toast_master extends AdminController
             }
             // A settings form for this module must not update unrelated CRM options.
             $settings = array_intersect_key($settings, array_flip(array_merge($checkboxes, array_keys($choices), ['toast_master_volume', 'toast_master_duration'])));
+            // This legacy preference cannot control the browser's native leave-page safety prompt.
+            unset($settings['toast_master_intercept_unsaved_warning']);
 
             $settings['toast_master_version'] = '2.0.2';
             $post_data = ['settings' => $settings];

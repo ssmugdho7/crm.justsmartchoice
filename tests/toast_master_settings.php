@@ -39,6 +39,7 @@ foreach (['enable', 'sound_enable', 'pause_on_hover', 'progress_bar', 'history_e
     check($saved['toast_master_' . $key] === '0', "$key preserves No");
 }
 check($saved['toast_master_intercept_ajax'] === '1' && $saved['toast_master_intercept_messages'] === '0', 'checked and unchecked sources persist');
+check(!isset($saved['toast_master_intercept_unsaved_warning']), 'native browser warning preference is not overwritten');
 check($saved['toaster_style'] === '12' && $saved['toaster_position'] === 'bottom-center' && $saved['toast_master_animation'] === 'flip', 'appearance persists');
 check($saved['toast_master_volume'] === '0' && !isset($saved['smtp_password']), 'zero volume and settings boundary');
 $invalid = save(['toaster_style' => ['bad'], 'toast_master_duration' => '999999', 'toast_master_volume' => '-2']);

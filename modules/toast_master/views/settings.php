@@ -100,10 +100,14 @@
                                         <tr>
                                             <td><?php echo html_escape($label); ?></td>
                                             <td class="text-center">
+                                                <?php if ($option === 'toast_master_intercept_unsaved_warning') { ?>
+                                                    <span class="text-muted"><?php echo _l('toast_master_browser_controlled'); ?></span>
+                                                <?php } else { ?>
                                                 <div class="onoffswitch">
-                                                    <input type="checkbox" value="1" id="<?php echo html_escape($option); ?>" class="onoffswitch-checkbox" name="settings[<?php echo html_escape($option); ?>]" <?php echo get_option($option) == '1' ? 'checked' : ''; ?> <?php echo $option === 'toast_master_intercept_unsaved_warning' ? 'disabled' : ''; ?>>
+                                                    <input type="checkbox" value="1" id="<?php echo html_escape($option); ?>" class="onoffswitch-checkbox" name="settings[<?php echo html_escape($option); ?>]" <?php echo get_option($option) == '1' ? 'checked' : ''; ?>>
                                                     <label class="onoffswitch-label" for="<?php echo html_escape($option); ?>"></label>
                                                 </div>
+                                                <?php } ?>
                                             </td>
                                             <td><?php echo _l($option . '_description'); ?></td>
                                         </tr>

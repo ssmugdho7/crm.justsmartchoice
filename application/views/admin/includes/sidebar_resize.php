@@ -21,9 +21,10 @@ body.sc-sidebar-dragging #menu,body.sc-sidebar-dragging #wrapper{transition:none
     function initSidebarResize() {
         var menu = document.getElementById('menu'), body = document.body;
         if (!menu || !body.classList.contains('admin') || document.getElementById('sc-admin-sidebar-resizer')) return;
-        var min = 200, max = 380, initial = Math.round(menu.getBoundingClientRect().width) || 230;
+        var min = 200, max = 380, initial = 280;
         var user = body.className.match(/\buser-id-(\d+)\b/);
-        var storageKey = 'sc.admin.sidebar.width.' + (user ? user[1] : 'default');
+        // Start existing users at the new default once; later manual choices remain remembered.
+        var storageKey = 'sc.admin.sidebar.width.v2.' + (user ? user[1] : 'default');
         var preferred = initial, drag = null;
         try {
             var saved = Number(window.localStorage.getItem(storageKey));
@@ -114,7 +115,7 @@ body.sc-sidebar-dragging #menu,body.sc-sidebar-dragging #wrapper{transition:none
         if (window.ResizeObserver) new ResizeObserver(position).observe(menu);
         render();
     }
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initSidebarResize);
-    else initSidebarResize();
+    // This view follows #menu, so apply its width before the remaining page finishes loading.
+    initSidebarResize();
 })();
 </script>

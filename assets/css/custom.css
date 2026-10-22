@@ -7,6 +7,11 @@
 #header a.logo img,.navbar-brand img{max-height:56px!important;width:auto!important;object-fit:contain!important}
 .sidebar{top:68px!important;background:#fff!important}
 .sidebar ul.nav li a{border-radius:7px!important}
+/* Keep long sidebar labels from pushing their submenu arrow onto a second line. */
+body.admin #menu #side-menu>li>a{display:flex!important;align-items:center}
+body.admin #menu #side-menu>li>a>.menu-icon{flex-shrink:0}
+body.admin #menu #side-menu>li>a>.menu-text{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.admin #menu #side-menu>li>a>.arrow{flex-shrink:0;float:none;margin-top:0!important;padding-top:0;line-height:1;align-self:center}
 .sidebar>ul.nav>li.active>a,.sidebar>ul.nav>li:hover>a{background:linear-gradient(90deg,var(--sc-green),var(--sc-green-dark))!important;color:#fff!important;border-color:transparent!important}
 .sidebar>ul.nav>li.active>a .menu-icon,.sidebar>ul.nav>li:hover>a .menu-icon{color:#fff!important}
 .btn-primary{background:var(--sc-orange)!important;border-color:#d96512!important}.btn-primary:hover{background:#d96512!important}

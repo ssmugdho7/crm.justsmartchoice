@@ -67,6 +67,31 @@ foreach ([[1,'100',1,2,null,1,1,$today,7,8,1,42], [2,'200',0,0,50,1,1,$today,7,8
     $db->insert('audit_exp_expenses', array_combine(['id','amount','tax','tax2','invoiceid','billable','currency','date','clientid','project_id','category','addedfrom'], $values));
 }
 $db->insert_batch('audit_exp_expenses_categories', [['id'=>1,'name'=>'Operations'], ['id'=>2,'name'=>'Travel']]);
+// Exercise the early admin_init response in a subprocess, including CI Loader's buffered-output contract.
+if (($argv[1] ?? '') === '--render-summary') {
+    $ci->router->method = 'get_expenses_total';
+    $ci->input->values = ['scct_expenses_workspace' => '1'];
+    $ci->currencies_model = new class {
+        function get() { return [['id'=>1, 'name'=>'USD', 'symbol'=>'$', 'isdefault'=>1]]; }
+        function get_base_currency() { return (object) ['id'=>1]; }
+    };
+    $ci->expenses_model = new class { function get_expenses_years() { return [['year'=>date('Y')]]; } };
+    $ci->load = new class {
+        function model($name) {}
+        function view($path, $data, $return = false) {
+            extract($data); ob_start();
+            include dirname(__DIR__) . '/modules/sc_expenses_workspace/views/expenses/expenses_total_template.php';
+            $html = ob_get_clean();
+            if ($return) return $html;
+            // CI normally buffers this until its output dispatcher, which an early exit skips.
+            get_instance()->bufferedOutput = $html;
+        }
+    };
+    scct_expenses_admin_init();
+    exit;
+}
+$child = shell_exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg(__FILE__) . ' --render-summary');
+check(substr_count($child, 'data-scct-expense-status=') === 5 && strpos($child, '375.80 USD') !== false, 'Early summary response emits complete HTML before exit');
 $s = scct_expenses_summary([], 1);
 check($s['metrics']['all']['count'] === 6 && bccomp($s['metrics']['all']['amount'], '375.8', 6) === 0, 'Exact tax-inclusive total, decimals and default year/currency');
 check(bccomp($s['metrics']['billable']['amount'], '325.5', 6) === 0 && $s['metrics']['billable']['count'] === 3, 'Billable sum includes tax 2 without tax 1');

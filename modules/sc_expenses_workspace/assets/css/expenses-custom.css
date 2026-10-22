@@ -497,3 +497,7 @@ body.scct-expenses .scct-category-spending .table { margin-bottom:0; }
  body.scct-expenses .exp-kpi-card { transition:none; }
  body.scct-expenses .exp-kpi-card:hover { transform:none; }
 }
+
+body.scct-expenses .scct-expenses-subtitle { display:block; margin-top:6px; font-size:13px; line-height:1.6; color:var(--exp-text-muted); font-weight:400; }
+body.scct-expenses .exp-toolbar { justify-content:flex-start; }
+body.scct-expenses .exp-toolbar #vueApp { margin-inline-start:auto; }

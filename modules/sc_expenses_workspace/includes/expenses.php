@@ -194,7 +194,8 @@ function scct_expenses_admin_init()
         'scct_expense_years' => scct_expenses_years($CI->input->post()),
         'scct_expense_summary' => scct_expenses_summary($CI->input->post(), $currencyId),
     ];
-    $CI->load->view('admin/expenses/expenses_total_template', $data);
+    // admin_init exits before CI's final output dispatcher, so return and emit the view explicitly.
+    echo $CI->load->view('admin/expenses/expenses_total_template', $data, true);
     exit;
 }
 

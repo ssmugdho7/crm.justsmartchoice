@@ -380,6 +380,3 @@ function smart_choice_core_tools_customer_footer()
     echo '<script>window.SmartChoiceSalesMeta=' . json_encode($meta) . ';</script>';
     echo '<script src="' . module_dir_url(SMART_CHOICE_CORE_TOOLS_MODULE_NAME, 'assets/js/customer-payment-summary.js?v=130') . '"></script>';
 }
-
-// Expenses presentation uses native view/row hooks; no CRM core replacement.
-require_once __DIR__ . '/includes/expenses.php';

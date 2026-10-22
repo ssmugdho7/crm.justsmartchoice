@@ -334,7 +334,7 @@ foreach ($custom_fields as $field) { ?>
                             <?php } ?>
                         </div>
                         <?php } ?>
-                        <?php $this->load->view('../../modules/smart_choice_core_tools/views/expenses/receipt_canvas', ['expense' => $expense]); ?>
+                        <?php $this->load->view('../../modules/sc_expenses_workspace/views/expenses/receipt_canvas', ['expense' => $expense]); ?>
                         <?php hooks()->do_action('after_right_panel_expense_preview_template', $expense); ?>
                     </div>
                 </div>

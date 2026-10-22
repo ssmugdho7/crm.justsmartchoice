@@ -28,7 +28,7 @@ function scct_expenses_view($view)
             if ($name === 'expenses_total_template' && !isset($view['data']['scct_expense_summary'])) {
                 return $view;
             }
-            $view['path'] = '../../modules/smart_choice_core_tools/views/expenses/' . $name;
+            $view['path'] = '../../modules/sc_expenses_workspace/views/expenses/' . $name;
             if ($name === 'manage_categories') {
                 $view['data']['scct_category_spending'] = scct_expenses_category_spending();
             }
@@ -50,7 +50,7 @@ function scct_expenses_head()
 {
     if (scct_expenses_context()) {
         $file = 'assets/css/expenses-custom.css';
-        echo '<link rel="stylesheet" href="' . e(module_dir_url('smart_choice_core_tools', $file) . '?v=' . filemtime(__DIR__ . '/../' . $file)) . '">';
+        echo '<link rel="stylesheet" href="' . e(module_dir_url('sc_expenses_workspace', $file) . '?v=' . filemtime(__DIR__ . '/../' . $file)) . '">';
     }
 }
 
@@ -58,7 +58,7 @@ function scct_expenses_footer()
 {
     if (scct_expenses_context()) {
         $file = 'assets/js/expenses.js';
-        echo '<script src="' . e(module_dir_url('smart_choice_core_tools', $file) . '?v=' . filemtime(__DIR__ . '/../' . $file)) . '"></script>';
+        echo '<script src="' . e(module_dir_url('sc_expenses_workspace', $file) . '?v=' . filemtime(__DIR__ . '/../' . $file)) . '"></script>';
     }
 }
 

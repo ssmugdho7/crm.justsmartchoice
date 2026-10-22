@@ -2,7 +2,7 @@
 <?php init_head(); ?>
 <div id="wrapper">
     <div class="content scct-expenses-workspace">
-        <?php $this->load->view('../../modules/smart_choice_core_tools/views/expenses/navigation'); ?>
+        <?php $this->load->view('../../modules/sc_expenses_workspace/views/expenses/navigation'); ?>
         <div class="row">
             <div class="col-md-12">
                 <h4 class="tw-mt-0 tw-font-bold tw-text-xl tw-mb-3">

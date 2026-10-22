@@ -36,7 +36,7 @@ $db = DB(['hostname' => APP_DB_HOSTNAME, 'username' => APP_DB_USERNAME, 'passwor
     'dbdriver' => 'mysqli', 'dbprefix' => 'audit_exp_', 'pconnect' => false, 'db_debug' => false, 'char_set' => 'utf8mb4', 'dbcollat' => 'utf8mb4_general_ci', 'save_queries' => true], true);
 $ci = (object) ['db' => $db, 'router' => new ExpenseFixtureRouter, 'input' => new ExpenseFixtureInput, 'uri' => new ExpenseFixtureUri];
 $permissions = ['expenses:view']; $admin = true; $loggedIn = true;
-require $root . '/modules/smart_choice_core_tools/includes/expenses.php';
+require $root . '/modules/sc_expenses_workspace/includes/expenses.php';
 foreach ([
     'CREATE TEMPORARY TABLE audit_exp_expenses (id INT PRIMARY KEY, amount DECIMAL(15,4), tax INT, tax2 INT, invoiceid INT NULL, billable INT, currency INT, date DATE, clientid INT, project_id INT, category INT, addedfrom INT)',
     'CREATE TEMPORARY TABLE audit_exp_taxes (id INT PRIMARY KEY, taxrate DECIMAL(8,4))',
@@ -116,11 +116,11 @@ $ci->router->class='Expenses';check(is_file($root.'/application/views/'.scct_exp
 $legacy=['path'=>'admin/expenses/expenses_total_template','data'=>[]];check(scct_expenses_view($legacy)===$legacy,'Non-workspace legacy totals preserved');
 $spending=scct_expenses_category_spending();check(count($spending)===3,'Category totals separated by currency');
 $admin=false;check(scct_expenses_category_spending()===[],'Category metrics admin-only');
-$lang=[];require $root.'/modules/smart_choice_core_tools/language/english/smart_choice_core_tools_lang.php';$en=$lang;
-$lang=[];require $root.'/modules/smart_choice_core_tools/language/spanish/smart_choice_core_tools_lang.php';$es=$lang;
+$lang=[];require $root.'/modules/sc_expenses_workspace/language/english/sc_expenses_workspace_lang.php';$en=$lang;
+$lang=[];require $root.'/modules/sc_expenses_workspace/language/spanish/sc_expenses_workspace_lang.php';$es=$lang;
 check(array_keys($en)===array_keys($es),'English and Spanish key parity');$lang=$en;
 $scct_expense_summary=$s;$expenses_years=[['year'=>$year]];$currencies=[];$_currency=1;$scct_expense_years=[$year];
-ob_start();include $root.'/modules/smart_choice_core_tools/views/expenses/expenses_total_template.php';$html=ob_get_clean();
+ob_start();include $root.'/modules/sc_expenses_workspace/views/expenses/expenses_total_template.php';$html=ob_get_clean();
 check(substr_count($html,'data-scct-expense-status=')===5 && strpos($html,'175.80 USD')!==false,'Summary view renders actual scoped fixture totals and five cards');
 $folder=get_upload_path_by_type('expense').'1';mkdir($folder,0700,true);file_put_contents($folder.'/fixture.pdf',"%PDF-1.4\nfixture");
 $expense=(object)['expenseid'=>1,'attachment'=>'fixture.pdf'];check(scct_expenses_receipt($expense)['exists'],'Existing receipt recognized');

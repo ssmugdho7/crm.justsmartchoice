@@ -14,14 +14,14 @@ Amounts come from CRM data. The supplied ZIP's sample amounts, company details, 
 
 ## Source locations
 
-All application changes are within the existing active `smart_choice_core_tools` module; no CRM core replacement or new activation is needed.
+All application changes are within the standalone `sc_expenses_workspace` presentation module. It does not enable Smart Choice Core Tools, which is deactivated on dev. No CRM core replacement is needed.
 
-- `modules/smart_choice_core_tools/smart_choice_core_tools.php`: load the Expenses extension.
-- `modules/smart_choice_core_tools/includes/expenses.php`: native view/row/SQL hooks, scoped assets, exact decimal aggregates, record and receipt authorization.
-- `modules/smart_choice_core_tools/assets/css/expenses-custom.css`: ZIP palette/components plus scoped Perfex integration and responsive styles.
-- `modules/smart_choice_core_tools/assets/js/expenses.js`: status-card actions, AJAX refresh state and workspace-only summary marker.
-- `modules/smart_choice_core_tools/views/expenses/`: full module-owned native views (`manage.php`, `expense.php`, `expense_preview_template.php`, `manage_categories.php`, `expenses_total_template.php`) and `navigation.php`, `receipt_canvas.php`, `category_spending.php`.
-- `modules/smart_choice_core_tools/language/{english,spanish}/smart_choice_core_tools_lang.php`: complete paired visible strings.
+- `modules/sc_expenses_workspace/sc_expenses_workspace.php`: register the language files and Expenses extension; the impact manifest documents its hooks and native permission reuse.
+- `modules/sc_expenses_workspace/includes/expenses.php`: native view/row/SQL hooks, scoped assets, exact decimal aggregates, record and receipt authorization.
+- `modules/sc_expenses_workspace/assets/css/expenses-custom.css`: ZIP palette/components plus scoped Perfex integration and responsive styles.
+- `modules/sc_expenses_workspace/assets/js/expenses.js`: status-card actions, AJAX refresh state and workspace-only summary marker.
+- `modules/sc_expenses_workspace/views/expenses/`: full module-owned native views (`manage.php`, `expense.php`, `expense_preview_template.php`, `manage_categories.php`, `expenses_total_template.php`) and `navigation.php`, `receipt_canvas.php`, `category_spending.php`.
+- `modules/sc_expenses_workspace/language/{english,spanish}/sc_expenses_workspace_lang.php`: complete paired visible strings.
 - `tests/expenses_workspace_regression.php`, `tests/expenses_workspace_ui.js`: temporary SQL fixtures and DOM interaction/control-preservation checks.
 
 ## Permissions and data
@@ -32,7 +32,7 @@ No schema migration, data rewrite, settings change, dependency install or upload
 
 ## Upgrade and recovery
 
-Deploy the listed files together using the normal dev Git fast-forward workflow. Keep Smart Choice Core Tools active and retain the native Expenses controller/views; they remain the fallback if this presentation extension is removed. After deployment, reload Expenses to pick up filemtime-versioned assets. No reinstall, module reactivation or permission reset is necessary.
+Deploy the listed files together using the normal dev Git fast-forward workflow. Activate Smart Choice Expenses Workspace once through Setup → Modules and retain the native Expenses controller/views; they remain the fallback if this presentation extension is removed. After deployment, reload Expenses to pick up filemtime-versioned assets. Subsequent source upgrades need no reinstall or permission reset. Native activation only records this module in the modules registry; there is no install SQL, database migration, settings rewrite or business-data mutation.
 
 The deployment helper creates a private tracked-source recovery archive outside the web root and verifies the server commit and public asset permissions. This is a source backup, not a database/upload backup. Do not reset over subsequent server changes; remove/revert this release through a reviewed follow-up commit if needed.
 
@@ -43,7 +43,7 @@ Executed locally:
 ```sh
 CRM_SITE_ROOT=/private/site/checkout php tests/expenses_workspace_regression.php
 NODE_PATH=/tmp/prchat-audit-tools/node_modules node tests/expenses_workspace_ui.js
-node --check modules/smart_choice_core_tools/assets/js/expenses.js
+node --check modules/sc_expenses_workspace/assets/js/expenses.js
 ```
 
 The SQL tests use connection-local TEMPORARY tables only: exact decimal/tax totals, tax 2 without tax 1, currency/year/customer/project/own scopes, invoice states, injection handling, record and bulk permissions, missing receipts, native view resolution and bilingual keys. DOM checks exercise status actions, refreshed KPI state, CSRF/filter payload preservation, controller isolation and preservation of native form controls. PHP syntax and Git whitespace checks are also required before release.

@@ -2,6 +2,7 @@
 <?php init_head(); ?>
 <div id="wrapper">
     <div class="content">
+        <?php $this->load->view('../../modules/sc_expenses_workspace/views/expenses/navigation'); ?>
         <div class="row">
             <div class="col-md-12">
                 <div class="panel_s">

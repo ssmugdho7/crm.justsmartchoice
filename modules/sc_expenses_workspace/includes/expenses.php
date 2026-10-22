@@ -22,7 +22,7 @@ function scct_expenses_view($view)
     if (!scct_expenses_context()) {
         return $view;
     }
-    $names = ['manage', 'expense', 'expense_preview_template', 'manage_categories', 'expenses_total_template'];
+    $names = ['manage', 'expense', 'expense_preview_template', 'manage_categories', 'expenses_total_template', 'import'];
     foreach ($names as $name) {
         if ($view['path'] === 'admin/expenses/' . $name) {
             if ($name === 'expenses_total_template' && !isset($view['data']['scct_expense_summary'])) {

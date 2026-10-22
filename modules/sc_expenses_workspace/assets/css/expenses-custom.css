@@ -501,3 +501,34 @@ body.scct-expenses .scct-category-spending .table { margin-bottom:0; }
 body.scct-expenses .scct-expenses-subtitle { display:block; margin-top:6px; font-size:13px; line-height:1.6; color:var(--exp-text-muted); font-weight:400; }
 body.scct-expenses .exp-toolbar { justify-content:flex-start; }
 body.scct-expenses .exp-toolbar #vueApp { margin-inline-start:auto; }
+
+/* Keep native CSV import guidance readable immediately, regardless of inherited theme hover styles. */
+body.scct-expenses .scct-expenses-import-guidelines,
+body.scct-expenses .scct-expenses-import-guidelines ul,
+body.scct-expenses .scct-expenses-import-guidelines li,
+body.scct-expenses .scct-expenses-import-guidelines li b {
+  color: #334155 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  animation: none !important;
+  transition: none !important;
+}
+
+body.scct-expenses .scct-expenses-import-guidelines ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+body.scct-expenses .scct-expenses-import-guidelines li {
+  line-height: 1.65;
+}
+
+body.scct-expenses .scct-expenses-import-guidelines a,
+body.scct-expenses .scct-expenses-import-guidelines a:hover,
+body.scct-expenses .scct-expenses-import-guidelines a:focus {
+  color: #1d4ed8 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  text-decoration: underline;
+  transition: none !important;
+}

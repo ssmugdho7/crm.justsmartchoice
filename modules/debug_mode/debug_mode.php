@@ -5,7 +5,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /*
 Module Name: CRM Utilities & Debug Tools
 Description: Quality ★★★★★.  CRM Utilities & Debug Tools gives administrators a safer control center for troubleshooting Perfex CRM. It includes debug mode controls, cache cleanup, error log reports, client portal toggle, phpMyAdmin quick link, safe database check/repair tools, and a help guide. Designed for PHP 8.5, MySQL 5.7, and Perfex CRM 3.4.x.
-Version: 2.3.0
+Version: 2.3.1
 Requires at least: 3.0.*
 Author: Smart Choice Contractors USA / Harold Cabrera
 Author URI: https://justsmartchoice.com/webdeveloper.php
@@ -21,8 +21,8 @@ hooks()->add_action('admin_init', 'debug_mode_smartchoice_admin_init');
 hooks()->add_action('app_admin_head', 'debug_mode_smartchoice_assets');
 hooks()->add_action('app_admin_head', 'debug_mode_smartchoice_capture_assets', 1);
 hooks()->add_action('app_customers_head', 'debug_mode_smartchoice_client_capture_assets', 1);
-hooks()->add_action('app_admin_footer', 'debug_mode_smartchoice_footer_notice');
-hooks()->add_action('app_admin_footer', 'debug_mode_smartchoice_module_console');
+hooks()->add_action('after_body_start', 'debug_mode_smartchoice_footer_notice');
+hooks()->add_action('after_body_start', 'debug_mode_smartchoice_module_console');
 hooks()->add_filter('before_settings_updated', 'debug_mode_smartchoice_before_settings_updated');
 
 function debug_mode_smartchoice_activation_hook()
@@ -54,7 +54,7 @@ function debug_mode_smartchoice_add_default_options()
         'debug_mode_client_portal_enabled' => '1',
         'debug_mode_show_admin_banner' => '1',
         'debug_mode_cache_last_cleared' => '',
-        'debug_mode_version' => '2.3.0',
+        'debug_mode_version' => '2.3.1',
         'debug_mode_access_control_enabled' => '0',
     ];
     $rows = get_instance()->db->select('name')->where_in('name', array_keys($defaults))
@@ -126,18 +126,9 @@ function debug_mode_smartchoice_footer_notice()
         return;
     }
 
-    echo '<script>
-    (function(){
-        if (window.localStorage && !localStorage.getItem("debug_mode_activated_seen")) {
-            localStorage.setItem("debug_mode_activated_seen", "1");
-            setTimeout(function(){
-                if (typeof alert_float === "function") {
-                    alert_float("info", "Debug Mode is active. Use CRM Utilities carefully.");
-                }
-            }, 800);
-        }
-    })();
-    </script>';
+    echo '<aside class="sc-debug-coverage-banner" role="status" aria-label="Debug Mode diagnostic coverage">'
+        . '<strong>Debug Mode active.</strong> <span><strong>Diagnostic coverage:</strong> PHP and module errors share the CRM log. Debug Mode adds notices, deprecations and browser errors on administrator pages as they are visited. The report includes the last 7 days, up to 500 events and the last 1 MiB per log source. Use <a href="' . admin_url('debug_mode/automatic_checks') . '">Automatic Checks</a> to scan module PHP and probe reviewed pages, including unvisited routes. Authenticated client-portal browser capture is separately switchable there.</span>'
+        . '</aside>';
 }
 
 /** Return a source change only for a single supported, executable ENVIRONMENT declaration. */
@@ -312,11 +303,12 @@ function debug_mode_smartchoice_capture_assets()
         $CI->session->set_userdata('debug_mode_capture_token', $token);
     }
     echo '<script src="' . module_dir_url('debug_mode', 'assets/js/debug_mode_capture.js') . '?v=231" data-token="' . html_escape($token) . '" data-endpoint="' . html_escape(admin_url('debug_mode/browser_error')) . '"></script>';
+    echo '<link href="' . module_dir_url('debug_mode', 'assets/css/debug_mode_console.css') . '?v=231" rel="stylesheet" type="text/css">';
     $module = debug_mode_current_admin_module();
     if ($module) {
-        echo '<link href="' . module_dir_url('debug_mode', 'assets/css/debug_mode_console.css') . '?v=230" rel="stylesheet" type="text/css">';
-        echo '<script src="' . module_dir_url('debug_mode', 'assets/js/debug_mode_console.js') . '?v=230" defer'
-            . ' data-module="' . html_escape($module) . '" data-since="' . (time() - 10) . '"'
+        $requestStarted = isset($_SERVER['REQUEST_TIME']) ? (int) $_SERVER['REQUEST_TIME'] : time();
+        echo '<script src="' . module_dir_url('debug_mode', 'assets/js/debug_mode_console.js') . '?v=231" defer'
+            . ' data-module="' . html_escape($module) . '" data-since="' . ($requestStarted - 5) . '"'
             . ' data-token="' . html_escape($token) . '" data-endpoint="' . html_escape(admin_url('debug_mode/module_console')) . '"></script>';
     }
 }

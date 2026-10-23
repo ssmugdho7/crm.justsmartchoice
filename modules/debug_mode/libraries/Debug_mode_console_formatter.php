@@ -13,7 +13,8 @@ class Debug_mode_console_formatter
         $events = [];
 
         foreach ($rows as $row) {
-            if (($row['module'] ?? '') !== $module) { continue; }
+            $routeMatches = isset($row['route']) && preg_match('~^/admin/' . preg_quote($module, '~') . '(?:/|$)~', $row['route']);
+            if (($row['module'] ?? '') !== $module && !$routeMatches) { continue; }
 
             $rawText = (string) ($row['line'] ?? '');
             $location = self::findLocation($rawText, $module, $root);

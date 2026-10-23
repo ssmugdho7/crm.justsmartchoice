@@ -88,7 +88,10 @@ try {
     foreach (['0', '1'] as $saved) {
         $options['debug_mode_enabled'] = $saved;
         ob_start(); debug_mode_smartchoice_footer_notice(); $notice = ob_get_clean();
-        verify((strpos($notice, 'Debug Mode is active') !== false) === (ENVIRONMENT === 'development'), 'Notice must reflect runtime despite stale database value');
+        verify((strpos($notice, 'Diagnostic coverage:') !== false) === (ENVIRONMENT === 'development'), 'Coverage banner must reflect runtime despite stale database value');
+        if (ENVIRONMENT === 'development') {
+            verify(strpos($notice, 'Automatic Checks') !== false && strpos($notice, 'including unvisited routes') !== false, 'Active banner explains automatic and visited-page coverage');
+        }
     }
     $options['debug_mode_show_admin_banner'] = '0';
     ob_start(); debug_mode_smartchoice_footer_notice(); $notice = ob_get_clean();

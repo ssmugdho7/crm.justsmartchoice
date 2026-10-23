@@ -212,8 +212,9 @@ class Debug_mode extends AdminController
 
         $requestedSince = (int) $this->input->post('since');
         $since = max(time() - 900, min(time() + 5, $requestedSince ?: time() - 10));
-        $rows = array_values(array_filter($this->build_error_report(200, $since, 262144, 1), static function ($row) use ($module, $since) {
-            return ($row['module'] ?? '') === $module && (int) ($row['time'] ?? 0) >= $since;
+        $rows = array_values(array_filter($this->build_error_report(200, $since, 524288, 2), static function ($row) use ($module, $since) {
+            $routeMatches = isset($row['route']) && preg_match('~^/admin/' . preg_quote($module, '~') . '(?:/|$)~', $row['route']);
+            return (($row['module'] ?? '') === $module || $routeMatches) && (int) ($row['time'] ?? 0) >= $since;
         }));
 
         require_once dirname(__DIR__) . '/libraries/Debug_mode_console_formatter.php';

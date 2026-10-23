@@ -51,9 +51,11 @@ class Debug_mode_log_reader
                     : (preg_match('/warning/i', $header) ? 'warning' : (preg_match('/notice|deprecated|language line/i', $header) ? 'notice' : 'error'));
                 $module = 'core';
                 if (preg_match('~(?:/modules/|\[module=)([a-zA-Z0-9_-]+)~', $text, $m)) { $module = $m[1]; }
+                $route = '';
+                if (preg_match('~\[route=(/[^\]]*)\]~', $text, $m)) { $route = $m[1]; }
                 if (strpos($text, '[browser]') !== false) { $severity = 'browser'; }
                 $rows[] = ['file' => $source['label'], 'line' => $text, 'time' => $record['time'], 'sequence' => $sequence,
-                    'source' => $source['type'], 'module' => $module, 'severity' => $severity];
+                    'source' => $source['type'], 'module' => $module, 'route' => $route, 'severity' => $severity];
             }
         }
         usort($rows, static function ($a, $b) {

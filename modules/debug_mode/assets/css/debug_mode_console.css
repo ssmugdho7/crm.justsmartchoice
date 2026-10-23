@@ -1,3 +1,20 @@
+.sc-debug-coverage-banner {
+    position: relative;
+    z-index: 10040;
+    margin: 10px 14px 0 240px;
+    padding: 10px 14px;
+    color: #12372f;
+    background: #ecfdf5;
+    border: 1px solid #6ee7b7;
+    border-left: 4px solid #059669;
+    border-radius: 7px;
+    box-shadow: 0 5px 18px rgba(15, 23, 42, .08);
+    font-size: 13px;
+    line-height: 1.45;
+}
+.sc-debug-coverage-banner > strong { color: #047857; margin-right: 4px; }
+.sc-debug-coverage-banner a { color: #075985; font-weight: 700; text-decoration: underline; }
+
 #scDebugConsole {
     --sc-console-bg: #1b1d21;
     --sc-console-panel: #24272c;
@@ -71,6 +88,7 @@
 #scDebugConsole.has-errors:not(.is-open) { border-color: #ef4444; }
 @media (prefers-reduced-motion: reduce) { #scDebugConsole * { scroll-behavior: auto !important; } }
 @media (max-width: 768px) {
+    .sc-debug-coverage-banner { margin: 8px; }
     #scDebugConsole { left: 8px; right: 8px; bottom: 8px; }
     #scDebugConsole .sc-debug-console-bar { flex-wrap: wrap; }
     #scDebugConsole [data-console-status] { order: 3; flex-basis: 100%; }

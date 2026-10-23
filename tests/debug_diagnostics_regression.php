@@ -32,6 +32,7 @@ try {
     verify_diagnostic($zoned[0]['source']==='CRM','Normalize explicit PHP timezones against the application timezone');
     date_default_timezone_set('UTC');
     verify_diagnostic(count(Debug_mode_log_reader::read($sources,1,strtotime('2026-10-20')))===1,'Apply event limit after sorting');
+    verify_diagnostic($rows[1]['route']==='', 'Rows without request context keep an empty route');
     verify_diagnostic(Debug_mode_log_reader::read($sources,500,strtotime('2026-10-24'))===[],'Exclude events outside the reporting window');
     $secret='password=private_password token=private_token Authorization: Bearer privateBearer https://example.test/?api_key=private_query';
     $redacted=Debug_mode_log_reader::redact($secret);
@@ -47,9 +48,10 @@ try {
     $consoleRows=[
         ['file'=>'CRM','line'=>'ERROR - 2026-10-23 13:10:00 --> Severity: Warning --> Fixture password=private_log_secret '.$moduleFile.' 4','time'=>strtotime('2026-10-23 13:10:00'),'module'=>'appointly','severity'=>'warning'],
         ['file'=>'CRM','line'=>'ERROR - 2026-10-23 13:11:00 --> Other module','time'=>strtotime('2026-10-23 13:11:00'),'module'=>'other','severity'=>'error'],
+        ['file'=>'CRM','line'=>'ERROR - 2026-10-23 13:12:00 --> Shared CRM failure [route=/admin/appointly/appointments] [module=core]','time'=>strtotime('2026-10-23 13:12:00'),'module'=>'core','route'=>'/admin/appointly/appointments','severity'=>'error'],
     ];
     $console=Debug_mode_console_formatter::format($consoleRows,'appointly',$fixture);
-    verify_diagnostic(count($console)===1 && $console[0]['severity']==='warning','Show only the current module in its diagnostic drawer');
+    verify_diagnostic(count($console)===2 && $console[0]['severity']==='warning','Show source-module and current-route errors in the diagnostic drawer');
     verify_diagnostic($console[0]['location']['file']==='modules/appointly/example.php' && $console[0]['location']['line']===4,'Resolve source only inside the current module');
     verify_diagnostic(count($console[0]['location']['excerpt'])===6 && $console[0]['location']['excerpt'][3]['current']===true,'Include a bounded source excerpt around the error line');
     verify_diagnostic(strpos(json_encode($console),'private_log_secret')===false && strpos(json_encode($console),'private_source_secret')===false,'Redact secrets from messages and source excerpts');

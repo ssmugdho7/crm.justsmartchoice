@@ -177,7 +177,7 @@ class Debug_mode extends AdminController
     {
         if (!is_admin()) { ajax_access_denied(); }
         header('Content-Type: application/json');
-        echo json_encode(['success' => true, 'errors' => $this->build_error_report(500), 'text' => $this->build_error_report_text(500), 'coverage' => 'Last 7 days; up to 500 events; last 1 MiB per source; visited authorized staff pages only for browser errors']);
+        echo json_encode(['success' => true, 'errors' => $this->build_error_report(500), 'text' => $this->build_error_report_text(500), 'coverage' => 'Last 7 days; up to 500 events; last 1 MiB per source; visited administrators and opted-in authenticated client pages for browser errors']);
         exit;
     }
 
@@ -185,32 +185,47 @@ class Debug_mode extends AdminController
     public function browser_error()
     {
         if (!is_admin() || !debug_mode_is_enabled()) { ajax_access_denied(); return; }
+        require_once dirname(__DIR__) . '/libraries/Debug_mode_browser_receiver.php';
+        Debug_mode_browser_receiver::receive($this);
+    }
+
+    public function automatic_checks()
+    {
+        if (!is_admin()) { access_denied('CRM Utilities'); return; }
+        $data['title'] = 'Automatic diagnostic checks';
+        $data['modules'] = array_values(array_map(static function ($m) { return $m['system_name'] ?? $m['name']; }, $this->app_modules->get()));
+        $data['pages'] = ['projects', 'clients', 'tasks', 'expenses', 'debug_mode/health'];
+        if ($this->app_modules->get('appointly')) { $data['pages'][] = 'appointly/appointments'; $data['pages'][] = 'appointly/services'; }
+        $token = $this->session->userdata('debug_mode_audit_token');
+        if (!is_string($token) || strlen($token) !== 64) { $token = bin2hex(random_bytes(32)); $this->session->set_userdata('debug_mode_audit_token', $token); }
+        $data['audit_token'] = $token;
+        $this->load->view('automatic_checks', $data);
+    }
+
+    public function audit_module()
+    {
+        if (!is_admin()) { ajax_access_denied(); return; }
         if ($this->input->method(true) !== 'POST') { show_error('POST required', 405); return; }
-        // CI consumes its normal POST token during global CSRF validation. Keep an independent, session-bound token.
-        $token = $this->input->post('debug_capture_token');
-        $expectedToken = $this->session->userdata('debug_mode_capture_token');
-        if (!is_string($token) || !is_string($expectedToken) || $expectedToken === '' || !hash_equals($expectedToken, $token)) { show_error('Invalid CSRF token', 403); return; }
-        $window = $this->session->userdata('debug_mode_capture_window');
-        if (!is_array($window) || ($window['start'] ?? 0) < time() - 60) { $window = ['start' => time(), 'count' => 0]; }
-        if ($window['count'] >= 40) { $this->output->set_status_header(429); return; }
-        $window['count']++;
-        $this->session->set_userdata('debug_mode_capture_window', $window);
-        $kind = $this->input->post('kind');
-        if (!in_array($kind, ['javascript', 'promise', 'resource', 'http', 'network'], true)) { show_error('Invalid diagnostic kind', 400); return; }
-        require_once dirname(__DIR__) . '/libraries/Debug_mode_log_reader.php';
-        $fields = [];
-        foreach (['message', 'file', 'route'] as $key) {
-            $value = $this->input->post($key);
-            if (!is_string($value)) { show_error('Invalid diagnostic field', 400); return; }
-            if ($key !== 'message') { $value = parse_url($value, PHP_URL_PATH) ?: '/'; }
-            $fields[$key] = str_replace(["\r", "\n"], ' ', Debug_mode_log_reader::redact(substr($value, 0, 700)));
-        }
-        $module = 'core';
-        if (preg_match('~^/modules/([a-zA-Z0-9_-]+)/~', $fields['file'], $m)) { $module = $m[1]; }
-        elseif (preg_match('~^/admin/([a-zA-Z0-9_-]+)~', $fields['route'], $m)) { $module = $m[1]; }
-        log_message('error', '[browser] [' . $kind . '] [module=' . $module . '] ' . $fields['message']
-            . ' [route=' . $fields['route'] . '] [file=' . $fields['file'] . ':' . max(0, (int) $this->input->post('line')) . ']');
-        $this->output->set_status_header(204);
+        if (!$this->valid_audit_token()) { show_error('Invalid CSRF token', 403); return; }
+        require_once dirname(__DIR__) . '/libraries/Debug_mode_module_auditor.php';
+        $result = Debug_mode_module_auditor::scan(APP_MODULES_PATH, $this->input->post('module'));
+        $this->output->set_content_type('application/json')->set_output(json_encode($result, JSON_INVALID_UTF8_SUBSTITUTE));
+    }
+
+    public function client_capture()
+    {
+        if (!is_admin()) { access_denied('CRM Utilities'); return; }
+        if ($this->input->method(true) !== 'POST') { show_error('POST required', 405); return; }
+        if (!$this->valid_audit_token()) { show_error('Invalid CSRF token', 403); return; }
+        update_option('debug_mode_client_capture', $this->input->post('enabled') === '1' ? '1' : '0');
+        redirect(admin_url('debug_mode/automatic_checks'));
+    }
+
+    private function valid_audit_token()
+    {
+        $token = $this->input->post('audit_token');
+        $expected = $this->session->userdata('debug_mode_audit_token');
+        return is_string($token) && is_string($expected) && strlen($expected) === 64 && hash_equals($expected, $token);
     }
 
     public function file_structure()

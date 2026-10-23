@@ -20,6 +20,7 @@ register_language_files(DEBUG_MODE_MODULE, [DEBUG_MODE_MODULE]);
 hooks()->add_action('admin_init', 'debug_mode_smartchoice_admin_init');
 hooks()->add_action('app_admin_head', 'debug_mode_smartchoice_assets');
 hooks()->add_action('app_admin_head', 'debug_mode_smartchoice_capture_assets', 1);
+hooks()->add_action('app_customers_head', 'debug_mode_smartchoice_client_capture_assets', 1);
 hooks()->add_action('app_admin_footer', 'debug_mode_smartchoice_footer_notice');
 hooks()->add_filter('before_settings_updated', 'debug_mode_smartchoice_before_settings_updated');
 
@@ -43,6 +44,7 @@ function debug_mode_smartchoice_add_default_options()
 {
     $defaults = [
         'debug_mode_enabled' => '0',
+        'debug_mode_client_capture' => '1',
         'debug_mode_client_visible' => '0',
         'debug_mode_log_level' => 'basic',
         'debug_mode_allowed_roles' => '',
@@ -290,5 +292,18 @@ function debug_mode_smartchoice_capture_assets()
         $token = bin2hex(random_bytes(32));
         $CI->session->set_userdata('debug_mode_capture_token', $token);
     }
-    echo '<script src="' . module_dir_url('debug_mode', 'assets/js/debug_mode_capture.js') . '?v=221" data-token="' . html_escape($token) . '" data-endpoint="' . html_escape(admin_url('debug_mode/browser_error')) . '"></script>';
+    echo '<script src="' . module_dir_url('debug_mode', 'assets/js/debug_mode_capture.js') . '?v=230" data-token="' . html_escape($token) . '" data-endpoint="' . html_escape(admin_url('debug_mode/browser_error')) . '"></script>';
+}
+
+/** Client capture is authenticated, separately switchable and tied to this contact session. */
+function debug_mode_smartchoice_client_capture_assets()
+{
+    if (!debug_mode_is_enabled() || get_option('debug_mode_client_capture') !== '1' || !is_client_logged_in() || !get_contact_user_id()) { return; }
+    $ci = &get_instance();
+    $token = $ci->session->userdata('debug_mode_capture_token');
+    if (!is_string($token) || strlen($token) !== 64) {
+        $token = bin2hex(random_bytes(32));
+        $ci->session->set_userdata('debug_mode_capture_token', $token);
+    }
+    echo '<script src="' . module_dir_url('debug_mode', 'assets/js/debug_mode_capture.js') . '?v=230" data-portal="client" data-token="' . html_escape($token) . '" data-endpoint="' . html_escape(site_url('debug_mode/client_diagnostics/collect')) . '"></script>';
 }

@@ -5,6 +5,7 @@
   var captureToken = script && script.getAttribute('data-token');
   if (!endpoint || !captureToken || window.scDebugCaptureInstalled) return;
   window.scDebugCaptureInstalled = true;
+  var clientPortal = script.getAttribute('data-portal') === 'client';
   var sent = 0, seen = Object.create(null), pending = [];
   function safePath(value) {
     try { var url = new URL(value, location.href); return url.origin === location.origin ? url.pathname : '[external resource]'; }
@@ -13,6 +14,12 @@
   function report(kind, message, file, line) {
     if (sent >= 20) return;
     var entry = {kind: kind, message: String(message || '').slice(0, 700), file: safePath(file || location.href), line: Number(line) || 0, route: location.pathname};
+    if (clientPortal) {
+      // Client messages may contain personal data. Keep only the error category and asset path.
+      entry.message = kind === 'http' ? String(message).replace(/[^A-Z0-9 ]/g, '').slice(0, 40) : 'Client portal ' + kind + ' error';
+      entry.route = '/' + location.pathname.split('/').filter(Boolean).slice(0, 1).join('/');
+      if (!/\.(js|css|png|jpg|jpeg|svg|webp|gif|woff2?)$/i.test(entry.file)) entry.file = entry.route;
+    }
     var key = JSON.stringify(entry);
     if (seen[key]) return;
     seen[key] = true; sent++; pending.push(entry);

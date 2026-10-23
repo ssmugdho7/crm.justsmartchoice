@@ -263,3 +263,30 @@ body.debug-mode-active:before {
   .debug-mode-page table.table td{min-width:140px!important;}
   .debug-mode-page .debug-mode-table-wrap{overflow-x:auto!important;-webkit-overflow-scrolling:touch;}
 }
+
+/* Keep diagnostic controls readable and long reports inside their own panels. */
+.debug-mode-page .debug-mode-utility-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+}
+.debug-mode-page .debug-mode-tile { min-width: 0; display: flex; flex-wrap: wrap; align-content: flex-start; gap: 8px; }
+.debug-mode-page .debug-mode-tile h3,
+.debug-mode-page .debug-mode-tile p,
+.debug-mode-page .debug-mode-tile small { flex-basis: 100%; margin: 0; overflow-wrap: anywhere; }
+.debug-mode-page .debug-mode-tile p { min-height: 48px; font-size: 13px; line-height: 1.6; }
+.debug-mode-page .debug-mode-tile .btn { white-space: normal; margin: 0; }
+.debug-mode-page .debug-mode-table-wrap { max-height: 360px !important; overflow: auto !important; margin-top: 16px; }
+.debug-mode-page .debug-mode-table-wrap thead th { position: sticky; top: 0; z-index: 1; }
+.debug-mode-page .debug-mode-table-wrap td code { display: block; max-width: 100%; overflow-wrap: anywhere; }
+.debug-mode-page .debug-mode-coverage { padding: 16px; margin: 16px 0; border: 1px solid #cbd5e1; border-radius: 12px; background: #f8fafc; color: #334155; line-height: 1.6; }
+.debug-mode-page .debug-mode-error-filters { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px; margin: 16px 0; }
+.debug-mode-page .debug-mode-error-filters label { display: block; font-weight: 600; }
+.debug-mode-page .debug-mode-error-editor { font-size: 13px; max-height: 65vh; min-height: 320px; }
+@media (max-width: 1400px) { .debug-mode-page .debug-mode-utility-grid { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; } }
+@media (max-width: 1000px) { .debug-mode-page .debug-mode-utility-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; } }
+@media (max-width: 600px) {
+    .debug-mode-page .debug-mode-utility-grid,
+    .debug-mode-page .debug-mode-error-filters { grid-template-columns: minmax(0, 1fr) !important; }
+    .debug-mode-page .debug-mode-hero { padding: 16px !important; }
+    .debug-mode-page .debug-mode-hero h1 { font-size: 22px; line-height: 1.3; }
+    .debug-mode-page .debug-mode-card .panel-body { padding: 16px; }
+}

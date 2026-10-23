@@ -4170,3 +4170,11 @@ $lang['sc_attachment_unavailable'] = 'Este archivo adjunto no está disponible a
 $lang['sc_proposal_items_editor_label'] = 'Artículos de la propuesta — tabla automática';
 $lang['sc_payment_for_document'] = 'Pago de';
 $lang['sc_proposal_items_editor_help'] = 'Edite las descripciones, cantidades y precios en la tabla de artículos de abajo. Este marcador inserta la tabla actual en la propuesta del cliente y el PDF; no guarda una copia de los precios.';
+
+// Shared labels used by CRM navigation and utility dialogs.
+$lang['calculator'] = 'Calculadora';
+$lang['continue'] = 'Continuar';
+$lang['add'] = 'Agregar';
+$lang['problem_updating'] = 'Hubo un problema al guardar los cambios.';
+$lang['attachments'] = 'Archivos adjuntos';
+$lang['login'] = 'Iniciar sesión';

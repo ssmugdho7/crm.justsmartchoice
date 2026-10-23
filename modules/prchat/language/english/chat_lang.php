@@ -1421,3 +1421,5 @@ $lang['chat_voice_upload_network'] = 'Upload network error. Please try again.';
 $lang['chat_call_not_accepted'] = 'Call signaling was not accepted.';
 $lang['chat_call_answer_not_accepted'] = 'The call answer was not accepted.';
 $lang['chat_call_cancelled'] = 'Call cancelled.';
+
+$lang['chat_at_time'] = 'at';

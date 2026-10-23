@@ -177,8 +177,38 @@ class Debug_mode extends AdminController
     {
         if (!is_admin()) { ajax_access_denied(); }
         header('Content-Type: application/json');
-        echo json_encode(['success' => true, 'errors' => $this->build_error_report(500), 'text' => $this->build_error_report_text(500)]);
+        echo json_encode(['success' => true, 'errors' => $this->build_error_report(500), 'text' => $this->build_error_report_text(500), 'coverage' => 'Last 7 days; up to 500 events; last 1 MiB per source; visited authorized staff pages only for browser errors']);
         exit;
+    }
+
+    /** Receive diagnostics only from the current authenticated administrator, through normal CSRF validation. */
+    public function browser_error()
+    {
+        if (!is_admin() || !debug_mode_is_enabled()) { ajax_access_denied(); return; }
+        if ($this->input->method(true) !== 'POST') { show_error('POST required', 405); return; }
+        $token = $this->input->post($this->security->get_csrf_token_name());
+        if (!is_string($token) || !hash_equals($this->security->get_csrf_hash(), $token)) { show_error('Invalid CSRF token', 419); return; }
+        $window = $this->session->userdata('debug_mode_capture_window');
+        if (!is_array($window) || ($window['start'] ?? 0) < time() - 60) { $window = ['start' => time(), 'count' => 0]; }
+        if ($window['count'] >= 40) { $this->output->set_status_header(429); return; }
+        $window['count']++;
+        $this->session->set_userdata('debug_mode_capture_window', $window);
+        $kind = $this->input->post('kind');
+        if (!in_array($kind, ['javascript', 'promise', 'resource', 'http', 'network'], true)) { show_error('Invalid diagnostic kind', 400); return; }
+        require_once dirname(__DIR__) . '/libraries/Debug_mode_log_reader.php';
+        $fields = [];
+        foreach (['message', 'file', 'route'] as $key) {
+            $value = $this->input->post($key);
+            if (!is_string($value)) { show_error('Invalid diagnostic field', 400); return; }
+            if ($key !== 'message') { $value = parse_url($value, PHP_URL_PATH) ?: '/'; }
+            $fields[$key] = str_replace(["\r", "\n"], ' ', Debug_mode_log_reader::redact(substr($value, 0, 700)));
+        }
+        $module = 'core';
+        if (preg_match('~^/modules/([a-zA-Z0-9_-]+)/~', $fields['file'], $m)) { $module = $m[1]; }
+        elseif (preg_match('~^/admin/([a-zA-Z0-9_-]+)~', $fields['route'], $m)) { $module = $m[1]; }
+        log_message('error', '[browser] [' . $kind . '] [module=' . $module . '] ' . $fields['message']
+            . ' [route=' . $fields['route'] . '] [file=' . $fields['file'] . ':' . max(0, (int) $this->input->post('line')) . ']');
+        $this->output->set_status_header(204);
     }
 
     public function file_structure()
@@ -534,7 +564,7 @@ class Debug_mode extends AdminController
         if (empty($rows)) { return 'No recent CRM error lines found.'; }
         $out = [];
         foreach ($rows as $row) { $out[] = '[' . $row['file'] . '] ' . $row['line']; }
-        return implode("\n", $out);
+        return implode("\n\n", $out);
     }
 
     private function build_folder_tree($path, $depth = 0, $maxDepth = 6)
@@ -573,20 +603,22 @@ class Debug_mode extends AdminController
 
     private function build_error_report($limit = 50)
     {
-        $files = [APPPATH . 'logs/log-' . date('Y-m-d') . '.php', APPPATH . 'logs/log-' . date('Y-m-d', strtotime('-1 day')) . '.php', APPPATH . 'logs/log-' . date('Y-m-d', strtotime('-2 day')) . '.php'];
-        $rows = [];
-        foreach ($files as $file) {
-            if (!is_file($file)) { continue; }
-            $lines = @file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-            if (!$lines) { continue; }
-            $lines = array_slice($lines, -220);
-            foreach ($lines as $line) {
-                if (stripos($line, 'ERROR') !== false || stripos($line, 'Severity:') !== false || stripos($line, 'Exception') !== false || stripos($line, 'ParseError') !== false) {
-                    $rows[] = ['file' => basename($file), 'line' => $line];
-                }
+        require_once dirname(__DIR__) . '/libraries/Debug_mode_log_reader.php';
+        $directory = $this->config->item('log_path') ?: APPPATH . 'logs/';
+        $extension = $this->config->item('log_file_extension') ?: 'php';
+        $sources = [];
+        for ($day = 0; $day < 7; $day++) {
+            $file = rtrim($directory, '/\\') . '/log-' . date('Y-m-d', strtotime('-' . $day . ' days')) . '.' . $extension;
+            if (is_file($file)) { $sources[] = ['path' => $file, 'label' => basename($file), 'type' => 'CRM']; }
+        }
+        // PHP can fail before CodeIgniter has installed its own handlers.
+        $phpLogs = array_unique([FCPATH . 'error_log', ini_get('error_log')]);
+        foreach ($phpLogs as $file) {
+            if ($file && is_file($file) && is_readable($file)) {
+                $sources[] = ['path' => $file, 'label' => 'PHP server log', 'type' => 'PHP'];
             }
         }
-        return array_slice(array_reverse($rows), 0, (int) $limit);
+        return Debug_mode_log_reader::read($sources, $limit);
     }
 
     private function build_database_report($action = false)

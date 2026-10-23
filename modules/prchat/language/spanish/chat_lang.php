@@ -1419,3 +1419,5 @@ $lang['chat_voice_upload_network'] = 'Error de red al subir el archivo. Inténte
 $lang['chat_call_not_accepted'] = 'No se aceptó la señalización de la llamada.';
 $lang['chat_call_answer_not_accepted'] = 'No se aceptó la respuesta de la llamada.';
 $lang['chat_call_cancelled'] = 'Llamada cancelada.';
+
+$lang['chat_at_time'] = 'a las';

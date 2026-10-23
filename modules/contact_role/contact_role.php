@@ -39,10 +39,10 @@ hooks()->add_action('admin_init', function () {
 
     $capabilities = [];
     $capabilities['capabilities'] = [
-        'view'   => _l('perfex_saas_permission_view'),
-        'create' => _l('perfex_saas_permission_create'),
-        'edit'   => _l('perfex_saas_permission_edit'),
-        'delete' => _l('perfex_saas_permission_delete'),
+        'view'   => _l('permission_view'),
+        'create' => _l('permission_create'),
+        'edit'   => _l('permission_edit'),
+        'delete' => _l('permission_delete'),
     ];
 
     register_staff_capabilities(CONTACT_ROLE_MODULE, $capabilities, _l(CONTACT_ROLE_MODULE));

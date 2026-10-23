@@ -4359,3 +4359,11 @@ $lang['sc_attachment_unavailable'] = 'This attachment is currently unavailable. 
 $lang['sc_proposal_items_editor_label'] = 'Proposal items — automatic table';
 $lang['sc_payment_for_document'] = 'Payment for';
 $lang['sc_proposal_items_editor_help'] = 'Edit item descriptions, quantities and prices in the items table below. This marker inserts the current table in the customer proposal and PDF; it does not store a copy of the prices.';
+
+// Shared labels used by CRM navigation and utility dialogs.
+$lang['calculator'] = 'Calculator';
+$lang['continue'] = 'Continue';
+$lang['add'] = 'Add';
+$lang['problem_updating'] = 'There was a problem saving your changes.';
+$lang['attachments'] = 'Attachments';
+$lang['login'] = 'Log in';

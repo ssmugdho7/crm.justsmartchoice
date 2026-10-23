@@ -648,3 +648,5 @@ $lang['recruitment_assess_safety_q3'] = 'A power tool binds while cutting. What 
 $lang['recruitment_assess_reliability_q1'] = 'You may be late for the morning start time. What should you do?';
 $lang['recruitment_assess_reliability_q2'] = 'You finish your assigned task earlier than expected. What should you do next?';
 $lang['recruitment_assess_reliability_q3'] = 'Instructions are incomplete and the supervisor is busy. What should you do?';
+
+$lang['recruitment_portal_language_label'] = 'Idioma';

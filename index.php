@@ -4,7 +4,8 @@ defined('ENVIRONMENT') || define('ENVIRONMENT', $_SERVER['CI_ENV'] ?? 'productio
 switch (ENVIRONMENT) {
     case 'development':
         error_reporting(-1);
-        ini_set('display_errors', '1');
+        // Capture full diagnostics without injecting PHP output into HTML, JSON or public pages.
+        ini_set('display_errors', PHP_SAPI === 'cli' ? '1' : '0');
         break;
     case 'testing':
     case 'production':

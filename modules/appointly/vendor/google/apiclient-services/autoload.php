@@ -18,7 +18,14 @@ if (
             'Google\\Collection' => 'Google_Collection',
         ];
         foreach ($servicesClassMap as $alias => $class) {
-            class_alias($class, $alias);
+            // Composer may not have loaded the legacy base class when this file runs.
+            if (!class_exists($class, false)) {
+                $legacyFile = __DIR__ . '/../apiclient/src/' . str_replace('_', '/', $class) . '.php';
+                if (is_file($legacyFile)) { require_once $legacyFile; }
+            }
+            if (class_exists($class, false) && !class_exists($alias, false)) {
+                class_alias($class, $alias);
+            }
         }
     }
 }

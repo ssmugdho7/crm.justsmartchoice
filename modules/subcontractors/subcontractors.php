@@ -205,10 +205,10 @@ function smartsource_subcontractors_admin_init()
 function smartsource_subcontractors_register_settings_tab()
 {
     $CI = &get_instance();
-    if (!is_admin() || !isset($CI->app_tabs)) {
+    if (!is_admin() || !isset($CI->app)) {
         return;
     }
-    $CI->app_tabs->add_settings_tab('subcontractors', [
+    $CI->app->add_settings_section_child('other', 'subcontractors', [
         'name'     => _l('smartsource_subcontractor_settings'),
         'view'     => 'subcontractors/admin/settings/setup',
         'position' => 48,

@@ -5,7 +5,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /*
 Module Name: CRM Utilities & Debug Tools
 Description: Quality ★★★★★.  CRM Utilities & Debug Tools gives administrators a safer control center for troubleshooting Perfex CRM. It includes debug mode controls, cache cleanup, error log reports, client portal toggle, phpMyAdmin quick link, safe database check/repair tools, and a help guide. Designed for PHP 8.5, MySQL 5.7, and Perfex CRM 3.4.x.
-Version: 2.1.6
+Version: 2.2.0
 Requires at least: 3.0.*
 Author: Smart Choice Contractors USA / Harold Cabrera
 Author URI: https://justsmartchoice.com/webdeveloper.php
@@ -19,6 +19,7 @@ register_language_files(DEBUG_MODE_MODULE, [DEBUG_MODE_MODULE]);
 
 hooks()->add_action('admin_init', 'debug_mode_smartchoice_admin_init');
 hooks()->add_action('app_admin_head', 'debug_mode_smartchoice_assets');
+hooks()->add_action('app_admin_head', 'debug_mode_smartchoice_capture_assets', 1);
 hooks()->add_action('app_admin_footer', 'debug_mode_smartchoice_footer_notice');
 hooks()->add_filter('before_settings_updated', 'debug_mode_smartchoice_before_settings_updated');
 
@@ -50,7 +51,7 @@ function debug_mode_smartchoice_add_default_options()
         'debug_mode_client_portal_enabled' => '1',
         'debug_mode_show_admin_banner' => '1',
         'debug_mode_cache_last_cleared' => '',
-        'debug_mode_version' => '2.1.6',
+        'debug_mode_version' => '2.2.0',
         'debug_mode_access_control_enabled' => '0',
     ];
     $rows = get_instance()->db->select('name')->where_in('name', array_keys($defaults))
@@ -85,7 +86,7 @@ function debug_mode_smartchoice_admin_init()
             'position' => 65,
         ]);
     } elseif (isset($CI->app_tabs) && method_exists($CI->app_tabs, 'add_settings_tab')) {
-        $CI->app->add_settings_section('debug_mode', [
+        $CI->app_tabs->add_settings_tab('debug_mode', [
             'name'     => 'CRM Utilities & Debug Tools',
             'view'     => 'debug_mode/settings',
             'position' => 65,
@@ -112,8 +113,8 @@ function debug_mode_smartchoice_assets()
     if (!$isModulePage && !$isSettingsPage) {
         return;
     }
-    echo '<link href="' . module_dir_url('debug_mode', 'assets/css/debug_mode_smartchoice.css') . '?v=216" rel="stylesheet" type="text/css" />';
-    echo '<script src="' . module_dir_url('debug_mode', 'assets/js/debug_mode_smartchoice.js') . '?v=216" defer></script>';
+    echo '<link href="' . module_dir_url('debug_mode', 'assets/css/debug_mode_smartchoice.css') . '?v=220" rel="stylesheet" type="text/css" />';
+    echo '<script src="' . module_dir_url('debug_mode', 'assets/js/debug_mode_smartchoice.js') . '?v=220" defer></script>';
 }
 
 function debug_mode_smartchoice_footer_notice()
@@ -279,3 +280,9 @@ function debug_mode_user_allowed()
 }
 
 /* Smart Choice Module Structural Repair: verified for flat language/migration structure and PHP 8.5 baseline. */
+
+function debug_mode_smartchoice_capture_assets()
+{
+    if (!debug_mode_is_enabled() || !is_admin()) { return; }
+    echo '<script src="' . module_dir_url('debug_mode', 'assets/js/debug_mode_capture.js') . '?v=220" data-endpoint="' . html_escape(admin_url('debug_mode/browser_error')) . '"></script>';
+}

@@ -189,7 +189,7 @@ class Debug_mode extends AdminController
         Debug_mode_browser_receiver::receive($this);
     }
 
-    /** Return recent, redacted events for the module currently open in this administrator session. */
+    /** Return recent, redacted events for the administrator page currently open in this session. */
     public function module_console()
     {
         if (!is_admin() || !debug_mode_is_enabled()) { ajax_access_denied(); return; }
@@ -203,25 +203,32 @@ class Debug_mode extends AdminController
             return;
         }
 
-        $module = $this->input->post('module');
-        if (!is_string($module) || !preg_match('/^[a-zA-Z0-9_-]+$/D', $module)
-            || !$this->app_modules->get($module)) {
-            show_error('Invalid module', 400);
+        $scope = $this->input->post('scope');
+        $route = $this->input->post('route');
+        if (!is_string($scope) || !preg_match('/^[a-zA-Z0-9_-]+$/D', $scope)
+            || !is_string($route) || !preg_match('~^/admin(?:/[a-zA-Z0-9_-]+){0,2}$~D', $route)) {
+            show_error('Invalid page scope', 400);
             return;
         }
+        $routeParts = array_values(array_filter(explode('/', trim($route, '/')), 'strlen'));
+        $expectedScope = $routeParts[1] ?? 'dashboard';
+        if ($scope !== $expectedScope) { show_error('Mismatched page scope', 400); return; }
 
         $requestedSince = (int) $this->input->post('since');
         $since = max(time() - 900, min(time() + 5, $requestedSince ?: time() - 10));
-        $rows = array_values(array_filter($this->build_error_report(200, $since, 524288, 2), static function ($row) use ($module, $since) {
-            $routeMatches = isset($row['route']) && preg_match('~^/admin/' . preg_quote($module, '~') . '(?:/|$)~', $row['route']);
-            return (($row['module'] ?? '') === $module || $routeMatches) && (int) ($row['time'] ?? 0) >= $since;
+        $rows = array_values(array_filter($this->build_error_report(200, $since, 524288, 2), static function ($row) use ($scope, $route, $since) {
+            $eventRoute = (string) ($row['route'] ?? '');
+            $routeMatches = $eventRoute === $route || strpos($eventRoute, $route . '/') === 0;
+            $unroutedScopeMatch = $eventRoute === '' && ($row['module'] ?? '') === $scope;
+            return ($routeMatches || $unroutedScopeMatch) && (int) ($row['time'] ?? 0) >= $since;
         }));
 
         require_once dirname(__DIR__) . '/libraries/Debug_mode_console_formatter.php';
-        $events = Debug_mode_console_formatter::format($rows, $module, FCPATH);
+        $events = Debug_mode_console_formatter::format($rows, $scope, FCPATH, $route);
         $payload = [
             'success' => true,
-            'module' => $module,
+            'scope' => $scope,
+            'route' => $route,
             'events' => $events,
             'checked_at' => date('Y-m-d H:i:s'),
             'limited' => count($rows) > count($events),

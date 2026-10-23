@@ -2,22 +2,24 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-/** Prepare redacted, module-scoped diagnostics for the administrator debug drawer. */
+/** Prepare redacted, page-scoped diagnostics for the administrator debug drawer. */
 class Debug_mode_console_formatter
 {
-    public static function format(array $rows, $module, $root)
+    public static function format(array $rows, $scope, $root, $route = '')
     {
-        $module = is_string($module) ? $module : '';
+        $scope = is_string($scope) ? $scope : '';
+        $route = is_string($route) ? $route : '';
         $displayRoot = rtrim((string) $root, '/\\');
         $root = realpath($displayRoot) ?: $displayRoot;
         $events = [];
 
         foreach ($rows as $row) {
-            $routeMatches = isset($row['route']) && preg_match('~^/admin/' . preg_quote($module, '~') . '(?:/|$)~', $row['route']);
-            if (($row['module'] ?? '') !== $module && !$routeMatches) { continue; }
+            $eventRoute = (string) ($row['route'] ?? '');
+            $routeMatches = $route !== '' && ($eventRoute === $route || strpos($eventRoute, $route . '/') === 0);
+            if (!$routeMatches && !($eventRoute === '' && ($row['module'] ?? '') === $scope)) { continue; }
 
             $rawText = (string) ($row['line'] ?? '');
-            $location = self::findLocation($rawText, $module, $root);
+            $location = self::findLocation($rawText, $scope, $root);
             $text = self::cleanText($rawText, [$displayRoot, $root]);
             $lines = preg_split('/\r?\n/', $text) ?: [];
             $summary = array_shift($lines) ?: 'Unknown diagnostic event';

@@ -85,12 +85,16 @@ try {
     verify(file_get_contents($index) === $productionSource, 'Idempotent switch must preserve contents');
     verify(glob($fixture . '/.debug-env-*') === [], 'No temporary PHP files may be left behind');
     verify(debug_mode_is_enabled() === (ENVIRONMENT === 'development'), 'Runtime, not saved setting, determines status');
+    verify(debug_mode_admin_scope_from_uri('admin') === ['key' => 'dashboard', 'route' => '/admin'], 'Dashboard receives its own diagnostic scope');
+    verify(debug_mode_admin_scope_from_uri('admin/projects/view/42') === ['key' => 'projects', 'route' => '/admin/projects/view'], 'Record identifiers are excluded from page diagnostic scopes');
+    verify(debug_mode_admin_scope_from_uri('clients') === null && debug_mode_admin_scope_from_uri('admin/projects.bad') === null, 'Reject non-admin and malformed diagnostic scopes');
     foreach (['0', '1'] as $saved) {
         $options['debug_mode_enabled'] = $saved;
         ob_start(); debug_mode_smartchoice_footer_notice(); $notice = ob_get_clean();
         verify((strpos($notice, 'Diagnostic coverage:') !== false) === (ENVIRONMENT === 'development'), 'Coverage banner must reflect runtime despite stale database value');
         if (ENVIRONMENT === 'development') {
             verify(strpos($notice, 'Automatic Checks') !== false && strpos($notice, 'including unvisited routes') !== false, 'Active banner explains automatic and visited-page coverage');
+            verify(strpos($notice, 'Switch to Production Mode') !== false && strpos($notice, 'method="post"') !== false, 'Active banner provides a text button that posts to Production Mode');
         }
     }
     $options['debug_mode_show_admin_banner'] = '0';

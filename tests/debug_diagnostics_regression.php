@@ -49,9 +49,10 @@ try {
         ['file'=>'CRM','line'=>'ERROR - 2026-10-23 13:10:00 --> Severity: Warning --> Fixture password=private_log_secret '.$moduleFile.' 4','time'=>strtotime('2026-10-23 13:10:00'),'module'=>'appointly','severity'=>'warning'],
         ['file'=>'CRM','line'=>'ERROR - 2026-10-23 13:11:00 --> Other module','time'=>strtotime('2026-10-23 13:11:00'),'module'=>'other','severity'=>'error'],
         ['file'=>'CRM','line'=>'ERROR - 2026-10-23 13:12:00 --> Shared CRM failure [route=/admin/appointly/appointments] [module=core]','time'=>strtotime('2026-10-23 13:12:00'),'module'=>'core','route'=>'/admin/appointly/appointments','severity'=>'error'],
+        ['file'=>'CRM','line'=>'ERROR - 2026-10-23 13:13:00 --> Different page [route=/admin/appointly/services] [module=appointly]','time'=>strtotime('2026-10-23 13:13:00'),'module'=>'appointly','route'=>'/admin/appointly/services','severity'=>'error'],
     ];
-    $console=Debug_mode_console_formatter::format($consoleRows,'appointly',$fixture);
-    verify_diagnostic(count($console)===2 && $console[0]['severity']==='warning','Show source-module and current-route errors in the diagnostic drawer');
+    $console=Debug_mode_console_formatter::format($consoleRows,'appointly',$fixture,'/admin/appointly/appointments');
+    verify_diagnostic(count($console)===2 && $console[0]['severity']==='warning','Show only unrouted source errors and errors for the exact current page');
     verify_diagnostic($console[0]['location']['file']==='modules/appointly/example.php' && $console[0]['location']['line']===4,'Resolve source only inside the current module');
     verify_diagnostic(count($console[0]['location']['excerpt'])===6 && $console[0]['location']['excerpt'][3]['current']===true,'Include a bounded source excerpt around the error line');
     verify_diagnostic(strpos(json_encode($console),'private_log_secret')===false && strpos(json_encode($console),'private_source_secret')===false,'Redact secrets from messages and source excerpts');
@@ -99,11 +100,12 @@ try {
     $controller->session->data['debug_mode_capture_window']=['start'=>time(),'count'=>40];$controller->browser_error();verify_diagnostic($controller->output->status===429 && count($messages)===1,'Bound server ingestion per session');
     $controller->session->data=['debug_mode_capture_token'=>'fixture'];$controller->input->method='GET';try{$controller->browser_error();throw new LogicException('Expected POST');}catch(RuntimeException $e){verify_diagnostic($e->getMessage()==='HTTP405','Require POST');}
     $consoleToken=str_repeat('a',64);$controller->session->data=['debug_mode_capture_token'=>$consoleToken];
-    $controller->input->method='POST';$controller->input->data=['debug_capture_token'=>'wrong','module'=>'appointly','since'=>time()];
+    $controller->input->method='POST';$controller->input->data=['debug_capture_token'=>'wrong','scope'=>'appointly','route'=>'/admin/appointly/appointments','since'=>time()];
     try{$controller->module_console();throw new LogicException('Expected token denial');}catch(RuntimeException $e){verify_diagnostic($e->getMessage()==='HTTP403','Reject a forged module-console token');}
-    $controller->input->data['debug_capture_token']=$consoleToken;$controller->input->data['module']='../appointly';
-    $controller->app_modules=new class {function get($name){return $name==='appointly'?['system_name'=>$name]:null;}};
-    try{$controller->module_console();throw new LogicException('Expected module denial');}catch(RuntimeException $e){verify_diagnostic($e->getMessage()==='HTTP400','Reject module traversal in the console endpoint');}
+    $controller->input->data['debug_capture_token']=$consoleToken;$controller->input->data['scope']='../appointly';
+    try{$controller->module_console();throw new LogicException('Expected scope denial');}catch(RuntimeException $e){verify_diagnostic($e->getMessage()==='HTTP400','Reject scope traversal in the console endpoint');}
+    $controller->input->data['scope']='projects';$controller->input->data['route']='/admin/tasks';
+    try{$controller->module_console();throw new LogicException('Expected mismatch denial');}catch(RuntimeException $e){verify_diagnostic($e->getMessage()==='HTTP400','Require the page scope to match its route');}
     $admin=false;try{$controller->module_console();throw new LogicException('Expected console denial');}catch(RuntimeException $e){verify_diagnostic($e->getMessage()==='DENIED','Deny non-admin module-console access');}$admin=true;
     $enabled=false;try{$controller->module_console();throw new LogicException('Expected disabled console denial');}catch(RuntimeException $e){verify_diagnostic($e->getMessage()==='DENIED','Deny module-console access outside Debug Mode');}$enabled=true;
     echo 'PASS '.$checks." diagnostic assertions\n";

@@ -2,12 +2,13 @@
   'use strict';
 
   var script = document.currentScript;
-  var moduleName = script && script.getAttribute('data-module');
+  var scopeName = script && script.getAttribute('data-scope');
+  var pageRoute = script && script.getAttribute('data-route');
   var endpoint = script && script.getAttribute('data-endpoint');
   var captureToken = script && script.getAttribute('data-token');
   var since = Number(script && script.getAttribute('data-since')) || Math.floor(Date.now() / 1000) - 10;
   var root = document.getElementById('scDebugConsole');
-  if (!root || !moduleName || !endpoint || !captureToken) return;
+  if (!root || !scopeName || !pageRoute || !endpoint || !captureToken) return;
 
   window.scDebugIgnoredPaths = window.scDebugIgnoredPaths || [];
   try { window.scDebugIgnoredPaths.push(new URL(endpoint, location.href).pathname); } catch (_) {}
@@ -19,7 +20,7 @@
   var status = root.querySelector('[data-console-status]');
   var events = root.querySelector('[data-console-events]');
   var body = root.querySelector('[data-console-body]');
-  var storageKey = 'scDebugConsole:' + moduleName;
+  var storageKey = 'scDebugConsole:' + pageRoute;
   var known = Object.create(null);
   var busy = false;
   var manuallyCollapsed = sessionStorage.getItem(storageKey) === 'collapsed';
@@ -80,12 +81,12 @@
       known[event.id] = true;
       events.appendChild(renderEvent(event));
     });
-    if (!payload.events.length) events.appendChild(node('p', 'sc-debug-console-empty', 'No module errors were recorded after this page started.'));
+    if (!payload.events.length) events.appendChild(node('p', 'sc-debug-console-empty', 'No errors were recorded for this page after it started.'));
     count.textContent = String(payload.events.length);
     count.hidden = payload.events.length === 0;
     status.textContent = payload.events.length
-      ? payload.events.length + ' event' + (payload.events.length === 1 ? '' : 's') + ' for ' + moduleName + (payload.limited ? ' · newest 50 shown' : '')
-      : 'No errors for ' + moduleName + ' during this page visit';
+      ? payload.events.length + ' event' + (payload.events.length === 1 ? '' : 's') + ' for this page' + (payload.limited ? ' · newest 50 shown' : '')
+      : 'No errors for this page visit';
     root.classList.toggle('has-errors', payload.events.length > 0);
     if (payload.events.length && fresh && !manuallyCollapsed) setExpanded(true);
   }
@@ -93,8 +94,8 @@
   function fetchEvents() {
     if (busy || document.hidden) return;
     busy = true;
-    status.textContent = 'Checking ' + moduleName + '…';
-    var bodyData = new URLSearchParams({module: moduleName, since: String(since), debug_capture_token: captureToken});
+    status.textContent = 'Checking ' + scopeName + '…';
+    var bodyData = new URLSearchParams({scope: scopeName, route: pageRoute, since: String(since), debug_capture_token: captureToken});
     if (window.csrfData && csrfData.token_name && csrfData.hash) bodyData.set(csrfData.token_name, csrfData.hash);
     fetch(endpoint, {
       method: 'POST',
@@ -105,10 +106,10 @@
       if (!response.ok || response.redirected) throw new Error('HTTP ' + response.status);
       return response.json();
     }).then(function (payload) {
-      if (!payload || payload.success !== true || payload.module !== moduleName || !Array.isArray(payload.events)) throw new Error('Invalid response');
+      if (!payload || payload.success !== true || payload.scope !== scopeName || payload.route !== pageRoute || !Array.isArray(payload.events)) throw new Error('Invalid response');
       render(payload);
     }).catch(function () {
-      status.textContent = 'Module diagnostics are temporarily unavailable';
+      status.textContent = 'Page diagnostics are temporarily unavailable';
       root.classList.add('has-errors');
     }).finally(function () { busy = false; });
   }

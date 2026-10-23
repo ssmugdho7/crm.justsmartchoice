@@ -3,6 +3,7 @@
 if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
 define('BASEPATH', __DIR__);
 define('ENVIRONMENT', 'development');
+date_default_timezone_set('UTC'); // Fixture timestamps below intentionally use UTC on every host.
 $fixture = sys_get_temp_dir() . '/crm-diagnostics-' . bin2hex(random_bytes(8)); mkdir($fixture, 0700);
 $checks = 0;
 function verify_diagnostic($condition, $message) { global $checks; if (!$condition) throw new RuntimeException($message); $checks++; }
@@ -19,6 +20,10 @@ try {
     verify_diagnostic($rows[1]['module']==='appointly' && $rows[1]['severity']==='warning','Module and severity classification');
     verify_diagnostic(strpos($rows[1]['line'],'#0 handler()')!==false,'Preserve the trace with its event');
     verify_diagnostic($rows[3]['file']==='older.php','Sort across sources by actual event timestamp');
+    date_default_timezone_set('America/Boise');
+    $zoned=Debug_mode_log_reader::read($sources,500,strtotime('2026-10-20'));
+    verify_diagnostic($zoned[0]['source']==='CRM','Normalize explicit PHP timezones against the application timezone');
+    date_default_timezone_set('UTC');
     verify_diagnostic(count(Debug_mode_log_reader::read($sources,1,strtotime('2026-10-20')))===1,'Apply event limit after sorting');
     verify_diagnostic(Debug_mode_log_reader::read($sources,500,strtotime('2026-10-24'))===[],'Exclude events outside the reporting window');
     $secret='password=private_password token=private_token Authorization: Bearer privateBearer https://example.test/?api_key=private_query';
@@ -60,15 +65,15 @@ try {
     require dirname(__DIR__).'/modules/debug_mode/controllers/Debug_mode.php';
     #[AllowDynamicProperties] class ControllerFixture extends Debug_mode {}
     class SecurityFixture {function get_csrf_token_name(){return 'csrf';}function get_csrf_hash(){return 'fixture';}}
-    $controller=new ControllerFixture();$controller->security=new SecurityFixture();$controller->input=new InputFixture();$controller->session=new SessionFixture();$controller->output=new OutputFixture();
-    $controller->input->data=['csrf'=>'fixture','kind'=>'javascript','message'=>"Test token=private_endpoint\nforged line",'file'=>'https://crm.example/modules/appointly/a.js?key=private_query','route'=>'/admin/appointly?token=private_route','line'=>42];
+    $controller=new ControllerFixture();$controller->security=new SecurityFixture();$controller->input=new InputFixture();$controller->session=new SessionFixture();$controller->session->data['debug_mode_capture_token']='fixture';$controller->output=new OutputFixture();
+    $controller->input->data=['debug_capture_token'=>'fixture','kind'=>'javascript','message'=>"Test token=private_endpoint\nforged line",'file'=>'https://crm.example/modules/appointly/a.js?key=private_query','route'=>'/admin/appointly?token=private_route','line'=>42];
     $controller->browser_error();
     verify_diagnostic($controller->output->status===204 && count($messages)===1,'Capture valid admin diagnostic');
     verify_diagnostic(strpos($messages[0],'private_')===false && strpos($messages[0],"\n")===false,'Redact endpoint fields and prevent log-line injection');
-    $controller->input->data['csrf']='wrong';try{$controller->browser_error();throw new LogicException('Expected CSRF denial');}catch(RuntimeException $e){verify_diagnostic($e->getMessage()==='HTTP419' && count($messages)===1,'Reject invalid CSRF token without logging');}$controller->input->data['csrf']='fixture';
+    $controller->input->data['debug_capture_token']='wrong';try{$controller->browser_error();throw new LogicException('Expected CSRF denial');}catch(RuntimeException $e){verify_diagnostic($e->getMessage()==='HTTP403' && count($messages)===1,'Reject invalid CSRF token without logging');}$controller->input->data['debug_capture_token']='fixture';
     $admin=false;try{$controller->browser_error();throw new LogicException('Expected denial');}catch(RuntimeException $e){verify_diagnostic($e->getMessage()==='DENIED','Deny non-admin collection');}$admin=true;
     $enabled=false;try{$controller->browser_error();throw new LogicException('Expected denial');}catch(RuntimeException $e){verify_diagnostic($e->getMessage()==='DENIED','Deny disabled capture');}$enabled=true;
     $controller->session->data['debug_mode_capture_window']=['start'=>time(),'count'=>40];$controller->browser_error();verify_diagnostic($controller->output->status===429 && count($messages)===1,'Bound server ingestion per session');
-    $controller->session->data=[];$controller->input->method='GET';try{$controller->browser_error();throw new LogicException('Expected POST');}catch(RuntimeException $e){verify_diagnostic($e->getMessage()==='HTTP405','Require POST');}
+    $controller->session->data=['debug_mode_capture_token'=>'fixture'];$controller->input->method='GET';try{$controller->browser_error();throw new LogicException('Expected POST');}catch(RuntimeException $e){verify_diagnostic($e->getMessage()==='HTTP405','Require POST');}
     echo 'PASS '.$checks." diagnostic assertions\n";
 } finally { foreach(glob($fixture.'/*') as $p)unlink($p);rmdir($fixture); }

@@ -5,7 +5,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /*
 Module Name: CRM Utilities & Debug Tools
 Description: Quality ★★★★★.  CRM Utilities & Debug Tools gives administrators a safer control center for troubleshooting Perfex CRM. It includes debug mode controls, cache cleanup, error log reports, client portal toggle, phpMyAdmin quick link, safe database check/repair tools, and a help guide. Designed for PHP 8.5, MySQL 5.7, and Perfex CRM 3.4.x.
-Version: 2.2.0
+Version: 2.2.1
 Requires at least: 3.0.*
 Author: Smart Choice Contractors USA / Harold Cabrera
 Author URI: https://justsmartchoice.com/webdeveloper.php
@@ -51,7 +51,7 @@ function debug_mode_smartchoice_add_default_options()
         'debug_mode_client_portal_enabled' => '1',
         'debug_mode_show_admin_banner' => '1',
         'debug_mode_cache_last_cleared' => '',
-        'debug_mode_version' => '2.2.0',
+        'debug_mode_version' => '2.2.1',
         'debug_mode_access_control_enabled' => '0',
     ];
     $rows = get_instance()->db->select('name')->where_in('name', array_keys($defaults))
@@ -284,5 +284,11 @@ function debug_mode_user_allowed()
 function debug_mode_smartchoice_capture_assets()
 {
     if (!debug_mode_is_enabled() || !is_admin()) { return; }
-    echo '<script src="' . module_dir_url('debug_mode', 'assets/js/debug_mode_capture.js') . '?v=220" data-endpoint="' . html_escape(admin_url('debug_mode/browser_error')) . '"></script>';
+    $CI =& get_instance();
+    $token = $CI->session->userdata('debug_mode_capture_token');
+    if (!is_string($token) || strlen($token) !== 64) {
+        $token = bin2hex(random_bytes(32));
+        $CI->session->set_userdata('debug_mode_capture_token', $token);
+    }
+    echo '<script src="' . module_dir_url('debug_mode', 'assets/js/debug_mode_capture.js') . '?v=221" data-token="' . html_escape($token) . '" data-endpoint="' . html_escape(admin_url('debug_mode/browser_error')) . '"></script>';
 }

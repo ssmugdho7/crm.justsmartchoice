@@ -186,8 +186,10 @@ class Debug_mode extends AdminController
     {
         if (!is_admin() || !debug_mode_is_enabled()) { ajax_access_denied(); return; }
         if ($this->input->method(true) !== 'POST') { show_error('POST required', 405); return; }
-        $token = $this->input->post($this->security->get_csrf_token_name());
-        if (!is_string($token) || !hash_equals($this->security->get_csrf_hash(), $token)) { show_error('Invalid CSRF token', 419); return; }
+        // CI consumes its normal POST token during global CSRF validation. Keep an independent, session-bound token.
+        $token = $this->input->post('debug_capture_token');
+        $expectedToken = $this->session->userdata('debug_mode_capture_token');
+        if (!is_string($token) || !is_string($expectedToken) || $expectedToken === '' || !hash_equals($expectedToken, $token)) { show_error('Invalid CSRF token', 403); return; }
         $window = $this->session->userdata('debug_mode_capture_window');
         if (!is_array($window) || ($window['start'] ?? 0) < time() - 60) { $window = ['start' => time(), 'count' => 0]; }
         if ($window['count'] >= 40) { $this->output->set_status_header(429); return; }
@@ -612,7 +614,9 @@ class Debug_mode extends AdminController
             if (is_file($file)) { $sources[] = ['path' => $file, 'label' => basename($file), 'type' => 'CRM']; }
         }
         // PHP can fail before CodeIgniter has installed its own handlers.
-        $phpLogs = array_unique([FCPATH . 'error_log', ini_get('error_log')]);
+        $phpLogs = array_unique(array_filter(array_map(static function ($file) {
+            return $file ? realpath($file) : false;
+        }, [FCPATH . 'error_log', ini_get('error_log')])));
         foreach ($phpLogs as $file) {
             if ($file && is_file($file) && is_readable($file)) {
                 $sources[] = ['path' => $file, 'label' => 'PHP server log', 'type' => 'PHP'];

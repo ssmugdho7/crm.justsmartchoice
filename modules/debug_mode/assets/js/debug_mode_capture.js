@@ -2,7 +2,8 @@
   'use strict';
   var script = document.currentScript;
   var endpoint = script && script.getAttribute('data-endpoint');
-  if (!endpoint || window.scDebugCaptureInstalled) return;
+  var captureToken = script && script.getAttribute('data-token');
+  if (!endpoint || !captureToken || window.scDebugCaptureInstalled) return;
   window.scDebugCaptureInstalled = true;
   var sent = 0, seen = Object.create(null), pending = [];
   function safePath(value) {
@@ -19,11 +20,12 @@
   }
   // No form values, request/response bodies, headers or query strings are collected.
   function flush() {
-    if (!window.csrfData || !window.csrfData.token_name || !window.csrfData.hash || document.readyState === 'loading') return;
+    if (document.readyState === 'loading') return;
     while (pending.length) {
       var entry = pending.shift(), body = new URLSearchParams();
       Object.keys(entry).forEach(function (key) { body.set(key, entry[key]); });
-      body.set(window.csrfData.token_name, window.csrfData.hash);
+      body.set('debug_capture_token', captureToken);
+      if (window.csrfData && window.csrfData.token_name && window.csrfData.hash) body.set(window.csrfData.token_name, window.csrfData.hash);
       nativeFetch(endpoint, {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body.toString()}).catch(function () {});
     }
   }

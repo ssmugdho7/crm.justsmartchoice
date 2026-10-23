@@ -5,7 +5,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /*
 Module Name: CRM Utilities & Debug Tools
 Description: Quality ★★★★★.  CRM Utilities & Debug Tools gives administrators a safer control center for troubleshooting Perfex CRM. It includes debug mode controls, cache cleanup, error log reports, client portal toggle, phpMyAdmin quick link, safe database check/repair tools, and a help guide. Designed for PHP 8.5, MySQL 5.7, and Perfex CRM 3.4.x.
-Version: 2.2.1
+Version: 2.3.0
 Requires at least: 3.0.*
 Author: Smart Choice Contractors USA / Harold Cabrera
 Author URI: https://justsmartchoice.com/webdeveloper.php
@@ -22,6 +22,7 @@ hooks()->add_action('app_admin_head', 'debug_mode_smartchoice_assets');
 hooks()->add_action('app_admin_head', 'debug_mode_smartchoice_capture_assets', 1);
 hooks()->add_action('app_customers_head', 'debug_mode_smartchoice_client_capture_assets', 1);
 hooks()->add_action('app_admin_footer', 'debug_mode_smartchoice_footer_notice');
+hooks()->add_action('app_admin_footer', 'debug_mode_smartchoice_module_console');
 hooks()->add_filter('before_settings_updated', 'debug_mode_smartchoice_before_settings_updated');
 
 function debug_mode_smartchoice_activation_hook()
@@ -53,7 +54,7 @@ function debug_mode_smartchoice_add_default_options()
         'debug_mode_client_portal_enabled' => '1',
         'debug_mode_show_admin_banner' => '1',
         'debug_mode_cache_last_cleared' => '',
-        'debug_mode_version' => '2.2.1',
+        'debug_mode_version' => '2.3.0',
         'debug_mode_access_control_enabled' => '0',
     ];
     $rows = get_instance()->db->select('name')->where_in('name', array_keys($defaults))
@@ -283,6 +284,24 @@ function debug_mode_user_allowed()
 
 /* Smart Choice Module Structural Repair: verified for flat language/migration structure and PHP 8.5 baseline. */
 
+/** Resolve only a real installed module from the current administrator route. */
+function debug_mode_current_admin_module()
+{
+    $CI =& get_instance();
+    $module = isset($CI->router) && method_exists($CI->router, 'fetch_module')
+        ? (string) $CI->router->fetch_module()
+        : '';
+    if ($module === '' && isset($CI->uri)) {
+        $uri = (string) $CI->uri->uri_string();
+        if (preg_match('~^admin/([a-zA-Z0-9_-]+)(?:/|$)~', $uri, $match)) { $module = $match[1]; }
+    }
+    if ($module === '' || !preg_match('/^[a-zA-Z0-9_-]+$/D', $module)
+        || !isset($CI->app_modules) || !$CI->app_modules->get($module)) {
+        return null;
+    }
+    return $module;
+}
+
 function debug_mode_smartchoice_capture_assets()
 {
     if (!debug_mode_is_enabled() || !is_admin()) { return; }
@@ -292,7 +311,39 @@ function debug_mode_smartchoice_capture_assets()
         $token = bin2hex(random_bytes(32));
         $CI->session->set_userdata('debug_mode_capture_token', $token);
     }
-    echo '<script src="' . module_dir_url('debug_mode', 'assets/js/debug_mode_capture.js') . '?v=230" data-token="' . html_escape($token) . '" data-endpoint="' . html_escape(admin_url('debug_mode/browser_error')) . '"></script>';
+    echo '<script src="' . module_dir_url('debug_mode', 'assets/js/debug_mode_capture.js') . '?v=231" data-token="' . html_escape($token) . '" data-endpoint="' . html_escape(admin_url('debug_mode/browser_error')) . '"></script>';
+    $module = debug_mode_current_admin_module();
+    if ($module) {
+        echo '<link href="' . module_dir_url('debug_mode', 'assets/css/debug_mode_console.css') . '?v=230" rel="stylesheet" type="text/css">';
+        echo '<script src="' . module_dir_url('debug_mode', 'assets/js/debug_mode_console.js') . '?v=230" defer'
+            . ' data-module="' . html_escape($module) . '" data-since="' . (time() - 10) . '"'
+            . ' data-token="' . html_escape($token) . '" data-endpoint="' . html_escape(admin_url('debug_mode/module_console')) . '"></script>';
+    }
+}
+
+/** Collision-inspired drawer for current-module errors; output remains escaped by the client renderer. */
+function debug_mode_smartchoice_module_console()
+{
+    if (!debug_mode_is_enabled() || !is_admin()) { return; }
+    $module = debug_mode_current_admin_module();
+    if (!$module) { return; }
+    ?>
+    <section id="scDebugConsole" aria-label="<?php echo html_escape($module); ?> module diagnostics">
+        <div class="sc-debug-console-bar">
+            <span class="sc-debug-console-lights" aria-hidden="true"><span></span><span></span><span></span></span>
+            <span class="sc-debug-console-title">Debug · <?php echo html_escape($module); ?></span>
+            <span data-console-status role="status" aria-live="polite">Checking module errors…</span>
+            <span class="sc-debug-console-spacer"></span>
+            <span class="sc-debug-console-count" data-console-count hidden>0</span>
+            <button type="button" data-console-refresh><i class="fa fa-refresh" aria-hidden="true"></i> Refresh</button>
+            <button type="button" data-console-clear>Clear view</button>
+            <button type="button" data-console-toggle aria-expanded="false" aria-controls="scDebugConsoleBody"><i class="fa fa-chevron-up" aria-hidden="true"></i> <span data-console-toggle-label>Open</span></button>
+        </div>
+        <div id="scDebugConsoleBody" class="sc-debug-console-body" data-console-body hidden>
+            <div class="sc-debug-console-events" data-console-events></div>
+        </div>
+    </section>
+    <?php
 }
 
 /** Client capture is authenticated, separately switchable and tied to this contact session. */

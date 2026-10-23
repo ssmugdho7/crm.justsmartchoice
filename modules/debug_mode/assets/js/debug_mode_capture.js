@@ -11,6 +11,10 @@
     try { var url = new URL(value, location.href); return url.origin === location.origin ? url.pathname : '[external resource]'; }
     catch (_) { return '[unknown resource]'; }
   }
+  function ignored(value) {
+    var path = safePath(value);
+    return path === safePath(endpoint) || (window.scDebugIgnoredPaths || []).indexOf(path) !== -1;
+  }
   function report(kind, message, file, line) {
     if (sent >= 20) return;
     var entry = {kind: kind, message: String(message || '').slice(0, 700), file: safePath(file || location.href), line: Number(line) || 0, route: location.pathname};
@@ -50,14 +54,14 @@
   window.fetch = function () {
     var args = arguments, url = args[0] && args[0].url || args[0];
     return nativeFetch.apply(window, args).then(function (response) {
-      if (response.status >= 400 && safePath(url) !== safePath(endpoint)) report('http', 'HTTP ' + response.status, url, 0);
+      if (response.status >= 400 && !ignored(url)) report('http', 'HTTP ' + response.status, url, 0);
       return response;
-    }, function (error) { report('network', 'Fetch request failed', url, 0); throw error; });
+    }, function (error) { if (!ignored(url)) report('network', 'Fetch request failed', url, 0); throw error; });
   };
   var open = XMLHttpRequest.prototype.open;
   XMLHttpRequest.prototype.open = function (method, url) {
     this.addEventListener('loadend', function () {
-      if ((this.status === 0 || this.status >= 400) && safePath(url) !== safePath(endpoint)) report('http', 'XHR HTTP ' + this.status, url, 0);
+      if ((this.status === 0 || this.status >= 400) && !ignored(url)) report('http', 'XHR HTTP ' + this.status, url, 0);
     }, {once: true});
     return open.apply(this, arguments);
   };

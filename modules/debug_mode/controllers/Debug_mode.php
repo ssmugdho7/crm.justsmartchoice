@@ -189,6 +189,45 @@ class Debug_mode extends AdminController
         Debug_mode_browser_receiver::receive($this);
     }
 
+    /** Return recent, redacted events for the module currently open in this administrator session. */
+    public function module_console()
+    {
+        if (!is_admin() || !debug_mode_is_enabled()) { ajax_access_denied(); return; }
+        if ($this->input->method(true) !== 'POST') { show_error('POST required', 405); return; }
+
+        $token = $this->input->post('debug_capture_token');
+        $expectedToken = $this->session->userdata('debug_mode_capture_token');
+        if (!is_string($token) || !is_string($expectedToken) || strlen($expectedToken) !== 64
+            || !hash_equals($expectedToken, $token)) {
+            show_error('Invalid CSRF token', 403);
+            return;
+        }
+
+        $module = $this->input->post('module');
+        if (!is_string($module) || !preg_match('/^[a-zA-Z0-9_-]+$/D', $module)
+            || !$this->app_modules->get($module)) {
+            show_error('Invalid module', 400);
+            return;
+        }
+
+        $requestedSince = (int) $this->input->post('since');
+        $since = max(time() - 900, min(time() + 5, $requestedSince ?: time() - 10));
+        $rows = array_values(array_filter($this->build_error_report(200, $since, 262144, 1), static function ($row) use ($module, $since) {
+            return ($row['module'] ?? '') === $module && (int) ($row['time'] ?? 0) >= $since;
+        }));
+
+        require_once dirname(__DIR__) . '/libraries/Debug_mode_console_formatter.php';
+        $events = Debug_mode_console_formatter::format($rows, $module, FCPATH);
+        $payload = [
+            'success' => true,
+            'module' => $module,
+            'events' => $events,
+            'checked_at' => date('Y-m-d H:i:s'),
+            'limited' => count($rows) > count($events),
+        ];
+        $this->output->set_content_type('application/json')->set_output(json_encode($payload, JSON_INVALID_UTF8_SUBSTITUTE));
+    }
+
     public function automatic_checks()
     {
         if (!is_admin()) { access_denied('CRM Utilities'); return; }
@@ -618,13 +657,13 @@ class Debug_mode extends AdminController
         return $deleted;
     }
 
-    private function build_error_report($limit = 50)
+    private function build_error_report($limit = 50, $cutoff = null, $maxBytes = 1048576, $days = 7)
     {
         require_once dirname(__DIR__) . '/libraries/Debug_mode_log_reader.php';
         $directory = $this->config->item('log_path') ?: APPPATH . 'logs/';
         $extension = $this->config->item('log_file_extension') ?: 'php';
         $sources = [];
-        for ($day = 0; $day < 7; $day++) {
+        for ($day = 0; $day < max(1, min(7, (int) $days)); $day++) {
             $file = rtrim($directory, '/\\') . '/log-' . date('Y-m-d', strtotime('-' . $day . ' days')) . '.' . $extension;
             if (is_file($file)) { $sources[] = ['path' => $file, 'label' => basename($file), 'type' => 'CRM']; }
         }
@@ -637,7 +676,7 @@ class Debug_mode extends AdminController
                 $sources[] = ['path' => $file, 'label' => 'PHP server log', 'type' => 'PHP'];
             }
         }
-        return Debug_mode_log_reader::read($sources, $limit);
+        return Debug_mode_log_reader::read($sources, $limit, $cutoff, $maxBytes);
     }
 
     private function build_database_report($action = false)

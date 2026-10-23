@@ -70,7 +70,8 @@ function sccc_admin_footer(){
     if (!is_staff_logged_in()) return;
     if (!(is_admin() || staff_can('view','smart_choice_call_center') || staff_can('view_own','smart_choice_call_center'))) return;
     echo '<script>window.scccTokenUrl='.json_encode(admin_url('smart_choice_call_center/token')).';window.scccBrowserEnabled=true;</script>';
-    echo '<script src="https://sdk.twilio.com/js/voice/releases/2.11.0/twilio.min.js"></script>';
+    // Pinned official npm browser bundle: the previous SDK-host URL returns a non-script 403 response.
+    echo '<script src="'.module_dir_url(SCCC_MODULE_NAME,'assets/vendor/twilio-voice-sdk/twilio-2.11.0.min.js').'"></script>';
     echo '<script src="'.module_dir_url(SCCC_MODULE_NAME,'assets/js/call-center.js?v='.SCCC_VERSION).'"></script>';
 }
 function sccc_cron(){

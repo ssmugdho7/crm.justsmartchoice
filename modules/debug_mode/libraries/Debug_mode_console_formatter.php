@@ -39,11 +39,12 @@ class Debug_mode_console_formatter
                 'trace' => $trace,
                 'source' => substr((string) ($row['file'] ?? 'CRM log'), 0, 100),
                 'occurred_at' => date('Y-m-d H:i:s', (int) ($row['time'] ?? time())),
+                'occurred_at_unix' => (int) ($row['time'] ?? time()),
                 'location' => $location,
             ];
         }
 
-        return array_slice($events, 0, 50);
+        return $events;
     }
 
     private static function cleanText($text, array $roots)

@@ -56,6 +56,25 @@ try {
     verify_diagnostic($console[0]['location']['file']==='modules/appointly/example.php' && $console[0]['location']['line']===4,'Resolve source only inside the current module');
     verify_diagnostic(count($console[0]['location']['excerpt'])===6 && $console[0]['location']['excerpt'][3]['current']===true,'Include a bounded source excerpt around the error line');
     verify_diagnostic(strpos(json_encode($console),'private_log_secret')===false && strpos(json_encode($console),'private_source_secret')===false,'Redact secrets from messages and source excerpts');
+    require dirname(__DIR__) . '/modules/debug_mode/libraries/Debug_mode_issue_tracker.php';
+    $repeated=[
+        ['severity'=>'error','summary'=>'Repeated failure [request=aaaaaaaaaaaaaaaa]','source'=>'CRM','trace'=>[],'location'=>null,'occurred_at_unix'=>100],
+        ['severity'=>'error','summary'=>'Repeated failure [request=bbbbbbbbbbbbbbbb]','source'=>'CRM','trace'=>[],'location'=>null,'occurred_at_unix'=>120],
+    ];
+    $collapsed=Debug_mode_issue_tracker::collapse($repeated,'expenses','/admin/expenses');
+    verify_diagnostic(count($collapsed)===1 && $collapsed[0]['occurrences']===2 && $collapsed[0]['first_seen_unix']===100 && $collapsed[0]['last_seen_unix']===120,'Collapse repeated page failures into one stable issue');
+    $state=Debug_mode_issue_tracker::synchronize([],$collapsed,'expenses','/admin/expenses');
+    $fingerprint=$collapsed[0]['fingerprint'];
+    verify_diagnostic(count(Debug_mode_issue_tracker::openForRoute($state,'expenses','/admin/expenses'))===1,'New page issue remains open in persistent state');
+    $state=Debug_mode_issue_tracker::resolve($state,$fingerprint,'expenses','/admin/expenses',130);
+    verify_diagnostic($state!==false && Debug_mode_issue_tracker::openForRoute($state,'expenses','/admin/expenses')===[],'Verified code fix resolves the retained issue');
+    $state=Debug_mode_issue_tracker::synchronize($state,$collapsed,'expenses','/admin/expenses');
+    verify_diagnostic(Debug_mode_issue_tracker::openForRoute($state,'expenses','/admin/expenses')===[],'Old retained log evidence does not reopen a resolved issue');
+    $repeated[1]['occurred_at_unix']=140;
+    $recurrence=Debug_mode_issue_tracker::collapse($repeated,'expenses','/admin/expenses');
+    $state=Debug_mode_issue_tracker::synchronize($state,$recurrence,'expenses','/admin/expenses');
+    verify_diagnostic(count(Debug_mode_issue_tracker::openForRoute($state,'expenses','/admin/expenses'))===1,'A recurrence after resolution reopens the issue');
+    verify_diagnostic(count(Debug_mode_issue_tracker::decode(json_encode($state)))===1,'Persistent issue registry survives serialization');
     unlink($moduleFile);rmdir($fixture.'/modules/appointly');rmdir($fixture.'/modules');
     class CI_Exceptions { public $logged; public function log_exception($severity,$message,$file,$line){$this->logged=[$severity,$message,$file,$line];} }
     require dirname(__DIR__).'/application/core/App_Exceptions.php';
@@ -108,5 +127,9 @@ try {
     try{$controller->module_console();throw new LogicException('Expected mismatch denial');}catch(RuntimeException $e){verify_diagnostic($e->getMessage()==='HTTP400','Require the page scope to match its route');}
     $admin=false;try{$controller->module_console();throw new LogicException('Expected console denial');}catch(RuntimeException $e){verify_diagnostic($e->getMessage()==='DENIED','Deny non-admin module-console access');}$admin=true;
     $enabled=false;try{$controller->module_console();throw new LogicException('Expected disabled console denial');}catch(RuntimeException $e){verify_diagnostic($e->getMessage()==='DENIED','Deny module-console access outside Debug Mode');}$enabled=true;
+    $controller->input->data=['debug_capture_token'=>$consoleToken,'scope'=>'expenses','route'=>'/admin/expenses','fingerprint'=>'invalid'];
+    try{$controller->resolve_console_issue();throw new LogicException('Expected fingerprint denial');}catch(RuntimeException $e){verify_diagnostic($e->getMessage()==='HTTP400','Reject malformed persistent-issue fingerprints');}
+    $admin=false;try{$controller->resolve_console_issue();throw new LogicException('Expected resolution denial');}catch(RuntimeException $e){verify_diagnostic($e->getMessage()==='DENIED','Deny non-admin persistent-issue resolution');}$admin=true;
+    $enabled=false;try{$controller->resolve_console_issue();throw new LogicException('Expected disabled resolution denial');}catch(RuntimeException $e){verify_diagnostic($e->getMessage()==='DENIED','Deny persistent-issue resolution outside Debug Mode');}$enabled=true;
     echo 'PASS '.$checks." diagnostic assertions\n";
 } finally { remove_diagnostic_fixture($fixture); }

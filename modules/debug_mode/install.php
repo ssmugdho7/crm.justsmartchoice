@@ -11,8 +11,9 @@ add_option('debug_mode_phpmyadmin_url', 'https://s111.bluehost.com:2083/');
 add_option('debug_mode_client_portal_enabled', '1');
 add_option('debug_mode_show_admin_banner', '1');
 add_option('debug_mode_cache_last_cleared', '');
-add_option('debug_mode_version', '2.1.6');
+add_option('debug_mode_version', '2.4.1');
 add_option('debug_mode_access_control_enabled', '0');
+add_option('debug_mode_console_issue_state', '[]');
 
 $CI =& get_instance();
 

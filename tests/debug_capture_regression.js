@@ -4,25 +4,28 @@ const source=fs.readFileSync(require('path').join(__dirname,'../modules/debug_mo
 const handlers={}, documentHandlers={},requests=[];
 const response={status:200};
 function XHR(){this.listeners={};this.status=500;}
+XHR.prototype.setRequestHeader=function(name,value){this.headers=this.headers||{};this.headers[name]=value;};
 XHR.prototype.addEventListener=function(name,callback){this.listeners[name]=callback;};XHR.prototype.open=function(){};
 const window={fetch:(url,options)=>{requests.push({url,options});return Promise.resolve(response);},csrfData:{token_name:'csrf',hash:'fixture'},addEventListener:(name,callback)=>handlers[name]=callback};
-const document={readyState:'complete',currentScript:{getAttribute:name=>name==='data-token'?'session-fixture':'/admin/debug_mode/browser_error'},addEventListener:(name,callback)=>documentHandlers[name]=callback};
-const sandbox={window,document,location:{href:'https://crm.example/admin/appointly',origin:'https://crm.example',pathname:'/admin/appointly'},URL,URLSearchParams,XMLHttpRequest:XHR,Error,console};
+const document={dispatchEvent:()=>{},readyState:'complete',currentScript:{getAttribute:name=>({'data-token':'session-fixture','data-endpoint':'/admin/debug_mode/browser_error','data-visit':'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'}[name])},addEventListener:(name,callback)=>documentHandlers[name]=callback};
+const sandbox={window,document,location:{href:'https://crm.example/admin/appointly',origin:'https://crm.example',pathname:'/admin/appointly'},URL,URLSearchParams,XMLHttpRequest:XHR,Headers,Event,Error,console};
 vm.runInNewContext(source,sandbox);
 (async()=>{
  handlers.error({message:'A fixture exception',filename:'https://crm.example/modules/appointly/app.js?token=secret',lineno:5});
- assert.equal(requests.length,1);let body=new URLSearchParams(requests[0].options.body);assert.equal(body.get('file'),'/modules/appointly/app.js');assert.equal(body.get('csrf'),'fixture');assert.equal(body.get('debug_capture_token'),'session-fixture');assert.equal(body.get('kind'),'javascript');assert(!requests[0].options.body.includes('secret'));
+ assert.equal(requests.length,1);let body=new URLSearchParams(requests[0].options.body);assert.equal(body.get('file'),'/modules/appointly/app.js');assert.equal(body.get('csrf'),'fixture');assert.equal(body.get('debug_capture_token'),'session-fixture');assert.equal(body.get('kind'),'javascript');assert.equal(body.get('visit'),'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');assert(!requests[0].options.body.includes('secret'));
  handlers.error({message:'A fixture exception',filename:'https://crm.example/modules/appointly/app.js?token=secret',lineno:5});assert.equal(requests.length,1,'Deduplicate the same event');
  handlers.unhandledrejection({reason:{privateCustomerData:'must not be captured'}});assert(!requests.at(-1).options.body.includes('privateCustomerData'));
  handlers.error({target:{tagName:'SCRIPT',src:'https://third-party.example/script?secret=x'}});body=new URLSearchParams(requests.at(-1).options.body);assert.equal(body.get('file'),'[external resource]');
  assert.strictEqual(await window.fetch('/api/working'),response,'Return the original response to application callers');
- const xhr=new XHR();xhr.open('GET','/api/failure?token=hidden');xhr.listeners.loadend.call(xhr);body=new URLSearchParams(requests.at(-1).options.body);assert.equal(body.get('message'),'XHR HTTP 500');assert(!requests.at(-1).options.body.includes('hidden'));
+ assert.equal(requests.at(-1).options.headers.get('X-Sc-Debug-Visit'),'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','Same-origin fetch retains page context');
+ await window.fetch('https://other.example/api');assert.equal(requests.at(-1).options,undefined,'Never attach visit context to third-party requests');
+ const xhr=new XHR();xhr.open('GET','/api/failure?token=hidden');assert.equal(xhr.headers['X-Sc-Debug-Visit'],'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','Same-origin XHR retains page context');xhr.listeners.loadend.call(xhr);body=new URLSearchParams(requests.at(-1).options.body);assert.equal(body.get('message'),'XHR HTTP 500');assert(!requests.at(-1).options.body.includes('hidden'));
  const before=requests.length;vm.runInNewContext(source,sandbox);assert.equal(requests.length,before,'Install only once');
  document.readyState='loading';window.csrfData=null;handlers.error({message:'Buffered failure',filename:'/modules/other/test.js'});assert.equal(requests.length,before);document.readyState='complete';documentHandlers.DOMContentLoaded();assert.equal(requests.length,before+1,'Flush buffered event with session token even when global CSRF is disabled');
  const clientRequests=[], clientHandlers={};
  const clientWindow={fetch:(url,options)=>{clientRequests.push({url,options});return Promise.resolve(response);},addEventListener:(name,callback)=>clientHandlers[name]=callback};
- const clientDocument={readyState:'complete',currentScript:{getAttribute:name=>({'data-token':'client-fixture','data-endpoint':'/debug_mode/client_diagnostics/collect','data-portal':'client'}[name])},addEventListener:()=>{}};
- vm.runInNewContext(source,{window:clientWindow,document:clientDocument,location:{href:'https://crm.example/invoices/123?token=secret',origin:'https://crm.example',pathname:'/invoices/123'},URL,URLSearchParams,XMLHttpRequest:XHR,Error,console});
+ const clientDocument={dispatchEvent:()=>{},readyState:'complete',currentScript:{getAttribute:name=>({'data-token':'client-fixture','data-endpoint':'/debug_mode/client_diagnostics/collect','data-portal':'client'}[name])},addEventListener:()=>{}};
+ vm.runInNewContext(source,{window:clientWindow,document:clientDocument,location:{href:'https://crm.example/invoices/123?token=secret',origin:'https://crm.example',pathname:'/invoices/123'},URL,URLSearchParams,XMLHttpRequest:XHR,Headers,Event,Error,console});
  clientHandlers.error({message:'Private customer note',filename:'https://crm.example/invoices/123?token=secret',lineno:1});
  const clientBody=new URLSearchParams(clientRequests[0].options.body);
  assert.equal(clientBody.get('message'),'Client portal javascript error');assert.equal(clientBody.get('route'),'/invoices');assert.equal(clientBody.get('file'),'/invoices');assert(!clientRequests[0].options.body.includes('Private'));assert(!clientRequests[0].options.body.includes('123'));assert(!clientRequests[0].options.body.includes('secret'));

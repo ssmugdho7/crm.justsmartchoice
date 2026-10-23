@@ -189,46 +189,23 @@ class Debug_mode extends AdminController
         Debug_mode_browser_receiver::receive($this);
     }
 
-    /** Return open, redacted issues for the current page. Issues persist until a verified fix is marked resolved. */
+    /** Recheck only the current document and its background requests; history remains in CRM Error Report. */
     public function module_console()
     {
         if (!is_admin() || !debug_mode_is_enabled()) { ajax_access_denied(); return; }
         if ($this->input->method(true) !== 'POST') { show_error('POST required', 405); return; }
-        [$scope, $route] = $this->validated_console_context();
-        [$state, $changed] = $this->synchronize_console_issues($scope, $route);
-        if ($changed) { update_option('debug_mode_console_issue_state', json_encode($state, JSON_INVALID_UTF8_SUBSTITUTE)); }
-        require_once dirname(__DIR__) . '/libraries/Debug_mode_issue_tracker.php';
-        $open = Debug_mode_issue_tracker::openForRoute($state, $scope, $route);
-        $payload = [
+        [$scope, $route, $visit] = $this->validated_console_context();
+        require_once dirname(__DIR__) . '/libraries/Debug_mode_console_formatter.php';
+        $events = Debug_mode_console_formatter::for_visit($this->build_error_report(2000, null, 1048576, 7, $visit), $scope, FCPATH, $route, $visit);
+        $this->output->set_content_type('application/json')->set_output(json_encode([
             'success' => true,
             'scope' => $scope,
             'route' => $route,
-            'events' => array_slice($open, 0, 50),
+            'visit' => $visit,
+            'events' => array_slice($events, 0, 50),
             'checked_at' => date('Y-m-d H:i:s'),
-            'limited' => count($open) > 50,
-            'persistent' => true,
-        ];
-        $this->output->set_content_type('application/json')->set_output(json_encode($payload, JSON_INVALID_UTF8_SUBSTITUTE));
-    }
-
-    /** Resolve a retained issue only after its code fix has been verified. A later recurrence reopens it. */
-    public function resolve_console_issue()
-    {
-        if (!is_admin() || !debug_mode_is_enabled()) { ajax_access_denied(); return; }
-        if ($this->input->method(true) !== 'POST') { show_error('POST required', 405); return; }
-        [$scope, $route] = $this->validated_console_context();
-        $fingerprint = $this->input->post('fingerprint');
-        if (!is_string($fingerprint) || !preg_match('/^[a-f0-9]{64}$/D', $fingerprint)) {
-            show_error('Invalid issue fingerprint', 400); return;
-        }
-        [$state] = $this->synchronize_console_issues($scope, $route);
-        require_once dirname(__DIR__) . '/libraries/Debug_mode_issue_tracker.php';
-        $resolved = Debug_mode_issue_tracker::resolve($state, $fingerprint, $scope, $route);
-        if ($resolved === false) { show_error('Issue not found for this page', 404); return; }
-        update_option('debug_mode_console_issue_state', json_encode($resolved, JSON_INVALID_UTF8_SUBSTITUTE));
-        $this->output->set_content_type('application/json')->set_output(json_encode([
-            'success' => true, 'scope' => $scope, 'route' => $route, 'fingerprint' => $fingerprint,
-        ]));
+            'limited' => count($events) > 50,
+        ], JSON_INVALID_UTF8_SUBSTITUTE));
     }
 
     public function automatic_checks()
@@ -660,7 +637,7 @@ class Debug_mode extends AdminController
         return $deleted;
     }
 
-    private function build_error_report($limit = 50, $cutoff = null, $maxBytes = 1048576, $days = 7)
+    private function build_error_report($limit = 50, $cutoff = null, $maxBytes = 1048576, $days = 7, $visitFilter = '')
     {
         require_once dirname(__DIR__) . '/libraries/Debug_mode_log_reader.php';
         $directory = $this->config->item('log_path') ?: APPPATH . 'logs/';
@@ -679,7 +656,7 @@ class Debug_mode extends AdminController
                 $sources[] = ['path' => $file, 'label' => 'PHP server log', 'type' => 'PHP'];
             }
         }
-        return Debug_mode_log_reader::read($sources, $limit, $cutoff, $maxBytes);
+        return Debug_mode_log_reader::read($sources, $limit, $cutoff, $maxBytes, $visitFilter);
     }
 
     private function validated_console_context()
@@ -698,22 +675,13 @@ class Debug_mode extends AdminController
         }
         $routeParts = array_values(array_filter(explode('/', trim($route, '/')), 'strlen'));
         if ($scope !== ($routeParts[1] ?? 'dashboard')) { show_error('Mismatched page scope', 400); }
-        return [$scope, $route];
-    }
-
-    private function synchronize_console_issues($scope, $route)
-    {
-        $rows = array_values(array_filter($this->build_error_report(500), static function ($row) use ($scope, $route) {
-            $eventRoute = (string) ($row['route'] ?? '');
-            $routeMatches = $eventRoute === $route || strpos($eventRoute, $route . '/') === 0;
-            return $routeMatches || ($eventRoute === '' && ($row['module'] ?? '') === $scope);
-        }));
-        require_once dirname(__DIR__) . '/libraries/Debug_mode_console_formatter.php';
-        require_once dirname(__DIR__) . '/libraries/Debug_mode_issue_tracker.php';
-        $recent = Debug_mode_issue_tracker::collapse(Debug_mode_console_formatter::format($rows, $scope, FCPATH, $route), $scope, $route);
-        $state = Debug_mode_issue_tracker::decode(get_option('debug_mode_console_issue_state'));
-        $updated = Debug_mode_issue_tracker::synchronize($state, $recent, $scope, $route);
-        return [$updated, $updated !== $state];
+        $visit = $this->input->post('visit');
+        $proof = $this->input->post('visit_proof');
+        if (!is_string($visit) || !preg_match('/^[a-f0-9]{32}$/D', $visit)
+            || !is_string($proof) || !hash_equals(hash_hmac('sha256', $scope . '|' . $route . '|' . $visit, $expectedToken), $proof)) {
+            show_error('Invalid page visit', 403);
+        }
+        return [$scope, $route, $visit];
     }
 
     private function build_database_report($action = false)

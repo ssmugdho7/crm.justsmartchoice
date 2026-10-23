@@ -5,7 +5,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /** Prepare redacted, page-scoped diagnostics for the administrator debug drawer. */
 class Debug_mode_console_formatter
 {
-    public static function format(array $rows, $scope, $root, $route = '')
+    public static function format(array $rows, $scope, $root, $route = '', $visit = '')
     {
         $scope = is_string($scope) ? $scope : '';
         $route = is_string($route) ? $route : '';
@@ -14,9 +14,10 @@ class Debug_mode_console_formatter
         $events = [];
 
         foreach ($rows as $row) {
+            if ($visit !== '' && ($row['visit'] ?? '') !== $visit) { continue; }
             $eventRoute = (string) ($row['route'] ?? '');
             $routeMatches = $route !== '' && ($eventRoute === $route || strpos($eventRoute, $route . '/') === 0);
-            if (!$routeMatches && !($eventRoute === '' && ($row['module'] ?? '') === $scope)) { continue; }
+            if ($visit === '' && !$routeMatches && !($eventRoute === '' && ($row['module'] ?? '') === $scope)) { continue; }
 
             $rawText = (string) ($row['line'] ?? '');
             $location = self::findLocation($rawText, $scope, $root);
@@ -24,6 +25,7 @@ class Debug_mode_console_formatter
             $lines = preg_split('/\r?\n/', $text) ?: [];
             $summary = array_shift($lines) ?: 'Unknown diagnostic event';
             $summary = preg_replace('/^(?:ERROR|DEBUG|INFO) - \d{4}-\d\d-\d\d \d\d:\d\d:\d\d -->\s*/', '', $summary);
+            $summary = preg_replace('/\s*\[(?:request|visit)=[a-f0-9]+\]/', '', $summary);
             $trace = [];
             foreach ($lines as $line) {
                 $line = trim($line);
@@ -45,6 +47,27 @@ class Debug_mode_console_formatter
         }
 
         return $events;
+    }
+
+    public static function for_visit(array $rows, $scope, $root, $route, $visit)
+    {
+        $issues = [];
+        foreach (self::format($rows, $scope, $root, $route, $visit) as $event) {
+            $fingerprint = hash('sha256', $event['severity'] . '|' . $event['summary']);
+            $seenAt = $event['occurred_at_unix'];
+            if (!isset($issues[$fingerprint])) {
+                $event['fingerprint'] = $fingerprint;
+                $event['first_seen_unix'] = $seenAt;
+                $event['last_seen_unix'] = $seenAt;
+                $event['occurrences'] = 1;
+                $issues[$fingerprint] = $event;
+            } else {
+                $issues[$fingerprint]['first_seen_unix'] = min($issues[$fingerprint]['first_seen_unix'], $seenAt);
+                $issues[$fingerprint]['last_seen_unix'] = max($issues[$fingerprint]['last_seen_unix'], $seenAt);
+                $issues[$fingerprint]['occurrences']++;
+            }
+        }
+        return array_values($issues);
     }
 
     private static function cleanText($text, array $roots)

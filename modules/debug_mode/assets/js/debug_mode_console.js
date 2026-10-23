@@ -5,14 +5,14 @@
   var scopeName = script && script.getAttribute('data-scope');
   var pageRoute = script && script.getAttribute('data-route');
   var endpoint = script && script.getAttribute('data-endpoint');
-  var resolveEndpoint = script && script.getAttribute('data-resolve-endpoint');
+  var visit = script && script.getAttribute('data-visit');
+  var visitProof = script && script.getAttribute('data-visit-proof');
   var captureToken = script && script.getAttribute('data-token');
   var root = document.getElementById('scDebugConsole');
-  if (!root || !scopeName || !pageRoute || !endpoint || !resolveEndpoint || !captureToken) return;
+  if (!root || !scopeName || !pageRoute || !endpoint || !visit || !visitProof || !captureToken) return;
 
   window.scDebugIgnoredPaths = window.scDebugIgnoredPaths || [];
   try { window.scDebugIgnoredPaths.push(new URL(endpoint, location.href).pathname); } catch (_) {}
-  try { window.scDebugIgnoredPaths.push(new URL(resolveEndpoint, location.href).pathname); } catch (_) {}
 
   var toggle = root.querySelector('[data-console-toggle]');
   var refresh = root.querySelector('[data-console-refresh]');
@@ -22,7 +22,10 @@
   var body = root.querySelector('[data-console-body]');
   var storageKey = 'scDebugConsole:' + pageRoute;
   var known = Object.create(null);
+  var observed = Object.create(null);
   var busy = false;
+  var loaded = document.readyState === 'complete';
+  var checkAgain = false;
   var manuallyCollapsed = sessionStorage.getItem(storageKey) === 'collapsed';
 
   function setExpanded(expanded) {
@@ -62,27 +65,6 @@
     try { return new Date(timestamp * 1000).toLocaleString(); } catch (_) { return 'unknown'; }
   }
 
-  function resolveIssue(event, button) {
-    if (button.disabled) return;
-    button.disabled = true;
-    status.textContent = 'Marking issue resolved…';
-    var bodyData = requestBody({fingerprint: event.fingerprint});
-    fetch(resolveEndpoint, {
-      method: 'POST', credentials: 'same-origin',
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: bodyData.toString()
-    }).then(function (response) {
-      if (!response.ok || response.redirected) throw new Error('HTTP ' + response.status);
-      return response.json();
-    }).then(function (payload) {
-      if (!payload || payload.success !== true || payload.fingerprint !== event.fingerprint) throw new Error('Invalid response');
-      delete known[event.fingerprint];
-      fetchEvents();
-    }).catch(function () {
-      status.textContent = 'Could not resolve this issue';
-      button.disabled = false;
-    });
-  }
-
   function renderEvent(event) {
     var article = node('article', 'sc-debug-console-event severity-' + event.severity);
     var heading = node('div', 'sc-debug-console-event-heading');
@@ -99,17 +81,12 @@
       details.appendChild(node('pre', '', event.trace.join('\n')));
       article.appendChild(details);
     }
-    var actions = node('div', 'sc-debug-console-actions');
-    actions.appendChild(node('span', '', 'This issue stays open across visits.'));
-    var resolveButton = node('button', 'sc-debug-console-resolve', 'Mark resolved after code fix');
-    resolveButton.type = 'button';
-    resolveButton.addEventListener('click', function () { resolveIssue(event, resolveButton); });
-    actions.appendChild(resolveButton);
-    article.appendChild(actions);
     return article;
   }
 
   function render(payload) {
+    payload.events.forEach(function (event) { observed[event.fingerprint || event.id] = event; });
+    payload.events = Object.keys(observed).map(function (key) { return observed[key]; }).slice(0, 50);
     events.textContent = '';
     var fresh = 0;
     payload.events.forEach(function (event) {
@@ -118,25 +95,33 @@
       known[eventKey] = true;
       events.appendChild(renderEvent(event));
     });
-    if (!payload.events.length) events.appendChild(node('p', 'sc-debug-console-empty', 'No unresolved issues are recorded for this page.'));
+    var capture = window.scDebugCaptureStatus || {pending: 0, failed: true};
+    if (!payload.events.length) events.appendChild(node('p', 'sc-debug-console-empty', capture.failed
+      ? 'Some browser diagnostics could not be recorded. This page cannot yet be reported clean.'
+      : 'No errors detected on this page load. Errors that no longer occur are removed automatically.'));
     count.textContent = String(payload.events.length);
     count.hidden = payload.events.length === 0;
     status.textContent = payload.events.length
-      ? payload.events.length + ' unresolved issue' + (payload.events.length === 1 ? '' : 's') + ' for this page' + (payload.limited ? ' · newest 50 shown' : '')
-      : 'No unresolved issues for this page';
-    root.classList.toggle('has-errors', payload.events.length > 0);
+      ? payload.events.length + ' issue' + (payload.events.length === 1 ? '' : 's') + ' on this page load' + (payload.limited ? ' · newest 50 shown' : '')
+      : (capture.failed ? 'Browser capture incomplete' : 'No errors on this page load');
+    if (capture.failed && payload.events.length) status.textContent += ' · browser capture incomplete';
+    root.classList.toggle('has-errors', payload.events.length > 0 || capture.failed);
     if (payload.events.length && fresh && !manuallyCollapsed) setExpanded(true);
   }
 
-  function requestBody(extra) {
-    var bodyData = new URLSearchParams({scope: scopeName, route: pageRoute, debug_capture_token: captureToken});
-    Object.keys(extra || {}).forEach(function (key) { bodyData.set(key, extra[key]); });
+  function requestBody() {
+    var bodyData = new URLSearchParams({scope: scopeName, route: pageRoute, visit: visit, visit_proof: visitProof, debug_capture_token: captureToken});
     if (window.csrfData && csrfData.token_name && csrfData.hash) bodyData.set(csrfData.token_name, csrfData.hash);
     return bodyData;
   }
 
   function fetchEvents() {
-    if (busy || document.hidden) return;
+    if (!loaded || document.hidden) return;
+    if (busy) { checkAgain = true; return; }
+    if (window.scDebugCaptureStatus && window.scDebugCaptureStatus.pending) {
+      status.textContent = 'Recording page errors…';
+      return;
+    }
     busy = true;
     status.textContent = 'Checking ' + scopeName + '…';
     var bodyData = requestBody();
@@ -149,12 +134,16 @@
       if (!response.ok || response.redirected) throw new Error('HTTP ' + response.status);
       return response.json();
     }).then(function (payload) {
-      if (!payload || payload.success !== true || payload.scope !== scopeName || payload.route !== pageRoute || !Array.isArray(payload.events)) throw new Error('Invalid response');
-      render(payload);
+      if (!payload || payload.success !== true || payload.scope !== scopeName || payload.route !== pageRoute || payload.visit !== visit || !Array.isArray(payload.events)) throw new Error('Invalid response');
+      if (!window.scDebugCaptureStatus || !window.scDebugCaptureStatus.pending) render(payload);
+      else checkAgain = true;
     }).catch(function () {
       status.textContent = 'Page diagnostics are temporarily unavailable';
       root.classList.add('has-errors');
-    }).finally(function () { busy = false; });
+    }).finally(function () {
+      busy = false;
+      if (checkAgain) { checkAgain = false; fetchEvents(); }
+    });
   }
 
   toggle.addEventListener('click', function () {
@@ -165,6 +154,8 @@
   });
   refresh.addEventListener('click', fetchEvents);
   document.addEventListener('visibilitychange', function () { if (!document.hidden) fetchEvents(); });
+  document.addEventListener('sc-debug-recorded', fetchEvents);
+  window.addEventListener('load', function () { loaded = true; fetchEvents(); });
 
   setExpanded(sessionStorage.getItem(storageKey) === 'open');
   fetchEvents();

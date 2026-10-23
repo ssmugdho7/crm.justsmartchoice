@@ -56,25 +56,22 @@ try {
     verify_diagnostic($console[0]['location']['file']==='modules/appointly/example.php' && $console[0]['location']['line']===4,'Resolve source only inside the current module');
     verify_diagnostic(count($console[0]['location']['excerpt'])===6 && $console[0]['location']['excerpt'][3]['current']===true,'Include a bounded source excerpt around the error line');
     verify_diagnostic(strpos(json_encode($console),'private_log_secret')===false && strpos(json_encode($console),'private_source_secret')===false,'Redact secrets from messages and source excerpts');
-    require dirname(__DIR__) . '/modules/debug_mode/libraries/Debug_mode_issue_tracker.php';
-    $repeated=[
-        ['severity'=>'error','summary'=>'Repeated failure [request=aaaaaaaaaaaaaaaa]','source'=>'CRM','trace'=>[],'location'=>null,'occurred_at_unix'=>100],
-        ['severity'=>'error','summary'=>'Repeated failure [request=bbbbbbbbbbbbbbbb]','source'=>'CRM','trace'=>[],'location'=>null,'occurred_at_unix'=>120],
-    ];
-    $collapsed=Debug_mode_issue_tracker::collapse($repeated,'expenses','/admin/expenses');
-    verify_diagnostic(count($collapsed)===1 && $collapsed[0]['occurrences']===2 && $collapsed[0]['first_seen_unix']===100 && $collapsed[0]['last_seen_unix']===120,'Collapse repeated page failures into one stable issue');
-    $state=Debug_mode_issue_tracker::synchronize([],$collapsed,'expenses','/admin/expenses');
-    $fingerprint=$collapsed[0]['fingerprint'];
-    verify_diagnostic(count(Debug_mode_issue_tracker::openForRoute($state,'expenses','/admin/expenses'))===1,'New page issue remains open in persistent state');
-    $state=Debug_mode_issue_tracker::resolve($state,$fingerprint,'expenses','/admin/expenses',130);
-    verify_diagnostic($state!==false && Debug_mode_issue_tracker::openForRoute($state,'expenses','/admin/expenses')===[],'Verified code fix resolves the retained issue');
-    $state=Debug_mode_issue_tracker::synchronize($state,$collapsed,'expenses','/admin/expenses');
-    verify_diagnostic(Debug_mode_issue_tracker::openForRoute($state,'expenses','/admin/expenses')===[],'Old retained log evidence does not reopen a resolved issue');
-    $repeated[1]['occurred_at_unix']=140;
-    $recurrence=Debug_mode_issue_tracker::collapse($repeated,'expenses','/admin/expenses');
-    $state=Debug_mode_issue_tracker::synchronize($state,$recurrence,'expenses','/admin/expenses');
-    verify_diagnostic(count(Debug_mode_issue_tracker::openForRoute($state,'expenses','/admin/expenses'))===1,'A recurrence after resolution reopens the issue');
-    verify_diagnostic(count(Debug_mode_issue_tracker::decode(json_encode($state)))===1,'Persistent issue registry survives serialization');
+    $visitA=str_repeat('a',32); $visitB=str_repeat('b',32);
+    $visitLog=$fixture.'/visits.php';
+    file_put_contents($visitLog,
+        "ERROR - 2026-10-23 13:20:00 --> Broken page [request=1111111111111111] [visit=$visitA] [route=/admin/expenses]\n" .
+        "ERROR - 2026-10-23 13:20:00 --> Broken page [request=2222222222222222] [visit=$visitA] [route=/admin/expenses]\n" .
+        "ERROR - 2026-10-23 13:20:00 --> Other tab [visit=$visitB] [route=/admin/expenses]\n" .
+        "ERROR - 2026-10-23 13:20:01 --> AJAX module failure [visit=$visitA] [route=/admin/prchat/users]\n");
+    $visitRows=Debug_mode_log_reader::read([['path'=>$visitLog,'label'=>'CRM','type'=>'CRM']],500,0);
+    $current=Debug_mode_console_formatter::for_visit($visitRows,'expenses',$fixture,'/admin/expenses',$visitA);
+    verify_diagnostic(count($current)===2,'Include current page and correlated background request errors; isolate simultaneous tabs');
+    verify_diagnostic($current[1]['occurrences']===2,'Group repeated current-load errors across request identifiers');
+    verify_diagnostic(strpos(json_encode($current),'[visit=')===false && strpos(json_encode($current),'[request=')===false,'Hide internal visit/request identifiers from summaries');
+    $clean=Debug_mode_console_formatter::for_visit($visitRows,'expenses',$fixture,'/admin/expenses',str_repeat('c',32));
+    verify_diagnostic($clean===[],'Clean page reload automatically clears prior errors without a resolution action');
+    $new=Debug_mode_console_formatter::for_visit($visitRows,'expenses',$fixture,'/admin/expenses',$visitB);
+    verify_diagnostic(count($new)===1 && $new[0]['summary']==='Other tab [route=/admin/expenses]','A new issue is shown automatically for its own visit');
     unlink($moduleFile);rmdir($fixture.'/modules/appointly');rmdir($fixture.'/modules');
     class CI_Exceptions { public $logged; public function log_exception($severity,$message,$file,$line){$this->logged=[$severity,$message,$file,$line];} }
     require dirname(__DIR__).'/application/core/App_Exceptions.php';
@@ -87,6 +84,12 @@ try {
     $request=preg_match('/\[request=([^\]]+)\]/',$exceptions->logged[1],$m)?$m[1]:'';
     $exceptions->log_exception('Warning','Second issue','/site/core.php',1);
     verify_diagnostic(strpos($exceptions->logged[1],'[request='.$request.']')!==false,'Reuse correlation identifier within a request');
+    verify_diagnostic(strpos($exceptions->logged[1],'[visit='.App_Debug_context::visit_id().']')!==false,'PHP errors and rendered page share one visit identifier');
+    class CI_Log { public $logged; function write_log($level,$message){$this->logged=[$level,$message];return true;} }
+    require dirname(__DIR__).'/application/core/App_Log.php';
+    $logger=new App_Log();$logger->write_log('error','Could not find a language line');
+    verify_diagnostic(strpos($logger->logged[1],'[visit='.App_Debug_context::visit_id().']')!==false && strpos($logger->logged[1],'[route=/admin/appointly/index]')!==false,'Module log_message errors receive the same page context as PHP errors');
+    $logger->write_log('info','Routine log');verify_diagnostic($logger->logged[1]==='Routine log','Routine logs keep existing behavior');
     $filters=[]; $actions=[]; $canDelete=true;
     class BulkFixtureHooks {function add_filter($name,$callback){global $filters;$filters[$name]=$callback;} function add_action($name,$callback){global $actions;$actions[$name]=$callback;}}
     function hooks(){return new BulkFixtureHooks();} function db_prefix(){return 'tbl';} function staff_can($p,$f){global $canDelete;return $canDelete;} function staff_cant($p,$f){return !staff_can($p,$f);} function e($v){return htmlspecialchars((string)$v,ENT_QUOTES);} function base_url($p){return '/'.$p;}
@@ -104,14 +107,15 @@ try {
     class AdminController {function __construct(){}}
     class InputFixture {public $data=[];public $method='POST';function post($key){return $this->data[$key]??null;}function method($upper){return $this->method;}}
     class SessionFixture {public $data=[];function userdata($key){return $this->data[$key]??null;}function set_userdata($key,$value){$this->data[$key]=$value;}}
-    class OutputFixture {public $status;function set_status_header($value){$this->status=$value;}}
+    class OutputFixture {public $status;public $body;function set_status_header($value){$this->status=$value;}function set_content_type($value){return $this;}function set_output($value){$this->body=$value;return $this;}}
     require dirname(__DIR__).'/modules/debug_mode/controllers/Debug_mode.php';
     #[AllowDynamicProperties] class ControllerFixture extends Debug_mode {}
     class SecurityFixture {function get_csrf_token_name(){return 'csrf';}function get_csrf_hash(){return 'fixture';}}
     $controller=new ControllerFixture();$controller->security=new SecurityFixture();$controller->input=new InputFixture();$controller->session=new SessionFixture();$controller->session->data['debug_mode_capture_token']='fixture';$controller->output=new OutputFixture();
-    $controller->input->data=['debug_capture_token'=>'fixture','kind'=>'javascript','message'=>"Test token=private_endpoint\nforged line",'file'=>'https://crm.example/modules/appointly/a.js?key=private_query','route'=>'/admin/appointly?token=private_route','line'=>42];
+    $controller->input->data=['debug_capture_token'=>'fixture','kind'=>'javascript','message'=>"Test token=private_endpoint\nforged line",'file'=>'https://crm.example/modules/appointly/a.js?key=private_query','route'=>'/admin/appointly?token=private_route','line'=>42,'visit'=>str_repeat('d',32)];
     $controller->browser_error();
     verify_diagnostic($controller->output->status===204 && count($messages)===1,'Capture valid admin diagnostic');
+    verify_diagnostic(strpos($messages[0],'[visit='.str_repeat('d',32).']')!==false,'Browser diagnostics carry their page visit identity');
     verify_diagnostic(strpos($messages[0],'private_')===false && strpos($messages[0],"\n")===false,'Redact endpoint fields and prevent log-line injection');
     $controller->input->data['debug_capture_token']='wrong';try{$controller->browser_error();throw new LogicException('Expected CSRF denial');}catch(RuntimeException $e){verify_diagnostic($e->getMessage()==='HTTP403' && count($messages)===1,'Reject invalid CSRF token without logging');}$controller->input->data['debug_capture_token']='fixture';
     $admin=false;try{$controller->browser_error();throw new LogicException('Expected denial');}catch(RuntimeException $e){verify_diagnostic($e->getMessage()==='DENIED','Deny non-admin collection');}$admin=true;
@@ -127,9 +131,17 @@ try {
     try{$controller->module_console();throw new LogicException('Expected mismatch denial');}catch(RuntimeException $e){verify_diagnostic($e->getMessage()==='HTTP400','Require the page scope to match its route');}
     $admin=false;try{$controller->module_console();throw new LogicException('Expected console denial');}catch(RuntimeException $e){verify_diagnostic($e->getMessage()==='DENIED','Deny non-admin module-console access');}$admin=true;
     $enabled=false;try{$controller->module_console();throw new LogicException('Expected disabled console denial');}catch(RuntimeException $e){verify_diagnostic($e->getMessage()==='DENIED','Deny module-console access outside Debug Mode');}$enabled=true;
-    $controller->input->data=['debug_capture_token'=>$consoleToken,'scope'=>'expenses','route'=>'/admin/expenses','fingerprint'=>'invalid'];
-    try{$controller->resolve_console_issue();throw new LogicException('Expected fingerprint denial');}catch(RuntimeException $e){verify_diagnostic($e->getMessage()==='HTTP400','Reject malformed persistent-issue fingerprints');}
-    $admin=false;try{$controller->resolve_console_issue();throw new LogicException('Expected resolution denial');}catch(RuntimeException $e){verify_diagnostic($e->getMessage()==='DENIED','Deny non-admin persistent-issue resolution');}$admin=true;
-    $enabled=false;try{$controller->resolve_console_issue();throw new LogicException('Expected disabled resolution denial');}catch(RuntimeException $e){verify_diagnostic($e->getMessage()==='DENIED','Deny persistent-issue resolution outside Debug Mode');}$enabled=true;
+    $controller->input->data=['debug_capture_token'=>$consoleToken,'scope'=>'expenses','route'=>'/admin/expenses','visit'=>str_repeat('a',32),'visit_proof'=>'forged'];
+    try{$controller->module_console();throw new LogicException('Expected visit proof denial');}catch(RuntimeException $e){verify_diagnostic($e->getMessage()==='HTTP403','Reject forged or unrelated page visit identifiers');}
+    define('APPPATH',$fixture.'/');define('FCPATH',dirname(__DIR__).'/');
+    class ConfigFixture {function item($key){global $fixture;return $key==='log_path'?$fixture.'/':null;}}
+    $controller->config=new ConfigFixture();
+    $currentVisit=str_repeat('e',32);$freshVisit=str_repeat('f',32);
+    file_put_contents($fixture.'/log-'.date('Y-m-d').'.php', 'ERROR - '.date('Y-m-d H:i:s').' --> Current warning [visit='.$currentVisit.'] [route=/admin/expenses]'."\n");
+    foreach ([$currentVisit=>1,$freshVisit=>0] as $visit=>$expectedCount) {
+        $controller->input->data=['debug_capture_token'=>$consoleToken,'scope'=>'expenses','route'=>'/admin/expenses','visit'=>$visit,'visit_proof'=>hash_hmac('sha256','expenses|/admin/expenses|'.$visit,$consoleToken)];
+        $controller->module_console();$payload=json_decode($controller->output->body,true);
+        verify_diagnostic($payload['success']===true && $payload['visit']===$visit && count($payload['events'])===$expectedCount,'Real controller automatically replaces prior-page issues on a clean reload');
+    }
     echo 'PASS '.$checks." diagnostic assertions\n";
 } finally { remove_diagnostic_fixture($fixture); }

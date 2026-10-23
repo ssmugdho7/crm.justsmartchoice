@@ -5,7 +5,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /*
 Module Name: CRM Utilities & Debug Tools
 Description: Quality ★★★★★.  CRM Utilities & Debug Tools gives administrators a safer control center for troubleshooting Perfex CRM. It includes debug mode controls, cache cleanup, error log reports, client portal toggle, phpMyAdmin quick link, safe database check/repair tools, and a help guide. Designed for PHP 8.5, MySQL 5.7, and Perfex CRM 3.4.x.
-Version: 2.4.1
+Version: 2.4.2
 Requires at least: 3.0.*
 Author: Smart Choice Contractors USA / Harold Cabrera
 Author URI: https://justsmartchoice.com/webdeveloper.php
@@ -54,9 +54,8 @@ function debug_mode_smartchoice_add_default_options()
         'debug_mode_client_portal_enabled' => '1',
         'debug_mode_show_admin_banner' => '1',
         'debug_mode_cache_last_cleared' => '',
-        'debug_mode_version' => '2.4.1',
+        'debug_mode_version' => '2.4.2',
         'debug_mode_access_control_enabled' => '0',
-        'debug_mode_console_issue_state' => '[]',
     ];
     $rows = get_instance()->db->select('name')->where_in('name', array_keys($defaults))
         ->get(db_prefix() . 'options')->result_array();
@@ -131,7 +130,7 @@ function debug_mode_smartchoice_footer_notice()
         ? form_open(admin_url('debug_mode/toggle_debug/off'), ['class' => 'sc-debug-production-form'])
         : '<form class="sc-debug-production-form" method="post" action="' . admin_url('debug_mode/toggle_debug/off') . '">';
     echo '<aside class="sc-debug-coverage-banner" role="status" aria-label="Debug Mode diagnostic coverage">'
-        . '<span class="sc-debug-coverage-copy"><strong>Debug Mode active.</strong> <strong>Diagnostic coverage:</strong> PHP and module errors share the CRM log. Debug Mode adds notices, deprecations and browser errors on administrator pages as they are visited. The report includes the last 7 days, up to 500 events and the last 1 MiB per log source. Use <a href="' . admin_url('debug_mode/automatic_checks') . '">Automatic Checks</a> to scan module PHP and probe reviewed pages, including unvisited routes. Authenticated client-portal browser capture is separately switchable there. Page issues remain in the drawer until marked resolved after their code fix; a recurrence reopens them.</span>'
+        . '<span class="sc-debug-coverage-copy"><strong>Debug Mode active.</strong> <strong>Diagnostic coverage:</strong> PHP and module errors share the CRM log. Debug Mode adds notices, deprecations and browser errors on administrator pages as they are visited. The report includes the last 7 days, up to 500 events and the last 1 MiB per log source. Use <a href="' . admin_url('debug_mode/automatic_checks') . '">Automatic Checks</a> to scan module PHP and probe reviewed pages, including unvisited routes. Authenticated client-portal browser capture is separately switchable there. The drawer automatically rechecks each page load and its background requests. Errors that no longer occur disappear on the next load; new errors appear automatically. Historical events remain in CRM Error Report.</span>'
         . $formOpen . '<button type="submit">Switch to Production Mode</button></form>'
         . '</aside>';
 }
@@ -327,14 +326,16 @@ function debug_mode_smartchoice_capture_assets()
         $token = bin2hex(random_bytes(32));
         $CI->session->set_userdata('debug_mode_capture_token', $token);
     }
-    echo '<script src="' . module_dir_url('debug_mode', 'assets/js/debug_mode_capture.js') . '?v=231" data-token="' . html_escape($token) . '" data-endpoint="' . html_escape(admin_url('debug_mode/browser_error')) . '"></script>';
-    echo '<link href="' . module_dir_url('debug_mode', 'assets/css/debug_mode_console.css') . '?v=241" rel="stylesheet" type="text/css">';
+    require_once APPPATH . 'core/App_Debug_context.php';
+    $visit = App_Debug_context::visit_id();
+    echo '<script src="' . module_dir_url('debug_mode', 'assets/js/debug_mode_capture.js') . '?v=242" data-visit="' . html_escape($visit) . '" data-token="' . html_escape($token) . '" data-endpoint="' . html_escape(admin_url('debug_mode/browser_error')) . '"></script>';
+    echo '<link href="' . module_dir_url('debug_mode', 'assets/css/debug_mode_console.css') . '?v=242" rel="stylesheet" type="text/css">';
     $scope = debug_mode_current_admin_scope();
     if ($scope) {
-        echo '<script src="' . module_dir_url('debug_mode', 'assets/js/debug_mode_console.js') . '?v=241" defer'
+        echo '<script src="' . module_dir_url('debug_mode', 'assets/js/debug_mode_console.js') . '?v=242" defer'
             . ' data-scope="' . html_escape($scope['key']) . '" data-route="' . html_escape($scope['route']) . '"'
             . ' data-token="' . html_escape($token) . '" data-endpoint="' . html_escape(admin_url('debug_mode/module_console')) . '"'
-            . ' data-resolve-endpoint="' . html_escape(admin_url('debug_mode/resolve_console_issue')) . '"></script>';
+            . ' data-visit="' . html_escape($visit) . '" data-visit-proof="' . hash_hmac('sha256', $scope['key'] . '|' . $scope['route'] . '|' . $visit, $token) . '"></script>';
     }
 }
 

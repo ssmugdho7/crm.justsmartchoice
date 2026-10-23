@@ -94,10 +94,6 @@
 #scDebugConsole .sc-debug-console-meta,
 #scDebugConsole .sc-debug-console-file { margin-top: 7px; color: var(--sc-console-muted); font-size: 12px; }
 #scDebugConsole .sc-debug-console-file { color: #34d399; }
-#scDebugConsole .sc-debug-console-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--sc-console-border); color: var(--sc-console-muted); font-size: 12px; }
-#scDebugConsole .sc-debug-console-resolve { flex: none; color: #d1fae5; border-color: #047857; background: #064e3b; font-weight: 800; }
-#scDebugConsole .sc-debug-console-resolve:hover { background: #065f46; }
-#scDebugConsole .sc-debug-console-resolve:disabled { opacity: .55; cursor: wait; }
 #scDebugConsole pre { margin: 8px 0 0; color: #d1d5db; background: #16181b; border: 0; border-radius: 6px; font-family: inherit; font-size: 12px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; }
 #scDebugConsole .sc-debug-console-source > span { display: grid; grid-template-columns: 46px minmax(0, 1fr); padding: 0 10px; }
 #scDebugConsole .sc-debug-console-source > span.is-current { color: #fff; background: rgba(239, 68, 68, .22); }
@@ -115,5 +111,4 @@
     #scDebugConsole .sc-debug-console-body { max-height: 62vh; }
     #scDebugConsole .sc-debug-console-event-heading { display: block; }
     #scDebugConsole .sc-debug-console-event-heading strong { display: block; margin-top: 8px; }
-    #scDebugConsole .sc-debug-console-actions { align-items: stretch; flex-direction: column; }
 }

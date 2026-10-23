@@ -6,6 +6,9 @@
   if (!endpoint || !captureToken || window.scDebugCaptureInstalled) return;
   window.scDebugCaptureInstalled = true;
   var clientPortal = script.getAttribute('data-portal') === 'client';
+  var visit = !clientPortal && script.getAttribute('data-visit');
+  if (!/^[a-f0-9]{32}$/.test(visit || '')) visit = '';
+  var captureStatus = window.scDebugCaptureStatus = {pending: 0, failed: false};
   var sent = 0, seen = Object.create(null), pending = [];
   function safePath(value) {
     try { var url = new URL(value, location.href); return url.origin === location.origin ? url.pathname : '[external resource]'; }
@@ -16,8 +19,8 @@
     return path === safePath(endpoint) || (window.scDebugIgnoredPaths || []).indexOf(path) !== -1;
   }
   function report(kind, message, file, line) {
-    if (sent >= 20) return;
     var entry = {kind: kind, message: String(message || '').slice(0, 700), file: safePath(file || location.href), line: Number(line) || 0, route: location.pathname};
+    if (visit) entry.visit = visit;
     if (clientPortal) {
       // Client messages may contain personal data. Keep only the error category and asset path.
       entry.message = kind === 'http' ? String(message).replace(/[^A-Z0-9 ]/g, '').slice(0, 40) : 'Client portal ' + kind + ' error';
@@ -26,7 +29,8 @@
     }
     var key = JSON.stringify(entry);
     if (seen[key]) return;
-    seen[key] = true; sent++; pending.push(entry);
+    if (sent >= 20) { captureStatus.failed = true; return; }
+    seen[key] = true; sent++; pending.push(entry); captureStatus.pending++;
     flush();
   }
   // No form values, request/response bodies, headers or query strings are collected.
@@ -37,7 +41,14 @@
       Object.keys(entry).forEach(function (key) { body.set(key, entry[key]); });
       body.set('debug_capture_token', captureToken);
       if (window.csrfData && window.csrfData.token_name && window.csrfData.hash) body.set(window.csrfData.token_name, window.csrfData.hash);
-      nativeFetch(endpoint, {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body.toString()}).catch(function () {});
+      nativeFetch(endpoint, {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body.toString()})
+        .then(function (response) {
+          if (response.status < 200 || response.status >= 300 || response.redirected) captureStatus.failed = true;
+        }, function () { captureStatus.failed = true; })
+        .finally(function () {
+          captureStatus.pending--;
+          document.dispatchEvent(new Event('sc-debug-recorded'));
+        });
     }
   }
   var nativeFetch = window.fetch.bind(window);
@@ -52,7 +63,14 @@
     report('promise', event.reason instanceof Error ? event.reason.message : 'Unhandled promise rejection', location.href, 0);
   });
   window.fetch = function () {
-    var args = arguments, url = args[0] && args[0].url || args[0];
+    var args = Array.prototype.slice.call(arguments), url = args[0] && args[0].url || args[0];
+    if (visit && safePath(url).charAt(0) === '/') {
+      var options = Object.assign({}, args[1] || {});
+      var headers = new Headers(options.headers || (args[0] && args[0].headers) || {});
+      headers.set('X-Sc-Debug-Visit', visit);
+      options.headers = headers;
+      args[1] = options;
+    }
     return nativeFetch.apply(window, args).then(function (response) {
       if (response.status >= 400 && !ignored(url)) report('http', 'HTTP ' + response.status, url, 0);
       return response;
@@ -63,7 +81,9 @@
     this.addEventListener('loadend', function () {
       if ((this.status === 0 || this.status >= 400) && !ignored(url)) report('http', 'XHR HTTP ' + this.status, url, 0);
     }, {once: true});
-    return open.apply(this, arguments);
+    var result = open.apply(this, arguments);
+    if (visit && safePath(url).charAt(0) === '/') this.setRequestHeader('X-Sc-Debug-Visit', visit);
+    return result;
   };
   document.addEventListener('DOMContentLoaded', flush);
   window.addEventListener('load', flush);

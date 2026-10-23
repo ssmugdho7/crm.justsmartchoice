@@ -33,8 +33,10 @@ class Debug_mode_browser_receiver
         $module = 'core';
         if (preg_match('~^/modules/([a-zA-Z0-9_-]+)/~', $fields['file'], $m)) { $module = $m[1]; }
         elseif (preg_match('~^/admin/([a-zA-Z0-9_-]+)~', $fields['route'], $m)) { $module = $m[1]; }
+        $visit = $ci->input->post('visit');
+        $visitContext = !$portal && is_string($visit) && preg_match('/^[a-f0-9]{32}$/D', $visit) ? ' [visit=' . $visit . ']' : '';
         log_message('error', '[browser] ' . ($portal ? '[client-portal] ' : '') . '[' . $kind . '] [module=' . $module . '] ' . $fields['message']
-            . ' [route=' . $fields['route'] . '] [file=' . $fields['file'] . ':' . max(0, (int) $ci->input->post('line')) . ']');
+            . ' [route=' . $fields['route'] . '] [file=' . $fields['file'] . ':' . max(0, (int) $ci->input->post('line')) . ']' . $visitContext);
         $ci->output->set_status_header(204);
     }
 }

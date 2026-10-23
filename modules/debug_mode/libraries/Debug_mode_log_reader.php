@@ -13,7 +13,7 @@ class Debug_mode_log_reader
         return preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', '', $text);
     }
 
-    public static function read(array $sources, $limit = 500, $cutoff = null, $maxBytes = 1048576)
+    public static function read(array $sources, $limit = 500, $cutoff = null, $maxBytes = 1048576, $visitFilter = '')
     {
         $rows = [];
         $cutoff = $cutoff ?? strtotime('-7 days');
@@ -53,9 +53,12 @@ class Debug_mode_log_reader
                 if (preg_match('~(?:/modules/|\[module=)([a-zA-Z0-9_-]+)~', $text, $m)) { $module = $m[1]; }
                 $route = '';
                 if (preg_match('~\[route=(/[^\]]*)\]~', $text, $m)) { $route = $m[1]; }
+                $visit = '';
+                if (preg_match('~\[visit=([a-f0-9]{32})\]~', $text, $m)) { $visit = $m[1]; }
+                if ($visitFilter !== '' && $visit !== $visitFilter) { continue; }
                 if (strpos($text, '[browser]') !== false) { $severity = 'browser'; }
                 $rows[] = ['file' => $source['label'], 'line' => $text, 'time' => $record['time'], 'sequence' => $sequence,
-                    'source' => $source['type'], 'module' => $module, 'route' => $route, 'severity' => $severity];
+                    'source' => $source['type'], 'module' => $module, 'route' => $route, 'visit' => $visit, 'severity' => $severity];
             }
         }
         usort($rows, static function ($a, $b) {

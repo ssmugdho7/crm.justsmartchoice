@@ -95,7 +95,7 @@ try {
         if (ENVIRONMENT === 'development') {
             verify(strpos($notice, 'Automatic Checks') !== false && strpos($notice, 'including unvisited routes') !== false, 'Active banner explains automatic and visited-page coverage');
             verify(strpos($notice, 'Switch to Production Mode') !== false && strpos($notice, 'method="post"') !== false, 'Active banner provides a text button that posts to Production Mode');
-            verify(strpos($notice, 'remain in the drawer until marked resolved') !== false && strpos($notice, 'recurrence reopens') !== false, 'Active banner explains persistent issue lifecycle');
+            verify(strpos($notice, 'automatically rechecks each page load') !== false && strpos($notice, 'new errors appear automatically') !== false, 'Active banner explains automatic issue rechecking');
         }
     }
     $options['debug_mode_show_admin_banner'] = '0';

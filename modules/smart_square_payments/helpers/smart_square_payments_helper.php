@@ -2,6 +2,12 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
+function smart_square_idempotency_key($invoiceId, $source, $minorUnits)
+{
+    // Square permits at most 45 characters; keep 160 bits of the digest.
+    return substr(hash('sha256', implode('|', ['smart-square', (string) $invoiceId, $source, (string) $minorUnits])), 0, 40);
+}
+
 /**
  * Convert a non-negative decimal currency amount to integer minor units.
  *

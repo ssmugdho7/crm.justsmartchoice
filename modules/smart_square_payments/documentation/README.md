@@ -21,3 +21,7 @@ Never place access tokens or webhook signature keys in source control, logs, or 
 ## Verification
 
 Use Square Sandbox test cards for a complete payment test. Do not use production cards for development verification. Confirm that a successful provider payment creates exactly one CRM payment record and one completed `smart_square_transactions` row.
+
+On 26 October 2026, the actual payment controller was exercised in an isolated local fixture using authenticated Square Sandbox credentials: a USD 3.00 payment completed, Square's GetPayment endpoint confirmed `COMPLETED` and 300 minor units, a declined-card token returned failure, and repeated successful requests returned the same provider payment ID. The fixture replaced CRM persistence with a local test ledger; this does not certify production database posting or customer email delivery. The production token/location were checked read-only with Square's Locations API. No live charge was made.
+
+The 1.2.2 follow-up limits idempotency keys to 40 characters (Square allows at most 45), retains decimal balances without a floating-point conversion, and renders checkout as a standalone responsive document. Gateway settings pass language keys to Perfex's native renderers.

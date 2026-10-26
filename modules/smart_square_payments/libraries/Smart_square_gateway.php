@@ -11,13 +11,18 @@ class Smart_square_gateway extends App_gateway
         $this->setId('smart_square');
         $this->setName(_l('smart_square_gateway_name'));
         $this->setSettings([
-            ['name' => 'application_id', 'label' => _l('smart_square_application_id')],
-            ['name' => 'access_token', 'label' => _l('smart_square_access_token'), 'encrypted' => true, 'input_type' => 'password'],
-            ['name' => 'location_id', 'label' => _l('smart_square_location_id')],
-            ['name' => 'currencies', 'label' => _l('smart_square_supported_currencies'), 'default_value' => 'USD'],
-            ['name' => 'sandbox', 'label' => _l('smart_square_sandbox_mode'), 'type' => 'yes_no', 'default_value' => 1],
-            ['name' => 'webhook_signature_key', 'label' => _l('smart_square_webhook_signature_key'), 'encrypted' => true, 'input_type' => 'password'],
+            ['name' => 'application_id', 'label' => 'smart_square_application_id'],
+            ['name' => 'access_token', 'label' => 'smart_square_access_token', 'encrypted' => true, 'input_type' => 'password'],
+            ['name' => 'location_id', 'label' => 'smart_square_location_id'],
+            ['name' => 'currencies', 'label' => 'smart_square_supported_currencies', 'default_value' => 'USD'],
+            ['name' => 'sandbox', 'label' => 'smart_square_sandbox_mode', 'type' => 'yes_no', 'default_value' => 1],
+            ['name' => 'webhook_signature_key', 'label' => 'smart_square_webhook_signature_key', 'encrypted' => true, 'input_type' => 'password'],
         ]);
+    }
+
+    public function getName()
+    {
+        return _l('smart_square_gateway_name');
     }
 
     public function secret($name)
@@ -33,5 +38,7 @@ class Smart_square_gateway extends App_gateway
             'amount'  => $data['amount'],
             'gateway' => $this,
         ]);
+        // Checkout is a complete document; do not append the invoice layout.
+        exit;
     }
 }

@@ -1,0 +1,101 @@
+<?php
+
+defined('BASEPATH') or exit('No direct script access allowed');
+
+$applicationId = trim((string) $gateway->getSetting('application_id'));
+$locationId = trim((string) $gateway->getSetting('location_id'));
+$sandbox = (int) $gateway->getSetting('sandbox') === 1;
+$ready = $applicationId !== '' && $locationId !== '' && trim((string) $gateway->secret('access_token')) !== '';
+$invoiceId = (int) $invoice->id;
+?>
+<div class="panel panel-default smart-square-checkout">
+    <div class="panel-body">
+        <h4><?= html_escape(_l('smart_square_pay_securely')); ?></h4>
+        <?php if (!$ready) { ?>
+            <div class="alert alert-danger"><?= html_escape(_l('smart_square_not_configured_contact')); ?></div>
+        <?php } else { ?>
+            <div id="smart-square-card" style="min-height:110px"></div>
+            <div id="smart-square-status" role="alert" aria-live="polite"></div>
+            <button type="button" class="btn btn-primary" id="smart-square-pay">
+                <?= html_escape(_l('smart_square_pay_amount', app_format_money($amount, $invoice->currency_name ?? 'USD'))); ?>
+            </button>
+            <script src="<?= $sandbox ? 'https://sandbox.web.squarecdn.com/v1/square.js' : 'https://web.squarecdn.com/v1/square.js'; ?>"></script>
+            <script>
+            (function() {
+                'use strict';
+                const button = document.getElementById('smart-square-pay');
+                const status = document.getElementById('smart-square-status');
+                const applicationId = <?= json_encode($applicationId); ?>;
+                const locationId = <?= json_encode($locationId); ?>;
+                const endpoint = <?= json_encode(site_url('smart_square_payments/charge')); ?>;
+                const invoiceId = <?= $invoiceId; ?>;
+                const invoiceHash = <?= json_encode($invoice->hash); ?>;
+                const csrfName = <?= json_encode($this->security->get_csrf_token_name()); ?>;
+                const csrfHash = <?= json_encode($this->security->get_csrf_hash()); ?>;
+                const messages = {
+                    unavailable: <?= json_encode(_l('smart_square_library_unavailable')); ?>,
+                    processing: <?= json_encode(_l('smart_square_processing')); ?>,
+                    cardInvalid: <?= json_encode(_l('smart_square_card_invalid')); ?>,
+                    statusUnavailable: <?= json_encode(_l('smart_square_status_unavailable')); ?>,
+                    failed: <?= json_encode(_l('smart_square_payment_failed')); ?>
+                };
+                let card;
+
+                (async function initializeCard() {
+                    try {
+                        if (!window.Square) {
+                            throw new Error(messages.unavailable);
+                        }
+                        const payments = window.Square.payments(applicationId, locationId);
+                        card = await payments.card();
+                        await card.attach('#smart-square-card');
+                    } catch (error) {
+                        button.disabled = true;
+                        status.textContent = error.message || messages.unavailable;
+                    }
+                })();
+
+                button.addEventListener('click', async function() {
+                    if (!card) {
+                        return;
+                    }
+                    button.disabled = true;
+                    status.textContent = messages.processing;
+
+                    try {
+                        const result = await card.tokenize();
+                        if (result.status !== 'OK') {
+                            throw new Error(messages.cardInvalid);
+                        }
+
+                        const body = new URLSearchParams();
+                        body.set('invoice_id', String(invoiceId));
+                        body.set('invoice_hash', invoiceHash);
+                        body.set('source_id', result.token);
+                        body.set(csrfName, csrfHash);
+
+                        const response = await fetch(endpoint, {
+                            method: 'POST',
+                            credentials: 'same-origin',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: body.toString()
+                        });
+                        const data = await response.json();
+                        status.textContent = data.message || messages.statusUnavailable;
+                        if (data.success) {
+                            window.location.reload();
+                        }
+                    } catch (error) {
+                        status.textContent = error.message || messages.failed;
+                    } finally {
+                        button.disabled = false;
+                    }
+                });
+            })();
+            </script>
+        <?php } ?>
+    </div>
+</div>

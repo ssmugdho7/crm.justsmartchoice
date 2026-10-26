@@ -33,11 +33,11 @@ class Smart_square_gateway extends App_gateway
     public function process_payment($data)
     {
         $CI = &get_instance();
-        $CI->load->view('smart_square_payments/checkout', [
+        echo $CI->load->view('smart_square_payments/checkout', [
             'invoice' => $data['invoice'],
             'amount'  => $data['amount'],
             'gateway' => $this,
-        ]);
+        ], true);
         // Checkout is a complete document; do not append the invoice layout.
         exit;
     }

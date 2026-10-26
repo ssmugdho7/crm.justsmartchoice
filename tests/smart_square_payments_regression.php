@@ -74,4 +74,26 @@ foreach ($moduleFiles as $file) {
     check(!preg_match('/(?:EAAA|sq0idp-|sandbox-sq0idb-)[A-Za-z0-9_-]{10,}/', $contents), 'No Square credentials are committed');
 }
 
+$renderProbe = <<<'PHP'
+define('BASEPATH', __DIR__);
+class App_gateway {}
+class TestSquareViewLoader {
+    public function view($name, $data, $return = false) {
+        return $return ? '<html><body>Square checkout</body></html>' : null;
+    }
+}
+function &get_instance() {
+    static $ci;
+    if (!$ci) { $ci = (object) ['load' => new TestSquareViewLoader]; }
+    return $ci;
+}
+require $argv[1];
+$gateway = (new ReflectionClass(Smart_square_gateway::class))->newInstanceWithoutConstructor();
+$gateway->process_payment(['invoice' => (object) ['id' => 1], 'amount' => '3.00']);
+echo 'unwanted-invoice-layout';
+PHP;
+// The probe exercises view output and termination without initializing CRM settings.
+$rendered = shell_exec(escapeshellarg(PHP_BINARY) . ' -r ' . escapeshellarg($renderProbe) . ' ' . escapeshellarg($root . '/modules/smart_square_payments/libraries/Smart_square_gateway.php'));
+check($rendered === '<html><body>Square checkout</body></html>', 'Checkout flushes its HTML and does not append the invoice layout');
+
 echo "Smart Square payment regression checks passed.\n";

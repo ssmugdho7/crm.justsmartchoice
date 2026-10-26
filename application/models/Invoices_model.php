@@ -445,6 +445,7 @@ class Invoices_model extends App_Model
             $scDefaultModes = [];
             if ((string) get_option('paymentmethod_paypal_checkout_active') === '1') { $scDefaultModes[] = 'paypal_checkout'; }
             if ((string) get_option('paymentmethod_stripe_active') === '1') { $scDefaultModes[] = 'stripe'; }
+            if ((string) get_option('paymentmethod_smart_square_active') === '1') { $scDefaultModes[] = 'smart_square'; }
             $data['allowed_payment_modes'] = serialize($scDefaultModes);
         }
 
@@ -888,6 +889,7 @@ class Invoices_model extends App_Model
             $scDefaultModes = [];
             if ((string) get_option('paymentmethod_paypal_checkout_active') === '1') { $scDefaultModes[] = 'paypal_checkout'; }
             if ((string) get_option('paymentmethod_stripe_active') === '1') { $scDefaultModes[] = 'stripe'; }
+            if ((string) get_option('paymentmethod_smart_square_active') === '1') { $scDefaultModes[] = 'smart_square'; }
             $data['allowed_payment_modes'] = serialize($scDefaultModes);
         }
         unset($data['allowed_payment_modes_present']);

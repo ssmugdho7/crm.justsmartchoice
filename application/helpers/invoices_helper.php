@@ -497,16 +497,31 @@ function get_invoice_item_taxes($itemid)
  */
 function sc_active_online_gateway_supports_currency($gatewayId, $currencyName)
 {
-    $supported = ['paypal_checkout', 'stripe'];
+    $supported = ['paypal_checkout', 'stripe', 'smart_square'];
     if (!in_array((string) $gatewayId, $supported, true)) {
         return false;
     }
     if ((string) get_option('paymentmethod_' . $gatewayId . '_active') !== '1') {
         return false;
     }
+    return sc_payment_gateway_supports_currency($gatewayId, $currencyName);
+}
+
+/**
+ * Check a gateway's configured currencies while retaining compatibility with
+ * custom Perfex gateways. Square 1.2.1 omitted this required option, so USD is
+ * the safe legacy fallback for that gateway only.
+ */
+function sc_payment_gateway_supports_currency($gatewayId, $currencyName)
+{
     $raw = trim((string) get_option('paymentmethod_' . $gatewayId . '_currencies'));
     if ($raw === '') {
-        $raw = 'USD,CAD';
+        $fallbacks = [
+            'paypal_checkout' => 'USD,CAD',
+            'stripe'          => 'USD,CAD',
+            'smart_square'    => 'USD',
+        ];
+        $raw = $fallbacks[$gatewayId] ?? '';
     }
     foreach (array_filter(array_map('trim', explode(',', $raw))) as $currency) {
         if (mb_strtoupper($currency) === mb_strtoupper((string) $currencyName)) {
@@ -547,16 +562,7 @@ function is_payment_mode_allowed_for_invoice($id, $invoiceid)
                 if (is_numeric($id)) {
                     return true;
                 }
-                // check currencies
-                $currencies = explode(',', get_option('paymentmethod_' . $id . '_currencies'));
-                foreach ($currencies as $currency) {
-                    $currency = trim($currency);
-                    if (mb_strtoupper($currency) == mb_strtoupper($invoice->currency_name)) {
-                        return true;
-                    }
-                }
-
-                return false;
+                return sc_payment_gateway_supports_currency($id, $invoice->currency_name);
             }
         }
     } else {
@@ -619,13 +625,8 @@ function found_invoice_mode($modes, $invoiceid, $offline = true, $show_on_pdf = 
                 if (!is_numeric($mode['id']) && !empty($mode['id'])) {
                     foreach ($invoice->allowed_payment_modes as $allowed_mode) {
                         if ($allowed_mode == $mode['id']) {
-                            // Check for currencies
-                            $currencies = explode(',', get_option('paymentmethod_' . $mode['id'] . '_currencies'));
-                            foreach ($currencies as $currency) {
-                                $currency = trim($currency);
-                                if (strtoupper($currency) == strtoupper($invoice->currency_name)) {
-                                    return true;
-                                }
+                            if (sc_payment_gateway_supports_currency($mode['id'], $invoice->currency_name)) {
+                                return true;
                             }
                         }
                     }

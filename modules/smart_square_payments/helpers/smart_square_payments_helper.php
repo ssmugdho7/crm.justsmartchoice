@@ -36,8 +36,11 @@ function smart_square_send_admin_receipt($paymentId)
     set_mailing_constant();
     $pdf = payment_pdf($payment);
     $attachment = $pdf->Output('', 'S');
-    $sent = send_mail_template('invoice_payment_recorded_to_staff', $recipient,
-        $staff ? (int) $staff->staffid : 0, $invoice, $attachment, $paymentId);
+    $arguments = [$recipient, $staff ? (int) $staff->staffid : 0, $invoice, $attachment, $paymentId];
+    // Resolve/load the native receipt class, then specialize only its event identity.
+    mail_template('invoice_payment_recorded_to_staff', ...$arguments);
+    require_once __DIR__ . '/../libraries/Smart_square_admin_receipt.php';
+    $sent = (new Smart_square_admin_receipt(...$arguments))->send();
     if ($hasLedger) {
         $CI->db->where('payment_id', (int) $paymentId)->where('channel', 'square_admin_email')
             ->where('recipient', strtolower($recipient))->update($table, ['status' => $sent ? 'sent' : 'failed']);

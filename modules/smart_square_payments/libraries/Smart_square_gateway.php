@@ -15,6 +15,7 @@ class Smart_square_gateway extends App_gateway
             ['name' => 'access_token', 'label' => 'smart_square_access_token', 'encrypted' => true, 'input_type' => 'password'],
             ['name' => 'location_id', 'label' => 'smart_square_location_id'],
             ['name' => 'currencies', 'label' => 'smart_square_supported_currencies', 'default_value' => 'USD'],
+            ['name' => 'notification_email', 'label' => 'smart_square_notification_email', 'default_value' => 'admin@justsmartchoice.com'],
             ['name' => 'sandbox', 'label' => 'smart_square_sandbox_mode', 'type' => 'yes_no', 'default_value' => 1],
             ['name' => 'webhook_signature_key', 'label' => 'smart_square_webhook_signature_key', 'encrypted' => true, 'input_type' => 'password'],
         ]);
@@ -33,10 +34,15 @@ class Smart_square_gateway extends App_gateway
     public function process_payment($data)
     {
         $CI = &get_instance();
+        $CI->load->helper('smart_square_payments/smart_square_payments');
+        $contact = $CI->db->where('userid', (int) $data['invoice']->clientid)
+            ->where('active', 1)->order_by('is_primary', 'DESC')->order_by('id', 'ASC')
+            ->get(db_prefix() . 'contacts')->row_array();
         echo $CI->load->view('smart_square_payments/checkout', [
             'invoice' => $data['invoice'],
             'amount'  => $data['amount'],
             'gateway' => $this,
+            'customer' => smart_square_checkout_customer($data['invoice'], $contact ?: []),
         ], true);
         // Checkout is a complete document; do not append the invoice layout.
         exit;

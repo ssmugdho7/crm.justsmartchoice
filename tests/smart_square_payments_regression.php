@@ -42,6 +42,10 @@ check(smart_square_minor_units('3.5') === 350, 'One decimal digit converts exact
 check(smart_square_minor_units('3.05') === 305, 'Two decimal digits convert exactly');
 check(smart_square_minor_units('3.005') === null, 'More than two decimal digits are rejected');
 check(smart_square_minor_units('-1.00') === null, 'Negative amounts are rejected');
+$requestKey = smart_square_idempotency_key(122, 'test-source', 300);
+check(strlen($requestKey) <= 45, 'Idempotency key fits Square API limits');
+check($requestKey === smart_square_idempotency_key(122, 'test-source', 300), 'A retry keeps the same key');
+check($requestKey !== smart_square_idempotency_key(123, 'test-source', 300), 'Different invoices have different keys');
 
 $route = file_get_contents($root . '/modules/smart_square_payments/config/routes.php');
 $checkout = file_get_contents($root . '/modules/smart_square_payments/views/checkout.php');

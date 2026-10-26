@@ -50,19 +50,14 @@ class Smart_square extends ClientsController
         }
 
         $this->load->helper('smart_square_payments/smart_square_payments');
-        $balance = number_format((float) get_invoice_total_left_to_pay($invoiceId, $invoice->total), 2, '.', '');
+        $balance = (string) get_invoice_total_left_to_pay($invoiceId, $invoice->total);
         $minorUnits = smart_square_minor_units($balance);
         if ($minorUnits === null || $minorUnits <= 0) {
             return $this->reply(false, _l('smart_square_invoice_already_paid'));
         }
 
         // Retrying the same invoice/token/amount reuses the same Square request.
-        $idempotencyKey = hash('sha256', implode('|', [
-            'smart-square',
-            (string) $invoiceId,
-            $source,
-            (string) $minorUnits,
-        ]));
+        $idempotencyKey = smart_square_idempotency_key($invoiceId, $source, $minorUnits);
         $transactionTable = db_prefix() . 'smart_square_transactions';
         $existing = $this->db->where('idempotency_key', $idempotencyKey)->get($transactionTable)->row();
         if ($existing) {

@@ -19,6 +19,19 @@ register_activation_hook(SMART_SQUARE_MODULE, 'smart_square_activate');
 register_deactivation_hook(SMART_SQUARE_MODULE, 'smart_square_deactivate');
 hooks()->add_action('admin_init', 'smart_square_permissions');
 hooks()->add_action('before_render_payment_gateway_settings', 'smart_square_credential_status');
+hooks()->add_action('after_payment_added', 'smart_square_payment_admin_receipt');
+
+function smart_square_payment_admin_receipt($paymentId)
+{
+    $CI = &get_instance();
+    $CI->load->helper('smart_square_payments/smart_square_payments');
+    try {
+        smart_square_send_admin_receipt((int) $paymentId);
+    } catch (Throwable $exception) {
+        // A notification problem must never turn a recorded charge into a failed checkout.
+        log_message('error', 'Smart Square admin receipt failed for CRM payment ' . (int) $paymentId);
+    }
+}
 
 function smart_square_activate()
 {

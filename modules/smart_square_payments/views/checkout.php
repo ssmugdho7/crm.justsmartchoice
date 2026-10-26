@@ -43,6 +43,7 @@ $invoiceId = (int) $invoice->id;
                 const applicationId = <?= json_encode($applicationId); ?>;
                 const locationId = <?= json_encode($locationId); ?>;
                 const endpoint = <?= json_encode(site_url('smart_square_payments/charge')); ?>;
+                const invoiceUrl = <?= json_encode(site_url('invoice/' . $invoiceId . '/' . $invoice->hash)); ?>;
                 const invoiceId = <?= $invoiceId; ?>;
                 const invoiceHash = <?= json_encode($invoice->hash); ?>;
                 const csrfName = <?= json_encode($this->security->get_csrf_token_name()); ?>;
@@ -52,9 +53,14 @@ $invoiceId = (int) $invoice->id;
                     processing: <?= json_encode(_l('smart_square_processing')); ?>,
                     cardInvalid: <?= json_encode(_l('smart_square_card_invalid')); ?>,
                     statusUnavailable: <?= json_encode(_l('smart_square_status_unavailable')); ?>,
+                    uncertain: <?= json_encode(_l('smart_square_response_uncertain')); ?>,
+                    expired: <?= json_encode(_l('smart_square_session_expired')); ?>,
                     failed: <?= json_encode(_l('smart_square_payment_failed')); ?>
                 };
                 let card;
+                let sourceToken;
+                let requestSent = false;
+                let completed = false;
 
                 (async function initializeCard() {
                     try {
@@ -79,17 +85,21 @@ $invoiceId = (int) $invoice->id;
                     status.textContent = messages.processing;
 
                     try {
-                        const result = await card.tokenize();
-                        if (result.status !== 'OK') {
-                            throw new Error(messages.cardInvalid);
+                        if (!sourceToken) {
+                            const result = await card.tokenize();
+                            if (result.status !== 'OK') {
+                                throw new Error(messages.cardInvalid);
+                            }
+                            sourceToken = result.token;
                         }
 
                         const body = new URLSearchParams();
                         body.set('invoice_id', String(invoiceId));
                         body.set('invoice_hash', invoiceHash);
-                        body.set('source_id', result.token);
+                        body.set('source_id', sourceToken);
                         body.set(csrfName, csrfHash);
 
+                        requestSent = true;
                         const response = await fetch(endpoint, {
                             method: 'POST',
                             credentials: 'same-origin',
@@ -99,15 +109,25 @@ $invoiceId = (int) $invoice->id;
                             },
                             body: body.toString()
                         });
+                        if (!response.ok) {
+                            throw new Error(response.status === 419 || response.status === 403 ? messages.expired : messages.uncertain);
+                        }
                         const data = await response.json();
+                        if (typeof data.success !== 'boolean') {
+                            throw new Error(messages.uncertain);
+                        }
                         status.textContent = data.message || messages.statusUnavailable;
                         if (data.success) {
-                            window.location.reload();
+                            completed = true;
+                            window.location.assign(invoiceUrl);
                         }
+                        requestSent = false;
                     } catch (error) {
-                        status.textContent = error.message || messages.failed;
+                        // Preserve the same token after an interrupted response so any
+                        // retry reuses the provider idempotency key rather than charging twice.
+                        status.textContent = requestSent ? messages.uncertain : (error.message || messages.failed);
                     } finally {
-                        button.disabled = false;
+                        button.disabled = completed;
                     }
                 });
             })();

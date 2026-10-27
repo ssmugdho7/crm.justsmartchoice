@@ -71,7 +71,7 @@ function _init_admin_assets()
     );
 
     $CI->app_scripts->add('app-v3', 'assets/builds/app.js');
-    $CI->app_scripts->add('sc-money-format', 'assets/js/sc_money_format.js', 'admin', ['app-js']);
+    $CI->app_scripts->add('sc-money-format', base_url('assets/js/sc_money_format.js') . '?mtime=' . filemtime(FCPATH . 'assets/js/sc_money_format.js'), 'admin', ['app-js']);
 
     // CSS
     add_favicon_link_asset();

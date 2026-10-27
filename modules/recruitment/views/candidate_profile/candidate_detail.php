@@ -729,6 +729,16 @@ $file_html = '';
 if (count($candidate->file) > 0) {
 
 	foreach ($candidate->file as $f) {
+        if (in_array($f['rel_type'], ['rec_candidate_driver', 'rec_candidate_driver_license'], true)) {
+            if (is_admin() || has_permission('recruitment', '', 'view')) {
+                $documentUrl = admin_url('recruitment/candidate_document/' . (int) $f['id']);
+                $file_html .= '<div class="mbot15 row inline-block full-width" data-attachment-id="' . (int) $f['id'] . '"><div class="col-md-12">'
+                    . '<a class="btn btn-success btn-sm" target="_blank" rel="noopener" href="' . html_escape($documentUrl) . '">' . html_escape(_l('preview_file')) . '</a> '
+                    . '<a target="_blank" rel="noopener" href="' . html_escape($documentUrl . '?download=1') . '">' . html_escape($f['file_name']) . '</a><br>'
+                    . '<small class="text-muted">' . html_escape(_l('recruitment_application_driver_license_upload')) . '</small></div></div>';
+            }
+            continue;
+        }
 		$href_url = site_url(RECRUITMENT_PATH . 'candidate/files/' . $f['rel_id'] . '/' . $f['file_name']) . '" download';
 		if (!empty($f['external'])) {
 			$href_url = $f['external_link'];

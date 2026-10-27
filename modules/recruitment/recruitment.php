@@ -21,6 +21,8 @@ define('CANDIDATE_IMPORT_ERROR', 'modules/recruitment/uploads/import_candidates_
 
 
 hooks()->add_action('admin_init', 'recruitment_permissions');
+hooks()->add_filter('merge_field_logo_img_width', 'recruitment_email_logo_width');
+
 hooks()->add_action('app_admin_head', 'recruitment_head_components');
 hooks()->add_action('app_admin_footer', 'recruitment_add_footer_components');
 hooks()->add_action('admin_init', 'recruitment_module_init_menu_items');

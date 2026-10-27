@@ -830,6 +830,22 @@ class recruitment extends AdminController {
 	 * @param  int $rel_id
 	 * @return view
 	 */
+    public function candidate_document($id)
+    {
+        // Identity documents are available only to staff with global recruitment access.
+        if (!is_admin() && !has_permission('recruitment', '', 'view')) { access_denied('recruitment'); }
+        $file = $this->recruitment_model->get_file((int) $id);
+        $path = recruitment_candidate_document_path($file);
+        if (!$path) { show_404(); return; }
+        $mime = (new finfo(FILEINFO_MIME_TYPE))->file($path);
+        $inline = in_array($mime, ['application/pdf', 'image/jpeg', 'image/png'], true) && !$this->input->get('download');
+        $this->output->set_content_type($inline ? $mime : 'application/octet-stream')
+            ->set_header('X-Content-Type-Options: nosniff')
+            ->set_header('Cache-Control: private, no-store')
+            ->set_header('Content-Disposition: ' . ($inline ? 'inline' : 'attachment') . "; filename*=UTF-8''" . rawurlencode($file->file_name))
+            ->set_output(file_get_contents($path));
+    }
+
 	public function candidate_file($id, $rel_id) {
 		$data['discussion_user_profile_image_url'] = staff_profile_image_url(get_staff_user_id());
 		$data['current_user_is_admin'] = is_admin();

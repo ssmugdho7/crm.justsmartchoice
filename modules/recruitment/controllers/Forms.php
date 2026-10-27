@@ -359,7 +359,7 @@ class Forms extends ClientsController
         if (!move_uploaded_file($_FILES['driver_license']['tmp_name'], $path . $filename)) {
             return false;
         }
-        $this->misc_model->add_attachment_to_database($candidate_id, 'rec_candidate_driver_license', [[
+        $this->misc_model->add_attachment_to_database($candidate_id, 'rec_candidate_driver', [[
             'file_name'=>$filename, 'filetype'=>$_FILES['driver_license']['type'],
         ]]);
         return true;

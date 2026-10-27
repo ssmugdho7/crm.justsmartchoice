@@ -790,7 +790,7 @@ class Recruitment_model extends App_Model {
 	{
         $this->load->model('emails_model');
         $html = '';
-        $html .= _l('re_dear').' '.$data['candidate_name'] .' '.$data['last_name'].'. '._l('re_welcome_contact').'. <br>'._l('re_click_here_to_login') .': <a href="'.site_url('recruitment/authentication_candidate/login').'">link</a> <br>'._l('your_password').': '.$password_before_hash;
+        $html .= _l('re_dear').' '.html_escape($data['candidate_name'].' '.$data['last_name']).'. '._l('re_welcome_contact').'. <br>'._l('re_click_here_to_login') .': <a href="'.site_url('recruitment/authentication_candidate/login').'">'.html_escape(_l('recruitment_portal')).'</a> <br>'._l('your_password').': '.html_escape($password_before_hash);
 
         $this->emails_model->send_simple_email($data['email'], _l('re_welcome'), $html);
 
@@ -840,7 +840,7 @@ class Recruitment_model extends App_Model {
 				$candidate->avar = $this->db->get(db_prefix() . 'files')->row();
 
 				$this->db->where('rel_id', $id);
-				$this->db->where('rel_type', 'rec_cadidate_file');
+				$this->db->where_in('rel_type', ['rec_cadidate_file', 'rec_candidate_driver', 'rec_candidate_driver_license']);
 				$candidate->file = $this->db->get(db_prefix() . 'files')->result_array();
 
 				$this->db->where('candidate', $id);

@@ -3,6 +3,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 hooks()->add_action('after_email_templates', 'add_recruitment_email_templates');
 
+function recruitment_email_logo_width($width)
+{
+    // Email clients otherwise render the merge-field logo at its native size.
+    return $width === '' ? 160 : $width;
+}
+
 if (!function_exists('add_recruitment_email_templates')) {
     /**
      * Init appointly email templates and assign languages
@@ -173,6 +179,16 @@ function handle_rec_campaign_file($id){
  * @param  int $id
  * @return bool
  */
+function recruitment_candidate_document_path($file)
+{
+    $folders = ['rec_cadidate_file' => 'files', 'rec_candidate_driver' => 'driver_licenses', 'rec_candidate_driver_license' => 'driver_licenses'];
+    if (!$file || !isset($folders[$file->rel_type]) || !empty($file->external)
+        || (int) $file->rel_id <= 0 || basename($file->file_name) !== $file->file_name) { return false; }
+    $root = realpath(RECRUITMENT_MODULE_UPLOAD_FOLDER . '/candidate/' . $folders[$file->rel_type] . '/' . (int) $file->rel_id);
+    $path = $root ? realpath($root . '/' . $file->file_name) : false;
+    return $path && strpos($path, $root . DIRECTORY_SEPARATOR) === 0 && is_file($path) ? $path : false;
+}
+
 function handle_rec_candidate_file($id){
     $field = null;
     foreach (['resume','file','file-input'] as $candidateField) {

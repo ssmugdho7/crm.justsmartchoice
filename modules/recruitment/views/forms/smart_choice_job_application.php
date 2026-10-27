@@ -3,7 +3,9 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title><?php echo html_escape($title); ?></title>
 <link rel="stylesheet" href="<?php echo module_dir_url('recruitment','assets/css/smart_choice_job_application.css'); ?>?v=1850">
-</head><body><div class="sc-public-language"><a href="<?php echo current_url(); ?>?lang=english">English</a><a href="<?php echo current_url(); ?>?lang=spanish">Español</a></div>
+<link rel="stylesheet" href="<?php echo module_dir_url('recruitment','assets/css/recruitment_header.css'); ?>?v=1">
+</head><body>
+<?php $this->load->view('recruitment_portal/template_parts/navigation', ['show_login' => false]); ?>
 <div class="sc-job-page"><div class="sc-job-shell"><div class="sc-job-card">
 <header class="sc-job-header"><div class="sc-job-brand"><div class="sc-job-logo"><?php echo get_dark_company_logo(); ?></div><div><h1><?php echo _l('recruitment_application_title'); ?></h1><p><?php echo _l('recruitment_application_subtitle'); ?></p></div></div><div class="sc-job-badges"><span><?php echo _l('recruitment_application_badge_skilled'); ?></span><span><?php echo _l('recruitment_application_badge_field'); ?></span></div></header>
 <main class="sc-job-body">

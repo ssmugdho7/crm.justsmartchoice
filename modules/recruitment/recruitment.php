@@ -368,6 +368,7 @@ function recruitment_portal_add_head_components() {
 
 	if (!(strpos($viewuri, 'recruitment') === false)) {
 		echo '<link href="' . module_dir_url(RECRUITMENT_MODULE_NAME, 'assets/css/recruitment_portal.css') . '?v=' . RE_REVISION . '"  rel="stylesheet" type="text/css" />';
+		echo '<link href="' . module_dir_url(RECRUITMENT_MODULE_NAME, 'assets/css/recruitment_header.css') . '?v=1" rel="stylesheet" type="text/css" />';
 		echo '<link href="' . module_dir_url(RECRUITMENT_MODULE_NAME, 'assets/css/smart_choice_recruitment_portal.css') . '?v=' . RE_REVISION . '"  rel="stylesheet" type="text/css" />';
 	}
 

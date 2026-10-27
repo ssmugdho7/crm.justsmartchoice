@@ -16,3 +16,6 @@ Deploy all changed recruitment source, views, helper, English/Spanish language f
 ## Verification
 
 Run `php tests/recruitment_application_repairs.php` and PHP syntax checks for the modified files. The regression uses the actual company-logo merge-field renderer and welcome-email method with isolated fixtures; it checks both historical document types, traversal/missing-file rejection, the portal link label and route. Browser verification must confirm the public Login button reaches a login form and the existing candidate's Attachment tab lists both stored documents. A separate multipart fixture verifies that multiple résumé files are processed. No applicant messages should be sent as a smoke test; historical Gmail messages retain their original HTML.
+
+## Shared public navigation — 28 October 2026
+Application, legacy skill-test, and pre-employment assessment pages now use the portal navigation partial, with Log in omitted. Header CSS is shared with the portal. Existing language keys, language cookie/query behavior, form submissions, and portal login remain unchanged. No migration or permission change is required; deploy the listed source files together. Validation: PHP lint, existing recruitment regressions, and isolated navigation rendering (login on/off, two language links, query preservation).

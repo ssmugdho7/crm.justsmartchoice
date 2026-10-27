@@ -25,8 +25,10 @@ $sc_logo_url = get_recruitment_option('recruitment_portal_logo_url');
 
     <nav class="sc-recruitment-header-actions" aria-label="<?php echo html_escape(_l('recruitment_portal')); ?>">
       <a class="sc-recruitment-header-link" href="<?php echo site_url('recruitment/recruitment_portal'); ?>"><?php echo _l('recruitment_portal'); ?></a>
+      <?php if (!isset($show_login) || $show_login) { ?>
       <a class="sc-recruitment-header-link" href="<?php echo site_url('recruitment/authentication_candidate/login'); ?>"><?php echo _l('login'); ?></a>
-      <div class="sc-recruitment-header-language" aria-label="Language selector">
+      <?php } ?>
+      <div class="sc-recruitment-header-language" aria-label="<?php echo html_escape(_l('recruitment_portal_language_label')); ?>">
         <span><?php echo _l('recruitment_portal_language_label'); ?>:</span>
         <a href="<?php echo html_escape($sc_base_url . '?' . $sc_english_query); ?>" class="<?php echo $sc_lang === 'english' ? 'active' : ''; ?>"><?php echo _l('recruitment_portal_language_english'); ?></a>
         <a href="<?php echo html_escape($sc_base_url . '?' . $sc_spanish_query); ?>" class="<?php echo $sc_lang === 'spanish' ? 'active' : ''; ?>"><?php echo _l('recruitment_portal_language_spanish'); ?></a>

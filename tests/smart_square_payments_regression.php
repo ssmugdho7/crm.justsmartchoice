@@ -42,6 +42,13 @@ check(smart_square_minor_units('3.5') === 350, 'One decimal digit converts exact
 check(smart_square_minor_units('3.05') === 305, 'Two decimal digits convert exactly');
 check(smart_square_minor_units('3.005') === null, 'More than two decimal digits are rejected');
 check(smart_square_minor_units('-1.00') === null, 'Negative amounts are rejected');
+check(smart_square_billing_address(null) === [], 'Legacy checkout requests remain compatible');
+$billing = ['address_line_1'=>'10 Test Street','locality'=>'Tampa','administrative_district_level_1'=>'FL','postal_code'=>'33601','country'=>'US'];
+check(smart_square_billing_address($billing + ['amount'=>'1']) === $billing, 'Billing parser accepts only provider address fields');
+check(smart_square_billing_address(['address_line_1'=>['invalid']]) === null, 'Nested address input is rejected');
+check(smart_square_billing_address(['address_line_1'=>'partial']) === null, 'Incomplete address is rejected');
+check(smart_square_billing_address(array_replace($billing,['country'=>'USA'])) === null, 'Invalid country is rejected');
+check(smart_square_billing_address(array_replace($billing,['locality'=>"Tampa\nInjected"])) === null, 'Address control characters are rejected');
 $customer = smart_square_checkout_customer((object) [
     'sc_customer_name' => 'Invoice recipient', 'sc_customer_email' => 'billing@example.test',
     'billing_street' => '10 Test Street', 'billing_city' => 'Tampa',

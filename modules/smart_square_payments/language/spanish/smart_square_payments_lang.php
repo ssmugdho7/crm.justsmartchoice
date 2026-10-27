@@ -3,6 +3,25 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 $lang['smart_square_payments'] = 'Pagos con Square';
+$lang['smart_square_pay_title'] = 'Pague de forma segura';
+$lang['smart_square_with_square'] = 'con Square';
+$lang['smart_square_secure_payment'] = 'Pago seguro';
+$lang['smart_square_processed_square'] = 'Procesado por Square';
+$lang['smart_square_receipt_email'] = 'Recibo por correo';
+$lang['smart_square_private_details'] = 'Su información está protegida';
+$lang['smart_square_payment_information'] = 'Información de pago';
+$lang['smart_square_edit'] = 'Editar';
+$lang['smart_square_edit_address'] = 'Editar dirección de facturación del pago';
+$lang['smart_square_street'] = 'Dirección';
+$lang['smart_square_city'] = 'Ciudad';
+$lang['smart_square_state'] = 'Estado / Región';
+$lang['smart_square_postal'] = 'Código postal';
+$lang['smart_square_same_address'] = 'Igual a la dirección del cliente indicada arriba';
+$lang['smart_square_terms_prefix'] = 'He leído y acepto los';
+$lang['smart_square_terms'] = 'Términos y condiciones';
+$lang['smart_square_and'] = 'y la';
+$lang['smart_square_privacy'] = 'Política de privacidad';
+$lang['smart_square_billing_invalid'] = 'Proporcione una dirección de facturación completa.';
 $lang['smart_square_gateway_name'] = 'Square';
 $lang['smart_square_permission_settings'] = 'Administrar configuración';
 $lang['smart_square_application_id'] = 'ID de aplicación de Square';

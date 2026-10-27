@@ -71,6 +71,24 @@ function smart_square_checkout_customer($invoice, array $contact = [])
     ];
 }
 
+// Optional checkout address belongs to this payment, never to the CRM contact.
+function smart_square_billing_address($input)
+{
+    if ($input === null || $input === '') { return []; }
+    if (!is_array($input)) { return null; }
+    $address = [];
+    foreach (['address_line_1' => 500, 'locality' => 100, 'administrative_district_level_1' => 100, 'postal_code' => 20, 'country' => 2] as $key => $limit) {
+        $value = $input[$key] ?? '';
+        if (!is_string($value) || strlen($value) > $limit || preg_match('/[\x00-\x1f\x7f]/', $value)) { return null; }
+        $value = trim($value);
+        if ($value !== '') { $address[$key] = $value; }
+    }
+    if (!$address) { return []; }
+    if (empty($address['address_line_1']) || empty($address['locality']) || empty($address['administrative_district_level_1']) || empty($address['postal_code'])
+        || !preg_match('/^[A-Z]{2}$/D', $address['country'] ?? '')) { return null; }
+    return $address;
+}
+
 function smart_square_idempotency_key($invoiceId, $source, $minorUnits)
 {
     // Square permits at most 45 characters; keep 160 bits of the digest.

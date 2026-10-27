@@ -50,6 +50,10 @@ class Smart_square extends ClientsController
         }
 
         $this->load->helper('smart_square_payments/smart_square_payments');
+        $billingAddress = smart_square_billing_address($this->input->post('billing_address'));
+        if ($billingAddress === null) {
+            return $this->reply(false, _l('smart_square_billing_invalid'));
+        }
         $balance = (string) get_invoice_total_left_to_pay($invoiceId, $invoice->total);
         $minorUnits = smart_square_minor_units($balance);
         if ($minorUnits === null || $minorUnits <= 0) {
@@ -77,6 +81,7 @@ class Smart_square extends ClientsController
             'reference_id'    => 'perfex-invoice-' . $invoiceId,
             'autocomplete'    => true,
         ];
+        if ($billingAddress) { $payload['billing_address'] = $billingAddress; }
         $baseUrl = (int) $gateway->getSetting('sandbox') === 1
             ? 'https://connect.squareupsandbox.com'
             : 'https://connect.squareup.com';

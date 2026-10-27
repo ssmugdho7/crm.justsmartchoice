@@ -38,7 +38,7 @@ $icon = static function ($name) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= html_escape(_l('smart_square_pay_securely')); ?></title>
-    <link rel="stylesheet" href="<?= html_escape(base_url('modules/smart_square_payments/assets/checkout.css?v=20261027b')); ?>">
+    <link rel="stylesheet" href="<?= html_escape(base_url('modules/smart_square_payments/assets/checkout.css?v=20261027c')); ?>">
 </head>
 <body>
 <main class="smart-square-checkout">

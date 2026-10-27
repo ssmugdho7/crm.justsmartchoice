@@ -38,13 +38,13 @@ $icon = static function ($name) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= html_escape(_l('smart_square_pay_securely')); ?></title>
-    <link rel="stylesheet" href="<?= html_escape(base_url('modules/smart_square_payments/assets/checkout.css?v=20261027')); ?>">
+    <link rel="stylesheet" href="<?= html_escape(base_url('modules/smart_square_payments/assets/checkout.css?v=20261027b')); ?>">
 </head>
 <body>
 <main class="smart-square-checkout">
     <div class="panel-body">
         <header class="checkout-header">
-            <a class="checkout-logo" href="https://primeshieldroofing.com/"><img src="<?= html_escape(base_url('modules/smart_square_payments/assets/prime-shield-logo.svg')); ?>" width="340" height="110" alt="Prime Shield Roofing"></a>
+            <div class="checkout-logo"><?php get_dark_company_logo(); ?></div>
             <div class="checkout-title"><h1><?= html_escape(_l('smart_square_pay_title')); ?></h1><p><?= html_escape(_l('smart_square_with_square')); ?></p></div>
             <span class="checkout-security"><?= $icon('lock'); ?><span><?= html_escape(_l('smart_square_secure_payment')); ?></span></span>
         </header>
@@ -78,7 +78,7 @@ $icon = static function ($name) {
                 <?= $icon('lock'); ?><span><?= html_escape(_l('smart_square_pay_amount', app_format_money($amount, $invoice->currency_name ?? 'USD'))); ?></span>
             </button>
             <p class="checkout-note"><?= html_escape(_l('smart_square_receipt_notice')); ?></p>
-            <label class="checkbox-row terms-row"><input type="checkbox" id="square-terms" required><span><?= html_escape(_l('smart_square_terms_prefix')); ?> <a href="<?= html_escape(site_url('terms-and-conditions')); ?>" target="_blank" rel="noopener"><?= html_escape(_l('smart_square_terms')); ?></a> <?= html_escape(_l('smart_square_and')); ?> <a href="https://primeshieldroofing.com/legal/privacy/" target="_blank" rel="noopener"><?= html_escape(_l('smart_square_privacy')); ?></a>.</span></label>
+            <label class="checkbox-row terms-row"><input type="checkbox" id="square-terms" required><span><?= html_escape(_l('smart_square_terms_prefix')); ?> <a href="<?= html_escape(site_url('terms-and-conditions')); ?>" target="_blank" rel="noopener"><?= html_escape(_l('smart_square_terms')); ?></a> <?= html_escape(_l('smart_square_and')); ?> <a href="<?= html_escape(site_url('privacy-policy')); ?>" target="_blank" rel="noopener"><?= html_escape(_l('smart_square_privacy')); ?></a>.</span></label>
             </form>
             <div class="checkout-trust"><?php foreach (['shield' => 'secure_payment', 'lock' => 'processed_square', 'receipt' => 'receipt_email', 'pin' => 'private_details'] as $symbol => $key) { ?><div><?= $icon($symbol); ?><span><?= html_escape(_l('smart_square_' . $key)); ?></span></div><?php } ?></div>
             <script src="<?= $sandbox ? 'https://sandbox.web.squarecdn.com/v1/square.js' : 'https://web.squarecdn.com/v1/square.js'; ?>"></script>

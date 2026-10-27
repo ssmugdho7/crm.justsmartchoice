@@ -2,7 +2,7 @@
 <!doctype html><html lang="<?php echo html_escape(get_locale_key(get_option('active_language'))); ?>"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title><?php echo html_escape($title); ?></title>
-<link rel="stylesheet" href="<?php echo module_dir_url('recruitment','assets/css/smart_choice_job_application.css'); ?>?v=1850">
+<link rel="stylesheet" href="<?php echo module_dir_url('recruitment','assets/css/smart_choice_job_application.css'); ?>?v=1851">
 <link rel="stylesheet" href="<?php echo module_dir_url('recruitment','assets/css/recruitment_header.css'); ?>?v=1">
 </head><body>
 <?php $this->load->view('recruitment_portal/template_parts/navigation', ['show_login' => false]); ?>

@@ -19,3 +19,4 @@ Run `php tests/recruitment_application_repairs.php` and PHP syntax checks for th
 
 ## Shared public navigation — 28 October 2026
 Application, legacy skill-test, and pre-employment assessment pages now use the portal navigation partial, with Log in omitted. Header CSS is shared with the portal. Existing language keys, language cookie/query behavior, form submissions, and portal login remain unchanged. No migration or permission change is required; deploy the listed source files together. Validation: PHP lint, existing recruitment regressions, and isolated navigation rendering (login on/off, two language links, query preservation).
+The phone-width check also exposed full-width invisible pill inputs extending beyond the viewport. Hidden controls now stay inside their labels, with a visible keyboard-focus outline. Local browser checks at 390px verified no horizontal overflow, Spanish switching, hidden login, and correct radio selection.

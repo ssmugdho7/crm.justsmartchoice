@@ -6,7 +6,7 @@ class FixtureHooks {
     function apply_filters($name,$value){return $name==='merge_field_logo_img_width'?recruitment_email_logo_width($value):$value;}
 }
 function hooks(){static $hooks;return $hooks??=new FixtureHooks;}
-function get_option($name){return ['company_logo'=>'logo.png','companyname'=>'Fixture Company','email_signature'=>'Regards'][$name]??'';}
+function get_option($name){if($name==='smart_choice_recruitment_w4_url')return $GLOBALS['fixture_w4_url']??'';return ['company_logo'=>'logo.png','companyname'=>'Fixture Company','email_signature'=>'Regards'][$name]??'';}
 function site_url($path=''){return 'https://crm.example.test/'.$path;}
 function base_url($path=''){return site_url($path);}
 function admin_url($path=''){return site_url('admin/'.$path);}
@@ -22,6 +22,12 @@ function check($condition,$message){if(!$condition)throw new RuntimeException($m
 $root=dirname(__DIR__);
 require $root.'/modules/recruitment/helpers/recruitment_helper.php';
 require $root.'/application/libraries/merge_fields/Other_merge_fields.php';
+check(recruitment_w4_url('spanish')==='https://www.irs.gov/pub/irs-pdf/fw4sp.pdf','Spanish selects the official Spanish W-4');
+check(recruitment_w4_url('english')==='https://www.irs.gov/pub/irs-pdf/fw4.pdf','English has an official English fallback');
+$GLOBALS['fixture_w4_url']='https://crm.example.test/english-w4.pdf';
+check(recruitment_w4_url('english')===$GLOBALS['fixture_w4_url'],'Configured English form is preserved');
+check(recruitment_w4_url('spanish')==='https://www.irs.gov/pub/irs-pdf/fw4sp.pdf','English configuration cannot override the Spanish selection');
+unset($GLOBALS['fixture_w4_url']);
 $fields=(new Other_merge_fields)->format();
 check(strpos($fields['{logo_image_with_url}'],'width="160"')!==false,'Actual logo merge field has an email-safe width');
 check(recruitment_email_logo_width(220)===220,'Explicit logo width is preserved');
@@ -44,4 +50,4 @@ $model->send_candidate_welcome_mail(['candidate_name'=>'Test <name>','last_name'
 check(strpos($mailer->body,'>Recruitment Portal</a>')!==false,'Welcome email uses a descriptive portal label');
 check(strpos($mailer->body,'recruitment/authentication_candidate/login')!==false,'Welcome uses the actual candidate login route');
 check(strpos($mailer->body,'Test &lt;name&gt;')!==false,'Candidate names are escaped in email');
-echo "Recruitment logo rendering, document compatibility/path checks, and welcome-email label/route checks passed.\n";
+echo "Recruitment language-specific W-4, logo rendering, document compatibility/path checks, and welcome-email label/route checks passed.\n";

@@ -9,6 +9,16 @@ function recruitment_email_logo_width($width)
     return $width === '' ? 160 : $width;
 }
 
+/** Return the W-4 matching the language already resolved by the public forms controller. */
+function recruitment_w4_url($language)
+{
+    if ($language === 'spanish') {
+        return 'https://www.irs.gov/pub/irs-pdf/fw4sp.pdf';
+    }
+
+    return get_option('smart_choice_recruitment_w4_url') ?: 'https://www.irs.gov/pub/irs-pdf/fw4.pdf';
+}
+
 if (!function_exists('add_recruitment_email_templates')) {
     /**
      * Init appointly email templates and assign languages

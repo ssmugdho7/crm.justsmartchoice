@@ -9,6 +9,7 @@ function hooks(){static $hooks;return $hooks??=new FixtureHooks;}
 function get_option($name){if($name==='smart_choice_recruitment_w4_url')return $GLOBALS['fixture_w4_url']??'';return ['company_logo'=>'logo.png','companyname'=>'Fixture Company','email_signature'=>'Regards'][$name]??'';}
 function site_url($path=''){return 'https://crm.example.test/'.$path;}
 function base_url($path=''){return site_url($path);}
+function current_url(){return site_url('recruitment/forms/application');}
 function admin_url($path=''){return site_url('admin/'.$path);}
 function e($value){return htmlspecialchars((string)$value,ENT_QUOTES,'UTF-8');}
 function html_escape($value){return e($value);}
@@ -22,6 +23,13 @@ function check($condition,$message){if(!$condition)throw new RuntimeException($m
 $root=dirname(__DIR__);
 require $root.'/modules/recruitment/helpers/recruitment_helper.php';
 require $root.'/application/libraries/merge_fields/Other_merge_fields.php';
+$GLOBALS['language']='english';
+check(recruitment_form_action_url()===current_url().'?lang=english','English form action preserves its displayed language');
+$GLOBALS['language']='spanish';
+check(recruitment_form_action_url()===current_url().'?lang=spanish','Spanish form action preserves its displayed language');
+$GLOBALS['language']='unexpected';
+check(recruitment_form_action_url()===current_url().'?lang=english','Unexpected form language safely defaults to English');
+unset($GLOBALS['language']);
 check(recruitment_w4_url('spanish')==='https://www.irs.gov/pub/irs-pdf/fw4sp.pdf','Spanish selects the official Spanish W-4');
 check(recruitment_w4_url('english')==='https://www.irs.gov/pub/irs-pdf/fw4.pdf','English has an official English fallback');
 $GLOBALS['fixture_w4_url']='https://crm.example.test/english-w4.pdf';

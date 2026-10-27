@@ -9,6 +9,17 @@ function recruitment_email_logo_width($width)
     return $width === '' ? 160 : $width;
 }
 
+/** Keep the displayed form language on POST, even if another tab changes its cookie. */
+function recruitment_form_action_url()
+{
+    $language = $GLOBALS['language'] ?? 'english';
+    if (!in_array($language, ['english', 'spanish'], true)) {
+        $language = 'english';
+    }
+
+    return current_url() . '?' . http_build_query(['lang' => $language]);
+}
+
 /** Return the W-4 matching the language already resolved by the public forms controller. */
 function recruitment_w4_url($language)
 {

@@ -12,7 +12,7 @@
 <div class="sc-job-notice"><b><?php echo _l('recruitment_application_required_notice'); ?></b></div>
 <?php if (!empty($errors)): ?><div class="sc-alert sc-alert-error"><strong><?php echo _l('recruitment_application_fix_errors'); ?></strong><ul><?php foreach($errors as $error): ?><li><?php echo html_escape($error); ?></li><?php endforeach; ?></ul></div><?php endif; ?>
 <?php if (!empty($success)): ?><div class="sc-success"><div class="sc-success-icon">OK</div><h2><?php echo _l('recruitment_application_success_title'); ?></h2><p><?php echo _l('recruitment_application_success_message'); ?></p></div><?php else: ?>
-<?php echo form_open_multipart(current_url(), ['class'=>'sc-job-form']); ?>
+<?php echo form_open_multipart(recruitment_form_action_url(), ['class'=>'sc-job-form']); ?>
 <?php
 function sc_field($label,$name,$type='text',$required=false,$placeholder=''){ $value=set_value($name); echo '<div class="sc-field"><label>'._l($label).($required?' <em>*</em>':'').'</label><input type="'.$type.'" name="'.$name.'" value="'.html_escape($value).'" placeholder="'.html_escape($placeholder).'"'.($required?' required':'').'></div>'; }
 function sc_radio($label,$name,$options,$required=false){ echo '<div class="sc-field sc-span-2"><label>'._l($label).($required?' <em>*</em>':'').'</label><div class="sc-pills">'; foreach($options as $value=>$key){ echo '<label><input type="radio" name="'.$name.'" value="'.html_escape($value).'"'.(set_value($name)===$value?' checked':'').($required?' required':'').'><span>'._l($key).'</span></label>'; } echo '</div></div>'; }

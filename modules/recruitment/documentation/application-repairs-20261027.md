@@ -23,3 +23,6 @@ The phone-width check also exposed full-width invisible pill inputs extending be
 
 ## Language-specific W-4 — 28 October 2026
 The application button follows the effective public-form language (query selection, then remembered cookie, then English). Spanish opens the official IRS Spanish W-4 at https://www.irs.gov/pub/irs-pdf/fw4sp.pdf; English preserves the configured English W-4 URL with the official IRS English form as fallback. Both official forms were verified as the 2026 five-page forms. No migration, settings mutation, language-key, or permission change is required. Existing recruitment regression checks cover language selection and English URL preservation.
+
+## Candidate session and submission language — 28 October 2026
+The portal shows Log in only without an authenticated candidate session; standalone forms still omit it. All three public forms submit with their displayed language in the action query, preventing another browser tab from changing welcome-email language through the shared language cookie. The existing candidate authentication helper is reused; no access/session rules are changed. Regression checks exercise default/explicit navbar visibility for both candidate session states and English/Spanish/invalid form-action language. No migration, settings change, or language key addition is needed.

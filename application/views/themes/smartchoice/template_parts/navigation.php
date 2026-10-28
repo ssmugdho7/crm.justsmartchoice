@@ -13,6 +13,9 @@
     <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
+            <?php if (is_client_logged_in()) { ?>
+            <a class="sc-mobile-back" href="<?= site_url('clients'); ?>" aria-label="<?= e(_l('go_back')); ?>" title="<?= e(_l('go_back')); ?>"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></a>
+            <?php } ?>
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
                 data-target="#theme-navbar-collapse" aria-expanded="false">
                 <span class="sr-only">Toggle navigation</span>

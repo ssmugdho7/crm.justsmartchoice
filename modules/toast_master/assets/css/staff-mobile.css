@@ -5,24 +5,28 @@
  body.app.admin #header>.hide-menu{width:44px;height:44px;margin:10px 4px!important;flex:none}
  body.app.admin #header nav{width:calc(100% - 52px)!important;min-width:0;float:right}
  body.app.admin #header nav>.tw-flex{height:64px;align-items:center;gap:0}
- body.app.admin #header #logo{display:flex!important;width:64px!important;min-width:0!important;height:64px!important}
- body.app.admin #header #logo img{max-width:62px!important;max-height:46px!important;height:auto!important}
+ body.app.admin #header #logo{display:flex!important;position:fixed!important;left:48px!important;top:0!important;width:72px!important;min-width:0!important;height:64px!important}
+ body.app.admin #header #logo img{max-width:70px!important;max-height:46px!important;height:auto!important}
  body.app.admin #header .sc-admin-search-actions{display:flex!important;flex:1!important;min-width:0;justify-content:flex-end}
  body.app.admin #header .sc-admin-search-actions>.navbar-nav{display:flex!important;float:none;flex:none}
- body.app.admin #header #top_search{display:flex!important;width:32px!important;flex:0 0 32px!important;height:44px!important;margin:0!important}
+ body.app.admin #header #top_search{display:flex!important;position:fixed!important;top:10px!important;left:164px!important;width:36px!important;min-width:0!important;flex:none!important;height:44px!important;margin:0!important}
  body.app.admin #header #top_search_button{position:static!important;transform:none!important}
  body.app.admin #header #top_search_button button{width:32px;height:44px;padding:6px!important}
- body.app.admin #header #search_input{position:absolute!important;width:1px!important;opacity:0;pointer-events:none}
- body.app.admin #header #top_search:focus-within #search_input{position:fixed!important;left:12px!important;right:12px!important;top:72px!important;width:calc(100vw - 24px)!important;max-width:none!important;opacity:1;pointer-events:auto;z-index:1060}
+ body.app.admin #header #search_input{position:absolute!important;width:1px!important;min-width:0!important;padding:0!important;opacity:0!important;pointer-events:none}
+ body.app.admin #header #top_search:focus-within #search_input{position:fixed!important;left:12px!important;right:12px!important;top:72px!important;width:calc(100vw - 24px)!important;max-width:none!important;opacity:1!important;pointer-events:auto;padding:8px 12px!important;z-index:1060}
  body.app.admin #header #search_results{position:fixed!important;top:116px!important;left:12px!important;right:12px!important;max-height:60dvh;overflow:auto}
  body.app.admin #header .smart-choice-links-trigger{display:flex!important;min-width:32px;height:44px!important;align-items:center;justify-content:center;margin:0!important}
  body.app.admin #header .smart-choice-links-nav{margin:0!important}
+ body.app.admin #header #smart-choice-links-left-live{position:fixed!important;left:124px!important;top:10px!important;width:36px!important;height:44px!important;margin:0!important}
+ body.app.admin #header #smart-choice-links-right-live{position:fixed!important;left:204px!important;top:10px!important;width:36px!important;height:44px!important;margin:0!important}
+ body.app.admin #header .sc-admin-search-actions>.navbar-nav>li{position:fixed!important;left:244px!important;top:10px!important;width:40px!important;margin:0!important}
  body.app.admin #header .sc-admin-search-actions>.navbar-nav>li>a{min-width:38px;height:44px!important}
  body.app.admin #header .sc-header-world-clock,body.app.admin #header .scce-world-clock-item{display:none!important}
  body.app.admin #header .mobile-menu{margin:0!important;flex:none}
- body.app.admin #header .mobile-menu-toggle{width:34px!important;min-width:34px!important;margin:0!important;padding:8px!important}
+ body.app.admin #header .mobile-menu-toggle{position:fixed!important;right:8px!important;top:10px!important;width:34px!important;min-width:34px!important;margin:0!important;padding:8px!important}
  body.app.admin #header .mobile-icon-menu{display:none!important}
  body.app.admin #header nav>div>div:has(>ul.navbar-right){display:none!important}
+ body.app.admin #header .navbar-right{display:none!important}
  body.app.admin #header #mobile-collapse{position:fixed;top:64px;right:8px;left:8px;max-height:calc(100dvh - 150px);overflow:auto;z-index:1050;background:#fff;box-shadow:0 4px 16px #0002}
  body.app.admin #wrapper{margin-left:0!important;margin-right:0!important;padding-top:0!important;min-height:calc(100dvh - 140px)!important}
  body.app.admin #menu,body.app.admin #setup-menu-wrapper{position:fixed!important;top:64px!important;bottom:calc(68px + env(safe-area-inset-bottom))!important;height:calc(100dvh - 132px - env(safe-area-inset-bottom))!important;min-height:0!important;width:100%!important;max-width:100%!important;overflow-y:auto!important;overscroll-behavior:contain;padding:56px 16px 24px!important;margin:0!important;z-index:1045;box-sizing:border-box;background:#fff!important}

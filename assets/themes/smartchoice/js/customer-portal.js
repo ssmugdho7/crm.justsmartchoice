@@ -3,6 +3,16 @@
     function init() {
         var layout = document.querySelector('#wrapper.sc-portal-layout');
         if (!layout) return;
+        var back = document.querySelector('.sc-mobile-back');
+        if (back) back.addEventListener('click', function (event) {
+            // Only return through this portal's history; the href is a safe fallback.
+            var referrer;
+            try { referrer = new URL(document.referrer); } catch (error) { return; }
+            if (referrer.origin === location.origin && history.length > 1) {
+                event.preventDefault();
+                history.back();
+            }
+        });
         layout.classList.add('sc-portal-enhanced');
         var sidebar = layout.querySelector('.sc-portal-sidebar');
         var toggle = layout.querySelector('.sc-portal-menu-button');

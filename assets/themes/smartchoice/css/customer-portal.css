@@ -1,3 +1,16 @@
+.sc-mobile-back{display:none}
+@media(max-width:991px){
+ body.customers:has(#wrapper.sc-portal-layout) .navbar.navbar-default.header>.container{display:flex!important;gap:0!important;padding:8px 16px!important}
+ body.customers:has(#wrapper.sc-portal-layout) .navbar.navbar-default.header .navbar-header{display:flex!important;flex:1!important;position:relative;justify-content:center!important;align-items:center!important;flex-direction:row!important;padding-left:44px}
+ body.customers:has(#wrapper.sc-portal-layout) .navbar.navbar-default.header .sc-mobile-back{display:flex!important;align-items:center;justify-content:center;position:absolute;left:0;top:8px;width:44px;height:44px;color:#fff;border-radius:8px}
+ body.customers:has(#wrapper.sc-portal-layout) .navbar.navbar-default.header .navbar-toggle{display:none!important}
+ body.customers:has(#wrapper.sc-portal-layout) .navbar.navbar-default.header #theme-navbar-collapse,
+ body.customers:has(#wrapper.sc-portal-layout) .navbar.navbar-default.header #theme-navbar-collapse.in{display:flex!important;flex:0 0 44px!important;overflow:visible!important;background:transparent!important;margin:0!important;padding:0!important}
+ body.customers:has(#wrapper.sc-portal-layout) .navbar.navbar-default.header #theme-navbar-collapse>ul.nav{display:flex!important;justify-content:flex-end!important;padding:0!important}
+ body.customers:has(#wrapper.sc-portal-layout) .navbar.navbar-default.header #theme-navbar-collapse>ul.nav>li:not(.customers-nav-item-profile){display:none!important}
+ body.customers:has(#wrapper.sc-portal-layout) .navbar.navbar-default.header #theme-navbar-collapse>ul.nav>li.customers-nav-item-profile>a{padding:5px!important;background:transparent!important}
+ #wrapper.sc-portal-layout .sc-portal-toolbar{display:none!important}
+}
 /* Only authenticated content is restyled; header and footer retain their styles. */
 #wrapper.sc-portal-layout{--portal-green:#166b53;--portal-ink:#24312e;--portal-muted:#63716d;--portal-border:#dfe6e3;display:grid;grid-template-columns:244px minmax(0,1fr);align-items:start;gap:28px;padding:0 24px 28px;color:var(--portal-ink)}
 #wrapper.sc-portal-layout #content{min-width:0}

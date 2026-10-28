@@ -45,6 +45,7 @@ foreach (['project' => 'projects', 'ticket' => 'tickets'] as $detail => $list) {
     }
 }
 ?>
+<noscript><style>@media(max-width:991px){#wrapper.sc-portal-layout .sc-portal-sidebar{position:static;width:auto;max-height:none;margin-bottom:20px;visibility:visible;transform:none}}</style></noscript>
 <button type="button" class="sc-portal-backdrop" aria-label="Close customer navigation" hidden></button>
 <aside id="sc-customer-sidebar" class="sc-portal-sidebar" aria-label="Customer navigation">
     <div class="sc-portal-sidebar-title">

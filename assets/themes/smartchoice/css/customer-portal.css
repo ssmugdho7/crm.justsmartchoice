@@ -97,9 +97,10 @@
   #wrapper.sc-portal-layout,#wrapper.sc-portal-collapsed{display:block;padding-inline:12px}
   #wrapper.sc-portal-enhanced .sc-portal-menu-button,#wrapper.sc-portal-enhanced .sc-portal-close{display:block!important}
   #wrapper.sc-portal-layout .sc-portal-collapse{display:none!important}
-  .sc-portal-sidebar{position:static;max-height:none;margin-bottom:20px}
-  .sc-portal-enhanced .sc-portal-sidebar{position:fixed;top:0;bottom:0;inset-inline-start:0;width:min(300px,85vw);max-height:100dvh;border-radius:0;z-index:1040;visibility:hidden;transform:translateX(-100%);transition:transform .18s ease,visibility .18s}
-  [dir="rtl"] .sc-portal-enhanced .sc-portal-sidebar{transform:translateX(100%)}
+  /* Start closed before DOMContentLoaded so navigation never paints a sidebar above content. */
+  .sc-portal-sidebar{position:fixed;top:0;bottom:0;inset-inline-start:0;width:min(300px,85vw);max-height:100dvh;margin-bottom:0;border-radius:0;z-index:1040;visibility:hidden;transform:translateX(-100%)}
+  .sc-portal-enhanced .sc-portal-sidebar{transition:transform .18s ease,visibility .18s}
+  [dir="rtl"] .sc-portal-sidebar{transform:translateX(100%)}
   .sc-portal-enhanced.sc-portal-open .sc-portal-sidebar{transform:translateX(0);visibility:visible}
   #wrapper.sc-portal-open .sc-portal-backdrop:not([hidden]){display:block!important;position:fixed;inset:0;z-index:1039;background:rgba(15,30,23,.4);border:0}
   .sc-portal-collapsed .sc-portal-sidebar-title strong,.sc-portal-collapsed .sc-portal-nav-group h2,.sc-portal-collapsed .sc-portal-nav-group a span{display:block}

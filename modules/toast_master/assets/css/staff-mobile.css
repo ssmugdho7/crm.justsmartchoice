@@ -25,10 +25,10 @@
  body.app.admin #header nav>div>div:has(>ul.navbar-right){display:none!important}
  body.app.admin #header #mobile-collapse{position:fixed;top:64px;right:8px;left:8px;max-height:calc(100dvh - 150px);overflow:auto;z-index:1050;background:#fff;box-shadow:0 4px 16px #0002}
  body.app.admin #wrapper{margin-left:0!important;margin-right:0!important;padding-top:0!important;min-height:calc(100dvh - 140px)!important}
- body.app.admin #menu,body.app.admin #setup-menu-wrapper{position:fixed!important;top:64px!important;bottom:calc(68px + env(safe-area-inset-bottom))!important;height:auto!important;width:100%!important;max-width:100%!important;overflow-y:auto!important;overscroll-behavior:contain;padding:56px 16px 24px!important;margin:0!important;z-index:1045;box-sizing:border-box;background:#fff!important}
- body.app.admin #menu{left:0!important;transform:translateX(-101%);visibility:hidden;pointer-events:none}
- body.app.admin #setup-menu-wrapper{left:0!important;right:0!important}
- body.app.admin.show-sidebar #menu{transform:none!important;visibility:visible;pointer-events:auto}
+ body.app.admin #menu,body.app.admin #setup-menu-wrapper{position:fixed!important;top:64px!important;bottom:calc(68px + env(safe-area-inset-bottom))!important;height:calc(100dvh - 132px - env(safe-area-inset-bottom))!important;min-height:0!important;width:100%!important;max-width:100%!important;overflow-y:auto!important;overscroll-behavior:contain;padding:56px 16px 24px!important;margin:0!important;z-index:1045;box-sizing:border-box;background:#fff!important}
+ body.app.admin #menu{left:0!important;transform:translateX(-101%)!important;visibility:hidden!important;pointer-events:none}
+ body.app.admin #setup-menu-wrapper{left:0!important;right:0!important;animation:none!important;transform:none!important}
+ body.app.admin.show-sidebar #menu{transform:none!important;visibility:visible!important;pointer-events:auto}
  body.app.admin #menu #side-menu,body.app.admin #setup-menu{height:auto!important;max-height:none!important;overflow:visible!important;padding-bottom:16px}
  body.app.admin #menu .sidebar-user-profile{margin-top:0!important}
  body.app.admin #setup-menu-item{display:block!important}

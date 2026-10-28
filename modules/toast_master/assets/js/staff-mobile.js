@@ -25,7 +25,25 @@
       close.addEventListener('click', hideDrawer);
       drawer.prepend(close);
     });
-    document.addEventListener('keydown', function (event) { if (mobile.matches && event.key === 'Escape') hideDrawer(); });
+    function syncDrawer() {
+      if (menu) menu.inert = mobile.matches && !body.classList.contains('show-sidebar');
+      if (setup) setup.inert = mobile.matches && !setup.classList.contains('display-block');
+    }
+    new MutationObserver(syncDrawer).observe(body, {attributes: true, attributeFilter: ['class']});
+    if (setup) new MutationObserver(syncDrawer).observe(setup, {attributes: true, attributeFilter: ['class']});
+    syncDrawer();
+    document.addEventListener('keydown', function (event) {
+      if (!mobile.matches) return;
+      if (event.key === 'Escape') { hideDrawer(); return; }
+      var drawer = body.classList.contains('show-sidebar') ? menu : (setup && setup.classList.contains('display-block') ? setup : null);
+      if (!drawer || event.key !== 'Tab') return;
+      var controls = Array.from(drawer.querySelectorAll('a[href],button,input,select')).filter(function (el) { return el.getClientRects().length && !el.disabled; });
+      if (!controls.length) return;
+      var first = controls[0], last = controls[controls.length - 1];
+      if (!drawer.contains(document.activeElement) || (event.shiftKey && document.activeElement === first) || (!event.shiftKey && document.activeElement === last)) {
+        event.preventDefault(); (event.shiftKey ? last : first).focus();
+      }
+    });
     document.querySelectorAll('.announcement').forEach(function (notice) {
       var close = notice.querySelector('a[href*="dismiss_announcement/"]');
       if (!close) return;
@@ -69,7 +87,7 @@
       body.classList.toggle('show-sidebar', !open);
     });
     body.appendChild(nav);
-    mobile.addEventListener('change', function () { hideDrawer(); });
+    mobile.addEventListener('change', function () { hideDrawer(); syncDrawer(); });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 }());

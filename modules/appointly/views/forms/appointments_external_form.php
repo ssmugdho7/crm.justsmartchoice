@@ -333,7 +333,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                             <div id="time-slots-section" class="tw-bg-white tw-border tw-border-neutral-200 tw-rounded-lg tw-p-3 md:tw-p-5 tw-hidden">
                                 <h5 class="tw-font-medium tw-mb-4"><?= _l('appointly_available_time_slots'); ?></h5>
-                                <div id="time-slots-container" class="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-3 lg:tw-grid-cols-4 tw-gap-3">
+                                <div id="time-slots-container" class="tw-grid tw-grid-cols-2 md:tw-grid-cols-3 lg:tw-grid-cols-4 tw-gap-3">
                                 </div>
                                 <div id="slot-loading" class="tw-text-center tw-py-8 tw-hidden">
                                     <div class="tw-w-8 tw-h-8 tw-mx-auto tw-border-2 tw-border-primary-500 tw-border-t-transparent tw-rounded-full tw-animate-spin"></div>
@@ -498,6 +498,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     <style>
+        @media (max-width: 639px) {
+            #time-slots-container { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+            #time-slots-container .time-slot-btn { min-width: 0; min-height: 48px; padding: 12px 4px; font-size: 13px; text-align: center; }
+            #time-slots-container .time-slot-btn.selected::after { width: 12px; height: 12px; top: 3px; right: 3px; background-size: 9px; }
+        }
         .appointly-services-grid { align-items: stretch; }
         .appointly-compact-service-card { min-height: 148px; cursor: pointer; display: flex; flex-direction: column; justify-content: flex-start; box-shadow: 0 1px 3px rgba(15, 23, 42, .06); }
         .appointly-compact-service-card:hover, .appointly-compact-service-card.selected { transform: translateY(-1px); box-shadow: 0 5px 14px rgba(15, 23, 42, .10); }

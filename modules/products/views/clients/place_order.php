@@ -1,5 +1,5 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<link rel="stylesheet" href="<?php echo module_dir_url('products', 'assets/css/checkout.css'); ?>?v=1">
+<link rel="stylesheet" href="<?php echo module_dir_url('products', 'assets/css/checkout.css'); ?>?v=2">
 <div class="panel_s section-heading section-products">
     <div class="panel-body">
         <h4 class="no-margin section-text"><i class="fa fa-shopping-cart"></i> Cart Review / Checkout</h4>

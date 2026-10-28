@@ -1,8 +1,8 @@
 /* Keep the existing desktop checkout; reflow cart rows inside phone WebViews. */
 @media (max-width: 600px) {
   .sc-mobile-checkout .panel-body { padding: 16px; }
-  .sc-mobile-checkout .table-responsive { border: 0; overflow: visible; }
-  .sc-mobile-checkout .items { width: 100%; table-layout: auto; }
+  .sc-mobile-checkout .table-responsive { border: 0; overflow: visible; padding: 0; }
+  .sc-mobile-checkout .items { width: 100%; table-layout: auto; margin-top: 0 !important; }
   .sc-mobile-checkout .items thead { display: none; }
   .sc-mobile-checkout .items tbody { display: block; }
   .sc-mobile-checkout .items tbody > tr {
@@ -26,6 +26,8 @@
   .sc-mobile-checkout .items td.description {
     grid-column: 1 / -1;
     line-height: 1.5;
+    height: auto !important;
+    overflow: visible !important;
   }
   .sc-mobile-checkout .items td.description strong { display: inline; }
   .sc-mobile-checkout .items td:nth-child(3) { grid-column: 1 / -1; }

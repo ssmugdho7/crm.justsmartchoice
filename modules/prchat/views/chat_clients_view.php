@@ -587,6 +587,7 @@ $widget_show_roles = ($show_roles_opt === '0' || $show_roles_opt === '1') ? $sho
     </div>
   </div>
 </div>
+<script src="<?= module_dir_url('prchat', 'assets/js/client-widget-position.js?v=1'); ?>"></script>
 <script>
   window.prchatI18n = window.prchatI18n || {};
   window.prchatI18n.chat_voice_message = <?= json_encode(_l('chat_voice_message')); ?>;

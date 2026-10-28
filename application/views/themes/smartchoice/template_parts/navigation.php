@@ -13,6 +13,7 @@
     <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
+            <script>if(window.self!==window.top||window.flutter_inappwebview){document.documentElement.classList.add('sc-app-shell');}</script>
             <?php if (is_client_logged_in()) { ?>
             <a class="sc-mobile-back" href="<?= site_url('clients'); ?>" aria-label="<?= e(_l('go_back')); ?>" title="<?= e(_l('go_back')); ?>"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></a>
             <?php } ?>

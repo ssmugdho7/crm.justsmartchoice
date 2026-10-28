@@ -37,6 +37,7 @@ function toast_master_uninstall_hook()
 hooks()->add_action('admin_init', 'toast_master_module_init_menu_items');
 hooks()->add_action('admin_init', 'toast_master_register_permissions');
 hooks()->add_action('app_admin_head', 'toast_master_add_head_components');
+hooks()->add_action('app_admin_head', 'toast_master_staff_mobile_components');
 hooks()->add_action('app_admin_footer', 'toast_master_add_footer_components');
 hooks()->add_action('app_customers_head', 'toast_master_add_head_components');
 hooks()->add_action('app_customers_footer', 'toast_master_add_footer_components');
@@ -82,6 +83,31 @@ function toast_master_add_head_components()
     echo '<link rel="stylesheet" type="text/css" href="' . module_dir_url(TOAST_MASTER_MODULE_NAME, 'assets/css/toast_master.css') . '?v=' . TOAST_MASTER_VERSION . '">';
 }
 
+function toast_master_staff_mobile_components()
+{
+    if (!is_staff_logged_in()) { return; }
+    $CI = &get_instance();
+    if (!$CI->session->userdata('sc_mobile_notice_session')) {
+        $CI->session->set_userdata('sc_mobile_notice_session', bin2hex(random_bytes(12)));
+    }
+    $config = [
+        'session' => $CI->session->userdata('sc_mobile_notice_session'),
+        'staff' => (int) get_staff_user_id(),
+        'home' => admin_url(),
+        'labels' => [
+            'home' => _l('dashboard_string'), 'tasks' => _l('tasks'),
+            'create' => _l('quick_create'), 'setup' => _l('setting_bar_heading'),
+            'more' => _l('more'), 'close' => _l('close'),
+        ],
+    ];
+    echo '<script>window.scStaffMobile=' . json_encode($config, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ';</script>';
+    foreach (['css' => 'staff-mobile.css', 'js' => 'staff-mobile.js'] as $type => $file) {
+        $path = 'assets/' . $type . '/' . $file;
+        $url = module_dir_url(TOAST_MASTER_MODULE_NAME, $path) . '?v=' . filemtime(__DIR__ . '/' . $path);
+        echo $type === 'css' ? '<link rel="stylesheet" href="' . $url . '">' : '<script defer src="' . $url . '"></script>';
+    }
+}
+
 function toast_master_add_footer_components()
 {
     if ((int)get_option('toast_master_enable') !== 1) {
@@ -91,7 +117,7 @@ function toast_master_add_footer_components()
 
     $settings = toast_master_get_runtime_settings();
     echo '<script>window.SMART_CHOICE_TOAST_MASTER=' . json_encode($settings, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) . ';</script>';
-    echo '<script src="' . module_dir_url(TOAST_MASTER_MODULE_NAME, 'assets/js/toast_master.js') . '?v=' . TOAST_MASTER_VERSION . '"></script>';
+    echo '<script src="' . module_dir_url(TOAST_MASTER_MODULE_NAME, 'assets/js/toast_master.js') . '?v=' . filemtime(__DIR__ . '/assets/js/toast_master.js') . '"></script>';
 }
 
 function module_toast_master_action_links($actions)

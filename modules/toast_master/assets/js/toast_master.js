@@ -234,6 +234,8 @@
             var flashes = window.jQuery('.alert:not(.sc-toast-skip), .flashdata, .alert-success, .alert-danger, .alert-warning, .alert-info');
             flashes.each(function(){
                 var $el = window.jQuery(this);
+                // Announcements already have a dismissible inline card on phones.
+                if (window.matchMedia('(max-width: 767px)').matches && $el.hasClass('announcement')) return;
                 if($el.data('scToastRead')) return;
                 var text = cleanMessage($el.text());
                 if(!text) return;

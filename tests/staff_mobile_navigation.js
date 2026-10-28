@@ -1,0 +1,28 @@
+const fs = require('node:fs');
+const assert = require('node:assert/strict');
+const {JSDOM} = require('jsdom');
+const script = fs.readFileSync('modules/toast_master/assets/js/staff-mobile.js', 'utf8');
+function page(session, saved, allowed = true) {
+  const d = new JSDOM(`<body class="app admin"><div id="header"><div class="sc-admin-search-actions"><ul class="navbar-nav">${allowed ? '<li><a data-toggle="dropdown"><span>+</span></a><ul class="dropdown-menu"></ul></li>' : ''}</ul></div></div><aside id="menu"><ul id="side-menu"><a href="https://crm.example/admin/tasks">Tasks</a>${allowed ? '<li id="setup-menu-item"><a class="open-customizer">Setup</a></li>' : ''}</ul></aside><aside id="setup-menu-wrapper"><button class="close-customizer"></button></aside><div class="announcement"><a href="/admin/misc/dismiss_announcement/8" aria-label="Close">Close</a>Notice</div></body>`, {url: 'https://crm.example/admin/', runScripts: 'outside-only'});
+  const w = d.window;
+  w.matchMedia = () => ({matches: true, addEventListener() {}});
+  w.scStaffMobile = {session, staff: 45, home: 'https://crm.example/admin/', labels: {home:'Dashboard', tasks:'Tasks', create:'Quick Create', setup:'Setup', more:'More', close:'Close'}};
+  if (saved) w.sessionStorage.setItem('sc-notices-45-A', saved);
+  w.eval(script); w.document.dispatchEvent(new w.Event('DOMContentLoaded'));
+  return d;
+}
+const d = page('A'), w = d.window;
+const buttons = [...w.document.querySelectorAll('.sc-staff-mobile-nav button')];
+assert.deepEqual(buttons.map(x => x.textContent), ['Quick Create', 'Setup', 'More']);
+buttons.at(-1).click(); assert(w.document.body.classList.contains('show-sidebar'));
+w.document.querySelector('#menu .sc-staff-drawer-close').click(); assert(!w.document.body.classList.contains('show-sidebar'));
+buttons.at(-1).click(); w.document.dispatchEvent(new w.KeyboardEvent('keydown', {key:'Escape'})); assert(!w.document.body.classList.contains('show-sidebar'));
+const close = w.document.querySelector('.announcement a');
+const event = new w.MouseEvent('click', {bubbles:true, cancelable:true}); close.dispatchEvent(event);
+assert(event.defaultPrevented); assert(w.document.querySelector('.announcement').classList.contains('sc-session-dismissed'));
+const saved = w.sessionStorage.getItem('sc-notices-45-A'); assert(saved.includes('dismiss_announcement/8'));
+const reload = page('A', saved); assert(reload.window.document.querySelector('.announcement').classList.contains('sc-session-dismissed'));
+const nextLogin = page('B', saved); assert(!nextLogin.window.document.querySelector('.announcement').classList.contains('sc-session-dismissed'));
+const restricted = page('A', null, false); assert.deepEqual([...restricted.window.document.querySelectorAll('.sc-staff-mobile-nav button')].map(x=>x.textContent), ['More']);
+[d,reload,nextLogin,restricted].forEach(x=>x.window.close());
+console.log('PASS staff mobile drawer close/Escape, permission-filtered navigation, session dismissal and new-login reset');

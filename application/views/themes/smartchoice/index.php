@@ -10,7 +10,7 @@
             <button type="button" class="sc-portal-menu-button" aria-controls="sc-customer-sidebar" aria-expanded="false" aria-label="Open customer navigation" title="Open customer navigation">
                 <i class="fa-solid fa-bars" aria-hidden="true"></i>
             </button>
-            <span><?= e($title ?? _l('clients')); ?></span>
+            <span<?= trim((string) ($title ?? '')) === trim($contact->firstname . ' ' . $contact->lastname) ? ' class="sc-portal-duplicate-account-title"' : ''; ?>><?= e($title ?? _l('clients')); ?></span>
             <a href="<?= site_url('clients/profile'); ?>" class="sc-portal-account"><i class="fa-regular fa-user" aria-hidden="true"></i> <?= e($contact->firstname . ' ' . $contact->lastname); ?></a>
         </div>
         <?php } ?>

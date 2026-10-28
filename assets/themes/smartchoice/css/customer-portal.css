@@ -95,7 +95,10 @@
 @media(max-width:1199px){#wrapper.sc-portal-layout{gap:20px;padding-inline:16px;grid-template-columns:220px minmax(0,1fr)}#wrapper.sc-portal-collapsed{grid-template-columns:76px minmax(0,1fr)}.sc-dashboard-columns{grid-template-columns:1fr}}
 @media(max-width:991px){
   #wrapper.sc-portal-layout,#wrapper.sc-portal-collapsed{display:block;padding-inline:12px}
-  #wrapper.sc-portal-enhanced .sc-portal-menu-button,#wrapper.sc-portal-enhanced .sc-portal-close{display:block!important}
+  #wrapper.sc-portal-enhanced .sc-portal-close{display:block!important}
+  /* The persistent More action opens the same drawer on mobile. */
+  #wrapper.sc-portal-layout .sc-portal-menu-button,
+  .sc-portal-toolbar .sc-portal-duplicate-account-title{display:none!important}
   #wrapper.sc-portal-layout .sc-portal-collapse{display:none!important}
   /* Start closed before DOMContentLoaded so navigation never paints a sidebar above content. */
   .sc-portal-sidebar{position:fixed;top:0;bottom:0;inset-inline-start:0;width:min(300px,85vw);max-height:100dvh;margin-bottom:0;border-radius:0;z-index:1040;visibility:hidden;transform:translateX(-100%)}

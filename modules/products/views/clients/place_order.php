@@ -1,4 +1,5 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<link rel="stylesheet" href="<?php echo module_dir_url('products', 'assets/css/checkout.css'); ?>?v=1">
 <div class="panel_s section-heading section-products">
     <div class="panel-body">
         <h4 class="no-margin section-text"><i class="fa fa-shopping-cart"></i> Cart Review / Checkout</h4>
@@ -8,7 +9,7 @@
     <!-- Removed HTML entities because in message we are sending HTML format -->
     <div class="alert alert-danger"><?php echo $message; ?></div>
 <?php } ?>
-<?php echo form_open(uri_string()); ?>
+<?php echo form_open(uri_string(), ['class' => 'sc-mobile-checkout']); ?>
 <?php echo form_hidden('clientid', $this->session->client_user_id); ?>
 <?php $total = 0; ?>
 <div class="panel_s sc-checkout-card">
@@ -47,7 +48,7 @@
                                         <br>
                                         <span><?php echo htmlspecialchars($product->product_description); ?></span>
                                     </td>
-                                    <td align="" width="10%">
+                                    <td align="" width="10%" data-label="<?php echo html_escape(_l('qty')); ?>">
                                         <?php
                                             $qty_attr = [
                                                 'data-rate' => $product->rate,
@@ -69,7 +70,7 @@
                                         </div>
                                         <?php echo render_select('taxes['.$key.'][]', $product->taxes, ['name', 'name'], '', array_column($product->taxes, 'name'), ['multiple'=>true], [], 'hidden', 'hidden product_taxes'); ?>
                                     </td>
-                                    <td align="right">
+                                    <td align="right" data-label="<?php echo html_escape(_l('rate')); ?>">
                                         <?php
                                             $recurring_type = '';
                                             $cycles_text    = '';
@@ -94,7 +95,7 @@
                                             echo htmlspecialchars($cycles_text);
                                         ?>
                                     </td>
-                                    <td align="right">
+                                    <td align="right" data-label="<?php echo !empty($product->taxes) ? html_escape(_l('tax')) : ''; ?>">
                                         <?php
                                             foreach ($product->taxes as $tax) {
                                                 echo htmlspecialchars($tax['taxname'] . '(' . $tax['taxrate'] . '%)') . '<br>';
@@ -106,7 +107,7 @@
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </td>
-                                    <td class="amount" align="right"><?php $total += $product->quantity * (isset($product->product_variation_id) ? $product->variation_rate : $product->rate); echo app_format_money($product->quantity * (isset($product->product_variation_id) ? $product->variation_rate : $product->rate), $base_currency->name); ?></td>
+                                    <td class="amount" align="right" data-label="<?php echo html_escape(_l('amount')); ?>"><?php $total += $product->quantity * (isset($product->product_variation_id) ? $product->variation_rate : $product->rate); echo app_format_money($product->quantity * (isset($product->product_variation_id) ? $product->variation_rate : $product->rate), $base_currency->name); ?></td>
                                 </tr>
                             <?php } ?>
                         <?php } ?>
@@ -118,7 +119,7 @@
         <?php if (0 == get_option('coupons_disabled')) { ?>
             <div class="row">
                 <div class="col-md-6 col-md-offset-6">
-                    <table class="table">
+                    <table class="table sc-checkout-coupon">
                         <tbody>
                             <tr>
                                 <td>
@@ -199,7 +200,7 @@
     </div>
 </div>
 <div class="panel_s section-heading section-products">
-    <div class="panel-body">
+    <div class="panel-body sc-checkout-actions">
         <a href="<?php echo site_url('products/client'); ?>" class="btn btn-default"><i class="fa fa-arrow-left"></i> Continue Shopping</a> <button class="btn btn-success pull-right sc-view-cart-btn"><i class="fa fa-check"></i> Create Invoice / Place Order</button>
     </div>
 </div>

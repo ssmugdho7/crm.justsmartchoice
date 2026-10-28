@@ -411,8 +411,10 @@ class Client extends ClientsController
         }
         $this->load->model('products/order_model');
         if (!is_client_logged_in()) {
+            // The native customer login consumes red_url after authenticating and rotating the session.
+            $this->session->set_userdata('red_url', site_url('products/client/place_order'));
             set_alert('warning', _l('clients_login_heading_no_register'));
-            redirect(site_url(''));
+            redirect(site_url('authentication/login'));
         }
         $message          = '';
         $post = $this->input->post();

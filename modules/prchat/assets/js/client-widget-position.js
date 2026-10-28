@@ -69,4 +69,8 @@
     }
   }, true);
   window.addEventListener('resize', restore);
+  // Mobile browsers can settle their viewport and widget size after this script.
+  window.addEventListener('load', restore);
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', restore);
+  requestAnimationFrame(restore);
 }());

@@ -26,3 +26,6 @@ The application button follows the effective public-form language (query selecti
 
 ## Candidate session and submission language — 28 October 2026
 The portal shows Log in only without an authenticated candidate session; standalone forms still omit it. All three public forms submit with their displayed language in the action query, preventing another browser tab from changing welcome-email language through the shared language cookie. The existing candidate authentication helper is reused; no access/session rules are changed. Regression checks exercise default/explicit navbar visibility for both candidate session states and English/Spanish/invalid form-action language. No migration, settings change, or language key addition is needed.
+
+## Recruitment logout navigation — 28 October 2026
+Signed-in candidates now see Log out (Cerrar sesión in Spanish) throughout the shared public navbar, including forms and assessments. Signed-out portal visitors still see Log in; signed-out application/assessment pages continue to omit it. The button uses the existing candidate logout route. English and Spanish module language keys are included. No authentication behavior, permissions, settings, or database migration is changed. Regression checks cover guest/authenticated states for default and explicit form navbar visibility.

@@ -650,3 +650,5 @@ $lang['recruitment_assess_reliability_q2'] = 'You finish your assigned task earl
 $lang['recruitment_assess_reliability_q3'] = 'Instructions are incomplete and the supervisor is busy. What should you do?';
 
 $lang['recruitment_portal_language_label'] = 'Idioma';
+
+$lang['recruitment_portal_logout'] = 'Cerrar sesión';

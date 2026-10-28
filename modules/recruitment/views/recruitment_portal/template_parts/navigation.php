@@ -25,7 +25,9 @@ $sc_logo_url = get_recruitment_option('recruitment_portal_logo_url');
 
     <nav class="sc-recruitment-header-actions" aria-label="<?php echo html_escape(_l('recruitment_portal')); ?>">
       <a class="sc-recruitment-header-link" href="<?php echo site_url('recruitment/recruitment_portal'); ?>"><?php echo _l('recruitment_portal'); ?></a>
-      <?php if ((!isset($show_login) || $show_login) && !is_candidate_logged_in()) { ?>
+      <?php if (is_candidate_logged_in()) { ?>
+      <a class="sc-recruitment-header-link" href="<?php echo site_url('recruitment/authentication_candidate/logout'); ?>"><?php echo _l('recruitment_portal_logout'); ?></a>
+      <?php } elseif (!isset($show_login) || $show_login) { ?>
       <a class="sc-recruitment-header-link" href="<?php echo site_url('recruitment/authentication_candidate/login'); ?>"><?php echo _l('login'); ?></a>
       <?php } ?>
       <div class="sc-recruitment-header-language" aria-label="<?php echo html_escape(_l('recruitment_portal_language_label')); ?>">

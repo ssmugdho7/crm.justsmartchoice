@@ -16,6 +16,8 @@
  body.app.admin #header #top_search.sc-mobile-search-open #search_input{position:fixed!important;left:12px!important;right:12px!important;top:72px!important;width:calc(100vw - 24px)!important;max-width:none!important;opacity:1!important;pointer-events:auto;padding:8px 12px!important;z-index:1060}
  body.app.admin #header #search_results{position:fixed!important;top:116px!important;left:12px!important;right:12px!important;max-height:60dvh;overflow:auto}
  body.app.admin #header #search_results:empty,body.app.admin #header #search-history{display:none!important}
+ body.app.admin #header #top_search:not(.sc-mobile-search-open) #search_results{display:none!important}
+ body.app.admin #header #top_search #sc-mobile-search-close{display:none!important}
  body.app.admin #header .smart-choice-links-trigger{display:flex!important;min-width:32px;height:44px!important;align-items:center;justify-content:center;margin:0!important}
  body.app.admin #header .smart-choice-links-nav{margin:0!important}
  body.app.admin #header #smart-choice-links-left-live{position:fixed!important;left:calc(20vw + 48px)!important;top:10px!important;width:36px!important;height:44px!important;margin:0!important}
@@ -33,6 +35,8 @@
  body.app.admin #wrapper{margin-left:0!important;margin-right:0!important;padding-top:0!important;min-height:calc(100dvh - 140px)!important}
  body.app.admin #wrapper>.content{width:100%!important;max-width:none!important;box-sizing:border-box;padding:16px!important;margin:0!important}
  body.app.admin #wrapper>.content .row{max-width:none!important}
+ body.app.admin #wrapper>.content>.row,body.app.admin #wrapper>.content .widget>.row{margin-left:0!important;margin-right:0!important}
+ body.app.admin #wrapper>.content>.row>[class*="col-"]{padding-left:0!important;padding-right:0!important}
  body.app.admin #menu,body.app.admin #setup-menu-wrapper{position:fixed!important;top:64px!important;bottom:calc(68px + env(safe-area-inset-bottom))!important;height:calc(100dvh - 132px - env(safe-area-inset-bottom))!important;min-height:0!important;width:100%!important;max-width:100%!important;overflow-y:auto!important;overscroll-behavior:contain;padding:56px 16px 24px!important;margin:0!important;z-index:1045;box-sizing:border-box;background:#fff!important}
  body.app.admin #menu{left:0!important;transform:translateX(-101%)!important;visibility:hidden!important;pointer-events:none}
  body.app.admin #setup-menu-wrapper{left:0!important;right:0!important;animation:none!important;transform:none!important}

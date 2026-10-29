@@ -137,6 +137,7 @@
     if (quick) {
       quickPanel = quick.parentElement.querySelector('.dropdown-menu');
       if (quickPanel) {
+        quickPanel.addEventListener('click', function (event) { if (event.target.closest('a[href]')) setQuick(false); });
         quickParent = quickPanel.parentNode; quickNext = quickPanel.nextSibling;
         quickButton = item(labels.create, 'plus', null, function () { setQuick(!quickOpen, quickButton); });
         quickButton.setAttribute('aria-expanded', 'false');

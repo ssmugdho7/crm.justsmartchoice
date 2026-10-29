@@ -24,7 +24,9 @@ body.app.admin #sc-native-media-panel .elfinder-navbar-arrow {
     max-width: 44% !important;
     width: 138px;
   }
-  body.app.admin #sc-native-media-panel .elfinder-navbar-dir {
+  body.app.admin #sc-native-media-panel .elfinder-navbar-dir,
+  body.app.admin #sc-native-media-panel .elfinder-navbar-dir.ui-state-hover,
+  body.app.admin #sc-native-media-panel .elfinder-navbar-dir.ui-state-active {
     min-height: 44px;
     padding-top: 13px;
     padding-bottom: 13px;

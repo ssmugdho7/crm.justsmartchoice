@@ -16,6 +16,8 @@
       if (setup && setup.classList.contains('display-block')) {
         var closer = setup.querySelector('.close-customizer');
         if (closer) closer.click();
+        // Native desktop closing relies on an exit animation, disabled on phones.
+        setup.classList.remove('display-block', 'fadeInLeft', 'fadeInRight', 'fadeOutLeft', 'fadeOutRight');
       }
     }
     [menu, setup].filter(Boolean).forEach(function (drawer) {
@@ -67,7 +69,11 @@
       var text = document.createElement('span'); text.textContent = label;
       el.append(glyph, text);
       if (href && location.pathname.replace(/\/$/, '') === new URL(href, location.href).pathname.replace(/\/$/, '')) el.setAttribute('aria-current', 'page');
-      if (action) el.addEventListener('click', function (event) { event.stopPropagation(); action(event); });
+      if (action) el.addEventListener('click', function (event) {
+        event.stopPropagation();
+        if (label !== labels.create) document.querySelectorAll('#header li.open').forEach(function (dropdown) { dropdown.classList.remove('open'); });
+        action(event);
+      });
       nav.appendChild(el);
     }
     item(labels.home, 'house', cfg.home);

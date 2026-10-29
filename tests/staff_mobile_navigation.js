@@ -16,6 +16,8 @@ const buttons = [...w.document.querySelectorAll('.sc-staff-mobile-nav button')];
 assert.deepEqual(buttons.map(x => x.textContent), ['Quick Create', 'Setup', 'More']);
 buttons.at(-1).click(); assert(w.document.body.classList.contains('show-sidebar'));
 w.document.querySelector('#menu .sc-staff-drawer-close').click(); assert(!w.document.body.classList.contains('show-sidebar'));
+const setup = w.document.getElementById('setup-menu-wrapper'); setup.classList.add('display-block', 'fadeInLeft');
+setup.querySelector('.sc-staff-drawer-close').click(); assert(!setup.classList.contains('display-block'), 'Setup closes without waiting for a desktop exit animation');
 buttons.at(-1).click(); w.document.dispatchEvent(new w.KeyboardEvent('keydown', {key:'Escape'})); assert(!w.document.body.classList.contains('show-sidebar'));
 const close = w.document.querySelector('.announcement a');
 const event = new w.MouseEvent('click', {bubbles:true, cancelable:true}); close.dispatchEvent(event);

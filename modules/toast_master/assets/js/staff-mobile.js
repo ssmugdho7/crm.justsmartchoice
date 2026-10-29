@@ -18,8 +18,10 @@
       searchButton.classList.remove('search_remove');
       searchButton.innerHTML = '<i class="fa fa-search" aria-hidden="true"></i>';
       searchButton.setAttribute('aria-expanded', 'false');
+      searchButton.setAttribute('aria-label', labels.search);
       var results = document.getElementById('search_results'); if (results) results.replaceChildren();
     }
+    if (searchButton) searchButton.setAttribute('aria-label', labels.search);
     if (searchButton) searchButton.addEventListener('click', function (event) {
       if (!mobile.matches) return;
       event.preventDefault(); event.stopImmediatePropagation();
@@ -29,6 +31,7 @@
       searchButton.classList.add('search_remove');
       searchButton.innerHTML = '<i class="fa fa-times" aria-hidden="true"></i>';
       searchButton.setAttribute('aria-expanded', 'true');
+      searchButton.setAttribute('aria-label', labels.close);
       searchInput.focus();
     }, true);
     function setQuick(open, trigger) {

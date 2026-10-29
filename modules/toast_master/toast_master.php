@@ -97,7 +97,7 @@ function toast_master_staff_mobile_components()
         'labels' => [
             'home' => _l('dashboard_string'), 'tasks' => _l('tasks'),
             'create' => _l('quick_create'), 'setup' => _l('setting_bar_heading'),
-            'more' => _l('more'), 'close' => _l('close'),
+            'more' => _l('more'), 'close' => _l('close'), 'search' => _l('search'),
         ],
     ];
     echo '<script>window.scStaffMobile=' . json_encode($config, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ';</script>';

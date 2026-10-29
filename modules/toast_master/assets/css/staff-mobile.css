@@ -34,7 +34,10 @@
  body.app.admin #header .mobile-icon-menu{display:none!important}
  body.app.admin #header nav>div>div:has(>ul.navbar-right){display:none!important}
  body.app.admin #header .navbar-right{display:none!important}
- body.app.admin #header #mobile-collapse{position:fixed;top:64px;right:8px;left:8px;max-height:calc(100dvh - 150px);overflow:auto;z-index:1050;background:#fff;box-shadow:0 4px 16px #0002}
+ body.app.admin #header #mobile-collapse{position:fixed;top:68px;right:8px;left:auto;width:240px;max-width:calc(100vw - 24px);max-height:calc(100dvh - 150px);overflow:auto;z-index:1050;background:#fff;border:1px solid #dce5e2;border-radius:12px;box-shadow:0 4px 16px #0002;padding:4px 0}
+ body.app.admin #header #mobile-collapse>.navbar-nav{float:none;width:100%;margin:0;padding:0}
+ body.app.admin #header #mobile-collapse>.navbar-nav>li{float:none;width:100%;margin:0;padding:0}
+ body.app.admin #header #mobile-collapse>.navbar-nav>li>a{display:flex;align-items:center;min-height:44px;line-height:20px;padding:10px 14px;font-size:14px;white-space:normal}
  body.app.admin #wrapper{margin-left:0!important;margin-right:0!important;padding-top:0!important;height:auto!important;width:100%!important;max-width:none!important;overflow:visible!important;min-height:calc(100dvh - 140px)!important}
  body.app.admin #wrapper>.content{width:100%!important;max-width:none!important;height:auto!important;overflow:visible!important;box-sizing:border-box;padding:16px!important;margin:0!important}
  body.app.admin #wrapper>.content .row{max-width:none!important}
@@ -45,6 +48,7 @@
  body.app.admin #setup-menu-wrapper{left:0!important;right:0!important;animation:none!important;transform:none!important}
  body.app.admin.show-sidebar #menu{transform:none!important;visibility:visible!important;pointer-events:auto}
  body.app.admin #menu #side-menu,body.app.admin #setup-menu{height:auto!important;max-height:none!important;overflow:visible!important;padding-bottom:16px}
+ body.app.admin #menu #side-menu>li.smart-choice-links-menu-search-wrap:has(input[type="search"]),body.app.admin #menu #side-menu>li:has(input[type="search"]),body.app.admin #menu #side-menu .menu-search,body.app.admin #menu #side-menu .sidebar-search{position:static!important;top:auto!important;bottom:auto!important;transform:none!important;z-index:auto!important}
  body.app.admin #menu .sidebar-user-profile{margin-top:0!important}
  body.app.admin #setup-menu-item{display:block!important}
  .sc-staff-drawer-close{display:flex;position:absolute;right:16px;top:8px;align-items:center;gap:8px;min-height:40px;padding:8px 12px;border:1px solid #dce5e2;background:#fff;color:#17453e;border-radius:8px;z-index:2}

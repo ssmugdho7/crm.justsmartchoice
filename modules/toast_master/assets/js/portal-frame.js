@@ -6,7 +6,7 @@
   const allowed = new Set(['https://mobile.justsmartchoice.com', 'https://ssmugdho7.github.io']);
   let parentOrigin;
   function report() {
-    if (parentOrigin) window.parent.postMessage({type:'sc-mobile-portal-location',url:location.href,overlay:!!document.querySelector('.modal.in,.modal.show')}, parentOrigin);
+    if (parentOrigin) window.parent.postMessage({type:'sc-mobile-portal-location',url:location.href,overlay:!!document.querySelector('.modal.in,.modal.show,dialog[open]')}, parentOrigin);
   }
   const storage = 'sc-mobile-scroll:' + window.name;
   function pageKey() { return location.origin + location.pathname.replace(/\/$/, '') + location.search + location.hash; }
@@ -24,8 +24,9 @@
   window.addEventListener('message', function (event) {
     if (!framed || event.source !== window.parent || !allowed.has(event.origin) || !event.data) return;
     if (event.data.type === 'sc-mobile-portal-close-overlay') {
-      const modal = document.querySelector('.modal.in,.modal.show');
-      if (modal && window.jQuery && window.jQuery.fn.modal) window.jQuery(modal).modal('hide');
+      const modal = document.querySelector('.modal.in,.modal.show,dialog[open]');
+      if (modal && modal.tagName === 'DIALOG') modal.close();
+      else if (modal && window.jQuery && window.jQuery.fn.modal) window.jQuery(modal).modal('hide');
       return;
     }
     if (event.data.type !== 'sc-mobile-portal-hello') return;
@@ -38,6 +39,7 @@
   });
   window.addEventListener('hashchange', report);
   window.addEventListener('popstate', report);
+  document.addEventListener('sc-portal-overlay-change', report);
   function apply() {
     if (window.jQuery) window.jQuery(document).on('shown.bs.modal.scPortal hidden.bs.modal.scPortal',report);
     const chart = document.getElementById('commission-chart');

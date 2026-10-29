@@ -353,6 +353,15 @@ function sales_center_custom_field_options($custom_field = null)
 function sales_center_admin_head()
 {
     echo '<link href="' . module_dir_url(SALES_CENTER_MODULE_NAME, 'assets/css/sales_center.css') . '" rel="stylesheet" type="text/css" />';
+    $CI = &get_instance();
+    if (in_array($CI->uri->segment(2), ['invoices', 'proposals', 'estimates', 'payments', 'credit_notes'], true)) {
+        echo '<script>document.documentElement.classList.add("sc-sales-ui");</script>';
+        foreach (['css' => 'sales-actions.css', 'js' => 'sales-actions.js'] as $type => $file) {
+            $path = 'assets/' . $type . '/' . $file;
+            $url = module_dir_url(SALES_CENTER_MODULE_NAME, $path) . '?v=' . filemtime(__DIR__ . '/' . $path);
+            echo $type === 'css' ? '<link rel="stylesheet" href="' . $url . '">' : '<script defer src="' . $url . '"></script>';
+        }
+    }
 }
 
 function sales_center_admin_footer()

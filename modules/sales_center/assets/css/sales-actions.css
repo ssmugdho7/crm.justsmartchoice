@@ -1,0 +1,28 @@
+/* One action hierarchy for native Sales pages; form fields and status badges keep their styles. */
+html.sc-sales-ui :is(#wrapper,.modal) .btn:not(.dropdown-toggle[data-id]){display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:36px;padding:8px 12px!important;border-radius:7px!important;font-size:13px!important;font-weight:600;line-height:18px!important;text-decoration:none;vertical-align:middle;box-shadow:none}
+html.sc-sales-ui :is(#wrapper,.modal) :is(.btn-primary,.btn-success){background:#f96302!important;border-color:#e65b00!important;color:#fff!important}
+html.sc-sales-ui :is(#wrapper,.modal) :is(.btn-primary,.btn-success):hover{background:#d95200!important;border-color:#d95200!important}
+html.sc-sales-ui :is(#wrapper,.modal) :is(.btn-default,.btn-info,.btn-warning):not(.dropdown-toggle[data-id]){background:#fff!important;border-color:#cbd5e1!important;color:#243b37!important}
+html.sc-sales-ui :is(#wrapper,.modal) :is(.btn-default,.btn-info,.btn-warning):not(.dropdown-toggle[data-id]):hover{background:#f1f6f4!important;border-color:#94a9a1!important}
+html.sc-sales-ui :is(#wrapper,.modal) .btn-danger{background:#dc2626!important;border-color:#dc2626!important;color:#fff!important}
+html.sc-sales-ui :is(#wrapper,.modal) .btn-danger:hover{background:#b91c1c!important;border-color:#b91c1c!important}
+html.sc-sales-ui :is(#wrapper,.modal) .btn:focus-visible{outline:3px solid #0e6f5b!important;outline-offset:2px}
+html.sc-sales-ui :is(#wrapper,.modal) .btn:disabled,html.sc-sales-ui :is(#wrapper,.modal) .btn.disabled{opacity:.5;cursor:not-allowed}
+html.sc-sales-ui #wrapper :is(._buttons,.sc-sales-action-bar){display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:12px}
+html.sc-sales-ui #wrapper :is(._buttons,.sc-sales-action-bar)>.clearfix{display:none}
+html.sc-sales-ui #wrapper :is(._buttons,.sc-sales-action-bar)>.btn{float:none!important;margin:0!important}
+html.sc-sales-ui #wrapper :is(._buttons,.sc-sales-action-bar)>.pull-right{float:none!important;margin-inline-start:auto;display:flex;align-items:center;gap:8px}
+html.sc-sales-ui #wrapper .sales-center-generated-toolbar.btn-group{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:0!important}
+html.sc-sales-ui #wrapper .sales-center-generated-toolbar>.btn{float:none;margin:0!important}
+html.sc-sales-ui #wrapper .sc-sales-data-actions{order:20}
+html.sc-sales-ui #wrapper :is(._buttons,.sc-sales-action-bar)>.pull-right{order:30}
+html.sc-sales-ui #wrapper .btn-bottom-toolbar .btn{margin-inline:4px}
+html.sc-sales-ui #wrapper .btn-group>.btn+.btn{margin-left:0}
+html.sc-sales-ui #wrapper :is(.dt-buttons,.sc-bulk-actions){display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+@media(max-width:767px){
+ html.sc-sales-ui :is(#wrapper,.modal) .btn:not(.dropdown-toggle[data-id]){min-height:44px;padding:10px 12px!important}
+ html.sc-sales-ui #wrapper .sc-sales-data-actions{width:100%;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))}
+ html.sc-sales-ui #wrapper .sc-sales-data-actions>.btn{min-width:0;white-space:normal}
+ html.sc-sales-ui #wrapper .sc-sales-data-actions>.btn:last-child:nth-child(odd){grid-column:1/-1}
+ html.sc-sales-ui #wrapper :is(._buttons,.sc-sales-action-bar)>.pull-right{width:100%;justify-content:flex-end}
+}

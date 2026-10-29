@@ -1,26 +1,26 @@
-.sc-staff-mobile-nav,.sc-staff-drawer-close{display:none}
+.sc-staff-mobile-nav,.sc-staff-drawer-close,.sc-staff-quick-backdrop{display:none}
 @media(max-width:767px){
  body.app.admin{padding-top:0!important;padding-bottom:calc(76px + env(safe-area-inset-bottom))!important;overflow-x:hidden!important}
  body.app.admin #header{top:0!important;position:sticky!important;margin:0!important;min-height:64px;height:64px!important;z-index:1040}
  body.app.admin #header>.hide-menu{width:44px;height:44px;margin:10px 4px!important;flex:none}
  body.app.admin #header nav{width:calc(100% - 52px)!important;min-width:0;float:right}
  body.app.admin #header nav>.tw-flex{height:64px;align-items:center;gap:0}
- body.app.admin #header #logo{display:flex!important;position:fixed!important;left:48px!important;top:0!important;width:72px!important;min-width:0!important;height:64px!important}
- body.app.admin #header #logo img{max-width:70px!important;max-height:46px!important;height:auto!important}
+ body.app.admin #header #logo{display:flex!important;position:fixed!important;left:48px!important;top:0!important;width:56px!important;min-width:0!important;height:64px!important}
+ body.app.admin #header #logo img{max-width:54px!important;max-height:46px!important;height:auto!important}
  body.app.admin #header .sc-admin-search-actions{display:flex!important;flex:1!important;min-width:0;justify-content:flex-end}
  body.app.admin #header .sc-admin-search-actions>.navbar-nav{display:flex!important;float:none;flex:none}
- body.app.admin #header #top_search{display:flex!important;position:fixed!important;top:10px!important;left:164px!important;width:36px!important;min-width:0!important;flex:none!important;height:44px!important;margin:0!important}
+ body.app.admin #header #top_search{display:flex!important;position:fixed!important;top:10px!important;left:calc(80vw - 24px)!important;width:36px!important;min-width:0!important;flex:none!important;height:44px!important;margin:0!important}
  body.app.admin #header #top_search_button{position:static!important;transform:none!important}
  body.app.admin #header #top_search_button button{width:32px;height:44px;padding:6px!important}
  body.app.admin #header #search_input{position:absolute!important;width:1px!important;min-width:0!important;padding:0!important;opacity:0!important;pointer-events:none}
- body.app.admin #header #top_search:focus-within #search_input{position:fixed!important;left:12px!important;right:12px!important;top:72px!important;width:calc(100vw - 24px)!important;max-width:none!important;opacity:1!important;pointer-events:auto;padding:8px 12px!important;z-index:1060}
+ body.app.admin #header #top_search.sc-mobile-search-open #search_input{position:fixed!important;left:12px!important;right:12px!important;top:72px!important;width:calc(100vw - 24px)!important;max-width:none!important;opacity:1!important;pointer-events:auto;padding:8px 12px!important;z-index:1060}
  body.app.admin #header #search_results{position:fixed!important;top:116px!important;left:12px!important;right:12px!important;max-height:60dvh;overflow:auto}
  body.app.admin #header #search_results:empty,body.app.admin #header #search-history{display:none!important}
  body.app.admin #header .smart-choice-links-trigger{display:flex!important;min-width:32px;height:44px!important;align-items:center;justify-content:center;margin:0!important}
  body.app.admin #header .smart-choice-links-nav{margin:0!important}
- body.app.admin #header #smart-choice-links-left-live{position:fixed!important;left:124px!important;top:10px!important;width:36px!important;height:44px!important;margin:0!important}
- body.app.admin #header #smart-choice-links-right-live{position:fixed!important;left:204px!important;top:10px!important;width:36px!important;height:44px!important;margin:0!important}
- body.app.admin #header .sc-admin-search-actions>.navbar-nav>li{position:fixed!important;left:244px!important;top:10px!important;width:40px!important;margin:0!important}
+ body.app.admin #header #smart-choice-links-left-live{position:fixed!important;left:calc(20vw + 48px)!important;top:10px!important;width:36px!important;height:44px!important;margin:0!important}
+ body.app.admin #header #smart-choice-links-right-live{position:fixed!important;left:calc(40vw + 24px)!important;top:10px!important;width:36px!important;height:44px!important;margin:0!important}
+ body.app.admin #header .sc-admin-search-actions>.navbar-nav>li{position:fixed!important;left:60vw!important;top:10px!important;width:40px!important;margin:0!important}
  body.app.admin #header .sc-admin-search-actions>.navbar-nav>li>a{display:flex!important;align-items:center!important;justify-content:center!important;min-width:38px;height:44px!important;min-height:44px!important;max-height:44px!important;padding:0!important;box-sizing:border-box}
  body.app.admin #header .sc-admin-search-actions>.navbar-nav>li>a>span{margin:0!important}
  body.app.admin #header .sc-header-world-clock,body.app.admin #header .scce-world-clock-item{display:none!important}
@@ -31,6 +31,8 @@
  body.app.admin #header .navbar-right{display:none!important}
  body.app.admin #header #mobile-collapse{position:fixed;top:64px;right:8px;left:8px;max-height:calc(100dvh - 150px);overflow:auto;z-index:1050;background:#fff;box-shadow:0 4px 16px #0002}
  body.app.admin #wrapper{margin-left:0!important;margin-right:0!important;padding-top:0!important;min-height:calc(100dvh - 140px)!important}
+ body.app.admin #wrapper>.content{width:100%!important;max-width:none!important;box-sizing:border-box;padding:16px!important;margin:0!important}
+ body.app.admin #wrapper>.content .row{max-width:none!important}
  body.app.admin #menu,body.app.admin #setup-menu-wrapper{position:fixed!important;top:64px!important;bottom:calc(68px + env(safe-area-inset-bottom))!important;height:calc(100dvh - 132px - env(safe-area-inset-bottom))!important;min-height:0!important;width:100%!important;max-width:100%!important;overflow-y:auto!important;overscroll-behavior:contain;padding:56px 16px 24px!important;margin:0!important;z-index:1045;box-sizing:border-box;background:#fff!important}
  body.app.admin #menu{left:0!important;transform:translateX(-101%)!important;visibility:hidden!important;pointer-events:none}
  body.app.admin #setup-menu-wrapper{left:0!important;right:0!important;animation:none!important;transform:none!important}
@@ -43,8 +45,14 @@
  .sc-staff-mobile-nav>a,.sc-staff-mobile-nav>button{display:flex;flex:1;min-width:0;min-height:52px;align-items:center;justify-content:center;flex-direction:column;gap:4px;border:0;background:transparent;color:#344f47;font-size:11px;text-decoration:none;border-radius:8px;padding:4px}
  .sc-staff-mobile-nav i{font-size:18px}
  .sc-staff-mobile-nav [aria-current=page]{color:#0e6f5b;background:#e7f3ed}
+ .sc-staff-mobile-nav.sc-action-open [aria-current=page]{color:#344f47;background:transparent}
+ .sc-staff-mobile-nav [aria-expanded=true]{color:#0e6f5b;background:#e7f3ed}
+ body.app.admin #header .sc-admin-search-actions>.navbar-nav>li>a[aria-expanded=true]{background:#ffffff30!important;border-radius:8px}
  .sc-staff-mobile-nav :focus-visible,.sc-staff-drawer-close:focus-visible{outline:3px solid #238b76;outline-offset:-3px}
- .sc-staff-mobile-quick{position:fixed!important;top:auto!important;bottom:76px!important;right:8px!important;left:8px!important;max-height:65dvh;overflow-y:auto;z-index:1060!important}
+ .sc-staff-quick-backdrop{display:block;position:fixed;inset:64px 0 70px;border:0;background:#0c302644;z-index:1055}
+ .sc-staff-mobile-quick{display:block!important;position:fixed!important;top:auto!important;bottom:76px!important;right:12px!important;left:12px!important;width:auto!important;min-width:0!important;max-width:none!important;max-height:calc(100dvh - 156px);overflow-y:auto;z-index:1060!important;background:#fff!important;border:1px solid #dce5e2!important;border-radius:12px!important;box-shadow:0 8px 32px #123c2b33!important;margin:0!important;padding:8px!important;list-style:none}
+ .sc-staff-mobile-quick>li>a{display:flex!important;align-items:center;gap:10px;min-height:44px!important;padding:12px!important;color:#243b33!important;font-size:14px!important;white-space:normal!important;text-decoration:none!important}
+ .sc-staff-mobile-quick>li>a:focus,.sc-staff-mobile-quick>li>a:hover{background:#e7f3ed!important;border-radius:8px}
  body.app.admin .announcement{max-height:220px;overflow:auto;visibility:hidden}
  body.app.admin.sc-staff-mobile-ready .announcement{visibility:visible}
  body.app.admin .announcement.sc-session-dismissed{display:none!important}

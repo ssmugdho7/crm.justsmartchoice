@@ -28,6 +28,7 @@ assert.equal(sent.length,1);
 assert.equal(sent[0].origin,'https://mobile.justsmartchoice.com');
 assert.equal(sent[0].message.url,'https://crm.justsmartchoice.com/admin');
 assert.ok(child.document.querySelector('.navbar-toggle svg'));
+assert.equal(child.document.querySelector('.navbar-toggle').getAttribute('aria-label'),'Menu');
 assert.equal(child.document.querySelector('.navbar-toggle').getAttribute('aria-expanded'),'false');
 const modal = child.document.createElement('div'); modal.className='modal in'; child.document.body.appendChild(modal);
 let hidden = 0;

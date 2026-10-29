@@ -60,6 +60,9 @@
     }
     // Keep the original accessible Bootstrap control and collapse behavior.
     document.querySelectorAll('body:not(.admin) .navbar-toggle').forEach(function (button) {
+      const originalLabel = button.getAttribute('aria-label') || button.querySelector('.sr-only')?.textContent || button.textContent;
+      const label = window.scPortalLabels && window.scPortalLabels.navigation || originalLabel;
+      if (label && label.trim()) button.setAttribute('aria-label', label.trim());
       button.classList.add('sc-app-navigation-toggle');
       button.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>';
     });

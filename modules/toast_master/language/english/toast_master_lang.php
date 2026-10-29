@@ -1,5 +1,7 @@
 <?php
 
+$lang['toast_master_portal_navigation'] = 'Portal navigation';
+
 $lang['toast_master_setting'] = 'Smart Notifications Settings';
 $lang['toast_master_setting_description'] = 'Control CRM popups, alerts, toast styles, sounds, message channels, and notification history.';
 $lang['toast_master'] = 'Smart Notifications';

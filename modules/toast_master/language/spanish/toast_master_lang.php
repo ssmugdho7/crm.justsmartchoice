@@ -1,5 +1,7 @@
 <?php
 
+$lang['toast_master_portal_navigation'] = 'Navegación del portal';
+
 $lang['toast_master_setting'] = 'Configuración de Notificaciones Inteligentes';
 $lang['toast_master_setting_description'] = 'Controla mensajes, alertas, estilos, sonidos, canales e historial de notificaciones del CRM.';
 $lang['toast_master'] = 'Notificaciones Inteligentes';

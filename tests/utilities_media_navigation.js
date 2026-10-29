@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const {JSDOM} = require('jsdom');
 
 (async () => {
-  const dom = new JSDOM('<div id="elfinder"><span class="elfinder-navbar-root"><span class="elfinder-navbar-icon"></span>Public</span><span class="elfinder-navbar-dir">Folder</span></div>', {
+  const dom = new JSDOM('<div id="elfinder"><span id="nav-public" class="elfinder-navbar-root elfinder-navbar-collapsed"><span class="elfinder-navbar-arrow"></span><span class="elfinder-navbar-icon"></span>Public</span><span class="elfinder-navbar-dir">Folder</span></div>', {
     url: 'https://crm.example/admin/utilities/media', runScripts: 'outside-only', pretendToBeVisual: true,
   });
   const w = dom.window;
@@ -11,7 +11,12 @@ const {JSDOM} = require('jsdom');
   w.eval(fs.readFileSync('assets/plugins/jquery-ui/jquery-ui.min.js', 'utf8'));
   const $ = w.jQuery;
   let starts = 0;
-  const manager = {draggable: {distance: 4, scroll: false, start() { starts++; }}};
+  const handlers = {};
+  const manager = {
+    draggable: {distance: 4, scroll: false, start() { starts++; }},
+    bind(event, callback) { handlers[event] = callback; },
+    cwd: () => ({hash: 'public'}), navHash2Id: hash => 'nav-' + hash,
+  };
   $.fn.elfinder = () => manager;
   function drag(selector) {
     const el = $(selector);
@@ -35,6 +40,15 @@ const {JSDOM} = require('jsdom');
   $('.elfinder-navbar-root').on('click', () => clicks++);
   $('.elfinder-navbar-icon').trigger('click');
   assert.equal(clicks, 1, 'clicks on the root icon still reach native folder navigation');
+  $('.elfinder-navbar-arrow').on('click', () => $('.elfinder-navbar-root').toggleClass('elfinder-navbar-expanded'));
+  handlers.opendone();
+  await new Promise(resolve => w.setTimeout(resolve, 30));
+  assert($('.elfinder-navbar-root').hasClass('elfinder-navbar-expanded'), 'opening Public reveals its children on the first navigation');
+  handlers.opendone();
+  await new Promise(resolve => w.setTimeout(resolve, 30));
+  assert($('.elfinder-navbar-root').hasClass('elfinder-navbar-expanded'), 'a completed refresh must not collapse an expanded tree');
+  $('.elfinder-navbar-arrow').trigger('click');
+  assert(!$('.elfinder-navbar-root').hasClass('elfinder-navbar-expanded'), 'the native arrow can still collapse the tree');
   dom.window.close();
   console.log('Media root navigation and subfolder drag regression checks passed');
 })().catch(error => {console.error(error); process.exitCode = 1;});

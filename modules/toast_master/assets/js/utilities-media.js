@@ -11,5 +11,19 @@
     // swallow the click on Public (elFinder's drag threshold is only 4px).
     const cancel = manager.draggable.cancel || 'input,textarea,button,select,option';
     manager.draggable.cancel = cancel + ',.elfinder-navbar-root';
+    // Opening another volume can finish before the native tree's lazy loading
+    // expands it. Reveal its children after navigation, using the native arrow
+    // handler so loading, permissions and later collapse remain elFinder-owned.
+    manager.bind('opendone', function () {
+      window.requestAnimationFrame(function () {
+        const cwd = manager.cwd();
+        if (!cwd) return;
+        const entry = $(document.getElementById(manager.navHash2Id(cwd.hash)));
+        if (entry.hasClass('elfinder-navbar-root') && entry.hasClass('elfinder-navbar-collapsed') &&
+            !entry.hasClass('elfinder-navbar-expanded')) {
+          entry.children('.elfinder-navbar-arrow').trigger('click');
+        }
+      });
+    });
   });
 })();

@@ -67,7 +67,7 @@
       var text = document.createElement('span'); text.textContent = label;
       el.append(glyph, text);
       if (href && location.pathname.replace(/\/$/, '') === new URL(href, location.href).pathname.replace(/\/$/, '')) el.setAttribute('aria-current', 'page');
-      if (action) el.addEventListener('click', action);
+      if (action) el.addEventListener('click', function (event) { event.stopPropagation(); action(event); });
       nav.appendChild(el);
     }
     item(labels.home, 'house', cfg.home);

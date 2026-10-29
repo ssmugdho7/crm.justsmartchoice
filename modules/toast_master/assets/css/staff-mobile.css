@@ -15,6 +15,7 @@
  body.app.admin #header #search_input{position:absolute!important;width:1px!important;min-width:0!important;padding:0!important;opacity:0!important;pointer-events:none}
  body.app.admin #header #top_search:focus-within #search_input{position:fixed!important;left:12px!important;right:12px!important;top:72px!important;width:calc(100vw - 24px)!important;max-width:none!important;opacity:1!important;pointer-events:auto;padding:8px 12px!important;z-index:1060}
  body.app.admin #header #search_results{position:fixed!important;top:116px!important;left:12px!important;right:12px!important;max-height:60dvh;overflow:auto}
+ body.app.admin #header #search_results:empty,body.app.admin #header #search-history{display:none!important}
  body.app.admin #header .smart-choice-links-trigger{display:flex!important;min-width:32px;height:44px!important;align-items:center;justify-content:center;margin:0!important}
  body.app.admin #header .smart-choice-links-nav{margin:0!important}
  body.app.admin #header #smart-choice-links-left-live{position:fixed!important;left:124px!important;top:10px!important;width:36px!important;height:44px!important;margin:0!important}

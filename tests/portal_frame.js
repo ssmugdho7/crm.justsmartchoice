@@ -7,6 +7,7 @@ const dom = new JSDOM('<iframe name="sc-mobile-test" src="https://crm.justsmartc
 });
 const parent = dom.window, child = parent.document.querySelector('iframe').contentWindow;
 child.name = 'sc-mobile-test';
+child.matchMedia = () => ({matches:true,addEventListener(){}});
 child.document.open();
 child.document.write('<html><head></head><body><button class="navbar-toggle" aria-expanded="false">Menu</button></body></html>');
 child.document.close();

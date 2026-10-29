@@ -112,6 +112,7 @@ function toast_master_staff_mobile_components()
 
 function toast_master_portal_frame_components()
 {
+    echo '<script>window.scPortalLabels=' . json_encode(['commissionChart' => _l('commission_chart')], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ';</script>';
     $path = 'assets/js/portal-frame.js';
     echo '<script defer src="' . module_dir_url(TOAST_MASTER_MODULE_NAME, $path) . '?v=' . filemtime(__DIR__ . '/' . $path) . '"></script>';
 }

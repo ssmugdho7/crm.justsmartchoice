@@ -15,7 +15,7 @@
     // reason to sync. Extension/devtools messages then abort folder navigation
     // and repeatedly reopen the previous directory. Replace only this manager's
     // legacy CORS listener, retaining the upload/editor response protocol.
-    $(window).off('message.' + manager.namespace).on('message.' + manager.namespace, function (event) {
+    function receiveMessage(event) {
       const message = event.originalEvent;
       if (!message || typeof message.data !== 'string') return;
       const origins = [manager.options.url, manager.uploadURL].filter(Boolean).map(url => new URL(url, location.href).origin);
@@ -40,6 +40,13 @@
         manager.trigger(response.bind + 'done');
       }
       if (data.sync) manager.sync();
-    });
+    }
+    function installMessageGuard() {
+      $(window).off('message.' + manager.namespace).on('message.' + manager.namespace, receiveMessage);
+    }
+    installMessageGuard();
+    // elFinder attaches its window handlers on the first asynchronous open,
+    // which can happen after this document-ready callback on a fresh load.
+    manager.one('opendone', installMessageGuard);
   });
 })();

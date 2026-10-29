@@ -14,11 +14,13 @@ const {JSDOM} = require('jsdom');
   $(w).on('message.other-module', () => otherMessages++);
   let starts = 0;
   const calls = [];
+  const once = {};
   const manager = {
     draggable: {distance: 4, scroll: false, start() { starts++; }},
     namespace: 'elfinder-test', options: {url: '/admin/utilities/media_connector'},
     uploadURL: '/admin/utilities/media_connector',
     convAbsUrl: url => new URL(url, w.location.href).href,
+    one(event, callback) { once[event] = callback; },
   };
   for (const method of ['sync', 'error', 'trigger', 'updateCache', 'remove', 'add', 'change']) {
     manager[method] = (...args) => calls.push([method, ...args]);
@@ -48,6 +50,10 @@ const {JSDOM} = require('jsdom');
   starts = 0;
   w.eval(fs.readFileSync('modules/toast_master/assets/js/utilities-media.js', 'utf8'));
   await new Promise(resolve => w.setTimeout(resolve, 30));
+  // Native initialization registers the legacy listener at first opendone,
+  // after document-ready when the connector response is slow.
+  w.eval('(function(self, namespace){' + nativeListener + '})(window.__testManager, "elfinder-test");');
+  once.opendone();
   $('.elfinder-navbar-root, .elfinder-navbar-dir').draggable(manager.draggable);
   drag('.elfinder-navbar-root');
   assert.equal(starts, 0, 'small root pointer movement must not initiate drag and swallow its click');

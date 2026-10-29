@@ -41,6 +41,8 @@ hooks()->add_action('app_admin_head', 'toast_master_staff_mobile_components');
 hooks()->add_action('app_admin_footer', 'toast_master_add_footer_components');
 hooks()->add_action('app_customers_head', 'toast_master_add_head_components');
 hooks()->add_action('app_customers_footer', 'toast_master_add_footer_components');
+hooks()->add_action('app_admin_head', 'toast_master_portal_frame_components');
+hooks()->add_action('app_customers_head', 'toast_master_portal_frame_components');
 hooks()->add_filter('module_toast_master_action_links', 'module_toast_master_action_links');
 
 
@@ -106,6 +108,12 @@ function toast_master_staff_mobile_components()
         $url = module_dir_url(TOAST_MASTER_MODULE_NAME, $path) . '?v=' . filemtime(__DIR__ . '/' . $path);
         echo $type === 'css' ? '<link rel="stylesheet" href="' . $url . '">' : '<script defer src="' . $url . '"></script>';
     }
+}
+
+function toast_master_portal_frame_components()
+{
+    $path = 'assets/js/portal-frame.js';
+    echo '<script defer src="' . module_dir_url(TOAST_MASTER_MODULE_NAME, $path) . '?v=' . filemtime(__DIR__ . '/' . $path) . '"></script>';
 }
 
 function toast_master_add_footer_components()

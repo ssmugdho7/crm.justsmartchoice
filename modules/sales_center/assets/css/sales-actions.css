@@ -14,6 +14,8 @@ html.sc-sales-ui #wrapper :is(._buttons,.sc-sales-action-bar)>.btn{float:none!im
 html.sc-sales-ui #wrapper :is(._buttons,.sc-sales-action-bar)>.pull-right{float:none!important;margin-inline-start:auto;display:flex;align-items:center;gap:8px}
 html.sc-sales-ui #wrapper .sales-center-generated-toolbar.btn-group{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:0!important}
 html.sc-sales-ui #wrapper .sales-center-generated-toolbar>.btn{float:none;margin:0!important}
+html.sc-sales-ui #wrapper .sales-center-generated-toolbar>.btn-success{background:#fff!important;border-color:#cbd5e1!important;color:#243b37!important}
+html.sc-sales-ui #wrapper .sales-center-generated-toolbar>.btn-success:hover{background:#f1f6f4!important;border-color:#94a9a1!important}
 html.sc-sales-ui #wrapper .sc-sales-data-actions{order:20}
 html.sc-sales-ui #wrapper :is(._buttons,.sc-sales-action-bar)>.pull-right{order:30}
 html.sc-sales-ui #wrapper .btn-bottom-toolbar .btn{margin-inline:4px}

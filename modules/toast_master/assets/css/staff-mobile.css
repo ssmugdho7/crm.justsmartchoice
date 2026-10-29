@@ -6,13 +6,14 @@
  body.app.admin #header>.hide-menu{width:44px;height:44px;margin:10px 4px!important;flex:none}
  body.app.admin #header nav{width:calc(100% - 52px)!important;min-width:0;float:right}
  body.app.admin #header nav>.tw-flex{height:64px;align-items:center;gap:0}
- body.app.admin #header #logo{display:flex!important;position:fixed!important;left:48px!important;top:0!important;width:56px!important;min-width:0!important;height:64px!important}
- body.app.admin #header #logo img{max-width:54px!important;max-height:46px!important;height:auto!important}
+ body.app.admin #header #logo{display:flex!important;position:fixed!important;left:48px!important;top:0!important;width:clamp(54px,calc(20vw - 12px),72px)!important;min-width:0!important;height:64px!important}
+ body.app.admin #header #logo img{width:100%!important;max-width:100%!important;max-height:46px!important;height:auto!important}
  body.app.admin #header .sc-admin-search-actions{display:flex!important;flex:1!important;min-width:0;justify-content:flex-end}
  body.app.admin #header .sc-admin-search-actions>.navbar-nav{display:flex!important;float:none;flex:none}
  body.app.admin #header #top_search{display:flex!important;position:fixed!important;top:10px!important;left:calc(80vw - 24px)!important;width:36px!important;min-width:0!important;flex:none!important;height:44px!important;margin:0!important}
  body.app.admin #header #top_search_button{position:static!important;transform:none!important}
- body.app.admin #header #top_search_button button{width:32px;height:44px;padding:6px!important}
+ body.app.admin #header #top_search_button button{width:32px;height:44px;padding:6px!important;color:#fff!important;opacity:1!important;background:#ffffff20!important;border-radius:8px}
+ body.app.admin #header #top_search_button button i{color:#fff!important;opacity:1!important}
  body.app.admin #header #search_input{position:absolute!important;width:1px!important;min-width:0!important;padding:0!important;opacity:0!important;pointer-events:none}
  body.app.admin #header #top_search.sc-mobile-search-open #search_input{position:fixed!important;left:12px!important;right:12px!important;top:72px!important;width:calc(100vw - 24px)!important;max-width:none!important;opacity:1!important;pointer-events:auto;padding:8px 12px!important;z-index:1060}
  body.app.admin #header #search_results{position:fixed!important;top:116px!important;left:12px!important;right:12px!important;max-height:60dvh;overflow:auto}

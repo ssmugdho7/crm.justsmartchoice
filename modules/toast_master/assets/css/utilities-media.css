@@ -1,0 +1,32 @@
+/* jQuery UI makes hover/active labels bold; reserve identical geometry in every state. */
+body.app.admin #sc-native-media-panel .elfinder-navbar-dir,
+body.app.admin #sc-native-media-panel .elfinder-navbar-dir.ui-state-hover,
+body.app.admin #sc-native-media-panel .elfinder-navbar-dir.ui-state-active {
+  box-sizing: border-box;
+  min-height: 36px;
+  padding-top: 9px;
+  padding-bottom: 9px;
+  border: 0;
+  font-weight: 500;
+  line-height: 18px;
+}
+body.app.admin #sc-native-media-panel .elfinder-navbar-arrow {
+  top: 50%;
+  margin-top: -9px;
+  width: 22px;
+  height: 18px;
+  padding: 0;
+  line-height: 18px;
+}
+@media (max-width: 767px) {
+  body.app.admin #sc-native-media-panel .elfinder-navbar {
+    min-width: 118px !important;
+    max-width: 44% !important;
+    width: 138px;
+  }
+  body.app.admin #sc-native-media-panel .elfinder-navbar-dir {
+    min-height: 44px;
+    padding-top: 13px;
+    padding-bottom: 13px;
+  }
+}

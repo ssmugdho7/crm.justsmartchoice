@@ -37,12 +37,20 @@
  body.app.admin #header #mobile-collapse{position:fixed;top:68px;right:8px;left:auto;width:240px;max-width:calc(100vw - 24px);max-height:calc(100dvh - 150px);overflow:auto;z-index:1050;background:#fff;border:1px solid #dce5e2;border-radius:12px;box-shadow:0 4px 16px #0002;padding:4px 0}
  body.app.admin #header #mobile-collapse>.navbar-nav{float:none;width:100%;margin:0;padding:0}
  body.app.admin #header #mobile-collapse>.navbar-nav>li{float:none;width:100%;margin:0;padding:0}
- body.app.admin #header #mobile-collapse>.navbar-nav>li>a{display:flex;align-items:center;min-height:44px;line-height:20px!important;padding:10px 14px!important;font-size:14px;white-space:normal}
+ body.app.admin #header #mobile-collapse>.navbar-nav>li>a{display:flex;align-items:center;height:44px!important;min-height:44px;line-height:20px!important;padding:10px 14px!important;font-size:14px!important;white-space:normal}
  body.app.admin #wrapper{margin-left:0!important;margin-right:0!important;padding-top:0!important;height:auto!important;width:100%!important;max-width:none!important;overflow:visible!important;min-height:calc(100dvh - 140px)!important}
  body.app.admin #wrapper>.content{width:100%!important;max-width:none!important;height:auto!important;overflow:visible!important;box-sizing:border-box;padding:16px!important;margin:0!important}
  body.app.admin #wrapper>.content .row{max-width:none!important}
  body.app.admin #wrapper>.content>.row,body.app.admin #wrapper>.content .widget>.row{margin-left:0!important;margin-right:0!important}
  body.app.admin #wrapper>.content>.row>[class*="col-"]{padding-left:0!important;padding-right:0!important}
+ body.app.admin .ui-sortable:has(>#widget-sc_new_leads_today){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:stretch}
+ body.app.admin .ui-sortable:has(>#widget-sc_new_leads_today)>.widget{grid-column:1/-1;min-width:0}
+ body.app.admin .ui-sortable:has(>#widget-sc_new_leads_today)>:is(#widget-sc_new_leads_today,#widget-sc_open_proposals,#widget-sc_active_projects,#widget-sc_staff_activity){grid-column:auto;margin:0!important}
+ body.app.admin :is(#widget-sc_new_leads_today,#widget-sc_open_proposals,#widget-sc_active_projects,#widget-sc_staff_activity)>.panel_s{height:100%;margin:0!important;border-radius:12px;box-shadow:0 2px 8px #163a2b0b}
+ body.app.admin :is(#widget-sc_new_leads_today,#widget-sc_open_proposals,#widget-sc_active_projects,#widget-sc_staff_activity) .panel-body{height:100%;padding:14px!important;border-radius:12px}
+ body.app.admin :is(#widget-sc_new_leads_today,#widget-sc_open_proposals,#widget-sc_active_projects,#widget-sc_staff_activity) .panel-body>.tw-flex{gap:6px;align-items:flex-start}
+ body.app.admin :is(#widget-sc_new_leads_today,#widget-sc_open_proposals,#widget-sc_active_projects,#widget-sc_staff_activity) .tw-text-3xl{font-size:24px;line-height:1.2}
+ body.app.admin :is(#widget-sc_new_leads_today,#widget-sc_open_proposals,#widget-sc_active_projects,#widget-sc_staff_activity) .text-muted{font-size:12px;line-height:1.4;min-height:34px}
  body.app.admin #menu,body.app.admin #setup-menu-wrapper{position:fixed!important;top:64px!important;bottom:calc(68px + env(safe-area-inset-bottom))!important;height:calc(100dvh - 132px - env(safe-area-inset-bottom))!important;min-height:0!important;width:100%!important;max-width:100%!important;overflow-y:auto!important;overscroll-behavior:contain;padding:56px 16px 24px!important;margin:0!important;z-index:1045;box-sizing:border-box;background:#fff!important}
  body.app.admin #menu{left:0!important;transform:translateX(-101%)!important;visibility:hidden!important;pointer-events:none}
  body.app.admin #setup-menu-wrapper{left:0!important;right:0!important;animation:none!important;transform:none!important}

@@ -5,6 +5,7 @@ const w=dom.window,d=w.document;
 w.scRepairMediaLabels={preview:'Preview',close:'Close'};
 w.HTMLDialogElement.prototype.showModal=function(){this.open=true;};
 w.HTMLDialogElement.prototype.close=function(){this.open=false;this.dispatchEvent(new w.Event('close'));};
+w.HTMLMediaElement.prototype.pause=function(){};
 w.eval(fs.readFileSync('modules/toast_master/assets/js/repair-media.js','utf8'));
 const img=d.querySelector('#thumb img');
 const click=new w.MouseEvent('click',{bubbles:true,cancelable:true});img.dispatchEvent(click);
@@ -18,5 +19,9 @@ assert.ok(d.querySelector('dialog[open]'),'Keyboard users can open the preview')
 d.querySelector('dialog button').click();
 d.getElementById('foreign').dispatchEvent(new w.MouseEvent('dblclick',{bubbles:true}));
 assert.equal(d.querySelectorAll('dialog').length,0,'Unrelated/off-origin images are excluded');
+const video=d.createElement('video'); video.src='/admin/development/file/9';d.body.appendChild(video);
+video.dispatchEvent(new w.MouseEvent('dblclick',{bubbles:true}));
+assert.ok(d.querySelector('dialog video[controls]'),'Video preview keeps playback controls');
+d.querySelector('dialog button').click();assert.equal(d.querySelectorAll('dialog').length,0);
 dom.window.close();
 console.log('PASS double-click preview, single-click close, keyboard controls and file-origin boundary');

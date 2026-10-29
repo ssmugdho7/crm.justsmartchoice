@@ -1,5 +1,5 @@
 a:has(>img[src*="/admin/development/file/"]){touch-action:manipulation;cursor:zoom-in}
-.sc-repair-media-dialog{width:calc(100vw - 24px);max-width:1200px;height:auto;max-height:calc(100dvh - 24px);padding:44px 12px 12px;margin:auto;border:0;border-radius:14px;background:#111827;box-shadow:0 12px 60px #0006;overflow:auto}
+.sc-repair-media-dialog{width:calc(100vw - 24px);max-width:1200px;height:fit-content;max-height:calc(100dvh - 24px);padding:44px 12px 12px;margin:auto;border:0;border-radius:14px;background:#111827;box-shadow:0 12px 60px #0006;overflow:auto}
 .sc-repair-media-dialog::backdrop{background:#0b1228dc}
 .sc-repair-media-dialog>img,.sc-repair-media-dialog>video{display:block;width:100%;height:auto;max-height:calc(100dvh - 100px);object-fit:contain;margin:auto}
 .sc-repair-media-dialog>img{cursor:zoom-out}

@@ -11,19 +11,35 @@
     // swallow the click on Public (elFinder's drag threshold is only 4px).
     const cancel = manager.draggable.cancel || 'input,textarea,button,select,option';
     manager.draggable.cancel = cancel + ',.elfinder-navbar-root';
-    // Opening another volume can finish before the native tree's lazy loading
-    // expands it. Reveal its children after navigation, using the native arrow
-    // handler so loading, permissions and later collapse remain elFinder-owned.
-    manager.bind('opendone', function () {
-      window.requestAnimationFrame(function () {
-        const cwd = manager.cwd();
-        if (!cwd) return;
-        const entry = $(document.getElementById(manager.navHash2Id(cwd.hash)));
-        if (entry.hasClass('elfinder-navbar-root') && entry.hasClass('elfinder-navbar-collapsed') &&
-            !entry.hasClass('elfinder-navbar-expanded')) {
-          entry.children('.elfinder-navbar-arrow').trigger('click');
-        }
-      });
+    // The bundled elFinder treats every non-JSON same-origin postMessage as a
+    // reason to sync. Extension/devtools messages then abort folder navigation
+    // and repeatedly reopen the previous directory. Replace only this manager's
+    // legacy CORS listener, retaining the upload/editor response protocol.
+    $(window).off('message.' + manager.namespace).on('message.' + manager.namespace, function (event) {
+      const message = event.originalEvent;
+      if (!message || typeof message.data !== 'string') return;
+      const origins = [manager.options.url, manager.uploadURL].filter(Boolean).map(url => new URL(url, location.href).origin);
+      if (!origins.includes(message.origin)) return;
+      let response;
+      try { response = JSON.parse(message.data); } catch (_) { return; }
+      if (!response || typeof response !== 'object' || Array.isArray(response) ||
+          !response.data || typeof response.data !== 'object' || Array.isArray(response.data)) return;
+      const data = response.data;
+      if (data.error) {
+        if (response.bind) manager.trigger(response.bind + 'fail', data);
+        manager.error(data.error);
+        return;
+      }
+      if (data.warning) manager.error(data.warning);
+      manager.updateCache(data);
+      if (data.removed && data.removed.length) manager.remove(data);
+      if (data.added && data.added.length) manager.add(data);
+      if (data.changed && data.changed.length) manager.change(data);
+      if (response.bind) {
+        manager.trigger(response.bind, data);
+        manager.trigger(response.bind + 'done');
+      }
+      if (data.sync) manager.sync();
     });
   });
 })();

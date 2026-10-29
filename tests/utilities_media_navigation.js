@@ -10,13 +10,30 @@ const {JSDOM} = require('jsdom');
   w.eval(fs.readFileSync('assets/plugins/jquery/jquery.min.js', 'utf8'));
   w.eval(fs.readFileSync('assets/plugins/jquery-ui/jquery-ui.min.js', 'utf8'));
   const $ = w.jQuery;
+  let otherMessages = 0;
+  $(w).on('message.other-module', () => otherMessages++);
   let starts = 0;
-  const handlers = {};
+  const calls = [];
   const manager = {
     draggable: {distance: 4, scroll: false, start() { starts++; }},
-    bind(event, callback) { handlers[event] = callback; },
-    cwd: () => ({hash: 'public'}), navHash2Id: hash => 'nav-' + hash,
+    namespace: 'elfinder-test', options: {url: '/admin/utilities/media_connector'},
+    uploadURL: '/admin/utilities/media_connector',
+    convAbsUrl: url => new URL(url, w.location.href).href,
   };
+  for (const method of ['sync', 'error', 'trigger', 'updateCache', 'remove', 'add', 'change']) {
+    manager[method] = (...args) => calls.push([method, ...args]);
+  }
+  // Exercise the real bundled vendor listener to reproduce the refresh loop.
+  const vendor = fs.readFileSync('assets/plugins/elFinder/js/elFinder.js', 'utf8');
+  const nativeListener = vendor.slice(vendor.indexOf("$(window).on('message.' + namespace"), vendor.indexOf('// elFinder enable always'));
+  w.__testManager = manager;
+  w.eval('(function(self, namespace){' + nativeListener + '})(window.__testManager, "elfinder-test");');
+  function message(data, origin = 'https://crm.example') {
+    w.dispatchEvent(new w.MessageEvent('message', {data, origin}));
+  }
+  message({source: 'react-devtools-content-script', hello: true});
+  assert.equal(calls.filter(c => c[0] === 'sync').length, 1, 'baseline: unrelated object message causes native refresh');
+  calls.length = 0;
   $.fn.elfinder = () => manager;
   function drag(selector) {
     const el = $(selector);
@@ -41,14 +58,27 @@ const {JSDOM} = require('jsdom');
   $('.elfinder-navbar-icon').trigger('click');
   assert.equal(clicks, 1, 'clicks on the root icon still reach native folder navigation');
   $('.elfinder-navbar-arrow').on('click', () => $('.elfinder-navbar-root').toggleClass('elfinder-navbar-expanded'));
-  handlers.opendone();
-  await new Promise(resolve => w.setTimeout(resolve, 30));
-  assert($('.elfinder-navbar-root').hasClass('elfinder-navbar-expanded'), 'opening Public reveals its children on the first navigation');
-  handlers.opendone();
-  await new Promise(resolve => w.setTimeout(resolve, 30));
-  assert($('.elfinder-navbar-root').hasClass('elfinder-navbar-expanded'), 'a completed refresh must not collapse an expanded tree');
-  $('.elfinder-navbar-arrow').trigger('click');
-  assert(!$('.elfinder-navbar-root').hasClass('elfinder-navbar-expanded'), 'the native arrow can still collapse the tree');
+  $('.elfinder-navbar-arrow').trigger('click').trigger('click');
+  for (let i = 0; i < 25; i++) message({source: 'react-devtools-content-script', hello: true});
+  for (const data of ['not JSON', 'null', '[]', '{"data":[]}', '{"other":true}']) message(data);
+  assert.equal(calls.length, 0, 'unrelated messages never refresh or mutate the manager');
+  assert(!$('.elfinder-navbar-root').hasClass('elfinder-navbar-expanded'), 'collapsed folders stay collapsed after extension messages');
+  const upload = {bind: 'upload', data: {added: [{hash: 'new-file'}], sync: true}};
+  message(JSON.stringify(upload), 'https://untrusted.example');
+  message(JSON.stringify(upload), 'https://crm.examp');
+  assert.equal(calls.length, 0, 'foreign and prefix-only origins are rejected');
+  message(JSON.stringify(upload));
+  assert.deepEqual(calls.map(c => c[0]), ['updateCache', 'add', 'trigger', 'trigger', 'sync'], 'valid native upload completion remains functional');
+  assert.equal(calls[2][1], 'upload');
+  assert.equal(calls[3][1], 'uploaddone');
+  calls.length = 0;
+  message(JSON.stringify({bind: 'upload', data: {error: ['errUpload']}}));
+  assert.deepEqual(calls.map(c => c[0]), ['trigger', 'error'], 'native upload errors remain visible');
+  assert.equal(calls[0][1], 'uploadfail');
+  calls.length = 0;
+  message(JSON.stringify({bind: 'edit', data: {warning: ['warning'], removed: ['old'], changed: [{hash: 'changed'}]}}));
+  assert.deepEqual(calls.map(c => c[0]), ['error', 'updateCache', 'remove', 'change', 'trigger', 'trigger'], 'editor changes and warnings retain the native protocol');
+  assert(otherMessages >= 30, 'other modules continue receiving window messages');
   dom.window.close();
   console.log('Media root navigation and subfolder drag regression checks passed');
 })().catch(error => {console.error(error); process.exitCode = 1;});

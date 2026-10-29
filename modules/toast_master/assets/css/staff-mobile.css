@@ -1,4 +1,7 @@
 .sc-staff-mobile-nav,.sc-staff-drawer-close,.sc-staff-quick-backdrop{display:none}
+/* Shared action footers use the same light surface on desktop and mobile. */
+body.app.admin #wrapper .panel-footer,body.app.admin #wrapper .btn-bottom-toolbar,body.app.admin .modal .modal-footer{background:#fff!important;color:#111827;border-top:1px solid #dce5e2}
+body.app.admin #wrapper .btn-bottom-toolbar .btn-toolbar-notice{color:#111827}
 body.app.admin #setup-menu-wrapper #setup-menu .sc-setup-profile-card>a{background:#fff!important;color:#111827!important;border:1px solid #dce5e2!important}
 body.app.admin #setup-menu-wrapper #setup-menu .sc-setup-profile-card>a span{color:#111827!important;opacity:1!important}
 @media(max-width:767px){

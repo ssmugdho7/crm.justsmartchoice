@@ -23,6 +23,7 @@
     const preview = document.createElement(media.tagName === 'VIDEO' ? 'video' : 'img');
     preview.src = src;
     if (preview.tagName === 'VIDEO') {
+      media.pause();
       preview.controls = true; preview.preload = 'metadata'; preview.playsInline = true;
     } else { preview.alt = media.alt || labels.preview; }
     function dismiss() { dialog.close(); }

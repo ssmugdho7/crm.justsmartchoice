@@ -10,13 +10,13 @@
           </p>
 
           <div class="footer-social-icons" aria-label="Social media links">
-            <a href="https://www.facebook.com/smartchoicsolar" target="_blank" rel="noopener" aria-label="Facebook">
+            <a href="https://www.facebook.com/profile.php?id=61594271759671" target="_blank" rel="noopener" aria-label="Facebook">
               <img src="/images/social/facebook.png" alt="Facebook" width="35" height="35" loading="lazy">
             </a>
             <a href="https://x.com/justsmartchoice" target="_blank" rel="noopener" aria-label="Twitter / X">
               <img src="/images/social/x.png" alt="Twitter / X" width="35" height="35" loading="lazy">
             </a>
-            <a href="https://www.instagram.com/justsmartchoice/" target="_blank" rel="noopener" aria-label="Instagram">
+            <a href="https://www.instagram.com/smartchoicecontra/" target="_blank" rel="noopener" aria-label="Instagram">
               <img src="/images/social/instagram.png" alt="Instagram" width="35" height="35" loading="lazy">
             </a>
             <a href="https://www.linkedin.com/company/justsmartchoice" target="_blank" rel="noopener" aria-label="LinkedIn">
@@ -25,10 +25,10 @@
             <a href="https://www.tiktok.com/@justsmartchoice" target="_blank" rel="noopener" aria-label="TikTok">
               <img src="/images/social/tiktok.png" alt="TikTok" width="35" height="35" loading="lazy">
             </a>
-            <a href="https://www.pinterest.com/justsmartchoice" target="_blank" rel="noopener" aria-label="Pinterest">
+            <a href="https://www.pinterest.com/haroldcabrerausa/" target="_blank" rel="noopener" aria-label="Pinterest">
               <img src="/images/social/pinterest.png" alt="Pinterest" width="35" height="35" loading="lazy">
             </a>
-            <a href="https://www.youtube.com/@Justsmartchoice" target="_blank" rel="noopener" aria-label="YouTube">
+            <a href="https://www.youtube.com/@SmartChoiceContractorUSA" target="_blank" rel="noopener" aria-label="YouTube">
               <img src="/images/social/youtube.png" alt="YouTube" width="35" height="35" loading="lazy">
             </a>
             <a href="https://wa.me/181686896239" target="_blank" rel="noopener" aria-label="WhatsApp">
@@ -76,7 +76,7 @@
             </div>
 
             <div class="footer-review-box">
-              <a href="https://www.facebook.com/profile.php?id=100079490918155&sk=reviews" target="_blank" rel="noopener">
+              <a href="https://www.facebook.com/profile.php?id=61594271759671" target="_blank" rel="noopener">
                 <img src="/images/social/facebook.png" alt="Facebook Reviews" width="35" height="35" loading="lazy">
                 <span>
                   <strong>Leave us a review on</strong>

@@ -1,0 +1,25 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs');
+const {JSDOM}=require('jsdom'),jquery=require('jquery');
+const source=fs.readFileSync('assets/js/sc-document-prefixes.js','utf8');
+const dom=new JSDOM(`<title>Edit - EST-007</title><form id="sales"><input name="subject" value="Unsaved subject"><input name="number" value="008"><span data-sc-document-number>EST-007</span><span data-sc-document-heading>Estimate EST-007</span><span id="prefix">EST-</span><li class="sc-sales-breadcrumbs__current">Edit - EST-007</li><details open class="sc-prefix-editor" data-url="/admin/smart_choice_sales/update_number_settings/estimate/7"><input class="sc-prefix-value"><button type="button" class="sc-save-prefix">Save</button><p role="status" class="sc-prefix-feedback"></p></details></form>`,{url:'https://dev.justsmartchoice.com/admin/estimates/estimate/7',runScripts:'outside-only'});
+const w=dom.window,$=jquery(w);w.$=w.jQuery=$;w.csrfData={token_name:'csrf_fixture',hash:'retained'};
+let request,deferred,submits=0,events=0;
+$('#sales').on('submit',e=>{submits++;e.preventDefault();});
+$(w.document).on('sc:document-prefix-updated',()=>events++);
+$.ajax=options=>{request=options;deferred=$.Deferred();return deferred.promise();};
+w.eval(source);
+const editor=$('.sc-prefix-editor'),input=$('.sc-prefix-value'),button=$('.sc-save-prefix');
+input.val('NEW-');button.trigger('click');
+assert.equal(button.prop('disabled'),true);assert.equal(request.type,'POST');assert.equal(request.dataType,'json');assert.equal(request.data.csrf_fixture,'retained');assert.equal(request.data.prefix,'NEW-');
+deferred.resolve({success:true,prefix:'NEW-',formatted_number:'NEW-007',heading:'Estimate NEW-007',message:'Saved'});
+assert.equal($('#prefix').text(),'NEW-');assert.equal($('[data-sc-document-heading]').text(),'Estimate NEW-007');assert.equal($('[data-sc-document-number]').text(),'NEW-007');assert.equal($('.sc-sales-breadcrumbs__current').text(),'Edit - NEW-007');assert.equal(w.document.title,'Edit - NEW-007');assert.equal(events,1);assert.equal(editor.prop('open'),false);assert.equal(button.prop('disabled'),false);
+assert.equal($('[name=subject]').val(),'Unsaved subject');assert.equal($('[name=number]').val(),'008');assert.equal(submits,0);
+input.val('NO-');button.trigger('click');deferred.resolve({success:false,message:'Denied'});
+assert.equal($('#prefix').text(),'NEW-');assert.equal($('.sc-prefix-feedback').text(),'Denied');assert.equal(button.prop('disabled'),false);
+input.val('TRY-');button.trigger('click');deferred.reject({status:403});assert($('.sc-prefix-feedback').text().includes('Access denied'));assert.equal(button.prop('disabled'),false);
+const enter=$.Event('keydown',{key:'Enter'});input.trigger(enter);assert(enter.isDefaultPrevented());assert.equal(submits,0);
+// A response is text, not executable HTML, including after server-side validation errors.
+deferred.resolve({success:true,prefix:'<img src=x onerror=alert(1)>',formatted_number:'<b>007</b>',heading:'<b>Heading</b>',message:'<img>'});
+assert.equal(w.document.querySelectorAll('img,b').length,0);assert.equal($('#prefix').text(),'<img src=x onerror=alert(1)>');
+w.close();console.log('PASS: async saves, CSRF, heading/number/breadcrumb/title refresh, failures, Enter, text escaping and unsaved form preservation');

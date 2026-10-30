@@ -1,0 +1,27 @@
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+$lang['scpr_directory'] = 'Directory';
+$lang['scpr_title'] = 'Projects Management';
+$lang['scpr_subtitle'] = 'Jobsite operations, work orders, schedules and field crews.';
+$lang['scpr_gantt'] = 'Gantt Schedule';
+$lang['scpr_workspace'] = 'Project workspace';
+$lang['scpr_portfolio'] = 'Active work orders and projects portfolio';
+$lang['scpr_active_count'] = '%s projects in progress';
+$lang['scpr_fixed_value'] = 'Fixed-price contract value';
+$lang['scpr_no_fixed'] = 'No active fixed-price contracts';
+$lang['scpr_average'] = 'Average completion';
+$lang['scpr_crew_hours'] = 'Logged crew hours';
+$lang['scpr_scope'] = 'Portfolio figures cover all projects you can access. Completion and hours cover In Progress projects. Values include fixed-price projects only, grouped by currency. Table filters apply to the directory below.';
+$lang['scpr_contract_value'] = 'Contract value';
+$lang['scpr_no_deadline'] = 'Not set';
+$lang['scpr_tab_files'] = 'Files & Drawings';
+$lang['scpr_tab_activity'] = 'Activity Audit';
+$lang['scpr_tab_notes'] = 'Jobsite Notes';
+$lang['scpr_punchlist'] = 'Project Punch List';
+$lang['scpr_punchlist_scope'] = 'Showing up to 12 visible tasks in the native task order. Use the full task table for filters, assignees, timers and bulk actions.';
+$lang['scpr_all_tasks'] = 'All tasks';
+$lang['scpr_toggle_task'] = 'Change completion for: %s';
+$lang['scpr_task_error'] = 'The task could not be updated. Please refresh the page and try again.';
+$lang['scpr_milestones'] = 'Work Order Milestones';
+$lang['scpr_all_milestones'] = 'All milestones';
+$lang['scpr_license_required'] = 'Activate a valid Projects Workspace key in Module Licensing before enabling this module.';

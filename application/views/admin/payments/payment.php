@@ -2,6 +2,7 @@
 <?php $this->load->helper('smart_choice_sales_links'); init_head(); ?>
 <div id="wrapper">
     <div class="content">
+        <?php $this->load->view('admin/includes/sales_workspace'); ?>
         <div class="tw-max-w-4xl tw-mx-auto">
             <h4 class="tw-mt-0 tw-font-bold tw-text-lg tw-text-neutral-700">
                 <?= _l('sc_payment_for_document'); ?>
@@ -238,6 +239,9 @@
 <script>$(function(){init_editor('#sc_clientnote,#sc_terms',{height:220});});</script>
 <script>
     $(function() {
+        if (window.location.hash === '#tab_payment') {
+            $('.nav-tabs a[href="#tab_payment"]').tab('show');
+        }
         appValidateForm($('form'), {
             amount: 'required',
             date: 'required'

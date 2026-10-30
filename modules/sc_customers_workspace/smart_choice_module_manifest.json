@@ -1,0 +1,12 @@
+{
+  "module": "sc_customers_workspace",
+  "version": "1.0.0",
+  "title": "Smart Choice Customers Workspace",
+  "subtitle": "Executive emerald customer directory, profiles, contacts and forms",
+  "core_tables": ["clients", "contacts"],
+  "core_files_modified": [],
+  "hooks": ["admin_body_class", "app_admin_head", "app_admin_footer", "all_contacts_table_row", "admin_customer_contacts_table_row"],
+  "permissions": "Reuses native Customers View Own, View, Create, Edit and Delete capabilities and controller authorization.",
+  "migrations": [],
+  "languages": ["english", "spanish"]
+}

@@ -1,0 +1,534 @@
+/**
+ * Smart Choice Contractors USA - Perfex CRM Expenses Module Stylesheet
+ * Brand Theme: Executive Emerald Green (#059669) & Crisp White (#FFFFFF)
+ * Target Views:
+ *   - application/views/admin/expenses/manage.php
+ *   - application/views/admin/expenses/expense.php
+ *   - application/views/admin/expenses/expense_preview_template.php
+ */
+
+body.scct-expenses {
+  --exp-primary: #059669;
+  --exp-primary-hover: #047857;
+  --exp-primary-deep: #064E3B;
+  --exp-primary-tint: #ECFDF5;
+  --exp-primary-border: #A7F3D0;
+  --exp-border-light: #E4EAE6;
+  --exp-text-dark: #0B1E17;
+  --exp-text-muted: #52675F;
+  --exp-text-subtle: #8FA29A;
+  --exp-bg-page: #F8FAF9;
+  --exp-bg-card: #FFFFFF;
+  --exp-radius-sm: 6px;
+  --exp-radius-md: 10px;
+  --exp-radius-lg: 14px;
+  --exp-shadow-subtle: 0 1px 3px rgba(11, 30, 23, 0.04);
+  --exp-shadow-card: 0 4px 16px rgba(11, 30, 23, 0.06);
+}
+
+/* ==========================================================================
+   1. Expenses Summary KPI Cards (5 Status Categories)
+   ========================================================================== */
+body.scct-expenses .exp-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 1024px) {
+  body.scct-expenses .exp-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 640px) {
+  body.scct-expenses .exp-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+body.scct-expenses .exp-kpi-card {
+  background: var(--exp-bg-card);
+  border: 1px solid var(--exp-border-light);
+  border-radius: var(--exp-radius-md);
+  padding: 16px 18px;
+  box-shadow: var(--exp-shadow-subtle);
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+body.scct-expenses .exp-kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--exp-shadow-card);
+  border-color: var(--exp-primary-border);
+}
+
+body.scct-expenses .exp-kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #CBD7D0;
+}
+
+body.scct-expenses .exp-kpi-card.status-all::before { background: #0B1E17; }
+body.scct-expenses .exp-kpi-card.status-billable::before { background: #059669; }
+body.scct-expenses .exp-kpi-card.status-non-billable::before { background: #64748B; }
+body.scct-expenses .exp-kpi-card.status-not-invoiced::before { background: #D97706; }
+body.scct-expenses .exp-kpi-card.status-billed::before { background: #0284C7; }
+
+body.scct-expenses .exp-kpi-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+body.scct-expenses .exp-kpi-label {
+  font-size: 11.84px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--exp-text-muted);
+}
+
+body.scct-expenses .exp-kpi-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body.scct-expenses .exp-kpi-count {
+  font-size: 26.4px;
+  font-weight: 800;
+  color: var(--exp-text-dark);
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+body.scct-expenses .exp-kpi-subtext {
+  font-size: 11.2px;
+  color: var(--exp-text-subtle);
+}
+
+/* ==========================================================================
+   2. Expenses Executive Cost Distribution Ribbon
+   ========================================================================== */
+body.scct-expenses .exp-ribbon {
+  background: linear-gradient(135deg, #064E3B 0%, #059669 100%);
+  border-radius: var(--exp-radius-md);
+  padding: 18px 24px;
+  color: #FFFFFF;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px rgba(6, 78, 59, 0.15);
+}
+
+body.scct-expenses .exp-ribbon-stat-title {
+  font-size: 11.52px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #A7F3D0;
+  margin-bottom: 2px;
+}
+
+body.scct-expenses .exp-ribbon-stat-value {
+  font-size: 21.6px;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+
+/* ==========================================================================
+   3. Table Panel, Toolbar & Search
+   ========================================================================== */
+body.scct-expenses .exp-table-panel {
+  background: var(--exp-bg-card);
+  border: 1px solid var(--exp-border-light);
+  border-radius: var(--exp-radius-lg);
+  box-shadow: var(--exp-shadow-subtle);
+  overflow: hidden;
+}
+
+body.scct-expenses .exp-toolbar {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--exp-border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+body.scct-expenses .exp-search-box {
+  position: relative;
+  min-width: 280px;
+}
+
+body.scct-expenses .exp-search-box input {
+  width: 100%;
+  padding: 8px 14px 8px 36px;
+  border: 1px solid var(--exp-border-light);
+  border-radius: var(--exp-radius-sm);
+  font-size: 13.12px;
+  color: var(--exp-text-dark);
+  background: var(--exp-bg-page);
+  transition: all 0.15s ease;
+}
+
+body.scct-expenses .exp-search-box input:focus {
+  outline: none;
+  border-color: var(--exp-primary);
+  background: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+}
+
+body.scct-expenses .exp-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: var(--exp-primary);
+  color: #FFFFFF;
+  font-size: 13.12px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(5, 150, 105, 0.2);
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+body.scct-expenses .exp-btn-primary:hover {
+  background: var(--exp-primary-hover);
+  color: #FFFFFF;
+}
+
+body.scct-expenses .exp-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  background: #FFFFFF;
+  border: 1px solid var(--exp-border-light);
+  color: var(--exp-text-dark);
+  font-size: 13.12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+body.scct-expenses .exp-btn-secondary:hover {
+  background: var(--exp-bg-page);
+  border-color: var(--exp-text-subtle);
+}
+
+/* ==========================================================================
+   4. Table Rows, High-Visibility Action Buttons & Status Pills
+   ========================================================================== */
+body.scct-expenses .table-expenses {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.12px;
+  color: var(--exp-text-dark);
+}
+
+body.scct-expenses .table-expenses th {
+  background: #F8FAF9;
+  padding: 12px 14px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 11.52px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--exp-text-muted);
+  border-bottom: 1px solid var(--exp-border-light);
+}
+
+body.scct-expenses .table-expenses td {
+  padding: 14px;
+  border-bottom: 1px solid var(--exp-border-light);
+  vertical-align: middle;
+}
+
+body.scct-expenses .table-expenses tr:hover td {
+  background: #F8FAF9;
+}
+
+/* Row Action Buttons: View & Edit */
+body.scct-expenses .exp-row-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+body.scct-expenses .exp-btn-view-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #ECFDF5;
+  color: #047857;
+  border: 1px solid #A7F3D0;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 11.52px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+body.scct-expenses .exp-btn-view-pill:hover {
+  background: #059669;
+  color: #FFFFFF;
+  border-color: #059669;
+}
+
+body.scct-expenses .exp-btn-edit-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #F8FAF9;
+  color: #52675F;
+  border: 1px solid #CBD7D0;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 11.52px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+body.scct-expenses .exp-btn-edit-pill:hover {
+  background: #475569;
+  color: #FFFFFF;
+  border-color: #475569;
+}
+
+/* Category Pill */
+body.scct-expenses .exp-category-pill {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: #ECFDF5;
+  color: #047857;
+  font-size: 11.52px;
+  font-weight: 700;
+  border: 1px solid #A7F3D0;
+  white-space: nowrap;
+}
+
+/* Receipt Voucher Thumbnail Badge */
+body.scct-expenses .exp-receipt-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: #EFF6FF;
+  color: #1D4ED8;
+  font-size: 11.2px;
+  font-weight: 700;
+  border: 1px solid #BFDBFE;
+}
+
+/* Status Badges */
+body.scct-expenses .exp-status-billed {
+  background: #F0F9FF;
+  color: #0284C7;
+  padding: 3px 8px;
+  border-radius: 99px;
+  font-size: 11.2px;
+  font-weight: 700;
+  border: 1px solid #BAE6FD;
+  white-space: nowrap;
+}
+
+body.scct-expenses .exp-status-unbilled {
+  background: #FFFBEB;
+  color: #D97706;
+  padding: 3px 8px;
+  border-radius: 99px;
+  font-size: 11.2px;
+  font-weight: 700;
+  border: 1px solid #FDE68A;
+  white-space: nowrap;
+}
+
+body.scct-expenses .exp-status-non-billable {
+  background: #F1F5F9;
+  color: #64748B;
+  padding: 3px 8px;
+  border-radius: 99px;
+  font-size: 11.2px;
+  font-weight: 700;
+  border: 1px solid #CBD5E1;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   5. Receipt Preview Card & Dropzone
+   ========================================================================== */
+body.scct-expenses .exp-receipt-canvas {
+  border: 1px solid #CBD7D0;
+  border-radius: var(--exp-radius-sm);
+  padding: 24px;
+  background: #FAFDFB;
+  font-family: monospace;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);
+}
+
+body.scct-expenses .exp-upload-dropzone {
+  border: 2px dashed #A7F3D0;
+  border-radius: 10px;
+  padding: 24px;
+  background: #F8FAF9;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+body.scct-expenses .exp-upload-dropzone:hover {
+  background: #ECFDF5;
+  border-color: #059669;
+}
+
+/* ==========================================================================
+   6. Form Controls
+   ========================================================================== */
+body.scct-expenses .exp-form-card {
+  background: #FFFFFF;
+  border: 1px solid var(--exp-border-light);
+  border-radius: var(--exp-radius-lg);
+  padding: 28px;
+  box-shadow: var(--exp-shadow-subtle);
+}
+
+body.scct-expenses .exp-form-group {
+  margin-bottom: 18px;
+}
+
+body.scct-expenses .exp-form-label {
+  display: block;
+  font-size: 12.8px;
+  font-weight: 700;
+  color: var(--exp-text-dark);
+  margin-bottom: 6px;
+}
+
+body.scct-expenses .exp-form-control {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--exp-border-light);
+  border-radius: var(--exp-radius-sm);
+  font-size: 13.44px;
+  color: var(--exp-text-dark);
+  background: #FFFFFF;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+}
+
+body.scct-expenses .exp-form-control:focus {
+  outline: none;
+  border-color: var(--exp-primary);
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.12);
+}
+
+/* Native Perfex layout integration, scoped exclusively to Expenses. */
+body.scct-expenses #wrapper { background: var(--exp-bg-page); }
+body.scct-expenses .scct-expense-nav { display:flex; flex-wrap:wrap; gap:6px; padding:6px; margin:0 0 20px; border:1px solid var(--exp-border-light); border-radius:10px; background:white; }
+body.scct-expenses .scct-expense-nav a { padding:9px 16px; border-radius:6px; color:var(--exp-text-muted); font-weight:600; }
+body.scct-expenses .scct-expense-nav a.active { background:var(--exp-primary-tint); color:var(--exp-primary-deep); }
+body.scct-expenses .scct-expenses-workspace .btn-primary { background:var(--exp-primary); border-color:var(--exp-primary); }
+body.scct-expenses .scct-expenses-workspace .btn-primary:hover { background:var(--exp-primary-hover); border-color:var(--exp-primary-hover); }
+body.scct-expenses .scct-expenses-workspace h4 { color:var(--exp-primary-deep); }
+body.scct-expenses .exp-kpi-card { text-align:start; min-width:0; }
+body.scct-expenses .exp-kpi-card span, body.scct-expenses .exp-ribbon span, body.scct-expenses .exp-ribbon strong { display:block; }
+body.scct-expenses .exp-kpi-label { margin-bottom:12px; }
+body.scct-expenses .exp-kpi-subtext { font-size:13px; color:var(--exp-text-muted); }
+body.scct-expenses .exp-kpi-card.is-active { border-color:var(--exp-primary); box-shadow:0 0 0 1px var(--exp-primary); }
+body.scct-expenses .exp-kpi-card:focus-visible, body.scct-expenses .scct-expense-nav a:focus-visible { outline:3px solid var(--exp-primary); outline-offset:3px; }
+body.scct-expenses .exp-ribbon p { max-width:440px; margin:0; line-height:1.6; font-size:13px; }
+body.scct-expenses .exp-toolbar { padding:0 0 16px; margin-bottom:16px; }
+body.scct-expenses .exp-table-panel { overflow:visible; }
+body.scct-expenses .scct-expense-quick-filters { display:flex; flex-wrap:wrap; gap:16px; margin-bottom:18px; align-items:flex-end; }
+body.scct-expenses .scct-expense-quick-filters .form-group { width:240px; margin:0; max-width:100%; }
+body.scct-expenses .scct-expense-quick-filters .text-muted { flex-basis:100%; font-size:13px; }
+body.scct-expenses .exp-row-actions { flex-wrap:wrap; align-items:center; min-width:155px; }
+body.scct-expenses .exp-row-actions ._delete { font-size:12px; padding:3px 6px; color:#b91c1c; }
+body.scct-expenses .table-expenses td:nth-child(5) > a { font-weight:600; color:var(--exp-primary-deep); }
+body.scct-expenses .table-expenses td { overflow-wrap:anywhere; }
+body.scct-expenses .exp-receipt-badge { max-width:100%; white-space:normal; }
+body.scct-expenses .scct-expense-builder { max-width:1200px; margin:0 auto; }
+body.scct-expenses .scct-expense-builder .form-group { margin-bottom:20px; }
+body.scct-expenses .scct-expense-builder label { font-weight:600; color:var(--exp-text-muted); }
+body.scct-expenses .scct-expense-builder .form-control:focus { border-color:var(--exp-primary); box-shadow:0 0 0 2px #0596691a; }
+body.scct-expenses .scct-expense-number { font-size:12px; border-radius:6px; background:var(--exp-primary-tint); color:var(--exp-primary-deep); padding:5px 8px; }
+body.scct-expenses .scct-expense-voucher-heading ._buttons .btn { margin-bottom:6px; }
+body.scct-expenses .scct-expense-accounting #amountWrapper { background:var(--exp-primary-tint); padding:16px; border-radius:8px; display:flex; flex-wrap:wrap; justify-content:space-between; gap:12px; color:var(--exp-primary-deep); }
+body.scct-expenses .exp-receipt-canvas { margin-top:16px; padding:16px; font-family:inherit; }
+body.scct-expenses .exp-receipt-canvas img { display:block; max-width:100%; max-height:640px; margin:0 auto; object-fit:contain; }
+body.scct-expenses .exp-receipt-canvas iframe { width:100%; height:520px; border:0; background:white; }
+body.scct-expenses .scct-category-spending .table { margin-bottom:0; }
+@media (max-width:767px) {
+ body.scct-expenses .exp-form-card { padding:20px; }
+ body.scct-expenses .scct-expense-receipt { margin-top:24px; }
+ body.scct-expenses .exp-ribbon { padding:18px; }
+ body.scct-expenses .exp-kpi-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+ body.scct-expenses .exp-kpi-card { padding:14px; }
+ body.scct-expenses .exp-kpi-count { font-size:21px; overflow-wrap:anywhere; }
+ body.scct-expenses .scct-expense-quick-filters .form-group { width:100%; }
+}
+@media (prefers-reduced-motion:reduce) {
+ body.scct-expenses .exp-kpi-card { transition:none; }
+ body.scct-expenses .exp-kpi-card:hover { transform:none; }
+}
+
+body.scct-expenses .scct-expenses-subtitle { display:block; margin-top:6px; font-size:13px; line-height:1.6; color:var(--exp-text-muted); font-weight:400; }
+body.scct-expenses .exp-toolbar { justify-content:flex-start; }
+body.scct-expenses .exp-toolbar #vueApp { margin-inline-start:auto; }
+
+/* Keep native CSV import guidance readable immediately, regardless of inherited theme hover styles. */
+body.scct-expenses .scct-expenses-import-guidelines,
+body.scct-expenses .scct-expenses-import-guidelines ul,
+body.scct-expenses .scct-expenses-import-guidelines li,
+body.scct-expenses .scct-expenses-import-guidelines li b {
+  color: #334155 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  animation: none !important;
+  transition: none !important;
+}
+
+body.scct-expenses .scct-expenses-import-guidelines ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+body.scct-expenses .scct-expenses-import-guidelines li {
+  line-height: 1.65;
+}
+
+body.scct-expenses .scct-expenses-import-guidelines a,
+body.scct-expenses .scct-expenses-import-guidelines a:hover,
+body.scct-expenses .scct-expenses-import-guidelines a:focus {
+  color: #1d4ed8 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  text-decoration: underline;
+  transition: none !important;
+}

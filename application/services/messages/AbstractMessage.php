@@ -14,8 +14,9 @@ abstract class AbstractMessage
 
     public function openHtml()
     {
+        $source = in_array(static::class, [CronJobFailure::class, IsCronSetupRequired::class], true) ? 'cron' : 'alertFloat';
         return '<div class="col-md-12 tw-mt-1">
-            <div class="alert alert-' . $this->alertClass . '" font-medium>';
+            <div class="alert alert-' . $this->alertClass . '" data-toast-source="' . $source . '" font-medium>';
     }
 
     public function closeHtml()

@@ -6,6 +6,7 @@ init_head();
 ?>
 <div id="wrapper">
     <div class="content">
+        <?php $this->load->view('admin/includes/sales_workspace'); ?>
         <div class="row">
             <?php
             echo form_open($this->uri->uri_string(), ['id' => 'estimate-form', 'class' => '_transaction_form estimate-form', 'enctype' => 'multipart/form-data']);
@@ -16,7 +17,7 @@ init_head();
             <div class="col-md-12">
                 <h4
                     class="tw-mt-0 tw-font-bold tw-text-lg tw-text-neutral-700 tw-flex tw-items-center tw-space-x-2">
-                    <span>
+                    <span data-sc-document-number class="hide"><?= isset($estimate) ? e(format_estimate_number($estimate->id)) : ''; ?></span><span data-sc-document-heading>
                         <?php echo isset($estimate) ? e(sc_sales_document_heading('estimate', format_estimate_number($estimate))) : _l('create_new_estimate'); ?>
                     </span>
                     <?php echo isset($estimate) ? format_estimate_status($estimate->status) : ''; ?>

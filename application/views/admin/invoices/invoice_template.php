@@ -146,13 +146,13 @@ if ($format == 1) {
     $__number = $next_invoice_number;
     if (isset($invoice)) {
         $__number = $invoice->number;
-        $prefix   = '<span id="prefix">' . $invoice->prefix . '</span>';
+        $prefix   = '<span id="prefix">' . e($invoice->prefix) . '</span>';
     }
 } elseif ($format == 2) {
     if (isset($invoice)) {
         $__number = $invoice->number;
         $prefix   = $invoice->prefix;
-        $prefix   = '<span id="prefix">' . $prefix . '</span><span id="prefix_year">' . date('Y', strtotime($invoice->date)) . '</span>/';
+        $prefix   = '<span id="prefix">' . e($prefix) . '</span><span id="prefix_year">' . date('Y', strtotime($invoice->date)) . '</span>/';
     } else {
         $__number = $next_invoice_number;
         $prefix   = $prefix . '<span id="prefix_year">' . date('Y') . '</span>/';
@@ -161,7 +161,7 @@ if ($format == 1) {
     if (isset($invoice)) {
         $yy       = date('y', strtotime($invoice->date));
         $__number = $invoice->number;
-        $prefix   = '<span id="prefix">' . $invoice->prefix . '</span>';
+        $prefix   = '<span id="prefix">' . e($invoice->prefix) . '</span>';
     } else {
         $yy       = date('y');
         $__number = $next_invoice_number;
@@ -171,7 +171,7 @@ if ($format == 1) {
         $yyyy     = date('Y', strtotime($invoice->date));
         $mm       = date('m', strtotime($invoice->date));
         $__number = $invoice->number;
-        $prefix   = '<span id="prefix">' . $invoice->prefix . '</span>';
+        $prefix   = '<span id="prefix">' . e($invoice->prefix) . '</span>';
     } else {
         $yyyy     = date('Y');
         $mm       = date('m');
@@ -185,6 +185,7 @@ $isedit               = isset($invoice) ? 'true' : 'false';
 $data_original_number = isset($invoice) ? $invoice->number : 'false';
 
 ?>
+                <?php if (isset($invoice)) sc_render_prefix_editor('invoice', $invoice); ?>
                 <div class="form-group">
                     <label for="number">
                         <?= _l('invoice_add_edit_number'); ?>
@@ -194,13 +195,7 @@ $data_original_number = isset($invoice) ? $invoice->number : 'false';
                     </label>
                     <div class="input-group">
                         <span class="input-group-addon">
-                            <?php if (isset($invoice)) { ?>
-                            <a href="#" onclick="return false;" data-toggle="popover"
-                                data-container='._transaction_form' data-html="true"
-                                data-content="<label class='control-label'><?= _l('settings_sales_invoice_prefix'); ?></label><div class='input-group'><input name='s_prefix' type='text' class='form-control' value='<?= e($invoice->prefix); ?>'></div><button type='button' onclick='save_sales_number_settings(this); return false;' data-url='<?= admin_url('invoices/update_number_settings/' . $invoice->id); ?>' class='btn btn-primary btn-block mtop15'><?= _l('submit'); ?></button>">
-                                <i class="fa fa-cog"></i>
-                            </a>
-                            <?php } ?>
+
                             <?= $prefix; ?>
                         </span>
                         <input type="text" name="number" class="form-control"

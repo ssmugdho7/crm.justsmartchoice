@@ -2,6 +2,7 @@
 <?php init_head(); ?>
 <div id="wrapper">
     <div class="content">
+        <?php $this->load->view('admin/includes/sales_workspace'); ?>
         <div class="panel_s">
             <div class="panel-body">
                 <div class="panel-table-full">

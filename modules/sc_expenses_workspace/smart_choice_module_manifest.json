@@ -1,0 +1,29 @@
+{
+  "module": "sc_expenses_workspace",
+  "version": "1.0.0",
+  "core_files_modified": [],
+  "database_tables_created": [],
+  "core_tables_modified": [],
+  "permissions_reused": {
+    "expenses": [
+      "view_own",
+      "view",
+      "create",
+      "edit",
+      "delete"
+    ]
+  },
+  "global_css": false,
+  "global_javascript": false,
+  "hooks": [
+    "app_view_data",
+    "admin_body_class",
+    "expenses_table_row_data",
+    "expenses_table_sql_join",
+    "app_admin_head",
+    "app_admin_footer",
+    "admin_init",
+    "app_init"
+  ],
+  "uninstall_deletes_data": false
+}

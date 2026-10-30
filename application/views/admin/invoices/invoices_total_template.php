@@ -97,10 +97,10 @@
 </dl>
 <?php } else { ?>
 <div class="tw-relative">
-    <div class="md:tw-flex md:tw-items-center tw-space-y-1 md:tw-space-y-0 md:tw-gap-1 tw-mb-0">
+    <div class="sales-financial-metrics md:tw-flex md:tw-items-center tw-space-y-1 md:tw-space-y-0 md:tw-gap-1 tw-mb-0">
 
-        <div class="tw-border tw-border-solid tw-border-neutral-300/80 tw-rounded-lg tw-shrink-0 tw-bg-white">
-            <div class="tw-px-2 md:tw-px-1.5 tw-py-1.5 md:tw-py-0.5 tw-text-sm tw-inline-flex tw-gap-2">
+        <div class="sales-financial-stat tw-border tw-border-solid tw-border-neutral-300/80 tw-rounded-lg tw-shrink-0 tw-bg-white">
+            <div class="sales-financial-stat-content tw-px-2 md:tw-px-1.5 tw-py-1.5 md:tw-py-0.5 tw-text-sm tw-inline-flex tw-gap-2">
                 <div class="text-success">
                     <?= _l('paid_invoices'); ?>
                 </div>
@@ -109,8 +109,8 @@
                 </div>
             </div>
         </div>
-        <div class="tw-border tw-border-solid tw-border-neutral-300/80 tw-rounded-lg tw-shrink-0 tw-bg-white">
-            <div class="tw-px-2 md:tw-px-1.5 tw-py-1.5 md:tw-py-0.5 tw-text-sm tw-inline-flex tw-gap-2">
+        <div class="sales-financial-stat tw-border tw-border-solid tw-border-neutral-300/80 tw-rounded-lg tw-shrink-0 tw-bg-white">
+            <div class="sales-financial-stat-content tw-px-2 md:tw-px-1.5 tw-py-1.5 md:tw-py-0.5 tw-text-sm tw-inline-flex tw-gap-2">
                 <div class="text-danger">
                     <?= _l('past_due_invoices'); ?>
                 </div>
@@ -119,8 +119,8 @@
                 </div>
             </div>
         </div>
-        <div class="tw-border tw-border-solid tw-border-neutral-300/80 tw-rounded-lg tw-shrink-0 tw-bg-white">
-            <div class="tw-px-2 md:tw-px-1.5 tw-py-1.5 md:tw-py-0.5 tw-text-sm tw-inline-flex tw-gap-2">
+        <div class="sales-financial-stat tw-border tw-border-solid tw-border-neutral-300/80 tw-rounded-lg tw-shrink-0 tw-bg-white">
+            <div class="sales-financial-stat-content tw-px-2 md:tw-px-1.5 tw-py-1.5 md:tw-py-0.5 tw-text-sm tw-inline-flex tw-gap-2">
                 <div class="text-warning">
                     <?= _l('outstanding_invoices'); ?>
                 </div>

@@ -159,3 +159,4 @@ if ($hasVideoMeetingSubmenu) {
             <?php $this->load->view('admin/projects/pinned'); ?>
     </ul>
 </aside>
+<?php $this->load->view('admin/includes/sidebar_resize'); ?>

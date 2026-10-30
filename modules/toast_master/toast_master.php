@@ -80,11 +80,18 @@ function toast_master_module_init_menu_items()
 
 function toast_master_add_head_components()
 {
-    if ((int)get_option('toast_master_enable') !== 1) {
+    if (!toast_master_load_assets()) {
         return;
     }
 
-    echo '<link rel="stylesheet" type="text/css" href="' . module_dir_url(TOAST_MASTER_MODULE_NAME, 'assets/css/toast_master.css') . '?v=' . TOAST_MASTER_VERSION . '">';
+    echo '<link rel="stylesheet" type="text/css" href="' . module_dir_url(TOAST_MASTER_MODULE_NAME, 'assets/css/toast_master.css') . '?v=' . filemtime(__DIR__ . '/assets/css/toast_master.css') . '">';
+}
+
+function toast_master_load_assets()
+{
+    $CI = &get_instance();
+    return (int)get_option('toast_master_enable') === 1 || (is_staff_logged_in() && is_admin()
+        && $CI->uri->segment(2) === 'toast_master' && $CI->uri->segment(3) === 'settings');
 }
 
 function toast_master_staff_mobile_components()
@@ -144,7 +151,7 @@ function toast_master_utilities_media_components()
 
 function toast_master_add_footer_components()
 {
-    if ((int)get_option('toast_master_enable') !== 1) {
+    if (!toast_master_load_assets()) {
         echo '<script>window.showSuccessToast=function(msg){if(window.alert_float){window.alert_float("success",msg);}else{alert(msg);}};window.showErrorToast=function(msg){if(window.alert_float){window.alert_float("danger",msg);}else{alert(msg);}};</script>';
         return;
     }

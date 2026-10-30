@@ -122,13 +122,13 @@
                    $__number = $next_estimate_number;
                    if (isset($estimate)) {
                        $__number = $estimate->number;
-                       $prefix   = '<span id="prefix">' . $estimate->prefix . '</span>';
+                       $prefix   = '<span id="prefix">' . e($estimate->prefix) . '</span>';
                    }
                } elseif ($format == 2) {
                    if (isset($estimate)) {
                        $__number = $estimate->number;
                        $prefix   = $estimate->prefix;
-                       $prefix   = '<span id="prefix">' . $prefix . '</span><span id="prefix_year">' . date('Y', strtotime($estimate->date)) . '</span>/';
+                       $prefix   = '<span id="prefix">' . e($prefix) . '</span><span id="prefix_year">' . date('Y', strtotime($estimate->date)) . '</span>/';
                    } else {
                        $__number = $next_estimate_number;
                        $prefix   = $prefix . '<span id="prefix_year">' . date('Y') . '</span>/';
@@ -137,7 +137,7 @@
                    if (isset($estimate)) {
                        $yy       = date('y', strtotime($estimate->date));
                        $__number = $estimate->number;
-                       $prefix   = '<span id="prefix">' . $estimate->prefix . '</span>';
+                       $prefix   = '<span id="prefix">' . e($estimate->prefix) . '</span>';
                    } else {
                        $yy       = date('y');
                        $__number = $next_estimate_number;
@@ -147,7 +147,7 @@
                        $yyyy     = date('Y', strtotime($estimate->date));
                        $mm       = date('m', strtotime($estimate->date));
                        $__number = $estimate->number;
-                       $prefix   = '<span id="prefix">' . $estimate->prefix . '</span>';
+                       $prefix   = '<span id="prefix">' . e($estimate->prefix) . '</span>';
                    } else {
                        $yyyy     = date('Y');
                        $mm       = date('m');
@@ -159,17 +159,12 @@
                $isedit               = isset($estimate) ? 'true' : 'false';
                $data_original_number = isset($estimate) ? $estimate->number : 'false';
                ?>
+                <?php if (isset($estimate)) sc_render_prefix_editor('estimate', $estimate); ?>
                 <div class="form-group">
                     <label for="number"><?php echo _l('estimate_add_edit_number'); ?></label>
                     <div class="input-group">
                         <span class="input-group-addon">
-                            <?php if (isset($estimate)) { ?>
-                            <a href="#" onclick="return false;" data-toggle="popover"
-                                data-container='._transaction_form' data-html="true"
-                                data-content="<label class='control-label'><?php echo _l('settings_sales_estimate_prefix'); ?></label><div class='input-group'><input name='s_prefix' type='text' class='form-control' value='<?php echo e($estimate->prefix); ?>'></div><button type='button' onclick='save_sales_number_settings(this); return false;' data-url='<?php echo admin_url('estimates/update_number_settings/' . $estimate->id); ?>' class='btn btn-primary btn-block mtop15'><?php echo _l('submit'); ?></button>"><i
-                                    class="fa fa-cog"></i></a>
-                            <?php }
-                    echo $prefix;
+                            <?php echo $prefix;
                   ?>
                         </span>
                         <input type="text" name="number" class="form-control" value="<?php echo e($_estimate_number); ?>"

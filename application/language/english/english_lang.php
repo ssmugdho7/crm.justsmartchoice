@@ -4367,3 +4367,12 @@ $lang['add'] = 'Add';
 $lang['problem_updating'] = 'There was a problem saving your changes.';
 $lang['attachments'] = 'Attachments';
 $lang['login'] = 'Log in';
+// Per-document sales numbering.
+$lang['sc_edit_document_prefix'] = 'Edit prefix';
+$lang['sc_document_prefix'] = 'Document prefix';
+$lang['sc_document_prefix_help'] = 'Updates this document only. The number, dates and links stay the same. Save other form changes separately.';
+
+// Admin Sales workspace.
+$lang['sc_sales_workspace_title'] = 'Sales Management';
+$lang['sc_sales_workspace_subtitle'] = 'Sales Operations & Financial Pipeline';
+$lang['sc_sales_invoices_title'] = 'Invoices';

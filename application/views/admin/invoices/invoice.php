@@ -6,12 +6,13 @@ init_head();
 ?>
 <div id="wrapper">
     <div class="content">
+        <?php $this->load->view('admin/includes/sales_workspace'); ?>
         <div class="row">
             <?= form_open($this->uri->uri_string(), ['id'=>'invoice-form','class'=>'_transaction_form invoice-form','enctype'=>'multipart/form-data']); ?>
             <?php if (isset($invoice)) { echo form_hidden('isedit'); } ?>
             <div class="col-md-12">
                 <h4 class="tw-mt-0 tw-font-bold tw-text-lg tw-text-neutral-700 tw-flex tw-items-center tw-space-x-2">
-                    <span><?= isset($invoice) ? e(sc_sales_document_heading('invoice', format_invoice_number($invoice))) : _l('create_new_invoice'); ?></span>
+                    <span data-sc-document-number class="hide"><?= isset($invoice) ? e(format_invoice_number($invoice->id)) : ''; ?></span><span data-sc-document-heading><?= isset($invoice) ? e(sc_sales_document_heading('invoice', format_invoice_number($invoice))) : _l('create_new_invoice'); ?></span>
                     <?= isset($invoice) ? format_invoice_status($invoice->status) : ''; ?>
                 </h4>
                 <?php $this->load->view('admin/invoices/invoice_template'); ?>

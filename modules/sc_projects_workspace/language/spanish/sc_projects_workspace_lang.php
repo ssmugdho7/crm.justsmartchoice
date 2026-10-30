@@ -1,0 +1,27 @@
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+$lang['scpr_directory'] = 'Directorio';
+$lang['scpr_title'] = 'Gestión de proyectos';
+$lang['scpr_subtitle'] = 'Operaciones de obra, órdenes de trabajo, cronogramas y equipos.';
+$lang['scpr_gantt'] = 'Cronograma Gantt';
+$lang['scpr_workspace'] = 'Espacio de trabajo del proyecto';
+$lang['scpr_portfolio'] = 'Cartera de órdenes de trabajo y proyectos activos';
+$lang['scpr_active_count'] = '%s proyectos en curso';
+$lang['scpr_fixed_value'] = 'Valor de contratos a precio fijo';
+$lang['scpr_no_fixed'] = 'No hay contratos activos a precio fijo';
+$lang['scpr_average'] = 'Avance promedio';
+$lang['scpr_crew_hours'] = 'Horas registradas del equipo';
+$lang['scpr_scope'] = 'Las cifras incluyen los proyectos a los que tiene acceso. El avance y las horas corresponden a proyectos En curso. Los valores incluyen solo proyectos a precio fijo, agrupados por moneda. Los filtros de la tabla se aplican al directorio de abajo.';
+$lang['scpr_contract_value'] = 'Valor del contrato';
+$lang['scpr_no_deadline'] = 'Sin definir';
+$lang['scpr_tab_files'] = 'Archivos y planos';
+$lang['scpr_tab_activity'] = 'Registro de actividad';
+$lang['scpr_tab_notes'] = 'Notas de obra';
+$lang['scpr_punchlist'] = 'Lista de tareas del proyecto';
+$lang['scpr_punchlist_scope'] = 'Se muestran hasta 12 tareas visibles en el orden nativo. Use la tabla completa para filtros, responsables, temporizadores y acciones masivas.';
+$lang['scpr_all_tasks'] = 'Todas las tareas';
+$lang['scpr_toggle_task'] = 'Cambiar finalización de: %s';
+$lang['scpr_task_error'] = 'No se pudo actualizar la tarea. Actualice la página e inténtelo de nuevo.';
+$lang['scpr_milestones'] = 'Hitos de la orden de trabajo';
+$lang['scpr_all_milestones'] = 'Todos los hitos';
+$lang['scpr_license_required'] = 'Active una clave válida de Espacio de proyectos en Licencias de módulos antes de habilitar este módulo.';

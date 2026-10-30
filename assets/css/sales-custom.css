@@ -1,0 +1,341 @@
+/* Adapted from the supplied Sales reference. Scoped to admin Sales; native handlers and data stay intact. */
+.sc-sales-workspace-page {
+    --sales-emerald: #059669;
+    --sales-action: #047857;
+    --sales-forest: #064e3b;
+    --sales-hover: #047857;
+    --sales-tint: #ecfdf5;
+    --sales-border: #e4eae6;
+    --sales-muted: #52675f;
+    --sales-shadow: 0 2px 8px rgba(11, 30, 23, .04);
+}
+.sc-sales-workspace-page #wrapper {
+    background: #f8faf9;
+}
+.sc-sales-workspace-page #wrapper > .content {
+    padding-top: 24px;
+}
+.sc-sales-workspace-page .sales-header {
+    margin-bottom: 24px;
+}
+.sc-sales-workspace-page .sales-eyebrow {
+    margin: 0 0 8px;
+    color: var(--sales-muted);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .04em;
+}
+.sc-sales-workspace-page .sales-eyebrow span {
+    padding-inline: 6px;
+    color: #8fa29a;
+}
+.sc-sales-workspace-page .sales-header h1 {
+    margin: 0;
+    color: #0b1e17;
+    font-size: 25px;
+    line-height: 1.3;
+    font-weight: 700;
+}
+.sc-sales-workspace-page .sales-subnav {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    margin-bottom: 24px;
+    padding: 6px;
+    border: 1px solid var(--sales-border);
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: var(--sales-shadow);
+}
+.sc-sales-workspace-page .sales-subnav-btn {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 40px;
+    padding: 9px 20px;
+    border-radius: 9px;
+    color: var(--sales-muted);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.sc-sales-workspace-page .sales-subnav-btn:hover {
+    background: var(--sales-tint);
+    color: var(--sales-hover);
+}
+.sc-sales-workspace-page .sales-subnav-btn.active {
+    background: var(--sales-action);
+    color: #fff;
+}
+.sc-sales-workspace-page #wrapper :is(a, button, input, select, textarea):focus-visible {
+    outline: 2px solid var(--sales-hover);
+    outline-offset: 3px;
+}
+.sc-sales-workspace-page #wrapper .panel_s {
+    border: 1px solid var(--sales-border);
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: var(--sales-shadow);
+}
+.sc-sales-workspace-page #wrapper .panel_s > .panel-body {
+    border: 0;
+    border-radius: inherit !important;
+    background-color: #fff;
+    box-shadow: none !important;
+}
+.sc-sales-workspace-page #wrapper .panel-footer {
+    border-color: var(--sales-border);
+    background: #f8faf9;
+    border-radius: 0 0 14px 14px;
+}
+.sc-sales-workspace-page #wrapper ._buttons {
+    min-height: 40px;
+    margin-bottom: 14px;
+}
+.sc-sales-workspace-page #wrapper ._buttons > .btn {
+    margin-inline-end: 6px;
+    margin-bottom: 6px;
+}
+.sc-sales-workspace-page :is(#wrapper, .btn-bottom-toolbar) .btn {
+    border-radius: 8px;
+    font-weight: 600;
+}
+.sc-sales-workspace-page :is(#wrapper, .btn-bottom-toolbar) .btn-primary {
+    background: var(--sales-action) !important;
+    border-color: var(--sales-action) !important;
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(5, 150, 105, .15);
+}
+.sc-sales-workspace-page :is(#wrapper, .btn-bottom-toolbar) .btn-primary:is(:hover, :focus) {
+    background: var(--sales-forest) !important;
+    border-color: var(--sales-forest) !important;
+}
+.sc-sales-workspace-page #wrapper .btn-default {
+    border-color: #cbd7d0;
+    background-color: #fff;
+    color: #254b3c;
+}
+.sc-sales-workspace-page #wrapper .btn-default:hover {
+    background-color: var(--sales-tint);
+    border-color: #a7f3d0;
+}
+/* Keep DataTables' responsive control, sorting, columns and export behavior unchanged. */
+.sc-sales-workspace-page #wrapper table.table > thead > tr > th {
+    padding-block: 13px;
+    border-color: var(--sales-border);
+    background: #f4f7f5 !important;
+    color: var(--sales-forest) !important;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+}
+.sc-sales-workspace-page #wrapper table.table > tbody > tr > td {
+    padding-block: 14px;
+    border-color: #edf3f0;
+    vertical-align: middle;
+}
+.sc-sales-workspace-page #wrapper table.dataTable > tbody > tr:hover > td {
+    background-color: #fbfdfb;
+}
+.sc-sales-workspace-page #wrapper :is(.table-proposals, .table-estimates, .table-invoices, .table-credit-notes, .table-payments) > tbody > tr > td:first-child > a {
+    color: var(--sales-hover);
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-weight: 700;
+}
+.sc-sales-workspace-page #wrapper .row-options {
+    display: flex !important;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    height: auto !important;
+    max-height: none !important;
+    margin-top: 6px !important;
+    padding: 0 !important;
+    line-height: normal !important;
+    overflow: visible !important;
+    white-space: normal !important;
+    visibility: visible;
+    opacity: 1;
+    /* Native separators remain in the markup for other table contexts. */
+    font-size: 0 !important;
+}
+/* Older register CSS clamps actions to 16–18px. Release that clamp only inside Sales. */
+.sc-sales-workspace-page #wrapper :is(.table-proposals, .table-invoices) > tbody > tr:not(.child),
+.sc-sales-workspace-page #wrapper :is(.table-proposals, .table-invoices) > tbody > tr > td {
+    height: auto !important;
+    max-height: none !important;
+}
+.sc-sales-workspace-page #wrapper .sc-proposal-cell-clamp:has(.row-options) {
+    display: grid !important;
+    grid-template-columns: 20px minmax(0, 1fr);
+    align-items: center;
+    gap: 4px 10px;
+    overflow: visible !important;
+    max-height: none !important;
+}
+.sc-sales-workspace-page #wrapper .sc-proposal-cell-clamp > .sc-bulk-checkbox-wrap {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    margin: 0;
+}
+.sc-sales-workspace-page #wrapper .sc-proposal-cell-clamp:has(.row-options) > a:first-of-type {
+    grid-column: 2;
+    color: var(--sales-hover);
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-weight: 700;
+}
+.sc-sales-workspace-page #wrapper .sc-proposal-cell-clamp > .row-options {
+    grid-column: 2;
+    margin-top: 0 !important;
+}
+.sc-sales-workspace-page #wrapper .row-options > a {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-height: 26px !important;
+    padding: 3px 8px !important;
+    border: 1px solid #cbd7d0;
+    border-radius: 6px;
+    background: #f8faf9;
+    color: var(--sales-muted);
+    font-size: 11px !important;
+    line-height: 1.4 !important;
+    font-weight: 600;
+}
+.sc-sales-workspace-page #wrapper .row-options > .row-btn-view {
+    border-color: #a7f3d0;
+    background: var(--sales-tint);
+    color: var(--sales-hover);
+}
+.sc-sales-workspace-page #wrapper .row-options > a:is(:hover, :focus) {
+    border-color: var(--sales-hover);
+    background: var(--sales-tint);
+    color: var(--sales-forest);
+}
+.sc-sales-workspace-page #wrapper .row-options > a._delete {
+    border-color: #fecaca;
+    background: #fef2f2;
+    color: #b91c1c;
+}
+.sc-sales-workspace-page #wrapper .label {
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 11px;
+    line-height: 1.5;
+}
+.sc-sales-workspace-page #wrapper .dataTables_wrapper > .row:first-child {
+    padding-block: 8px 16px;
+}
+.sc-sales-workspace-page #wrapper .form-control,
+.sc-sales-workspace-page #wrapper .bootstrap-select > .dropdown-toggle {
+    border-color: #cbd7d0;
+    border-radius: 8px;
+    box-shadow: none;
+}
+.sc-sales-workspace-page #wrapper .form-control:focus {
+    border-color: var(--sales-emerald);
+    box-shadow: 0 0 0 3px rgba(5, 150, 105, .12);
+}
+.sc-sales-workspace-page #wrapper .form-group > label {
+    color: var(--sales-forest);
+    font-size: 12px;
+    font-weight: 600;
+}
+.sc-sales-workspace-page #wrapper :is(.table.items, .items-preview) {
+    border: 1px solid var(--sales-border);
+    border-radius: 10px;
+}
+.sc-sales-workspace-page #wrapper .sales-kpi-grid {
+    gap: 14px;
+}
+.sc-sales-workspace-page #wrapper .sales-kpi-card {
+    padding: 16px 18px;
+    border: 1px solid var(--sales-border);
+    border-radius: 12px;
+    box-shadow: var(--sales-shadow);
+}
+.sc-sales-workspace-page #wrapper .sales-kpi-card:hover {
+    border-color: #a7f3d0;
+    background: #fbfdfb;
+}
+.sc-sales-workspace-page #wrapper .sales-kpi-track {
+    height: 5px;
+    margin-top: 12px;
+    overflow: hidden;
+    border-radius: 99px;
+    background: #edf3f0;
+}
+.sc-sales-workspace-page #wrapper .sales-kpi-track > span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--sales-emerald);
+}
+.sc-sales-workspace-page #wrapper .sales-transaction-id {
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+.sc-sales-workspace-page #wrapper .sales-invoice-overview {
+    display: block;
+}
+.sc-sales-workspace-page #wrapper #invoices_total[data-type="badge"]:not(:empty) {
+    margin-top: 16px;
+    padding: 18px 24px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #064e3b, #047857);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(6, 78, 59, .12);
+}
+.sc-sales-workspace-page #wrapper #invoices_total .sales-financial-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 12px;
+}
+.sc-sales-workspace-page #wrapper #invoices_total .sales-financial-stat {
+    margin: 0;
+    border: 0;
+    background: transparent;
+}
+.sc-sales-workspace-page #wrapper #invoices_total .sales-financial-stat-content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 0;
+}
+.sc-sales-workspace-page #wrapper #invoices_total .sales-financial-stat-content > div {
+    color: #fff;
+    font-size: 12px;
+}
+.sc-sales-workspace-page #wrapper #invoices_total .sales-financial-stat-content > div:last-child {
+    font-size: 21px;
+    font-weight: 700;
+}
+.sc-sales-workspace-page #wrapper #invoices_total .bootstrap-select > .dropdown-toggle {
+    min-height: 32px !important;
+    height: auto !important;
+    padding: 6px 10px !important;
+    border-radius: 6px;
+    background: #fff !important;
+    color: var(--sales-forest) !important;
+}
+.sc-sales-workspace-page #wrapper .sales-credit-balance {
+    color: var(--sales-hover);
+    font-weight: 700;
+}
+@media (max-width: 767px) {
+    .sc-sales-workspace-page .sales-header h1 { font-size: 22px; }
+    .sc-sales-workspace-page .sales-subnav-btn { min-height: 44px; padding-inline: 14px; }
+    .sc-sales-workspace-page .sales-subnav { margin-bottom: 18px; }
+    .sc-sales-workspace-page #wrapper .sales-kpi-card { padding: 12px; }
+    .sc-sales-workspace-page #wrapper #invoices_total .sales-financial-metrics { grid-template-columns: 1fr; }
+}
+@media print {
+    .sc-sales-workspace-page :is(.sales-header, .sales-subnav) { display: none; }
+    .sc-sales-workspace-page #wrapper .panel_s { box-shadow: none; }
+}

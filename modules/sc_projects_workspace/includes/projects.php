@@ -12,6 +12,7 @@ hooks()->add_action('app_admin_footer', 'scpr_footer');
 
 function scpr_context()
 {
+    if (function_exists('smartchoice_admin_theme_is_modern') && !smartchoice_admin_theme_is_modern()) { return false; }
     return strtolower(get_instance()->router->fetch_class()) === 'projects'
         && function_exists('scl_licensed') && scl_licensed('sc_projects_workspace');
 }

@@ -31,7 +31,7 @@
                     <div class="col-sm-4"><strong><?php echo _l('found'); ?>:</strong> <?php echo (int) $summary['found']; ?></div>
                     <div class="col-sm-4"><strong><?php echo _l('missing'); ?>:</strong> <?php echo (int) $summary['missing']; ?></div>
                 </div>
-                <div class="sc-staff-image-table-wrap">
+                <div class="table-responsive sc-staff-image-table-wrap">
                     <table id="sc-staff-image-table" class="table table-striped table-hover dt-table sc-staff-image-table">
                         <thead><tr>
                             <th class="sc-col-id"><?php echo _l('staff_id'); ?></th>

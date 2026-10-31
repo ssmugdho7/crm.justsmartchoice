@@ -4376,3 +4376,13 @@ $lang['sc_document_prefix_help'] = 'Updates this document only. The number, date
 $lang['sc_sales_workspace_title'] = 'Sales Management';
 $lang['sc_sales_workspace_subtitle'] = 'Sales Operations & Financial Pipeline';
 $lang['sc_sales_invoices_title'] = 'Invoices';
+
+// Shared admin appearance settings.
+$lang['sc_admin_theme_title'] = 'Admin theme';
+$lang['sc_admin_theme_help'] = 'Applies to all staff pages. Emerald is the current design; Classic restores the previous admin styling. Customer pages, documents, permissions and saved color overrides are unchanged.';
+$lang['sc_admin_theme_emerald'] = 'Emerald (current)';
+$lang['sc_admin_theme_classic'] = 'Classic (previous)';
+$lang['sc_admin_theme_invalid'] = 'Select an available admin theme.';
+$lang['sc_admin_theme_style_inactive'] = 'Activate the Theme Style module to edit individual colors. Admin theme selection above works independently.';
+
+$lang['theme_style'] = 'Theme Style';

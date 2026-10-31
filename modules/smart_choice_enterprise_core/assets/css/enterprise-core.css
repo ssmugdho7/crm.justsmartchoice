@@ -20,3 +20,7 @@
 #sc-enterprise-app .sc-status-badge{display:inline-block;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:600;background:#eef2ff;color:#1f3c88}
 #sc-enterprise-app .sc-action-row{display:flex;gap:4px;flex-wrap:wrap}
 @media(max-width:767px){#sc-enterprise-app .sc-enterprise-header{align-items:flex-start;flex-direction:column}#sc-enterprise-app .sc-toolbar{justify-content:flex-start}#sc-enterprise-app .sc-enterprise-data-wrap{overflow-x:auto}#sc-enterprise-app .sc-enterprise-table{min-width:760px}}
+
+/* Reuse the native table scroll container; long filesystem paths must not widen the page. */
+#sc-enterprise-app .sc-staff-image-table-wrap{max-width:100%;overflow-x:auto}
+#sc-enterprise-app .sc-staff-image-table .sc-cell-path{max-width:32rem;overflow-wrap:anywhere;white-space:normal}

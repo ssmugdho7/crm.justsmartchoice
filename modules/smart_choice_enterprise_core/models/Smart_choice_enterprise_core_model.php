@@ -66,6 +66,14 @@ class Smart_choice_enterprise_core_model extends App_Model
         return $rows;
     }
 
+    public function summarize_staff_images(array $rows)
+    {
+        $found = count(array_filter($rows, static function ($row) {
+            return ($row['status'] ?? '') === 'Found';
+        }));
+        return ['total' => count($rows), 'found' => $found, 'missing' => count($rows) - $found];
+    }
+
     public function get_system_health()
     {
         $checks = [];

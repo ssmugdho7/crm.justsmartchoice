@@ -60,7 +60,7 @@
     );
     echo $scAdminHead;
     ?>
-    <?php if ($scSalesWorkspace) { ?>
+    <?php if ($scSalesWorkspace && (!function_exists('smartchoice_admin_theme_is_modern') || smartchoice_admin_theme_is_modern())) { ?>
     <link rel="stylesheet" href="<?= base_url('assets/css/sales-custom.css?v=2'); ?>">
     <?php } ?>
 </head>

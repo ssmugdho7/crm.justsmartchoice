@@ -4187,3 +4187,13 @@ $lang['sc_document_prefix_help'] = 'Actualiza solo este documento. El número, l
 $lang['sc_sales_workspace_title'] = 'Gestión de ventas';
 $lang['sc_sales_workspace_subtitle'] = 'Operaciones de ventas y flujo financiero';
 $lang['sc_sales_invoices_title'] = 'Facturas';
+
+// Shared admin appearance settings.
+$lang['sc_admin_theme_title'] = 'Tema de administración';
+$lang['sc_admin_theme_help'] = 'Se aplica a todas las páginas del personal. Emerald es el diseño actual; Clásico restaura el estilo anterior. No cambia las páginas de clientes, documentos, permisos ni colores personalizados.';
+$lang['sc_admin_theme_emerald'] = 'Emerald (actual)';
+$lang['sc_admin_theme_classic'] = 'Clásico (anterior)';
+$lang['sc_admin_theme_invalid'] = 'Seleccione un tema de administración disponible.';
+$lang['sc_admin_theme_style_inactive'] = 'Active el módulo Theme Style para editar los colores individuales. La selección del tema de administración funciona de forma independiente.';
+
+$lang['theme_style'] = 'Estilo del tema';

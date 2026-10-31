@@ -10,6 +10,7 @@ hooks()->add_filter('admin_customer_contacts_table_row', 'sccw_contact_row', 10,
 
 function sccw_context()
 {
+    if (function_exists('smartchoice_admin_theme_is_modern') && !smartchoice_admin_theme_is_modern()) { return false; }
     return strtolower(get_instance()->router->fetch_class()) === 'clients'
         && function_exists('scl_licensed') && scl_licensed('sc_customers_workspace');
 }

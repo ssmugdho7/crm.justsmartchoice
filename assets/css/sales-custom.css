@@ -1,11 +1,11 @@
 /* Adapted from the supplied Sales reference. Scoped to admin Sales; native handlers and data stay intact. */
 .sc-sales-workspace-page {
     --sales-emerald: #059669;
-    --sales-action: #047857;
+    --sales-action: var(--sc-admin-accent, #047857);
     --sales-forest: #064e3b;
     --sales-hover: #047857;
     --sales-tint: #ecfdf5;
-    --sales-border: #e4eae6;
+    --sales-border: var(--sc-admin-border, #e4eae6);
     --sales-muted: #52675f;
     --sales-shadow: 0 2px 8px rgba(11, 30, 23, .04);
 }

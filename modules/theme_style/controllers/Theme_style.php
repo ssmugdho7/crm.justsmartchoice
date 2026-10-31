@@ -15,8 +15,22 @@ class Theme_style extends AdminController
 
     public function index()
     {
+        $this->load->helper('theme_style/theme_style');
+        $this->lang->load('theme_style/theme_style');
         $data['title'] = _l('theme_style');
         $this->load->view('theme_style', $data);
+    }
+
+    public function select_admin_theme()
+    {
+        if ($this->input->method() !== 'post') { show_404(); return; }
+        $key = $this->input->post('admin_theme');
+        if (!is_string($key) || !isset(smartchoice_admin_themes()[$key])) {
+            show_error(_l('sc_admin_theme_invalid'), 400); return;
+        }
+        update_option('smartchoice_admin_theme', $key);
+        set_alert('success', _l('settings_updated'));
+        redirect(admin_url('theme_style'));
     }
 
     public function reset()

@@ -7,9 +7,12 @@ function base_url($path) { return 'https://dev.justsmartchoice.com/' . $path; }
 function html_escape($value) { return htmlspecialchars($value, ENT_QUOTES, 'UTF-8'); }
 class ThemeTestHooks {
     public $actions = [];
+    public function add_filter(...$args) {}
+    public function apply_filters($name, $value) { return $value; }
     public function add_action($event, $callback) { $this->actions[$event][] = $callback; }
     public function run($event) { foreach ($this->actions[$event] ?? [] as $callback) $callback(); }
 }
+function get_option($key) { return ''; }
 function hooks() { static $hooks; return $hooks ?? ($hooks = new ThemeTestHooks()); }
 require FCPATH . 'application/libraries/assets/App_css.php';
 $ci = (object) ['app_css' => new App_css()];

@@ -1,5 +1,6 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php
+if (function_exists('smartchoice_admin_theme_is_modern') && !smartchoice_admin_theme_is_modern()) { return; }
 // Reuse the permission-filtered sidebar; do not expose extra records or query totals for navigation.
 $scSalesSections = ['proposals', 'estimates', 'invoices', 'payments', 'credit_notes'];
 $scSalesLinks = [];

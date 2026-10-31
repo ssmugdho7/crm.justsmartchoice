@@ -16,6 +16,24 @@
                     <?= _l('reset'); ?>
                 </a>
             </div>
+            <section class="panel_s" aria-labelledby="sc-admin-theme-title">
+                <div class="panel-body">
+                    <h2 id="sc-admin-theme-title" class="tw-text-lg tw-font-semibold"><?= _l('sc_admin_theme_title'); ?></h2>
+                    <p class="text-muted"><?= _l('sc_admin_theme_help'); ?></p>
+                    <?= form_open(admin_url('theme_style/select_admin_theme')); ?>
+                    <div class="form-group">
+                        <label for="sc-admin-theme"><?= _l('sc_admin_theme_title'); ?></label>
+                        <select id="sc-admin-theme" name="admin_theme" class="form-control">
+                            <?php foreach (smartchoice_admin_themes() as $key => $theme) { ?>
+                                <option value="<?= html_escape($key); ?>" <?= smartchoice_admin_theme() === $key ? 'selected' : ''; ?>><?= html_escape(_l($theme['label'])); ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary"><?= _l('save'); ?></button>
+                    <?= form_close(); ?>
+                </div>
+            </section>
+            <?php if (function_exists('theme_style_admin_head')) { ?>
             <div class="horizontal-scrollable-tabs picker">
                 <div class="scroller arrow-left"><i class="fa fa-angle-left"></i></div>
                 <div class="scroller arrow-right"><i class="fa fa-angle-right"></i></div>
@@ -277,6 +295,9 @@
                     </a>
                 </div>
             </div>
+            <?php } else { ?>
+                <p class="alert alert-info"><?= _l('sc_admin_theme_style_inactive'); ?></p>
+            <?php } ?>
         </div>
     </div>
 </div>

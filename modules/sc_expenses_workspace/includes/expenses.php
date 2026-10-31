@@ -17,9 +17,14 @@ function scct_expenses_context()
     return strtolower(get_instance()->router->fetch_class()) === 'expenses';
 }
 
+function scct_expenses_presentation_context()
+{
+    return scct_expenses_context() && (!function_exists('smartchoice_admin_theme_is_modern') || smartchoice_admin_theme_is_modern());
+}
+
 function scct_expenses_view($view)
 {
-    if (!scct_expenses_context()) {
+    if (!scct_expenses_presentation_context()) {
         return $view;
     }
     $names = ['manage', 'expense', 'expense_preview_template', 'manage_categories', 'expenses_total_template', 'import'];
@@ -40,7 +45,7 @@ function scct_expenses_view($view)
 
 function scct_expenses_body($classes)
 {
-    if (scct_expenses_context()) {
+    if (scct_expenses_presentation_context()) {
         $classes[] = 'scct-expenses';
     }
     return $classes;
@@ -48,7 +53,7 @@ function scct_expenses_body($classes)
 
 function scct_expenses_head()
 {
-    if (scct_expenses_context()) {
+    if (scct_expenses_presentation_context()) {
         $file = 'assets/css/expenses-custom.css';
         echo '<link rel="stylesheet" href="' . e(module_dir_url('sc_expenses_workspace', $file) . '?v=' . filemtime(__DIR__ . '/../' . $file)) . '">';
     }
@@ -56,7 +61,7 @@ function scct_expenses_head()
 
 function scct_expenses_footer()
 {
-    if (scct_expenses_context()) {
+    if (scct_expenses_presentation_context()) {
         $file = 'assets/js/expenses.js';
         echo '<script src="' . e(module_dir_url('sc_expenses_workspace', $file) . '?v=' . filemtime(__DIR__ . '/../' . $file)) . '"></script>';
     }
@@ -115,7 +120,7 @@ function scct_expenses_table_filter($joins)
 
 function scct_expenses_row($row, $expense)
 {
-    if (!scct_expenses_context()) {
+    if (!scct_expenses_presentation_context()) {
         return $row;
     }
     if (preg_match('~<div class="row-options">(.*?)</div>~s', $row[2], $match)) {

@@ -16,7 +16,13 @@ class Theme_style extends AdminController
     public function index()
     {
         $this->load->helper('theme_style/theme_style');
-        $this->lang->load('theme_style/theme_style');
+        // The module may be inactive, so load its translations from an explicit package path.
+        $modulePath = module_dir_path('theme_style');
+        $language = $this->lang->last_loaded ?: 'english';
+        if (!is_file($modulePath . 'language/' . $language . '/theme_style_lang.php')) {
+            $language = 'english';
+        }
+        $this->lang->load('theme_style', $language, false, true, $modulePath);
         $data['title'] = _l('theme_style');
         $this->load->view('theme_style', $data);
     }

@@ -402,6 +402,19 @@ function smart_choice_links_normalize_url($url)
         return '';
     }
 
+    // Repair historical internal shortcuts without rewriting external websites.
+    $parts = parse_url($url);
+    $host = $parts['host'] ?? null;
+    if ($host === null || strcasecmp($host, (string) parse_url(site_url(), PHP_URL_HOST)) === 0) {
+        $path = strtolower(trim($parts['path'] ?? '', '/'));
+        if ($path === 'admin/setup' || $url === '#setup') {
+            return admin_url('settings');
+        }
+        if ($path === 'templates/index') {
+            return admin_url('zillapage/templates/index');
+        }
+    }
+
     $lowerOriginal = strtolower(str_replace(' ', '', $url));
     if (in_array($lowerOriginal, ['admin/modules', '/admin/modules'], true)) {
         return admin_url('modules');

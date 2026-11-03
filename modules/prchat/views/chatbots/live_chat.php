@@ -400,7 +400,6 @@
                 chatbot_remove_all_tags: <?= json_encode(_l('chatbot_remove_all_tags')) ?>
             },
             urls: {
-                contact: <?= json_encode(admin_url('clients/contact/')) ?>,
                 client: <?= json_encode(admin_url('clients/client/')) ?>,
                 lead: <?= json_encode(admin_url('leads/index/')) ?>,
                 staffProfile: <?= json_encode(admin_url('staff/profile/')) ?>
@@ -1248,7 +1247,7 @@
             if (conv.visitor_name) ch += infoRow(CONFIG.i18n.nameLabel, esc(conv.visitor_name));
             if (conv.visitor_email) ch += infoRow(CONFIG.i18n.emailLabel, '<a href="mailto:' + esc(conv.visitor_email) + '" target="_blank" rel="noopener noreferrer">' + esc(conv.visitor_email) + '</a>');
             if (info.phone) ch += infoRow(CONFIG.i18n.phoneLabel, esc(info.phone));
-            if (conv.contact_id) ch += infoRow(CONFIG.i18n.crmLabel, '<a href="' + CONFIG.urls.contact + conv.contact_id + '" target="_blank" rel="noopener noreferrer">' + CONFIG.i18n.viewContact + ' <i class="fa fa-external-link"></i></a>');
+            if (conv.contact_id && conv.crm_client_id) ch += infoRow(CONFIG.i18n.crmLabel, '<a href="' + CONFIG.urls.client + conv.crm_client_id + '?group=contacts&contactid=' + conv.contact_id + '" target="_blank" rel="noopener noreferrer">' + CONFIG.i18n.viewContact + ' <i class="fa fa-external-link"></i></a>');
             DOM.contactInfo.innerHTML = ch || '<div class="text-muted">' + CONFIG.i18n.noContactInfo + '</div>';
 
             // Session
@@ -1292,13 +1291,11 @@
             if (!conv) return;
             let h = '';
 
-            // Priority: 1) Converted client  2) Converted lead / CRM lead  3) Matched contact  4) Create lead  5) No info
+            // Priority: 1) Converted client  2) Converted lead / CRM lead  3) Create lead  4) No info
             if (conv.crm_client_id) {
                 h = '<a href="' + CONFIG.urls.client + conv.crm_client_id + '" target="_blank" class="btn btn-info btn-sm btn-block"><i class="fa fa-building"></i> ' + CONFIG.i18n.viewClient + '</a>';
             } else if (conv.crm_lead_id) {
                 h = '<a href="' + CONFIG.urls.lead + conv.crm_lead_id + '" target="_blank" class="btn btn-default btn-sm btn-block"><i class="fa fa-user"></i> ' + CONFIG.i18n.viewLead + '</a>';
-            } else if (conv.contact_id) {
-                h = '<a href="' + CONFIG.urls.contact + conv.contact_id + '" target="_blank" class="btn btn-info btn-sm btn-block"><i class="fa fa-user"></i> ' + CONFIG.i18n.viewContact + '</a>';
             } else if (conv.visitor_email || conv.visitor_name) {
                 h = '<button class="btn btn-success btn-sm btn-block" onclick="ChatApp.createLead()"><i class="fa fa-user-plus"></i> ' + CONFIG.i18n.createAsLead + '</button>';
             } else {

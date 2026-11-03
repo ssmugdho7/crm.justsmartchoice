@@ -14,6 +14,18 @@ foreach ($links as $link) {
         continue;
     }
 
+    // Saved shortcuts can outlive their disabled module; retain the saved record.
+    $shortcutUrl = smart_choice_links_normalize_url($link->url);
+    $shortcutHost = parse_url($shortcutUrl, PHP_URL_HOST);
+    $shortcutPath = parse_url($shortcutUrl, PHP_URL_PATH);
+    $zillapagePath = parse_url(admin_url('zillapage'), PHP_URL_PATH);
+    if (($shortcutHost === null || strcasecmp((string) $shortcutHost, (string) parse_url(site_url(), PHP_URL_HOST)) === 0)
+        && strpos((string) $shortcutPath, rtrim($zillapagePath, '/') . '/') === 0
+        && (!$CI->app_modules->is_active('zillapage')
+            || !is_file(module_dir_path('zillapage', 'controllers/Templates.php')))) {
+        continue;
+    }
+
     $placement = isset($link->placement) ? $link->placement : 'both';
 
     if ($placement === 'left') {

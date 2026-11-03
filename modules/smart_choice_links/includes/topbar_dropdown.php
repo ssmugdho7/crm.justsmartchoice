@@ -21,7 +21,8 @@ foreach ($links as $link) {
     $zillapagePath = parse_url(admin_url('zillapage'), PHP_URL_PATH);
     if (($shortcutHost === null || $shortcutHost === parse_url(site_url(), PHP_URL_HOST))
         && strpos((string) $shortcutPath, rtrim($zillapagePath, '/') . '/') === 0
-        && !$CI->app_modules->is_active('zillapage')) {
+        && (!$CI->app_modules->is_active('zillapage')
+            || !is_file(module_dir_path('zillapage', 'controllers/Templates.php')))) {
         continue;
     }
 

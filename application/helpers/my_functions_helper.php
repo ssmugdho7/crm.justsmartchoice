@@ -39,6 +39,7 @@ function smartchoice_enqueue_modern_theme()
 
 function smartchoice_enqueue_modern_scripts()
 {
+    echo '<script defer src="' . html_escape(smartchoice_theme_asset_url('assets/js/sc-active-project-count.js')) . '"></script>' . PHP_EOL;
     echo '<script src="' . html_escape(smartchoice_theme_asset_url('assets/js/sc-document-prefixes.js')) . '"></script>' . PHP_EOL;
     echo '<script id="smartchoice-custom-js" src="' . html_escape(smartchoice_theme_asset_url('assets/js/custom.js')) . '"></script>' . PHP_EOL;
 }

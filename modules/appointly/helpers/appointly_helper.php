@@ -1047,7 +1047,7 @@ if (! function_exists('appointlyGoogleAuth')) {
     {
         $CI = &get_instance();
         $CI->load->model('appointly/googlecalendar');
-        $accounts = $CI->googlecalendar->getAccountDetails();
+        $accounts = $CI->googlecalendar->getAccountDetails(true);
         if (!$accounts || empty($accounts[0]->access_token)) return false;
         $account = $accounts[0];
         try {
@@ -1056,7 +1056,7 @@ if (! function_exists('appointlyGoogleAuth')) {
                 $token = $CI->googleplus->client->fetchAccessTokenWithRefreshToken($account->refresh_token);
                 if (!is_array($token) || empty($token['access_token']) || empty($token['expires_in']) || isset($token['error'])) return false;
                 $CI->googleplus->client->setAccessToken($token);
-                $CI->googlecalendar->saveNewTokenValues($token);
+                $CI->googlecalendar->saveNewTokenValues($token, true);
             } else {
                 $token = [
                     'access_token' => $account->access_token,

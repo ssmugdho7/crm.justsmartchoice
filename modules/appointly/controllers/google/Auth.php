@@ -39,7 +39,8 @@ class Auth extends AdminController
         $this->googleplus->client->setState($state);
         $data = array('loginUrl' => $this->googlecalendar->loginUrl());
 
-        if (!appointlyGoogleAuth()) {
+        // Connecting a personal grant must never test another user's team grant.
+        if (!$this->googlecalendar->getAccountDetails()) {
             redirect($data['loginUrl']);
         } else {
             redirect('admin/appointly/appointments');
@@ -80,6 +81,12 @@ class Auth extends AdminController
             show_error('Use the Disconnect button on your Calendar settings page.', 405);
             return;
         }
+        if ($this->googlecalendar->sharedMode()
+            && (int) get_option('appointly_google_team_owner_id') === (int) get_staff_user_id()) {
+            set_alert('danger', 'Disable team calendar sync before disconnecting its owner.');
+            redirect(site_url('appointly/google/auth/settings'));
+            return;
+        }
         $this->session->unset_userdata('appointly_google_oauth');
         try {
             if (!$this->googleplus->revokeToken()) throw new RuntimeException();
@@ -95,7 +102,11 @@ class Auth extends AdminController
         if (!$this->allowedStaff()) return;
         if ($this->input->method() === 'post') {
             try {
-                $this->googlecalendar->saveCalendarId($this->input->post('calendar_id', false));
+                if ($this->input->post('action') === 'team') {
+                    $this->googlecalendar->saveTeamSettings($this->input->post('team_enabled') === '1', $this->input->post('team_owner_id'));
+                } else {
+                    $this->googlecalendar->saveCalendarId($this->input->post('calendar_id', false));
+                }
                 $this->session->unset_userdata('appointly_google_oauth');
                 set_alert('success', 'Your Calendar settings were saved.');
             } catch (InvalidArgumentException | RuntimeException $e) {
@@ -108,6 +119,9 @@ class Auth extends AdminController
             'title' => 'My Google Calendar',
             'calendar_id' => $this->googlecalendar->calendarId(),
             'connected' => (bool) $this->googlecalendar->getAccountDetails(),
+            'team_enabled' => $this->googlecalendar->sharedMode(),
+            'team_owner_id' => (int) get_option('appointly_google_team_owner_id'),
+            'team_ready' => $this->googlecalendar->sharedMode() && (bool) $this->googlecalendar->getAccountDetails(true),
         ]);
     }
 }

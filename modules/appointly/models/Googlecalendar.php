@@ -37,7 +37,44 @@ class Googlecalendar extends App_Model
 
     private function dedicatedCalendar()
     {
-        return $this->calendarId();
+        return $this->sharedMode() ? trim((string) get_option('appointly_google_team_calendar_id')) : $this->calendarId();
+    }
+
+    public function sharedMode()
+    {
+        return get_option('appointly_google_team_enabled') === '1';
+    }
+
+    public function syncOwnerId()
+    {
+        $actor = (int) get_staff_user_id();
+        if ($actor < 1) return 0;
+        if (!$this->sharedMode()) return $actor;
+        if (!is_admin() && !staff_can('create', 'appointments') && !staff_can('edit', 'appointments')) return 0;
+        return max(0, (int) get_option('appointly_google_team_owner_id'));
+    }
+
+    public function saveTeamSettings($enabled, $ownerId)
+    {
+        if (!is_admin()) throw new RuntimeException('Only administrators can configure the team calendar.');
+        $ownerId = filter_var($ownerId, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        if ($enabled && !$ownerId) throw new InvalidArgumentException('Choose a valid calendar owner staff ID.');
+        if ($enabled) {
+            $staff = $this->db->where('staffid', $ownerId)->where('active', 1)->get(db_prefix().'staff')->row();
+            $calendar = get_option('appointly_google_calendar_id_staff_'.$ownerId);
+            if (!$calendar && (int) get_option('appointly_google_calendar_staff_id') === $ownerId) $calendar = get_option('appointly_google_calendar_id');
+            if (!$staff || !is_string($calendar) || !preg_match('/^[a-z0-9_-]+@group\.calendar\.google\.com$/iD', $calendar)) {
+                throw new RuntimeException('The owner must save their separate company calendar in My Google Calendar first.');
+            }
+            // Switching an active team target could strand existing appointment links.
+            if ($this->sharedMode() && ((int) get_option('appointly_google_team_owner_id') !== $ownerId
+                || get_option('appointly_google_team_calendar_id') !== $calendar)) {
+                throw new RuntimeException('Disable team sync before changing its owner or calendar. Existing events are retained.');
+            }
+            update_option('appointly_google_team_owner_id', (string) $ownerId);
+            update_option('appointly_google_team_calendar_id', $calendar);
+        }
+        update_option('appointly_google_team_enabled', $enabled ? '1' : '0');
     }
 
     public function calendarId()
@@ -61,6 +98,10 @@ class Googlecalendar extends App_Model
             throw new InvalidArgumentException('Enter the ID of a separate calendar owned by your Google account.');
         }
         $calendarId = trim($calendarId);
+        if ($this->sharedMode() && (int) get_option('appointly_google_team_owner_id') === $staffId
+            && $calendarId !== get_option('appointly_google_team_calendar_id')) {
+            throw new RuntimeException('Disable team sync before changing its owner calendar.');
+        }
         if ($calendarId !== $this->calendarId() && $this->getAccountDetails()) {
             throw new RuntimeException('Disconnect your Google account before changing its calendar. Existing Google events are retained.');
         }
@@ -81,7 +122,7 @@ class Googlecalendar extends App_Model
     {
         $target = $this->dedicatedCalendar();
         if ($this->dedicatedMode()) {
-            if ((int) get_staff_user_id() < 1 || !preg_match('/^[a-z0-9_-]+@group\.calendar\.google\.com$/iD', $target)) {
+            if ($this->syncOwnerId() < 1 || !preg_match('/^[a-z0-9_-]+@group\.calendar\.google\.com$/iD', $target)) {
                 throw new RuntimeException('Configure your own private calendar before syncing appointments.');
             }
             return $target;
@@ -96,6 +137,9 @@ class Googlecalendar extends App_Model
         $private = $properties ? $properties->getPrivate() : [];
         $staffId = (int) get_staff_user_id();
         $owner = $private['smartchoice_staff_id'] ?? null;
+        if ($this->sharedMode() && ($private['smartchoice_team_calendar'] ?? '') !== hash('sha256', $this->dedicatedCalendar())) {
+            throw new RuntimeException('This event does not belong to the configured team calendar.');
+        }
         // The previous dedicated connection stamped only the CRM source. Keep
         // its existing events usable solely by its recorded original owner/target.
         $originalOwner = $owner === null && $staffId > 0
@@ -200,6 +244,7 @@ class Googlecalendar extends App_Model
     public function deleteEvent($eventid)
     {
         try {
+            if ($this->sharedMode() && !appointlyGoogleAuth()) return false;
             // Check if we need to refresh the token
             if ($this->googleplus->isAccessTokenExpired()) {
                 $refreshToken = $this->googleplus->getTokenType('refresh_token');
@@ -414,6 +459,7 @@ class Googlecalendar extends App_Model
                 'private' => [
                     'smartchoice_source' => hash('sha256', base_url()),
                     'smartchoice_staff_id' => (string) get_staff_user_id(),
+                    'smartchoice_team_calendar' => $this->sharedMode() ? hash('sha256', $this->dedicatedCalendar()) : '',
                 ],
             ]));
         }
@@ -425,11 +471,13 @@ class Googlecalendar extends App_Model
      *
      * @return mixed
      */
-    public function getAccountDetails()
+    public function getAccountDetails($forSync = false)
     {
         if ((int) get_staff_user_id() < 1) return false;
+        $owner = $forSync ? $this->syncOwnerId() : (int) get_staff_user_id();
+        if ($owner < 1) return false;
         $this->db->select();
-        $this->db->where('staff_id', get_staff_user_id());
+        $this->db->where('staff_id', $owner);
         $result = $this->db->get($this->table)->result();
 
         if ($result) {
@@ -449,12 +497,14 @@ class Googlecalendar extends App_Model
      * @param $data
      * @return void
      */
-    public function saveNewTokenValues($data)
+    public function saveNewTokenValues($data, $forSync = false)
     {
         if ((int) get_staff_user_id() < 1 || !is_array($data) || empty($data['access_token']) || empty($data['expires_in'])) return;
         $values = ['access_token' => sc_google_secret_encrypt($data['access_token']), 'expires_in' => time() + (int) $data['expires_in']];
         // Google may omit refresh_token on renewal; preserve the existing grant.
         if (!empty($data['refresh_token'])) $values['refresh_token'] = sc_google_secret_encrypt($data['refresh_token']);
-        $this->db->where('staff_id', get_staff_user_id())->update($this->table, $values);
+        $owner = $forSync ? $this->syncOwnerId() : (int) get_staff_user_id();
+        if ($owner < 1) return;
+        $this->db->where('staff_id', $owner)->update($this->table, $values);
     }
 }

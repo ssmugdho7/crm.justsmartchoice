@@ -9,7 +9,7 @@
     <?php if (is_admin()) { ?>
         <?= form_open(site_url('appointly/google/auth/settings')); ?>
             <input type="hidden" name="action" value="team">
-            <div class="checkbox"><label><input type="checkbox" name="team_enabled" value="1" <?= $team_enabled ? 'checked' : '' ?>> Enable shared company calendar</label></div>
+            <div class="checkbox"><input type="checkbox" id="team-calendar-enabled" name="team_enabled" value="1" <?= $team_enabled ? 'checked' : '' ?>><label for="team-calendar-enabled">Enable shared company calendar</label></div>
             <div class="form-group"><label for="team-owner-id">Company calendar owner staff ID</label><input class="form-control" type="number" min="1" id="team-owner-id" name="team_owner_id" value="<?= $team_owner_id ?: '' ?>"></div>
             <p>The owner saves a dedicated company Calendar ID below and connects Google once. Staff with appointment create/edit permissions then sync through that connection. Enabling this does not grant access to the owner's personal calendars.</p>
             <button class="btn btn-info" type="submit">Save team calendar settings</button>

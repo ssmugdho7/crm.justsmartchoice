@@ -15,6 +15,8 @@ $list=new DiagnosticGoogleCollection();$list['items']=[1,2];
 if(count($list)!==2 || iterator_to_array($list)!==[1,2])throw new RuntimeException('Collection iteration');
 $list[1]=3;if($list[1]!==3)throw new RuntimeException('Collection ArrayAccess');
 unset($list[1]);if(isset($list[1]))throw new RuntimeException('Collection unset');
+$parser=new Google_Utils_UriTemplate();
+if($parser->parse('/calendars/{calendarId}/events',['calendarId'=>'synthetic@group.calendar.google.com'])!=='/calendars/synthetic%40group.calendar.google.com/events')throw new RuntimeException('Calendar URI template expansion');
 $calendar=new Google_Service_Calendar(new Google_Client());
 if($calendar->serviceName!=='calendar' || !isset($calendar->events))throw new RuntimeException('Calendar service construction');
 restore_error_handler();

@@ -136,7 +136,7 @@ class ComposerStaticInitbe1e3fa862371108e29a893fe13137e1
         'Google_Task_Exception' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
         'Google_Task_Retryable' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
         'Google_Task_Runner' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
-        'Google_Utils_UriTemplate' => __DIR__ . '/..' . '/google/apiclient/src/aliases.php',
+        'Google_Utils_UriTemplate' => __DIR__ . '/..' . '/google/apiclient/src/Google/Utils/UriTemplate.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

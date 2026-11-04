@@ -26,5 +26,5 @@ return array(
     'Google_Task_Exception' => $vendorDir . '/google/apiclient/src/aliases.php',
     'Google_Task_Retryable' => $vendorDir . '/google/apiclient/src/aliases.php',
     'Google_Task_Runner' => $vendorDir . '/google/apiclient/src/aliases.php',
-    'Google_Utils_UriTemplate' => $vendorDir . '/google/apiclient/src/aliases.php',
+    'Google_Utils_UriTemplate' => $vendorDir . '/google/apiclient/src/Google/Utils/UriTemplate.php',
 );

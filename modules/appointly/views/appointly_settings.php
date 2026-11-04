@@ -341,7 +341,7 @@ $appointly_disable_google_meeting_emails = get_option('appointly_disable_google_
                             <div class="form-group">
  <label for="appointly_google_calendar_id">Dedicated private calendar ID</label>
  <input type="text" class="form-control" id="appointly_google_calendar_id" name="settings[appointly_google_calendar_id]" value="<?= html_escape(get_option('appointly_google_calendar_id')) ?>">
- <p class="text-muted">Use the ID of Smart Choice CRM Appointments. With a dedicated calendar configured, sync is private and one-way; no guests or email notifications are sent. Personal calendar events cannot be edited.</p>
+ <p class="text-muted">Existing calendar fallback for the staff ID below. Each staff member can configure a separate private calendar in <a href="<?= site_url('appointly/google/auth/settings') ?>">My Google Calendar</a>. Sync is one-way, without guests or email notifications.</p>
 </div>
 <div class="form-group">
  <label for="appointly_google_calendar_staff_id">Calendar owner CRM staff ID</label>

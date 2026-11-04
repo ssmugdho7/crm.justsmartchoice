@@ -104,20 +104,12 @@ class Googleplus
     {
         $ci = &get_instance();
 
-        $refreshToken = $this->getTokenType('refresh_token');
-
-        if ($refreshToken) {
-            // Refresh the token first
-            $newToken = $this->client->refreshToken($refreshToken);
-            $this->client->setAccessToken($newToken);
-
-            // Revoke the newly refreshed token
-            // We do this because sometimes the access_token is not valid due to unknown reasons
-            $ci->db->where('staff_id', get_staff_user_id());
-            $ci->db->delete(db_prefix() . 'appointly_google');
-
-            return $this->client->revokeToken($this->client->getAccessToken());
-        }
+        if ((int) get_staff_user_id() < 1) return false;
+        $token = $this->getTokenType('refresh_token') ?: $this->getTokenType('access_token');
+        if (!$token) return true;
+        // Revoke this staff user's grant directly; do not refresh or touch anyone else's row.
+        if (!$this->client->revokeToken($token)) return false;
+        return $ci->db->where('staff_id', get_staff_user_id())->delete(db_prefix() . 'appointly_google');
     }
 
 
@@ -132,6 +124,7 @@ class Googleplus
      */
     public function getTokenType($type)
     {
+        if ((int) get_staff_user_id() < 1 || !in_array($type, ['access_token', 'refresh_token'], true)) return null;
         $ci = &get_instance();
         $ci->db->select($type);
         $ci->db->where('staff_id', get_staff_user_id());

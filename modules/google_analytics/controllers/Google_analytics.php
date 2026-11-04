@@ -173,13 +173,15 @@ class Google_analytics extends AdminController
             'websites_table' => $this->db->table_exists(db_prefix().'ga_websites'),
             'cache_table' => $this->db->table_exists(db_prefix().'ga_report_cache'),
             'service_account' => get_option('ga_service_account_json') !== '',
-            'measurement_id' => ga_valid_measurement_id(get_option('ga_crm_measurement_id')),
+            'measurement_id' => get_option('ga_enabled') === '1' ? ga_valid_measurement_id(get_option('ga_crm_measurement_id')) : null,
         ];
         $data['api_message'] = null;
+        $data['last_health_check'] = get_option('ga_last_health_check');
         if ($this->input->get('test_api') === '1') {
             try { $this->google_analytics_model->get_access_token(); $data['api_message'] = ['success', _l('ga_api_connection_success')]; }
             catch (Throwable $e) { $data['api_message'] = ['danger', $e->getMessage()]; }
-            update_option('ga_last_health_check', date('Y-m-d H:i:s'));
+            $data['last_health_check'] = date('Y-m-d H:i:s');
+            update_option('ga_last_health_check', $data['last_health_check']);
             ga_audit('health_check_run');
         }
         $this->load->view('health', $data);

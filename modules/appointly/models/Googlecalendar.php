@@ -37,21 +37,52 @@ class Googlecalendar extends App_Model
 
     private function dedicatedCalendar()
     {
-        return trim((string) get_option('appointly_google_calendar_id'));
+        return $this->calendarId();
+    }
+
+    public function calendarId()
+    {
+        $staffId = (int) get_staff_user_id();
+        if ($staffId < 1) return '';
+        $personal = get_option('appointly_google_calendar_id_staff_' . $staffId);
+        // Only the explicitly configured original owner inherits the old target.
+        if ($personal === false || $personal === null || $personal === '') {
+            $personal = (int) get_option('appointly_google_calendar_staff_id') === $staffId
+                ? get_option('appointly_google_calendar_id') : '';
+        }
+        return is_string($personal) ? trim($personal) : '';
+    }
+
+    public function saveCalendarId($calendarId)
+    {
+        $staffId = (int) get_staff_user_id();
+        if ($staffId < 1 || !is_string($calendarId) || strlen($calendarId) > 191
+            || !preg_match('/^[a-z0-9_-]+@group\.calendar\.google\.com$/iD', trim($calendarId))) {
+            throw new InvalidArgumentException('Enter the ID of a separate calendar owned by your Google account.');
+        }
+        $calendarId = trim($calendarId);
+        if ($calendarId !== $this->calendarId() && $this->getAccountDetails()) {
+            throw new RuntimeException('Disconnect your Google account before changing its calendar. Existing Google events are retained.');
+        }
+        // Never accept a staff ID from the request, even for administrators.
+        $key = 'appointly_google_calendar_id_staff_' . $staffId;
+        if (get_option($key) !== $calendarId && !update_option($key, $calendarId, 0)) {
+            throw new RuntimeException('Your Calendar settings could not be saved. Please try again.');
+        }
     }
 
     private function dedicatedMode()
     {
-        return $this->dedicatedCalendar() !== '' || trim((string) get_option('appointly_google_client_id')) !== '';
+        return $this->dedicatedCalendar() !== '' || trim((string) get_option('appointly_google_client_id')) !== ''
+            || trim((string) get_option('appointly_google_calendar_id')) !== '';
     }
 
     private function syncCalendar($requested = 'primary')
     {
         $target = $this->dedicatedCalendar();
         if ($this->dedicatedMode()) {
-            if (!preg_match('/^[a-z0-9_-]+@group\.calendar\.google\.com$/iD', $target) || (int) get_option('appointly_google_calendar_staff_id') < 1
-                || (int) get_option('appointly_google_calendar_staff_id') !== (int) get_staff_user_id()) {
-                throw new RuntimeException('Dedicated calendar sync requires the configured owner staff account.');
+            if ((int) get_staff_user_id() < 1 || !preg_match('/^[a-z0-9_-]+@group\.calendar\.google\.com$/iD', $target)) {
+                throw new RuntimeException('Configure your own private calendar before syncing appointments.');
             }
             return $target;
         }
@@ -63,7 +94,15 @@ class Googlecalendar extends App_Model
         if (!$this->dedicatedMode()) return;
         $properties = $event->getExtendedProperties();
         $private = $properties ? $properties->getPrivate() : [];
-        if (($private['smartchoice_source'] ?? '') !== hash('sha256', base_url())) {
+        $staffId = (int) get_staff_user_id();
+        $owner = $private['smartchoice_staff_id'] ?? null;
+        // The previous dedicated connection stamped only the CRM source. Keep
+        // its existing events usable solely by its recorded original owner/target.
+        $originalOwner = $owner === null && $staffId > 0
+            && (int) get_option('appointly_google_calendar_staff_id') === $staffId
+            && $this->calendarId() === trim((string) get_option('appointly_google_calendar_id'));
+        if (($private['smartchoice_source'] ?? '') !== hash('sha256', base_url())
+            || ((string) $owner !== (string) $staffId && !$originalOwner)) {
             throw new RuntimeException('This event was not created by this CRM and cannot be changed.');
         }
     }
@@ -104,7 +143,9 @@ class Googlecalendar extends App_Model
             $this->db->where('staff_id', get_staff_user_id());
             $result = $this->db->get($this->table)->row_array();
 
-            if (!$result && empty($login['refresh_token'])) return false;
+            // A new authorization must include its own refresh grant. Never pair
+            // a new Google account's access token with an older account's grant.
+            if (empty($login['refresh_token'])) return false;
 
             if ($result) {
                 $this->saveNewTokenValues($login);
@@ -370,7 +411,10 @@ class Googlecalendar extends App_Model
             $event->setAttendees([]);
             $event->setReminders(new Google\Service\Calendar\EventReminders(['useDefault' => false, 'overrides' => []]));
             $event->setExtendedProperties(new Google\Service\Calendar\EventExtendedProperties([
-                'private' => ['smartchoice_source' => hash('sha256', base_url())],
+                'private' => [
+                    'smartchoice_source' => hash('sha256', base_url()),
+                    'smartchoice_staff_id' => (string) get_staff_user_id(),
+                ],
             ]));
         }
         return $event;
@@ -383,6 +427,7 @@ class Googlecalendar extends App_Model
      */
     public function getAccountDetails()
     {
+        if ((int) get_staff_user_id() < 1) return false;
         $this->db->select();
         $this->db->where('staff_id', get_staff_user_id());
         $result = $this->db->get($this->table)->result();
@@ -406,7 +451,7 @@ class Googlecalendar extends App_Model
      */
     public function saveNewTokenValues($data)
     {
-        if (!is_array($data) || empty($data['access_token']) || empty($data['expires_in'])) return;
+        if ((int) get_staff_user_id() < 1 || !is_array($data) || empty($data['access_token']) || empty($data['expires_in'])) return;
         $values = ['access_token' => sc_google_secret_encrypt($data['access_token']), 'expires_in' => time() + (int) $data['expires_in']];
         // Google may omit refresh_token on renewal; preserve the existing grant.
         if (!empty($data['refresh_token'])) $values['refresh_token'] = sc_google_secret_encrypt($data['refresh_token']);

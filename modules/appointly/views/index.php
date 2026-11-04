@@ -234,13 +234,12 @@ $edit_appointment_id = ($this->session->userdata('from_view_id')) ?: 0;
                                             <span class="tw-font-medium"><?= _l('appointment_google_calendar'); ?></span>
                                         </div>
                                         <?php if (!appointlyGoogleAuth()): ?>
-                                            <a href="<?= site_url('appointly/google/auth/login'); ?>" class="tw-text-primary-600 tw-font-medium">
+                                            <a href="<?= site_url('appointly/google/auth/settings'); ?>" class="tw-text-primary-600 tw-font-medium">
                                                 <?= _l('appointment_connect'); ?> <i class="fa fa-arrow-right tw-ml-1"></i>
                                             </a>
                                         <?php else: ?>
-                                            <a href="<?= site_url('appointly/google/auth/logout'); ?>"
-                                                class="tw-text-success-600 tw-font-medium"
-                                                onclick="return confirm('<?= _l('appointments_google_revoke_confirm'); ?>');">
+                                            <a href="<?= site_url('appointly/google/auth/settings'); ?>"
+                                                class="tw-text-success-600 tw-font-medium">
                                                 <i class="fa fa-check-circle tw-mr-1"></i> <?= _l('appointment_connected'); ?>
                                             </a>
                                         <?php endif; ?>

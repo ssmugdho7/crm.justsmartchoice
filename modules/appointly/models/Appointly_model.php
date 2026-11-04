@@ -570,6 +570,15 @@ class Appointly_model extends App_Model
                     ];
                 }
 
+                if (!empty($appointment['google_event_id'])) {
+                    if ((int) $appointment['google_added_by_id'] !== (int) get_staff_user_id()) {
+                        return ['result' => 'error', 'message' => 'This appointment is linked to another staff member\'s Google Calendar.'];
+                    }
+                    // Repeated clicks must not create additional copies of this event.
+                    return ['result' => 'success', 'message' => 'This appointment is already connected to your Google Calendar.',
+                        'google_event_id' => $appointment['google_event_id'], 'google_calendar_link' => $appointment['google_calendar_link']];
+                }
+
                 // Ensure start_hour and end_hour are properly formatted for Google Calendar
                 if (isset($appointment['start_hour']) && ! strpos($appointment['start_hour'], ':')) {
                     $appointment['start_hour'] .= ':00';
@@ -1192,10 +1201,12 @@ class Appointly_model extends App_Model
             handle_custom_fields_post($data['appointment_id'], $custom_fields);
         }
         // Handle Google Calendar integration
-        if (isset($data['google_event_id']) && appointlyGoogleAuth()) {
+        if (!empty($originalAppointment['google_event_id'])
+            && (int) $originalAppointment['google_added_by_id'] === (int) get_staff_user_id() && appointlyGoogleAuth()) {
             // If appointment is in Google Calendar, update it
             updateAppointmentToGoogleCalendar(array_merge($data, [
                 'id'         => $data['appointment_id'],
+                'google_event_id' => $originalAppointment['google_event_id'],
                 'date'       => $updateData['date'],
                 'start_hour' => $updateData['start_hour'],
                 'end_hour'   => $updateData['end_hour'],
@@ -1243,10 +1254,11 @@ class Appointly_model extends App_Model
         if (! is_numeric($id)) {
             if (appointlyGoogleAuth()) {
                 $this->load->model('googlecalendar');
-                $this->googlecalendar->deleteEvent($id);
+                if (!$this->googlecalendar->deleteEvent($id)) return false;
 
                 // Check if there's a matching event in the database to delete
                 $this->db->where('google_event_id', $id);
+                $this->db->where('google_added_by_id', get_staff_user_id());
                 $appointment = $this->db->get(db_prefix() . 'appointly_appointments')->row_array();
 
                 if ($appointment) {
@@ -1278,12 +1290,11 @@ class Appointly_model extends App_Model
         }
 
         // Delete from Google Calendar if enabled and we have a Google event ID
-        if (! empty($appointment['google_event_id']) && get_option('appointly_also_delete_in_google_calendar') && appointlyGoogleAuth()) {
-            // Only delete from Google if current user added it or is admin
-            if ($appointment['google_added_by_id'] == get_staff_user_id() || is_admin()) {
-                $this->load->model('googlecalendar');
-                $this->googlecalendar->deleteEvent($appointment['google_event_id']);
-            }
+        if (!empty($appointment['google_event_id'])
+            && (int) $appointment['google_added_by_id'] === (int) get_staff_user_id()
+            && get_option('appointly_also_delete_in_google_calendar') && appointlyGoogleAuth()) {
+            $this->load->model('googlecalendar');
+            $this->googlecalendar->deleteEvent($appointment['google_event_id']);
         }
 
         // Delete related records from appointly_appointment_services table

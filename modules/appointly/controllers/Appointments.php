@@ -721,8 +721,15 @@ class Appointments extends AdminController
      */
     public function deleteGoogleSyncedAppointment($google_event_id)
     {
-        if (! $this->input->is_ajax_request()) {
+        if (!$this->input->is_ajax_request() || $this->input->method() !== 'post' || !staff_can('edit', 'appointments')) {
             show_404();
+            return;
+        }
+
+        $appointment = $this->db->get_where(db_prefix() . 'appointly_appointments', ['google_event_id' => $google_event_id])->row();
+        if ($appointment && (int) $appointment->google_added_by_id !== (int) get_staff_user_id()) {
+            access_denied('Appointments');
+            return;
         }
 
         // Load Google Calendar model
@@ -741,18 +748,15 @@ class Appointments extends AdminController
         // Try to delete the event from Google Calendar
         $success = $this->googlecalendar->deleteEvent($google_event_id);
         // Get the appointment ID from the Google event ID
-        $appointment = $this->db->get_where(db_prefix() . 'appointly_appointments', ['google_event_id' => $google_event_id])->row();
-
-        if ($appointment) {
+        if ($appointment && $success) {
             // Direct SQL update to clear Google-related fields
             $this->db->query("
                 UPDATE " . db_prefix() . "appointly_appointments
                 SET google_event_id = NULL,
                     google_calendar_link = NULL,
-                    google_meet_link = NULL,
                     google_added_by_id = NULL
-                WHERE google_event_id = ?
-            ", [$google_event_id]);
+                WHERE google_event_id = ? AND google_added_by_id = ?
+            ", [$google_event_id, get_staff_user_id()]);
         }
 
         if ($success) {
@@ -1010,8 +1014,9 @@ class Appointments extends AdminController
      */
     public function deleteGoogleEvent()
     {
-        if (! $this->input->is_ajax_request()) {
+        if (!$this->input->is_ajax_request() || $this->input->method() !== 'post' || !staff_can('edit', 'appointments')) {
             show_404();
+            return;
         }
 
         $appointment_id = $this->input->post('appointment_id');
@@ -1036,6 +1041,12 @@ class Appointments extends AdminController
             return;
         }
 
+        if ((int) $appointment->google_added_by_id !== (int) get_staff_user_id()
+            || !is_string($google_event_id) || $appointment->google_event_id !== $google_event_id) {
+            access_denied('Appointments');
+            return;
+        }
+
         // Load Google Calendar model for deletion
         $this->load->model('appointly/googlecalendar');
 
@@ -1046,11 +1057,10 @@ class Appointments extends AdminController
         }
 
         // Clear Google-related fields from the appointment regardless of Google API result
-        $this->db->where('id', $appointment_id);
+        $this->db->where('id', $appointment_id)->where('google_added_by_id', get_staff_user_id());
         $success = $this->db->update(db_prefix() . 'appointly_appointments', [
             'google_event_id' => null,
             'google_calendar_link' => null,
-            'google_meet_link' => null,
             'google_added_by_id' => null,
         ]);
 

@@ -13,13 +13,15 @@ function probe($tx,$state,$code='synthetic'){
  $p=new Probe;
  $p->session=new class($tx){public $tx;function __construct($tx){$this->tx=$tx;}function userdata($k){return $this->tx;}function unset_userdata($k){$this->tx=null;}};
  $p->input=new class($state,$code){public $state,$code;function __construct($s,$c){$this->state=$s;$this->code=$c;}function get($k,$filter){return $k==='state'?$this->state:$this->code;}};
- $p->googlecalendar=new class{public $calls=0;function login($c){$this->calls++;return true;}};
+ $p->googlecalendar=new class{public $calls=0;public $id='synthetic@group.calendar.google.com';function calendarId(){return $this->id;}function login($c){$this->calls++;return true;}};
  return $p;
 }
-$tx=['state'=>str_repeat('a',64),'staff_id'=>7,'expires'=>time()+600];
+$tx=['state'=>str_repeat('a',64),'staff_id'=>7,'expires'=>time()+600,'calendar_id'=>'synthetic@group.calendar.google.com'];
 foreach([['mismatch',$tx,'bad','synthetic'],['missing',null,$tx['state'],'synthetic'],['wrong_staff',array_replace($tx,['staff_id'=>8]),$tx['state'],'synthetic'],['expired',array_replace($tx,['expires'=>time()-1]),$tx['state'],'synthetic'],['array_state',$tx,[],'synthetic'],['missing_code',$tx,$tx['state'],null]] as [$label,$t,$s,$c]){ $p=probe($t,$s,$c);$p->oauth();if($p->googlecalendar->calls!==0||$p->session->tx!==null)throw new Exception($label);echo "$label: pass\n";}
 $p=probe($tx,$tx['state']);$p->oauth();if($p->googlecalendar->calls!==1)throw new Exception('valid');$p->oauth();if($p->googlecalendar->calls!==1)throw new Exception('replay');echo "valid and replay: pass\n";
 
 $options=['appointly_google_client_id'=>'synthetic-client','appointly_google_calendar_staff_id'=>8];
-$p=probe($tx,$tx['state']);$p->oauth();if($p->googlecalendar->calls!==0)throw new Exception('Non-owner connected dedicated integration');
-echo "dedicated calendar non-owner denied: pass\n";
+$p=probe($tx,$tx['state']);$p->oauth();if($p->googlecalendar->calls!==1)throw new Exception('Separate staff connection incorrectly blocked by global owner');
+echo "staff connects independently of global owner: pass\n";
+$p=probe($tx,$tx['state']);$p->googlecalendar->id='changed@group.calendar.google.com';$p->oauth();if($p->googlecalendar->calls!==0)throw new Exception('Calendar changed during OAuth');
+echo "changed calendar target during consent denied: pass\n";

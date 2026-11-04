@@ -1,6 +1,7 @@
 <?php
 
 defined('BASEPATH') or exit('No direct script access allowed');
+require_once APPPATH . 'helpers/google_integration_security_helper.php';
 
 function solar_pro_install_schema($CI)
 {
@@ -690,6 +691,7 @@ function solar_pro_random_token()
 function solar_pro_setting($key, $default = '')
 {
     $value = get_option($key);
+    if (in_array($key, solar_pro_secret_setting_keys(), true)) $value = sc_google_secret_decrypt($value);
     return ($value === false || $value === null || $value === '') ? $default : $value;
 }
 

@@ -4,6 +4,64 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Google_analytics_model extends App_Model
 {
+    public function internal_report($start, $end)
+    {
+        $count = function ($table, $dateField) use ($start, $end) {
+            $table = db_prefix() . $table;
+            if (!$this->db->table_exists($table) || !$this->db->field_exists($dateField, $table)) return null;
+            return (int) $this->db->where($dateField . ' >=', $start)
+                ->where($dateField . ' <', date('Y-m-d', strtotime($end . ' +1 day')) . ' 00:00:00')
+                ->count_all_results($table);
+        };
+        return [
+            'Staff with last activity in period' => $count('staff', 'last_activity'),
+            'Customers with last login in period' => $count('contacts', 'last_login'),
+            'Recorded CRM activity entries' => $count('activity_log', 'date'),
+            'New leads' => $count('leads', 'dateadded'),
+            'Estimates created' => $count('estimates', 'datecreated'),
+            'Invoices created' => $count('invoices', 'datecreated'),
+            'Appointments scheduled in period' => $count('appointly_appointments', 'date'),
+            'Payments received' => $count('invoicepaymentrecords', 'daterecorded'),
+        ];
+    }
+
+    public function internal_sales($start, $end)
+    {
+        $result = [];
+        foreach (['estimates' => 'Estimates created', 'invoices' => 'Invoices created'] as $name => $label) {
+            $table = db_prefix() . $name;
+            if (!$this->db->table_exists($table)) continue;
+            $rows = $this->db->select('currency, status, COUNT(*) AS document_count, SUM(total) AS amount', false)
+                ->where('datecreated >=', $start)
+                ->where('datecreated <', date('Y-m-d', strtotime($end . ' +1 day')))
+                ->group_by(['currency', 'status'])->get($table)->result_array();
+            foreach ($rows as $row) {
+                $row['metric'] = $label;
+                $result[] = $row;
+            }
+        }
+        $payments = db_prefix() . 'invoicepaymentrecords';
+        $invoices = db_prefix() . 'invoices';
+        if ($this->db->table_exists($payments) && $this->db->table_exists($invoices)) {
+            $rows = $this->db->select('i.currency, COUNT(*) AS document_count, SUM(p.amount) AS amount', false)
+                ->from($payments . ' p')->join($invoices . ' i', 'i.id = p.invoiceid')
+                ->where('p.daterecorded >=', $start)
+                ->where('p.daterecorded <', date('Y-m-d', strtotime($end . ' +1 day')))
+                ->group_by('i.currency')->get()->result_array();
+            foreach ($rows as $row) {
+                $row['metric'] = 'Payments recorded';
+                $row['status'] = null;
+                $result[] = $row;
+            }
+        }
+        foreach ($result as &$row) {
+            $currency = $this->db->where('id', (int) $row['currency'])->get(db_prefix() . 'currencies')->row();
+            $row['currency_name'] = $currency ? $currency->name : 'Currency ID ' . $row['currency'];
+        }
+        unset($row);
+        return $result;
+    }
+
     public function get_websites($activeOnly = false)
     {
         if ($activeOnly) $this->db->where('active', 1);
@@ -81,6 +139,9 @@ class Google_analytics_model extends App_Model
         if (!is_array($service) || empty($service['client_email']) || empty($service['private_key']) || empty($service['token_uri'])) {
             throw new RuntimeException('A valid Google service-account JSON credential is required.');
         }
+        if ($service['token_uri'] !== 'https://oauth2.googleapis.com/token') {
+            throw new RuntimeException('The Google credential must use the official Google token endpoint.');
+        }
         $now = time();
         $header = $this->base64url(json_encode(['alg'=>'RS256','typ'=>'JWT']));
         $claims = $this->base64url(json_encode([
@@ -117,9 +178,14 @@ class Google_analytics_model extends App_Model
 
     public function dashboard_report($website, $startDate = '30daysAgo', $endDate = 'today', $force = false)
     {
-        $key = sha1('dashboard|' . $website->id . '|' . $startDate . '|' . $endDate);
+        $host = strtolower((string) parse_url($website->website_url, PHP_URL_HOST));
+        if ($host === '') throw new InvalidArgumentException('A website hostname is required.');
+        $host = preg_replace('/^www\./', '', $host);
+        $hostFilter = ['filter' => ['fieldName' => 'hostName', 'inListFilter' => ['values' => [$host, 'www.' . $host]]]];
+        $key = sha1('website-host-v2|' . $host . '|'  . $website->id . '|' . $startDate . '|' . $endDate);
         if (!$force && ($cached = $this->get_cached($key))) return $cached;
         $summary = $this->run_report($website->property_id, [
+            'dimensionFilter' => $hostFilter,
             'dateRanges' => [['startDate'=>$startDate,'endDate'=>$endDate]],
             'metrics' => [
                 ['name'=>'activeUsers'], ['name'=>'sessions'], ['name'=>'engagedSessions'],
@@ -127,6 +193,7 @@ class Google_analytics_model extends App_Model
             ],
         ]);
         $pages = $this->run_report($website->property_id, [
+            'dimensionFilter' => $hostFilter,
             'dateRanges' => [['startDate'=>$startDate,'endDate'=>$endDate]],
             'dimensions' => [['name'=>'pageTitle'],['name'=>'pagePath']],
             'metrics' => [['name'=>'screenPageViews'],['name'=>'activeUsers'],['name'=>'averageSessionDuration']],
@@ -134,21 +201,34 @@ class Google_analytics_model extends App_Model
             'limit' => 10,
         ]);
         $sources = $this->run_report($website->property_id, [
+            'dimensionFilter' => $hostFilter,
             'dateRanges' => [['startDate'=>$startDate,'endDate'=>$endDate]],
             'dimensions' => [['name'=>'sessionSource'],['name'=>'sessionMedium']],
             'metrics' => [['name'=>'sessions'],['name'=>'activeUsers'],['name'=>'keyEvents']],
             'orderBys' => [['metric'=>['metricName'=>'sessions'],'desc'=>true]],
             'limit' => 10,
         ]);
-        $result = ['summary'=>$summary,'pages'=>$pages,'sources'=>$sources,'generated_at'=>date('c')];
+        $events = $this->run_report($website->property_id, [
+            'dimensionFilter' => $hostFilter,
+            'dateRanges' => [['startDate'=>$startDate,'endDate'=>$endDate]],
+            'dimensions' => [['name'=>'eventName']],
+            'metrics' => [['name'=>'eventCount'], ['name'=>'keyEvents']],
+            'orderBys' => [['metric'=>['metricName'=>'keyEvents'], 'desc'=>true]],
+            'limit' => 50,
+        ]);
+        $result = ['events'=>$events,'summary'=>$summary,'pages'=>$pages,'sources'=>$sources,'generated_at'=>date('c')];
         $this->set_cached($website->id, $key, 'dashboard', $result);
         return $result;
     }
 
     public function realtime_report($website)
     {
+        if (empty($website->stream_id) || !preg_match('/^[0-9]+$/D', (string) $website->stream_id)) {
+            throw new InvalidArgumentException('Configure the website stream ID before requesting isolated realtime reports.');
+        }
         return $this->run_report($website->property_id, [
-            'dimensions' => [['name'=>'unifiedScreenName'],['name'=>'country']],
+            'dimensionFilter' => ['filter' => ['fieldName' => 'streamId', 'stringFilter' => ['matchType' => 'EXACT', 'value' => (string) $website->stream_id]]],
+            'dimensions' => [['name'=>'country']],
             'metrics' => [['name'=>'activeUsers'],['name'=>'eventCount']],
             'limit' => 20,
         ], true);
@@ -160,7 +240,7 @@ class Google_analytics_model extends App_Model
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => $data,
+            CURLOPT_POSTFIELDS => !$json && is_array($data) ? http_build_query($data, '', '&', PHP_QUERY_RFC3986) : $data,
             CURLOPT_HTTPHEADER => $headers,
             CURLOPT_TIMEOUT => 30,
             CURLOPT_CONNECTTIMEOUT => 10,

@@ -35,6 +35,39 @@ class Googlecalendar extends App_Model
     }
 
 
+    private function dedicatedCalendar()
+    {
+        return trim((string) get_option('appointly_google_calendar_id'));
+    }
+
+    private function dedicatedMode()
+    {
+        return $this->dedicatedCalendar() !== '' || trim((string) get_option('appointly_google_client_id')) !== '';
+    }
+
+    private function syncCalendar($requested = 'primary')
+    {
+        $target = $this->dedicatedCalendar();
+        if ($this->dedicatedMode()) {
+            if (!preg_match('/^[a-z0-9_-]+@group\.calendar\.google\.com$/iD', $target) || (int) get_option('appointly_google_calendar_staff_id') < 1
+                || (int) get_option('appointly_google_calendar_staff_id') !== (int) get_staff_user_id()) {
+                throw new RuntimeException('Dedicated calendar sync requires the configured owner staff account.');
+            }
+            return $target;
+        }
+        return $requested;
+    }
+
+    private function assertManagedEvent($event)
+    {
+        if (!$this->dedicatedMode()) return;
+        $properties = $event->getExtendedProperties();
+        $private = $properties ? $properties->getPrivate() : [];
+        if (($private['smartchoice_source'] ?? '') !== hash('sha256', base_url())) {
+            throw new RuntimeException('This event was not created by this CRM and cannot be changed.');
+        }
+    }
+
     /**
      * Google OAuth Login Url
      *
@@ -58,13 +91,12 @@ class Googlecalendar extends App_Model
             $login = $this->googleplus
                 ->client
                 ->authenticate($code);
-        } catch (GuzzleHttp\Exception\ClientException $e) {
-            if ($e->getCode() === 401) {
-                die($this->unauthorized_url_settings);
-            }
+        } catch (Throwable $e) {
+            log_message('error', 'Google Calendar authorization failed; reconnect the calendar.');
+            return false;
         }
-        if (isset($login['error_description']) && $login['error_description'] == 'Unauthorized') {
-            die($this->unauthorized_url_settings);
+        if (!is_array($login) || empty($login['access_token']) || empty($login['expires_in']) || isset($login['error'])) {
+            return false;
         }
 
         if ($login) {
@@ -72,26 +104,22 @@ class Googlecalendar extends App_Model
             $this->db->where('staff_id', get_staff_user_id());
             $result = $this->db->get($this->table)->row_array();
 
-            if ($result) {
-                $this->db->where('staff_id', get_staff_user_id());
+            if (!$result && empty($login['refresh_token'])) return false;
 
-                $this->db->update($this->table, [
-                    'access_token'  => $login['access_token'],
-                    'expires_in'    => time() + $login['expires_in'],
-                    'refresh_token' => $login['refresh_token'],
-                ]);
+            if ($result) {
+                $this->saveNewTokenValues($login);
             } else {
                 if (isset($login['refresh_token'])) {
                     $this->db->insert($this->table, [
                         'staff_id'      => get_staff_user_id(),
-                        'access_token'  => $login['access_token'],
-                        'refresh_token' => $login['refresh_token'],
+                        'access_token'  => sc_google_secret_encrypt($login['access_token']),
+                        'refresh_token' => sc_google_secret_encrypt($login['refresh_token']),
                         'expires_in'    => time() + $login['expires_in'],
                     ]);
                 } else {
                     $this->db->insert($this->table, [
                         'staff_id'     => get_staff_user_id(),
-                        'access_token' => $login['access_token'],
+                        'access_token' => sc_google_secret_encrypt($login['access_token']),
                         'expires_in'   => time() + $login['expires_in'],
                     ]);
                 }
@@ -104,8 +132,6 @@ class Googlecalendar extends App_Model
             $this->googleplus
                 ->client
                 ->setAccessToken($token);
-
-            $this->saveNewTokenValues($token);
 
             return true;
         }
@@ -147,21 +173,23 @@ class Googlecalendar extends App_Model
 
             // First check if the event exists
             try {
-                $event = $this->calendar->events->get('primary', $eventid);
+                $event = $this->calendar->events->get($this->syncCalendar(), $eventid);
+
+                $this->assertManagedEvent($event);
 
                 // Log successful retrieval
                 log_message('debug', 'Google Calendar: Successfully found event ' . $eventid . ' before deletion');
 
                 // Set sendUpdates parameter based on settings
                 $params = [];
-                if (get_option('appointly_disable_google_meeting_emails') == '1') {
+                if ($this->dedicatedMode() || get_option('appointly_disable_google_meeting_emails') == '1') {
                     $params['sendUpdates'] = 'none';
                 } else {
                     $params['sendUpdates'] = 'all';
                 }
 
                 // If we get here, the event exists, so try to delete it
-                $deleteResult = $this->calendar->events->delete('primary', $eventid, $params);
+                $deleteResult = $this->calendar->events->delete($this->syncCalendar(), $eventid, $params);
 
                 // Log success
                 log_message('debug', 'Google Calendar: Successfully deleted event ' . $eventid);
@@ -196,6 +224,8 @@ class Googlecalendar extends App_Model
      */
     public function getEvents($calendarId = 'primary', $timeMin = false, $timeMax = false, $maxResults = 200)
     {
+        // One-way mode never imports Google/personal events into CRM reports.
+        if ($this->dedicatedMode()) return [];
         if (! $timeMin) {
             $timeMin = date("c", strtotime("-6 months", strtotime(date('Y-m-d') . ' 00:00:00')));
         } else {
@@ -269,13 +299,13 @@ class Googlecalendar extends App_Model
 
         // Set sendUpdates parameter in the API call based on settings
         $params = ['conferenceDataVersion' => 1];
-        if (get_option('appointly_disable_google_meeting_emails') == '1') {
+        if ($this->dedicatedMode() || get_option('appointly_disable_google_meeting_emails') == '1') {
             $params['sendUpdates'] = 'none';
         } else {
             $params['sendUpdates'] = 'all';
         }
 
-        return $this->calendar->events->insert($calendarId, $event, $params);
+        return $this->calendar->events->insert($this->syncCalendar($calendarId), $event, $params);
     }
 
 
@@ -292,13 +322,15 @@ class Googlecalendar extends App_Model
 
         // Set sendUpdates parameter in the API call based on settings
         $params = [];
-        if (get_option('appointly_disable_google_meeting_emails') == '1') {
+        if ($this->dedicatedMode() || get_option('appointly_disable_google_meeting_emails') == '1') {
             $params['sendUpdates'] = 'none';
         } else {
             $params['sendUpdates'] = 'all';
         }
 
-        return $this->calendar->events->update('primary', $eventid, $event, $params);
+        $calendarId = $this->syncCalendar();
+        $this->assertManagedEvent($this->calendar->events->get($calendarId, $eventid));
+        return $this->calendar->events->update($calendarId, $eventid, $event, $params);
     }
 
     /**
@@ -309,18 +341,12 @@ class Googlecalendar extends App_Model
      */
     public function fillGoogleCalendarEvent($data)
     {
-        // Check if Google email notifications are disabled in settings
-        $sendUpdates = 'all'; // Default value
-        if (get_option('appointly_disable_google_meeting_emails') == '1') {
-            $sendUpdates = 'none'; // No email notifications from Google
-        }
 
         $event = new Google\Service\Calendar\Event(
             [
                 'summary'        => $data['summary'],
                 'description'    => $data['description'],
                 'location'       => ($data['location']) ? $data['location'] : '',
-                'sendUpdates'    => $sendUpdates, // Use the conditional value
                 'start'          => $data['start'],
                 'end'            => $data['end'],
                 'attendees'      => (array) $data['attendees'],
@@ -330,6 +356,23 @@ class Googlecalendar extends App_Model
 
         // Video rooms are provisioned by Jitsi; calendar sync must not create another room.
 
+        if ($this->dedicatedMode()) {
+            foreach (['start', 'end'] as $part) {
+                $value = $data[$part];
+                if (!empty($value['dateTime'])) {
+                    $time = new DateTimeImmutable($value['dateTime'], new DateTimeZone($value['timeZone'] ?? (get_option('default_timezone') ?: 'America/New_York')));
+                    $value = ['dateTime' => $time->setTimezone(new DateTimeZone('America/New_York'))->format(DateTime::RFC3339), 'timeZone' => 'America/New_York'];
+                    $setter = $part === 'start' ? 'setStart' : 'setEnd';
+                    $event->$setter(new Google\Service\Calendar\EventDateTime($value));
+                }
+            }
+            $event->setVisibility('private');
+            $event->setAttendees([]);
+            $event->setReminders(new Google\Service\Calendar\EventReminders(['useDefault' => false, 'overrides' => []]));
+            $event->setExtendedProperties(new Google\Service\Calendar\EventExtendedProperties([
+                'private' => ['smartchoice_source' => hash('sha256', base_url())],
+            ]));
+        }
         return $event;
     }
 
@@ -345,6 +388,10 @@ class Googlecalendar extends App_Model
         $result = $this->db->get($this->table)->result();
 
         if ($result) {
+            foreach ($result as $account) {
+                $account->access_token = sc_google_secret_decrypt($account->access_token);
+                $account->refresh_token = sc_google_secret_decrypt($account->refresh_token);
+            }
             return $result;
         }
         return false;
@@ -359,14 +406,10 @@ class Googlecalendar extends App_Model
      */
     public function saveNewTokenValues($data)
     {
-        $this->db->where('staff_id', get_staff_user_id());
-        $this->db->update(
-            $this->table,
-            [
-                'refresh_token' => $data['refresh_token'],
-                'access_token'  => $data['access_token'],
-                'expires_in'    => time() + $data['expires_in']
-            ]
-        );
+        if (!is_array($data) || empty($data['access_token']) || empty($data['expires_in'])) return;
+        $values = ['access_token' => sc_google_secret_encrypt($data['access_token']), 'expires_in' => time() + (int) $data['expires_in']];
+        // Google may omit refresh_token on renewal; preserve the existing grant.
+        if (!empty($data['refresh_token'])) $values['refresh_token'] = sc_google_secret_encrypt($data['refresh_token']);
+        $this->db->where('staff_id', get_staff_user_id())->update($this->table, $values);
     }
 }

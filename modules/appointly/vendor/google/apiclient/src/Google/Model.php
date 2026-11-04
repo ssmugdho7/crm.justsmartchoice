@@ -21,6 +21,8 @@
  * http://tools.ietf.org/html/draft-zyp-json-schema-03#section-5
  *
  */
+// Generated Google service models intentionally materialize schema fields dynamically.
+#[\AllowDynamicProperties]
 class Google_Model implements ArrayAccess
 {
   /**

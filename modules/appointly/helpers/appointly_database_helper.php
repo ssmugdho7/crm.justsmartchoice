@@ -215,8 +215,8 @@ if (! function_exists('init_appointly_database_tables')) {
                 "CREATE TABLE IF NOT EXISTS " . db_prefix() . "appointly_google (
                `id` int(11) NOT NULL AUTO_INCREMENT,
                `staff_id` int(11) NOT NULL,
-               `access_token` varchar(191) NOT NULL,
-               `refresh_token` varchar(191) NOT NULL,
+               `access_token` LONGTEXT NOT NULL,
+               `refresh_token` LONGTEXT NOT NULL,
                `expires_in` varchar(191) NOT NULL,
                PRIMARY KEY (`id`)
                ) ENGINE=InnoDB DEFAULT CHARSET=" . $CI->db->char_set . ";"

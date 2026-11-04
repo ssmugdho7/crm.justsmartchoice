@@ -89,6 +89,12 @@ function google_analytics_register_menu_items()
         'position' => 4,
     ]);
 
+    if (is_admin()) {
+        $CI->app_menu->add_sidebar_children_item('google-analytics', [
+            'slug' => 'google-analytics-internal', 'name' => 'Internal CRM reports',
+            'href' => admin_url('google_analytics/internal'), 'icon' => 'fa fa-building', 'position' => 5,
+        ]);
+    }
     if (is_admin() || has_permission('google_analytics', '', 'edit')) {
         $CI->app_menu->add_setup_menu_item('google-analytics-settings', [
             'name'     => _l('google_analytics'),

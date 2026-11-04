@@ -1047,81 +1047,30 @@ if (! function_exists('appointlyGoogleAuth')) {
     {
         $CI = &get_instance();
         $CI->load->model('appointly/googlecalendar');
-
-        $account = $CI->googlecalendar->getAccountDetails();
-
-        if (! $account) return false;
-
-        $newToken = '';
-
-        if ($account) {
-            $account = $account[0];
-
-            $currentToken = [
-                'access_token' => $account->access_token,
-                'expires_in'   => $account->expires_in
-            ];
-
-            $CI->googleplus
-                ->client
-                ->setAccessToken($currentToken);
-
-            $refreshToken = $account->refresh_token;
-            // renew 5 minutes before token expire
-            if ($account->expires_in <= time() + 300) {
-
-                if ($CI->googleplus->isAccessTokenExpired()) {
-                    $CI->googleplus
-                        ->client
-                        ->setAccessToken($currentToken);
-                }
-
-                if ($refreshToken) {
-                    // { "error": "invalid_grant", "error_description": "Token has been expired or revoked." }
-                    try {
-                        $newToken = $CI->googleplus->client->refreshToken($refreshToken);
-                    } catch (Exception $e) {
-                        if ($e->getCode() === 400) {
-                            return false;
-                        }
-
-                        if ($e->getCode() === 401) {
-                            return false;
-                        }
-                    }
-
-                    $CI->googleplus
-                        ->client
-                        ->setAccessToken($newToken);
-
-                    if ($newToken) {
-                        $CI->googlecalendar->saveNewTokenValues($newToken);
-                    }
-                }
+        $accounts = $CI->googlecalendar->getAccountDetails();
+        if (!$accounts || empty($accounts[0]->access_token)) return false;
+        $account = $accounts[0];
+        try {
+            if ((int) $account->expires_in <= time() + 300) {
+                if (empty($account->refresh_token)) return false;
+                $token = $CI->googleplus->client->fetchAccessTokenWithRefreshToken($account->refresh_token);
+                if (!is_array($token) || empty($token['access_token']) || empty($token['expires_in']) || isset($token['error'])) return false;
+                $CI->googleplus->client->setAccessToken($token);
+                $CI->googlecalendar->saveNewTokenValues($token);
             } else {
-                try {
-                    $newToken = $CI->googleplus->client->refreshToken($refreshToken);
-                } catch (Exception $e) {
-                    if ($e->getCode() === 400) {
-                        return false;
-                    }
-
-                    if ($e->getCode() === 401) {
-                        return false;
-                    }
-                }
+                $token = [
+                    'access_token' => $account->access_token,
+                    'refresh_token' => $account->refresh_token,
+                    'created' => time(),
+                    'expires_in' => max(0, (int) $account->expires_in - time()),
+                ];
+                $CI->googleplus->client->setAccessToken($token);
             }
-
-            $CI->googleplus
-                ->client
-                ->setAccessToken(($newToken !== '') ? $newToken : $account->access_token);
-        }
-
-        if ($CI->googleplus->client->getAccessToken()) {
             return $CI->googleplus->client->getAccessToken();
+        } catch (Throwable $e) {
+            log_message('error', 'Google Calendar authorization needs reconnection.');
+            return false;
         }
-
-        return false;
     }
 }
 

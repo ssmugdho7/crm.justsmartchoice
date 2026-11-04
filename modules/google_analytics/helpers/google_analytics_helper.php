@@ -1,6 +1,7 @@
 <?php
 
 defined('BASEPATH') or exit('No direct script access allowed');
+require_once APPPATH . 'helpers/google_integration_security_helper.php';
 
 function ga_valid_measurement_id($value)
 {
@@ -25,15 +26,13 @@ function ga_encrypt_secret($value)
 {
     $value = (string) $value;
     if ($value === '') return '';
-    if (function_exists('app_encrypt_decrypt')) {
-        return app_encrypt_decrypt($value, 'e');
-    }
-    return base64_encode($value);
+    return sc_google_secret_encrypt($value);
 }
 
 function ga_decrypt_secret($value)
 {
     $value = (string) $value;
+    if (strpos($value, 'scg1:') === 0) return sc_google_secret_decrypt($value);
     if ($value === '') return '';
     if (function_exists('app_encrypt_decrypt')) {
         $decrypted = app_encrypt_decrypt($value, 'd');

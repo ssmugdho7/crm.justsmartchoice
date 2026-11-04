@@ -3,6 +3,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 require('modules/appointly/vendor/autoload.php');
+require_once APPPATH . 'helpers/google_integration_security_helper.php';
 
 class Googleplus
 {
@@ -137,7 +138,7 @@ class Googleplus
 
         $result = $ci->db->get(db_prefix() . 'appointly_google')->row_array();
 
-        return isset($result[$type]) ? $result[$type] : NULL;
+        return isset($result[$type]) ? sc_google_secret_decrypt($result[$type]) : NULL;
     }
 
 
@@ -146,7 +147,7 @@ class Googleplus
      */
     private function thenVerifySSL()
     {
-        $httpClient = new GuzzleHttp\Client(['verify' => false,]);
+        $httpClient = new GuzzleHttp\Client(['verify' => true,]);
         $this->client->setHttpClient($httpClient);
     }
 
@@ -157,11 +158,14 @@ class Googleplus
     {
         $this->client = new Google\Client();
         $this->client->setApplicationName('Appointly Google Calendar API');
-        $this->client->setClientId(get_option('google_client_id'));
+        $this->client->setClientId((get_option('appointly_google_client_id') ?: get_option('google_client_id')));
         $this->client->setDeveloperKey(get_option('google_api_key'));
-        $this->client->setClientSecret(get_option('appointly_google_client_secret'));
+        $this->client->setClientSecret(sc_google_secret_decrypt(get_option('appointly_google_client_secret')));
         $this->client->setRedirectUri(base_url() . 'appointly/google/auth/oauth');
-        $this->client->addScope('https://www.googleapis.com/auth/calendar');
+        // A dedicated connection only needs event access to calendars the owner owns.
+        $this->client->addScope(get_option('appointly_google_client_id')
+            ? 'https://www.googleapis.com/auth/calendar.events.owned'
+            : 'https://www.googleapis.com/auth/calendar');
         $this->client->setAccessType("offline");
         $this->client->setPrompt('consent');
     }

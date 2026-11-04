@@ -36,6 +36,28 @@ class Google_analytics extends AdminController
         $this->load->view('dashboard', $data);
     }
 
+    public function internal()
+    {
+        // Operational activity includes staff information: administrators only.
+        if (!is_admin()) { access_denied('Internal CRM reports'); return; }
+        $start = $this->input->get('start') ?: date('Y-m-d', strtotime('-29 days'));
+        $end = $this->input->get('end') ?: date('Y-m-d');
+        foreach ([$start, $end] as $date) {
+            if (!is_string($date) || !preg_match('/^\d{4}-\d{2}-\d{2}$/D', $date)
+                || date('Y-m-d', strtotime($date)) !== $date) {
+                show_error('Use valid YYYY-MM-DD dates.', 400); return;
+            }
+        }
+        if ($end < $start || (strtotime($end) - strtotime($start)) / 86400 > 366) {
+            show_error('Select a date range of up to 366 days.', 400); return;
+        }
+        $this->load->view('internal', [
+            'title' => 'Internal CRM reports', 'start' => $start, 'end' => $end,
+            'report' => $this->google_analytics_model->internal_report($start, $end),
+            'sales' => $this->google_analytics_model->internal_sales($start, $end),
+        ]);
+    }
+
     public function websites()
     {
         $this->require_capability('view');

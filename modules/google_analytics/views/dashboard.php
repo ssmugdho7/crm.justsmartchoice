@@ -9,11 +9,18 @@
 </div></div>
 <?php if(!$websites){ ?><div class="alert alert-info"><?php echo _l('ga_add_website_first'); ?></div><?php } ?>
 <?php if($error){ ?><div class="alert alert-danger"><?php echo html_escape($error); ?></div><?php } ?>
+<p class="text-muted">Public website traffic only. CRM operational activity is reported separately.</p>
+<?php if(is_admin()){ ?><a href="<?= admin_url('google_analytics/internal') ?>" class="btn btn-default">Internal CRM reports</a><?php } ?>
 <?php if($report){ $vals=$report['summary']['rows'][0]['metricValues']??[]; $names=['activeUsers','sessions','engagedSessions','screenPageViews','eventCount','keyEvents']; ?>
 <div class="row"><?php foreach($names as $i=>$name){ ?><div class="col-md-2"><div class="ga-kpi"><span><?php echo _l('ga_'.$name); ?></span><strong><?php echo html_escape($vals[$i]['value']??'0'); ?></strong></div></div><?php } ?></div>
 <div class="row"><div class="col-md-6"><div class="panel_s"><div class="panel-body"><h4><?php echo _l('ga_top_pages'); ?></h4><div class="table-responsive"><table class="table table-striped"><thead><tr><th><?php echo _l('ga_page'); ?></th><th><?php echo _l('ga_views'); ?></th><th><?php echo _l('ga_users'); ?></th></tr></thead><tbody>
 <?php foreach(($report['pages']['rows']??[]) as $row){ ?><tr><td><?php echo html_escape(($row['dimensionValues'][0]['value']??'').' '.($row['dimensionValues'][1]['value']??'')); ?></td><td><?php echo html_escape($row['metricValues'][0]['value']??'0'); ?></td><td><?php echo html_escape($row['metricValues'][1]['value']??'0'); ?></td></tr><?php } ?></tbody></table></div></div></div></div>
 <div class="col-md-6"><div class="panel_s"><div class="panel-body"><h4><?php echo _l('ga_traffic_sources'); ?></h4><div class="table-responsive"><table class="table table-striped"><thead><tr><th><?php echo _l('ga_source'); ?></th><th><?php echo _l('ga_medium'); ?></th><th><?php echo _l('ga_sessions'); ?></th></tr></thead><tbody>
 <?php foreach(($report['sources']['rows']??[]) as $row){ ?><tr><td><?php echo html_escape($row['dimensionValues'][0]['value']??''); ?></td><td><?php echo html_escape($row['dimensionValues'][1]['value']??''); ?></td><td><?php echo html_escape($row['metricValues'][0]['value']??'0'); ?></td></tr><?php } ?></tbody></table></div></div></div></div></div>
+<div class="panel_s"><div class="panel-body"><h4>Website events and conversions</h4>
+<p>Shows events actually received by GA4. Lead and appointment conversions require their website events to be implemented and marked as key events in GA4; missing events are not treated as verified conversions.</p>
+<table class="table table-striped"><thead><tr><th>Event</th><th>Occurrences</th><th>Key events</th></tr></thead><tbody>
+<?php foreach (($report['events']['rows'] ?? []) as $row) { ?><tr><td><?= html_escape($row['dimensionValues'][0]['value'] ?? '') ?></td><td><?= html_escape($row['metricValues'][0]['value'] ?? '0') ?></td><td><?= html_escape($row['metricValues'][1]['value'] ?? '0') ?></td></tr><?php } ?>
+</tbody></table></div></div>
 <?php } ?>
 </div></div></div></div><?php init_tail(); ?></body></html>

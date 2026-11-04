@@ -20,9 +20,9 @@ $appointly_show_summary = get_option('appointly_show_summary');
         <!-- Only shown for system admins -->
         <?php if (is_admin()) {
 
-            $google_client_id = get_option('google_client_id');
+            $google_client_id = get_option('appointly_google_client_id') ?: get_option('google_client_id');
             $appointly_outlook_client_id = get_option('appointly_outlook_client_id');
-            $appointly_google_client_secret = get_option('appointly_google_client_secret');
+            $appointly_google_client_secret = ''; // Saved credentials are never rendered into HTML.
             $appointly_also_delete_in_google_calendar = get_option('appointly_also_delete_in_google_calendar');
             $appointments_disable_weekends = get_option('appointments_disable_weekends');
             $appointments_show_past_times = get_option('appointments_show_past_times');
@@ -107,12 +107,21 @@ $appointly_show_summary = get_option('appointly_show_summary');
             <hr />
             <h4>Google Calendar API</h4>
             <div class="form-group">
-                <label for="google_client_id"><?= _l('appointments_google_calendar_client_id'); ?></label>
-                <input type="text" class="form-control" value="<?= $google_client_id; ?>" id="google_client_id" name="settings[google_client_id]">
+                <label for="appointly_google_client_id"><?= _l('appointments_google_calendar_client_id'); ?></label>
+                <input type="text" class="form-control" value="<?= html_escape($google_client_id); ?>" id="appointly_google_client_id" name="settings[appointly_google_client_id]">
             </div>
             <div class="form-group">
+ <label for="appointly_google_calendar_id">Dedicated private calendar ID</label>
+ <input type="text" class="form-control" id="appointly_google_calendar_id" name="settings[appointly_google_calendar_id]" value="<?= html_escape(get_option('appointly_google_calendar_id')) ?>">
+ <p class="text-muted">Use the ID of Smart Choice CRM Appointments. With a dedicated calendar configured, sync is private and one-way; no guests or email notifications are sent. Personal calendar events cannot be edited.</p>
+</div>
+<div class="form-group">
+ <label for="appointly_google_calendar_staff_id">Calendar owner CRM staff ID</label>
+ <input type="number" min="1" class="form-control" id="appointly_google_calendar_staff_id" name="settings[appointly_google_calendar_staff_id]" value="<?= html_escape(get_option('appointly_google_calendar_staff_id')) ?>">
+</div>
+<div class="form-group">
                 <label for="appointly_google_client_secret"><?= _l('appointments_google_calendar_client_secret'); ?></label>
-                <input type="text" class="form-control" value="<?= $appointly_google_client_secret; ?>" id="appointly_google_client_secret" name="settings[appointly_google_client_secret]">
+                <input type="password" autocomplete="new-password" placeholder="Leave blank to keep the saved secret" class="form-control" value="" id="appointly_google_client_secret" name="settings[appointly_google_client_secret]">
             </div>
             <div class="alert alert-info alert-dismissible" role="alert">
                 <?= _l('appointments_redirect_url'); ?>:

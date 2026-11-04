@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /*
 Module Name: Appointly
 Description: Quality ★★★★★.  Appointly / Smart Choice Appointments helps Smart Choice Contractors USA manage appointment booking, dispatch, customer scheduling, staff calendars, public booking forms, appointment status notifications, daily staff reminders, one-hour alerts, installer tracking bridges, AI scheduling workflows, and customer portal appointment operations inside Perfex CRM. Quality ★★★★★. Updated for PHP 8.5, Perfex CRM 3.4.1, safe database upgrades, clean labels, English/Spanish language support, and Smart Choice corporate scheduling standards.
-Version: 2.2.1
+Version: 2.2.2
 Author: Smart Choice Contractors USA / Harold Cabrera
 Author URI: https://justsmartchoice.com/webdeveloper.php
 Requires at least: 3.0.0
@@ -707,6 +707,16 @@ hooks()->add_filter('before_settings_updated', 'modify_settings_form_post');
 
 function modify_settings_form_post($form)
 {
+    if (array_key_exists('appointly_google_client_secret', $form['settings'] ?? [])) {
+        $secret = $form['settings']['appointly_google_client_secret'];
+        if ($secret === '') {
+            unset($form['settings']['appointly_google_client_secret']);
+        } else {
+            if (!is_string($secret)) throw new InvalidArgumentException('Invalid Google client credential.');
+            require_once APPPATH . 'helpers/google_integration_security_helper.php';
+            $form['settings']['appointly_google_client_secret'] = sc_google_secret_encrypt($secret);
+        }
+    }
     if (isset($form['settings']['appointly_default_feedbacks'])) {
         $form['settings']['appointly_default_feedbacks'] = json_encode(
             $form['settings']['appointly_default_feedbacks']

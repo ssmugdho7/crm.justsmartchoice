@@ -510,6 +510,10 @@ class Solar_pro extends AdminController
                 continue;
             }
 
+            if (in_array($key, $secretKeys, true)) {
+                if (!is_string($value)) { show_error('Invalid credential value.', 400); return; }
+                $value = sc_google_secret_encrypt($value);
+            }
             update_option($key, $value);
         }
 

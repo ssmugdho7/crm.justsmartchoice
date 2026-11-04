@@ -147,3 +147,54 @@ body.customers .navbar-nav>li>a i{min-width:18px;text-align:center}
   margin-right: auto;
   margin-left: 31px;
 }
+
+/* Issue #25: reserve admin layout space without changing forms or sidebar sizing. */
+body.admin #wrapper { min-height: calc(100vh - 75px); }
+body.admin #wrapper > .content { min-height: calc(100vh - 75px); box-sizing: border-box; }
+body.admin #wrapper .panel-table-full,
+body.admin #wrapper .dataTables_wrapper { min-height: min(380px, 60vh); }
+body.admin #wrapper #stats-top,
+body.admin #wrapper #expenses_total,
+body.admin #wrapper #invoices_total,
+body.admin #wrapper #proposals_total,
+body.admin #wrapper #estimates_total { min-height: 82px; }
+body.admin #wrapper :is(#expenses_total, #invoices_total, #proposals_total, #estimates_total):empty {
+  border-radius: 10px;
+  background: linear-gradient(90deg, #f8faf9, #eaefea, #f8faf9);
+  background-size: 200% 100%;
+  animation: scLoadingSummary 1.5s ease-in-out infinite;
+}
+@keyframes scLoadingSummary { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+body.admin #side-menu ul.nav-second-level > li > a {
+  display: flex; align-items: center; gap: 8px;
+}
+body.admin #side-menu ul.nav-second-level > li > a::before {
+  content: '\203a'; font-family: Arial, sans-serif; font-size: 16px;
+  line-height: 1; font-weight: 700; color: #1e3a8a; flex: 0 0 auto;
+}
+body.admin #side-menu ul.nav-second-level > li > a:hover::before,
+body.admin #side-menu ul.nav-second-level > li.active > a::before { color: #059669; }
+#smartchoice-nav-progress {
+  position: fixed; top: 0; left: 0; height: 3px; width: 0;
+  background: #059669; z-index: 99999; pointer-events: none;
+}
+#smartchoice-nav-progress.sc-navigating { width: 85%; transition: width .6s ease-out; }
+@media (prefers-reduced-motion: reduce) {
+  body.admin #wrapper :is(#expenses_total, #invoices_total, #proposals_total, #estimates_total):empty { animation: none; }
+  #smartchoice-nav-progress.sc-navigating { transition: none; }
+}
+/* Replace existing per-module submenu glyphs with the common chevron, once. */
+body.admin #side-menu ul.nav-second-level > li > a > .menu-icon { display: none; }
+/* Progressive cross-document transition; navigation remains native in other browsers. */
+@view-transition { navigation: auto; }
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
+}
+/* Totals wrap according to available content width, including a resized sidebar. */
+body.admin #wrapper #stats-top { container-type: inline-size; }
+body.admin #wrapper #expenses_total { min-height: 112px; }
+@container (max-width: 639px) {
+  body.admin #wrapper #expenses_total { min-height: 240px; }
+  body.admin #wrapper #invoices_total,
+  body.admin #wrapper #estimates_total { min-height: 160px; }
+}

@@ -160,3 +160,4 @@ if ($hasVideoMeetingSubmenu) {
     </ul>
 </aside>
 <?php $this->load->view('admin/includes/sidebar_resize'); ?>
+<script src="<?= html_escape(smartchoice_theme_asset_url('assets/js/sc-layout-stability.js')); ?>"></script>

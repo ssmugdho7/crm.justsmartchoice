@@ -4,6 +4,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Smart_choice_ui extends AdminController
 {
+    public function active_projects_count()
+    {
+        if (!is_staff_logged_in()) {
+            show_error('Authentication required', 403);
+            return;
+        }
+        return $this->output->set_header('Cache-Control: no-store, private')
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['count' => (int) total_rows(db_prefix().'projects', ['status' => 2])]));
+    }
+
     public function save_world_clocks()
     {
         if (!is_admin() && staff_cant('edit', 'settings')) {

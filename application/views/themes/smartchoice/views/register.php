@@ -25,6 +25,7 @@
     </div>
 </div>
 <div class="col-md-10 col-md-offset-1">
+    <?php hooks()->do_action('clients_register_form_start'); ?>
     <?= form_open('authentication/register', ['id' => 'register-form']); ?>
     <div class="panel_s">
         <div class="panel-body">

@@ -26,6 +26,7 @@ hooks()->add_action('admin_init', function () {
 });
 hooks()->add_action('before_admin_login_form_close', function () { scsl_buttons('staff'); });
 hooks()->add_action('clients_login_form_end', function () { scsl_buttons('client'); });
+hooks()->add_action('clients_register_form_start', function () { scsl_buttons('client', true); });
 hooks()->add_action('after_staff_login', function () { scsl_attach_after_login('staff',get_staff_user_id()); });
 hooks()->add_action('after_contact_login', function () { scsl_attach_after_login('client',get_contact_user_id()); });
 hooks()->add_action('after_client_register', function ($clientid) {

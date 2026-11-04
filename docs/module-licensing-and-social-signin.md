@@ -174,3 +174,11 @@ docs/module-licensing-and-social-signin.md
 Local results: 149 license/OAuth/translation assertions, 69 native database/authorization/session assertions per migration run (both modules), 34 PHP files syntax checked, and private configuration/Apple ES256 utility checks passed. No mail, provider accounts, or customer records were submitted. Browser layout and real provider tests remain unperformed.
 
 Lists use keyset pagination in batches of 100. Global social-connection viewers can switch between their own connections and all authorized connections.
+
+## Customer Google signup entry point (November 4, 2026)
+
+Both Smart Choice and Perfex registration templates expose `clients_register_form_start`. The social module renders configured providers there only when native registration and social registration are enabled. A valid pending customer identity suppresses that entry point so completing the native form does not restart OAuth. Login remains available when signup is disabled; no empty social block is rendered if no provider is configured. Native required fields, CAPTCHA, approval and account-linking safeguards remain in force.
+
+Production setup is pending: activate the licensed module after provisioning its owner authority, create a dedicated web OAuth client with redirect `https://crm.justsmartchoice.com/sc_social_login/oauth/callback/google`, securely enter its credentials in `/admin/sc_social_login/settings`, enable Google for clients and social registration, then test new registration, existing-account linking, repeat login and revocation. Google sign-in uses only `openid email profile`; Drive and Calendar grants are separate. Do not publish the OAuth app or enable staff sign-in implicitly.
+
+Local checks: 150 provider/license/language assertions and 75 native temporary-table checks in each migration mode. These use provider fixtures and do not establish real Google login success. No deployment was performed.

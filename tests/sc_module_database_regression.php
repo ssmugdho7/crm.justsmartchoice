@@ -213,6 +213,27 @@ check(count(array_filter(array_merge($own,$rest),function($r){return (int)$r['cr
 $permissions=['sc_social_login:view'];$ci->input->gets=['scope'=>'all'];$socialController->connections();
 check($GLOBALS['last_view'][1]['global']===true,'Global connection view is explicit');
 $ci->input->gets=[];$socialController->connections();check($GLOBALS['last_view'][1]['global']===false,'Own connections remain default for global viewers');
+// Customer registration exposes only configured providers and respects native signup policy.
+$savedOptions=$options;
+$options['scsl_google_client_id']='google-fixture';$options['scsl_google_client_secret']='encrypted-fixture';
+$options['scsl_google_client']='1';$options['scsl_client_registration']='1';$options['allow_registration']='0';
+$ci->session->unset_userdata('scsl_pending');$GLOBALS['last_view']=null;
+hooks()->do_action('clients_register_form_start');
+check($GLOBALS['last_view']===null,'Social signup hidden when native registration is disabled');
+$options['allow_registration']='1';hooks()->do_action('clients_register_form_start');
+check($GLOBALS['last_view'][0]==='sc_social_login/buttons' && $GLOBALS['last_view'][1]['registration']===true
+    && $GLOBALS['last_view'][1]['providers']===['google'],'Registration exposes configured Google signup');
+$ci->session->set_userdata('scsl_pending',['audience'=>'client','expires'=>time()+600]);$GLOBALS['last_view']=null;
+hooks()->do_action('clients_register_form_start');
+check($GLOBALS['last_view']===null,'Pending Google registration does not restart OAuth');
+$ci->session->unset_userdata('scsl_pending');$options['scsl_client_registration']='0';$GLOBALS['last_view']=null;
+hooks()->do_action('clients_register_form_start');
+check($GLOBALS['last_view']===null,'Social signup respects module registration toggle');
+hooks()->do_action('clients_login_form_end');
+check($GLOBALS['last_view'][1]['registration']===false,'Google login remains available with signup disabled');
+$options['scsl_google_client']='0';$GLOBALS['last_view']=null;hooks()->do_action('clients_login_form_end');
+check($GLOBALS['last_view']===null,'Disabled providers leave no empty social login block');
+$options=$savedOptions;
 $migrationModule=($argv[1]??'sc_module_licensing');
 if(!in_array($migrationModule,['sc_module_licensing','sc_social_login'],true))throw new RuntimeException('invalid fixture module');
 $db->where('module_name',$migrationModule)->update(db_prefix().'modules',['installed_version'=>'0.9.9']);

@@ -70,3 +70,5 @@ $lang['scsl_install_failed'] = 'No se pudo completar la instalación del módulo
 $lang['scsl_own_accounts'] = 'Mis conexiones';
 $lang['scsl_all_accounts'] = 'Todas las conexiones autorizadas';
 $lang['scsl_older'] = 'Conexiones anteriores';
+
+$lang['scsl_signup'] = 'Regístrese con su cuenta';

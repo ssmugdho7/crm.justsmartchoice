@@ -70,3 +70,5 @@ $lang['scsl_install_failed'] = 'Module installation could not be completed. Revi
 $lang['scsl_own_accounts'] = 'My connections';
 $lang['scsl_all_accounts'] = 'All authorized connections';
 $lang['scsl_older'] = 'Older connections';
+
+$lang['scsl_signup'] = 'Sign up with your account';

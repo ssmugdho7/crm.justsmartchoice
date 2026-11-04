@@ -3,7 +3,7 @@ if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
 error_reporting(E_ALL);
 set_error_handler(static function($number,$message){throw new RuntimeException($message);});
 require dirname(__DIR__).'/modules/appointly/vendor/autoload.php';
-foreach (['Google_Service','Google_Service_Resource','Google_Model','Google_Collection','Google\\Service','Google\\Service\\Resource','Google\\Model','Google\\Collection'] as $class) {
+foreach (['Google_AuthHandler_AuthHandlerFactory','Google_AuthHandler_Guzzle6AuthHandler','Google_AccessToken_Revoke','Google_Http_REST','Google_Http_Batch','Google_Http_MediaFileUpload','Google_Task_Runner','Google_Task_Exception','Google_Service','Google_Service_Resource','Google_Model','Google_Collection','Google\\Service','Google\\Service\\Resource','Google\\Model','Google\\Collection'] as $class) {
     if (!class_exists($class)) { throw new RuntimeException('Missing SDK class '.$class); }
 }
 $model=new Google_Model();$model['fixture']='value';

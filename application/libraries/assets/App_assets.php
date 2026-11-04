@@ -114,6 +114,10 @@ class App_assets
 
     protected function compileUrl($path, $version = true)
     {
+        // Shared integration fixes must invalidate cached bundles without a CRM version upgrade.
+        if ($version && $path === 'assets/builds/common.js' && is_file(FCPATH . $path)) {
+            $path .= '?mtime=' . filemtime(FCPATH . $path);
+        }
         $url = $path;
 
         if (!$this->strStartsWith($path, 'http') && !$this->strStartsWith($path, '//')) {

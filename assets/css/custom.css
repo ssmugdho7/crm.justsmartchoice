@@ -184,7 +184,7 @@ body.admin #side-menu ul.nav-second-level > li.active > a::before { color: #0596
   #smartchoice-nav-progress.sc-navigating { transition: none; }
 }
 /* Replace existing per-module submenu glyphs with the common chevron, once. */
-body.admin #side-menu ul.nav-second-level > li > a > .menu-icon { display: none; }
+body.admin #side-menu ul.nav-second-level > li > a > .menu-icon { display: none !important; }
 /* Progressive cross-document transition; navigation remains native in other browsers. */
 @view-transition { navigation: auto; }
 @media (prefers-reduced-motion: reduce) {

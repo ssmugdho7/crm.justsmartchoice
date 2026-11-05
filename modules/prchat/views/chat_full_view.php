@@ -4782,7 +4782,7 @@
         <?php if (is_admin() || staff_can('edit', PR_CHAT_MODULE_NAME)) { ?>
         html += '<div class="ctx-item" data-action="group-rename" data-id="' + targetId + '" data-type="groups"><i class="fa fa-pencil"></i><?= addslashes(_l('chat_rename_label')); ?></div>';
         <?php } ?>
-        html += '<div class="ctx-item" data-action="group-avatar data-id="' + targetId + '" data-type="' + type + '">';
+        html += '<div class="ctx-item" data-action="group-avatar" data-id="' + targetId + '" data-type="' + type + '">';
         html += '<i class="fa fa-camera"></i><?php echo addslashes(_l('chat_add_group_photo')); ?>';
         html += '</div>';
         html += '<div class="ctx-item" data-action="group-avatar-remove" data-id="' + targetId + '" data-type="' + type + '">';

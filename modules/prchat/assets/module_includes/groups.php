@@ -1841,6 +1841,7 @@
     var group_messages_active_selector = $(".content .chat_group_options");
     var $activeGroup = $("#frame .chat_groups_list li.active");
     var activeGroupName = $activeGroup.find(".group_name_main").text() || "Group";
+    var safeGroupName = escapeHtml(activeGroupName).replace(/"/g, "&quot;");
     var activeGroupId = $activeGroup.attr("id");
     var createdBy = $activeGroup.attr("data-created-by") || '';
     var isCreator = (createdBy == userSessionId);
@@ -1913,11 +1914,11 @@
                     <div class="history-header-left">
                         <div class="history-header-icon"><i class="${headerIconClass}"></i></div>
                         <div class="grp-panel-name-wrap">
-                            <h4 class="grp-panel-name" id="grp-panel-name-display">${activeGroupName}</h4>
+                            <h4 class="grp-panel-name" id="grp-panel-name-display">${safeGroupName}</h4>
                             ${isCreator ? '<button class="grp-panel-rename-btn" onclick="toggleGroupRenameInput(\'' + activeGroupId + '\')" data-toggle="tooltip" title="<?= _l("chat_rename_label"); ?>"><i class="fa-regular fa-pen-to-square"></i></button>' : ''}
                         </div>
                         ${isCreator ? `<div class="grp-panel-rename-input" id="grp-panel-rename-input" style="display:none;">
-                            <input type="text" id="grp-rename-field" class="form-control" value="${activeGroupName}" maxlength="100" />
+                            <input type="text" id="grp-rename-field" class="form-control" value="${safeGroupName}" maxlength="100" />
                             <button class="grp-rename-save" onclick="saveGroupRename('${activeGroupId}')"><i class="fa fa-check"></i></button>
                             <button class="grp-rename-cancel" onclick="cancelGroupRename()"><i class="fa fa-times"></i></button>
                         </div>` : ''}
@@ -1978,7 +1979,7 @@
                     ${!isCreator ? `<button class="history-action-btn" style="background:#f39c12;color:#fff;" onclick="leaveGroup('${activeGroupId}')">
                         <i class="fa fa-sign-out"></i> <?= _l("chat_group_leave"); ?>
                     </button>` : ''}
-                    ${staffCanDeleteGroups ? `<button class="history-action-btn danger" onclick="deleteGroup(this)" data-group-id="${activeGroupId}" data-group-name="${activeGroupName}">
+                    ${staffCanDeleteGroups ? `<button class="history-action-btn danger" onclick="deleteGroup(this)" data-group-id="${activeGroupId}" data-group-name="${safeGroupName}">
                         <i class="fa fa-trash"></i> <?= _l("chat_delete_group_text"); ?>
                     </button>` : ''}
                 </div>

@@ -4859,7 +4859,7 @@
                 $renameGroup.find('.group_name_main').text(newName);
                 if ($('#frame .chat_groups_list li.active').attr('id') === targetId) $('#grp-panel-name-display').text(newName);
                 $renameDialog.modal('hide');
-                alert_float('success', customerSettings.groupNameChanged + newName);
+                alert_float('success', customerSettings.groupNameChanged + escapeHtml(newName));
               } else $renameDialog.find('[role="alert"]').text(resp.error || <?= json_encode(_l('chat_error_float')); ?>);
             }).fail(function() { $renameDialog.find('[role="alert"]').text(<?= json_encode(_l('chat_error_float')); ?>); })
             .always(function() { $save.prop('disabled', false); });

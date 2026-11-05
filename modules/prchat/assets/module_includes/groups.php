@@ -162,6 +162,7 @@
 
       // Update sidebar group name
       $("body").find("li.group_selector#" + data.group_id + " .group_name_main").text(data.newName);
+      if (data.channel) $("li.group_selector#" + data.group_id).attr("data-channel", data.channel).data("channel", data.channel);
 
       // Update group panel header if this group is currently active
       if ($("#frame .chat_groups_list li.active").attr("id") == data.group_id) {
@@ -1117,6 +1118,7 @@
       if (r.success) {
         // Update sidebar group name
         $("body").find("li.group_selector#" + groupId + " .group_name_main").text(groupName);
+        if (r.channel) $("li.group_selector#" + groupId).attr("data-channel", r.channel).data("channel", r.channel);
         // Update panel header
         $("#grp-panel-name-display").text(groupName);
         cancelGroupRename();

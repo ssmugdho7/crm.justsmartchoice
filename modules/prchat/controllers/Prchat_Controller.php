@@ -1775,6 +1775,7 @@ strpos($channel_name, 'private-') === 0
     if (!is_admin() && !staff_can('edit', PR_CHAT_MODULE_NAME)) { access_denied(PR_CHAT_MODULE_NAME); }
     $groupId = $this->input->post('groupId');
     $newName = $this->input->post('groupName');
+    $channel = CHAT_GROUP_PRESENCE_PREFIX . slugifyGroupName($newName);
 
     try {
       if ($groupId) {
@@ -1788,6 +1789,7 @@ strpos($channel_name, 'private-') === 0
         [
           'group_id' => $groupId,
           'newName' => $newName,
+          'channel' => $channel,
         ]
       );
     } catch (Exception $e) {
@@ -1795,7 +1797,7 @@ strpos($channel_name, 'private-') === 0
       die;
     }
 
-    echo json_encode(['success' => true]);
+    echo json_encode(['success' => true, 'channel' => $channel]);
   }
 
   /**

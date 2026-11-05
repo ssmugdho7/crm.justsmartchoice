@@ -4857,6 +4857,7 @@
             .done(function(resp) {
               if (resp.success) {
                 $renameGroup.find('.group_name_main').text(newName);
+                if (resp.channel) $renameGroup.attr('data-channel', resp.channel).data('channel', resp.channel);
                 if ($('#frame .chat_groups_list li.active').attr('id') === targetId) $('#grp-panel-name-display').text(newName);
                 $renameDialog.modal('hide');
                 alert_float('success', customerSettings.groupNameChanged + escapeHtml(newName));

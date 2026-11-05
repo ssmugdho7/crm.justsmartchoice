@@ -35,6 +35,7 @@ $additionalSelect = [
   db_prefix() . 'appointly_appointments.name as name',
   db_prefix() . 'appointly_services.name as service_name',
   db_prefix() . 'appointly_services.color as service_color',
+  db_prefix() . 'appointly_services.duration as service_duration',
   db_prefix() . 'appointly_services.price as service_price',
   db_prefix() . 'appointly_appointments.contact_id as contact_id',
   db_prefix() . 'appointly_appointments.google_calendar_link',
@@ -226,16 +227,12 @@ foreach ($rResult as $aRow) {
           </a>';
     }
 
-    if (staff_can('delete', 'appointments')) {
+    if (staff_can('delete', 'appointments') && (!is_numeric($aRow['id']) || is_admin() || (int) $aRow['created_by'] === (int) get_staff_user_id())) {
       $subjectHtml .= ' | <a href="javascript:void(0);" class="text-danger" onclick="deleteAppointment(\'' . $aRow['id'] . '\', this)">' . _l('delete') . '</a>';
     }
   }
 
   $subjectHtml .= '</div>';
-  if (is_numeric($aRow['id']) && staff_can('delete', 'appointments')
-      && (is_admin() || (int) $aRow['created_by'] === (int) get_staff_user_id())) {
-    $subjectHtml .= '<div class="mtop5"><button type="button" class="btn btn-danger btn-xs" onclick="deleteAppointment(' . (int) $aRow['id'] . ', this); return false;">' . _l('delete') . '</button></div>';
-  }
   $subjectHtml .= '</div>';
   $row[]       = $subjectHtml;
 
@@ -264,9 +261,9 @@ foreach ($rResult as $aRow) {
 
   // Service with clean badge
   if (isset($aRow['service_id'])) {
-    $serviceClass = $aRow['service_color'] ?? 'tw-bg-neutral-50';
+    $serviceClass = preg_match('/^#[0-9a-f]{3}(?:[0-9a-f]{3})?$/i', $aRow['service_color'] ?? '') ? $aRow['service_color'] : '#059669';
     $row[] = '<a target="_blank" href="' . admin_url(APPOINTLY_MODULE_NAME . '/services/service/' . $aRow['service_id']) . '">
-        <span class="tw-px-2 tw-py-1 tw-text-xs tw-rounded-md tw-text-white" style="background-color: ' . $serviceClass . ';">' . ($aRow['service_name'] ?? 'N/A') . '</span>
+        <span class="tw-px-2 tw-py-1 tw-text-xs tw-rounded-md tw-text-white" style="background:#fff;color:#0f172a;border:1px solid #cbd5e1;border-left:4px solid ' . $serviceClass . ';">' . html_escape($aRow['service_name'] ?? 'N/A') . '</span><small class="sc-service-duration">' . (int) ($aRow['service_duration'] ?? 0) . ' ' . _l('minutes') . '</small>
     </a>';
   } else {
     $row[] = '<span class="tw-px-2 tw-py-1 tw-text-xs tw-font-medium tw-rounded-md tw-bg-neutral-50 tw-text-neutral-700">N/A</span>';

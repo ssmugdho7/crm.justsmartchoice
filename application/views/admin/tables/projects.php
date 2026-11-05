@@ -62,6 +62,7 @@ return App_table::find('projects')
 
         $result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, [
             'clientid',
+            'description',
             '(SELECT GROUP_CONCAT(staff_id SEPARATOR ",") FROM ' . db_prefix() . 'project_members WHERE project_id=' . db_prefix() . 'projects.id ORDER BY staff_id) as members_ids',
         ]);
 

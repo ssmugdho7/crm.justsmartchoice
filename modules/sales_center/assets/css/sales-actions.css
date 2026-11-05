@@ -1,7 +1,7 @@
 /* One action hierarchy for native Sales pages; form fields and status badges keep their styles. */
-html.sc-sales-ui :is(#wrapper,.modal) .btn:not(.dropdown-toggle[data-id]){display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:36px;padding:8px 12px!important;border-radius:7px!important;font-size:13px!important;font-weight:600;line-height:18px!important;text-decoration:none;vertical-align:middle;box-shadow:none}
-html.sc-sales-ui :is(#wrapper,.modal) :is(.btn-primary,.btn-success){background:#f96302!important;border-color:#e65b00!important;color:#fff!important}
-html.sc-sales-ui :is(#wrapper,.modal) :is(.btn-primary,.btn-success):hover{background:#d95200!important;border-color:#d95200!important}
+html.sc-sales-ui :is(#wrapper,.modal) .btn:not(.dropdown-toggle[data-id]){display:inline-flex;align-items:center;justify-content:center;gap:6px;height:38px;min-height:38px;padding:8px 12px!important;border-radius:7px!important;font-size:13px!important;font-weight:600;line-height:18px!important;text-decoration:none;vertical-align:middle;box-shadow:none}
+html.sc-sales-ui :is(#wrapper,.modal) :is(.btn-primary,.btn-success){background:linear-gradient(180deg,#059669,#047857)!important;border-color:#047857!important;color:#fff!important}
+html.sc-sales-ui :is(#wrapper,.modal) :is(.btn-primary,.btn-success):hover{background:linear-gradient(180deg,#047857,#065f46)!important;border-color:#065f46!important}
 html.sc-sales-ui :is(#wrapper,.modal) :is(.btn-default,.btn-info,.btn-warning):not(.dropdown-toggle[data-id]){background:#fff!important;border-color:#cbd5e1!important;color:#243b37!important}
 html.sc-sales-ui :is(#wrapper,.modal) :is(.btn-default,.btn-info,.btn-warning):not(.dropdown-toggle[data-id]):hover{background:#f1f6f4!important;border-color:#94a9a1!important}
 html.sc-sales-ui :is(#wrapper,.modal) .btn-danger{background:#dc2626!important;border-color:#dc2626!important;color:#fff!important}
@@ -28,3 +28,25 @@ html.sc-sales-ui #wrapper :is(.dt-buttons,.sc-bulk-actions){display:flex;flex-wr
  html.sc-sales-ui #wrapper .sc-sales-data-actions>.btn:last-child:nth-child(odd){grid-column:1/-1}
  html.sc-sales-ui #wrapper :is(._buttons,.sc-sales-action-bar)>.pull-right{width:100%;justify-content:flex-end}
 }
+
+/* Sales issue 33: stable geometry, accessible feedback and native dialog presentation. */
+html.sc-sales-ui :is(#wrapper,.modal) .btn.btn-sm{height:32px;min-height:32px;padding:5px 10px!important}
+html.sc-sales-ui :is(#wrapper,.modal) .btn.btn-lg{height:44px;min-height:44px;padding:11px 16px!important}
+html.sc-sales-ui :is(#wrapper,.modal) .btn:active{transform:translateY(1px)}
+html.sc-sales-ui .modal-backdrop{background:#0b1e17;backdrop-filter:blur(4px)}
+html.sc-sales-ui .modal-content{border-radius:14px;box-shadow:0 24px 60px #0b1e1733;overflow:hidden}
+html.sc-sales-ui #wrapper .dataTables_wrapper{min-height:240px}
+html.sc-sales-ui .sales-transaction-id{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere}
+html.sc-sales-ui .sc-copy-transaction{margin-inline-start:6px;background:none;border:1px solid #cbd5e1;border-radius:4px;color:#047857;padding:2px 6px}
+html.sc-sales-ui #side-menu .menu-item-sales ul.nav-second-level li a::before{content:'›';font-size:15px;color:#1e3a8a;margin-inline-end:8px}
+.sc-sales-toasts{position:fixed;bottom:24px;right:24px;z-index:11000;display:grid;gap:8px;max-width:min(380px,calc(100vw - 32px));pointer-events:none}
+.sc-sales-toast{background:#fff;color:#0b1e17;border:1px solid #d1fae5;border-left:4px solid #059669;border-radius:10px;padding:14px 18px;box-shadow:0 8px 30px #0b1e1726;animation:scSalesToastIn .2s ease-out}
+.sc-sales-toast[data-type="error"]{border-left-color:#dc2626}
+.sc-sales-toast.sc-dismiss{opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s}
+@keyframes scSalesToastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.sc-sales-toast{animation:none}.sc-sales-toast.sc-dismiss{transition:none}}
+
+html.sc-sales-ui .sc-payment-mode{display:inline-block;border-radius:999px;padding:3px 9px;background:#f1f5f9;color:#334155;font-weight:600;font-size:12px}
+html.sc-sales-ui .sc-payment-mode-stripe{background:#ede9fe;color:#5b21b6}
+html.sc-sales-ui .sc-payment-mode-wire{background:#dbeafe;color:#1e40af}
+html.sc-sales-ui .sc-payment-mode-check{background:#d1fae5;color:#065f46}

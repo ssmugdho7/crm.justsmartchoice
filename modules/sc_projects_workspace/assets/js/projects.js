@@ -2,6 +2,16 @@
     'use strict';
     if (!$ || !document.body.classList.contains('scpr-projects')) return;
 
+    $(document).on('click', '.scpr-scope-preview', function () {
+        var modal = $('#scpr-scope-modal');
+        if (!modal.length) {
+            modal = $('<div class="modal fade" id="scpr-scope-modal" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="scpr-scope-title"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button><h4 class="modal-title" id="scpr-scope-title"></h4></div><div class="modal-body scpr-full-scope"></div></div></div></div>').appendTo('body');
+        }
+        modal.find('.modal-title').text($(this).attr('data-title'));
+        modal.find('.modal-body').text($(this).attr('data-scope'));
+        modal.modal('show');
+    });
+
     $(document).on('click', '.prj-kpi-card', function () {
         $('.prj-kpi-card').removeClass('is-active').attr('aria-pressed', 'false');
         $(this).addClass('is-active').attr('aria-pressed', 'true');

@@ -1,0 +1,13 @@
+const {JSDOM}=require('jsdom'),fs=require('fs'),assert=require('assert/strict');
+const dom=new JSDOM('<main class="sc-training-dashboard"><button data-training-audience="all"></button><button data-training-audience="internal"></button><button data-training-audience="customer"></button><div data-training-book-audience="internal"><a href="/original">Manual</a></div><p class="sc-training-filter-empty" hidden></p></main>',{runScripts:'outside-only'});
+const w=dom.window,d=w.document;
+w.eval(fs.readFileSync('modules/training_manual/assets/js/training_dashboard.js','utf8'));
+d.querySelector('[data-training-audience="customer"]').click();
+assert.equal(d.querySelector('[data-training-book-audience]').hidden,true);
+assert.equal(d.querySelector('.sc-training-filter-empty').hidden,false);
+assert.equal(d.querySelector('[data-training-audience="customer"]').getAttribute('aria-pressed'),'true');
+d.querySelector('[data-training-audience="all"]').click();
+assert.equal(d.querySelector('[data-training-book-audience]').hidden,false);
+assert.equal(d.querySelector('.sc-training-filter-empty').hidden,true);
+assert.equal(d.querySelector('a').getAttribute('href'),'/original');
+w.close();console.log('PASS Training audience filtering, empty feedback, selected state and preserved navigation');

@@ -37,6 +37,9 @@
 <?php if (function_exists('render_custom_fields_view')) { echo render_custom_fields_view('sales_center_contracts', $contract->id); } ?>
 </div>
 <div role="tabpanel" class="tab-pane" id="ss-signatures">
+<?php $companySigned = !empty($contract->company_signature) && !empty($contract->company_signed_at); $repSigned = !empty($contract->salesperson_signature) && !empty($contract->salesperson_signed_at); ?>
+<p><span class="label <?php echo $companySigned && $repSigned ? 'label-success' : 'label-default'; ?>"><?php echo $companySigned && $repSigned ? 'Signed & Countersigned' : ($companySigned || $repSigned ? 'Awaiting countersignature' : 'Awaiting signatures'); ?></span></p>
+
 <div class="row">
 <div class="col-md-6"><div class="smartsource-signature-box"><h4><?php echo _l('sales_center_company_signature'); ?></h4><?php echo sales_center_signature_img($contract->company_signature ?? '', 'Company Signature'); ?><p><strong><?php echo _l('sales_center_initials'); ?>:</strong> <?php echo html_escape($contract->company_initials ?? ''); ?></p><p><small><?php echo html_escape($contract->company_signed_at ?? ''); ?> <?php echo html_escape($contract->company_signed_ip ?? ''); ?></small></p></div></div>
 <div class="col-md-6"><div class="smartsource-signature-box"><h4><?php echo _l('sales_center_salesperson_signature'); ?></h4><?php echo sales_center_signature_img($contract->salesperson_signature ?? '', 'Salesperson Signature'); ?><p><strong><?php echo _l('sales_center_initials'); ?>:</strong> <?php echo html_escape($contract->salesperson_initials ?? ''); ?></p><p><small><?php echo html_escape($contract->salesperson_signed_at ?? ''); ?> <?php echo html_escape($contract->salesperson_signed_ip ?? ''); ?></small></p></div></div>

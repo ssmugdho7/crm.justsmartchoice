@@ -445,6 +445,7 @@ init_head();
                                                 id="timezone"
                                                 class="form-control selectpicker"
                                                 data-live-search="true">
+                                                <option value="America/New_York" selected>Eastern Time - Florida (America/New_York)</option>
                                                 <?php
                                                 foreach (
                                                     get_timezones_list() as
@@ -457,11 +458,8 @@ init_head();
                                                             $timezones as
                                                             $timezone
                                                         ) { ?>
-                                                            <option value="<?= $timezone ?>"
-                                                                <?= get_option('default_timezone')
-                                                                    == $timezone
-                                                                    ? 'selected'
-                                                                    : '' ?>>
+                                                            <?php if ($timezone === 'America/New_York') { continue; } ?>
+                                                            <option value="<?= $timezone ?>">
                                                                 <?= $timezone ?>
                                                             </option>
                                                         <?php

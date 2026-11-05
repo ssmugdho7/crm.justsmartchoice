@@ -1512,7 +1512,9 @@ class Commission extends AdminController
         $data['staffs'] = $this->staff_model->get('', ['active' => 1]);
         $data['clients'] = $this->clients_model->get();
         $data['filters'] = $filters;
+        $this->load->helper('commission/commission');
         $data['rows'] = $this->commission_model->smartchoice_commission_summary($filters);
+        $data['leaders'] = saleshub_commission_leaders($data['rows']);
         $this->load->view('smartchoice_report', $data);
     }
 

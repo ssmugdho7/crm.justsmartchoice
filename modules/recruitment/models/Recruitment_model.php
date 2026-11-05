@@ -5210,4 +5210,15 @@ class Recruitment_model extends App_Model {
         return true;
     }
 
+    /** Read-only command center; preserve the native candidate stage definitions. */
+    public function board_command_center()
+    {
+        $counts = array_fill(1, 10, 0);
+        foreach ($this->db->select('status, COUNT(*) AS total', false)->group_by('status')->get(db_prefix() . 'rec_candidate')->result_array() as $row) {
+            if (isset($counts[(int) $row['status']])) { $counts[(int) $row['status']] = (int) $row['total']; }
+        }
+        $recent = $this->db->select('id, candidate_code, candidate_name, last_name, status')->order_by('id', 'DESC')->limit(10)->get(db_prefix() . 'rec_candidate')->result_array();
+        return ['counts' => $counts, 'recent' => $recent];
+    }
+
 }

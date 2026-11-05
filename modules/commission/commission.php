@@ -37,6 +37,12 @@ $CI->load->helper(COMMISSION_MODULE_NAME . '/commission');
  * @return
  */
 function commission_add_head_components() {
+    $saleshubCI = &get_instance();
+    if ($saleshubCI->uri->segment(2) === 'commission') {
+        echo '<script>document.documentElement.classList.add("sc-saleshub");</script>';
+        echo '<link rel="stylesheet" href="' . module_dir_url('sales_center', 'assets/css/saleshub.css') . '?v=1">';
+        echo '<script defer src="' . module_dir_url('sales_center', 'assets/js/saleshub.js') . '?v=1"></script>';
+    }
 	$CI = &get_instance();
 	$viewuri = $_SERVER['REQUEST_URI'];
 	if (strpos($viewuri, '/admin/commission') !== false) {

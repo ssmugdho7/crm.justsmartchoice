@@ -1,6 +1,8 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
 $data = get_appointments_summary();
+$dispatchCards = $data['dispatch_cards'] ?? [];
+unset($data['dispatch_cards']);
 $total_appointments_in_database = $data['total_appointments'] ?? 0;
 unset($data['total_appointments']);
 
@@ -45,6 +47,11 @@ if (!function_exists('adjust_color')) {
 </div>
 <hr class="tw-mb-3 tw-mt-2 tw-mx-4">
 
+<div class="sc-dispatch-cards" aria-label="Dispatch summary">
+<?php foreach (['today' => "Today's Scheduled Dispatches", 'week' => 'Upcoming Through Sunday', 'pending' => 'Pending Approval', 'completed' => 'Completed This Month'] as $key => $label): ?>
+    <div class="sc-dispatch-card"><span><?= html_escape($label); ?></span><strong><?= (int) ($dispatchCards[$key] ?? 0); ?></strong><small>Visible CRM appointments · Eastern Time</small></div>
+<?php endforeach; ?>
+</div>
 <div class="row appointment_summary_parent" style="padding: -1px 15px;">
     <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 tw-mb-3">
         <a href="#" class="summary-card tw-bg-neutral-100" onclick="appointlyApplySummaryFilter('all'); return false;">

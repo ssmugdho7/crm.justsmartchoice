@@ -354,6 +354,11 @@ function sales_center_admin_head()
 {
     echo '<link href="' . module_dir_url(SALES_CENTER_MODULE_NAME, 'assets/css/sales_center.css') . '" rel="stylesheet" type="text/css" />';
     $CI = &get_instance();
+    if ($CI->uri->segment(2) === 'sales_center') {
+        echo '<script>document.documentElement.classList.add("sc-saleshub");</script>';
+        echo '<link rel="stylesheet" href="' . module_dir_url('sales_center', 'assets/css/saleshub.css') . '?v=1">';
+        echo '<script defer src="' . module_dir_url('sales_center', 'assets/js/saleshub.js') . '?v=1"></script>';
+    }
     if (in_array($CI->uri->segment(2), ['invoices', 'proposals', 'estimates', 'payments', 'credit_notes'], true)) {
         echo '<script>document.documentElement.classList.add("sc-sales-ui");</script>';
         foreach (['css' => 'sales-actions.css', 'js' => 'sales-actions.js'] as $type => $file) {

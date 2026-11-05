@@ -95,7 +95,10 @@ foreach ($rResult as $aRow) {
     if (! empty($aRow['paymentmethod'])) {
         $outputPaymentMode .= ' - ' . e($aRow['paymentmethod']);
     }
-    $row[] = $outputPaymentMode;
+    // Preserve the configured mode name; style only known modes without guessing gateways.
+    $modeLabel = strtolower(trim(strip_tags($outputPaymentMode)));
+    $modeToken = preg_match('/stripe/', $modeLabel) ? 'stripe' : (preg_match('/wire/', $modeLabel) ? 'wire' : (preg_match('/check|cheque/', $modeLabel) ? 'check' : 'other'));
+    $row[] = '<span class="sc-payment-mode sc-payment-mode-' . $modeToken . '">' . $outputPaymentMode . '</span>';
 
     $row[] = '<span class="sales-transaction-id">' . e($aRow['transactionid']) . '</span>';
 

@@ -2,6 +2,7 @@
 <?php init_head();?>
 <div id="wrapper">
   <div class="content">
+    <?php $this->load->view('board_command_center', ['command_center' => $command_center, 'cp_count' => $cp_count]); ?>
     <div class="clearfix"></div>
       <div class="col-md-12">
         <div class="panel_s">

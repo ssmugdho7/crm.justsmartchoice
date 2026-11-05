@@ -1449,6 +1449,7 @@ class recruitment extends AdminController {
 	 * @return view
 	 */
 	public function dashboard() {
+        if (!is_admin() && !has_permission('recruitment', '', 'view')) { access_denied('recruitment'); }
 		recmnt_init();
 		$data['title'] = _l('dashboard');
 		recmnt_token();
@@ -1456,6 +1457,7 @@ class recruitment extends AdminController {
 		$data['rec_plan_chart_by_status'] = json_encode($this->recruitment_model->rec_plan_chart_by_status());
 		$data['cp_count'] = $this->recruitment_model->get_rec_dashboard_count();
 		$data['upcoming_interview'] = $this->recruitment_model->get_upcoming_interview();
+        $data['command_center'] = $this->recruitment_model->board_command_center();
 		
 		$this->load->view('dashboard', $data);
 	}

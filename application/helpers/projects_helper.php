@@ -276,9 +276,9 @@ function get_project_status_by_id($id)
     $statuses = $CI->projects_model->get_project_statuses();
 
     $status = [
-        'id'    => 0,
-        'color' => '#333',
-        'name'  => '[Status Not Found]',
+        'id'    => (int) $id,
+        'color' => '#64748b',
+        'name'  => _l('project_status') . ' #' . (int) $id,
         'order' => 1,
     ];
 

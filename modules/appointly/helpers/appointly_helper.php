@@ -465,6 +465,8 @@ if (! function_exists('get_appointments_summary')) {
             }
         }
 
+        $data['dispatch_cards'] = appointly_dispatch_cards($appointments);
+
         // Only add Google sync count if it's a valid positive number
         if ($googleSync && is_numeric($googleSync) && $googleSync > 0) {
             $data['total_appointments'] += (int)$googleSync;
@@ -2126,4 +2128,48 @@ function appointly_video_calendar_description($appointment)
         $description .= "\nJoin video meeting: " . $link;
     }
     return $description;
+}
+
+/** Actual visible appointment counts; no inferred confirmations or conversion rates. */
+function appointly_dispatch_cards(array $appointments, $today = null)
+{
+    $today = $today ?: (new DateTimeImmutable('now', new DateTimeZone('America/New_York')))->format('Y-m-d');
+    $day = new DateTimeImmutable($today, new DateTimeZone('America/New_York'));
+    $weekEnd = $day->modify('sunday this week')->format('Y-m-d');
+    $cards = ['today' => 0, 'week' => 0, 'pending' => 0, 'completed' => 0];
+    foreach ($appointments as $appointment) {
+        $date = $appointment['date'] ?? '';
+        $status = $appointment['status'] ?? '';
+        if (!in_array($status, ['cancelled', 'no-show', 'completed'], true)) {
+            if ($date === $today) { $cards['today']++; }
+            if ($date >= $today && $date <= $weekEnd) { $cards['week']++; }
+        }
+        if ($status === 'pending') { $cards['pending']++; }
+        if ($status === 'completed' && $date >= $day->format('Y-m-01') && $date <= $today) { $cards['completed']++; }
+    }
+    return $cards;
+}
+
+/** Read-only handoff. Never creates a customer or an estimate, and never trusts GET customer IDs. */
+function appointly_estimate_prefill($appointmentId)
+{
+    if (!staff_can('create', 'estimates') || !ctype_digit((string) $appointmentId)) { return null; }
+    $CI = &get_instance();
+    $appointment = $CI->db->where('id', (int) $appointmentId)->get(db_prefix() . 'appointly_appointments')->row_array();
+    if (!$appointment) { return null; }
+    if (!staff_can('view', 'appointments') && (int) $appointment['created_by'] !== (int) get_staff_user_id()) {
+        $attendee = $CI->db->where('appointment_id', (int) $appointmentId)->where('staff_id', get_staff_user_id())->get(db_prefix() . 'appointly_attendees')->row_array();
+        if (!$attendee) { return null; }
+    }
+    // Native estimates require a CRM customer; external/lead appointments must be converted first.
+    if (($appointment['source'] ?? '') !== 'internal' || empty($appointment['contact_id'])) { return null; }
+    $contact = $CI->db->where('id', (int) $appointment['contact_id'])->get(db_prefix() . 'contacts')->row_array();
+    if (!$contact || empty($contact['userid'])) { return null; }
+    $service = !empty($appointment['service_id']) ? $CI->db->where('id', (int) $appointment['service_id'])->get(db_prefix() . 'appointly_services')->row_array() : [];
+    return [
+        'customer_id' => (int) $contact['userid'],
+        'address' => (string) ($appointment['address'] ?? ''),
+        'service' => (string) ($service['name'] ?? $appointment['subject'] ?? ''),
+        'notes' => 'Appointment #' . (int) $appointmentId . ': ' . ($appointment['subject'] ?? '') . "\n" . ($appointment['description'] ?? ''),
+    ];
 }

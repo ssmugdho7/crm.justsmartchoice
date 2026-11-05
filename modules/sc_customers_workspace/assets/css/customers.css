@@ -12,3 +12,31 @@ body.sccw-customers{--sccw-green:#059669;--sccw-deep:#064e3b;--sccw-hover:#04785
 .sccw-customers a:focus-visible,.sccw-customers button:focus-visible,.sccw-customers input:focus-visible,.sccw-customers select:focus-visible{outline:3px solid var(--sccw-hover);outline-offset:2px}
 @media(max-width:991px){.sccw-header h1{font-size:22px}.sccw-nav{width:100%}.sccw-nav a{flex:1;text-align:center}.sccw-profile-tabs{margin-bottom:15px}.sccw-kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media(max-width:540px){.sccw-kpis{grid-template-columns:1fr!important}.sccw-contact-modal .modal-body{padding:18px}.sccw-header{margin-bottom:16px}}
+
+/* Customer issues39–43: native data and actions retain their original routes and handlers. */
+.sccw-customers :is(#wrapper,#contact) .btn:not(.dropdown-toggle[data-id]){min-height:38px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-weight:600}
+.sccw-customers :is(.sc-btn-primary,.btn-primary){background:linear-gradient(180deg,#059669,#047857);border-color:#047857;color:#fff}
+.sccw-customers :is(.sc-btn-secondary,.btn-default){background:#fff;border-color:#cbd7d0;color:#0b1e17}
+.sccw-customers .sc-btn-ghost{background:transparent;border-color:transparent;color:#52675f}
+.sccw-customers :is(.sc-btn-danger,.btn-danger){background:#fef2f2;border-color:#fecaca;color:#dc2626}
+.sccw-customers .btn:active{transform:translateY(1px)}
+.sccw-customers .dataTables_wrapper{min-height:420px}
+.sccw-customers #profile-save-section{position:sticky;bottom:0;z-index:30;background:#fff;border-top:1px solid #e4eae6;box-shadow:0 -4px 14px #064e3b0d;padding:14px}
+.sccw-tab-section{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#52675f;padding:16px 8px 5px;list-style:none}
+.sccw-contact-initials{display:inline-flex;width:34px;height:34px;align-items:center;justify-content:center;border-radius:50%;background:#ecfdf5;color:#047857;font-weight:700;margin-right:5px;border:2px solid transparent}
+.sccw-contact-initials.is-primary{border-color:#059669}
+.sccw-copy{border:1px solid #cbd7d0;border-radius:5px;padding:2px 6px;background:#fff;color:#047857;font-size:11px;margin-inline-start:5px}
+.sccw-customers #contact .form-control:focus{border-color:#059669;box-shadow:0 0 0 3px #0596691f}
+.sccw-customers .modal-backdrop{background:#0b1e17;backdrop-filter:blur(4px)}
+.sccw-statement-summary :is(tbody,tfoot){display:contents}
+.sccw-statement-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;border:0!important}
+.sccw-statement-summary tr{display:flex;flex-direction:column;padding:14px;border:1px solid #e4eae6;border-radius:10px;background:#fff}
+.sccw-statement-summary td{display:block;border:0!important;padding:3px!important;text-align:left!important}
+.sccw-statement-summary td:last-child{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;color:#064e3b;overflow-wrap:anywhere}
+.sccw-customers :is(.sccw-ledger-payment,.sccw-ledger-credit) td{background:#ecfdf5!important;color:#047857}
+.sccw-customers :is(.sccw-ledger-payment,.sccw-ledger-credit) td:last-child{font-family:ui-monospace,Consolas,monospace;font-weight:700}
+#sccw-toast-stack{position:fixed;right:24px;bottom:24px;z-index:11000;display:grid;gap:8px;max-width:calc(100vw - 32px)}
+.sccw-toast{border:1px solid #d1fae5;border-left:4px solid #059669;border-radius:10px;background:#fff;padding:14px 18px;color:#0b1e17;box-shadow:0 8px 30px #0b1e1726;animation:sccw-toast-enter .2s ease-out}
+.sccw-toast.is-error{border-left-color:#dc2626}.sccw-toast.is-dismissing{opacity:0;transform:translateY(8px);transition:opacity .25s,transform .25s}
+@keyframes sccw-toast-enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.sccw-toast{animation:none}.sccw-toast.is-dismissing{transition:none}}

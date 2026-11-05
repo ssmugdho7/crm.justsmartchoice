@@ -86,3 +86,12 @@ body.scpr-projects { --prj-green:#059669; --prj-deep:#064e3b; --prj-tint:#ecfdf5
 @media(max-width:991px) { .scpr-projects .prj-kpi-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .scpr-projects .scpr-project-layout { grid-template-columns:minmax(0,1fr); } .scpr-projects .scpr-tabs { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); } .scpr-projects .scpr-project-summary { padding:18px; } }
 @media(max-width:540px) { .scpr-projects .prj-kpi-grid { grid-template-columns:1fr; } .scpr-projects .scpr-filters { margin-left:0; } .scpr-projects .scpr-project-metrics { width:100%; } .scpr-projects .scpr-project-metrics > div { flex:1 1 120px; } .scpr-projects .prj-task-row { flex-wrap:wrap; } .scpr-projects .scpr-task-detail { flex-basis:70%; } .scpr-projects .scpr-tabs { grid-template-columns:1fr; } }
 .scpr-projects .scpr-task-status { color:#064e3b; background:#ecfdf5; white-space:normal; }
+
+/* Portfolio density: keep long crews and loading tables stable. */
+.scpr-projects .scpr-team-overflow{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;border-radius:50%;background:#ecfdf5;color:#047857;font-size:11px;font-weight:600;margin-left:4px}
+.scpr-projects .dataTables_wrapper{min-height:480px}
+.scpr-projects .btn-success,.scpr-projects .btn-primary{background-color:#059669;border-color:#059669;min-height:38px}
+@media(max-width:767px){.scpr-projects .panel-body{padding:12px}.scpr-projects .table-responsive{overflow-x:auto}}
+
+.scpr-scope-preview{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;max-height:48px;overflow:hidden;text-align:left;white-space:pre-line;background:transparent;border:0;padding:0;margin-top:6px;color:#64748b;font-size:12px;line-height:24px;max-width:420px;cursor:pointer}
+.scpr-scope-preview:focus-visible{outline:2px solid #059669;outline-offset:2px}.scpr-full-scope{white-space:pre-wrap;overflow-wrap:anywhere;max-height:70vh;overflow:auto}

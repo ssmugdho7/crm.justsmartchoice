@@ -10,6 +10,19 @@
       <a href="<?php echo admin_url('commission/quick_assign'); ?>" class="btn btn-default">Quick Assign</a>
     </div>
 
+    <?php if (!empty($leaders)) { ?>
+    <section aria-label="Top commission earners in current report" class="row">
+    <?php foreach ($leaders as $rank => $leader) { $leaderName = $leader['is_client'] ? get_company_name($leader['staffid']) : get_staff_full_name($leader['staffid']); ?>
+      <div class="col-sm-4"><div class="panel_s"><div class="panel-body">
+        <span class="label label-success"><?php echo ['Gold · 1', 'Silver · 2', 'Bronze · 3'][$rank]; ?></span>
+        <h4><?php echo html_escape($leaderName); ?></h4>
+        <strong><?php echo app_format_money($leader['amount'], get_base_currency()); ?></strong>
+        <p class="text-muted">Commission earned · current report filters</p>
+      </div></div></div>
+    <?php } ?>
+    </section>
+    <?php } ?>
+
     <div class="panel_s sc-card">
       <div class="panel-body">
         <?php echo form_open(admin_url('commission/smartchoice_report'), ['method' => 'get']); ?>

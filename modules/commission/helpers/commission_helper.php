@@ -81,3 +81,20 @@ function commission_get_status_modules_all($module_name){
         return false;
     }
 }
+/** Rank only the already-authorized, filtered report rows; never change payout calculations. */
+function saleshub_commission_leaders(array $rows)
+{
+    $leaders = [];
+    foreach ($rows as $row) {
+        $key = (int)($row['is_client'] ?? 0) . ':' . (int)$row['staffid'];
+        if (!isset($leaders[$key])) {
+            $leaders[$key] = ['staffid' => (int)$row['staffid'], 'is_client' => (int)($row['is_client'] ?? 0), 'amount' => 0];
+        }
+        $leaders[$key]['amount'] += (float)$row['amount'];
+    }
+    $leaders = array_values($leaders);
+    usort($leaders, static function ($a, $b) {
+        return ($b['amount'] <=> $a['amount']) ?: ($a['is_client'] <=> $b['is_client']) ?: ($a['staffid'] <=> $b['staffid']);
+    });
+    return array_slice($leaders, 0, 3);
+}

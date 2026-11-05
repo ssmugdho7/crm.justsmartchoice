@@ -1,0 +1,24 @@
+'use strict';
+const {JSDOM}=require('jsdom'),fs=require('fs'),assert=require('node:assert/strict');
+(async()=>{
+ const dom=new JSDOM('<body class="sccw-customers"><div id="wrapper"><main class="content"><nav class="customer-tabs"><ul><li><a data-group="invoices" href="/admin/clients/client/4?group=invoices">Invoices</a></li><li><a data-group="profile" href="/admin/clients/client/4?group=profile">Profile</a></li><li><a data-group="extension" href="/extension">Custom</a></li></ul></nav><a href="mailto:actual@example.com">actual@example.com</a></main></div>',{url:'https://crm.example/admin/clients',runScripts:'outside-only'});
+ const w=dom.window,d=w.document;
+ w.jQuery=require('jquery')(w);w.scCustomersWorkspace={sections:['Identity','Finance','Operations','Logs']};
+ let copied;Object.defineProperty(w.navigator,'clipboard',{value:{writeText:async value=>{copied=value}}});
+ w.eval(fs.readFileSync('modules/sc_customers_workspace/assets/js/customers.js','utf8'));
+ assert.equal(d.querySelector('.customer-tabs a').dataset.group,'profile');
+ assert.equal(d.querySelector('.customer-tabs li:last-child a').dataset.group,'extension');
+ assert.equal(d.querySelectorAll('.sccw-tab-section').length,2,'No empty categories or invented unauthorized links');
+ d.querySelector('.sccw-copy').click();await new Promise(r=>setTimeout(r,0));
+ assert.equal(copied,'actual@example.com');assert.equal(d.querySelectorAll('.sccw-toast:not(.is-error)').length,1);
+ w.navigator.clipboard.writeText=async()=>{throw Error('denied')};d.querySelector('.sccw-copy').click();await new Promise(r=>setTimeout(r,0));
+ assert.equal(d.querySelectorAll('.sccw-toast.is-error').length,1);
+ d.querySelector('main').insertAdjacentHTML('beforeend','<table class="statement-account-summary"><tbody><tr><td>Due</td><td>EUR 98.70</td></tr></tbody></table><table class="table"><tbody><tr><td><a href="/admin/payments/payment/9">Payment9</a></td><td>EUR 12.30</td></tr></tbody></table><a href="tel:+18005550123">+18005550123</a>');
+ await new Promise(r=>setTimeout(r,0));
+ assert(d.querySelector('.statement-account-summary').classList.contains('sccw-statement-summary'));
+ assert.equal(d.querySelector('.statement-account-summary').textContent,'DueEUR 98.70','Actual currency and amount remain untouched');
+ assert(d.querySelector('.sccw-ledger-payment'));
+ assert.equal(d.querySelectorAll('.sccw-copy').length,2,'Async contacts enhanced once without duplicate actions');
+ assert.equal(d.querySelectorAll('.sccw-tab-section').length,2);
+ w.close();console.log('PASS customer grouping, extension/permission links, confirmed clipboard outcome, async statement real values and idempotence');
+})().catch(e=>{console.error(e);process.exitCode=1});

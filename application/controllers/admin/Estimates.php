@@ -142,6 +142,14 @@ class Estimates extends AdminController
             $data['estimate_request_id'] = $this->input->get('estimate_request_id');
         }
 
+        if ($id === '' && !$this->input->post() && $this->input->get('from_appointment')) {
+            $this->load->helper('appointly/appointly');
+            $prefill = appointly_estimate_prefill($this->input->get('from_appointment'));
+            if (!$prefill) { access_denied('appointments'); }
+            $data['customer_id'] = $prefill['customer_id'];
+            $data['appointment_prefill'] = $prefill;
+        }
+
         $this->load->model('taxes_model');
         $data['taxes'] = $this->taxes_model->get();
         $this->load->model('currencies_model');

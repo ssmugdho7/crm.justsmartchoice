@@ -245,8 +245,12 @@ function handleTimeSlotChange($timeSelect) {
  * Load providers for a service
  * @param {string} serviceId - The service ID
  */
+var appointlyProvidersRequest = null;
+var appointlyProvidersGeneration = 0;
 function appointlyLoadProviders(serviceId) {
     if (!serviceId) return;
+    var generation = ++appointlyProvidersGeneration;
+    if (appointlyProvidersRequest) { appointlyProvidersRequest.abort(); }
     
     $('#provider_loading').removeClass('hide');
     var providerSelect = $('#provider_id');
@@ -259,11 +263,12 @@ function appointlyLoadProviders(serviceId) {
     // Add CSRF token
     data[csrfTokenName] = csrfTokenValue;
 
-    $.ajax({
+    appointlyProvidersRequest = $.ajax({
         url: admin_url + 'appointly/appointments/get_providers_by_service',
         type: 'POST',
         data: data,
         success: function(response) {
+            if (generation !== appointlyProvidersGeneration || String($('#service_id').val()) !== String(serviceId)) return;
             $('#provider_loading').addClass('hide');
             providerSelect.html('<option value="">' + appointlyLang.appointment_select_provider + '</option>');
 
@@ -289,6 +294,12 @@ function appointlyLoadProviders(serviceId) {
             } else {
                 providerSelect.selectpicker('refresh');
             }
+        },
+        error: function(xhr, status) {
+            if (status === 'abort' || generation !== appointlyProvidersGeneration) return;
+            $('#provider_loading').addClass('hide');
+            providerSelect.empty().append(new Option(appointlyLang.appointment_select_provider, '')).prop('disabled', true).selectpicker('refresh');
+            alert_float('danger', appointlyLang.appointment_error_loading_providers || 'Unable to load providers. Select the service again to retry.');
         }
     });
 }

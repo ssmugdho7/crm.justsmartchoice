@@ -8,7 +8,7 @@
 <h4><?php echo html_escape($salesperson->company); ?></h4>
 <p><strong><?php echo _l('salesperson_contact_name'); ?>:</strong> <?php echo html_escape($salesperson->contact_name); ?></p>
 <p><strong><?php echo _l('email'); ?>:</strong> <?php echo html_escape($salesperson->email); ?></p>
-<p><strong><?php echo _l('phone'); ?>:</strong> <?php echo html_escape($salesperson->phone); ?></p>
+<p><strong><?php echo _l('phone'); ?>:</strong> <?php if (!empty($salesperson->phone)) { ?><a href="tel:<?php echo html_escape(preg_replace('/[^0-9+]/', '', $salesperson->phone)); ?>"><?php echo html_escape($salesperson->phone); ?></a> <a href="sms:<?php echo html_escape(preg_replace('/[^0-9+]/', '', $salesperson->phone)); ?>">SMS</a><?php } ?></p>
 <p><strong><?php echo _l('salesperson_trade'); ?>:</strong> <?php echo html_escape($salesperson->trade); ?></p>
 <p><strong><?php echo _l('sales_center_category'); ?>:</strong> <?php echo html_escape($salesperson->category); ?></p>
 <p><strong><?php echo _l('salesperson_license_number'); ?>:</strong> <?php echo html_escape($salesperson->license_number); ?></p>

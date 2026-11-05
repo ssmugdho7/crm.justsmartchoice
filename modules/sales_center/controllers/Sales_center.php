@@ -95,8 +95,11 @@ class Sales_center extends AdminController
         if (!has_permission('sales_center', '', 'delete')) {
             access_denied('sales_center');
         }
-        $this->sales_center_model->delete($id);
-        set_alert('success', _l('deleted', _l('sales_center_salesperson')));
+        if ($this->sales_center_model->delete($id)) {
+            set_alert('success', _l('deleted', _l('sales_center_salesperson')));
+        } else {
+            set_alert('warning', 'Representative was not deleted. Retain representatives linked to agreements, commissions, or projects; set their status to inactive instead.');
+        }
         redirect(admin_url('sales_center'));
     }
 

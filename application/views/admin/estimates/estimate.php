@@ -32,6 +32,7 @@ init_head();
     </div>
 </div>
 <?php init_tail(); ?>
+<?php if (!empty($appointment_prefill) && !isset($estimate)) { $this->load->view('appointly/smart_choice/estimate_prefill', ['prefill' => $appointment_prefill]); } ?>
 <script>
 $(function() {
     init_editor('#clientnote,#terms', { height: 240 });

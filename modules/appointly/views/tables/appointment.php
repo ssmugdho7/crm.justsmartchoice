@@ -584,7 +584,10 @@ init_head(); ?>
                                         </div>
 
                                         <!-- Location -->
-                                        <?php if (!empty($appointment['address'])): ?>
+                                        <?php if (staff_can('create', 'estimates') && ($appointment['source'] ?? '') === 'internal' && !empty($appointment['contact_id'])): ?>
+                    <a class="btn btn-success" href="<?= admin_url('estimates/estimate?from_appointment=' . (int) $appointment['id']); ?>">Create Estimate from Appointment</a>
+                    <?php endif; ?>
+                    <?php if (!empty($appointment['address'])): ?>
                                             <div class="tw-flex tw-items-center tw-gap-3 tw-border tw-border-neutral-200 tw-border-solid tw-rounded-md tw-p-4 tw-mb-4">
                                                 <div class="tw-w-8 tw-h-8 tw-flex tw-items-center tw-justify-center tw-rounded-md tw-bg-neutral-100 tw-text-neutral-700">
                                                     <i class="fa fa-globe"></i>
@@ -1160,6 +1163,14 @@ init_head(); ?>
                         </div>
                     <?php
                     endif; ?>
+
+                    <?php if (!empty($appointment['address'])): ?>
+                    <div class="sc-navigation-bar" aria-label="Property navigation">
+                        <strong><?= html_escape($appointment['address']); ?></strong>
+                        <a class="btn btn-default sc-btn-secondary" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/dir/?api=1&amp;travelmode=driving&amp;destination=<?= rawurlencode($appointment['address']); ?>">Navigate with Google Maps</a>
+                        <a class="btn btn-default sc-btn-secondary" target="_blank" rel="noopener noreferrer" href="https://waze.com/ul?q=<?= rawurlencode($appointment['address']); ?>&amp;navigate=yes">Navigate with Waze</a>
+                    </div>
+                    <?php endif; ?>
 
                     <!-- Location Map -->
                     <?php

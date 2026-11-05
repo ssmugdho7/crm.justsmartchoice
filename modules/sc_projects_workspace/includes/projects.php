@@ -150,6 +150,23 @@ function scpr_table_row($row, $project)
     $row[1] = str_replace(' | ', '', $row[1]);
     $row[1] = str_replace('<a href="' . admin_url('projects/view/' . $id) . '">' , '<a class="prj-btn-view-pill" href="' . admin_url('projects/view/' . $id) . '">', $row[1]);
     $row[1] = str_replace('<a href="' . admin_url('projects/project/' . $id) . '">', '<a class="prj-btn-edit-pill" href="' . admin_url('projects/project/' . $id) . '">', $row[1]);
+    if (!empty($project['description'])) {
+        // Render scope as plain text: project rich text must never become table markup.
+        $scope = trim(html_entity_decode(strip_tags(preg_replace('~<(?:br\s*/?|/p|/div|/li)>~i', "\n", $project['description'])), ENT_QUOTES, 'UTF-8'));
+        if ($scope !== '') {
+            $row[1] .= '<button type="button" class="scpr-scope-preview" data-scope="' . e($scope) . '" data-title="' . e($project['name'] ?? '') . '">' . e($scope) . '</button>';
+        }
+    }
+    // Preserve every team member in the export while keeping large crews compact.
+    if (isset($row[6])) {
+        $memberCount = 0;
+        $row[6] = preg_replace_callback('~<a href="[^">]*/profile/[^">]*">.*?</a>~s', function ($match) use (&$memberCount) {
+            return ++$memberCount <= 3 ? $match[0] : '';
+        }, $row[6]);
+        if ($memberCount > 3) {
+            $row[6] = str_replace('<span class="hide">', '<span class="scpr-team-overflow" aria-label="+' . ($memberCount - 3) . '">+' . ($memberCount - 3) . '</span><span class="hide">', $row[6]);
+        }
+    }
     $progress = max(0, min(100, (float) ($project['scpr_progress'] ?? 0)));
     $html = '<div class="prj-progress-container"><div class="prj-progress-track" role="progressbar" aria-label="' . e(_l('project_progress'))
         . '" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' . e($progress) . '"><div class="prj-progress-bar" style="width:'

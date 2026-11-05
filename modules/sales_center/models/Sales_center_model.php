@@ -66,6 +66,13 @@ class Sales_center_model extends App_Model
     public function delete($id)
     {
         $id = (int) $id;
+        // Retain the representative identity required by agreement and commission history.
+        foreach (['sales_center_contracts', 'sales_center_commissions', 'sales_center_project_links'] as $table) {
+            if ($this->db->table_exists(db_prefix() . $table)
+                && $this->db->where('salesperson_id', $id)->count_all_results(db_prefix() . $table) > 0) {
+                return false;
+            }
+        }
         $this->db->where('id', $id);
         $this->db->delete(db_prefix() . 'sales_center');
 

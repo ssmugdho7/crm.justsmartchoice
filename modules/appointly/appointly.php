@@ -1126,3 +1126,12 @@ function appointly_smartchoice_compact_footer_assets()
     echo '<script>document.addEventListener("DOMContentLoaded",function(){document.body.classList.add("appointly-smartchoice-compact");});</script>';
 }
 hooks()->add_action('app_admin_footer', 'appointly_smartchoice_compact_footer_assets');
+
+// Appointment-only UI assets; keep overrides away from other CRM modules.
+hooks()->add_action('app_admin_head', 'appointly_board_admin_assets');
+function appointly_board_admin_assets()
+{
+    $CI = &get_instance();
+    if ($CI->uri->segment(2) !== 'appointly') { return; }
+    echo '<link rel="stylesheet" href="' . module_dir_url('appointly', 'assets/css/board_appointments.css') . '">';
+}

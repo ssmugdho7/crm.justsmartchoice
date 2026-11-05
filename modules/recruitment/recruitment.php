@@ -679,3 +679,13 @@ function recruitment_sync_resume_after_staff_change($staff_id = 0)
     }
     return recruitment_sync_candidate_resume_to_staff(0, $staff_id);
 }
+
+// Isolate the executive admin theme from candidate-facing consent and application pages.
+hooks()->add_action('app_admin_head', 'recruitment_board_admin_assets');
+function recruitment_board_admin_assets()
+{
+    $CI = &get_instance();
+    if ($CI->uri->segment(2) !== 'recruitment') { return; }
+    echo '<script>document.documentElement.classList.add("sc-recruitment-board");</script>';
+    echo '<link rel="stylesheet" href="' . module_dir_url(RECRUITMENT_MODULE_NAME, 'assets/css/board_recruitment.css') . '">';
+}

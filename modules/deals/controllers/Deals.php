@@ -7,6 +7,13 @@ class Deals extends AdminController
     public function __construct()
     {
         parent::__construct();
+        // Routes may be reached while the optional module is inactive.
+        $this->load->helper('deals/deals');
+        hooks()->add_action('app_admin_head', static function () {
+            echo '<script>document.documentElement.classList.add("sc-saleshub");</script>';
+            echo '<link rel="stylesheet" href="' . module_dir_url('sales_center', 'assets/css/saleshub.css') . '?v=1">';
+            echo '<script defer src="' . module_dir_url('sales_center', 'assets/js/saleshub.js') . '?v=1"></script>';
+        });
         $this->load->model('deals_model');
         $this->load->model('staff_model');
     }
@@ -17,12 +24,21 @@ class Deals extends AdminController
         if (!is_staff_member()) {
             access_denied('Deals');
         }
+        if (!$this->pipeline_schema_ready()) {
+            $this->load->view('setup_required');
+            return;
+        }
         $data['switch_kanban'] = true;
 
         $data['piplines'] = get_deals_result('tbl_deals_pipelines', null, 'array');
         $default_pipeline = get_option('default_pipeline');
-        if (empty($default_pipeline)) {
-            $default_pipeline = $data['piplines'][0]['pipeline_id'];
+        $pipeline_ids = array_column($data['piplines'], 'pipeline_id');
+        if (!in_array($default_pipeline, $pipeline_ids)) {
+            $default_pipeline = $pipeline_ids[0] ?? null;
+        }
+        if ($default_pipeline === null) {
+            $this->load->view('setup_required');
+            return;
         }
         $data['default_pipeline'] = $default_pipeline;
 
@@ -46,6 +62,17 @@ class Deals extends AdminController
         $this->load->view('all_deals', $data);
     }
 
+    private function pipeline_schema_ready()
+    {
+        // Installation is an explicit Modules action, never a side effect of a GET.
+        foreach (['tbl_deals', 'tbl_deals_pipelines', 'tbl_deals_stages', 'tbl_deals_source'] as $table) {
+            if (!$this->db->table_exists($table)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public function switch_kanban($set = 0)
     {
         if ($set == 1) {
@@ -63,6 +90,11 @@ class Deals extends AdminController
     {
         if (!is_staff_member()) {
             ajax_access_denied();
+        }
+        if (!$this->pipeline_schema_ready()) {
+            $this->output->set_status_header(409);
+            echo '<p class="alert alert-warning">Deals setup is required. Ask an administrator to activate the Deals module.</p>';
+            return;
         }
         $pipeline_id = $this->input->get('pipeline_id');
         $data['base_currency'] = get_base_currency();

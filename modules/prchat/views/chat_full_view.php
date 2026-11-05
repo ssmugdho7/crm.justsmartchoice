@@ -4779,7 +4779,10 @@
       html += isMuted ? '<?php echo _l("chat_unmute_conversation"); ?>' : '<?php echo _l("chat_mute_conversation"); ?>';
       html += '</div>';
       if (type === 'groups') {
-        html += '<div class="ctx-item" data-action="group-avatar" data-id="' + targetId + '" data-type="' + type + '">';
+        <?php if (is_admin() || staff_can('edit', PR_CHAT_MODULE_NAME)) { ?>
+        html += '<div class="ctx-item" data-action="group-rename" data-id="' + targetId + '" data-type="groups"><i class="fa fa-pencil"></i><?= addslashes(_l('chat_rename_label')); ?></div>';
+        <?php } ?>
+        html += '<div class="ctx-item" data-action="group-avatar data-id="' + targetId + '" data-type="' + type + '">';
         html += '<i class="fa fa-camera"></i><?php echo addslashes(_l('chat_add_group_photo')); ?>';
         html += '</div>';
         html += '<div class="ctx-item" data-action="group-avatar-remove" data-id="' + targetId + '" data-type="' + type + '">';
@@ -4837,6 +4840,22 @@
       var targetId = String($(this).data("id"));
       var type = $(this).data("type");
       $contextMenu.removeClass("visible");
+
+      if (action === 'group-rename') {
+        var $renameGroup = $('#frame .chat_groups_list .group_selector#' + targetId);
+        var oldName = $renameGroup.find('.group_name_main').text();
+        var newName = window.prompt(<?= json_encode(_l('chat_rename_label')); ?>, oldName);
+        if (newName === null || !newName.trim() || newName.trim() === oldName) return;
+        $.post(prchatSettings.chatRenameGroup, prchatCsrfPayload({groupId: targetId, groupName: newName.trim()}), null, 'json')
+          .done(function(resp) {
+            if (resp.success) {
+              $renameGroup.find('.group_name_main').text(newName.trim());
+              if (String(window.activeGroupId) === targetId) $('#grp-panel-name-display').text(newName.trim());
+              alert_float('success', customerSettings.groupNameChanged + newName.trim());
+            } else alert_float('danger', resp.error || <?= json_encode(_l('chat_error_float')); ?>);
+          }).fail(function() { alert_float('danger', <?= json_encode(_l('chat_error_float')); ?>); });
+        return;
+      }
 
       if (action === 'group-delete') {
         if (!staffCanDeleteGroups) return;

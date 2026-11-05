@@ -35,7 +35,7 @@
 
                     <app-filters id="<?= $invoices_table->id(); ?>"
                         view="<?= $invoices_table->viewName(); ?>"
-                        :rules="extra.invoicesRules || <?= app\services\utilities\Js::from($this->input->get('status') ? $invoices_table->findRule('status')->setValue([$this->input->get('status')]) : ($this->input->get('not_sent') ? $invoices_table->findRule('sent')->setValue('0') : [])); ?>"
+                        :rules="extra.invoicesRules || <?= app\services\utilities\Js::from($this->input->get('outstanding') === '1' ? $invoices_table->findRule('status')->setValue(['1', '3', '4']) : ($this->input->get('status') ? $invoices_table->findRule('status')->setValue([$this->input->get('status')]) : ($this->input->get('not_sent') ? $invoices_table->findRule('sent')->setValue('0') : []))); ?>"
                         :saved-filters="<?= $invoices_table->filtersJs(); ?>"
                         :available-rules="<?= $invoices_table->rulesJs(); ?>">
                     </app-filters>

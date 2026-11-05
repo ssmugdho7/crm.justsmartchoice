@@ -5,7 +5,7 @@
 // ADMIN SETTINGS & DASHBOARD
 // ----------------------
 // Module Information
-$lang['appointly_module_name'] = 'Appointly';
+$lang['appointly_module_name'] = 'Gestor de Citas';
 $lang['appointly_current_version'] = 'Versión actual del módulo: ';
 $lang['appointly_settings_label_pointer'] = '<strong>Configuración -> Citas</strong>';
 $lang['appointly_integrations'] = 'Integraciones';

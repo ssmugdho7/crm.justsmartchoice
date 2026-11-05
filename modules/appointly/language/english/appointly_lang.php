@@ -5,7 +5,7 @@
 // ADMIN SETTINGS & DASHBOARD
 // ----------------------
 // Module Information
-$lang['appointly_module_name'] = 'Appoinment Manager';
+$lang['appointly_module_name'] = 'Appoinments Mgr';
 $lang['appointly_current_version'] = 'Current module version: ';
 $lang['appointly_settings_label_pointer'] = '<strong>Setup -> Settings -> Appointments</strong>';
 $lang['appointly_integrations'] = 'Integrations';
@@ -25,9 +25,9 @@ $lang['appointment_appointments_dashboard'] = 'Dashboard';
 $lang['appointment_want_to_go_back'] = 'Appointments';
 $lang['appointly_analytics_dashboard'] = 'Appointly Analytics Dashboard';
 $lang['appointment_history_label'] = 'Past Appointments';
-$lang['appointment_history_label_menu_label'] = 'Appointment History';
+$lang['appointment_history_label_menu_label'] = 'Apps History';
 $lang['appointment_services_menu_label'] = 'Services';
-$lang['appointment_analytics_and_reports_menu_label'] = 'Analytics & Reports';
+$lang['appointment_analytics_and_reports_menu_label'] = 'Reports';
 
 // Invoice Conversion
 $lang['appointment_convert_to_invoice'] = 'Convert to Invoice';
@@ -467,10 +467,10 @@ $lang['appointments_blocked_days_tab_title'] = 'Not working days';
 
 // Working Hours and Schedules
 $lang['appointments_default_hours_label'] = 'Manage your default appointment hours';
-$lang['appointly_company_schedule'] = 'Company Schedule';
+$lang['appointly_company_schedule'] = 'Office Schedule';
 $lang['appointly_company_schedule_info'] = 'Configure the default working hours for your company. These hours will be used for all staff members unless they have their own specific working hours set.';
 $lang['appointly_manage_company_schedule'] = 'Manage Company Schedule';
-$lang['appointly_staff_working_hours'] = 'Staff Working Hours';
+$lang['appointly_staff_working_hours'] = 'Staffs Hours';
 $lang['appointly_staff_working_hours_info'] = 'Configure the working hours for this staff member. These hours will override the company schedule when this staff member is selected as a provider.';
 $lang['appointly_view_staff_schedule'] = 'View Staff Schedule';
 $lang['appointly_day'] = 'Day';

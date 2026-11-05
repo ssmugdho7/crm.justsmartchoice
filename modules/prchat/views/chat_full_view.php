@@ -4843,17 +4843,28 @@
 
       if (action === 'group-rename') {
         var $renameGroup = $('#frame .chat_groups_list .group_selector#' + targetId);
-        var oldName = $renameGroup.find('.group_name_main').text();
-        var newName = window.prompt(<?= json_encode(_l('chat_rename_label')); ?>, oldName);
-        if (newName === null || !newName.trim() || newName.trim() === oldName) return;
-        $.post(prchatSettings.chatRenameGroup, prchatCsrfPayload({groupId: targetId, groupName: newName.trim()}), null, 'json')
-          .done(function(resp) {
-            if (resp.success) {
-              $renameGroup.find('.group_name_main').text(newName.trim());
-              if (String(window.activeGroupId) === targetId) $('#grp-panel-name-display').text(newName.trim());
-              alert_float('success', customerSettings.groupNameChanged + newName.trim());
-            } else alert_float('danger', resp.error || <?= json_encode(_l('chat_error_float')); ?>);
-          }).fail(function() { alert_float('danger', <?= json_encode(_l('chat_error_float')); ?>); });
+        var $renameDialog = $('<div class="modal fade" tabindex="-1" role="dialog" aria-label="Rename Group"><div class="modal-dialog modal-sm"><div class="modal-content"><form><div class="modal-header"><h4 class="modal-title"></h4></div><div class="modal-body"><label>Group name<input class="form-control" name="groupName" required maxlength="100"></label><p class="text-danger" role="alert"></p></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button><button type="submit" class="btn btn-primary">Save</button></div></form></div></div></div>');
+        $renameDialog.find('.modal-title').text(<?= json_encode(_l('chat_rename_label')); ?>);
+        $renameDialog.find('input').val($renameGroup.find('.group_name_main').text());
+        $renameDialog.on('hidden.bs.modal', function() { $renameDialog.remove(); });
+        $renameDialog.on('shown.bs.modal', function() { $renameDialog.find('input').focus().select(); });
+        $renameDialog.find('form').on('submit', function(event) {
+          event.preventDefault();
+          var newName = $renameDialog.find('input').val().trim();
+          if (!newName) return;
+          var $save = $renameDialog.find('[type="submit"]').prop('disabled', true);
+          $.post(prchatSettings.chatRenameGroup, prchatCsrfPayload({groupId: targetId, groupName: newName}), null, 'json')
+            .done(function(resp) {
+              if (resp.success) {
+                $renameGroup.find('.group_name_main').text(newName);
+                if ($('#frame .chat_groups_list li.active').attr('id') === targetId) $('#grp-panel-name-display').text(newName);
+                $renameDialog.modal('hide');
+                alert_float('success', customerSettings.groupNameChanged + newName);
+              } else $renameDialog.find('[role="alert"]').text(resp.error || <?= json_encode(_l('chat_error_float')); ?>);
+            }).fail(function() { $renameDialog.find('[role="alert"]').text(<?= json_encode(_l('chat_error_float')); ?>); })
+            .always(function() { $save.prop('disabled', false); });
+        });
+        $renameDialog.appendTo('body').modal('show');
         return;
       }
 

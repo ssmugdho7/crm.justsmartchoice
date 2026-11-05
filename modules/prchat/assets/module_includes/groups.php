@@ -165,7 +165,7 @@
 
       // Update group panel header if this group is currently active
       if ($("#frame .chat_groups_list li.active").attr("id") == data.group_id) {
-        $(".modern-group-header h4").html('<i class="fa-solid fa-user-group"></i> ' + data.newName);
+        $(".modern-group-header h4").empty().append($('<i class="fa-solid fa-user-group"></i>')).append(document.createTextNode(" " + data.newName));
       }
     });
 

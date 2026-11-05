@@ -1222,6 +1222,10 @@ class Appointments extends AdminController
      */
     public function delete($id)
     {
+        if ($this->input->method() !== 'post') {
+            show_error('Use the appointment Delete button.', 405);
+            return;
+        }
         if (! staff_can('delete', 'appointments')) {
             access_denied('Appointments');
         }

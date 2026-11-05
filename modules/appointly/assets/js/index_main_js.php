@@ -361,8 +361,7 @@
     function deleteAppointment(id, element) {
         if (confirm("<?= _l('appointment_are_you_sure'); ?>")) {
             // Check if it's a Google synced appointment
-            var isGoogleSynced = $(element).closest('tr').find('.fab.fa-google').length > 0 ||
-                !$.isNumeric(id); // Google IDs are typically not numeric
+            var isGoogleSynced = !$.isNumeric(id); // Google IDs are typically not numeric
 
             if (isGoogleSynced) {
                 // For Google synced appointments, we need to delete from Google Calendar
@@ -396,9 +395,12 @@
                     success: function(response) {
                         if (response && response.success) {
                             alert_float('success', response.message || "<?= _l('appointment_deleted'); ?>");
-                            $(".table-appointments").DataTable().ajax.reload(null, false);
+                            window.location.reload();
+                        } else {
+                            alert_float('danger', response && response.message || 'Appointment could not be deleted.');
                         }
                     },
+                    error: function() { alert_float('danger', 'Appointment could not be deleted. Please try again.'); },
                     complete: function() {
                         $(".table-appointments").find(".dt-loader").remove();
                     }

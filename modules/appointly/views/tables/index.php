@@ -232,6 +232,10 @@ foreach ($rResult as $aRow) {
   }
 
   $subjectHtml .= '</div>';
+  if (is_numeric($aRow['id']) && staff_can('delete', 'appointments')
+      && (is_admin() || (int) $aRow['created_by'] === (int) get_staff_user_id())) {
+    $subjectHtml .= '<div class="mtop5"><button type="button" class="btn btn-danger btn-xs" onclick="deleteAppointment(' . (int) $aRow['id'] . ', this); return false;">' . _l('delete') . '</button></div>';
+  }
   $subjectHtml .= '</div>';
   $row[]       = $subjectHtml;
 

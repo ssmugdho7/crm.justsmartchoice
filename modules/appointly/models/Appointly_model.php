@@ -1250,6 +1250,9 @@ class Appointly_model extends App_Model
      */
     public function delete_appointment($id)
     {
+        if (!staff_can('delete', 'appointments')) {
+            return ['success' => false, 'message' => _l('access_denied')];
+        }
         // For Google two-way sync appointments that are not in database (direct Google event ID)
         if (! is_numeric($id)) {
             if (appointlyGoogleAuth()) {
@@ -1287,6 +1290,11 @@ class Appointly_model extends App_Model
                 'success' => false,
                 'message' => _l('appointment_not_found'),
             ];
+        }
+
+        // Authorize before deleting attendees, services or external events.
+        if (!is_admin() && (int) $appointment['created_by'] !== (int) get_staff_user_id()) {
+            return ['success' => false, 'message' => _l('access_denied')];
         }
 
         // Delete from Google Calendar if enabled and we have a Google event ID

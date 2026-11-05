@@ -1,0 +1,24 @@
+'use strict';
+const {JSDOM}=require('jsdom'),fs=require('fs'),assert=require('node:assert/strict');
+const code=fs.readFileSync('modules/sc_admin_fixes/assets/js/sales.js','utf8');
+const delay=()=>new Promise(r=>setTimeout(r,10));
+(async()=>{
+ const dom=new JSDOM('<body class="scaf-enabled scaf-invoices"><div id="wrapper"><a href="/proposal/4/actualhash">Public</a><span class="sales-transaction-id">pi_&lt;actual&gt;</span><table class="table-invoices"><tr><td><input type="checkbox" class="sc-bulk-row" checked></td></tr></table><div id="sc-bulk-invoices"><span class="sc-bulk-count"></span></div><div id="apply_credits" data-credits-remaining="0.30"><div class="modal-body"><form><input class="apply-credits-field" type="number" step="0.01" min="0" max="0.20" value="0" name="amount[1]"><input class="apply-credits-field" type="number" step="0.01" min="0" max="0.30" value="0" name="amount[2]"><button type="submit">Apply</button></form></div></div></div></body>',{url:'https://crm.example/admin/invoices',runScripts:'outside-only'});
+ const w=dom.window,d=w.document,$=require('jquery')(w);w.jQuery=$;$.fn.modal=function(action){this.attr('data-modal-action',action);return this;};
+ const copies=[],toasts=[];Object.defineProperty(w.navigator,'clipboard',{value:{writeText:async v=>copies.push(v)}});w.SCAF={toast:(...v)=>toasts.push(v)};
+ w.eval(code);await delay();
+ assert(d.querySelector('#sc-bulk-invoices').classList.contains('scaf-floating-batch'));
+ d.querySelector('.scaf-copy-link').click();d.querySelector('.scaf-copy-id').click();await delay();
+ assert.deepEqual(copies,['https://crm.example/proposal/4/actualhash','pi_<actual>']);assert.equal(toasts.length,2);
+ w.navigator.clipboard.writeText=async()=>{throw Error('denied')};d.querySelector('.scaf-copy-id').click();await delay();assert.equal(toasts.at(-1)[0],'error');
+ const fields=d.querySelectorAll('.apply-credits-field');fields[0].value='0.10';fields[1].value='0.20';fields[0].dispatchEvent(new w.Event('input',{bubbles:true}));
+ assert.equal(d.querySelector('.scaf-allocation-remaining').textContent,'Remaining credit after allocation: 0.00');
+ assert.equal(fields[0].max,'0.10');assert.equal(fields[1].max,'0.20');assert.equal(d.querySelector('[type=submit]').disabled,false,'0.1+0.2 exactly0.3');
+ fields[1].value='0.21';fields[1].dispatchEvent(new w.Event('input',{bubbles:true}));assert.equal(d.querySelector('[type=submit]').disabled,true,'Aggregate allocation constrained');
+ fields[1].value='0';fields[1].dispatchEvent(new w.Event('input',{bubbles:true}));d.querySelectorAll('.scaf-credit-max')[1].click();assert.equal(fields[1].value,'0.20','Applymax respects other allocations');
+ fields[0].value='0.001';fields[0].dispatchEvent(new w.Event('input',{bubbles:true}));assert(!fields[0].validity.valid,'Reject precision beyond currency step');
+ d.querySelector('.sc-bulk-row').checked=false;$(d).trigger('change');assert(!d.querySelector('#sc-bulk-invoices').classList.contains('scaf-floating-batch'));
+ d.querySelector('#wrapper').insertAdjacentHTML('beforeend','<span class="sales-transaction-id">new_actual_id</span>');await delay();
+ assert.equal(d.querySelectorAll('.scaf-copy-id').length,2);assert.equal(d.querySelectorAll('.scaf-credit-max').length,2,'Enhancements idempotent');
+ w.close();console.log('PASS Sales real clipboard URL/text+failure, floating selection, exact0.1+0.2 allocations, sharedmax/precision limits, async idempotence');
+})().catch(e=>{console.error(e);process.exitCode=1});

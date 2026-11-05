@@ -1133,5 +1133,5 @@ function appointly_board_admin_assets()
 {
     $CI = &get_instance();
     if ($CI->uri->segment(2) !== 'appointly') { return; }
-    echo '<link rel="stylesheet" href="' . module_dir_url('appointly', 'assets/css/board_appointments.css') . '">';
+    echo '<link rel="stylesheet" href="' . module_dir_url('appointly', 'assets/css/board_appointments.css') . '?v=' . filemtime(__DIR__ . '/assets/css/board_appointments.css') . '">';
 }

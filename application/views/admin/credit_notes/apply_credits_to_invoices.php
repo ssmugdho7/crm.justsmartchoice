@@ -32,7 +32,7 @@
                     <td><?php echo e(app_format_money($invoice['total'], $invoice['currency_name'])); ?></td>
                     <td><?php echo e(app_format_money($invoice['total_left_to_pay'], $invoice['currency_name'])); ?></td>
                     <td>
-                        <input type="number" name="amount[<?php echo e($invoice['id']); ?>]" class="form-control apply-credits-field" value="0">
+                        <input type="number" name="amount[<?php echo e($invoice['id']); ?>]" class="form-control apply-credits-field" value="0" min="0" step="<?php echo e(pow(10, -get_decimal_places())); ?>" max="<?php echo e(min((float) $invoice['total_left_to_pay'], (float) $credit_note->remaining_credits)); ?>">
                     </td>
                 </tr>
                 <?php } ?>
@@ -80,6 +80,7 @@
     init_currency(<?php echo e($credit_note->currencyid); ?>);
     $(function(){
         appValidateForm('#apply_credits_form');
+        $('#apply_credits_form').on('input', '.apply-credits-field', function () { $(this).trigger('change'); });
     });
 </script>
 <?php } ?>

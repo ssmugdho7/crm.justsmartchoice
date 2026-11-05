@@ -1,0 +1,11 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+let s=fs.readFileSync(__dirname+'/../modules/sc_admin_fixes/assets/js/saleshub.js','utf8');s=s.slice(s.indexOf('async function submitMassDelete'),s.indexOf('    function placeToolbar'));
+let answer,submits=0,created=[],confirmations=0,locks=0,releases=0,fail=false;
+let context={SCAF:{confirm:()=>{confirmations++;return new Promise(r=>answer=r);},busy:()=>{locks++;return()=>releases++;},toast(){}},alert(){throw Error('Unexpected alert');},adminBase:()=>'/admin/',csrfData:{token_name:'csrf',hash:'hash'},window:{csrfData:{token_name:'csrf',hash:'hash'}},document:{createElement(tag){let x={children:[],appendChild(v){this.children.push(v)},submit(){if(fail)throw Error('failure');submits++;assert(this.children.some(x=>x.name==='csrf'&&x.value==='hash'));}};created.push(x);return x;},body:{appendChild(){}}}};vm.createContext(context);vm.runInContext(s,context);
+(async()=>{
+ let source={},p=context.submitMassDelete('salespersons',[1,2],source);await context.submitMassDelete('salespersons',[1,2],source);assert.equal(confirmations,1,'Rapid repeat does not queue another confirmation');assert.equal(locks,1,'Spinner starts before confirmation');assert.equal(submits,0);answer(false);await p;assert.equal(submits,0);assert.equal(releases,1,'Cancel unlocks');
+ p=context.submitMassDelete('salespersons',[1,2],source);answer(true);await p;assert.equal(submits,1);await context.submitMassDelete('salespersons',[1,2],source);assert.equal(submits,1,'Successful native submit stays locked during navigation');assert.equal(confirmations,2);
+ let form=created[0];assert.equal(form.action,'/admin/sales_center/mass_delete/salespersons');assert.equal(form.method,'post');assert.equal(form.children.filter(x=>x.name==='ids[]').length,2);
+ fail=true;p=context.submitMassDelete('contracts',[4],source);answer(true);await p;assert.equal(releases,2,'Failed native submit unlocks');fail=false;p=context.submitMassDelete('contracts',[4],source);answer(false);await p;assert.equal(releases,3,'Retry remains possible after failure');
+ console.log('PASS SalesHub preconfirm spinner/duplicate guard,cancel/failure unlock,nativePOST/CSRF/IDs retained,single submit through navigation');
+})().catch(e=>{console.error(e);process.exit(1)});

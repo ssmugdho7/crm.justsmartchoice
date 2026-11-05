@@ -488,3 +488,11 @@ function total_project_finished_tasks_by_milestone($milestone_id, $project_id)
         'milestone' => $milestone_id,
     ]);
 }
+
+/** Compact native custom-field scope without executing stored rich text. */
+function render_project_scope_preview($value, $projectName)
+{
+    $text = trim(html_entity_decode(strip_tags(preg_replace('~<(?:br\s*/?|/p|/div|/li)>~i', "\n", (string) $value)), ENT_QUOTES, 'UTF-8'));
+    if ($text === '') { return ''; }
+    return '<button type="button" class="native-project-scope" data-scope="' . e($text) . '" data-scope-title="' . e($projectName) . '">' . e($text) . '</button>';
+}

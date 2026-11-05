@@ -1,0 +1,11 @@
+const fs=require('fs'),assert=require('assert'),{JSDOM}=require('jsdom');
+const dom=new JSDOM('<body><svg id="gantt"></svg><select name="gantt_view"><option>Day</option><option>Week</option><option selected>Month</option></select></body>',{runScripts:'outside-only'});
+const $=require('jquery')(dom.window); dom.window.$=$;
+let changes=[];
+dom.window.Gantt=function(){this.hide_popup=()=>{};this.change_view_mode=v=>changes.push(v);};
+let source=fs.readFileSync('application/views/admin/projects/project_gantt.php','utf8').split('<script>')[1].split('</script>')[0];
+source=source.replace(/<\?= json_encode\(\$gantt_data\); \?>/,JSON.stringify([{id:'1',name:'Job',start:'2026-11-05',end:'2026-11-06'}]));
+dom.window.eval(source);dom.window.document.dispatchEvent(new dom.window.Event('DOMContentLoaded'));
+for(const mode of ['Day','Week','Month'])$('select[name="gantt_view"]').val(mode).trigger('change');
+assert.deepStrictEqual(changes,['Day','Week','Month']);
+console.log('PASS native project Gantt initializes and Day/Week/Month controls reach chart');

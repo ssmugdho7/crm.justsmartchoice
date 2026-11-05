@@ -1,0 +1,8 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<?php if(isset($kpis)): ?>
+<template id="scaf-project-kpis"><section class="scaf-project-kpis" aria-label="Project summary">
+<?php foreach(['active'=>'Active Jobs','overdue'=>'Overdue / At Risk','contracts'=>'Total Contract Value','billed'=>'Billed Velocity','permitted'=>'Permitted Jobs'] as $key=>$label): ?>
+<div class="scaf-project-kpi"><span><?= html_escape($label) ?></span><strong><?php if(is_array($kpis[$key])) { foreach($kpis[$key] as $currency=>$amount)echo '<small>'.html_escape($currency).' '.html_escape($amount).'</small>';if(!$kpis[$key])echo '—'; }else echo (int)$kpis[$key]; ?></strong><small><?= $key==='contracts'?'Fixed-price in-progress projects · permitted access only':($key==='billed'?'Issued invoices for in-progress projects · permitted access only':($key==='permitted'?'Permit Needed: Yes · in-progress projects':'In Progress projects only')) ?></small></div>
+<?php endforeach; ?></section></template>
+<?php endif; ?>
+<div class="scaf-project-batch" hidden><strong><span data-scaf-selected>0</span> projects selected</strong><select class="form-control" data-scaf-batch-status><?php foreach($statuses as $status): ?><option value="<?= (int)$status['id'] ?>"><?= html_escape($status['name']) ?></option><?php endforeach; ?></select><?php if(staff_can('edit','projects')): ?><button class="btn sc-btn-primary" type="button" data-scaf-batch-apply>Update Status</button><?php endif; ?><button class="btn sc-btn-secondary" type="button" data-scaf-batch-export>Export Selected Schedule</button><button class="btn sc-btn-ghost" type="button" data-scaf-batch-clear>Clear</button></div>

@@ -81,7 +81,7 @@ if ($total_reminders > 0) {
                         <div class="mtop10"></div>
                     </div>
                     <div class="pull-right _buttons">
-                        <?php if ($credit_note->status == 1 && ! empty($credit_note->clientid)) { ?>
+                        <?php if ($credit_note->status == 1 && ! empty($credit_note->clientid) && staff_can('edit', 'credit_notes')) { ?>
                         <a href="#" data-toggle="modal" data-target="#apply_credits" class="btn btn-primary">
                             <?= _l('apply_to_invoice'); ?>
                         </a>
@@ -356,7 +356,7 @@ if (staff_can('delete', 'credit_notes')) {
                                                 </span>
                                             </td>
                                             <td>
-                                                <?= e(app_format_money($credit_note->remaining_credits, $credit_note->currency_name)); ?>
+                                                <strong style="color:#047857;font-variant-numeric:tabular-nums"><?= e(app_format_money($credit_note->remaining_credits, $credit_note->currency_name)); ?></strong>
                                             </td>
                                         </tr>
                                     </tbody>

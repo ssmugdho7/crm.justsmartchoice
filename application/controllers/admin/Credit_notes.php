@@ -149,12 +149,17 @@ class Credit_notes extends AdminController
 
     public function apply_credits_to_invoices($credit_note_id)
     {
+        if (staff_cant('edit', 'credit_notes')) { access_denied('credit_notes'); }
+        $credit = $this->credit_notes_model->get($credit_note_id);
+        if (!$credit || (staff_cant('view', 'credit_notes') && (staff_cant('view_own', 'credit_notes') || (int) $credit->addedfrom !== (int) get_staff_user_id()))) { access_denied('credit_notes'); }
         $creditApplied = false;
-        if ($this->input->post()) {
-            foreach ($this->input->post('amount') as $invoice_id => $amount) {
+        $amounts = $this->input->post('amount');
+        if ($this->input->post() && is_array($amounts)) {
+            foreach ($amounts as $invoice_id => $amount) {
+                if (!ctype_digit((string) $invoice_id) || !user_can_view_invoice($invoice_id)) { continue; }
                 if ($this->credit_notes_model->apply_credits($credit_note_id, ['amount' => $amount, 'invoice_id' => $invoice_id])) {
                     update_invoice_status($invoice_id, true);
-                    $creditsApplied = true;
+                    $creditApplied = true;
                 }
             }
         }

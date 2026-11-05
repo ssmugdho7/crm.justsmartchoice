@@ -89,7 +89,7 @@
                 gantt.hide_popup();
             })
 
-            $('select[name$="gantt_view"').change(function(el) {
+            $('select[name="gantt_view"]').change(function(el) {
                 let view = $(el.target).val();
                 gantt.change_view_mode(view);
             })

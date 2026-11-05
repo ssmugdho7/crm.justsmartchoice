@@ -53,11 +53,13 @@ $additionalSelect = [
 $where = [];
 
 if (! is_admin() && ! staff_can('view', 'appointments')) {
+  // Group owner and attendee visibility before applying search/status filters.
+  // The attendee model stores staff_id (staffid belongs to the staff table).
+  $staffId = (int) get_staff_user_id();
   $where[] = 'AND (' . db_prefix() . 'appointly_appointments.created_by='
-    . get_staff_user_id() . ')
-    OR ' . db_prefix() . 'appointly_appointments.id
-    IN (SELECT appointment_id FROM ' . db_prefix()
-    . 'appointly_attendees WHERE staffid=' . get_staff_user_id() . ')';
+    . $staffId . ' OR ' . db_prefix() . 'appointly_appointments.id'
+    . ' IN (SELECT appointment_id FROM ' . db_prefix()
+    . 'appointly_attendees WHERE staff_id=' . $staffId . '))';
 }
 
 $filters = createFilters();

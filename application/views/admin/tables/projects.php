@@ -45,9 +45,13 @@ return App_table::find('projects')
 
         $custom_fields = get_table_custom_fields('projects');
 
+        $projectScopeColumns = [];
         foreach ($custom_fields as $key => $field) {
             $selectAs = (is_cf_date($field) ? 'date_picker_cvalue_' . $key : 'cvalue_' . $key);
             array_push($customFieldsColumns, $selectAs);
+            if (strtolower(trim($field['name'])) === 'scope of work') {
+                $projectScopeColumns[$selectAs] = true;
+            }
             array_push($aColumns, 'ctable_' . $key . '.value as ' . $selectAs);
             array_push($join, 'LEFT JOIN ' . db_prefix() . 'customfieldsvalues as ctable_' . $key . ' ON ' . db_prefix() . 'projects.id = ctable_' . $key . '.relid AND ctable_' . $key . '.fieldto="' . $field['fieldto'] . '" AND ctable_' . $key . '.fieldid=' . $field['id']);
         }
@@ -109,23 +113,32 @@ return App_table::find('projects')
             $membersOutput = '<div class="tw-flex -tw-space-x-1">';
             $members       = explode(',', $aRow['members']);
             $exportMembers = '';
+            $visibleMembers = 0;
+            $memberCount = 0;
             foreach ($members as $key => $member) {
                 if ($member != '') {
                     $members_ids = explode(',', $aRow['members_ids']);
                     $member_id   = $members_ids[$key];
-                    $membersOutput .= '<a href="' . admin_url('profile/' . $member_id) . '">' .
-                        staff_profile_image($member_id, [
-                            'tw-inline-block tw-h-7 tw-w-7 tw-rounded-full tw-ring-2 tw-ring-white',
-                        ], 'small', [
-                            'data-toggle' => 'tooltip',
-                            'data-title'  => $member,
-                        ]) . '</a>';
+                    if ($visibleMembers < 3) {
+                        $membersOutput .= '<a href="' . admin_url('profile/' . $member_id) . '">' .
+                            staff_profile_image($member_id, [
+                                'tw-inline-block tw-h-7 tw-w-7 tw-rounded-full tw-ring-2 tw-ring-white',
+                            ], 'small', [
+                                'data-toggle' => 'tooltip',
+                                'data-title'  => $member,
+                            ]) . '</a>';
+                        $visibleMembers++;
+                    }
+                    $memberCount++;
                     // For exporting
                     $exportMembers .= $member . ', ';
                 }
             }
 
-            $membersOutput .= '<span class="hide">' . trim($exportMembers, ', ') . '</span>';
+            if ($memberCount > 3) {
+                $membersOutput .= '<span class="label label-default tw-ml-2" title="' . e(trim($exportMembers, ', ')) . '">+' . ($memberCount - 3) . '</span>';
+            }
+            $membersOutput .= '<span class="hide">' . e(trim($exportMembers, ', ')) . '</span>';
             $membersOutput .= '</div>';
             $row[] = $membersOutput;
 
@@ -134,7 +147,9 @@ return App_table::find('projects')
 
             // Custom fields add values
             foreach ($customFieldsColumns as $customFieldColumn) {
-                $row[] = (strpos($customFieldColumn, 'date_picker_') !== false ? _d($aRow[$customFieldColumn]) : $aRow[$customFieldColumn]);
+                $row[] = isset($projectScopeColumns[$customFieldColumn])
+                    ? render_project_scope_preview($aRow[$customFieldColumn], $aRow['name'])
+                    : (strpos($customFieldColumn, 'date_picker_') !== false ? _d($aRow[$customFieldColumn]) : $aRow[$customFieldColumn]);
             }
 
             $row['DT_RowClass'] = 'has-row-options';

@@ -1,0 +1,3 @@
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+$lang['scaf_confirm']='Confirmar acción'; $lang['scaf_continue']='Continuar'; $lang['scaf_cancel']='Cancelar'; $lang['scaf_delete']='Eliminar'; $lang['scaf_type_to_confirm']='Escriba %s para confirmar'; $lang['scaf_copied']='Copiado al portapapeles'; $lang['scaf_copy_failed']='No se pudo copiar. Seleccione y copie el valor.'; $lang['scaf_wait']='Espere'; $lang['scaf_selected']='seleccionados'; $lang['scaf_failed']='No se pudo completar la acción.'; $lang['scaf_saved']='Cambios guardados'; $lang['scaf_select_records']='Seleccione al menos un registro.';

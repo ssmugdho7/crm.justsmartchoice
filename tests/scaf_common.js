@@ -1,0 +1,20 @@
+const fs=require('fs'),assert=require('assert'),{JSDOM}=require('jsdom');
+const delay=ms=>new Promise(r=>setTimeout(r,ms));
+(async()=>{
+ const dom=new JSDOM('<body class="scaf-enabled scaf-clients"><form id="ordinary"><input required name="identity"><button type="submit" name="action" value="save">Save</button></form><button id="ajax" type="button">Async</button><a class="_delete" href="/admin/clients/delete/3">Delete</a></body>',{url:'https://crm.example/admin/clients',runScripts:'outside-only',pretendToBeVisual:true});
+ const w=dom.window,$=require('jquery')(w);w.$=w.jQuery=$;w.scafConfig={page:'clients',domain:'customers',decimals:2,adminUrl:'/admin/',labels:{}};
+ w.matchMedia=()=>({matches:false,addEventListener(){},removeEventListener(){},addListener(){},removeListener(){}});w.ResizeObserver=class{observe(){}disconnect(){}};
+ $.fn.modal=function(arg){if(arg==='hide')this.trigger('hidden.bs.modal');else this.trigger('shown.bs.modal');return this;};
+ w.eval(fs.readFileSync('modules/sc_admin_fixes/assets/js/vendor-sonner.js','utf8'));w.eval(fs.readFileSync('modules/sc_admin_fixes/assets/js/common.js','utf8'));
+ await delay(60);w.alert_float('success','Saved <img src=x onerror="bad()"> safely');await delay(120);
+ assert(w.document.querySelector('[data-sonner-toast]'),'Actual Sonner toast renders');assert(w.document.body.textContent.includes('Saved  safely'));assert(!w.document.querySelector('[data-sonner-toast] img'),'Toast message cannot execute HTML');
+ assert.equal(w.SCAF.decimal.add('0.10','0.20'),'0.30');assert.equal(w.SCAF.decimal.sub('999999999999999999.99','.01'),'999999999999999999.98');assert.equal(w.SCAF.decimal.normalize('1.5',0),'2');
+ const form=w.document.getElementById('ordinary'),button=form.querySelector('button');
+ form.dispatchEvent(new w.Event('submit',{bubbles:true,cancelable:true}));assert.equal(form.getAttribute('aria-busy'),null,'Invalid form not locked');
+ form.querySelector('input').value='Ana';let first=new w.Event('submit',{bubbles:true,cancelable:true}),second=new w.Event('submit',{bubbles:true,cancelable:true});form.dispatchEvent(first);form.dispatchEvent(second);assert(second.defaultPrevented);assert.equal(button.name,'action');assert.equal(button.value,'save');assert(!button.disabled,'Native submitter serialization retained');w.SCAF.busy(form)();
+ const prevent=e=>e.preventDefault();form.addEventListener('submit',prevent);form.dispatchEvent(new w.Event('submit',{bubbles:true,cancelable:true}));await delay(10);assert.equal(form.getAttribute('aria-busy'),null,'Validation-cancelled submit unlocks');form.removeEventListener('submit',prevent);
+ const action=w.document.getElementById('ajax');action.dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true}));let release;$(w.document).trigger('ajaxSend',[{always(fn){release=fn;}},{type:'POST'}]);assert.equal(action.getAttribute('aria-busy'),'true');release();assert.equal(action.getAttribute('aria-busy'),null,'Failed or complete AJAX unlocks');
+ let outcome=w.SCAF.confirm({title:'Delete',message:'Review record',typed:'DELETE',actionLabel:'Delete'});await delay(10);let modal=$('.scaf-confirm-modal');assert(modal.length);assert(modal.find('.scaf-confirm-input').prop('hidden'));modal.find('.scaf-confirm-accept').trigger('click');assert(!modal.find('.scaf-confirm-input').prop('hidden'));assert(modal.find('.scaf-confirm-accept').prop('disabled'));modal.find('input').val('wrong').trigger('input');assert(modal.find('.scaf-confirm-accept').prop('disabled'));modal.find('input').val('DELETE').trigger('input');modal.find('.scaf-confirm-accept').trigger('click');assert.equal(await outcome,true);
+ outcome=w.SCAF.confirm({title:'Cancel me'});await delay(10);$('.scaf-confirm-cancel').trigger('click');assert.equal(await outcome,false);
+ console.log('PASS actual Sonner rendering/security, exact JS decimals, native/invalid/AJAX busy lifecycle, submitter preservation and two-stage typed confirmation');w.close();
+})().catch(e=>{console.error(e);process.exit(1)});

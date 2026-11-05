@@ -527,8 +527,13 @@ class Invoices extends AdminController
 
     public function apply_credits($invoice_id)
     {
+        if (staff_cant('edit', 'invoices') || !user_can_view_invoice($invoice_id)) { access_denied('invoices'); }
         $total_credits_applied = 0;
-        foreach ($this->input->post('amount') as $credit_id => $amount) {
+        $amounts = $this->input->post('amount');
+        foreach (is_array($amounts) ? $amounts : [] as $credit_id => $amount) {
+            if (!ctype_digit((string) $credit_id)) { continue; }
+            $credit = $this->credit_notes_model->get($credit_id);
+            if (!$credit || (staff_cant('view', 'credit_notes') && (staff_cant('view_own', 'credit_notes') || (int) $credit->addedfrom !== (int) get_staff_user_id()))) { continue; }
             $success = $this->credit_notes_model->apply_credits($credit_id, [
             'invoice_id' => $invoice_id,
             'amount'     => $amount,

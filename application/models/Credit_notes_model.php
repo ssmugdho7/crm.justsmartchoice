@@ -44,12 +44,13 @@ class Credit_notes_model extends App_Model
         $has_permission_view = staff_can('view',  'invoices');
 
         $invoices_statuses_available_for_credits = invoices_statuses_available_for_credits();
-        $this->db->select('clientid');
+        $this->db->select('clientid,currency');
         $this->db->where('id', $credit_note_id);
         $credit_note = $this->db->get(db_prefix() . 'creditnotes')->row();
 
         $this->db->select('' . db_prefix() . 'invoices.id as id, status, total, date, ' . db_prefix() . 'currencies.name as currency_name');
         $this->db->where('clientid', $credit_note->clientid);
+        $this->db->where('currency', $credit_note->currency);
         $this->db->where('status IN (' . implode(', ', $invoices_statuses_available_for_credits) . ')');
         if (!$has_permission_view) {
             $this->db->where('addedfrom', get_staff_user_id());
@@ -774,10 +775,34 @@ class Credit_notes_model extends App_Model
 
     public function apply_credits($id, $data)
     {
-        if ($data['amount'] == 0) {
+        $amount = $data['amount'] ?? null;
+        $invoiceId = $data['invoice_id'] ?? null;
+        $places = (int) get_decimal_places();
+        if (!is_scalar($amount) || is_bool($amount) || !preg_match('/^(?:[0-9]+(?:\.[0-9]{1,' . max(1, $places) . '})?|\.[0-9]{1,' . max(1, $places) . '})$/D', (string) $amount)
+            || ($places === 0 && strpos((string) $amount, '.') !== false)
+            || !is_finite((float) $amount) || (float) $amount <= 0
+            || !ctype_digit((string) $id) || !ctype_digit((string) $invoiceId)) {
             return false;
         }
-
+        // Serialize credit-to-credit allocation for the same credit note or invoice.
+        if (!$this->db->trans_begin()) { return false; }
+        $credit = $this->db->query('SELECT id,clientid,currency,status FROM ' . db_prefix() . 'creditnotes WHERE id=? FOR UPDATE', [(int) $id])->row();
+        $invoice = $this->db->query('SELECT id,clientid,currency,status,total FROM ' . db_prefix() . 'invoices WHERE id=? FOR UPDATE', [(int) $invoiceId])->row();
+        if (!$credit || !$invoice || (int) $credit->status !== 1
+            || (int) $credit->clientid !== (int) $invoice->clientid
+            || (int) $credit->currency !== (int) $invoice->currency
+            || !in_array((int) $invoice->status, invoices_statuses_available_for_credits(), true)) {
+            $this->db->trans_rollback();
+            return false;
+        }
+        $remaining = $this->total_remaining_credits_by_credit_note($id);
+        $due = get_invoice_total_left_to_pay($invoiceId, $invoice->total);
+        $tooMuch = function_exists('bccomp')
+            ? bccomp((string) $amount, (string) $remaining, $places) > 0 || bccomp((string) $amount, (string) $due, $places) > 0
+            : (float) $amount > round((float) $remaining, $places) || (float) $amount > round((float) $due, $places);
+        if ($tooMuch) { $this->db->trans_rollback(); return false; }
+        $data['amount'] = $amount;
+        $data['invoice_id'] = (int) $invoiceId;
         $this->db->insert(db_prefix() . 'credits', [
             'invoice_id'   => $data['invoice_id'],
             'credit_id'    => $id,
@@ -788,6 +813,14 @@ class Credit_notes_model extends App_Model
         ]);
 
         $insert_id = $this->db->insert_id();
+        if (!$insert_id || !$this->db->trans_status()) {
+            $this->db->trans_rollback();
+            return false;
+        }
+        if (!$this->db->trans_commit()) {
+            $this->db->trans_rollback();
+            return false;
+        }
 
         if ($insert_id) {
             $this->update_credit_note_status($id);

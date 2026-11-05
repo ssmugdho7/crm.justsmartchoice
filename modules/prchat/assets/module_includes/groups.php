@@ -156,9 +156,12 @@
 
 
     pusher.bind("group-renamed", function (data) {
-      let oldGroupName = $("body").find("li.group_selector#" + data.group_id + " .group_name_main").text();
-      pusher.unsubscribe("presence-" + oldGroupName.replace(/\s+/g, "-").replace(/\b\w/g, l => l.toUpperCase()));
-      pusher.subscribe("presence-" + data.newName.replace(/\s+/g, "-").replace(/\b\w/g, l => l.toUpperCase()));
+      var $renamedGroup = $("li.group_selector#" + data.group_id);
+      var oldGroupName = $renamedGroup.find('.group_name_main').text();
+      var oldChannel = $renamedGroup.attr('data-channel') || ("presence-" + oldGroupName.replace(/\s+/g, "-").replace(/\b\w/g, l => l.toUpperCase()));
+      var newChannel = data.channel || ("presence-" + data.newName.replace(/\s+/g, "-").replace(/\b\w/g, l => l.toUpperCase()));
+      pusher.unsubscribe(oldChannel);
+      pusher.subscribe(newChannel);
 
       // Update sidebar group name
       $("body").find("li.group_selector#" + data.group_id + " .group_name_main").text(data.newName);

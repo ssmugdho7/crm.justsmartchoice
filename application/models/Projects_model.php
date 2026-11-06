@@ -876,6 +876,11 @@ class Projects_model extends App_Model
         $this->db->where('id', $id);
         $old_status = $this->db->get(db_prefix() . 'projects')->row()->status;
 
+        if ((int) $old_status !== 4 && (int) ($data['status'] ?? 0) === 4
+            && $this->requires_final_inspection($id, (array) ($data['custom_fields']['projects'] ?? []))) {
+            return false;
+        }
+
         $send_created_email = false;
         if (isset($data['send_created_email'])) {
             unset($data['send_created_email']);
@@ -1115,11 +1120,29 @@ class Projects_model extends App_Model
         return $sent;
     }
 
+    private function requires_final_inspection($projectId, array $fields = [])
+    {
+        if (!$this->app_modules->is_active('sc_admin_fixes')) {
+            return false;
+        }
+        require_once FCPATH.'modules/sc_admin_fixes/includes/permit_controls.php';
+        if (!scaf_project_finish_requires_inspection($projectId, $fields)) {
+            return false;
+        }
+        set_alert('warning', 'Record a passed final inspection for each required permit before finishing this project.');
+        return true;
+    }
+
     public function mark_as($data)
     {
         $this->db->select('status');
         $this->db->where('id', $data['project_id']);
         $old_status = $this->db->get(db_prefix() . 'projects')->row()->status;
+
+        if ((int) $old_status !== 4 && (int) $data['status_id'] === 4
+            && $this->requires_final_inspection($data['project_id'])) {
+            return false;
+        }
 
         $this->db->where('id', $data['project_id']);
         $this->db->update(db_prefix() . 'projects', [

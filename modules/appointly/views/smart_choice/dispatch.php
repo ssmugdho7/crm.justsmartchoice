@@ -18,6 +18,7 @@ document.querySelectorAll('form.form-inline').forEach(function(form) {
         eta.disabled = status.value !== 'on-the-way';
         if (status.value === '15-minutes-away') { eta.value = 15; } else if (eta.disabled) { eta.value = ''; }
     }
+    if (!status || !eta) return;
     status.addEventListener('change', updateEta);
     updateEta();
 });

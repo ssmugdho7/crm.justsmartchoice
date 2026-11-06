@@ -32,7 +32,7 @@ function scaf_project_command_data($project){
     $scope=scaf_project_scope($project);try{$sections=scaf_scope_tasks($scope,$project->start_date);}catch(InvalidArgumentException $e){$sections=[];}
     $tasks=$CI->projects_model->get_tasks((int)$project->id,[],true);
     foreach($sections as $section){$section['task']=null;foreach($tasks as $task){if(mb_strtolower(trim($task['name']))===mb_strtolower(trim($section['name']))||strpos((string)($task['description']??''),$section['marker'])!==false){$section['task']=$task;break;}}$data['steps'][]=$section;}
-    $data['scope_text']=trim(strip_tags(preg_replace('/<br\s*\/?\s*>|<\/(?:p|div|li)>/i',"\n",(string)$scope)));
+    $data['scope_text']=trim(html_entity_decode(strip_tags(preg_replace('/<br\s*\/?\s*>|<\/(?:p|div|li)>/i',"\n",(string)$scope)),ENT_QUOTES | ENT_HTML5,'UTF-8'));
     return $data;
 }
 function scaf_project_tab_groups($tabs){

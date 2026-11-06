@@ -1,0 +1,38 @@
+.training-reader-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(12rem, 22%);
+    gap: 1.25rem;
+    align-items: start;
+}
+.training-reader-layout > .training-manual-rendered-article {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+    width: 100%;
+}
+.training-reader-outline {
+    position: sticky;
+    top: 5rem;
+    grid-column: 2;
+    grid-row: 1;
+    max-height: 70vh;
+    overflow: auto;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    border: 1px solid #d1e4dc;
+    border-radius: .5rem;
+    background: #f2faf6;
+    color: #16392d;
+}
+.training-reader-outline a { color: #065f46; overflow-wrap: anywhere; }
+.training-reader-outline ol { margin: .5rem 0 0; padding-left: 1.5rem; }
+.training-reader-outline li { margin: .4rem 0; }
+.training-reader-outline li[data-level="3"] { margin-left: .5rem; }
+.training-reader-outline li[data-level="4"] { margin-left: 1rem; }
+.training-reader-layout h2[id],
+.training-reader-layout h3[id],
+.training-reader-layout h4[id] { scroll-margin-top: 5rem; }
+@media (max-width: 850px) {
+    .training-reader-layout { display: flex; flex-direction: column; gap: 0; }
+    .training-reader-outline { position: static; max-height: 15rem; width: 100%; margin-bottom: 0; }
+}

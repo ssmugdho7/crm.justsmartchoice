@@ -1168,6 +1168,10 @@ class recruitment extends AdminController {
 	 * @return redirect
 	 */
 	public function evaluation_form() {
+        if (strtoupper($this->input->method()) === 'GET') {
+            redirect(admin_url('recruitment/setting?group=evaluation_form'));
+            return;
+        }
 		if ($this->input->post()) {
 			$message = '';
 			$data = $this->input->post();

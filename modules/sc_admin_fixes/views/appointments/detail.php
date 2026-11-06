@@ -16,7 +16,7 @@ init_head(); ?>
                             <?= _l('appointment_back_to_appointments'); ?>
                         </a>
 
-                        <?php $this->load->view('sc_admin_fixes/appointments/telemetry',['appointment'=>$appointment]); ?>
+                        <?php require __DIR__.'/telemetry.php'; ?>
                     <!-- Status Dropdown -->
                         <?php
                         // Status styling

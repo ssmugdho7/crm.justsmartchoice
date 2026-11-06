@@ -13,6 +13,7 @@ class Scaf_commission_batches extends AdminController {
    $key='scaf_commission_batch_'.$month;$stored=$this->db->where('name',$key)->get(db_prefix().'options')->row();$raw=$stored->value??'';$batch=$raw?json_decode($raw,true):null;
    if($action==='approve'&&(!is_string($this->input->post('hash'))||!hash_equals($snapshot['hash'],$this->input->post('hash'))))return $this->respond(['success'=>false,'message'=>'Reviewed batch no longer matches the ledger.'],409);
    $batch=scaf_commission_transition($batch,$snapshot,$action,get_staff_user_id(),date('Y-m-d H:i:s'));
+   if(!$this->db->trans_begin())throw new RuntimeException('Unable to start batch review update.');
    if($action==='approve'){
     $indexRow=$this->db->where('name','scaf_commission_approved_ids')->get(db_prefix().'options')->row();$indexRaw=$indexRow->value??'';$index=$indexRaw?json_decode($indexRaw,true):[];if(!is_array($index))$index=[];
     foreach($snapshot['items'] as $item){if(isset($index[$item['id']])&&$index[$item['id']]['month']!==$month)throw new RuntimeException('A commission was already approved in another monthly batch. Review its previous approval before proceeding.');}
@@ -20,8 +21,9 @@ class Scaf_commission_batches extends AdminController {
     update_option('scaf_commission_approved_ids',json_encode($index));
    }
    update_option($key,json_encode($batch));
+   if(!$this->db->trans_status() || !$this->db->trans_commit())throw new RuntimeException('Batch review could not be saved.');
    return $this->respond(['success'=>true,'batch'=>$batch,'message'=>$batch['state']==='approved'?'Batch review approved. No payment or transfer was recorded.':'Batch generated for review. No payment or transfer was recorded.']);
-  }catch(RuntimeException $e){return $this->respond(['success'=>false,'message'=>$e->getMessage()],409);}finally{$this->db->query('SELECT RELEASE_LOCK(?)',[$lock]);}
+  }catch(RuntimeException $e){$this->db->trans_rollback();return $this->respond(['success'=>false,'message'=>$e->getMessage()],409);}finally{$this->db->query('SELECT RELEASE_LOCK(?)',[$lock]);}
  }
  private function respond($data,$status=200){return $this->output->set_status_header($status)->set_content_type('application/json')->set_output(json_encode($data));}
 }

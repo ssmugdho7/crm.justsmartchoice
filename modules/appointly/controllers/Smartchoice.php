@@ -18,7 +18,10 @@ class Smartchoice extends AdminController
         $data['title'] = _l('appointly_dispatch_board');
         $data['appointments'] = $this->get_today_and_upcoming();
         $this->load->helper('appointly/workflow');
-        $data['dispatch_events'] = $this->db->select('a.*, s.name as service_name, s.color as service_color, st.firstname, st.lastname')->from(db_prefix().'appointly_appointments a')->join(db_prefix().'appointly_services s','s.id=a.service_id','left')->join(db_prefix().'staff st','st.staffid=a.provider_id','left')->where('a.date >=',date('Y-m-d'))->where('a.date <=',date('Y-m-d',strtotime('+6 days')))->where_not_in('a.status',['cancelled','no-show'])->order_by('a.start_hour','ASC')->get()->result_array();
+        $requestedWeek = (string) $this->input->get('week');
+        $weekDate = DateTimeImmutable::createFromFormat('!Y-m-d', $requestedWeek);
+        $data['dispatch_week'] = $weekDate && $weekDate->format('Y-m-d') === $requestedWeek ? $requestedWeek : date('Y-m-d');
+        $data['dispatch_events'] = $this->db->select('a.*, s.name as service_name, s.color as service_color, st.firstname, st.lastname')->from(db_prefix().'appointly_appointments a')->join(db_prefix().'appointly_services s','s.id=a.service_id','left')->join(db_prefix().'staff st','st.staffid=a.provider_id','left')->where('a.date >=',$data['dispatch_week'])->where('a.date <=',date('Y-m-d',strtotime($data['dispatch_week'].' +6 days')))->where_not_in('a.status',['cancelled','no-show'])->order_by('a.start_hour','ASC')->get()->result_array();
         $this->load->view('appointly/smart_choice/dispatch', $data);
     }
 

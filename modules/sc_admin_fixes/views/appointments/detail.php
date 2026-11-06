@@ -585,7 +585,7 @@ init_head(); ?>
                                         </div>
 
                                         <!-- Location -->
-                                        
+
                     <?php if (!empty($appointment['address'])): ?>
                                             <div class="tw-flex tw-items-center tw-gap-3 tw-border tw-border-neutral-200 tw-border-solid tw-rounded-md tw-p-4 tw-mb-4">
                                                 <div class="tw-w-8 tw-h-8 tw-flex tw-items-center tw-justify-center tw-rounded-md tw-bg-neutral-100 tw-text-neutral-700">

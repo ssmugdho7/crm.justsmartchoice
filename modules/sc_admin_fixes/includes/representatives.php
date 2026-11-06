@@ -47,6 +47,10 @@ function scaf_rep_metrics($reps){
 function scaf_rep_money($values){$out=[];foreach($values as $currency=>$value)$out[]=e(app_format_money($value,$currency));return $out?implode('<br>',$out):e(scaf_rep_label('No permitted closed invoices this month','Sin facturas cerradas autorizadas este mes'));}
 function scaf_representative_view($v){
  if(strtolower(get_instance()->router->fetch_class())!=='sales_center')return $v;$path=preg_replace('/\.php$/','',$v['path']);
+ // HMVC resolves module views to their basename before app_view_data runs.
+ $method=strtolower(get_instance()->router->fetch_method());
+ $nativePaths=['index'=>['manage'=>'admin/salespersons/manage'],'view'=>['view'=>'admin/salespersons/view'],'contracts'=>['manage'=>'admin/contracts/manage'],'contract'=>['form'=>'admin/contracts/form'],'contract_view'=>['view'=>'admin/contracts/view']];
+ $path=$nativePaths[$method][$path]??$path;
  if(in_array($path,['admin/salespersons/manage','sales_center/admin/salespersons/manage'],true)){$v['data']['salespersons']=array_values(array_filter($v['data']['salespersons']??[],'scaf_rep_allowed'));$v['data']['rep_metrics']=scaf_rep_metrics($v['data']['salespersons']);$v['path']='../../modules/sc_admin_fixes/views/representatives/manage';}
  elseif(in_array($path,['admin/salespersons/view','sales_center/admin/salespersons/view'],true)){if(!scaf_rep_allowed($v['data']['salesperson'])){access_denied('sales_center');return $v;}$v['data']['contracts']=array_values(array_filter($v['data']['contracts']??[],'scaf_rep_contract_allowed'));$v['data']['rep_metrics']=scaf_rep_metrics([(array)$v['data']['salesperson']]);$v['data']['rep_native']=$path;$v['path']='../../modules/sc_admin_fixes/views/representatives/profile';}
  elseif(in_array($path,['admin/contracts/form','sales_center/admin/contracts/form','admin/contracts/view','sales_center/admin/contracts/view','admin/contracts/manage','sales_center/admin/contracts/manage'],true)){$v['data']['rep_native']=str_replace('sales_center/','',$path);$v['path']='../../modules/sc_admin_fixes/views/representatives/agreement';}

@@ -11,11 +11,11 @@ foreach ($stages as $stage) {
     }
     $deals = $kanBan->get();
     // Full stage totals use the same ownership scope, not only the first paginated cards.
-    $this->db->select('currency,SUM(deal_value) AS amount', false)->where('stage_id', $stage->stage_id)->group_by('currency');
+    $this->db->select('currency,SUM(deal_value) AS amount,COUNT(*) AS deal_count', false)->where('stage_id', $stage->stage_id)->group_by('currency');
     if (!has_permission('deals', '', 'view')) $this->db->where('default_deal_owner', get_staff_user_id());
     $stage_totals = $this->db->get('tbl_deals')->result_array();
     $total_value = 0;
-    $total_deals = count($deals);
+    $total_deals = array_sum(array_column($stage_totals, 'deal_count'));
     $total_pages = $kanBan->totalPages();
 
     $settings = '';
@@ -42,7 +42,7 @@ foreach ($stages as $stage) {
                         data-name="<?php echo html_escape($stage->stage_name); ?>"
                     <?php } ?>><?php echo html_escape($stage->stage_name); ?>
                 </span>
-                    <?php foreach ($stage_totals as $stage_total) { echo html_escape(app_format_money($stage_total['amount'], $stage_total['currency'])) . '<br>'; } ?> - <small><?php echo $total_deals . ' ' . _l('deals'); ?></small>
+                    <span class="scaf-stage-volume" aria-label="Total stage volume"><?php if (!$stage_totals) echo html_escape(app_format_money('0', get_base_currency()->name)); foreach ($stage_totals as $stage_total) { echo html_escape(app_format_money($stage_total['amount'], $stage_total['currency'])) . '<br>'; } ?></span> - <small><?php echo $total_deals . ' ' . _l('deals'); ?></small>
 
                 </div>
                 <div class="kan-ban-content-wrapper">
@@ -70,7 +70,7 @@ foreach ($stages as $stage) {
                             } ?>">
                                 <h4>
                                     <i class="fa-solid fa-circle-notch" aria-hidden="true"></i><br/><br/>
-                                    <?php echo _l('no_leads_found'); ?>
+                                    No deals found
                                 </h4>
                             </li>
                         </ul>

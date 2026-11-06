@@ -21,7 +21,10 @@
   api.confirm=function(options){options=options||{};var run=function(){return new Promise(function(resolve){
     var oldFocus=document.activeElement, typed=String(options.typed||''), stage=typed?1:2, modal=$('<div class="modal fade scaf-confirm-modal" tabindex="-1" role="dialog" aria-modal="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="modal-title"></h4></div><div class="modal-body"><p class="scaf-confirm-message"></p><div class="scaf-confirm-input" hidden><label></label><input class="form-control" autocomplete="off" spellcheck="false"></div></div><div class="modal-footer"><button type="button" class="btn btn-default scaf-confirm-cancel"></button><button type="button" class="btn btn-primary scaf-confirm-accept"></button></div></div></div></div>');
     var titleId='scaf-confirm-'+Date.now()+'-'+Math.random().toString(16).slice(2);modal.find('.modal-title').attr('id',titleId).text(options.title||labels.confirm||'Confirm action');modal.attr('aria-labelledby',titleId);modal.find('.scaf-confirm-message').text(options.message||'');
-    var input=modal.find('input'), label=modal.find('label'), inputId=titleId+'-input';input.attr('id',inputId);label.attr('for',inputId).text((labels.type_to_confirm||'Type %s to confirm').replace('%s',typed));
+    var input=modal.find('input'), label=modal.find('label'), inputId=titleId+'-input';
+    var instruction=String(labels.type_to_confirm||'Type %s to confirm');
+    instruction=instruction.indexOf('%s')!==-1?instruction.replace('%s',typed):instruction+' ('+typed+')';
+    input.attr('id',inputId);label.attr('for',inputId).text(instruction);
     var accept=modal.find('.scaf-confirm-accept'),cancel=modal.find('.scaf-confirm-cancel'), settled=false, answer=false;
     cancel.text(labels.cancel||'Cancel');accept.text(stage===1?(labels.continue||'Continue'):(options.actionLabel||labels.confirm||'Confirm'));
     function finish(value){if(settled)return;answer=value;modal.modal('hide');}

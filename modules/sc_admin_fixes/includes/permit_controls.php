@@ -57,14 +57,15 @@ function scaf_permit_records($projectId)
 function scaf_project_finish_requires_inspection($projectId, array $submittedFields = [])
 {
     foreach (scaf_permit_custom_fields($projectId) as $field) {
-        if (!preg_match('/^permit\s+(needed|required)\??$/i', trim($field['name']))) {
+        if (!preg_match('/^permit\s+(needed|required)[:?]?$/i', trim($field['name']))) {
             continue;
         }
         // A saved requirement remains effective during the same request that tries to close the project.
         $submitted = $submittedFields[$field['id']] ?? '';
         $values = array_merge((array) $field['value'], (array) $submitted);
         foreach ($values as $value) {
-            if (!in_array(strtolower(trim((string) $value)), ['yes', '1', 'required'], true)) {
+            $choices = preg_split('/\s*,\s*/', strtolower(trim((string) $value)));
+            if (!array_intersect($choices, ['yes', '1', 'required'])) {
                 continue;
             }
             $permits = scaf_permit_records($projectId)['permits'];

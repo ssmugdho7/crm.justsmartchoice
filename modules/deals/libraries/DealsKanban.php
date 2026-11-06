@@ -13,13 +13,14 @@ class DealsKanban extends AbstractKanban
 
     public function defaultSortDirection()
     {
-        return (!empty(get_option('default_deals_kanban_sort_by')) ? get_option('default_deals_kanban_sort_by') : 'dealorder');
-
+        $direction = strtolower((string)get_option('default_deals_kanban_sort_type'));
+        return in_array($direction, ['asc', 'desc'], true) ? $direction : 'asc';
     }
 
     public function defaultSortColumn()
     {
-        return (!empty(get_option('default_deals_kanban_sort_type')) ? get_option('default_deals_kanban_sort_type') : 'asc');
+        $column = get_option('default_deals_kanban_sort_by');
+        return in_array($column, ['dealorder', 'title', 'deal_value', 'created_at', 'days_to_close'], true) ? $column : 'dealorder';
     }
 
     public function limit()

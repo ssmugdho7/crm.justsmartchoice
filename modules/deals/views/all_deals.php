@@ -6,6 +6,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="_buttons tw-mb-2 sm:tw-mb-4">
+                    <?php if (is_admin()) { echo form_open(admin_url('sc_admin_fixes/scaf_deals/setup'), ['class'=>'pull-right']); ?><button class="btn btn-default" type="submit">Configure contractor pipeline</button><?php echo form_close(); } ?>
                     <a href="<?php echo admin_url('deals/new_deal'); ?>"
                        class="btn btn-primary mright5 pull-left display-block">
                         <i class="fa-regular fa-plus tw-mr-1"></i>

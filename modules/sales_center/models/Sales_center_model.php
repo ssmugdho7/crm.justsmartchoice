@@ -11,6 +11,10 @@ class Sales_center_model extends App_Model
 
     public function get($id = '')
     {
+        if (function_exists('is_staff_logged_in') && is_staff_logged_in() && !has_permission('sales_center', '', 'view') && has_permission('sales_center', '', 'view_own')) {
+            $staff = (int)get_staff_user_id();
+            $this->db->where('(assigned=' . $staff . ' OR staff_id=' . $staff . ' OR created_by=' . $staff . ')', null, false);
+        }
         if (is_numeric($id)) {
             $this->db->where('id', (int) $id);
             return $this->db->get(db_prefix() . 'sales_center')->row();
@@ -130,7 +134,9 @@ class Sales_center_model extends App_Model
         $this->db->from(db_prefix() . 'sales_center_contracts c');
         $this->db->join(db_prefix() . 'sales_center s', 's.id = c.salesperson_id', 'left');
         $this->db->join(db_prefix() . 'projects p', 'p.id = c.project_id', 'left');
-
+        if (function_exists('is_staff_logged_in') && is_staff_logged_in() && !has_permission('sales_center_contracts', '', 'view') && has_permission('sales_center_contracts', '', 'view_own')) {
+            $staff=(int)get_staff_user_id();$this->db->where('(c.assigned='.$staff.' OR c.created_by='.$staff.')',null,false);
+        }
         if (is_numeric($id)) {
             $this->db->where('c.id', (int) $id);
             return $this->db->get()->row();

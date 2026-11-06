@@ -100,7 +100,7 @@ $CI->db->query("CREATE TABLE IF NOT EXISTS `tbl_deals_mettings` (
   PRIMARY KEY (`mettings_id`)
 ) ENGINE=InnoDB;");
 
-$CI->db->query("DROP TABLE IF EXISTS `tbl_deals_pipelines`;");
+
 $CI->db->query("CREATE TABLE IF NOT EXISTS `tbl_deals_pipelines` (
   `pipeline_id` int NOT NULL AUTO_INCREMENT,
   `pipeline_name` varchar(100) NOT NULL,
@@ -109,18 +109,18 @@ $CI->db->query("CREATE TABLE IF NOT EXISTS `tbl_deals_pipelines` (
   PRIMARY KEY (`pipeline_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4;");
 
-$CI->db->query("INSERT INTO `tbl_deals_pipelines` (`pipeline_id`, `pipeline_name`, `description`, `order`) VALUES
+$CI->db->query("INSERT IGNORE INTO `tbl_deals_pipelines` (`pipeline_id`, `pipeline_name`, `description`, `order`) VALUES
 (1, 'Sales', NULL, 0),
 (2, 'Interview', NULL, 0),
 (3, 'Store', NULL, 0);");
-$CI->db->query("DROP TABLE IF EXISTS `tbl_deals_source`;");
+
 $CI->db->query("CREATE TABLE IF NOT EXISTS `tbl_deals_source` (
   `source_id` int NOT NULL AUTO_INCREMENT,
   `source_name` varchar(100) NOT NULL,
   PRIMARY KEY (`source_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11;");
 
-$CI->db->query("INSERT INTO `tbl_deals_source` (`source_id`, `source_name`) VALUES
+$CI->db->query("INSERT IGNORE INTO `tbl_deals_source` (`source_id`, `source_name`) VALUES
 (1, 'Facebook'),
 (2, 'Google Organic'),
 (3, 'Web'),
@@ -131,7 +131,7 @@ $CI->db->query("INSERT INTO `tbl_deals_source` (`source_id`, `source_name`) VALU
 (9, 'Email List'),
 (10, 'Google Ads');");
 
-$CI->db->query("DROP TABLE IF EXISTS `tbl_deals_stages`;");
+
 $CI->db->query("CREATE TABLE IF NOT EXISTS `tbl_deals_stages` (
   `stage_id` int NOT NULL AUTO_INCREMENT,
   `stage_name` varchar(512) DEFAULT NULL,
@@ -140,7 +140,7 @@ $CI->db->query("CREATE TABLE IF NOT EXISTS `tbl_deals_stages` (
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`stage_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8;");
-$CI->db->query("INSERT INTO `tbl_deals_stages` (`stage_id`, `stage_name`, `pipeline_id`, `stage_order`, `date`) VALUES
+$CI->db->query("INSERT IGNORE INTO `tbl_deals_stages` (`stage_id`, `stage_name`, `pipeline_id`, `stage_order`, `date`) VALUES
 (1, 'Qualified To Buy', 1, 1, '2023-08-23 09:22:38'),
 (2, 'Contact Made', 1, 2, '2023-08-23 09:41:24'),
 (3, 'Presentation Scheduled', 1, 3, '2023-08-23 09:41:47'),

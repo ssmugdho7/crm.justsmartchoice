@@ -10,7 +10,11 @@ foreach ($stages as $stage) {
         $kanBan->refresh($this->input->get('refresh')[$stage->stage_id] ?? null);
     }
     $deals = $kanBan->get();
-    $total_value = array_sum(array_column($deals, 'deal_value'));
+    // Full stage totals use the same ownership scope, not only the first paginated cards.
+    $this->db->select('currency,SUM(deal_value) AS amount', false)->where('stage_id', $stage->stage_id)->group_by('currency');
+    if (!has_permission('deals', '', 'view')) $this->db->where('default_deal_owner', get_staff_user_id());
+    $stage_totals = $this->db->get('tbl_deals')->result_array();
+    $total_value = 0;
     $total_deals = count($deals);
     $total_pages = $kanBan->totalPages();
 
@@ -35,13 +39,10 @@ foreach ($stages as $stage) {
                     <i class="fa fa-reorder pointer"></i>
                     <span class="heading pointer tw-ml-1" <?php if ($is_admin) { ?>
                         data-order="<?php echo $stage->stage_order; ?>"
-                        data-name="<?php echo $stage->stage_name; ?>"
-                    <?php } ?>><?php echo $stage->stage_name; ?>
+                        data-name="<?php echo html_escape($stage->stage_name); ?>"
+                    <?php } ?>><?php echo html_escape($stage->stage_name); ?>
                 </span>
-                    <?php echo app_format_money(
-                        $total_value,
-                        $base_currency
-                    ); ?> - <small><?php echo $total_deals . ' ' . _l('deals'); ?></small>
+                    <?php foreach ($stage_totals as $stage_total) { echo html_escape(app_format_money($stage_total['amount'], $stage_total['currency'])) . '<br>'; } ?> - <small><?php echo $total_deals . ' ' . _l('deals'); ?></small>
 
                 </div>
                 <div class="kan-ban-content-wrapper">

@@ -5,6 +5,11 @@ if ($deal['stage_id'] == $stage->stage_id) { ?>
             echo ' current-user-lead';
         } ?>">
         <div class="panel-body lead-body">
+            <?php if (($deal['status'] === 'won' || mb_strtolower(trim($stage->stage_name)) === 'closed won') && staff_can('create','projects') && staff_can('edit','deals')) { ?>
+            <div class="mbot10">
+            <?php if (!empty($deal['project_id'])) { ?><a class="btn btn-default btn-sm" href="<?php echo admin_url('projects/view/'.(int)$deal['project_id']); ?>">Open linked project</a>
+            <?php } else { echo form_open(admin_url('sc_admin_fixes/scaf_deals/convert/'.(int)$deal['id']), ['class'=>'scaf-deal-convert']); ?><button type="submit" class="btn btn-primary btn-sm">Convert to Active Project</button><?php echo form_close(); } ?>
+            </div><?php } ?>
             <div class="row">
                 <div class="col-md-12 lead-name">
                     <?php if ($deal['default_deal_owner'] != 0) { ?>

@@ -8,3 +8,5 @@ function scaf_appointments_views($view) {
     $path=preg_replace('/\.php$/','',$view['path']);if(isset($map[$path]))$view['path']='../../modules/sc_admin_fixes/views/appointments/'.$map[$path];
     return $view;
 }
+
+require_once __DIR__.'/appointment_workflows.php';

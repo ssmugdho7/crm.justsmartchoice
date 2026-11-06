@@ -28,10 +28,14 @@ class Deals extends AdminController
             $this->load->view('setup_required');
             return;
         }
+        if (!$this->app_modules->is_active('deals')) {
+            $this->load->view('setup_required');
+            return;
+        }
         $data['switch_kanban'] = true;
 
         $data['piplines'] = get_deals_result('tbl_deals_pipelines', null, 'array');
-        $default_pipeline = get_option('default_pipeline');
+        $default_pipeline = $this->input->get('pipeline_id') ?: get_option('default_pipeline');
         $pipeline_ids = array_column($data['piplines'], 'pipeline_id');
         if (!in_array($default_pipeline, $pipeline_ids)) {
             $default_pipeline = $pipeline_ids[0] ?? null;

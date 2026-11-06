@@ -419,6 +419,12 @@ class Estimates extends AdminController
     /* Convert estimate to invoice */
     public function convert_to_invoice($id)
     {
+        // The reviewed workflow owns conversion while active; legacy GET links never create invoices.
+        if ($this->app_modules->is_active('sc_admin_fixes')) {
+            if (!user_can_view_estimate($id)) { access_denied('estimates'); }
+            redirect(admin_url('estimates/list_estimates/' . (int) $id));
+            return;
+        }
         if (staff_cant('create', 'invoices')) {
             access_denied('invoices');
         }

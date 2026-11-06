@@ -19,8 +19,9 @@ class HubLoad {
     function view($view, $data = []) { $this->view = $view; $this->data = $data; }
 }
 class AdminController {
-    public $load; public $db; public $session; public $staff_model;
+    public $load; public $db; public $session; public $staff_model; public $app_modules; public $input;
     function __construct() {
+        $this->app_modules = new class { function is_active($name) { return true; } }; $this->input = new class { function get($name) { return null; } };
         $this->load = new HubLoad; $this->db = new HubDB; $this->session = new HubSession;
         $this->staff_model = new class { function get(...$args) { return []; } };
     }

@@ -1,0 +1,10 @@
+<?php
+define('BASEPATH',true);$canEstimate=true;$canCustomer=false;$path='admin/estimates/estimate';
+function hooks(){return new class{function add_filter(...$a){}function add_action(...$a){}};}function staff_can($a,$r){global $canEstimate,$canCustomer;return $r==='estimates'?$canEstimate:($r==='customers'?$canCustomer:true);}function is_customer_admin($id){return false;}function access_denied($r){throw new RuntimeException('DENIED');}function appointly_estimate_prefill($id){global $canEstimate;return $canEstimate&&$id==='10'?['customer_id'=>7,'address'=>'123 Oak','service'=>'Inspection','notes'=>'Actual scope']:null;}
+$ci=(object)['router'=>new class{function fetch_class(){return 'estimates';}},'input'=>new class{function get($k){return '10';}},'load'=>new class{function helper($name){} }];function &get_instance(){global $ci;return $ci;}
+require __DIR__.'/../modules/sc_admin_fixes/includes/appointment_workflows.php';
+try{scaf_appointment_workflows_view(['path'=>$path,'data'=>[]]);throw new Exception('Customer unauthorized');}catch(RuntimeException $e){}
+$canCustomer=true;$view=scaf_appointment_workflows_view(['path'=>$path,'data'=>[]]);if($view['data']['customer_id']!==7 || $view['data']['appointment_prefill']['service']!=='Inspection')throw new Exception('Actual prefill lost');
+$existing=['path'=>$path,'data'=>['estimate'=>(object)['id'=>50]]];if(scaf_appointment_workflows_view($existing)!==$existing)throw new Exception('Existing draft overwritten');$canEstimate=false;try{scaf_appointment_workflows_view(['path'=>$path,'data'=>[]]);throw new Exception('Create unauthorized');}catch(RuntimeException $e){}
+$source=file_get_contents(__DIR__.'/../modules/sc_admin_fixes/views/appointments/estimate_handoff.php');if(strpos($source,"include APPPATH.'views/admin/estimates/estimate.php'")===false || strpos($source,'->add(')!==false)throw new Exception('Native unsaved form contract lost');
+echo "PASS create/customer permission, actual prefill, unsaved native form and existing-estimate isolation\n";

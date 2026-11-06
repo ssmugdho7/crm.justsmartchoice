@@ -2632,9 +2632,10 @@ class Commission_model extends App_Model {
     /** Smart Choice: detailed commission report rows. */
     public function smartchoice_commission_summary($filters = [])
     {
-        $this->db->select('c.*, i.number, i.prefix, i.total, i.status as invoice_status');
+        $this->db->select('c.*, i.number, i.prefix, i.total, i.status as invoice_status, cur.name as currency_name');
         $this->db->from(db_prefix() . 'commission c');
         $this->db->join(db_prefix() . 'invoices i', 'i.id = c.invoice_id', 'left');
+        $this->db->join(db_prefix() . 'currencies cur', 'cur.id = i.currency', 'left');
         if (!empty($filters['staffid'])) { $this->db->where('c.staffid', (int) $filters['staffid']); $this->db->where('c.is_client', 0); }
         if (!empty($filters['clientid'])) { $this->db->where('c.staffid', (int) $filters['clientid']); $this->db->where('c.is_client', 1); }
         if (!empty($filters['from_date'])) { $this->db->where('c.date >=', $filters['from_date']); }

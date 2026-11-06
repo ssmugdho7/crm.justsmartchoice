@@ -16,7 +16,8 @@ init_head(); ?>
                             <?= _l('appointment_back_to_appointments'); ?>
                         </a>
 
-                        <!-- Status Dropdown -->
+                        <?php $this->load->view('sc_admin_fixes/appointments/telemetry',['appointment'=>$appointment]); ?>
+                    <!-- Status Dropdown -->
                         <?php
                         // Status styling
                         $status_icon = '';
@@ -678,10 +679,11 @@ init_head(); ?>
                                                 <div>
                                                     <div class=" tw-text-neutral-700"><?= _l('appointment_email_tracking'); ?></div>
                                                     <?php
-                                                    if (! empty($appointment['email_tracking']) && $appointment['email_tracking'][0]['opened'] == 1): ?>
+                                                    $openRecord=null;foreach(($appointment['email_tracking']??[]) as $trackedEmail){if(!empty($trackedEmail['opened']))$openRecord=$trackedEmail;}
+                                                    if ($openRecord): ?>
                                                         <div class="tw-text-success-600  tw-flex tw-items-center tw-gap-1">
                                                             <i class="fa-solid fa-check-circle"></i>
-                                                            <?= _l('appointment_email_read_at'); ?>: <?= _dt($appointment['email_tracking'][0]['date_opened']); ?>
+                                                            <?= _l('appointment_email_read_at'); ?>: <?= _dt($openRecord['date_opened']); ?>
                                                         </div>
                                                     <?php
                                                     else: ?>

@@ -11,7 +11,7 @@ function scaf_project_command($id){
 function scaf_project_command_data($project){
     $CI=&get_instance();$currency=$CI->projects_model->get_currency($project->id);$code=$currency?$currency->name:get_base_currency()->name;
     $data=['currency'=>$code,'contract'=>null,'changes'=>null,'billed'=>[],'margin'=>null,'margin_percent'=>null,'expenses'=>null,'permits'=>[],'steps'=>[]];
-    if(staff_can('create','projects')&&(int)$project->billing_type===1)$data['contract']=scaf_decimal_normalize((string)$project->project_cost);
+    if(staff_can('create','projects')&&(int)$project->billing_type===1&&trim((string)$project->project_cost)!=='')$data['contract']=scaf_decimal_normalize((string)$project->project_cost);
     $enterprise=is_admin()||staff_can('view_project_controls','smart_choice_enterprise_core');
     if($enterprise&&$CI->db->table_exists(db_prefix().'sce_change_orders')){
         $data['changes']='0';foreach($CI->db->select('amount')->where('project_id',(int)$project->id)->where('status','approved')->get(db_prefix().'sce_change_orders')->result_array() as $row)$data['changes']=scaf_decimal_add($data['changes'],$row['amount']);

@@ -13,7 +13,7 @@
   const frame=d.createElement('iframe');url.searchParams.set('scaf_candidate_drawer','1');frame.src=url.href;frame.title=t('Candidate profile and evaluations','Perfil y evaluaciones');frame.addEventListener('load',()=>{loading.remove();});drawer.append(frame);d.body.append(drawer);d.body.classList.add('scaf-candidate-drawer-open');button.focus();
  }
  $(d).on('click','a[href]',function(event){
-  if(event.ctrlKey||event.metaKey||event.shiftKey||event.altKey||event.button)return;
+  if(event.ctrlKey||event.metaKey||event.shiftKey||event.altKey||event.button||this.closest('#scaf-candidate-drawer'))return;
   let url;try{url=new URL(this.href);}catch(_){return;}
   if(url.origin!==location.origin||!/^\/admin\/recruitment\/candidate\/\d+\/?$/.test(url.pathname))return;
   event.preventDefault();open(url,this.textContent.trim());

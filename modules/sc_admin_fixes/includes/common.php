@@ -25,6 +25,9 @@ function scaf_asset($relative) {
     echo str_ends_with($relative, '.css') ? '<link rel="stylesheet" href="'.$url.'">' : '<script defer src="'.$url.'"></script>';
 }
 function scaf_head_assets() {
+    if (scaf_page() === 'development' && get_instance()->router->fetch_method() === 'view') {
+        scaf_asset('assets/js/repair-note-clipboard.js');
+    }
     $domain = scaf_domain(); if (!$domain) return;
     $config = ['page'=>scaf_page(),'domain'=>$domain,'decimals'=>(int)get_decimal_places(),'adminUrl'=>admin_url(), 'labels'=>[]];
     foreach (['confirm','continue','cancel','delete','type_to_confirm','copied','copy_failed','wait','selected','failed','saved','select_records'] as $key) $config['labels'][$key] = _l('scaf_'.$key);

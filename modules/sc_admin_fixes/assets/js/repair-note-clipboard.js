@@ -15,20 +15,58 @@
         const status = document.createElement('p');
         status.className = 'text-muted tw-mt-2';
         status.setAttribute('role', 'status');
+        const previews = document.createElement('ul');
+        previews.className = 'list-unstyled';
+        previews.setAttribute('aria-label', 'Attachment previews');
+        Object.assign(previews.style, {display: 'flex', flexWrap: 'wrap', gap: '12px'});
         const clear = document.createElement('button');
         clear.type = 'button';
         clear.className = 'btn btn-default btn-xs tw-mb-2';
         clear.textContent = 'Clear attachments';
         clear.style.display = 'none';
-        input.after(pasteArea, status, clear);
+        input.after(pasteArea, status, previews, clear);
 
         let picked = Array.from(input.files);
         let pasted = [];
+        const previewUrls = [];
+
+        function renderPreviews(files) {
+            previews.replaceChildren();
+            for (const url of previewUrls.splice(0)) URL.revokeObjectURL(url);
+
+            for (const file of files) {
+                const item = document.createElement('li');
+                Object.assign(item.style, {width: '180px', maxWidth: '100%', overflowWrap: 'anywhere'});
+                const isImage = imageTypes.has(file.type);
+                const isVideo = ['video/mp4', 'video/webm', 'video/quicktime'].includes(file.type);
+                if (isImage || isVideo) {
+                    const media = document.createElement(isImage ? 'img' : 'video');
+                    Object.assign(media.style, {display: 'block', width: '100%', height: '112px', objectFit: 'contain'});
+                    if (isImage) {
+                        media.alt = 'Preview of ' + file.name;
+                    } else {
+                        media.controls = true;
+                        media.preload = 'metadata';
+                        media.setAttribute('aria-label', 'Preview of ' + file.name);
+                    }
+                    media.addEventListener('error', () => media.remove(), {once: true});
+                    const url = URL.createObjectURL(file);
+                    previewUrls.push(url);
+                    media.src = url;
+                    item.append(media);
+                }
+                const caption = document.createElement('span');
+                caption.textContent = file.name;
+                item.append(caption);
+                previews.append(item);
+            }
+        }
 
         function updateFiles() {
             const transfer = new DataTransfer();
             for (const file of [...picked, ...pasted]) transfer.items.add(file);
             input.files = transfer.files;
+            renderPreviews(input.files);
             const count = input.files.length;
             clear.style.display = count ? '' : 'none';
             status.textContent = count

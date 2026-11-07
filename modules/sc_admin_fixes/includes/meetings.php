@@ -1,11 +1,16 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-hooks()->add_filter('quick_actions_links', 'scaf_meeting_quick_links');
-function scaf_meeting_quick_links($links)
+hooks()->add_action('admin_init', 'scaf_seed_meeting_admin_links');
+function scaf_seed_meeting_admin_links()
 {
-    $links[] = ['name' => _l('scaf_quick_meet'), 'url' => 'https://meet.justsmartchoice.com/', 'custom_url' => true, 'icon' => 'fa-solid fa-video', 'position' => 80, 'href_attributes' => ['target' => '_blank']];
-    $links[] = ['name' => _l('scaf_quick_rec'), 'url' => 'https://rec.justsmartchoice.com/', 'custom_url' => true, 'icon' => 'fa-solid fa-record-vinyl', 'position' => 81, 'href_attributes' => ['target' => '_blank']];
-    return $links;
+    if (get_option('scaf_meeting_admin_links_seeded') === '1' || !defined('SMART_CHOICE_LINKS_TABLE')) { return; }
+    $CI = &get_instance();
+    if (!$CI->db->table_exists(SMART_CHOICE_LINKS_TABLE)) { return; }
+    foreach ([['SmartMeet', 'https://meet.justsmartchoice.com/', 'fa-solid fa-video', 2], ['ScreenRec', 'https://rec.justsmartchoice.com/', 'fa-solid fa-record-vinyl', 3]] as [$title, $url, $icon, $position]) {
+        if ($CI->db->where('url', $url)->count_all_results(SMART_CHOICE_LINKS_TABLE) > 0) { continue; }
+        $CI->db->insert(SMART_CHOICE_LINKS_TABLE, ['title' => $title, 'url' => $url, 'category' => 'Meetings', 'placement' => 'left', 'icon' => $icon, 'target' => '_blank', 'rel' => 'noopener noreferrer', 'position' => $position, 'is_active' => 1, 'is_internal' => 0, 'visible_to_roles' => '', 'visible_to_staff' => '', 'created_by' => get_staff_user_id() ?: null, 'datecreated' => date('Y-m-d H:i:s')]);
+    }
+    update_option('scaf_meeting_admin_links_seeded', '1');
 }
 hooks()->add_action('before_start_render_dashboard_content', 'scaf_render_live_meetings');
 function scaf_live_meetings()

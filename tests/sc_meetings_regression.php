@@ -11,9 +11,6 @@ require __DIR__ . '/../modules/sc_admin_fixes/includes/meetings.php';
 $fails = 0; function ok($c, $m) { global $fails; echo ($c ? 'PASS ' : 'FAIL ') . $m . "\n"; if (!$c) { $fails++; } }
 function render() { ob_start(); scaf_render_live_meetings(); return ob_get_clean(); }
 // Quick links
-$l = scaf_meeting_quick_links([]);
-ok(count($l) === 2 && $l[0]['url'] === 'https://meet.justsmartchoice.com/' && $l[1]['url'] === 'https://rec.justsmartchoice.com/' && !isset($l[0]['permission']) && $l[0]['custom_url'] === true, 'quick links: two items with correct URLs, no permission');
-ok($H->f['quick_actions_links'] === ['scaf_meeting_quick_links'] && $H->a['before_start_render_dashboard_content'] === ['scaf_render_live_meetings'], 'hooks registered');
 // Scratch DB
 preg_match("/define\('APP_DB_PASSWORD',\s*'((?:[^'\\\\]|\\\\.)*)'/", file_get_contents('/Users/mugdho/smart_projects/crm.justsmartchoice/application/config/app-config.php'), $m); $pw = stripcslashes($m[1] ?? '');
 $pdo = new PDO('mysql:host=127.0.0.1', 'root', $pw, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);

@@ -11,7 +11,7 @@ define('SCAF_MODULE_NAME', 'sc_admin_fixes');
 register_language_files(SCAF_MODULE_NAME, ['sc_admin_fixes', 'customers']);
 register_activation_hook(SCAF_MODULE_NAME, 'scaf_activate');
 function scaf_activate() { /* No schema or customer data changes are needed. */ }
-foreach (['money', 'decimal_math', 'common', 'customers', 'sales', 'estimate_workflows', 'projects', 'project_command', 'appointments', 'appointment_workflows', 'saleshub', 'representatives', 'commission_workflows', 'workspaces', 'deals_workflows'] as $include) {
+foreach (['money', 'decimal_math', 'common', 'customers', 'sales', 'estimate_workflows', 'projects', 'project_command', 'appointments', 'appointment_workflows', 'saleshub', 'representatives', 'commission_workflows', 'workspaces', 'deals_workflows', 'meetings'] as $include) {
     $path = __DIR__ . '/includes/' . $include . '.php';
     if (is_file($path)) { require_once $path; }
 }

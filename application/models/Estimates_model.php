@@ -108,7 +108,7 @@ class Estimates_model extends App_Model
             $this->db->update(db_prefix() . 'estimates', ['signature' => null]);
 
             if (! empty($estimate->signature)) {
-                unlink(get_upload_path_by_type('estimate') . $id . '/' . $estimate->signature);
+                @unlink(get_upload_path_by_type('estimate') . $id . '/' . $estimate->signature);
             }
             signature_backup_delete('estimate', $id);
 
@@ -1040,6 +1040,7 @@ class Estimates_model extends App_Model
 
         $this->db->where('id', $id);
         $this->db->delete(db_prefix() . 'estimates');
+        signature_backup_delete('estimate', $id);
 
         if ($this->db->affected_rows() > 0) {
             if (! is_null($estimate->short_link)) {

@@ -458,6 +458,7 @@ class Contracts_model extends App_Model
         $contract = $this->get($id);
         $this->db->where('id', $id);
         $this->db->delete(db_prefix() . 'contracts');
+        signature_backup_delete('contract', $id);
         if ($this->db->affected_rows() > 0) {
             $this->db->where('contract_id', $id);
             $this->db->delete(db_prefix() . 'contract_comments');

@@ -407,7 +407,7 @@ class Proposals_model extends App_Model
             $this->db->update(db_prefix() . 'proposals', ['signature' => null]);
 
             if (! empty($proposal->signature)) {
-                unlink(get_upload_path_by_type('proposal') . $id . '/' . $proposal->signature);
+                @unlink(get_upload_path_by_type('proposal') . $id . '/' . $proposal->signature);
             }
             signature_backup_delete('proposal', $id);
 
@@ -881,6 +881,7 @@ class Proposals_model extends App_Model
 
         $this->db->where('id', $id);
         $this->db->delete(db_prefix() . 'proposals');
+        signature_backup_delete('proposal', $id);
         if ($this->db->affected_rows() > 0) {
             if (! is_null($proposal->short_link)) {
                 app_archive_short_link($proposal->short_link);

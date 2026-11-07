@@ -19,7 +19,7 @@
         clear.type = 'button';
         clear.className = 'btn btn-default btn-xs tw-mb-2';
         clear.textContent = 'Clear attachments';
-        clear.hidden = true;
+        clear.style.display = 'none';
         input.after(pasteArea, status, clear);
 
         let picked = Array.from(input.files);
@@ -30,7 +30,7 @@
             for (const file of [...picked, ...pasted]) transfer.items.add(file);
             input.files = transfer.files;
             const count = input.files.length;
-            clear.hidden = count === 0;
+            clear.style.display = count ? '' : 'none';
             status.textContent = count
                 ? `${count} attachment${count === 1 ? '' : 's'} ready. Add a work note or next step, then save the update.`
                 : '';

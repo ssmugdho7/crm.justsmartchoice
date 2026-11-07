@@ -459,8 +459,12 @@ if (is_admin() || get_option('staff_members_create_inline_contract_types') == '1
                                         <?php } ?>
                                     </p>
                                     <div class="pull-right">
+                                        <?php if (ensure_signature_file('contract', $contract->id, $contract->signature)) { ?>
                                         <img src="<?= site_url('download/preview_image?path=' . protected_file_url_by_path(get_upload_path_by_type('contract') . $contract->id . '/' . $contract->signature)); ?>"
                                             class="img-responsive" alt="">
+                                        <?php } else { ?>
+                                        <div class="alert alert-warning text-left"><?= e(signature_missing_text($contract)); ?></div>
+                                        <?php } ?>
                                     </div>
                                     <?php if (!empty($contract->initials)) { ?>
                                     <div class="clearfix"></div><p class="bold mtop10">Customer Initials: <span class="label label-info"><?= e($contract->initials); ?></span></p>

@@ -210,6 +210,61 @@ class Contracts extends AdminController
         }
     }
 
+    /* Signed documents whose signature image is gone from disk and the database backup */
+    public function signature_health()
+    {
+        if (!is_admin()) {
+            access_denied('contracts');
+        }
+        $sources = [
+            'contract' => ['contracts', 'client', ['signature', 'initials_signature']],
+            'estimate' => ['estimates', 'clientid', ['signature']],
+            'proposal' => ['proposals', 'proposal_to', ['signature']],
+        ];
+        $links = ['contract' => 'contracts/contract/', 'estimate' => 'estimates/list_estimates/', 'proposal' => 'proposals/list_proposals/'];
+        $backup = $this->input->post('backup_signatures') !== null;
+        $backedUp = 0;
+        $data['missing'] = [];
+        foreach ($sources as $relType => [$table, $clientField, $columns]) {
+            $columns = array_values(array_filter($columns, function ($column) use ($table) {
+                return $this->db->field_exists($column, db_prefix() . $table);
+            }));
+            $select = 'id, ' . $clientField . ' AS clientid, acceptance_firstname, acceptance_lastname, acceptance_date, acceptance_ip, ' . implode(', ', $columns);
+            $rows = $this->db->select($select)->where('signature IS NOT NULL')->where('signature !=', '')->get(db_prefix() . $table)->result();
+            foreach ($rows as $row) {
+                foreach ($columns as $column) {
+                    if (empty($row->$column)) {
+                        continue;
+                    }
+                    $path = signature_backup_path($relType, $row->id, $row->$column);
+                    if ($backup) {
+                        if (is_file($path) && signature_backup_store($relType, $row->id, $row->$column, (string) file_get_contents($path))) {
+                            $backedUp++;
+                        }
+                    } elseif (!is_file($path) && !signature_backup_exists($relType, $row->id, $row->$column)) {
+                        $client = $relType === 'proposal' ? $row->clientid : get_company_name($row->clientid);
+                        $data['missing'][] = [
+                            'type'   => $relType,
+                            'id'     => $row->id,
+                            'file'   => $row->$column,
+                            'client' => $client,
+                            'signer' => trim($row->acceptance_firstname . ' ' . $row->acceptance_lastname),
+                            'date'   => $row->acceptance_date,
+                            'ip'     => $row->acceptance_ip,
+                            'link'   => admin_url($links[$relType] . $row->id),
+                        ];
+                    }
+                }
+            }
+        }
+        if ($backup) {
+            set_alert('success', _l('signature_health_backed_up', $backedUp));
+            redirect(admin_url('contracts/signature_health'));
+        }
+        $data['title'] = _l('signature_health');
+        $this->load->view('admin/contracts/signature_health', $data);
+    }
+
     public function clear_signature($id)
     {
         if (staff_can('delete',  'contracts')) {

@@ -55,6 +55,13 @@
                         <?= _l('new_contract'); ?>
                     </a>
                     <?php } ?>
+                    <?php if (is_admin()) { ?>
+                    <a href="<?= admin_url('contracts/signature_health'); ?>"
+                        class="btn btn-default pull-left display-block tw-ml-1.5">
+                        <i class="fa-solid fa-file-signature tw-mr-1"></i>
+                        <?= _l('signature_health'); ?>
+                    </a>
+                    <?php } ?>
                     <div id="vueApp" class="tw-inline pull-right tw-ml-0 sm:tw-ml-1.5 rtl:tw-mr-1.5 rtl:tw-ml-0">
                         <app-filters id="<?= $table->id(); ?>"
                             view="<?= $table->viewName(); ?>"

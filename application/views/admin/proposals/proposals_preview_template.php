@@ -457,8 +457,12 @@ if (count($tags) > 0) {
                                     <?php } ?>
                                 </p>
                                 <div class="pull-right">
+                                    <?php if (!ensure_signature_file('proposal', $proposal->id, $proposal->signature)) { ?>
+                                    <div class="alert alert-warning text-left"><?= e(signature_missing_text($proposal)); ?></div>
+                                    <?php } else { ?>
                                     <img src="<?= site_url('download/preview_image?path=' . protected_file_url_by_path(get_upload_path_by_type('proposal') . $proposal->id . '/' . $proposal->signature)); ?>"
                                         class="img-responsive" alt="">
+                                    <?php } ?>
                                 </div>
                             </div>
                         </div>

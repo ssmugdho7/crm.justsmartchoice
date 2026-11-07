@@ -146,6 +146,7 @@ $autoload['helper'] = [
         'payment_gateways',
         'general',
         'misc',
+        'signature_backup',
         'smart_choice_sales_links', 'smart_choice_sales_discussions', 'smart_choice_maps', 'smart_choice_bulk',
         'func',
         'gdpr',

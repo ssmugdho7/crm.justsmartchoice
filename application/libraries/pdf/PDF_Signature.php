@@ -32,6 +32,9 @@ trait PDF_Signature
         // Customer signature
         $record = $this->getSignatureableInstance();
         $path   = $this->getSignaturePath();
+        if ($record && ! file_exists($path)) {
+            ensure_signature_file($this->type(), $record->id, $record->signature);
+        }
 
         if (! empty($path) && file_exists($path)) {
             $signature = _l('document_customer_signature_text');
@@ -82,6 +85,8 @@ trait PDF_Signature
             $this->MultiCell($width, 0, '<div nobr="true">' . $signature . '</div>', 0, 'R', 0, 1, '', '', true, 0, true, false, 0);
 
             hooks()->do_action('after_customer_pdf_signature', $hookData);
+        } elseif ($record && in_array($this->type(), ['estimate', 'proposal'], true)) {
+            $this->MultiCell(0, 0, '<div nobr="true">' . e(signature_missing_text($record, true)) . '</div>', 0, 'R', 0, 1, '', '', true, 0, true, false, 0);
         }
     }
 

@@ -125,7 +125,7 @@ class Contract_merge_fields extends App_merge_fields
         $initialsImage = '';
         if (!empty($contract->initials_signature)) {
             $initialsPath = get_upload_path_by_type('contract') . $contract_id . '/' . $contract->initials_signature;
-            if (is_file($initialsPath)) {
+            if (ensure_signature_file('contract', $contract_id, $contract->initials_signature)) {
                 $mime = function_exists('mime_content_type') ? mime_content_type($initialsPath) : 'image/png';
                 $encoded = base64_encode((string) file_get_contents($initialsPath));
                 $initialsImage = '<img src="data:' . e($mime ?: 'image/png') . ';base64,' . $encoded . '" alt="Customer initials" style="height:28px;max-width:82px;width:auto;object-fit:contain;vertical-align:middle" />';

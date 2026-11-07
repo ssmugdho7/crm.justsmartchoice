@@ -4386,3 +4386,12 @@ $lang['sc_admin_theme_invalid'] = 'Select an available admin theme.';
 $lang['sc_admin_theme_style_inactive'] = 'Activate the Theme Style module to edit individual colors. Admin theme selection above works independently.';
 
 $lang['theme_style'] = 'Theme Style';
+$lang['signature_image_missing_text'] = 'Signature image missing — signed by %s on %s, IP %s';
+$lang['signature_on_file_text'] = 'Signature on file — signed by %s on %s';
+$lang['signature_health'] = 'Signature Health';
+$lang['signature_health_backup'] = 'Back up existing signatures to database';
+$lang['signature_health_backed_up'] = '%s signature file(s) backed up to the database.';
+$lang['signature_health_none'] = 'Every signed document has a signature file or a database copy.';
+$lang['signature_health_missing_intro'] = 'Signed documents whose signature image is missing on disk and has no database copy.';
+$lang['signature_health_document'] = 'Document';
+$lang['signature_health_file'] = 'Signature File';

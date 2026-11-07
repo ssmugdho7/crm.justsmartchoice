@@ -196,15 +196,18 @@
                         $signaturePath = get_upload_path_by_type('contract') . $contract->id . '/' . basename((string) $contract->signature);
                         $initialsPath = get_upload_path_by_type('contract') . $contract->id . '/' . basename((string) ($contract->initials_signature ?? ''));
                         ?>
-                        <?php if (!empty($contract->signature) && is_file($signaturePath)) { ?>
+                        <?php $signatureFileOk = !empty($contract->signature) && ensure_signature_file('contract', $contract->id, $contract->signature); ?>
+                        <?php if ($signatureFileOk) { ?>
                         <div class="col-md-12 mtop20 text-center smart-choice-signed-images">
                             <div class="smart-choice-signature-card"><strong><?= _l('signature'); ?></strong><br>
                             <img src="<?= site_url('uploads/contracts/' . (int)$contract->id . '/' . rawurlencode(basename($contract->signature))); ?>" alt="Customer signature" style="max-width:320px;max-height:120px;width:auto;height:auto"></div>
-                            <?php if (!empty($contract->initials_signature) && is_file($initialsPath)) { ?>
+                            <?php if (!empty($contract->initials_signature) && ensure_signature_file('contract', $contract->id, $contract->initials_signature)) { ?>
                             <div class="smart-choice-signature-card smart-choice-initials-card"><strong>Initials</strong><br>
                             <img src="<?= site_url('uploads/contracts/' . (int)$contract->id . '/' . rawurlencode(basename($contract->initials_signature))); ?>" alt="Customer initials" style="max-width:calc(90px * <?= max(25, min(300, (int)get_option('smart_choice_contract_initials_scale'))) / 100 ?>);max-height:calc(40px * <?= max(25, min(300, (int)get_option('smart_choice_contract_initials_scale'))) / 100 ?>);width:auto;height:auto"></div>
                             <?php } ?>
                         </div>
+                        <?php } elseif (!empty($contract->signature)) { ?>
+                        <div class="col-md-12 mtop20 text-center text-muted smart-choice-signature-on-file"><?= e(signature_missing_text($contract, true)); ?></div>
                         <?php } ?>
                     </div>
                     <?php } ?>

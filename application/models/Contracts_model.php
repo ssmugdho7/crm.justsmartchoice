@@ -241,8 +241,9 @@ class Contracts_model extends App_Model
             ]));
 
             if (!empty($contract->signature)) {
-                unlink(get_upload_path_by_type('contract') . $id . '/' . $contract->signature);
+                @unlink(get_upload_path_by_type('contract') . $id . '/' . $contract->signature);
             }
+            signature_backup_delete('contract', $id);
 
             return true;
         }
@@ -730,8 +731,9 @@ class Contracts_model extends App_Model
                 $_data           = array_merge($_data, get_acceptance_info_array(true));
                 $_data['signed'] = 0;
                 if (!empty($_contract->signature)) {
-                    unlink(get_upload_path_by_type('contract') . $data['contractid'] . '/' . $_contract->signature);
+                    @unlink(get_upload_path_by_type('contract') . $data['contractid'] . '/' . $_contract->signature);
                 }
+                signature_backup_delete('contract', $data['contractid']);
             }
 
             $this->db->update(db_prefix() . 'contracts', $_data);

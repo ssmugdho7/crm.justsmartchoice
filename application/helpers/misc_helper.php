@@ -120,6 +120,7 @@ function process_digital_signature_image($partBase64, $path)
     }
 
     @chmod($fullPath, 0644);
+    signature_backup_store_file($fullPath);
     $GLOBALS['processed_digital_signature'] = $filename;
     return true;
 }
@@ -149,6 +150,7 @@ function process_digital_initials_image($partBase64, $path)
         return null;
     }
     @chmod($fullPath, 0644);
+    signature_backup_store_file($fullPath);
     return $filename;
 }
 

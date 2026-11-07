@@ -26,11 +26,14 @@ if (!empty($contract->contract_value)) {
 // CUSTOMER SIGNATURE GUARANTEE
 if ((int)$contract->signed === 1 && !empty($contract->signature)) {
     $sigPath = get_upload_path_by_type('contract') . $contract->id . '/' . basename((string)$contract->signature);
-    if (is_file($sigPath)) {
+    if (ensure_signature_file('contract', $contract->id, $contract->signature)) {
         $sigData = base64_encode((string)file_get_contents($sigPath));
         $sigMime = function_exists('mime_content_type') ? mime_content_type($sigPath) : 'image/png';
         $pdf->Ln(8);
         $pdf->writeHTML('<div style="border-top:1px solid #ddd;padding-top:8px"><strong>Customer Signature</strong><br><img src="data:' . ($sigMime ?: 'image/png') . ';base64,' . $sigData . '" style="width:220px;max-height:90px"><br><span style="font-size:9px">Signed by ' . e($contract->acceptance_firstname . ' ' . $contract->acceptance_lastname) . ' on ' . e(_dt($contract->acceptance_date)) . ' — IP ' . e($contract->acceptance_ip) . '</span></div>', true, false, true, false, '');
+    } else {
+        $pdf->Ln(8);
+        $pdf->writeHTML('<div style="border-top:1px solid #ddd;padding-top:8px;font-size:9px">' . e(signature_missing_text($contract, true)) . '</div>', true, false, true, false, '');
     }
 }
 ?>

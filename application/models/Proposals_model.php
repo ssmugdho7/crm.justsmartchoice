@@ -409,6 +409,7 @@ class Proposals_model extends App_Model
             if (! empty($proposal->signature)) {
                 unlink(get_upload_path_by_type('proposal') . $id . '/' . $proposal->signature);
             }
+            signature_backup_delete('proposal', $id);
 
             return true;
         }

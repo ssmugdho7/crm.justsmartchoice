@@ -110,6 +110,7 @@ class Estimates_model extends App_Model
             if (! empty($estimate->signature)) {
                 unlink(get_upload_path_by_type('estimate') . $id . '/' . $estimate->signature);
             }
+            signature_backup_delete('estimate', $id);
 
             return true;
         }

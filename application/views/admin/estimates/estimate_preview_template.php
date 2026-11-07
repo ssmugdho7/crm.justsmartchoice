@@ -299,6 +299,11 @@ if ($estimate->sent == 1) {
                                 </div>
                             </div>
                             <?php } ?>
+                            <?php if (! empty($estimate->signature) && ! ensure_signature_file('estimate', $estimate->id, $estimate->signature)) { ?>
+                            <div class="col-md-12">
+                                <div class="alert alert-warning mbot15"><?= e(signature_missing_text($estimate)); ?></div>
+                            </div>
+                            <?php } ?>
                             <?php if ($estimate->project_id) { ?>
                             <div class="col-md-12">
                                 <h4 class="font-medium mbot15">

@@ -41,3 +41,5 @@ $lang['dev_actions'] = 'Actions';
 $lang['dev_confirm_delete'] = 'Delete this repair entry and all its work notes and attachments? This cannot be undone.';
 $lang['dev_delete_post_required'] = 'Please use the Delete button to remove a repair entry.';
 $lang['dev_delete_failed'] = 'The repair entry could not be deleted.';
+$lang['dev_note_empty'] = 'Add a work note, a next step, or a picture/video before saving.';
+$lang['dev_files_rejected'] = 'The update was saved, but some files were not attached. Use JPG, PNG, WebP, GIF, MP4, WebM or MOV.';

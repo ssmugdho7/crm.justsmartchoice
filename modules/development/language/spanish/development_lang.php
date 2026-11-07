@@ -41,3 +41,5 @@ $lang['dev_actions'] = 'Acciones';
 $lang['dev_confirm_delete'] = '¿Eliminar esta reparación y todas sus notas de trabajo y archivos adjuntos? Esta acción no se puede deshacer.';
 $lang['dev_delete_post_required'] = 'Utilice el botón Eliminar para eliminar una reparación.';
 $lang['dev_delete_failed'] = 'No se pudo eliminar la reparación.';
+$lang['dev_note_empty'] = 'Agregue una nota, un siguiente paso o una foto/video antes de guardar.';
+$lang['dev_files_rejected'] = 'La actualización se guardó, pero algunos archivos no se adjuntaron. Use JPG, PNG, WebP, GIF, MP4, WebM o MOV.';

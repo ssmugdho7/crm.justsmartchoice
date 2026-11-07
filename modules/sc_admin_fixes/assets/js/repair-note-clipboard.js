@@ -26,15 +26,14 @@
         clear.style.display = 'none';
         input.after(pasteArea, status, previews, clear);
 
-        let picked = Array.from(input.files);
-        let pasted = [];
+        let queue = Array.from(input.files);
         const previewUrls = [];
 
         function renderPreviews(files) {
             previews.replaceChildren();
             for (const url of previewUrls.splice(0)) URL.revokeObjectURL(url);
 
-            for (const file of files) {
+            files.forEach((file, index) => {
                 const item = document.createElement('li');
                 Object.assign(item.style, {width: '180px', maxWidth: '100%', overflowWrap: 'anywhere'});
                 const isImage = imageTypes.has(file.type);
@@ -57,30 +56,39 @@
                 }
                 const caption = document.createElement('span');
                 caption.textContent = file.name;
-                item.append(caption);
+                const remove = document.createElement('button');
+                remove.type = 'button';
+                remove.className = 'btn btn-default btn-xs tw-mt-1';
+                remove.textContent = 'Remove';
+                remove.setAttribute('aria-label', 'Remove ' + file.name);
+                remove.addEventListener('click', () => {
+                    queue.splice(index, 1);
+                    updateFiles();
+                    (previews.querySelectorAll('button')[Math.min(index, queue.length - 1)] || pasteArea).focus();
+                });
+                item.append(caption, document.createElement('br'), remove);
                 previews.append(item);
-            }
+            });
         }
 
         function updateFiles() {
             const transfer = new DataTransfer();
-            for (const file of [...picked, ...pasted]) transfer.items.add(file);
+            for (const file of queue) transfer.items.add(file);
             input.files = transfer.files;
-            renderPreviews(input.files);
+            renderPreviews(queue);
             const count = input.files.length;
             clear.style.display = count ? '' : 'none';
             status.textContent = count
-                ? `${count} attachment${count === 1 ? '' : 's'} ready. Add a work note or next step, then save the update.`
+                ? `${count} attachment${count === 1 ? '' : 's'} ready. Remove any you don't want, then save the update.`
                 : '';
         }
 
         input.addEventListener('change', () => {
-            picked = Array.from(input.files);
+            queue.push(...Array.from(input.files).filter(file => !queue.some(q => q.name === file.name && q.size === file.size && q.lastModified === file.lastModified)));
             updateFiles();
         });
         clear.addEventListener('click', () => {
-            picked = [];
-            pasted = [];
+            queue = [];
             updateFiles();
             pasteArea.focus();
         });
@@ -94,7 +102,7 @@
                 }
                 return;
             }
-            pasted.push(...images);
+            queue.push(...images);
             updateFiles();
             event.preventDefault();
         });

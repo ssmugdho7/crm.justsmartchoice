@@ -1,6 +1,7 @@
 <?php
 
 $lang['sales_center'] = 'Sales Hub';
+$lang['sales_center_resize_invoice_panes'] = 'Resize invoice panes. Drag or use the arrow keys. Double-click to reset.';
 $lang['sales_center_salesperson'] = 'Salesperson';
 $lang['sales_center_contracts'] = 'Sales Agreements';
 $lang['sales_center_contract'] = 'Sales Agreement';

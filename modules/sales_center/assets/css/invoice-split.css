@@ -1,0 +1,65 @@
+.sc-invoice-divider {
+  display: none;
+}
+
+@media (min-width: 992px) {
+  #wrapper .sc-invoice-split > #small-table {
+    width: var(--sc-invoice-list-width);
+    padding-inline-end: 10px;
+  }
+
+  #wrapper .sc-invoice-split > .small-table-right-col {
+    width: calc(100% - var(--sc-invoice-list-width));
+    padding-inline-start: 10px;
+  }
+
+  .sc-invoice-split .sc-invoice-divider {
+    display: block;
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: -9px;
+    width: 18px;
+    cursor: col-resize;
+    touch-action: none;
+    z-index: 2;
+    border-radius: 8px;
+  }
+
+  .sc-invoice-divider::before,
+  .sc-invoice-divider::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #9db3ab;
+  }
+
+  .sc-invoice-divider::before {
+    inset-block: 8px;
+    width: 1px;
+  }
+
+  .sc-invoice-divider::after {
+    top: 18px;
+    width: 5px;
+    height: 30px;
+    border-radius: 4px;
+  }
+
+  .sc-invoice-divider:hover::before,
+  .sc-invoice-divider:hover::after,
+  .sc-invoice-divider:focus-visible::after,
+  .sc-invoice-resizing .sc-invoice-divider::after {
+    background: #008667;
+  }
+
+  .sc-invoice-divider:focus-visible {
+    outline: 2px solid #008667;
+    outline-offset: -2px;
+  }
+
+  body.sc-invoice-resizing {
+    cursor: col-resize;
+    user-select: none;
+  }
+}

@@ -367,6 +367,12 @@ function sales_center_admin_head()
             echo $type === 'css' ? '<link rel="stylesheet" href="' . $url . '">' : '<script defer src="' . $url . '"></script>';
         }
     }
+    if ($CI->uri->segment(2) === 'invoices' && in_array((string) $CI->uri->segment(3), ['', 'list_invoices', 'recurring'], true)) {
+        $css = 'assets/css/invoice-split.css';
+        $js = 'assets/js/invoice-split.js';
+        echo '<link rel="stylesheet" href="' . module_dir_url(SALES_CENTER_MODULE_NAME, $css) . '?v=' . filemtime(__DIR__ . '/' . $css) . '">';
+        echo '<script defer src="' . module_dir_url(SALES_CENTER_MODULE_NAME, $js) . '?v=' . filemtime(__DIR__ . '/' . $js) . '" data-resize-label="' . e(_l('sales_center_resize_invoice_panes')) . '"></script>';
+    }
 }
 
 function sales_center_admin_footer()

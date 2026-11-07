@@ -1,5 +1,7 @@
 <?php
 
+$lang['sales_center_resize_invoice_panes'] = 'Ajustar el ancho de los paneles de facturas. Arrastre o use las flechas. Haga doble clic para restablecer.';
+
 $lang['sales_center'] = 'Sub Contratistas';
 $lang['sales_center_salesperson'] = 'Sub Contratista';
 $lang['sales_center_contracts'] = 'Contratos Smartsource de Sub Contratistas';

@@ -30,7 +30,7 @@ function scaf_head_assets() {
     }
     $domain = scaf_domain(); if (!$domain) return;
     $config = ['page'=>scaf_page(),'domain'=>$domain,'decimals'=>(int)get_decimal_places(),'adminUrl'=>admin_url(), 'labels'=>[]];
-    foreach (['confirm','continue','cancel','delete','type_to_confirm','copied','copy_failed','wait','selected','failed','saved','select_records'] as $key) $config['labels'][$key] = _l('scaf_'.$key);
+    foreach (['confirm','continue','cancel','delete','type_to_confirm','copied','copy_failed','wait','selected','failed','saved','select_records','word_delete','word_confirm','word_approve'] as $key) $config['labels'][$key] = _l('scaf_'.$key, $key === 'type_to_confirm' ? '%s' : '');
     echo '<script>window.scafConfig='.json_encode($config, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT).';</script>';
     scaf_asset('assets/css/vendor-sonner.css'); scaf_asset('assets/css/common.css'); scaf_asset('assets/css/'.$domain.'.css');
     scaf_asset('assets/js/vendor-sonner.js'); scaf_asset('assets/js/common.js'); scaf_asset('assets/js/'.$domain.'.js');

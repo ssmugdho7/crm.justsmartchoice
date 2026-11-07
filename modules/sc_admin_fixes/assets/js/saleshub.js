@@ -312,7 +312,7 @@
         var release = source && SCAF.busy ? SCAF.busy(source) : function(){};
         var submitted = false;
         try {
-            if(!await SCAF.confirm({title:'Delete selected records?',message:'This permanently deletes the selected records. Linked records remain protected by the existing server checks.',typed:'DELETE',actionLabel:'Delete'})) return;
+            if(!await SCAF.confirm({title:SCAF.t('Delete selected records?','¿Eliminar registros seleccionados?'),message:SCAF.t('This permanently deletes the selected records. Linked records remain protected by the existing server checks.','Esto elimina permanentemente los registros seleccionados. Los registros vinculados siguen protegidos por las comprobaciones del servidor.'),typed:'DELETE',actionLabel:SCAF.t('Delete','Eliminar')})) return;
             var form = document.createElement('form');
             form.method = 'post';
             form.action = adminBase() + 'sales_center/mass_delete/' + target;

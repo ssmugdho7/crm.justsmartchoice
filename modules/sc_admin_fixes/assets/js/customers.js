@@ -24,7 +24,7 @@
   var ids=selected(); if (!ids.length) return false;
   var deleting=$('#mass_delete').prop('checked');
   if (!await window.SCAF.confirm({title:deleting?t('Delete selected customers?','¿Eliminar clientes seleccionados?'):t('Update selected customers?','¿Actualizar clientes seleccionados?'),message:ids.length+' '+t('selected customers will be affected.','clientes seleccionados se verán afectados.'),actionLabel:t('Continue','Continuar')})) return false;
-  if (deleting && !await window.SCAF.confirm({title:t('Permanently delete customers','Eliminar clientes permanentemente'),message:t('This removes selected customer records. Type DELETE to continue.','Se eliminarán los clientes seleccionados. Escriba DELETE para continuar.'),typed:'DELETE',actionLabel:t('Delete customers','Eliminar clientes')})) return false;
+  if (deleting && !await window.SCAF.confirm({title:t('Permanently delete customers','Eliminar clientes permanentemente'),message:t('This removes the selected customer records.','Se eliminarán los clientes seleccionados.'),typed:'DELETE',actionLabel:t('Delete customers','Eliminar clientes')})) return false;
   var data={ids:ids};
   if(deleting) data.mass_delete=true;
   else {data.groups=$('select[name="move_to_groups_customers_bulk[]"]').val()||[];if(!data.groups.length){

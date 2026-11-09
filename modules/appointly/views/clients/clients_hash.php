@@ -76,6 +76,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     </script>
 
     <style>
+        .appointment-overview-logo img { max-width: 220px; max-height: 80px; width: auto; height: auto; }
+        .appointment-reschedule-button { background-color: #2563eb; color: #fff; }
+        .appointment-reschedule-button:hover, .appointment-reschedule-button:focus { background-color: #1d4ed8; color: #fff; }
         html {
             font-size: 16px;
             -webkit-text-size-adjust: 100%;
@@ -140,7 +143,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <div class="tw-max-w-4xl tw-mx-auto tw-px-4 sm:tw-px-6 lg:tw-px-8">
             <!-- Logo centered above the card -->
             <div class="tw-flex tw-justify-center tw-mb-6">
-                <div class="tw-flex-shrink-0 tw-p-4"><?= get_company_logo(); ?></div>
+                <div class="appointment-overview-logo tw-flex-shrink-0 tw-p-4"><?= get_company_logo(); ?></div>
             </div>
 
             <!-- Main Card -->
@@ -776,7 +779,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-3 tw-mt-6">
                                         <?php if ($canBeRescheduled) : ?>
                                             <button type="button"
-                                                class="tw-flex-1 tw-px-4 tw-py-2 tw-bg-blue-600 tw-text-white tw-rounded-md tw-text-sm tw-font-medium hover:tw-bg-blue-700 tw-shadow-sm tw-transition-colors tw-flex tw-items-center tw-justify-center"
+                                                class="appointment-reschedule-button tw-flex-1 tw-px-4 tw-py-2 tw-bg-blue-600 tw-text-white tw-rounded-md tw-text-sm tw-font-medium hover:tw-bg-blue-700 tw-shadow-sm tw-transition-colors tw-flex tw-items-center tw-justify-center"
                                                 onclick="openRescheduleModal()">
                                                 <i class="fa fa-calendar-alt tw-mr-2"></i>
                                                 <?= _l('appointment_reschedule'); ?>

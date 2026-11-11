@@ -109,7 +109,7 @@ $(function(){
         supplier_trade: '#supplier_filter_trade',
         supplier_location: '#supplier_filter_location',
         supplier_visibility: '#supplier_filter_visibility'
-    }, [[1, 'asc']]);
+    }, [1, 'asc']);
     <?php if ($this->input->get('new') && has_permission('supplier', '', 'create')) { ?>init_supplier_modal(0);<?php } ?>
 });
 </script>

@@ -7,12 +7,12 @@ body.admin .sc-task-register table.table-tasks td{box-sizing:border-box;max-widt
 body.admin .sc-task-register table.table-tasks th{min-width:160px;width:160px;padding-right:24px!important;vertical-align:top!important}
 body.admin .sc-task-register table.table-tasks th.sc-task-col-select{min-width:40px!important;width:40px!important;padding-right:10px!important}
 body.admin .sc-task-register table.table-tasks th.sc-task-col-number{min-width:64px;width:64px}
-body.admin .sc-task-register table.table-tasks th.sc-task-col-name{min-width:320px;width:320px}
+body.admin .sc-task-register table.table-tasks th.sc-task-col-name{min-width:300px;width:300px}
 body.admin .sc-task-register table.table-tasks th.sc-task-col-status{min-width:164px;width:164px}
-body.admin .sc-task-register table.table-tasks th.sc-task-col-date{min-width:112px;width:112px}
+body.admin .sc-task-register table.table-tasks th.sc-task-col-date{min-width:128px;width:128px}
 body.admin .sc-task-register table.table-tasks th.sc-task-col-assignees{min-width:144px;width:144px}
 body.admin .sc-task-register table.table-tasks th.sc-task-col-tags{min-width:130px;width:130px}
-body.admin .sc-task-register table.table-tasks th.sc-task-col-priority{min-width:100px;width:100px}
+body.admin .sc-task-register table.table-tasks th.sc-task-col-priority{min-width:120px;width:120px}
 body.admin .sc-task-register .main-tasks-table-href-name,
 body.admin .sc-task-register .task-table-related{max-width:300px!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;overflow-wrap:anywhere}
 body.admin .sc-task-register .row-options{white-space:normal!important;line-height:1.5}

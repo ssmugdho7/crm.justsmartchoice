@@ -1,5 +1,5 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<?php $this->app_css->add('tasks-table-layout', base_url('assets/css/tasks-table-layout.css?v=1')); ?>
+<?php $this->app_css->add('tasks-table-layout', base_url('assets/css/tasks-table-layout.css?v=2')); ?>
 <?php init_head(); ?>
 <div id="wrapper">
     <div class="content" id="vueApp">
@@ -92,12 +92,15 @@
     taskid = '<?= e($taskid); ?>';
     $(function() {
         tasks_kanban();
-        var taskScroll = document.querySelector('.sc-task-register .table-responsive');
-        if (taskScroll) {
+        function labelTaskScroll() {
+            var taskScroll = document.querySelector('.sc-task-register .table-responsive');
+            if (!taskScroll) return;
             taskScroll.setAttribute('tabindex', '0');
             taskScroll.setAttribute('role', 'region');
             taskScroll.setAttribute('aria-label', 'Tasks table: scroll horizontally for additional fields');
         }
+        $(document).on('init.dt', 'table.table-tasks', labelTaskScroll);
+        labelTaskScroll();
     });
 </script>
 </body>

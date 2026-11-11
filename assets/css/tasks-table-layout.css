@@ -1,0 +1,24 @@
+/* The Tasks register has optional custom fields; never squeeze every column into the viewport. */
+body.admin .sc-task-register .dataTables_wrapper{max-width:100%!important;overflow:visible!important}
+body.admin .sc-task-register .table-responsive{width:100%;max-width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch}
+body.admin .sc-task-register table.table-tasks{width:100%!important;max-width:none!important;table-layout:auto!important;border-collapse:separate!important;border-spacing:0!important}
+body.admin .sc-task-register table.table-tasks th,
+body.admin .sc-task-register table.table-tasks td{box-sizing:border-box;max-width:none!important;padding:9px 10px!important;line-height:1.45!important;font-size:13px!important;vertical-align:middle!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;overflow-wrap:anywhere}
+body.admin .sc-task-register table.table-tasks th{min-width:160px;width:160px;padding-right:24px!important;vertical-align:top!important}
+body.admin .sc-task-register table.table-tasks th.sc-task-col-select{min-width:40px!important;width:40px!important;padding-right:10px!important}
+body.admin .sc-task-register table.table-tasks th.sc-task-col-number{min-width:64px;width:64px}
+body.admin .sc-task-register table.table-tasks th.sc-task-col-name{min-width:320px;width:320px}
+body.admin .sc-task-register table.table-tasks th.sc-task-col-status{min-width:164px;width:164px}
+body.admin .sc-task-register table.table-tasks th.sc-task-col-date{min-width:112px;width:112px}
+body.admin .sc-task-register table.table-tasks th.sc-task-col-assignees{min-width:144px;width:144px}
+body.admin .sc-task-register table.table-tasks th.sc-task-col-tags{min-width:130px;width:130px}
+body.admin .sc-task-register table.table-tasks th.sc-task-col-priority{min-width:100px;width:100px}
+body.admin .sc-task-register .main-tasks-table-href-name,
+body.admin .sc-task-register .task-table-related{max-width:300px!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;overflow-wrap:anywhere}
+body.admin .sc-task-register .row-options{white-space:normal!important;line-height:1.5}
+body.admin .sc-task-register .label{display:inline-block;max-width:100%;white-space:normal;line-height:1.4}
+body.admin .sc-task-register .dataTables_filter{float:none!important;display:flex!important;justify-content:flex-end;margin-top:0!important}
+body.admin .sc-task-register .dataTables_filter input{width:210px!important;max-width:100%;font-size:13px!important}
+body.admin .sc-task-register .table-responsive:focus-visible{outline:2px solid #0f766e;outline-offset:2px}
+body.admin .sc-task-register .sc-task-scroll-hint{margin:0 0 10px;padding:0 15px;color:#475569;font-size:12px}
+@media(max-width:767px){body.admin .sc-task-register .dataTables_filter{justify-content:flex-start;margin-top:8px!important}}

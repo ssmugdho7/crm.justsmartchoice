@@ -1,4 +1,5 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<?php $this->app_css->add('tasks-table-layout', base_url('assets/css/tasks-table-layout.css?v=1')); ?>
 <?php init_head(); ?>
 <div id="wrapper">
     <div class="content" id="vueApp">
@@ -74,7 +75,8 @@
                         <a href="#" data-toggle="modal" data-target="#tasks_bulk_actions"
                             class="hide bulk-actions-btn table-btn"
                             data-table=".table-tasks"><?= _l('bulk_actions'); ?></a>
-                        <div class="panel-table-full">
+                        <div class="panel-table-full sc-task-register">
+                            <p class="sc-task-scroll-hint">Scroll horizontally to view additional task fields.</p>
                             <?php $this->load->view('admin/tasks/_table', ['bulk_actions' => true]); ?>
                         </div>
                         <?php $this->load->view('admin/tasks/_bulk_actions'); ?>
@@ -90,6 +92,12 @@
     taskid = '<?= e($taskid); ?>';
     $(function() {
         tasks_kanban();
+        var taskScroll = document.querySelector('.sc-task-register .table-responsive');
+        if (taskScroll) {
+            taskScroll.setAttribute('tabindex', '0');
+            taskScroll.setAttribute('role', 'region');
+            taskScroll.setAttribute('aria-label', 'Tasks table: scroll horizontally for additional fields');
+        }
     });
 </script>
 </body>

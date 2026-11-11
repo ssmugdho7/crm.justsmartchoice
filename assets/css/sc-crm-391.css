@@ -570,3 +570,27 @@ body.admin.proposals .onoffswitch-label,form#proposal-form .onoffswitch-label{di
 body.admin.proposals .onoffswitch-checkbox,form#proposal-form .onoffswitch-checkbox{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important}
 .sc-proposal-public-items{width:100%!important;overflow-x:auto!important}
 .sc-proposal-public-client-note,.sc-proposal-public-terms{border-top:1px solid #e5e7eb;padding-top:18px}
+
+/* Let list columns size to their content even when module normalization is loaded. */
+body.admin.smart-choice-normalized-module :is(.dataTables_wrapper, .table-responsive) {
+  overflow-x: auto !important;
+}
+body.admin.smart-choice-normalized-module :is(table.table.dataTable, .table-responsive > table.table):not(.items) {
+  table-layout: auto !important;
+}
+body.admin.smart-choice-normalized-module :is(table.table.dataTable, .table-responsive > table.table):not(.items)
+  > :is(thead, tbody) > tr > :is(th, td):first-child {
+  width: auto !important;
+  max-width: none !important;
+  text-align: start !important;
+}
+body.admin.smart-choice-normalized-module :is(table.table.dataTable, .table-responsive > table.table):not(.items)
+  > :is(thead, tbody) > tr > :is(th, td):first-child:has(input[type="checkbox"]):not(:has(a, button, .row-options)) {
+  width: 36px !important;
+  min-width: 36px !important;
+  text-align: center !important;
+}
+/* Sales identifiers share the first cell with selection and row actions. */
+body.admin.smart-choice-normalized-module table.table.dataTable > tbody > tr > td:first-child:has(.row-options) {
+  min-width: 150px;
+}

@@ -47,7 +47,7 @@ if (get_option('pusher_realtime_notifications') == 1) { ?>
 <script src="<?= base_url('assets/js/smart-choice-sales-inputs.js?v=403'); ?>"></script>
 <script src="<?= base_url('assets/js/sc-phone-format.js?v=4.2.8'); ?>"></script>
 
-<link rel="stylesheet" href="<?= base_url('assets/css/sc-crm-391.css?v=4.0.6'); ?>">
+<link rel="stylesheet" href="<?= base_url('assets/css/sc-crm-391.css?v=4.0.7'); ?>">
 <script>window.scDefaultValidityMonths=<?= (int)(get_option('smart_choice_sales_default_validity_months') ?: 3); ?>;</script>
 <script src="<?= base_url('assets/js/sc-crm-391.js?v=4.0.6'); ?>"></script>
 <link rel="stylesheet" href="<?= base_url('assets/css/staff-profile-menu.css?v=3'); ?>">

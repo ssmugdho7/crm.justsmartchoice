@@ -11,9 +11,11 @@
                                 <h3 class="supplier-title"><i class="fa fa-truck"></i> <?php echo _l('supplier_menu_name'); ?></h3>
                                 <div class="supplier-subtitle"><?php echo _l('supplier_description'); ?></div>
                             </div>
+                            <?php if (has_permission('supplier', '', 'create')) { ?>
                             <div class="supplier-actions">
                                 <a href="#" onclick="init_supplier_modal(0); return false;" class="btn btn-info supplier-btn"><i class="fa fa-plus"></i> <?php echo _l('supplier_add_new'); ?></a>
                             </div>
+                            <?php } ?>
                         </div>
 
                         <div class="supplier-filter-bar">
@@ -77,7 +79,9 @@
     </div>
 </div>
 
-<div class="modal fade" id="supplier_bulk_actions" tabindex="-1" role="dialog">
+<div class="modal fade" id="supplier_bulk_actions" tabindex="-1" role="dialog"
+    data-action-required="<?php echo html_escape(_l('supplier_mass_action_note')); ?>"
+    data-action-error="<?php echo html_escape(_l('supplier_delete_failed')); ?>">
     <div class="modal-dialog" role="document"><div class="modal-content">
         <div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button><h4 class="modal-title"><?php echo _l('supplier_mass_action'); ?></h4></div>
         <div class="modal-body"><div class="checkbox checkbox-danger"><input type="checkbox" name="mass_delete" id="mass_delete"><label for="mass_delete"><?php echo _l('mass_delete'); ?></label></div><p class="text-muted"><?php echo _l('supplier_mass_action_note'); ?></p></div>
@@ -85,7 +89,8 @@
     </div></div>
 </div>
 
-<div class="modal fade" id="supplier_email_modal" tabindex="-1" role="dialog">
+<div class="modal fade" id="supplier_email_modal" tabindex="-1" role="dialog"
+    data-load-error="<?php echo html_escape(_l('supplier_email_form_load_failed')); ?>">
     <div class="modal-dialog" role="document"><div class="modal-content">
         <?php echo form_open_multipart(admin_url('supplier/send_email'), ['id' => 'supplier-email-form']); ?>
         <div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button><h4 class="modal-title"><?php echo _l('supplier_send_email'); ?></h4></div>
@@ -95,12 +100,17 @@
     </div></div>
 </div>
 
-<?php init_tail(); ?>
 <?php $this->load->view('supplier/modals/supplier_form'); ?>
+<?php init_tail(); ?>
+<script src="<?php echo module_dir_url(SUPPLIER_MODULE_NAME, 'assets/js/supplier.js'); ?>?v=112"></script>
 <script>
 $(function(){
-    initDataTable('.table-suppliers', admin_url + 'supplier', [0], [0], {}, [1, 'asc']);
-    <?php if($this->input->get('new')){ ?>init_supplier_modal(0);<?php } ?>
+    initDataTable('.table-suppliers', <?php echo json_encode(admin_url('supplier')); ?>, [0, 8], [0, 8], {
+        supplier_trade: '#supplier_filter_trade',
+        supplier_location: '#supplier_filter_location',
+        supplier_visibility: '#supplier_filter_visibility'
+    }, [[1, 'asc']]);
+    <?php if ($this->input->get('new') && has_permission('supplier', '', 'create')) { ?>init_supplier_modal(0);<?php } ?>
 });
 </script>
 </body>

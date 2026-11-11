@@ -13,7 +13,7 @@ class Supplier_model extends App_Model
     public function ensure_schema()
     {
         if (!$this->db->table_exists(db_prefix() . 'suppliers')) {
-            $this->db->query('CREATE TABLE `' . db_prefix() . "suppliers` (
+            $this->db->query('CREATE TABLE IF NOT EXISTS `' . db_prefix() . "suppliers` (
                 `id` INT(11) NOT NULL AUTO_INCREMENT,
                 `supplier_name` VARCHAR(191) NOT NULL,
                 `website` VARCHAR(255) NULL,
@@ -35,7 +35,7 @@ class Supplier_model extends App_Model
         }
 
         if (!$this->db->table_exists(db_prefix() . 'supplier_locations')) {
-            $this->db->query('CREATE TABLE `' . db_prefix() . "supplier_locations` (
+            $this->db->query('CREATE TABLE IF NOT EXISTS `' . db_prefix() . "supplier_locations` (
                 `id` INT(11) NOT NULL AUTO_INCREMENT,
                 `location_name` VARCHAR(191) NOT NULL,
                 `description` TEXT NULL,
@@ -47,7 +47,7 @@ class Supplier_model extends App_Model
         }
 
         if (!$this->db->table_exists(db_prefix() . 'supplier_documents')) {
-            $this->db->query('CREATE TABLE `' . db_prefix() . "supplier_documents` (
+            $this->db->query('CREATE TABLE IF NOT EXISTS `' . db_prefix() . "supplier_documents` (
                 `id` INT(11) NOT NULL AUTO_INCREMENT,
                 `supplier_id` INT(11) NOT NULL,
                 `file_name` VARCHAR(191) NOT NULL,
@@ -111,8 +111,18 @@ class Supplier_model extends App_Model
         return trim((string)$phone);
     }
 
+    public function visibility_condition()
+    {
+        if (has_permission('supplier', '', 'view')) {
+            return '1 = 1';
+        }
+
+        return '(only_me IS NULL OR only_me != 1 OR staff_id = ' . (int) get_staff_user_id() . ')';
+    }
+
     public function get($id = '')
     {
+        $this->db->where($this->visibility_condition(), null, false);
         if (is_numeric($id)) {
             return $this->db->where('id', (int)$id)->get(db_prefix() . 'suppliers')->row();
         }
@@ -156,14 +166,18 @@ class Supplier_model extends App_Model
     {
         $tags = $data['tags'] ?? '';
         $clean = $this->clean_data($data);
-        $this->db->where('id', (int)$id)->update(db_prefix() . 'suppliers', $clean);
+        if (!$this->db->where('id', (int)$id)->update(db_prefix() . 'suppliers', $clean)) {
+            return false;
+        }
+
         handle_tags_save($tags, (int)$id, 'supplier');
-        return $this->db->affected_rows() >= 0;
+        return true;
     }
 
     public function delete($id)
     {
-        $this->db->where('id', (int)$id)->delete(db_prefix() . 'suppliers');
+        $this->db->where($this->visibility_condition(), null, false)
+            ->where('id', (int)$id)->delete(db_prefix() . 'suppliers');
         return $this->db->affected_rows() > 0;
     }
 
@@ -197,7 +211,12 @@ class Supplier_model extends App_Model
 
     public function get_trades()
     {
-        return ['General Supplier', 'Building Materials', 'Electrical', 'Plumbing', 'HVAC', 'Roofing', 'Painting', 'Drywall', 'Framing', 'Concrete', 'Flooring', 'Tile', 'Cabinets', 'Windows And Doors', 'Insulation', 'Landscaping', 'Fencing', 'Engineering', 'Permit Service', 'Equipment Rental', 'Tools', 'Other'];
+        $trades = ['General Supplier', 'Building Materials', 'Electrical', 'Plumbing', 'HVAC', 'Roofing', 'Painting', 'Drywall', 'Framing', 'Concrete', 'Flooring', 'Tile', 'Cabinets', 'Windows And Doors', 'Insulation', 'Landscaping', 'Fencing', 'Engineering', 'Permit Service', 'Equipment Rental', 'Tools', 'Other'];
+        $stored = $this->db->distinct()->select('trade')
+            ->where($this->visibility_condition(), null, false)->where('trade !=', '')
+            ->order_by('trade', 'asc')->get(db_prefix() . 'suppliers')->result_array();
+
+        return array_values(array_unique(array_merge($trades, array_column($stored, 'trade'))));
     }
 
     public function get_documents($supplier_id)
@@ -224,6 +243,9 @@ class Supplier_model extends App_Model
         }
         $original = $file['name'];
         $ext = strtolower(pathinfo($original, PATHINFO_EXTENSION));
+        if (!in_array($ext, ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'jpg', 'jpeg', 'png', 'webp', 'zip', 'rar'], true)) {
+            return false;
+        }
         $safe = preg_replace('/[^A-Za-z0-9\-_]/', '_', pathinfo($original, PATHINFO_FILENAME));
         $name = $safe . '_' . date('Ymd_His') . ($ext ? '.' . $ext : '');
         $target = $folder . $name;
@@ -262,7 +284,8 @@ class Supplier_model extends App_Model
         if (!$ids) {
             return 0;
         }
-        $this->db->where_in('id', $ids)->delete(db_prefix() . 'suppliers');
+        $this->db->where($this->visibility_condition(), null, false)
+            ->where_in('id', $ids)->delete(db_prefix() . 'suppliers');
         return $this->db->affected_rows();
     }
 
@@ -272,7 +295,8 @@ class Supplier_model extends App_Model
         if ($ids) {
             $this->db->where_in('id', $ids);
         }
-        return $this->db->order_by('supplier_name', 'asc')->get(db_prefix() . 'suppliers')->result_array();
+        return $this->db->where($this->visibility_condition(), null, false)
+            ->order_by('supplier_name', 'asc')->get(db_prefix() . 'suppliers')->result_array();
     }
 
     public function import_supplier_record($data)
@@ -293,8 +317,14 @@ class Supplier_model extends App_Model
         $existing = $this->db->get(db_prefix() . 'suppliers')->row();
 
         if ($existing) {
-            $this->db->where('id', (int)$existing->id)->update(db_prefix() . 'suppliers', $clean);
-            return (int)$existing->id;
+            if (!has_permission('supplier', '', 'edit')) {
+                return false;
+            }
+
+            $updated = $this->db->where($this->visibility_condition(), null, false)
+                ->where('id', (int)$existing->id)->update(db_prefix() . 'suppliers', $clean);
+
+            return $updated && $this->db->affected_rows() > 0 ? (int) $existing->id : false;
         }
 
         return $this->add($clean);

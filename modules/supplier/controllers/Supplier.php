@@ -8,7 +8,6 @@ class Supplier extends AdminController
     {
         parent::__construct();
         $this->load->model('supplier_model');
-        $this->supplier_model->ensure_schema();
     }
 
     public function index()
@@ -24,18 +23,43 @@ class Supplier extends AdminController
 
     public function save()
     {
-        if (!has_permission('supplier', '', 'create') && !has_permission('supplier', '', 'edit')) {
+        if ($this->input->method() !== 'post') {
+            show_404();
+        }
+
+        $data = $this->input->post();
+        $id = (int) ($data['id'] ?? 0);
+        $editing = $id !== 0;
+        if (!has_permission('supplier', '', $editing ? 'edit' : 'create')) {
             access_denied('supplier');
         }
-        $data = $this->input->post();
-        $id = empty($data['id']) ? $this->supplier_model->add($data) : (int)$data['id'];
-        if (!empty($data['id'])) {
-            $this->supplier_model->update($data, $id);
+        if ($editing && !$this->supplier_model->get($id)) {
+            show_404();
         }
-        if ($id && isset($_FILES['supplier_document']) && !empty($_FILES['supplier_document']['name'])) {
-            $this->supplier_model->add_document($id, $_FILES['supplier_document'], $data['supplier_document_description'] ?? '');
+
+        $data['supplier_name'] = trim((string) ($data['supplier_name'] ?? ''));
+        if ($data['supplier_name'] === '' || mb_strlen($data['supplier_name']) > 191) {
+            set_alert('warning', _l('supplier_name_required'));
+            redirect(admin_url('supplier'));
         }
-        set_alert('success', empty($data['id']) ? _l('supplier_added_successfully') : _l('supplier_updated_successfully'));
+
+        if ($editing) {
+            $saved = $this->supplier_model->update($data, $id);
+        } else {
+            $id = $this->supplier_model->add($data);
+            $saved = (bool) $id;
+        }
+        if (!$saved) {
+            set_alert('danger', _l('supplier_save_failed'));
+            redirect(admin_url('supplier'));
+        }
+
+        if (!empty($_FILES['supplier_document']['name'])
+            && !$this->supplier_model->add_document($id, $_FILES['supplier_document'], $data['supplier_document_description'] ?? '')) {
+            set_alert('warning', _l('supplier_document_save_failed'));
+        } else {
+            set_alert('success', _l($editing ? 'supplier_updated_successfully' : 'supplier_added_successfully'));
+        }
         redirect(admin_url('supplier'));
     }
 
@@ -44,20 +68,34 @@ class Supplier extends AdminController
         if (!has_permission('supplier', '', 'delete')) {
             access_denied('supplier');
         }
-        if ($id) {
-            $this->supplier_model->delete($id);
+        if ($id && $this->supplier_model->delete($id)) {
             set_alert('success', _l('supplier_deleted_successfully'));
+        } else {
+            set_alert('danger', _l('supplier_delete_failed'));
         }
         redirect(admin_url('supplier'));
     }
 
-    public function supplier_form($id = '')
+    public function supplier_form($id = 0)
     {
-        $supplier = $this->supplier_model->get($id);
-        $locations = $this->supplier_model->get_locations();
-        $trades = array_map(static function ($t) { return ['id' => $t, 'name' => $t]; }, $this->supplier_model->get_trades());
+        $id = (int) $id;
+        if (!has_permission('supplier', '', $id ? 'edit' : 'create')) {
+            ajax_access_denied();
+        }
+        $supplier = $id ? $this->supplier_model->get($id) : null;
+        if ($id && !$supplier) {
+            show_404();
+        }
+        $locations = array_map(static function ($location) {
+            $location['location_name'] = html_escape($location['location_name']);
+            return $location;
+        }, $this->supplier_model->get_locations());
+        $trades = array_map(static function ($trade) {
+            $trade = html_escape($trade);
+            return ['id' => $trade, 'name' => $trade];
+        }, $this->supplier_model->get_trades());
         echo '<div class="row"><div class="col-md-6">';
-        echo render_input('supplier_name', 'supplier_name', !empty($supplier) ? $supplier->supplier_name : '', 'text');
+        echo render_input('supplier_name', 'supplier_name', $supplier->supplier_name ?? '', 'text', ['required' => true, 'maxlength' => 191]);
         echo '</div><div class="col-md-6">';
         echo render_input('website', 'supplier_website', !empty($supplier) ? $supplier->website : '', 'text', ['placeholder' => 'supplier.com or https://supplier.com']);
         echo '</div></div>';
@@ -66,7 +104,7 @@ class Supplier extends AdminController
         echo '</div><div class="col-md-4">';
         echo render_input('email', 'supplier_email', !empty($supplier) ? $supplier->email : '', 'email');
         echo '</div><div class="col-md-4">';
-        echo render_select('trade', $trades, ['id', 'name'], 'supplier_trade', !empty($supplier) ? $supplier->trade : '');
+        echo render_select('trade', $trades, ['id', 'name'], 'supplier_trade', html_escape($supplier->trade ?? ''));
         echo '</div></div>';
         echo '<div class="row"><div class="col-md-6">';
         echo render_input('supplier_type', 'supplier_type', !empty($supplier) ? $supplier->supplier_type : '', 'text', ['placeholder' => 'Supplier, manufacturer, rental, service provider']);
@@ -117,8 +155,6 @@ class Supplier extends AdminController
         if (!has_permission('supplier', '', 'create')) {
             access_denied('supplier');
         }
-
-        $this->supplier_model->ensure_schema();
 
         if ($this->input->method() === 'post') {
             if (empty($_FILES['file_csv']['tmp_name'])) {
@@ -310,6 +346,9 @@ class Supplier extends AdminController
 
     public function email_form($id = '')
     {
+        if (!has_permission('supplier', '', 'view')) {
+            ajax_access_denied();
+        }
         $supplier = $this->supplier_model->get((int)$id);
         if (!$supplier) {
             echo '<div class="alert alert-danger">' . _l('supplier_not_found') . '</div>';
@@ -323,7 +362,9 @@ class Supplier extends AdminController
             echo '<div class="alert alert-info"><strong>' . html_escape($supplier->supplier_name) . '</strong><br>' . html_escape($savedEmail) . '</div>';
         }
         echo render_input('supplier_email_to', 'supplier_email_to', $savedEmail, 'email', ['required' => true]);
-        echo '<div class="checkbox checkbox-primary"><input type="checkbox" name="save_supplier_email" id="save_supplier_email" value="1" ' . ($savedEmail === '' ? 'checked' : '') . '><label for="save_supplier_email">' . _l('supplier_save_email_to_record') . '</label></div>';
+        if (has_permission('supplier', '', 'edit')) {
+            echo '<div class="checkbox checkbox-primary"><input type="checkbox" name="save_supplier_email" id="save_supplier_email" value="1" ' . ($savedEmail === '' ? 'checked' : '') . '><label for="save_supplier_email">' . _l('supplier_save_email_to_record') . '</label></div>';
+        }
         echo render_input('email_subject', 'supplier_email_subject', '', 'text', ['required' => true]);
         echo render_textarea('email_message', 'supplier_email_message', '', ['rows' => 7, 'required' => true]);
         echo '<div class="checkbox checkbox-primary"><input type="checkbox" name="send_copy_to_me" id="send_copy_to_me" value="1" checked><label for="send_copy_to_me">Send copy to me for delivery confirmation</label></div>';
@@ -350,7 +391,7 @@ class Supplier extends AdminController
             redirect(admin_url('supplier'));
         }
 
-        if ($this->input->post('save_supplier_email')) {
+        if ($this->input->post('save_supplier_email') && has_permission('supplier', '', 'edit')) {
             $this->supplier_model->update_email($supplier_id, $to);
         }
 
@@ -534,10 +575,15 @@ class Supplier extends AdminController
 
     public function bulk_action()
     {
-        $ids = $this->input->post('ids');
-        if ($this->input->post('mass_delete') && has_permission('supplier', '', 'delete')) {
-            $this->supplier_model->bulk_delete($ids);
+        if (!has_permission('supplier', '', 'delete')) {
+            ajax_access_denied();
         }
-        echo json_encode(['success' => true]);
+
+        $ids = $this->input->post('ids');
+        $deleted = $this->input->post('mass_delete') && $this->supplier_model->bulk_delete($ids) > 0;
+        $this->output
+            ->set_status_header($deleted ? 200 : 400)
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['success' => $deleted]));
     }
 }

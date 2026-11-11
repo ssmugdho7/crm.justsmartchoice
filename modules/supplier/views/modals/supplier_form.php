@@ -1,5 +1,6 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<div class="modal fade" id="supplier-modal" tabindex="-1" role="dialog">
+<div class="modal fade" id="supplier-modal" tabindex="-1" role="dialog"
+    data-load-error="<?php echo html_escape(_l('supplier_form_load_failed')); ?>">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <?php echo form_open_multipart(admin_url('supplier/save'), ['id'=>'supplier-form']); ?>

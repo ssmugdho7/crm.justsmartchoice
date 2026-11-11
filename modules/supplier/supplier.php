@@ -60,5 +60,4 @@ function supplier_permissions()
 function supplier_load_assets()
 {
     echo '<link href="' . module_dir_url(SUPPLIER_MODULE_NAME, 'assets/css/supplier.css') . '?v=111" rel="stylesheet" type="text/css">';
-    echo '<script src="' . module_dir_url(SUPPLIER_MODULE_NAME, 'assets/js/supplier.js') . '?v=111"></script>';
 }

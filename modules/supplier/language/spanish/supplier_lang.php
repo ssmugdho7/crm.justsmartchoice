@@ -55,3 +55,10 @@ $lang['supplier_email_attachments'] = 'Archivos Adjuntos Del Correo';
 $lang['supplier_import_missing_supplier_name'] = 'La importación falló. El CSV debe incluir la columna supplier_name.';
 $lang['supplier_standard_supplier_file'] = 'Archivo Estándar de Proveedores';
 $lang['supplier_import_standard_help'] = 'Use el archivo estándar de proveedores para cargar registros verificados de Tampa Bay y Pasco en este módulo.';
+
+$lang['supplier_form_load_failed'] = 'No se pudo cargar el formulario del proveedor. Ciérrelo y vuelva a intentarlo.';
+$lang['supplier_email_form_load_failed'] = 'No se pudo cargar el formulario de correo. Ciérrelo y vuelva a intentarlo.';
+$lang['supplier_name_required'] = 'Introduzca un nombre de proveedor de hasta 191 caracteres.';
+$lang['supplier_save_failed'] = 'No se pudo guardar el registro del proveedor.';
+$lang['supplier_document_save_failed'] = 'Se guardó el proveedor, pero no se pudo subir el documento.';
+$lang['supplier_delete_failed'] = 'No se pudieron eliminar los registros de proveedores seleccionados.';

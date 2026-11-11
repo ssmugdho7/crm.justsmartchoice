@@ -2,30 +2,66 @@
 'use strict';
 if (!$) { return; }
 
+function loadSupplierForm($modal, url, expectedField, initialize) {
+    var $content = $modal.find('.modal-body');
+    var $submit = $modal.find('[type="submit"]');
+    var previous = $modal.data('supplier-request');
+    if (previous) { previous.abort(); }
+
+    $submit.prop('disabled', true);
+    $content.html('<div class="text-center p-4" role="status"><i class="fa fa-spinner fa-spin"></i> Loading...</div>');
+    $modal.modal('show');
+
+    function showError() {
+        $content.empty().append($('<div class="alert alert-danger" role="alert">').text($modal.attr('data-load-error')));
+    }
+
+    var request = $.get(url).done(function(response) {
+        var $fields = $('<div>').append($.parseHTML(response));
+        if (!$fields.find(expectedField).length) {
+            showError();
+            return;
+        }
+        $content.empty().append($fields.contents());
+        if (initialize) { initialize($content); }
+        $submit.prop('disabled', false);
+    }).fail(function(xhr, status) {
+        if (status !== 'abort') { showError(); }
+    });
+    $modal.data('supplier-request', request);
+}
+
 function init_supplier_modal(id) {
-    if (typeof id === 'undefined') { id = 0; }
-    $('#supplier-modal').modal('show');
-    $('#supplier-modal-content').html('<div class="text-center p-4"><i class="fa fa-spinner fa-spin"></i> Loading...</div>');
-    $.get(admin_url + 'supplier/supplier_form/' + id, function(response) {
-        $('#supplier-modal-content').html(response);
-        if ($.fn.selectpicker) { $('#supplier-modal-content .selectpicker').selectpicker('refresh'); }
-        if ($.fn.tagsinput) { $('#supplier-modal-content .tagsinput').tagsinput(); }
+    loadSupplierForm($('#supplier-modal'), admin_url + 'supplier/supplier_form/' + id, 'input[name="id"]', function($content) {
+        if ($.fn.selectpicker) { $content.find('.selectpicker').selectpicker('refresh'); }
+        if ($.fn.tagit) { appTagsInput($content.find('.tagsinput')); }
     });
 }
 function supplierBulkAction(btn) {
-    var ids = [];
-    $('.table-suppliers tbody input[type="checkbox"]:checked').each(function(){ ids.push($(this).val()); });
-    if (!ids.length) { alert_float('warning', 'Please select at least one supplier.'); return false; }
-    if (!confirm_delete()) { return false; }
-    $(btn).addClass('disabled');
-    $.post(admin_url + 'supplier/bulk_action', {ids: ids, mass_delete: $('#mass_delete').is(':checked') ? 1 : 0}).done(function(){ window.location.reload(); }).fail(function(xhr){ alert_float('danger', xhr.responseText || 'Action failed'); $(btn).removeClass('disabled'); });
+    var $button = $(btn);
+    if ($button.hasClass('disabled')) { return; }
+
+    var ids = supplierSelectedIds();
+    if (!ids.length || !$('#mass_delete').is(':checked')) {
+        alert_float('warning', $('#supplier_bulk_actions').attr('data-action-required'));
+        return;
+    }
+    if (!confirm_delete()) { return; }
+
+    var data = { ids: ids, mass_delete: 1 };
+    data[csrfData.token_name] = csrfData.hash;
+    $button.addClass('disabled');
+    $.post(admin_url + 'supplier/bulk_action', data, null, 'json').done(function(response) {
+        if (response.success) { window.location.reload(); }
+    }).fail(function() {
+        alert_float('danger', $('#supplier_bulk_actions').attr('data-action-error'));
+    }).always(function() {
+        $button.removeClass('disabled');
+    });
 }
 function supplierApplyFilters() {
     var table = $('.table-suppliers').DataTable();
-    var keyword = $('#supplier_filter_keyword').val();
-    var trade = $('#supplier_filter_trade').val();
-    table.search(keyword || '').draw();
-    if (trade) { table.column(5).search(trade).draw(); } else { table.column(5).search('').draw(); }
+    table.search($('#supplier_filter_keyword').val() || '').draw();
 }
 function supplierClearFilters() {
     $('#supplier_filter_keyword').val('');
@@ -53,14 +89,7 @@ function supplierExport(type) {
     setTimeout(function(){ $('.supplier-main-export').removeClass('supplier-export-active'); }, 1600);
 }
 function supplierEmailModal(id) {
-    $('#supplier-email-form').attr('enctype','multipart/form-data');
-    $('#supplier_email_modal').modal('show');
-    $('#supplier-email-modal-content').html('<div class="text-center p-4"><i class="fa fa-spinner fa-spin"></i> Loading...</div>');
-    $.get(admin_url + 'supplier/email_form/' + id, function(response) {
-        $('#supplier-email-modal-content').html(response);
-    }).fail(function(xhr){
-        $('#supplier-email-modal-content').html('<div class="alert alert-danger">' + (xhr.responseText || 'Email form failed to load.') + '</div>');
-    });
+    loadSupplierForm($('#supplier_email_modal'), admin_url + 'supplier/email_form/' + id, 'input[name="supplier_id"]');
 }
 function supplierMoveToolbar() {
     var $wrapper = $('.table-suppliers_wrapper');
@@ -153,4 +182,15 @@ $(function () {
 });
 
 
-})(window.jQuery || window.$);
+// These actions are called by the list, including rows rendered by DataTables.
+Object.assign(window, {
+    init_supplier_modal: init_supplier_modal,
+    supplierApplyFilters: supplierApplyFilters,
+    supplierClearFilters: supplierClearFilters,
+    supplierEmailModal: supplierEmailModal,
+    supplierExport: supplierExport,
+    supplierPrint: supplierPrint,
+    supplierBulkAction: supplierBulkAction
+});
+
+})(window.jQuery);

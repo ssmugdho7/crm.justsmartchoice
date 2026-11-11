@@ -11,6 +11,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <!-- Keep the phone widget's idle panels hidden before its external CSS is available.
+         Real calls still use jQuery.show() or remove .flipback to reveal the matching panel. -->
+    <style id="sc-softphone-critical">
+        #ringing-soft-phone,
+        #dialing-soft-phone,
+        #speaking-soft-phone.flipback { display: none; }
+        #soft-phone-draggable .head_bell img { width: 50px; height: 50px; object-fit: contain; }
+    </style>
+
     <title>
         <?= $title ?? get_option('companyname'); ?>
     </title>

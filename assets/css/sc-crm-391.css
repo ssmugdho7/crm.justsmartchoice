@@ -575,6 +575,10 @@ body.admin.proposals .onoffswitch-checkbox,form#proposal-form .onoffswitch-check
 body.admin.smart-choice-normalized-module :is(.dataTables_wrapper, .table-responsive) {
   overflow-x: auto !important;
 }
+/* The inner table scroller can extend into the panel gutters. Keep the outer wrapper from clipping it. */
+body.admin.smart-choice-normalized-module .dataTables_wrapper:has(> .table-responsive > table) {
+  overflow: visible !important;
+}
 body.admin.smart-choice-normalized-module :is(table.table.dataTable, .table-responsive > table.table):not(.items) {
   table-layout: auto !important;
 }

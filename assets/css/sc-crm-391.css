@@ -578,13 +578,21 @@ body.admin.smart-choice-normalized-module :is(.dataTables_wrapper, .table-respon
 body.admin.smart-choice-normalized-module :is(table.table.dataTable, .table-responsive > table.table):not(.items) {
   table-layout: auto !important;
 }
-body.admin.smart-choice-normalized-module :is(table.table.dataTable, .table-responsive > table.table):not(.items)
+body.admin.smart-choice-normalized-module :is(
+  table.table.dataTable,
+  .table-responsive > table.table,
+  table.table:has(> thead > tr > th:first-child:not(:empty)):not(:has(> thead > tr > th:first-child input[type="checkbox"]))
+):not(.items)
   > :is(thead, tbody) > tr > :is(th, td):first-child {
   width: auto !important;
   max-width: none !important;
   text-align: start !important;
 }
-body.admin.smart-choice-normalized-module :is(table.table.dataTable, .table-responsive > table.table):not(.items)
+body.admin.smart-choice-normalized-module :is(
+  table.table.dataTable,
+  .table-responsive > table.table,
+  table.table:has(> thead > tr > th:first-child:not(:empty)):not(:has(> thead > tr > th:first-child input[type="checkbox"]))
+):not(.items)
   > :is(thead, tbody) > tr > :is(th, td):first-child:has(input[type="checkbox"]):not(:has(a, button, .row-options)) {
   width: 36px !important;
   min-width: 36px !important;

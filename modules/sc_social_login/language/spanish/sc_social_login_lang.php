@@ -72,3 +72,11 @@ $lang['scsl_all_accounts'] = 'Todas las conexiones autorizadas';
 $lang['scsl_older'] = 'Conexiones anteriores';
 
 $lang['scsl_signup'] = 'Regístrese con su cuenta';
+$lang['scsl_signin_google'] = 'Iniciar sesión con Google';
+$lang['scsl_signin_facebook'] = 'Iniciar sesión con Facebook';
+$lang['scsl_signin_apple'] = 'Iniciar sesión con Apple';
+$lang['scsl_signup_google'] = 'Registrarse con Google';
+$lang['scsl_signup_facebook'] = 'Registrarse con Facebook';
+$lang['scsl_signup_apple'] = 'Registrarse con Apple';
+$lang['scsl_unavailable_facebook'] = 'El acceso con Facebook aún no está disponible.';
+$lang['scsl_unavailable_google'] = 'El acceso con Google aún no está disponible.';

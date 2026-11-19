@@ -1,0 +1,42 @@
+const { chromium } = require('playwright');
+const { execFileSync } = require('child_process');
+const path = require('path');
+const root = path.resolve(__dirname, '..');
+const assert = require('assert');
+(async () => {
+  const browser = await chromium.launch({ headless: true, executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE || undefined });
+  try {
+    const page = await browser.newPage({ viewport: { width: 1100, height: 650 } });
+    await page.route('https://crm.example.test/**', route => route.fulfill({status: 200, body: ''}));
+    await page.goto('https://crm.example.test/admin/development');
+    const title = 'Urgently fix the appointment overview and verify the complete customer booking workflow with both staff and customers';
+    await page.setContent(`<style>body{font:14px Arial;margin:24px}.table-responsive{width:100%;overflow:auto}table{border-collapse:collapse;width:100%}th,td{padding:14px;border:1px solid #ddd;text-align:left}.sc-table-cell-ellipsis{display:block;max-width:160px!important;overflow:hidden!important;white-space:nowrap!important;text-overflow:ellipsis!important}</style><div id="wrapper"><div class="table-responsive"><table id="development-repairs-table" class="dt-table"><thead><tr><th>Select</th><th>#</th><th>Problem / Repair</th><th>Assigned to</th><th>Actions</th></tr></thead><tbody><tr><td><input type="checkbox"></td><td>48</td><td><a class="sc-table-cell-ellipsis" href="/admin/development/view/48">${title}</a></td><td>Staff member</td><td><button>Edit</button></td></tr></tbody></table></div></div><table id="other"><tr><td>Other module</td></tr></table>`);
+    await page.addStyleTag({ path: root + '/modules/sc_admin_fixes/assets/css/repair-notes.css' });
+    await page.addScriptTag({ path: root + '/assets/js/jquery.js' });
+    await page.addScriptTag({ path: root + '/modules/sc_admin_fixes/assets/js/repair-notes.js' });
+    const handle = page.getByRole('separator');
+    await handle.waitFor();
+    const before = Number(await handle.getAttribute('aria-valuenow'));
+    const box = await handle.boundingBox();
+    await page.mouse.move(box.x + box.width/2, box.y + box.height/2);
+    await page.mouse.down(); await page.mouse.move(box.x + box.width/2 + 300, box.y + box.height/2); await page.mouse.up();
+    assert(Number(await handle.getAttribute('aria-valuenow')) >= before + 295, 'Drag widens problem column');
+    const details = await page.locator('a[href*="/development/view/"]').evaluate(a => ({text:a.textContent,overflow:getComputedStyle(a).textOverflow,wrap:getComputedStyle(a).whiteSpace,width:a.getBoundingClientRect().width}));
+    assert.equal(details.text, title); assert.equal(details.overflow,'clip'); assert.equal(details.wrap,'normal');
+    const expanded = Number(await handle.getAttribute('aria-valuenow'));
+    await handle.focus(); await page.keyboard.press('ArrowRight');
+    assert.equal(Number(await handle.getAttribute('aria-valuenow')), expanded + 20);
+    assert.equal(await page.evaluate(() => localStorage.getItem('sc-repair-title-width-v1')), String(expanded+20));
+    await page.evaluate(() => jQuery('#development-repairs-table').trigger('draw.dt'));
+    assert.equal(await page.locator('td.sc-repair-title-cell').count(),1);
+    assert.equal(await page.locator('#other.sc-repair-resizable').count(),0);
+    await page.screenshot({path:'/tmp/repair-title-resize-verified.png',fullPage:true});
+    console.log('PASS title drag, full text, wrapping, keyboard, saved width, redraw and other-table isolation');
+    await page.setContent(`<style>body{font:16px Arial;padding:30px}main{max-width:380px;margin:auto}</style><main>${execFileSync('php', ['-r', `define('BASEPATH',true);$registration=false;$audience='client';$providers=['google'];function html_escape($s){return htmlspecialchars($s,ENT_QUOTES,'UTF-8');}function site_url($s){return 'https://crm.example.test/'.$s;}function module_dir_url($m,$p){return 'https://crm.example.test/modules/'.$m.'/'.$p;}$lang=[];require $argv[1];function _l($s){global $lang;return $lang[$s]??$s;}require $argv[2];`, root+'/modules/sc_social_login/language/english/sc_social_login_lang.php', root+'/modules/sc_social_login/views/buttons.php'], {encoding:'utf8'})}</main>`);
+    await page.addStyleTag({path:root+'/modules/sc_social_login/assets/css/sign-in-buttons.css'});
+    assert(await page.getByRole('button',{name:'Sign in with Facebook',exact:false}).isDisabled());
+    assert((await page.getByRole('link',{name:'Sign in with Google',exact:false}).getAttribute('href')).endsWith('/google/client'));
+    await page.screenshot({path:'/tmp/social-buttons-verified.png',fullPage:true});
+    console.log('PASS Facebook unavailable, Google customer route, stacked provider buttons');
+  } finally { await browser.close(); }
+})().catch(e => {console.error(e);process.exit(1);});

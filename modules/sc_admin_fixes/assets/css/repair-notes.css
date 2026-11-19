@@ -1,0 +1,6 @@
+table.sc-repair-resizable{table-layout:fixed!important;max-width:none!important}
+table.sc-repair-resizable th.sc-repair-title-cell{position:relative;overflow:visible!important;padding-right:24px!important}
+table.sc-repair-resizable td.sc-repair-title-cell,table.sc-repair-resizable td.sc-repair-title-cell *{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;max-width:none!important;max-height:none!important;height:auto!important;overflow-wrap:anywhere}
+table.sc-repair-resizable td.sc-repair-title-cell a{display:block!important}
+.sc-repair-column-resizer{position:absolute;right:0;top:0;bottom:0;width:14px;border:0;border-right:2px solid #9cafa5;background:transparent;cursor:col-resize;touch-action:none;padding:0;z-index:2}
+.sc-repair-column-resizer:hover,.sc-repair-column-resizer:focus-visible{background:#d1fae5;border-color:#047857;outline:2px solid #047857;outline-offset:-2px}

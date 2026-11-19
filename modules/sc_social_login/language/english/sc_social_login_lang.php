@@ -72,3 +72,11 @@ $lang['scsl_all_accounts'] = 'All authorized connections';
 $lang['scsl_older'] = 'Older connections';
 
 $lang['scsl_signup'] = 'Sign up with your account';
+$lang['scsl_signin_google'] = 'Sign in with Google';
+$lang['scsl_signin_facebook'] = 'Sign in with Facebook';
+$lang['scsl_signin_apple'] = 'Sign in with Apple';
+$lang['scsl_signup_google'] = 'Sign up with Google';
+$lang['scsl_signup_facebook'] = 'Sign up with Facebook';
+$lang['scsl_signup_apple'] = 'Sign up with Apple';
+$lang['scsl_unavailable_facebook'] = 'Facebook sign-in is not available yet.';
+$lang['scsl_unavailable_google'] = 'Google sign-in is not available yet.';

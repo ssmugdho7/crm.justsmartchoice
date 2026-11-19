@@ -156,3 +156,14 @@ $lang['sccc_callback_confirmed'] = 'Your callback request has been saved. A team
 $lang['sccc_extension_not_found'] = 'That extension or team member could not be found. Please try again.';
 $lang['sccc_connecting_to'] = 'Connecting you to %s.';
 $lang['sccc_settings'] = 'Settings';
+
+$lang['sccc_invalid_ai_provider'] = 'Select a supported AI voice provider.';
+$lang['sccc_invalid_ai_url'] = 'Use a valid wss:// stream URL without a query string, or an https:// TwiML webhook URL.';
+$lang['sccc_ai_parameter_too_long'] = 'Stream instructions and voice names must each fit within Twilio\'s 500-byte parameter limit.';
+$lang['sccc_ai_disabled'] = 'AI calling is disabled in Call Center settings.';
+$lang['sccc_ai_agent_unavailable'] = 'Configure an active AI voice agent with a valid provider endpoint.';
+$lang['sccc_staff_required'] = 'Assign a staff member for the browser call.';
+$lang['sccc_name_required'] = 'Enter an agent name.';
+$lang['sccc_invalid_campaign'] = 'Enter a campaign name, valid call list and supported dialing mode.';
+$lang['sccc_setup_incomplete'] = 'Call Center setup is incomplete. Missing configuration:';
+$lang['sccc_ai_provider_help'] = 'Connect an existing AI voice service. Stream providers receive call_id, agent_id, system_prompt and voice_name as Twilio custom parameters. Webhook providers must return TwiML; configure their instructions and voice in that provider. Creating an agent does not create or host an AI voice service.';

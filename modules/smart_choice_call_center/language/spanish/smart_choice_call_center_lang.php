@@ -156,3 +156,14 @@ $lang['sccc_callback_confirmed'] = 'Su solicitud de devolución de llamada ha si
 $lang['sccc_extension_not_found'] = 'No se encontró esa extensión o miembro del equipo. Inténtelo de nuevo.';
 $lang['sccc_connecting_to'] = 'Conectándolo con %s.';
 $lang['sccc_settings'] = 'Settings';
+
+$lang['sccc_invalid_ai_provider'] = 'Seleccione un proveedor de voz IA compatible.';
+$lang['sccc_invalid_ai_url'] = 'Use una URL wss:// sin consulta o un webhook TwiML https:// válido.';
+$lang['sccc_ai_parameter_too_long'] = 'Los parámetros deben ocupar menos de 500 bytes, incluido su nombre.';
+$lang['sccc_ai_disabled'] = 'Las llamadas IA están desactivadas en la configuración.';
+$lang['sccc_ai_agent_unavailable'] = 'Configure un agente IA activo con un endpoint válido.';
+$lang['sccc_staff_required'] = 'Asigne un empleado para la llamada del navegador.';
+$lang['sccc_name_required'] = 'Introduzca un nombre para el agente.';
+$lang['sccc_invalid_campaign'] = 'Introduzca un nombre, una lista válida y un modo compatible.';
+$lang['sccc_setup_incomplete'] = 'La configuración del centro de llamadas está incompleta. Falta:';
+$lang['sccc_ai_provider_help'] = 'Conecte un servicio de voz IA existente. Los streams reciben call_id, agent_id, system_prompt y voice_name. Los webhooks deben devolver TwiML; configure sus instrucciones y voz en el proveedor. Crear un agente no crea ni aloja un servicio de voz IA.';

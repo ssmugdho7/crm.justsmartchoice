@@ -72,7 +72,7 @@ function sccc_admin_footer(){
     echo '<script>window.scccTokenUrl='.json_encode(admin_url('smart_choice_call_center/token')).';window.scccBrowserEnabled=true;</script>';
     // Pinned official npm browser bundle: the previous SDK-host URL returns a non-script 403 response.
     echo '<script src="'.module_dir_url(SCCC_MODULE_NAME,'assets/vendor/twilio-voice-sdk/twilio-2.11.0.min.js').'"></script>';
-    echo '<script src="'.module_dir_url(SCCC_MODULE_NAME,'assets/js/call-center.js?v='.SCCC_VERSION).'"></script>';
+    echo '<script src="'.module_dir_url(SCCC_MODULE_NAME,'assets/js/call-center.js?v='.SCCC_VERSION.'-'.filemtime(__DIR__.'/assets/js/call-center.js')).'"></script>';
 }
 function sccc_cron(){
     $CI=&get_instance(); $CI->load->model('smart_choice_call_center/Call_center_model','sccc_model');

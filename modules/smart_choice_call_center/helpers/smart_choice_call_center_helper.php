@@ -24,7 +24,7 @@ function sccc_form_encode(array $data): string {
 }
 function sccc_ai_agent_error(array $agent): ?string {
  $provider=$agent['provider']??'';
- if($provider==='crm_openai')return get_option('openai_api_key')&&get_option('openai_model')?null:_l('sccc_crm_ai_missing');
+ if($provider==='crm_openai')return (get_option('sccc_ai_api_key')?:get_option('openai_api_key'))&&get_option('openai_model')?null:_l('sccc_crm_ai_missing');
  $field=$provider==='generic_stream'?'websocket_url':($provider==='webhook'?'webhook_url':null);
  if(!$field)return _l('sccc_invalid_ai_provider');
  $url=trim((string)($agent[$field]??''));$parts=parse_url($url);

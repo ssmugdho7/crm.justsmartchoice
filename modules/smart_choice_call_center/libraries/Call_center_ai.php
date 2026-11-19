@@ -6,7 +6,7 @@ class Call_center_ai
 {
     public function reply(array $agent, array $history, string $speech): string
     {
-        $key = trim((string) get_option('openai_api_key'));
+        $key = trim((string) (get_option('sccc_ai_api_key') ?: get_option('openai_api_key')));
         $model = trim((string) get_option('openai_model'));
         if ($key === '' || $model === '') {
             throw new RuntimeException('AI credentials or model unavailable');

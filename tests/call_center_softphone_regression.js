@@ -7,7 +7,8 @@ function fixture(configured) {
   let startup, device;
   const document = { getElementById: () => null };
   function $(selector) {
-    if (typeof selector === 'function') { startup = selector; return; }
+    // jQuery 3.1.1 recognises ordinary Function objects, not AsyncFunction.
+    if (Object.prototype.toString.call(selector) === '[object Function]') { startup = selector; return; }
     if (selector === document) return { on: (event, target, action) => handlers.set(target, action) };
     if (typeof selector === 'object') return selector;
     if (!elements.has(selector)) elements.set(selector, {

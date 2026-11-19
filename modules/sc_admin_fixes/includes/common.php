@@ -9,7 +9,7 @@ function scaf_domain() {
     $page = scaf_page();
     if ($page === 'clients') return 'customers';
     if ($page === 'projects') return 'projects';
-    if (in_array($page, ['invoices','estimates','proposals','payments','credit_notes'], true)) return 'sales';
+    if (in_array($page, ['invoices','estimates','proposals','payments','credit_notes','contracts'], true)) return 'sales';
     if (in_array($page, ['sales_center','deals','commission'], true)) return 'saleshub';
     if (get_instance()->uri->segment(2) === 'appointly' || ($page === 'settings' && get_instance()->input->get('group') === 'appointly_settings')) return 'appointments';
     return null;

@@ -18,3 +18,9 @@ hooks()->add_action('after_contract_view_as_client_link', function ($contract) {
 hooks()->add_action('after_contract_deleted', function ($id) {
     delete_option('scaf_contract_workflow_' . (int)$id);
 });
+
+hooks()->add_action('app_admin_head', function () {
+    if (strtolower(get_instance()->router->fetch_class()) !== 'contracts') { return; }
+    scaf_asset('assets/css/contract-workflows.css');
+    scaf_asset('assets/js/contract-workflows.js');
+});

@@ -77,6 +77,21 @@ class Projects extends AdminController
             access_denied('Projects');
         }
 
+        $sourceContract = null;
+        $sourceContractId = $this->input->get('via_contract_id');
+        if ($sourceContractId !== null && $sourceContractId !== '') {
+            if ($id !== '' || $this->input->get('via_estimate_id') || !ctype_digit((string)$sourceContractId) || (int)$sourceContractId < 1
+                || staff_cant('create','projects') || staff_cant('edit','contracts')) {
+                access_denied('contracts'); return;
+            }
+            $this->load->model('contracts_model');
+            $sourceContract = $this->contracts_model->get((int)$sourceContractId);
+            if (!$sourceContract || (staff_cant('view','contracts') && (int)$sourceContract->addedfrom !== (int)get_staff_user_id())) {
+                show_404(); return;
+            }
+            if (!empty($sourceContract->project_id)) { redirect(admin_url('projects/view/'.(int)$sourceContract->project_id)); return; }
+        }
+
         if ($this->input->post()) {
             $data                = $this->input->post();
             $data['description'] = html_purify($this->input->post('description', false));
@@ -84,8 +99,15 @@ class Projects extends AdminController
                 if (staff_cant('create', 'projects')) {
                     access_denied('Projects');
                 }
+                if ($sourceContract && (int)($data['clientid'] ?? 0) !== (int)$sourceContract->client) {
+                    show_error('The project customer must match the source contract.',422); return;
+                }
                 $id = $this->projects_model->add($data);
                 if ($id) {
+                    if ($sourceContract) {
+                        $this->db->where('id',(int)$sourceContract->id)->update(db_prefix().'contracts',['project_id'=>(int)$id]);
+                        log_activity('Project created from contract [Contract ID: '.(int)$sourceContract->id.', Project ID: '.(int)$id.']');
+                    }
                     set_alert('success', _l('added_successfully', _l('project')));
                     redirect(admin_url('projects/view/' . $id));
                 }
@@ -116,7 +138,12 @@ class Projects extends AdminController
             $title                   = _l('edit', _l('project'));
         }
 
-        if ($this->input->get('customer_id')) {
+        if ($sourceContract) {
+            $data['source_contract'] = $sourceContract;
+            $data['customer_id'] = (int)$sourceContract->client;
+        }
+
+        if (!$sourceContract && $this->input->get('customer_id')) {
             $data['customer_id'] = $this->input->get('customer_id');
         }
 

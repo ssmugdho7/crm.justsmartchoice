@@ -110,6 +110,7 @@
  // Capture before the legacy delegated native confirm handler; keep its exact authorized endpoint.
  d.addEventListener('click',async event=>{
   const source=event.target.closest('.sc-bulk-delete');if(!source)return;
+  if(w.scBulkActions){event.preventDefault();event.stopImmediatePropagation();w.scBulkActions.deleteSelected(source);return;}
   const bar=source.closest('.sc-bulk-actions'),wrap=bar?.closest('.dataTables_wrapper'),table=wrap?.querySelector('table');
   if(!table)return;
   const checked=Array.from(table.querySelectorAll('.sc-bulk-row:checked'));
@@ -120,7 +121,7 @@
   const release=api.busy(source);
   try{
    if(!await api.confirm({title:t('Delete selected records?','¿Eliminar registros seleccionados?'),message:ids.length+' '+t('selected records. Existing server safeguards still apply.','registros seleccionados. Se aplican las protecciones del servidor.'),typed:'DELETE',actionLabel:t('Delete','Eliminar')}))return;
-   const result=await $.ajax({url:(w.scafConfig?.adminUrl||'/admin/')+'smart_choice_bulk/delete/'+feature,type:'POST',data:{ids:ids},dataType:'json'});
+   const result=await $.ajax({url:(w.scafConfig?.adminUrl||'/admin/')+'smart_choice_bulk/delete/'+feature,type:'POST',data:{ids:ids,delete_confirmation:'DELETE'},dataType:'json'});
    if(!result||result.success!==true||!Number.isInteger(result.deleted)||result.deleted<1){toast('error',t('No deletion was confirmed.','No se confirmó ninguna eliminación.'));return;}
    const failed=Array.isArray(result.failed)?result.failed.length:Math.max(0,ids.length-result.deleted);
    toast(failed?'warning':'success',result.deleted+' '+t('deleted','eliminados')+(failed?' · '+failed+' '+t('not deleted','sin eliminar'):''));

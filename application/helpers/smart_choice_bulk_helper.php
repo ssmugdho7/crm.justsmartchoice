@@ -22,5 +22,5 @@ foreach (sc_bulk_table_targets() as $scFeature) {
 }
 
 hooks()->add_action('app_admin_footer', function(){
-    echo '<script src="'.base_url('assets/js/smart_choice_bulk.js?v=430').'"></script>';
+    echo '<script src="'.base_url('assets/js/smart_choice_bulk.js?v=' . filemtime(FCPATH . 'assets/js/smart_choice_bulk.js')).'"></script>';
 });

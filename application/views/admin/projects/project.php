@@ -2,7 +2,7 @@
 <?php init_head(); ?>
 <div id="wrapper">
     <div class="content">
-        <?= form_open($this->uri->uri_string(), ['id' => 'project_form']); ?>
+        <?= form_open($this->uri->uri_string() . (isset($source_contract) ? '?via_contract_id='.(int)$source_contract->id : ''), ['id' => 'project_form']); ?>
 
         <div class="tw-max-w-4xl tw-mx-auto">
             <h4 class="tw-mt-0 tw-font-bold tw-text-lg tw-text-neutral-700">
@@ -42,7 +42,7 @@ if (isset($project)) {
     }
 }
 ?>
-                            <?php $value = (isset($project) ? $project->name : ''); ?>
+                            <?php $value = isset($project) ? $project->name : (isset($source_contract) ? $source_contract->subject : ''); ?>
                             <?= sc_google_map_field('project', isset($project) ? $project : null); ?>
                             <?= render_input('name', 'project_name', $value); ?>
                             <div class="form-group select-placeholder">

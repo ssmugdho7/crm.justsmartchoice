@@ -1,0 +1,9 @@
+body.contract .scaf-contract-menu{min-width:230px;max-width:min(310px,calc(100vw - 32px));padding:6px 0;border:1px solid #dce4e0;border-radius:9px;box-shadow:0 8px 24px #173b2a1a;max-height:calc(100vh - 200px);overflow-y:auto}
+body.contract .scaf-contract-menu>li>a,body.contract .scaf-contract-menu .scaf-contract-action-button{box-sizing:border-box;display:block;width:100%;padding:9px 16px;white-space:normal;text-align:left;font:inherit;font-size:14px;line-height:1.4;color:#172b24;background:transparent;border:0;text-decoration:none;cursor:pointer}
+body.contract .scaf-contract-menu>li>a:hover,body.contract .scaf-contract-menu .scaf-contract-action-button:hover{background:#edf8f2;color:#075e42}
+body.contract .scaf-contract-menu .scaf-contract-action-button:focus-visible,body.contract .scaf-contract-menu>li>a:focus-visible{outline:2px solid #07825f;outline-offset:-3px;background:#edf8f2}
+body.contract .scaf-contract-menu .scaf-contract-action-button:disabled{color:#66756d;background:#f3f7f4;cursor:default}
+body.contract .scaf-contract-menu .scaf-contract-action-form{margin:0!important;padding:0!important;display:block!important}
+body.contract .scaf-contract-status{padding:7px 16px;color:#52675c;white-space:normal;font-size:11px;text-transform:uppercase;letter-spacing:.03em}
+body.contract .scaf-contract-help{padding:8px 16px;font-size:11px;line-height:1.45;color:#687a70;white-space:normal}
+body.contract .scaf-contract-menu>li>a._delete{color:#c62828}

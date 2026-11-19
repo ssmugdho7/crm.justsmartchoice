@@ -19,3 +19,5 @@ $lang['scaf_contract_workflow_help'] = 'Workflow labels do not send email or cha
 $lang['scaf_contract_signed_workflow_locked'] = 'A signed contract cannot be given an unsigned workflow status.';
 $lang['scaf_contract_workflow_failed'] = 'The contract workflow could not be saved.';
 $lang['scaf_contract_workflow_saved'] = 'Contract workflow updated.';
+$lang['scaf_contract_convert_project'] = 'Convert to Project';
+$lang['scaf_contract_view_project'] = 'View Project';

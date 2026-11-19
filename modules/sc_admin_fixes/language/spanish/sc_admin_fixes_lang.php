@@ -19,3 +19,5 @@ $lang['scaf_contract_workflow_help'] = 'Estas etiquetas no envían correos ni ca
 $lang['scaf_contract_signed_workflow_locked'] = 'Un contrato firmado no puede recibir un estado de contrato sin firmar.';
 $lang['scaf_contract_workflow_failed'] = 'No se pudo guardar el estado del contrato.';
 $lang['scaf_contract_workflow_saved'] = 'Estado del contrato actualizado.';
+$lang['scaf_contract_convert_project'] = 'Convertir en proyecto';
+$lang['scaf_contract_view_project'] = 'Ver proyecto';

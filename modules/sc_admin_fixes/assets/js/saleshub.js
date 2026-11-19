@@ -301,10 +301,15 @@
     }
     function selectedIds(scope){
         var ids = [];
-        scope.querySelectorAll('.sales-center-row-checkbox:checked,input[type="checkbox"][name="ids[]"]:checked,input[type="checkbox"][name="id[]"]:checked').forEach(function(cb){ if(cb.value){ ids.push(cb.value); } });
+        scope.querySelectorAll('.sc-bulk-row:checked,.sales-center-row-checkbox:checked,input[type="checkbox"][name="ids[]"]:checked,input[type="checkbox"][name="id[]"]:checked').forEach(function(cb){ if(cb.value){ ids.push(cb.value); } });
         return ids;
     }
     async function submitMassDelete(target, ids, source){
+        if(['invoices','estimates','proposals','credit_notes','payments'].indexOf(target)!==-1){
+            if(window.scBulkActions){window.scBulkActions.deleteSelected(source);}
+            else if(typeof alert_float==='function'){alert_float('warning','Refresh the page to load the deletion confirmation.');}
+            return;
+        }
         if(!ids.length){ alert('Select at least one record first.'); return; }
         var pending = submitMassDelete.pending || (submitMassDelete.pending = Object.create(null));
         if(pending[target]) return;
@@ -353,6 +358,7 @@
             var scope = table.closest('.dataTables_wrapper') || table.closest('.panel-body') || table.parentNode;
             if(!scope || scope.querySelector('.sales-center-generated-toolbar')){ return; }
             var tb = toolbar(target);
+            tb._scBulkTable = table;
             placeToolbar(scope, tb);
             tb.addEventListener('click', function(e){
                 if(e.target.closest('.sales-center-refresh')){ window.location.reload(); }

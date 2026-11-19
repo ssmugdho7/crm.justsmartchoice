@@ -4,6 +4,8 @@
  var pending=new WeakSet();
  function featureFor(table){var input=table.querySelector('.sc-bulk-row[data-feature],.sc-bulk-select-all[data-feature]');return input?input.dataset.feature:'';}
  function tableFor(source){
+  var toolbar=source.closest('.sales-center-generated-toolbar');
+  if(toolbar&&toolbar._scBulkTable&&toolbar._scBulkTable.isConnected)return toolbar._scBulkTable;
   var bar=source.closest('.sc-bulk-actions');
   if(bar&&bar._scBulkTable&&bar._scBulkTable.isConnected)return bar._scBulkTable;
   var scope=source.closest('.dataTables_wrapper,.panel-body');
@@ -16,6 +18,8 @@
   var rows=Array.from(table.querySelectorAll('.sc-bulk-row')).filter(function(row){return row.dataset.feature===featureFor(table);});
   var count=rows.filter(function(row){return row.checked;}).length;
   bar.querySelector('.sc-bulk-count').textContent=count?count+' selected':'';
+  bar.classList.toggle('scaf-floating-batch',count>0);
+  bar.setAttribute('aria-label','Selected '+feature.replace('_',' ')+' actions');
   bar.querySelector('.sc-bulk-select-all').checked=rows.length>0&&count===rows.length;
   bar.querySelector('.sc-bulk-select-all').indeterminate=count>0&&count<rows.length;
  }

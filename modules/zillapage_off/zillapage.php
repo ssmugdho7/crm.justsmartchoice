@@ -232,7 +232,7 @@ function zillapage_fetch_library_section($url)
 {
     $url = trim((string) $url);
     if ($url === '' || !filter_var($url, FILTER_VALIDATE_URL)) { return ''; }
-    $cacheDir = WRITEPATH . 'cache/';
+    $cacheDir = APPPATH . 'cache/';
     $cacheFile = $cacheDir . 'zillapage_section_' . sha1($url) . '.html';
     if (is_file($cacheFile) && (time() - filemtime($cacheFile)) < 900) { return (string) file_get_contents($cacheFile); }
     $html = '';

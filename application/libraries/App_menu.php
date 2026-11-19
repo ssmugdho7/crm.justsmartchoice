@@ -73,6 +73,12 @@ class App_menu
         return $this;
     }
 
+    /** Compatibility name used by installed customer-portal modules. */
+    public function add_theme_menu_item($slug, $item)
+    {
+        return $this->add_theme_item($slug, $item);
+    }
+
     public function get_theme_items()
     {
         return $this->get('theme');

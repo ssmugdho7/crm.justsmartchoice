@@ -11,6 +11,7 @@
             data: values + `&${csrfName}=${csrfHash}&_code=${codePage}`,
             success: function(data) {
                 if ($.isEmptyObject(data.error)) {
+                    document.dispatchEvent(new CustomEvent('sc:landing-lead-created'));
                     if (data.type_form_submit == 'url') {
                         window.location.href = data.redirect_url;
                     } else {

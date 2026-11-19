@@ -47,6 +47,7 @@ $socialImage = !empty($page->social_image) ? base_url(ZILLAPAGE_IMAGE_PATH.'/upl
 </head>
 
     <body class="">
+<?php $CI->load->view('zillapage/publish/meta_pixel', ['settingsMap'=>$settingsMap]); ?>
 <?php echo zillapage_fetch_library_section($settingsMap['header_library_url'] ?? ''); ?>
         
         <?php if (!empty($page->social_overlay_text) || !empty($page->social_video_url) || !empty($page->carousel_images)): ?>
@@ -72,7 +73,7 @@ $socialImage = !empty($page->social_image) ? base_url(ZILLAPAGE_IMAGE_PATH.'/upl
         </script>
        
         <script src="<?php echo base_url(ZILLAPAGE_ASSETS_PATH.'/landingpage/js/publish.js'); ?>"></script>
-        <script src="<?php echo base_url(ZILLAPAGE_ASSETS_PATH.'/landingpage/js/main-page.js'); ?>"></script>
+        <script src="<?php echo base_url(ZILLAPAGE_ASSETS_PATH.'/landingpage/js/main-page.js'); ?>?v=<?php echo filemtime(__DIR__.'/../../assets/landingpage/js/main-page.js'); ?>"></script>
 
     <style>.sc-social-hero{position:relative;background:#f8fafc}.sc-social-media{position:relative;max-height:620px;overflow:hidden}.sc-social-media img,.sc-social-media iframe{width:100%;height:min(62vw,620px);object-fit:cover;border:0}.sc-social-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:30px;background:linear-gradient(90deg,rgba(16,45,92,.72),rgba(22,145,121,.28));color:#fff;text-align:center}.sc-social-overlay h1{max-width:980px;font-size:clamp(30px,5vw,68px);text-shadow:0 3px 16px rgba(0,0,0,.45)}.sc-appointment{text-align:center;padding:22px}.sc-appointment-btn{display:inline-block;background:#169179;color:#fff;padding:14px 30px;border-radius:9px;font-weight:700;text-decoration:none}.sc-carousel{position:relative}.sc-carousel img{display:none}.sc-carousel img.active{display:block}@media(max-width:767px){.sc-social-media img,.sc-social-media iframe{height:64vw;min-height:280px}}</style><script>(function(){var imgs=document.querySelectorAll('.sc-carousel img');if(imgs.length>1){var i=0;setInterval(function(){imgs[i].classList.remove('active');i=(i+1)%imgs.length;imgs[i].classList.add('active')},4000)}})();</script>
 <?php echo zillapage_fetch_library_section($settingsMap['footer_library_url'] ?? ''); ?>

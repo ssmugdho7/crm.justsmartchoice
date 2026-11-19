@@ -1,6 +1,36 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 class Sc_admin_fixes extends AdminController {
+    public function contract_workflow($id)
+    {
+        if ($this->input->method(true) !== 'POST') { show_error('POST required', 405); return; }
+        if (!ctype_digit((string)$id) || (int)$id < 1 || !(is_admin() || staff_can('edit','contracts'))) {
+            access_denied('contracts'); return;
+        }
+        $this->load->model('contracts_model');
+        $contract = $this->contracts_model->get((int)$id);
+        if (!$contract || (!(is_admin() || staff_can('view','contracts')) && (int)$contract->addedfrom !== (int)get_staff_user_id())) {
+            show_404(); return;
+        }
+        $state = $this->input->post('status');
+        if (!in_array($state, scaf_contract_workflow_states(), true)) { show_error('Invalid workflow status',422); return; }
+        // Workflow labels must never overwrite evidence of a signed agreement.
+        if (!empty($contract->signed) || !empty($contract->marked_as_signed)) {
+            set_alert('warning',_l('scaf_contract_signed_workflow_locked'));
+        } else {
+            $key = 'scaf_contract_workflow_' . (int)$id;
+            update_option($key,$state,0);
+            $saved = $this->db->where('name',$key)->get(db_prefix().'options')->row();
+            if (!$saved || $saved->value !== $state) {
+                set_alert('danger',_l('scaf_contract_workflow_failed'));
+            } else {
+                log_activity('Contract workflow updated [Contract ID: '.(int)$id.', State: '.$state.']');
+                set_alert('success',_l('scaf_contract_workflow_saved'));
+            }
+        }
+        redirect(admin_url('contracts/contract/'.(int)$id));
+    }
+
     public function customer_statements() {
         if (strtoupper($this->input->method()) !== 'POST') { show_404(); return; }
         require_once __DIR__.'/../includes/customer_data.php';

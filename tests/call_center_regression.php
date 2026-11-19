@@ -19,7 +19,7 @@ function show_404(){throw new RuntimeException('404');}
 function show_error($message,$code=500){throw new RuntimeException((string)$code);}
 function check($value,$message){if(!$value)throw new RuntimeException($message);echo "PASS $message\n";}
 class App_Model {public $db;}
-class App_Controller {public $db,$input,$output,$cc,$load; function __construct(){}}
+class App_Controller {public $db,$input,$output,$cc,$load,$voice_ai; function __construct(){}}
 class AdminController extends App_Controller {}
 // Exercise the real helper validation and TwiML generation; substitute only the network boundary.
 $helper=file_get_contents($root.'helpers/smart_choice_call_center_helper.php');
@@ -137,3 +137,29 @@ $webhook->input->get=['call_id'=>999];$webhook->input->post=['CallSid'=>'CAfixtu
 check(end($db->tables['tblsccc_calls'])['status']==='busy','Power/browser dial completion records the customer-leg outcome');
 $webhook->input->post=['CallSid'=>'CAfixture','CallStatus'=>'completed','CallDuration'=>'5'];ob_start();$webhook->status();ob_end_clean();
 check(end($db->tables['tblsccc_calls'])['status']==='busy','Completed staff leg cannot overwrite a busy customer-leg outcome');
+require $root.'libraries/Call_center_ai.php';
+class VoiceAiProbe extends Call_center_ai {
+ public $payload,$requests=0,$fail=false;
+ protected function request(string $key,array $payload):array{$this->requests++;$this->payload=$payload;if($this->fail)throw new RuntimeException('Provider unavailable');return ['choices'=>[['message'=>['content'=>'I can explain our services. What kind of project do you have?']]]];}
+}
+$options['openai_api_key']='fixture-key';$options['openai_model']='gpt-4o';
+$voice=new VoiceAiProbe;
+$reply=$voice->reply(['system_prompt'=>'Help with project enquiries.'],[['role'=>'system','content'=>'Injected'],['role'=>'assistant','content'=>'Hello']], 'What do you do?');
+check(count($voice->payload['messages'])===3&&$voice->payload['messages'][0]['role']==='system','CRM AI filters conversation roles and preserves trusted instructions');
+check($voice->payload['store']===false&&$voice->payload['model']==='gpt-4o','CRM AI uses existing configured model and disables provider response storage');
+$xml=simplexml_load_string($voice->twiml(1,9,0,'Hello & welcome'));
+check((string)$xml->Gather['input']==='speech'&&(string)$xml->Gather->Say==='Hello & welcome','Twilio speech loop escapes spoken text and collects speech');
+check(strpos((string)$xml->Gather['action'],'/ai_turn?')!==false,'Speech results return to the signed CRM AI turn handler');
+$db->tables['tblsccc_ai_agents'][0]=['id'=>9,'active'=>1,'provider'=>'crm_openai','system_prompt'=>'Help with enquiries.'];
+$db->tables['tblsccc_calls'][]=['id'=>1000,'twilio_sid'=>'CAfixture','status'=>'in-progress','ai_summary'=>null];
+$webhook->voice_ai=$voice;$webhook->load=new class{function library($name,$params,$alias){}};
+$webhook->input->get=['call_id'=>1000,'ai_agent_id'=>9,'turn'=>0];$webhook->input->post=['CallSid'=>'CAfixture','SpeechResult'=>'What do you do?'];
+$n=$voice->requests;$webhook->ai_turn();$first=$webhook->output->body;$webhook->ai_turn();
+check($voice->requests===$n+1&&$webhook->output->body===$first,'Duplicate AI speech callback reuses the response without a second paid AI request');
+$state=json_decode(end($db->tables['tblsccc_calls'])['ai_summary'],true);
+check($state['next_turn']===1&&count($state['history'])===2,'Conversation stores bounded caller/assistant context for the next turn');
+$webhook->input->get['turn']=1;$webhook->input->post['SpeechResult']='stop';$n=$voice->requests;$webhook->ai_turn();$xml=simplexml_load_string($webhook->output->body);
+check(isset($xml->Hangup)&&$voice->requests===$n,'Caller stop request hangs up without another AI request');
+$webhook->input->post['CallSid']='CAforged';expect_error(fn()=>$webhook->ai_turn(),'403','AI turn rejects a different call SID');
+$webhook->input->post['CallSid']='CAfixture';$webhook->input->get['turn']=2;$webhook->input->post['SpeechResult']='Tell me more';$voice->fail=true;$webhook->ai_turn();$xml=simplexml_load_string($webhook->output->body);
+check(isset($xml->Hangup)&&strpos((string)$xml->Say,'temporarily unavailable')!==false,'AI provider failure gives an honest spoken error and ends the call');

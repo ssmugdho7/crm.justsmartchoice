@@ -167,3 +167,6 @@ $lang['sccc_name_required'] = 'Enter an agent name.';
 $lang['sccc_invalid_campaign'] = 'Enter a campaign name, valid call list and supported dialing mode.';
 $lang['sccc_setup_incomplete'] = 'Call Center setup is incomplete. Missing configuration:';
 $lang['sccc_ai_provider_help'] = 'Connect an existing AI voice service. Stream providers receive call_id, agent_id, system_prompt and voice_name as Twilio custom parameters. Webhook providers must return TwiML; configure their instructions and voice in that provider. Creating an agent does not create or host an AI voice service.';
+
+$lang['sccc_crm_openai'] = 'CRM OpenAI + Twilio speech';
+$lang['sccc_crm_ai_missing'] = 'Configure the existing CRM OpenAI API key and model.';

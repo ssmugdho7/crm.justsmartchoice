@@ -20,6 +20,10 @@ class Webhook extends App_Controller {
   if($ai){
    $a=$this->db->where('id',$ai)->where('active',1)->get(db_prefix().'sccc_ai_agents')->row_array();
    if(get_option('sccc_ai_enabled')!=='1'||!$a||sccc_ai_agent_error($a)){$this->xml('<?xml version="1.0"?><Response><Say>'.sccc_xml(_l('sccc_ai_agent_unavailable')).'</Say><Hangup/></Response>');return;}
+   if($a['provider']==='crm_openai'){
+    $this->load->library('smart_choice_call_center/Call_center_ai',null,'voice_ai');
+    $this->xml($this->voice_ai->twiml($call,$ai,0,'Hello, this is the Smart Choice Contractors AI assistant. How can I help you today?'));return;
+   }
    if($a['provider']==='webhook'){
     $url=$a['webhook_url'].(strpos($a['webhook_url'],'?')===false?'?':'&').http_build_query(['call_id'=>$call,'agent_id'=>$ai]);
     $this->xml('<?xml version="1.0"?><Response><Redirect method="POST">'.sccc_xml($url).'</Redirect></Response>');return;
@@ -28,6 +32,31 @@ class Webhook extends App_Controller {
    $this->xml('<?xml version="1.0"?><Response><Connect><Stream url="'.sccc_xml($a['websocket_url']).'">'.$parameters.'</Stream></Connect><Hangup/></Response>');return;
   }
   $record=get_option('sccc_record_calls')==='1'?' record="record-from-answer-dual" recordingStatusCallback="'.sccc_xml(site_url('smart_choice_call_center/webhook/recording?call_id='.$call)).'"':'';$action=site_url('smart_choice_call_center/webhook/browser_complete?call_id='.$call);$this->xml('<?xml version="1.0"?><Response><Dial'.$record.' action="'.sccc_xml($action).'" method="POST" callerId="'.sccc_xml($r['from_number']).'"><Number>'.sccc_xml($r['to_number']).'</Number></Dial></Response>');
+ }
+ public function ai_turn(){
+  $call=(int)$this->input->get('call_id');$ai=(int)$this->input->get('ai_agent_id');$turn=(int)$this->input->get('turn');
+  $lock=db_prefix().'sccc_ai_turn_'.$call;
+  $acquired=$this->db->query('SELECT GET_LOCK(?, 2) AS acquired',[$lock])->row_array();if(empty($acquired['acquired']))show_error('Call turn busy',503);
+  try{
+   $r=$this->db->where('id',$call)->get(db_prefix().'sccc_calls')->row_array();
+   if(!$r||empty($r['twilio_sid'])||!hash_equals($r['twilio_sid'],(string)$this->input->post('CallSid')))show_error('Call does not match callback',403);
+   $a=$this->db->where('id',$ai)->where('active',1)->get(db_prefix().'sccc_ai_agents')->row_array();
+   if(!$a||$a['provider']!=='crm_openai'||get_option('sccc_ai_enabled')!=='1')show_error('AI agent unavailable',403);
+   $this->load->library('smart_choice_call_center/Call_center_ai',null,'voice_ai');
+   $state=json_decode((string)($r['ai_summary']??''),true);if(!is_array($state)||($state['format']??'')!=='sccc_voice_v1')$state=['format'=>'sccc_voice_v1','agent_id'=>$ai,'next_turn'=>0,'history'=>[]];
+   if((int)$state['agent_id']!==$ai)show_error('Agent does not match call',403);
+   if($turn===(int)$state['next_turn']-1&&!empty($state['last_xml'])){$this->xml($state['last_xml']);return;}
+   if($turn!==(int)$state['next_turn']||$turn<0||$turn>8)show_error('Invalid call turn',409);
+   $speech=mb_substr(trim((string)$this->input->post('SpeechResult')),0,1000);
+   $finish=$speech===''||$turn>=8||preg_match('/^(goodbye|bye|stop|stop calling|no thanks|not interested)[.! ]*$/i',$speech);
+   if($finish)$reply=$speech===''?'I did not hear a response. Thank you for your time. Goodbye.':'Thank you for your time. Goodbye.';
+   else{try{$reply=$this->voice_ai->reply($a,$state['history'],$speech);}catch(RuntimeException $e){$reply='I am sorry, the AI service is temporarily unavailable. Please contact our team for help. Goodbye.';$finish=true;$state['provider_error']=true;}}
+   if($speech!=='')$state['history'][]=['role'=>'user','content'=>$speech];
+   $state['history'][]=['role'=>'assistant','content'=>$reply];$state['history']=array_slice($state['history'],-16);
+   $xml=$this->voice_ai->twiml($call,$ai,$turn+1,$reply,(bool)$finish);$state['next_turn']=$turn+1;$state['last_xml']=$xml;
+   $this->db->where('id',$call)->update(db_prefix().'sccc_calls',['ai_summary'=>json_encode($state),'updated_at'=>date('Y-m-d H:i:s')]);
+   $this->xml($xml);
+  }finally{$this->db->query('SELECT RELEASE_LOCK(?)',[$lock]);}
  }
  public function browser_outgoing(){
   $to=$this->input->post('To')?:$this->input->get('To');$from=get_option('sccc_outbound_caller_id')?:get_option('sccc_main_number');$identity=(string)$this->input->post('From');$staff_id=0;if(preg_match('/^client:staff_([1-9][0-9]*)$/',$identity,$m))$staff_id=(int)$m[1];if(!$staff_id||!staff_can('create','smart_choice_call_center',$staff_id))show_error('Calling is not permitted',403);$to=sccc_phone($to);$from=sccc_phone($from);if(!$to||!$from)show_error('Invalid phone number',422);$id=$this->cc->create_call(['twilio_sid'=>$this->input->post('CallSid'),'staff_id'=>$staff_id?:null,'direction'=>'outbound','from_number'=>$from,'to_number'=>sccc_phone($to),'status'=>'in-progress','answered_at'=>date('Y-m-d H:i:s')]);$record=get_option('sccc_record_calls')==='1'?' record="record-from-answer-dual" recordingStatusCallback="'.sccc_xml(site_url('smart_choice_call_center/webhook/recording?call_id='.$id)).'"':'';$action=site_url('smart_choice_call_center/webhook/browser_complete?call_id='.$id);$this->xml('<?xml version="1.0"?><Response><Dial'.$record.' callerId="'.sccc_xml($from).'" action="'.sccc_xml($action).'"><Number>'.sccc_xml(sccc_phone($to)).'</Number></Dial></Response>'); }

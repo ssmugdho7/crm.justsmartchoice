@@ -1,54 +1,43 @@
-# AI call center verification - 19 November 2026
+# Live AI call center repair - 19 November 2026
 
-## Live findings
+## Current outcome
 
-- Production source HEAD: `645ad6cfe810927beb7e020c84fd50ec9978a72f`.
-- Production contains 467 tracked modifications/deletions. No call-center tracked changes were present at inspection. Those unrelated changes have been preserved; no production source deployment has occurred.
-- The call-center Twilio account matches the account open in the browser. Stored credentials successfully authenticated read-only account, incoming-number and application requests (HTTP 200). No secrets were printed.
-- The account is active and owns voice-enabled number `+18559066053`.
-- The number uses a published Studio flow, “Smart Choice CRM inbound forwarding,” forwarding to the existing business phone. It does not route through the call-center module or an AI agent. Its routing has not been changed.
-- Production has an outbound caller ID and AI enabled. Its call-center main number, TwiML App SID, API Key SID and API Key Secret are empty; there are zero AI agents, campaigns and call records.
-- An existing TwiML application belongs to the separate Lead Manager feature. Do not replace its URL to configure this module.
-- The Twilio console also shows a rejected toll-free messaging registration; voice is enabled. This is not evidence of a voice block.
+- Verified call-center implementation on production and GitHub main: `9caa9d900f675f61d8c75b279ddae19595511c5e` (prior `645ad6cfe810927beb7e020c84fd50ec9978a72f`).
+- The user explicitly authorized preserving the 467 unrelated tracked production changes while deploying only the call-center repair. Their binary patch was compared byte-for-byte after each fast-forward. They were preserved.
+- Private recovery point: `/home2/scusawco/.codex-backups/call-center-e7e62679-6ad57B`. Contains committed source, tracked/index patches, runtime configuration, call-center source snapshots, consistent database dump, and private provider setup records. Database dump passed gzip verification and SHA-256 verification.
+- Twilio account active; owned voice number `+18559066053`. Fixed outbound caller ID incorrectly set to an email address. Main number and outbound caller ID now use the owned phone number.
+- Configured a dedicated Call Center TwiML application and browser signing credentials. Provider authentication verified HTTP 200. Browser dialer visibly reached READY before browser control was disabled in Work settings.
+- Existing inbound Studio forwarding to the business phone and separate Lead Manager TwiML application preserved.
+- Public callback routing repaired against the actual MX module router: valid signed callback reaches the controller; invalid signature is rejected HTTP 403. A valid callback for a nonexistent call returns HTTP 404 as expected. Public JavaScript HTTP 200; `/.git/HEAD` HTTP 403.
+- First approved phone test to `+17277553786` completed in 11 seconds. Twilio and CRM status/duration agree; answer/end timestamps persisted.
+- Existing main OpenAI credential authenticates but generation returns HTTP 429 / `credit_balance_exhausted`. A separately configured CRM chatbot credential generated successfully. Reused that existing credential privately as the dedicated Call Center AI key; did not change other modules' credentials or create a new AI-provider account.
+- Added CRM OpenAI + Twilio speech provider. Active agent: `Smart Choice CRM AI Assistant` (ID 1). Uses existing configured `gpt-4o` model and Twilio speech recognition/text-to-speech. No external voice server required.
+- Signed live HTTP verification: greeting HTTP 200 with speech collection; synthetic utterance produced an AI reply, next turn persisted, no provider error.
+- Second phone test was separately approved for actual AI conversation. CRM call ID 3 completed in 111 seconds. Twilio and CRM agree on completion and duration; speech turns and AI replies were processed without provider error. The bounded history retains the most recent eight caller utterances and eight assistant replies. The handler processed nine callbacks including its final turn.
 
-## Repairs prepared
+## Verification
 
-- Correct outbound TwiML URL and repeated status-event form encoding.
-- Validate destinations and provider endpoints before paid calls; fail closed on disabled/missing AI.
-- Connect WSS agents with escaped instructions/voice custom parameters; support TwiML webhook redirects with call/agent IDs.
-- Ring the staff browser first for REST power calls, instead of dialing the customer and then dialing the customer again.
-- Authenticate Twilio webhooks with the installed SDK, checking configured public origin, exact request URI and payload; narrowly exclude only those callbacks from browser CSRF tokens.
-- Validate agent/campaign saves and require POST for campaign state changes. Read-only staff access tokens cannot originate calls. Browser webhook validates staff identity and permission.
-- Serialize campaign workers, honor business hours/daily limits, release failed reservations, apply retry intervals/attempt limits, and ignore duplicate/late terminal callbacks.
-- Report incomplete setup; refresh browser tokens; show initialization failures; restore call controls after rejection/error; add hangup control and refresh script cache version.
-
-## Checks
+Final recheck: all 47 PHP behavior checks, eight actual MX route checks, and five browser-device lifecycle checks passed. The PHP behavior and route suites also passed on Bluehost. Production had no tracked edits in the call-center module. The approved live AI call was rechecked through the Twilio API and CRM database; both retain completed status and matching duration.
 
 ```
 php tests/call_center_regression.php
+php tests/call_center_routes_regression.php
 node tests/call_center_softphone_regression.js
 node --check modules/smart_choice_call_center/assets/js/call-center.js
 git diff --check
 ```
 
-The PHP regressions reproduce the original nonexistent outbound action before repair and exercise model/controller behavior with isolated database/network fixtures. They do not call customers. Softphone regressions use a simulated Twilio device. All changed PHP files must pass `php -l`.
+Changed PHP files passed syntax checks locally and on production. Regression tests exercise AI streams/webhooks/CRM speech turns, configuration validation, authorization, signed callbacks, real MX routing, repeated Twilio form fields, failure handling, campaign concurrency/retry limits, duplicate callbacks, customer-leg outcomes, stop requests and browser lifecycle. External integrations were verified as described above, not inferred from fixture tests.
 
-## Remaining activation work
+## Material limits
 
-1. Reconcile production tracked changes or explicitly authorize a narrowly scoped release method that preserves them. The normal production deployment helper rejects unknown tracked modifications.
-2. After the source repair is deployed, create a dedicated TwiML app for this module with POST voice URL `https://crm.justsmartchoice.com/smart_choice_call_center/webhook/browser_outgoing`; configure its SID and an API key/secret privately in Call Center settings. Keep the existing Lead Manager app intact.
-3. Set the owned number as main number if incoming CRM routing is desired. Keep Studio business forwarding until an approved replacement has been configured and tested.
-4. Supply an existing external AI voice provider endpoint. Twilio provides telephony, not a hosted conversational AI service in this module. WSS providers must implement Twilio bidirectional Media Streams and consume custom parameters. Generic HTTPS webhook providers must return TwiML; their prompts/voices are configured at the provider.
-5. Use an explicitly approved test number to verify outbound audio in both directions, hangup, logging, terminal statuses and recording. Verify inbound routing separately if it is changed.
+The implemented AI provider speaks English in turns rather than streaming full-duplex audio. It identifies itself as AI, uses brief replies, bounds conversation context and turn count, handles stop requests and failures, and has no tools to book appointments, quote prices, or mutate business records. Bounded conversation context is retained in the call record. Provider response storage is disabled. Both approved test calls have audio recording disabled.
 
-No real calls, provider resource creation, production configuration/database writes, or live source changes were performed during this verification.
-
-## Limits
-
-The callback queue exists but automatic scheduled callback processing is an existing no-op. Extension fallback/after-hours behavior and disposition/lead-conversion workflows are also not implemented end to end in this module. These are not covered by a claim of full functionality. No AI conversation or production call completion has been verified.
+Existing inbound routing still forwards to a human business phone; it has not been silently replaced by AI. Scheduled callback processing remains an existing no-op; extension fallback/after-hours routing and disposition-to-lead workflows are not implemented end to end. These limits prevent a blanket claim that every advertised call-center feature is complete.
 
 ## Provider references
 
+- https://www.twilio.com/docs/voice/twiml/gather
 - https://www.twilio.com/docs/voice/twiml/stream
 - https://www.twilio.com/docs/usage/security#validating-requests
-- https://www.twilio.com/docs/voice/api/call-resource#create-a-call-resource
+- https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create

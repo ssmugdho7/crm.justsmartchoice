@@ -1,4 +1,7 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
+// Track reviewed marketing pages only; this module also hosts private financial forms.
+$marketingSlugs = ['contact-us', 'en-estimate-request-form', 'solicitud-de-estimado'];
+if (!in_array((string) ($page->slug ?? ''), $marketingSlugs, true)) { return; }
 $pixelId = trim((string) ($settingsMap['facebook_pixel_id'] ?? ''));
 if (!preg_match('/^[0-9]{5,25}$/D', $pixelId)) { return; }
 ?>

@@ -47,7 +47,7 @@ $socialImage = !empty($page->social_image) ? base_url(ZILLAPAGE_IMAGE_PATH.'/upl
 </head>
 
     <body class="sc-thank-body">
-<?php $CI->load->view('zillapage/publish/meta_pixel', ['settingsMap'=>$settingsMap]); ?>
+<?php $CI->load->view('zillapage/publish/meta_pixel', ['settingsMap'=>$settingsMap, 'page'=>$page]); ?>
 <?php echo zillapage_fetch_library_section($settingsMap['header_library_url'] ?? ''); ?>
         
         <div id="loadingMessage">

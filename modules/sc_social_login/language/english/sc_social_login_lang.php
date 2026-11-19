@@ -80,3 +80,7 @@ $lang['scsl_signup_facebook'] = 'Sign up with Facebook';
 $lang['scsl_signup_apple'] = 'Sign up with Apple';
 $lang['scsl_unavailable_facebook'] = 'Facebook sign-in is not available yet.';
 $lang['scsl_unavailable_google'] = 'Google sign-in is not available yet.';
+$lang['scsl_confirm_title'] = 'One-time account confirmation';
+$lang['scsl_confirm_hint'] = 'Your social sign-in succeeded. Sign in once with your CRM password to connect it securely. Use the same email address as your social account.';
+$lang['scsl_confirm_other_email'] = 'If your CRM email is different, sign in normally, then connect your social account from Account Connections.';
+$lang['scsl_confirm_register'] = 'New customer? Create your account';

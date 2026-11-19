@@ -80,3 +80,7 @@ $lang['scsl_signup_facebook'] = 'Registrarse con Facebook';
 $lang['scsl_signup_apple'] = 'Registrarse con Apple';
 $lang['scsl_unavailable_facebook'] = 'El acceso con Facebook aún no está disponible.';
 $lang['scsl_unavailable_google'] = 'El acceso con Google aún no está disponible.';
+$lang['scsl_confirm_title'] = 'Confirmación de cuenta por única vez';
+$lang['scsl_confirm_hint'] = 'El acceso social se completó. Inicie sesión una vez con su contraseña del CRM para conectarlo de forma segura. Use el mismo correo de su cuenta social.';
+$lang['scsl_confirm_other_email'] = 'Si el correo del CRM es diferente, inicie sesión normalmente y conecte su cuenta social desde Conexiones de cuenta.';
+$lang['scsl_confirm_register'] = '¿Es un cliente nuevo? Cree su cuenta';

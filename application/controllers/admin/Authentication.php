@@ -82,9 +82,9 @@ class Authentication extends App_Controller
                 $this->announcements_model->set_announcements_as_read_except_last_one(get_staff_user_id(), true);
 
                 // is logged in
-                maybe_redirect_to_previous_url();
-
                 hooks()->do_action('after_staff_login');
+
+                maybe_redirect_to_previous_url();
                 redirect(admin_url());
             }
         }
@@ -116,9 +116,9 @@ class Authentication extends App_Controller
                     $this->load->model('announcements_model');
                     $this->announcements_model->set_announcements_as_read_except_last_one(get_staff_user_id(), true);
 
-                    maybe_redirect_to_previous_url();
-
                     hooks()->do_action('after_staff_login');
+
+                    maybe_redirect_to_previous_url();
                     redirect(admin_url());
                 } elseif ($this->Authentication_model->is_google_two_factor_code_valid($code) && $type = 'app') {
                     $user = get_staff($this->session->userdata('tfa_staffid'));
@@ -127,9 +127,9 @@ class Authentication extends App_Controller
                     $this->load->model('announcements_model');
                     $this->announcements_model->set_announcements_as_read_except_last_one(get_staff_user_id(), true);
 
-                    maybe_redirect_to_previous_url();
-
                     hooks()->do_action('after_staff_login');
+
+                    maybe_redirect_to_previous_url();
                     redirect(admin_url());
                 } else {
                     log_activity('Failed Two factor authentication attempt [Staff Name: ' . get_staff_full_name() . ', IP: ' . $this->input->ip_address() . ']');

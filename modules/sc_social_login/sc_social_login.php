@@ -24,6 +24,8 @@ hooks()->add_action('admin_init', function () {
             'name'=>_l('scsl_title'),'href'=>admin_url('sc_social_login'),'position'=>61]);
     }
 });
+hooks()->add_action('after_admin_login_form_start', function () { scsl_confirmation('staff'); });
+hooks()->add_action('clients_login_form_start', function () { scsl_confirmation('client'); });
 hooks()->add_action('before_admin_login_form_close', function () { scsl_buttons('staff'); });
 hooks()->add_action('clients_login_form_end', function () { scsl_buttons('client'); });
 hooks()->add_action('clients_register_form_start', function () { scsl_buttons('client', true); });

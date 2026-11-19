@@ -18,10 +18,32 @@ function scsl_license()
     require_once FCPATH . 'modules/sc_module_licensing/helpers/sc_module_licensing_helper.php';
     return scl_licensed('sc_social_login');
 }
+function scsl_pending_for($audience)
+{
+    $CI = &get_instance();
+    $pending = $CI->session->userdata('scsl_pending');
+    if (!is_array($pending) || ($pending['audience'] ?? '') !== $audience
+        || ($pending['expires'] ?? 0) <= time()
+        || !in_array($pending['provider'] ?? '', ['google','facebook','apple'], true)
+        || ($pending['client_id'] ?? '') !== get_option('scsl_' . $pending['provider'] . '_client_id')) { return null; }
+    return $pending;
+}
+function scsl_confirmation($audience)
+{
+    if (!is_https() || !scsl_license()) { return; }
+    $pending = scsl_pending_for($audience);
+    if (!$pending) { return; }
+    get_instance()->load->view('sc_social_login/confirmation', [
+        'pending'=>$pending, 'audience'=>$audience,
+        'can_register'=>$audience==='client' && empty($pending['actor_id']) && !empty($pending['email'])
+            && get_option('allow_registration')==='1' && get_option('scsl_client_registration')==='1',
+    ]);
+}
 function scsl_buttons($audience, $registration = false)
 {
     if (!is_https() || !scsl_license()) { return; }
     $CI = &get_instance();
+    if (!$registration && scsl_pending_for($audience)) { return; }
     if ($registration) {
         if ($audience !== 'client' || get_option('allow_registration') !== '1'
             || get_option('scsl_client_registration') !== '1') { return; }

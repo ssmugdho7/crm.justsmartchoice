@@ -61,7 +61,7 @@ class Oauth extends App_Controller
                     // Apple form_post may omit the normal SameSite=Lax CRM session cookie.
                     // Require fresh native password/MFA proof of the original actor, never log them in here.
                     $this->pending($provider,$audience,$profile,(int)$tx['actor_id']);
-                    $this->load->view('sc_social_login/finish',['audience'=>$audience,'can_register'=>false]); return;
+                    $this->continueWithPassword($audience); return;
                 }
                 if ((int)$actor!==(int)$tx['actor_id'] || ($audience==='staff' && !scsl_can('create'))
                     || !$this->sc_identity_model->attach($provider,$audience,$profile['subject'],(int)$actor)) { throw new RuntimeException('scsl_failed'); }
@@ -71,12 +71,14 @@ class Oauth extends App_Controller
             if (is_staff_logged_in() || is_client_logged_in()) { throw new RuntimeException('scsl_denied'); }
             $identity=$this->sc_identity_model->identity($provider,$audience,$profile['subject']);
             if ($identity) { redirect($this->sc_identity_model->login($audience,(int)$identity['user_id'])); }
-            $email=is_string($profile['email']) && filter_var($profile['email'],FILTER_VALIDATE_EMAIL)?$profile['email']:'';
             $this->pending($provider,$audience,$profile);
-            $this->load->view('sc_social_login/finish',['audience'=>$audience,
-                'can_register'=>$audience==='client' && $email!=='' && get_option('allow_registration')==='1'
-                    && get_option('scsl_client_registration')==='1']);
+            $this->continueWithPassword($audience);
         } catch (Throwable $e) { $this->failure($audience); }
+    }
+    private function continueWithPassword($audience)
+    {
+        // Keep first-time account proof inside the normal, branded CRM login flow.
+        redirect($audience==='staff'?admin_url('authentication'):site_url('authentication/login'));
     }
     private function pending($provider,$audience,array $profile,$actor=0)
     {

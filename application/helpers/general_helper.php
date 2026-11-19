@@ -238,23 +238,47 @@ function get_app_version()
  * Set current full url to for user to be redirected after login
  * Check below function to see why is this
  */
+function login_redirect_url_allowed($url)
+{
+    if (!is_string($url) || $url === '' || preg_match('/[\x00-\x20]/', $url) || strpos($url, '\\') !== false) {
+        return false;
+    }
+    $target = parse_url($url);
+    $site = parse_url(site_url());
+    if (!$target || !$site || isset($target['user']) || isset($target['pass'])
+        || strtolower($target['scheme'] ?? '') !== strtolower($site['scheme'] ?? '')
+        || strtolower($target['host'] ?? '') !== strtolower($site['host'] ?? '')
+        || ($target['port'] ?? null) !== ($site['port'] ?? null)) {
+        return false;
+    }
+    $path = '/' . trim(rawurldecode($target['path'] ?? ''), '/');
+    if (strpos($path, '\\') !== false || preg_match('#(?:^|/)\\.\\.?(?:/|$)#', $path)) { return false; }
+    // Polls may arrive after session expiry. They are never useful landing pages.
+    if (preg_match('#(?:^|/)(?:notifications_check|smartchoice_daily_reminders/reminders/due)(?:/|$)#i', $path)
+        || preg_match('#/(?:authentication|sc_social_login/oauth)(?:/|$)#i', $path)) {
+        return false;
+    }
+    if (is_staff_logged_in()) {
+        $admin = rtrim(parse_url(admin_url(), PHP_URL_PATH), '/');
+        if ($path !== $admin && strpos($path, $admin . '/') !== 0) { return false; }
+    }
+    return true;
+}
+
 function redirect_after_login_to_current_url()
 {
-    $redirectTo = current_full_url();
-
-    // This can happen if at the time you received a notification but your session was expired the system stored this as last accessed URL so after login can redirect you to this URL.
-    if (strpos($redirectTo, 'notifications_check') !== false) {
+    $CI = &get_instance();
+    $destination = strtolower($_SERVER['HTTP_SEC_FETCH_DEST'] ?? 'document');
+    if ($CI->input->is_ajax_request() || $CI->input->method(true) !== 'GET'
+        || !in_array($destination, ['document', 'iframe'], true)) {
         return;
     }
-
-    get_instance()->session->set_userdata([
-        'red_url' => $redirectTo,
-    ]);
+    $redirectTo = current_full_url();
+    if (!login_redirect_url_allowed($redirectTo)) { return; }
+    $CI->session->set_userdata(['red_url' => $redirectTo]);
 }
 /**
- * Check if user accessed url while not logged in to redirect after login
- *
- * @return null
+ * Consume only a valid page destination. Discard stale polling URLs saved by older code.
  */
 function maybe_redirect_to_previous_url()
 {
@@ -262,15 +286,7 @@ function maybe_redirect_to_previous_url()
     if ($CI->session->has_userdata('red_url')) {
         $red_url = $CI->session->userdata('red_url');
         $CI->session->unset_userdata('red_url');
-
-        // If staff previously accessed client URL's
-        // we should ensure to redirect to staff after login as it's confused
-        // if redirects to the client url
-        if (strpos($red_url, 'clients') !== false && is_staff_logged_in()) {
-            return;
-        }
-
-        redirect($red_url);
+        if (login_redirect_url_allowed($red_url)) { redirect($red_url); }
     }
 }
 /**

@@ -1,3 +1,5 @@
+/* Keep the open menu above underlying AJAX clear buttons (z-index: 99). */
+body.contract .scaf-contract-menu-owner.open{z-index:100!important}
 body.contract .scaf-contract-menu{min-width:230px;max-width:min(310px,calc(100vw - 32px));padding:6px 0;border:1px solid #dce4e0;border-radius:9px;box-shadow:0 8px 24px #173b2a1a;max-height:calc(100vh - 200px);overflow-y:auto}
 body.contract .scaf-contract-menu>li>a,body.contract .scaf-contract-menu .scaf-contract-action-button{box-sizing:border-box;display:block;width:100%;padding:9px 16px;white-space:normal;text-align:left;font:inherit;font-size:14px;line-height:1.4;color:#172b24;background:transparent;border:0;text-decoration:none;cursor:pointer}
 body.contract .scaf-contract-menu>li>a:hover,body.contract .scaf-contract-menu .scaf-contract-action-button:hover{background:#edf8f2;color:#075e42}

@@ -4395,3 +4395,5 @@ $lang['signature_health_none'] = 'Every signed document has a signature file or 
 $lang['signature_health_missing_intro'] = 'Signed documents whose signature image is missing on disk and has no database copy.';
 $lang['signature_health_document'] = 'Document';
 $lang['signature_health_file'] = 'Signature File';
+
+$lang['sc_google_calendar_unavailable'] = '%s Google calendar feed(s) are unavailable. CRM events and accessible Google calendars continue to work. Check the saved calendar IDs, Google sharing permissions, and API configuration.';

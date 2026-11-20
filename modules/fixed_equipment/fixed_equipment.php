@@ -1160,7 +1160,7 @@ if (!function_exists('fixed_equipment_smart_choice_standard_head')) {
 }
 if (!function_exists('fixed_equipment_smart_choice_standard_footer')) {
     function fixed_equipment_smart_choice_standard_footer() {
-        echo '<script src="' . module_dir_url('fixed_equipment', 'assets/js/smart_choice_module_standard.js') . '?v=100"></script>';
+        echo '<script src="' . module_dir_url('fixed_equipment', 'assets/js/smart_choice_module_standard.js') . '?v=101"></script>';
     }
 }
 if (function_exists('register_staff_capabilities')) {

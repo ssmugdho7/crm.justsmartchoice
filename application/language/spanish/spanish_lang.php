@@ -4197,3 +4197,5 @@ $lang['sc_admin_theme_invalid'] = 'Seleccione un tema de administración disponi
 $lang['sc_admin_theme_style_inactive'] = 'Active el módulo Theme Style para editar los colores individuales. La selección del tema de administración funciona de forma independiente.';
 
 $lang['theme_style'] = 'Estilo del tema';
+
+$lang['sc_google_calendar_unavailable'] = '%s calendario(s) de Google no están disponibles. Los eventos del CRM y los calendarios de Google accesibles siguen funcionando. Revisa los identificadores guardados, los permisos de Google y la configuración de la API.';

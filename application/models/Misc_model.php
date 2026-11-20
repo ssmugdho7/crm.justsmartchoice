@@ -6,6 +6,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Misc_model extends App_Model
 {
+    public $google_calendar_unavailable = 0;
     public $notifications_limit;
 
     public function __construct()
@@ -430,7 +431,10 @@ class Misc_model extends App_Model
             $ids[] = $main_id_calendar;
         }
 
-        return array_unique($ids);
+        $this->load->library('google_calendar_feed_health');
+        $health = $this->google_calendar_feed_health->check($ids, (string) get_option('google_api_key'));
+        $this->google_calendar_unavailable = $health['unavailable'];
+        return $health['ids'];
     }
 
     /**

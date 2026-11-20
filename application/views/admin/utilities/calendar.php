@@ -7,6 +7,7 @@
 				<div class="panel_s">
 					<div class="panel-body" style="overflow-x: auto;">
 						<div class="dt-loader hide"></div>
+						<?php $this->load->view('admin/utilities/calendar_google_notice'); ?>
 						<?php $this->load->view('admin/utilities/calendar_filters'); ?>
 						<div id="calendar"></div>
 					</div>

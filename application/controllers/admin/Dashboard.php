@@ -46,6 +46,7 @@ class Dashboard extends AdminController
         $data['projects_status_stats'] = json_encode($this->dashboard_model->projects_status_stats());
         $data['leads_status_stats']    = json_encode($this->dashboard_model->leads_status_stats());
         $data['google_ids_calendars']  = $this->misc_model->get_google_calendar_ids();
+        $data['google_calendar_unavailable'] = $this->misc_model->google_calendar_unavailable;
         $data['bodyclass']             = 'dashboard invoices-total-manual';
         $this->load->model('announcements_model');
         $data['staff_announcements']             = $this->announcements_model->get();

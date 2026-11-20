@@ -117,6 +117,17 @@ function sc_recovery_after_schema_change(string $sql, mysqli $connection, string
     if (!preg_match('/^\s*(?:CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?|ALTER\s+TABLE\s+)(`[^`]+`|[a-zA-Z0-9_$]+)/i',$sql,$match)) return;
     $table=trim($match[1],'`');
     if (strpos($table,$prefix)!==0 || strpos($table,$prefix.'sc_recovery_')===0) return;
+    // Legacy modules issue CREATE IF NOT EXISTS on normal requests. An existing
+    // registered table needs no DDL or whole-schema scan on that hot path.
+    if (preg_match('/^\s*CREATE\s+TABLE\b/i', $sql)) {
+        $registry = '`' . str_replace('`', '``', $prefix . 'sc_recovery_coverage') . '`';
+        $statement = $connection->prepare("SELECT 1 FROM $registry WHERE table_name=? LIMIT 1");
+        $statement->bind_param('s', $table);
+        $statement->execute();
+        $known = $statement->get_result()->fetch_row();
+        $statement->close();
+        if ($known) return;
+    }
     require_once __DIR__.'/../libraries/recovery/DatabaseArchive.php';
     (new ScDatabaseArchive($connection,$prefix))->install($table);
 }

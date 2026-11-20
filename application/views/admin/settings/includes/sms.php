@@ -11,6 +11,9 @@ if ($total_gateways > 1) { ?>
 </div>
 <?php } ?>
 
+<?php echo render_input('settings[crm_sms_message_prefix]', 'Outbound SMS prefix', crm_sms_message_prefix()); ?>
+<p class="text-muted">This text appears before the message body. Clear the field to send SMS without a prefix.</p>
+
 <div class="panel-group" id="sms_gateways_options" role="tablist" aria-multiselectable="false">
     <?php foreach ($gateways as $gateway) { ?>
     <div class="panel panel-default">

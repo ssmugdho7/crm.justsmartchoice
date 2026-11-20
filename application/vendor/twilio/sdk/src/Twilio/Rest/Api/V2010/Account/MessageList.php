@@ -42,6 +42,12 @@ class MessageList extends ListResource {
      * @throws TwilioException When an HTTP error occurs.
      */
     public function create(string $to, array $options = []): MessageInstance {
+        // CRM modules share this transport for Twilio SMS, including Lead Manager.
+        if (\function_exists('crm_sms_message_body')
+            && isset($options['body']) && \is_string($options['body'])
+            && empty($options['contentSid']) && \strpos($to, ':') === false) {
+            $options['body'] = \crm_sms_message_body($options['body']);
+        }
         $options = new Values($options);
 
         $data = Values::of([

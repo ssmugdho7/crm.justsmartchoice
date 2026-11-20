@@ -61,6 +61,7 @@ class Sms_msg91 extends App_sms
      */
     public function send($number, $message)
     {
+        $message = crm_sms_message_body($message);
         if ($this->api_type == 'world') {
             return $this->sendViaWorldRoute($number, $message);
         }

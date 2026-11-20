@@ -54,6 +54,32 @@ function get_option($name)
 }
 
 /**
+ * Return the editable prefix used for outbound SMS.
+ */
+function crm_sms_message_prefix(): string
+{
+    $prefix = trim((string) get_option('crm_sms_message_prefix'));
+    if ($prefix === '' && ! option_exists('crm_sms_message_prefix')) {
+        return 'Smart Choice CRM SMS Message :';
+    }
+
+    return $prefix;
+}
+
+/**
+ * Format an outbound SMS body while preserving media-only sends.
+ */
+function crm_sms_message_body(string $body): string
+{
+    $prefix = crm_sms_message_prefix();
+    if ($prefix === '' || trim($body) === '') {
+        return $body;
+    }
+
+    return $prefix . ' ' . $body;
+}
+
+/**
  * Updates option by name
  *
  * @param string $name     Option name

@@ -2954,6 +2954,7 @@ strpos($channel_name, 'private-') === 0
     if (!$staff || trim((string)$staff->phonenumber) === '') {
       return $this->output->set_status_header(422)->set_content_type('application/json')->set_output(json_encode(['success'=>false,'message'=>'The employee does not have a phone number in the CRM profile.']));
     }
+    $message=crm_sms_message_body($message);
     $sid=trim((string)get_option('prchat_twilio_account_sid'));
     $token=trim((string)get_option('prchat_twilio_auth_token'));
     $from=trim((string)get_option('prchat_twilio_phone_number'));

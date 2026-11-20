@@ -28,6 +28,7 @@ class Sms_clickatell extends App_sms
 
     public function send($number, $message)
     {
+        $message = crm_sms_message_body($message);
         try {
             $response = $this->client->request('GET', $this->requestURL, [
                 'headers' => [

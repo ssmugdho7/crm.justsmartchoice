@@ -699,8 +699,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </div>
 
 <!-- CSS STYLES -->
-<link rel="stylesheet" href="<?php echo base_url('modules/prchat/assets/css/new_toggle_chat.css?v=' . time()); ?>">
-<link rel="stylesheet" href="<?php echo base_url('modules/prchat/assets/css/toggled_chat_emoji.css?v=' . time()); ?>">
+<link rel="stylesheet" href="<?php echo base_url('modules/prchat/assets/css/new_toggle_chat.css?v=' . (@filemtime(FCPATH . 'modules/prchat/assets/css/new_toggle_chat.css') ?: '1')); ?>">
+<link rel="stylesheet" href="<?php echo base_url('modules/prchat/assets/css/toggled_chat_emoji.css?v=' . (@filemtime(FCPATH . 'modules/prchat/assets/css/toggled_chat_emoji.css') ?: '1')); ?>">
 <style>
   .chat-header {
     background: linear-gradient(135deg, #2663eb 0%, #1e4fd6 100%);
@@ -1333,7 +1333,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </style>
 
 <!-- VUE.JS LIBRARY -->
-<script src="<?= base_url('modules/prchat/assets/js/vendor/vue.global.prod.js?v=' . time()); ?>"></script>
+<script src="<?= base_url('modules/prchat/assets/js/vendor/vue.global.prod.js?v=' . (@filemtime(FCPATH . 'modules/prchat/assets/js/vendor/vue.global.prod.js') ?: '1')); ?>"></script>
 
 <!-- CHAT SETTINGS -->
 <script>

@@ -15,6 +15,7 @@ class Register extends App_Controller
         if ($this->sc_identity_model->emailExists('staff',$profile['email'])) {
             redirect(admin_url('authentication')); return;
         }
+        $this->load->library('form_validation');
         $this->form_validation->set_rules('firstname',_l('staff_add_edit_firstname'),'trim|required|max_length[50]');
         $this->form_validation->set_rules('lastname',_l('staff_add_edit_lastname'),'trim|required|max_length[50]');
         $terms=is_gdpr() && get_option('gdpr_enable_terms_and_conditions')==='1';

@@ -114,7 +114,7 @@ $ci=(object)['db'=>$db,'session'=>new FixtureSession(),'input'=>new FixtureInput
  'sc_license_model'=>new class {function valid($module){return true;}},
  'output'=>new class {function set_header($header){return $this;}},
  'encryption'=>new class {function decrypt($value){return 'fixture-secret';}},
- 'load'=>new class {function __get($key){return get_instance()->$key;} function model($name){} function helper($name){} function view($name,$data=[]){extract($data);if($name==='authentication/includes/head.php')echo '<!DOCTYPE html><html><head></head>';elseif($name==='sc_social_login/register_staff')require FCPATH.'modules/sc_social_login/views/register_staff.php';}},
+ 'load'=>new class {function __get($key){return get_instance()->$key;} function model($name){} function helper($name){} function library($name){if($name==='form_validation')get_instance()->form_validation=new FixtureValidation();} function view($name,$data=[]){extract($data);if($name==='authentication/includes/head.php')echo '<!DOCTYPE html><html><head></head>';elseif($name==='sc_social_login/register_staff')require FCPATH.'modules/sc_social_login/views/register_staff.php';}},
  'app_object_cache'=>new class {function delete($key){}},
  'announcements_model'=>new class {function set_announcements_as_read_except_last_one(...$args){}}];
 require $root.'/application/vendor/autoload.php';
@@ -153,6 +153,7 @@ foreach([['verified'=>false],['expires'=>time()-1],['actor_id'=>4],['client_id'=
 $ci->session->set_userdata('scsl_pending',$pending);
 $ci->input->data=['firstname'=>'New','lastname'=>'Staff','accept_terms_and_conditions'=>'1',
  'email'=>'attacker@example.test','admin'=>'1','administrator'=>'1','role'=>'1','permissions'=>['staff'=>['create']]];
+unset($ci->form_validation); // App_Controller does not autoload form validation on public staff routes.
 $register=(new ReflectionClass(Register::class))->newInstanceWithoutConstructor();
 $GLOBALS['captureRedirects']=true;$register->index();$GLOBALS['captureRedirects']=false;
 check($GLOBALS['capturedRedirect']===admin_url(),'public staff controller signs in after signup');

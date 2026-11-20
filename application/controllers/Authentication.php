@@ -81,6 +81,7 @@ class Authentication extends ClientsController
             redirect(site_url());
         }
 
+        $socialRegistration = function_exists('scsl_registration_profile') ? scsl_registration_profile() : null;
         $requiredFields = get_required_fields_for_registration();
        
         $honeypot = get_option('enable_honeypot_spam_validation') == 1;
@@ -91,6 +92,13 @@ class Authentication extends ClientsController
             'email'     => $honeypot ? 'emailmjxw' : 'email',
             'company'   => $honeypot ? 'companymjxw' : 'company',
         ];
+
+        $registrationData = $this->input->post();
+        if ($socialRegistration && is_array($registrationData)) {
+            // Bind the new contact to the server-verified Google email, never a posted address.
+            $registrationData[$fields['email']] = $socialRegistration['email'];
+            $this->form_validation->set_data($registrationData);
+        }
 
         if (get_option('company_is_required') == 1) {
             $this->form_validation->set_rules($fields['company'], _l('client_company'), 'required');
@@ -129,8 +137,10 @@ class Authentication extends ClientsController
             );
         }
        
-        $this->form_validation->set_rules('password', _l('clients_register_password'), 'required');
-        $this->form_validation->set_rules('passwordr', _l('clients_register_password_repeat'), 'required|matches[password]');
+        if (!$socialRegistration) {
+            $this->form_validation->set_rules('password', _l('clients_register_password'), 'required');
+            $this->form_validation->set_rules('passwordr', _l('clients_register_password_repeat'), 'required|matches[password]');
+        }
 
         if (show_recaptcha_in_customers_area()) {
             $this->form_validation->set_rules('g-recaptcha-response', 'Captcha', 'callback_recaptcha');
@@ -169,7 +179,7 @@ class Authentication extends ClientsController
             }
 
             if ($this->form_validation->run() !== false) {
-                $data      = $this->input->post();
+                $data      = $registrationData;
                 $countryId = is_numeric($data['country']) ? $data['country'] : 0;
 
                 if (is_automatic_calling_codes_enabled()) {
@@ -188,6 +198,8 @@ class Authentication extends ClientsController
 
                 define('CONTACT_REGISTERING', true);
 
+                if ($socialRegistration) { $this->db->trans_begin(); }
+
                 $clientid = $this->clients_model->add([
                       'billing_street'      => $data['address'],
                       'billing_city'        => $data['city'],
@@ -200,7 +212,7 @@ class Authentication extends ClientsController
                       'contact_phonenumber' => $data['contact_phonenumber'] ,
                       'website'             => $data['website'],
                       'title'               => $data['title'],
-                      'password'            => $data['passwordr'],
+                      'password'            => $socialRegistration ? '' : $data['passwordr'],
                       'company'             => $data[$fields['company']],
                       'vat'                 => isset($data['vat']) ? $data['vat'] : '',
                       'phonenumber'         => $data['phonenumber'],
@@ -216,12 +228,47 @@ class Authentication extends ClientsController
                 if ($clientid) {
                     hooks()->do_action('after_client_register', $clientid);
 
+                    if ($socialRegistration) {
+                        $this->load->model('sc_social_login/sc_identity_model');
+                        $identity = $this->sc_identity_model->identity('google', 'client', $socialRegistration['subject']);
+                        $contact = $identity ? $this->db->where('id', (int)$identity['user_id'])->get(db_prefix().'contacts')->row() : null;
+                        if (!$contact || (int)$contact->userid !== (int)$clientid || !$this->db->trans_status()) {
+                            $this->db->trans_rollback();
+                            set_alert('danger', _l('scsl_failed'));
+                            redirect(site_url('authentication/login'));
+                            return;
+                        }
+                        if (get_option('customers_register_require_confirmation') == '1') {
+                            $this->clients_model->require_confirmation($clientid);
+                        }
+                        if (!$this->db->trans_status() || !$this->db->trans_commit()) {
+                            $this->db->trans_rollback();
+                            set_alert('danger', _l('scsl_failed'));
+                            redirect(site_url('authentication/login'));
+                            return;
+                        }
+                    }
+
                     if (get_option('customers_register_require_confirmation') == '1') {
                         send_customer_registered_email_to_administrators($clientid);
 
                         $this->clients_model->require_confirmation($clientid);
                         set_alert('success', _l('customer_register_account_confirmation_approval_notice'));
                         redirect(site_url('authentication/login'));
+                    }
+
+                    if ($socialRegistration) {
+                        $redUrl = site_url('authentication/login');
+                        try {
+                            $redUrl = $this->sc_identity_model->login('client', (int)$identity['user_id']);
+                            hooks()->do_action('after_client_register_logged_in', $clientid);
+                            set_alert('success', _l('clients_successfully_registered'));
+                        } catch (Throwable $e) {
+                            set_alert('warning', _l('clients_account_created_but_not_logged_in'));
+                        }
+                        send_customer_registered_email_to_administrators($clientid);
+                        redirect($redUrl);
+                        return;
                     }
 
                     $this->load->model('authentication_model');
@@ -245,10 +292,13 @@ class Authentication extends ClientsController
 
                     send_customer_registered_email_to_administrators($clientid);
                     redirect($redUrl);
+                } elseif ($socialRegistration) {
+                    $this->db->trans_rollback();
                 }
             }
         }
 
+        $data['socialRegistration'] = $socialRegistration;
         $data['requiredFields'] = $requiredFields;
         $data['title']     = _l('clients_register_heading');
         $data['bodyclass'] = 'register';

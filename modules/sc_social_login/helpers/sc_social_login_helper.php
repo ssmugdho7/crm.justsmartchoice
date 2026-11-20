@@ -39,6 +39,20 @@ function scsl_confirmation($audience)
             && get_option('allow_registration')==='1' && get_option('scsl_client_registration')==='1',
     ]);
 }
+function scsl_registration_profile($audience = 'client')
+{
+    $CI = &get_instance();
+    if (!in_array($audience, ['staff','client'], true)
+        || !$CI->app_modules->is_active('sc_social_login') || !is_https() || !scsl_license()
+        || !scsl_ready('google', $audience)
+        || ($audience === 'client' && (get_option('allow_registration') !== '1'
+            || get_option('scsl_client_registration') !== '1'))) { return null; }
+    $pending = scsl_pending_for($audience);
+    if (!$pending || $pending['provider'] !== 'google' || ($pending['verified'] ?? false) !== true
+        || !empty($pending['actor_id']) || empty($pending['subject'])
+        || !filter_var($pending['email'] ?? '', FILTER_VALIDATE_EMAIL)) { return null; }
+    return $pending;
+}
 function scsl_buttons($audience, $registration = false)
 {
     if (!is_https() || !scsl_license()) { return; }
@@ -65,4 +79,16 @@ function scsl_attach_after_login($audience, $id)
     $CI = &get_instance();
     $CI->load->model('sc_social_login/sc_identity_model');
     $CI->sc_identity_model->attachPending($audience, (int) $id);
+}
+function scsl_save_initial_password($audience)
+{
+    $CI = &get_instance();
+    $logged = $audience==='staff' ? is_staff_logged_in() : is_client_logged_in();
+    if (!$logged || $CI->input->method()!=='post') { show_404(); return; }
+    $password = $CI->input->post('newpassword', false);
+    $repeat = $CI->input->post('newpasswordr', false);
+    $id = $audience==='staff' ? get_staff_user_id() : get_contact_user_id();
+    $ok = is_string($password) && is_string($repeat) && hash_equals($password, $repeat)
+        && $CI->sc_identity_model->setInitialPassword($audience, (int)$id, $password);
+    set_alert($ok?'success':'danger', _l($ok?'scsl_password_saved':'scsl_password_failed'));
 }

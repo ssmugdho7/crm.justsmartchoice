@@ -19,7 +19,7 @@ hooks()->add_action('admin_init', function () {
     $caps=[];
     foreach (['view_own','view','create','edit','delete','manage_settings'] as $cap) { $caps[$cap]=_l('scsl_permission_' . $cap); }
     register_staff_capabilities('sc_social_login',['capabilities'=>$caps],_l('scsl_title'));
-    if (scsl_can('view') || scsl_can('view_own') || scsl_can('create') || scsl_can('manage_settings')) {
+    if (is_staff_logged_in()) {
         get_instance()->app_menu->add_setup_menu_item('sc-social-login', [
             'name'=>_l('scsl_title'),'href'=>admin_url('sc_social_login'),'position'=>61]);
     }
@@ -51,5 +51,20 @@ hooks()->add_action('app_customers_footer', function () {
 hooks()->add_action('customers_navigation_end', function () {
     if (is_client_logged_in() && scsl_license()) {
         echo '<li><a href="' . site_url('sc_social_login/account') . '">' . _l('scsl_connections') . '</a></li>';
+    }
+});
+hooks()->add_filter('before_create_contact', function ($data) {
+    $profile = defined('CONTACT_REGISTERING') ? scsl_registration_profile() : null;
+    if ($profile && strcasecmp($profile['email'], $data['email'] ?? '') === 0) {
+        // Google has verified this exact address; never create a usable empty password.
+        $data['password'] = null;
+        $data['email_verified_at'] = date('Y-m-d H:i:s');
+        $data['email_verification_key'] = null;
+    }
+    return $data;
+});
+hooks()->add_action('after_client_profile_password_form_loaded', function () {
+    if (is_client_logged_in() && scsl_license()) {
+        echo '<p><a class="btn btn-default" href="' . site_url('sc_social_login/account') . '">' . _l('scsl_connections') . '</a></p>';
     }
 });

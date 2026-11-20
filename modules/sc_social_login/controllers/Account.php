@@ -13,8 +13,14 @@ class Account extends ClientsController
     }
     public function index()
     {
-        $this->data(['audience'=>'client','identities'=>$this->sc_identity_model->rows('client',get_contact_user_id()),'title'=>_l('scsl_connections')]);
+        $this->data(['audience'=>'client','identities'=>$this->sc_identity_model->rows('client',get_contact_user_id()),
+            'accountUser'=>$this->sc_identity_model->account('client',get_contact_user_id()),'title'=>_l('scsl_connections')]);
         $this->view('connections'); $this->layout();
+    }
+    public function password()
+    {
+        scsl_save_initial_password('client');
+        redirect(site_url('sc_social_login/account'));
     }
     public function remove($id)
     {

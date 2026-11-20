@@ -16,4 +16,7 @@ $buttonAsset = 'assets/css/sign-in-buttons.css';
     <?= $available ? '</a>' : '</button>'; ?>
     <?php if (!$available): ?><small class="scsl-provider-unavailable" id="scsl-unavailable-<?= html_escape($provider); ?>"><?= _l('scsl_unavailable_'.$provider); ?></small><?php endif; ?>
     <?php endforeach; ?>
+    <?php if ($audience==='staff' && in_array('google',$providers,true)): ?>
+    <p class="mtop15"><a href="<?= site_url('sc_social_login/oauth/start/google/staff'); ?>"><?= _l('scsl_staff_signup_google'); ?></a></p>
+    <?php endif; ?>
 </div>

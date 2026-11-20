@@ -47,6 +47,51 @@ class Sc_identity_model extends App_Model
         return $this->db->where(['provider'=>$provider,'audience'=>$audience,'subject_hash'=>$this->subjectHash($provider,$subject),'enabled'=>1])
             ->get(db_prefix().'scsl_identities')->row_array();
     }
+    public function knownIdentity($provider, $audience, $subject)
+    {
+        return $this->db->where(['provider'=>$provider,'audience'=>$audience,'subject_hash'=>$this->subjectHash($provider,$subject)])
+            ->count_all_results(db_prefix().'scsl_identities') > 0;
+    }
+    public function emailExists($audience, $email)
+    {
+        return $this->db->where('email',$email)->count_all_results(db_prefix().($audience==='staff'?'staff':'contacts')) > 0;
+    }
+    public function registerStaff(array $profile, $firstname, $lastname)
+    {
+        // Revalidate server-held proof at creation time; no role or permissions come from the request.
+        if ($profile !== scsl_registration_profile('staff') || $this->emailExists('staff',$profile['email'])
+            || $this->knownIdentity('google','staff',$profile['subject'])) { throw new RuntimeException('scsl_failed'); }
+        $this->load->model('staff_model');
+        $this->db->trans_begin();
+        try {
+            $id=$this->staff_model->add(['email'=>$profile['email'],'firstname'=>$firstname,'lastname'=>$lastname,
+                'password'=>bin2hex(random_bytes(32)), 'admin'=>0,'role'=>0,'active'=>1,'is_not_staff'=>0,
+                'permissions'=>[], 'two_factor_auth_enabled'=>0]);
+            if (!$id || !$this->db->where('staffid',$id)->update(db_prefix().'staff',['password'=>''])
+                || !$this->attach('google','staff',$profile['subject'],(int)$id) || !$this->db->trans_status()) {
+                throw new RuntimeException('scsl_failed');
+            }
+            if (!$this->db->trans_commit()) { throw new RuntimeException('scsl_failed'); }
+        } catch (Throwable $e) { $this->db->trans_rollback(); throw $e; }
+        $this->session->unset_userdata('scsl_pending');
+        return (int)$id;
+    }
+    public function setInitialPassword($audience, $id, $password)
+    {
+        if (!in_array($audience,['staff','client'],true) || !is_string($password) || strlen($password)<8
+            || strlen($password)>4096) { return false; }
+        $user=$this->account($audience,$id);
+        if (!$user || !empty($user->password)
+            || !$this->db->where(['audience'=>$audience,'user_id'=>(int)$id,'enabled'=>1])
+                ->count_all_results(db_prefix().'scsl_identities')) { return false; }
+        // The conditional update prevents another request from overwriting a newly set password.
+        $this->db->where($audience==='staff'?'staffid':'id',(int)$id)
+            ->group_start()->where('password',null)->or_where('password','')->group_end()
+            ->update(db_prefix().($audience==='staff'?'staff':'contacts'),
+                ['password'=>app_hash_password($password),'last_password_change'=>date('Y-m-d H:i:s'),
+                    'new_pass_key'=>null,'new_pass_key_requested'=>null]);
+        return $this->db->affected_rows() === 1;
+    }
     public function attach($provider, $audience, $subject, $id)
     {
         if (!in_array($audience,['staff','client'],true) || !in_array($provider,['google','facebook','apple'],true)
@@ -59,22 +104,23 @@ class Sc_identity_model extends App_Model
             ->get(db_prefix().'scsl_identities')->row_array();
         if ($owner) { return false; }
         $debug=$this->db->db_debug; $this->db->db_debug=false;
-        $ok=$this->db->insert(db_prefix().'scsl_identities',['audience'=>$audience,'provider'=>$provider,
-            'subject_hash'=>$this->subjectHash($provider,$subject),'user_id'=>(int)$id,'enabled'=>1,'created_at'=>time()]);
-        $this->db->db_debug=$debug;
-        return $ok;
+        try {
+            return $this->db->insert(db_prefix().'scsl_identities',['audience'=>$audience,'provider'=>$provider,
+                'subject_hash'=>$this->subjectHash($provider,$subject),'user_id'=>(int)$id,'enabled'=>1,'created_at'=>time()]);
+        } finally { $this->db->db_debug=$debug; }
     }
     public function attachPending($audience, $id)
     {
         $p=$this->session->userdata('scsl_pending');
         if (is_array($p) && ($p['expires']??0)<=time()) { $this->session->unset_userdata('scsl_pending'); return false; }
         if (!is_array($p) || ($p['audience']??'')!==$audience
+            || !in_array($p['provider']??'', ['google','facebook','apple'], true)
+            || !scsl_ready($p['provider'],$audience)
             || ($p['client_id']??'')!==get_option('scsl_'.($p['provider']??'').'_client_id')) { return false; }
         $user=$this->db->where($audience==='staff'?'staffid':'id',$id)
             ->get(db_prefix().($audience==='staff'?'staff':'contacts'))->row();
         $expectedActor=(int)($p['actor_id']??0);
-        if (!$user || ($expectedActor>0 ? $expectedActor!==(int)$id : (empty($p['email']) || strcasecmp($p['email'],$user->email)!==0))
-            || ($audience==='staff' && !scsl_can('create'))) { return false; }
+        if (!$user || ($expectedActor>0 ? $expectedActor!==(int)$id : (empty($p['email']) || strcasecmp($p['email'],$user->email)!==0))) { return false; }
         $this->session->unset_userdata('scsl_pending');
         $ok=$this->attach($p['provider'],$audience,$p['subject'],$id);
         set_alert($ok?'success':'danger',_l($ok?'scsl_connected':'scsl_conflict'));

@@ -43,7 +43,7 @@
                         <input type="text" class="form-control"
                             name="<?= e($fields['firstname']); ?>"
                             id="<?= e($fields['firstname']); ?>"
-                            value="<?= set_value($fields['firstname']); ?>">
+                            value="<?= set_value($fields['firstname'], $socialRegistration['firstname'] ?? ''); ?>">
                         <?= form_error($fields['firstname']); ?>
                     </div>
                     <div class="form-group register-lastname-group">
@@ -54,7 +54,7 @@
                         <input type="text" class="form-control"
                             name="<?= e($fields['lastname']); ?>"
                             id="<?= e($fields['lastname']); ?>"
-                            value="<?= set_value($fields['lastname']); ?>">
+                            value="<?= set_value($fields['lastname'], $socialRegistration['lastname'] ?? ''); ?>">
                         <?= form_error($fields['lastname']); ?>
                     </div>
                     <div class="form-group register-email-group">
@@ -65,7 +65,7 @@
                         <input type="email" class="form-control"
                             name="<?= e($fields['email']); ?>"
                             id="<?= e($fields['email']); ?>"
-                            value="<?= set_value($fields['email']); ?>">
+                            value="<?= set_value($fields['email'], $socialRegistration['email'] ?? ''); ?>" <?= !empty($socialRegistration) ? 'readonly' : ''; ?>>
                         <?= form_error($fields['email']); ?>
                     </div>
                     <div class="form-group register-contact-phone-group">
@@ -101,6 +101,7 @@
                             value="<?= set_value('title'); ?>">
                         <?= form_error('title'); ?>
                     </div>
+                    <?php if (empty($socialRegistration)): ?>
                     <div class="form-group register-password-group">
                         <label class="control-label" for="password"><span class="text-danger">*</span>
                             <?= _l('clients_register_password'); ?></label>
@@ -113,6 +114,9 @@
                         <input type="password" class="form-control" name="passwordr" id="passwordr">
                         <?= form_error('passwordr'); ?>
                     </div>
+                    <?php else: ?>
+                    <p class="alert alert-info"><?= _l('scsl_google_registration_hint'); ?></p>
+                    <?php endif; ?>
                     <div class="register-contact-custom-fields">
                         <?= render_custom_fields('contacts', '', ['show_on_client_portal' => 1]); ?>
                     </div>

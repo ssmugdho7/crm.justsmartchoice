@@ -73,7 +73,9 @@ class Sc_oauth
         $claims = self::verifyIdToken($tokens['id_token'] ?? '', $keys['keys'] ?? [], $issuers,
             $this->settings['client_id'], $tx['nonce']);
         return ['subject'=>$claims['sub'], 'email'=>$claims['email'] ?? '',
-            'verified'=>in_array($claims['email_verified'] ?? false, [true,'true'], true)];
+            'verified'=>in_array($claims['email_verified'] ?? false, [true,'true'], true),
+            'firstname'=>is_string($claims['given_name']??null)?$claims['given_name']:'',
+            'lastname'=>is_string($claims['family_name']??null)?$claims['family_name']:''];
     }
     public static function verifyIdToken($jwt, array $keys, array $issuers, $audience, $nonce, $now = null)
     {

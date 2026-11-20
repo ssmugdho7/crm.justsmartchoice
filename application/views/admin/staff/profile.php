@@ -190,6 +190,10 @@
                 <?= _l('staff_edit_profile_change_your_password'); ?>
             </h4>
 
+            <?php if (function_exists('scsl_license') && $this->app_modules->is_active('sc_social_login') && scsl_license()): ?>
+            <p><a class="btn btn-default" href="<?= admin_url('sc_social_login/connections'); ?>"><?= _l('scsl_connections'); ?></a></p>
+            <?php endif; ?>
+
             <?= form_open('admin/staff/change_password_profile', ['id' => 'staff_password_change_form']); ?>
 
             <div class="panel_s">

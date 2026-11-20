@@ -28,7 +28,7 @@ class Oauth extends App_Controller
             if (!in_array($intent,['login','link'],true)) { throw new RuntimeException('scsl_failed'); }
             $actor=$audience==='staff'?get_staff_user_id():get_contact_user_id();
             $logged=$audience==='staff'?is_staff_logged_in():is_client_logged_in();
-            if ($intent==='link' && ($this->input->method()!=='post' || !$logged || ($audience==='staff' && !scsl_can('create')))) {
+            if ($intent==='link' && ($this->input->method()!=='post' || !$logged)) {
                 throw new RuntimeException('scsl_denied');
             }
             if ($intent==='login' && (is_staff_logged_in() || is_client_logged_in())) { throw new RuntimeException('scsl_denied'); }
@@ -63,15 +63,25 @@ class Oauth extends App_Controller
                     $this->pending($provider,$audience,$profile,(int)$tx['actor_id']);
                     $this->continueWithPassword($audience); return;
                 }
-                if ((int)$actor!==(int)$tx['actor_id'] || ($audience==='staff' && !scsl_can('create'))
+                if ((int)$actor!==(int)$tx['actor_id']
                     || !$this->sc_identity_model->attach($provider,$audience,$profile['subject'],(int)$actor)) { throw new RuntimeException('scsl_failed'); }
                 set_alert('success',_l('scsl_connected'));
                 redirect($audience==='staff'?admin_url('sc_social_login/connections'):site_url('sc_social_login/account'));
+                return;
             }
             if (is_staff_logged_in() || is_client_logged_in()) { throw new RuntimeException('scsl_denied'); }
             $identity=$this->sc_identity_model->identity($provider,$audience,$profile['subject']);
-            if ($identity) { redirect($this->sc_identity_model->login($audience,(int)$identity['user_id'])); }
+            if ($identity) {
+                $this->session->unset_userdata('scsl_pending');
+                redirect($this->sc_identity_model->login($audience,(int)$identity['user_id'])); return;
+            }
+            // A disabled connection must never be treated as a new registration.
+            if ($this->sc_identity_model->knownIdentity($provider,$audience,$profile['subject'])) { throw new RuntimeException('scsl_denied'); }
             $this->pending($provider,$audience,$profile);
+            if ($provider==='google' && scsl_registration_profile($audience)
+                && !$this->sc_identity_model->emailExists($audience,$profile['email'])) {
+                redirect(site_url($audience==='staff'?'sc_social_login/register':'authentication/register')); return;
+            }
             $this->continueWithPassword($audience);
         } catch (Throwable $e) { $this->failure($audience); }
     }
@@ -85,10 +95,12 @@ class Oauth extends App_Controller
         $email=is_string($profile['email']) && filter_var($profile['email'],FILTER_VALIDATE_EMAIL)?$profile['email']:'';
         $this->session->set_userdata('scsl_pending',['provider'=>$provider,'subject'=>$profile['subject'],
             'email'=>$email,'audience'=>$audience,'expires'=>time()+600,'actor_id'=>$actor,
-            'client_id'=>get_option('scsl_'.$provider.'_client_id')]);
+            'client_id'=>get_option('scsl_'.$provider.'_client_id'), 'verified'=>($profile['verified']??false)===true,
+            'firstname'=>$profile['firstname']??'', 'lastname'=>$profile['lastname']??'']);
     }
     private function failure($audience)
     {
+        $this->session->unset_userdata('scsl_pending');
         $this->session->unset_userdata(['tfa_staffid','tfa_remember','_two_factor_auth_established','_two_factor_auth_staff_email']);
         set_alert('danger',_l('scsl_failed'));
         redirect($audience==='staff'?admin_url('authentication'):site_url('authentication/login'));

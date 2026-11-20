@@ -36,6 +36,35 @@ $(document).on('click','#scccCallButton',async function(){
 $(document).on('click','#scccHangup',function(){if(activeCall){if(activeCall.status()==='pending')activeCall.reject();else activeCall.disconnect();}});
 if(window.scccChartData&&window.Chart&&document.getElementById('scccCallChart')){new Chart(document.getElementById('scccCallChart'),{type:'doughnut',data:{labels:['Answered','Other','Successful'],datasets:[{data:window.scccChartData}]},options:{responsive:true,plugins:{legend:{position:'bottom'}}}});}
 if(window.scccOutcome&&window.Chart&&document.getElementById('scccOutcomeChart')){new Chart(document.getElementById('scccOutcomeChart'),{type:'bar',data:{labels:window.scccOutcome.map(x=>x.d),datasets:[{label:'Calls',data:window.scccOutcome.map(x=>x.c)}]},options:{responsive:true,plugins:{legend:{display:false}}}});}
+function linkLeadCalls(root) {
+ var blockedCalls = root.querySelectorAll('tr[id^="lead_"] li.fa-stack > a');
+ Array.prototype.forEach.call(blockedCalls, function(link) {
+  var blockedIcon = link.querySelector('.fa-ban');
+  if (!blockedIcon || !link.querySelector('.fa-phone')) return;
+  var phoneLink = link.closest('tr').querySelector('a[href^="tel:"]');
+  if (!phoneLink) return;
+  var digits = phoneLink.getAttribute('href').slice(4).replace(/\D/g, '');
+  if (!/^(1)?[2-9]\d{9}$/.test(digits)) return;
+  link.href = window.scccLeadDialerUrl + '#phone=' + digits.slice(-10);
+  link.title = window.scccLeadDialerLabel;
+  link.setAttribute('aria-label', link.title);
+  blockedIcon.remove();
+  link.querySelector('.fa-phone').classList.remove('fa-stack-1x');
+  link.parentElement.classList.remove('fa-stack');
+ });
+}
+if (window.scccLeadDialerUrl) {
+ $(function() { linkLeadCalls(document); });
+ $(document).on('draw.dt', function(event) { linkLeadCalls(event.target); });
+}
+$(function() {
+ var phone = document.getElementById('scccPhone');
+ if (!phone) return;
+ var match = /^#phone=([2-9]\d{9})$/.exec(window.location.hash);
+ if (!match) return;
+ phone.value = fmt(match[1]);
+ window.history.replaceState(window.history.state, '', window.location.pathname + window.location.search);
+});
 // jQuery 3.1.1 does not classify AsyncFunction as a ready callback.
 $(function(){return initDevice();});
 })(jQuery);

@@ -128,6 +128,21 @@ function sc_recovery_after_schema_change(string $sql, mysqli $connection, string
         $statement->close();
         if ($known) return;
     }
-    require_once __DIR__.'/../libraries/recovery/DatabaseArchive.php';
-    (new ScDatabaseArchive($connection,$prefix))->install($table);
+    // Repeated no-op ALTERs are also common in legacy initializers. Compare only
+    // that table's columns and serialize the rare expensive coverage refresh.
+    $cacheDir = sc_recovery_root() . '/schema-checks';
+    if (!is_dir($cacheDir) && !mkdir($cacheDir, 0700, true) && !is_dir($cacheDir)) throw new RuntimeException('Recovery schema verification storage is unavailable.');
+    $cache = $cacheDir . '/' . hash('sha256', $table);
+    $lock = fopen($cache . '.lock', 'c');
+    if (!$lock || !flock($lock, LOCK_EX)) throw new RuntimeException('Recovery schema verification is busy.');
+    try {
+        $escaped = $connection->real_escape_string($table);
+        $columns = $connection->query("SELECT COLUMN_NAME,COLUMN_TYPE,IS_NULLABLE,EXTRA FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='$escaped' ORDER BY ORDINAL_POSITION")->fetch_all(MYSQLI_ASSOC);
+        $hash = hash('sha256', json_encode($columns));
+        if (is_file($cache) && file_get_contents($cache) === $hash) return;
+        require_once __DIR__.'/../libraries/recovery/DatabaseArchive.php';
+        (new ScDatabaseArchive($connection,$prefix))->install($table);
+        if (file_put_contents($cache, $hash) === false) throw new RuntimeException('Recovery schema verification could not be saved.');
+        chmod($cache, 0600);chmod($cache . '.lock', 0600);
+    } finally {flock($lock, LOCK_UN);fclose($lock);}
 }

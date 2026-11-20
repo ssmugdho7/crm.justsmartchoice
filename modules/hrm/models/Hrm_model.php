@@ -1154,7 +1154,7 @@ class hrm_model extends App_Model
         $attachment = $this->get_hrm_attachments_delete($attachment_id);
         if ($attachment) {
             if (empty($attachment->external)) {
-                unlink(HRM_MODULE_UPLOAD_FOLDER.'/' .$attachment->rel_id.'/'.$attachment->file_name);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(HRM_MODULE_UPLOAD_FOLDER.'/' .$attachment->rel_id.'/'.$attachment->file_name);
             }
             $this->db->where('id', $attachment->id);
             $this->db->delete(db_prefix() . 'files');

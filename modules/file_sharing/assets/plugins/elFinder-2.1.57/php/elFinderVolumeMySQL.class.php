@@ -684,7 +684,7 @@ class fs_elFinderVolumeMySQL extends fs_elFinderVolumeDriver
     protected function _fopen($path, $mode = 'rb')
     {
         $fp = $this->tmpPath
-            ? fopen($this->getTempFile($path), 'w+')
+            ? (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($this->getTempFile($path), 'w+')
             : $this->tmpfile();
 
 
@@ -713,10 +713,10 @@ class fs_elFinderVolumeMySQL extends fs_elFinderVolumeDriver
      */
     protected function _fclose($fp, $path = '')
     {
-        is_resource($fp) && fclose($fp);
+        is_resource($fp) && (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
         if ($path) {
             $file = $this->getTempFile($path);
-            is_file($file) && unlink($file);
+            is_file($file) && (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file);
         }
     }
 
@@ -879,12 +879,12 @@ class fs_elFinderVolumeMySQL extends fs_elFinderVolumeDriver
         }
 
         if ($this->isLocalhost && ($tmpfile = tempnam($this->tmpPath, $this->id))) {
-            if (($trgfp = fopen($tmpfile, 'wb')) == false) {
-                unlink($tmpfile);
+            if (($trgfp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($tmpfile, 'wb')) == false) {
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tmpfile);
             } else {
                 elFinder::rewind($fp);
                 stream_copy_to_stream($fp, $trgfp);
-                fclose($trgfp);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($trgfp);
                 chmod($tmpfile, 0644);
 
                 $sql = $id > 0
@@ -893,7 +893,7 @@ class fs_elFinderVolumeMySQL extends fs_elFinderVolumeDriver
                 $sql = sprintf($sql, $this->tbf, $dir, $this->db->real_escape_string($name), $this->loadFilePath($tmpfile), $size, $ts, $mime, $w, $h);
 
                 $res = $this->query($sql);
-                unlink($tmpfile);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tmpfile);
 
                 if ($res) {
                     return $id > 0 ? $id : $this->db->insert_id;

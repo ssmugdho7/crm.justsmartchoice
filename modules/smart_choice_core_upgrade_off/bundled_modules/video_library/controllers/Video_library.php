@@ -238,7 +238,7 @@ class Video_library extends AdminController
                     );
 
                     if ($this->video_library_modal->update_video($video_data, $video_id)) {
-                        unlink($old_file_data);
+                        (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($old_file_data);
                         $this->session->set_flashdata('msg', 'Video updated successfully');
                         return redirect('video_library/index');
                     } else {
@@ -468,7 +468,7 @@ class Video_library extends AdminController
         $logoName = get_option('thumbnail_image');
         $path = get_upload_path_by_type('company') . '/' . $logoName;
         if (file_exists($path)) {
-            unlink($path);
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path);
         }
 
         update_option('thumbnail_image', '');

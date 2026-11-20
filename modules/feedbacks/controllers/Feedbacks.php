@@ -612,7 +612,7 @@ class Feedbacks extends AdminController
 
         $filename = uniqid() . '_' . $_FILES['file_xls']['name'];
         $temp_url = TEMP_FOLDER . $filename;
-        if (move_uploaded_file($_FILES['file_xls']['tmp_name'], $temp_url)) {
+        if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($_FILES['file_xls']['tmp_name'], $temp_url)) {
             try {
                 $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_url);
             } catch (Exception $e) {
@@ -662,7 +662,7 @@ class Feedbacks extends AdminController
                 }
             }
             // Delete uploaded file
-            unlink($temp_url);
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($temp_url);
             set_alert($_alert_type, _l('mail_list_total_imported', $total_added_emails) . '<br />' . _l('mail_list_total_duplicate', $total_duplicate_emails) . '<br />' . _l('mail_list_total_failed_to_insert', $mails_failed_to_insert) . '<br />' . _l('mail_list_total_invalid', $total_invalid_address));
         } else {
             set_alert('danger', _l('error_uploading_file'));

@@ -21,14 +21,14 @@ $CI->app_modules->upgrade_database('quickbooks');
  * @return [type] [description]
  */
 function qb_modFile($fname, $searchF, $replaceW) {
-	$fhandle = fopen($fname, "r");
+	$fhandle = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($fname, "r");
 	$content = fread($fhandle, filesize($fname));
 	if (strstr($content, $searchF)) {
 		$content = str_replace($searchF, $replaceW, $content);
-		$fhandle = fopen($fname, "w");
+		$fhandle = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($fname, "w");
 		fwrite($fhandle, $content);
 	}
-	fclose($fhandle);
+	(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fhandle);
 	return true;
 }
 

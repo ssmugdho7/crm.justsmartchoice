@@ -407,9 +407,9 @@ class Reminder_model extends App_Model
 		$path = REMINDERS_OTHER_ATTACHMENTS_FOLDER . $rel_id . '/';
 		if ($attachments && file_exists($path)) {
 			foreach ($attachments as $attachment) {
-				unlink($path . $attachment['file_name']);
+				(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path . $attachment['file_name']);
 			}
-			rmdir($path);
+			(\function_exists('sc_recovery_rmdir') ? '\sc_recovery_rmdir' : '\rmdir')($path);
 		}
 		$this->db->where('rel_id', $rel_id);
 		$this->db->where('rel_type', 'reminder');

@@ -73,7 +73,7 @@ class Backup extends AdminController
     {
         $path = $this->get_path($backup);
 
-        if (unlink($path)) {
+        if ((\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path)) {
             set_alert('success', _l('backup_delete'));
         }
 

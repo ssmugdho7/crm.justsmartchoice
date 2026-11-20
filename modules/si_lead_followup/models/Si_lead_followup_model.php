@@ -159,7 +159,7 @@ class Si_lead_followup_model extends App_Model
             if (empty($attachment->external)) {
                 $relPath  = get_upload_path_by_type('si_lead_followup') . $attachment->rel_id . '/';
                 $fullPath = $relPath . $attachment->file_name;
-                unlink($fullPath);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($fullPath);
             }
 
             $this->db->where('id', $id);

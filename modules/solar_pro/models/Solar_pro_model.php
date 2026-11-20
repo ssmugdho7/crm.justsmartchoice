@@ -193,7 +193,7 @@ class Solar_pro_model extends App_Model
                 $ext = strtolower(pathinfo((string) $original, PATHINFO_EXTENSION));
                 if (!in_array($ext, $allowed, true)) { continue; }
                 $stored = uniqid('solar_', true) . '.' . $ext;
-                if (!@move_uploaded_file($tmps[$i], $base . $stored)) { continue; }
+                if (!@(\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmps[$i], $base . $stored)) { continue; }
                 $this->db->insert(db_prefix() . 'solar_documents', [
                     'analysis_id' => $analysisId,
                     'contract_id' => null,

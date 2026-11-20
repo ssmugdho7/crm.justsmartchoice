@@ -302,7 +302,7 @@ class Email_template_manage extends AdminController
 
                 if (empty($attachment->external))
                 {
-                    unlink(get_upload_path_by_type('email_template') . $attachment->rel_id . '/' . $attachment->file_name);
+                    (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(get_upload_path_by_type('email_template') . $attachment->rel_id . '/' . $attachment->file_name);
                 }
 
                 $this->db->where('id', $attachment->id);

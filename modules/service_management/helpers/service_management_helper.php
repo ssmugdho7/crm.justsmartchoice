@@ -103,7 +103,7 @@ function sm_handle_product_attachments($id)
 			$filename    = $_FILES['file']['name'];
 			$newFilePath = $path . $filename;
 			// Upload the file into the temp dir
-			if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+			if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
 				$attachment   = [];
 				$attachment[] = [
@@ -224,7 +224,7 @@ function sm_handle_contract_attachment($id)
 			$filename    = unique_filename($path, $_FILES['file']['name']);
 			$newFilePath = $path . $filename;
 			// Upload the file into the company uploads dir
-			if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+			if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 				$CI           = & get_instance();
 				$attachment   = [];
 				$attachment[] = [
@@ -639,7 +639,7 @@ function sm_handle_contract_addendum_attachment($id)
 			$filename    = unique_filename($path, $_FILES['file']['name']);
 			$newFilePath = $path . $filename;
 			// Upload the file into the company uploads dir
-			if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+			if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 				$CI           = & get_instance();
 				$attachment   = [];
 				$attachment[] = [

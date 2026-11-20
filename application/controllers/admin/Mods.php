@@ -60,7 +60,7 @@ class Mods extends AdminController
         if ($tmp === false) {
             show_error('Unable to create a temporary module archive.', 500);
         }
-        @unlink($tmp);
+        @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tmp);
         $zipPath = $tmp . '.zip';
         $zip = new ZipArchive();
         if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
@@ -86,7 +86,7 @@ class Mods extends AdminController
         }
         $this->load->helper('download');
         $data = file_get_contents($zipPath);
-        @unlink($zipPath);
+        @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($zipPath);
         force_download($name . '_' . date('Ymd_His') . '.zip', $data);
     }
 
@@ -267,8 +267,8 @@ class Mods extends AdminController
                 continue;
             }
             if ($file->isDir()) {
-                @rmdir($file->getPathname());
-            } elseif (@unlink($file->getPathname())) {
+                @(\function_exists('sc_recovery_rmdir') ? '\sc_recovery_rmdir' : '\rmdir')($file->getPathname());
+            } elseif (@(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file->getPathname())) {
                 $count++;
             }
         }

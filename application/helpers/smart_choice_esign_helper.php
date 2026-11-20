@@ -2,7 +2,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 function sces_process_initial_image($base64,$folder){
  if(!$base64){return null;} if(!is_dir($folder)){@mkdir($folder,0755,true);} $data=base64_decode($base64,true); if($data===false){return null;}
- $file='initials_'.time().'_'.bin2hex(random_bytes(3)).'.png'; if(file_put_contents(rtrim($folder,'/').'/'.$file,$data)===false){return null;} return $file;
+ $file='initials_'.time().'_'.bin2hex(random_bytes(3)).'.png'; if((\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')(rtrim($folder,'/').'/'.$file,$data)===false){return null;} return $file;
 }
 function sces_save_initials($type,$id,$base64,$folder){
  $CI=&get_instance(); $file=sces_process_initial_image($base64,$folder); if(!$file){return false;} $table=db_prefix().$type.'s'; if($type==='proposal'){$table=db_prefix().'proposals';}

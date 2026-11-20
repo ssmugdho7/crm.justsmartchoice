@@ -137,7 +137,7 @@ class Requests_Transport_cURL implements Requests_Transport {
 		$options['hooks']->dispatch('curl.before_send', array(&$this->handle));
 
 		if ($options['filename'] !== false) {
-			$this->stream_handle = fopen($options['filename'], 'wb');
+			$this->stream_handle = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($options['filename'], 'wb');
 		}
 
 		$this->response_data       = '';
@@ -287,7 +287,7 @@ class Requests_Transport_cURL implements Requests_Transport {
 		$this->setup_handle($url, $headers, $data, $options);
 
 		if ($options['filename'] !== false) {
-			$this->stream_handle = fopen($options['filename'], 'wb');
+			$this->stream_handle = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($options['filename'], 'wb');
 		}
 
 		$this->response_data       = '';
@@ -412,7 +412,7 @@ class Requests_Transport_cURL implements Requests_Transport {
 			return false;
 		}
 		if ($options['filename'] !== false && $this->stream_handle) {
-			fclose($this->stream_handle);
+			(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($this->stream_handle);
 			$this->headers = trim($this->headers);
 		}
 		else {

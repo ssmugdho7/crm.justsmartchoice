@@ -12,73 +12,73 @@ class Migration_Version_107 extends CI_Migration
     public function up()
     {
         if (file_exists(FCPATH . 'media/.htaccess')) {
-            @unlink(FCPATH . 'media/.htaccess');
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(FCPATH . 'media/.htaccess');
         }
 
         if (file_exists(FCPATH . 'media/')) {
             if (!file_exists(FCPATH . 'media/' . 'index.html')) {
-                fopen(FCPATH . 'media/' . 'index.html', 'w');
+                (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(FCPATH . 'media/' . 'index.html', 'w');
             }
         }
 
         if (file_exists(APPPATH . 'views/themes/' . active_clients_theme() . '/template_parts/contract_attachments.php')) {
-            @unlink(APPPATH . 'views/themes/' . active_clients_theme() . '/template_parts/contract_attachments.php');
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'views/themes/' . active_clients_theme() . '/template_parts/contract_attachments.php');
         }
 
         if (file_exists(APPPATH . 'views/themes/perfex/template_parts/contract_attachments.php')) {
-            @unlink(APPPATH . 'views/themes/perfex/template_parts/contract_attachments.php');
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'views/themes/perfex/template_parts/contract_attachments.php');
         }
 
         if (file_exists(APPPATH . 'views/admin/tickets/priorities/priority.php')) {
-            @unlink(APPPATH . 'views/admin/tickets/priorities/priority.php');
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'views/admin/tickets/priorities/priority.php');
         }
         if (file_exists(APPPATH . 'views/admin/tickets/tickets_statuses/status.php')) {
-            @unlink(APPPATH . 'views/admin/tickets/tickets_statuses/status.php');
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'views/admin/tickets/tickets_statuses/status.php');
         }
 
         if (file_exists(APPPATH . 'views/admin/tickets/services/service.php')) {
-            @unlink(APPPATH . 'views/admin/tickets/services/service.php');
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'views/admin/tickets/services/service.php');
         }
 
         if (file_exists(APPPATH . 'views/admin/departments/department.php')) {
-            @unlink(APPPATH . 'views/admin/departments/department.php');
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'views/admin/departments/department.php');
         }
 
         if (file_exists(APPPATH . 'views/admin/expenses/category.php')) {
-            @unlink(APPPATH . 'views/admin/expenses/category.php');
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'views/admin/expenses/category.php');
         }
 
         if (file_exists(APPPATH . 'views/admin/contracts/type.php')) {
-            @unlink(APPPATH . 'views/admin/contracts/type.php');
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'views/admin/contracts/type.php');
         }
 
         if (file_exists(APPPATH . 'views/admin/includes/modals/payment_modes_modal.php')) {
-            @unlink(APPPATH . 'views/admin/includes/modals/payment_modes_modal.php');
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'views/admin/includes/modals/payment_modes_modal.php');
         }
 
         if (file_exists(APPPATH . 'views/admin/includes/modals/currency_modal.php')) {
-            @unlink(APPPATH . 'views/admin/includes/modals/currency_modal.php');
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'views/admin/includes/modals/currency_modal.php');
         }
 
         if (file_exists(APPPATH . 'views/admin/includes/modals/tax_modal.php')) {
-            @unlink(APPPATH . 'views/admin/includes/modals/tax_modal.php');
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'views/admin/includes/modals/tax_modal.php');
         }
 
         if (file_exists(APPPATH . 'views/admin/includes/modals/sales_item_modal.php')) {
-            @unlink(APPPATH . 'views/admin/includes/modals/sales_item_modal.php');
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'views/admin/includes/modals/sales_item_modal.php');
         }
 
         if (file_exists(APPPATH . 'views/admin/leads/source.php')) {
-            @unlink(APPPATH . 'views/admin/leads/source.php');
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'views/admin/leads/source.php');
         }
 
         if (!is_dir(CLIENT_ATTACHMENTS_FOLDER)) {
             mkdir(CLIENT_ATTACHMENTS_FOLDER, 0755);
-            fopen(CLIENT_ATTACHMENTS_FOLDER . '.htaccess', 'w');
-            $fp = fopen(CLIENT_ATTACHMENTS_FOLDER . '.htaccess', 'a+');
+            (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(CLIENT_ATTACHMENTS_FOLDER . '.htaccess', 'w');
+            $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(CLIENT_ATTACHMENTS_FOLDER . '.htaccess', 'a+');
             if ($fp) {
                 fwrite($fp, 'Order Deny,Allow' . PHP_EOL . 'Deny from all');
-                fclose($fp);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
             }
         }
 

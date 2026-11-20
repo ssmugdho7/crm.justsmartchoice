@@ -41,7 +41,7 @@ class Smart_choice_enterprise_core extends AdminController
     public function project_controls(){ $this->requirePermission('view_project_controls');$this->domainPage('project_controls','enterprise_project_controls',['sce_project_phases','sce_rfis','sce_submittals','sce_permits','sce_change_orders']); }
     public function document_center(){ $this->requirePermission('view_project_controls');$this->domainPage('document_center','enterprise_document_center',['sce_document_versions','sce_document_approvals']); }
     private function domainPage($view,$titleKey,array $tables){$data=['title'=>_l($titleKey),'cards'=>$this->smart_choice_enterprise_core_model->get_domain_cards($tables),'recent'=>$this->smart_choice_enterprise_core_model->get_domain_recent($tables)];$this->load->view($view,$data);}
-    private function csv($name,array $headers,array $rows){header('Content-Type: text/csv; charset=UTF-8');header('Content-Disposition: attachment; filename="'.$name.'-'.date('Y-m-d-His').'.csv"');$o=fopen('php://output','wb');fwrite($o,"\xEF\xBB\xBF");fputcsv($o,$headers);foreach($rows as$r)fputcsv($o,$r);fclose($o);exit;}
+    private function csv($name,array $headers,array $rows){header('Content-Type: text/csv; charset=UTF-8');header('Content-Disposition: attachment; filename="'.$name.'-'.date('Y-m-d-His').'.csv"');$o=(\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('php://output','wb');fwrite($o,"\xEF\xBB\xBF");fputcsv($o,$headers);foreach($rows as$r)fputcsv($o,$r);(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($o);exit;}
 
     public function repair_schema()
     {
@@ -96,7 +96,7 @@ class Smart_choice_enterprise_core extends AdminController
         if (!$this->smart_choice_enterprise_core_model->isAllowedEnterpriseTable($suffix)) show_404();
         $imported = 0; $skipped = 0;
         if (!empty($_FILES['import_file']['tmp_name']) && is_uploaded_file($_FILES['import_file']['tmp_name'])) {
-            $handle = fopen($_FILES['import_file']['tmp_name'], 'rb');
+            $handle = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($_FILES['import_file']['tmp_name'], 'rb');
             $headers = $handle ? fgetcsv($handle) : false;
             if ($headers) {
                 $headers = array_map(function($v){ return trim((string)$v); }, $headers);
@@ -106,7 +106,7 @@ class Smart_choice_enterprise_core extends AdminController
                     if ($this->smart_choice_enterprise_core_model->insertEnterpriseRow($suffix, $row)) $imported++; else $skipped++;
                 }
             }
-            if ($handle) fclose($handle);
+            if ($handle) (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($handle);
         }
         $this->enterprise_audit->record('table.import', $suffix, null, [], ['imported'=>$imported,'skipped'=>$skipped]);
         set_alert('success', sprintf(_l('enterprise_import_complete'), $imported, $skipped));

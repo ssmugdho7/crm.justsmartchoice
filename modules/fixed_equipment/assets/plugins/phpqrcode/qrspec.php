@@ -565,7 +565,7 @@
                         self::$frames[$version] = self::unserial(file_get_contents($fileName));
                     } else {
                         self::$frames[$version] = self::createFrame($version);
-                        file_put_contents($fileName, self::serial(self::$frames[$version]));
+                        (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($fileName, self::serial(self::$frames[$version]));
                     }
                 } else {
                     self::$frames[$version] = self::createFrame($version);

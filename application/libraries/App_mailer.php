@@ -357,7 +357,7 @@ class App_mailer extends CI_Email
                     // return FALSE;
                     return $this;
                 }
-                if (! $fp = @fopen($file, FOPEN_READ)) {
+                if (! $fp = @(\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($file, FOPEN_READ)) {
                     $this->_set_error_message('lang:email_attachment_unreadable', $file);
 
                     // Modified by Ivan Tcholakov, 14-JAN-2014.
@@ -366,7 +366,7 @@ class App_mailer extends CI_Email
                 }
                 $file_content = stream_get_contents($fp);
                 $mime         = $this->_mime_types(pathinfo($file, PATHINFO_EXTENSION));
-                fclose($fp);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
                 $this->_attachments[] = [
                     'name'        => [$file, $newname],
                     'disposition' => $disposition,

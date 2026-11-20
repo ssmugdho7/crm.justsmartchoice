@@ -345,8 +345,8 @@ function flexiblewa_create_folder($folder)
 {
     if (!is_dir($folder)) {
         mkdir($folder, 0777);
-        $fp = fopen(rtrim($folder, '/') . '/' . 'index.html', 'w');
-        fclose($fp);
+        $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(rtrim($folder, '/') . '/' . 'index.html', 'w');
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
     }
 }
 
@@ -402,7 +402,7 @@ function flexiblewa_upload_file($input_name, $limit = 1)
 
                 $new_file_path = $path . $filename;
                 // Upload the file into the event uploads dir
-                if (move_uploaded_file($tmpFilePath, $new_file_path)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $new_file_path)) {
                     // Return only the upload path; that's all we need.
                     return str_replace(FCPATH, '', $new_file_path);
                 }

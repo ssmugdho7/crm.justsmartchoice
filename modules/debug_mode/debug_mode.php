@@ -194,7 +194,7 @@ function debug_mode_enable_environment($desired_env)
     if (!is_file($indexFile) || !is_writable($indexFile)) {
         return false;
     }
-    $handle = @fopen($indexFile, 'r');
+    $handle = @(\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($indexFile, 'r');
     if (!$handle) {
         return false;
     }
@@ -218,9 +218,9 @@ function debug_mode_enable_environment($desired_env)
         // Replace atomically so a web request never reads a partially written PHP entry point.
         $temporaryFile = @tempnam(dirname($indexFile), '.debug-env-');
         if (!$temporaryFile || realpath(dirname($temporaryFile)) !== realpath(dirname($indexFile))
-            || @file_put_contents($temporaryFile, $newContent) !== strlen($newContent)
+            || @(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($temporaryFile, $newContent) !== strlen($newContent)
             || !@chmod($temporaryFile, fileperms($indexFile) & 0777)
-            || !@rename($temporaryFile, $indexFile)) {
+            || !@(\function_exists('sc_recovery_rename') ? '\sc_recovery_rename' : '\rename')($temporaryFile, $indexFile)) {
             return false;
         }
         if (function_exists('opcache_invalidate')) {
@@ -229,10 +229,10 @@ function debug_mode_enable_environment($desired_env)
         return true;
     } finally {
         if ($temporaryFile && is_file($temporaryFile)) {
-            @unlink($temporaryFile);
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($temporaryFile);
         }
         flock($handle, LOCK_UN);
-        fclose($handle);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($handle);
     }
 }
 

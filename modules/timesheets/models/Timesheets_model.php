@@ -5208,7 +5208,7 @@ class timesheets_model extends app_model
 		$attachment = $this->get_timesheets_attachments_delete($attachment_id);
 		if ($attachment) {
 			if (empty($attachment->external)) {
-				unlink(timesheets_module_upload_folder . '/requisition_leave/' . $attachment->rel_id . '/' . $attachment->file_name);
+				(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(timesheets_module_upload_folder . '/requisition_leave/' . $attachment->rel_id . '/' . $attachment->file_name);
 			}
 			$this->db->where('id', $attachment->id);
 			$this->db->delete(db_prefix() . 'files');

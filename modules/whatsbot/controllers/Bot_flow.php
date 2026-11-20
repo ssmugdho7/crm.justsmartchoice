@@ -75,7 +75,7 @@ class Bot_flow extends AdminController {
                 array_walk($matchingFiles, function ($file) use ($dir) {
                     $filePath = $dir . DIRECTORY_SEPARATOR . $file;
                     if (is_file($filePath)) {
-                        unlink($filePath);
+                        (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($filePath);
                     }
                 });
             }
@@ -97,7 +97,7 @@ class Bot_flow extends AdminController {
                 $filename = $node_id . '_' . unique_filename($path, $newFileName);
                 if (in_array('.' . get_file_extension($filename), array_map('trim', explode(',', $extensions[$type]['extension'])))) {
                     $newFilePath = $path . $filename;
-                    if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                    if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                         $status = true;
                         $file_url = base_url(get_upload_path_by_type('flow') . '/' . $id . '/');
                     }

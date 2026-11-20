@@ -2363,7 +2363,7 @@ class Team_password_model extends App_Model {
         $deleted    = false;
         if ($attachment) {
             if (empty($attachment->external)) {
-                unlink(TEAM_PASSWORD_MODULE_UPLOAD_FOLDER .'/'.$type.'/'. $attachment->rel_id . '/' . $attachment->file_name);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(TEAM_PASSWORD_MODULE_UPLOAD_FOLDER .'/'.$type.'/'. $attachment->rel_id . '/' . $attachment->file_name);
             }
             $this->db->where('id', $attachment->id);
             $this->db->delete(db_prefix() .'files');

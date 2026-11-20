@@ -121,7 +121,7 @@ if ( ! function_exists('force_download'))
 			$filename = implode('.', $x);
 		}
 
-		if ($data === NULL && ($fp = @fopen($filepath, 'rb')) === FALSE)
+		if ($data === NULL && ($fp = @(\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($filepath, 'rb')) === FALSE)
 		{
 			return;
 		}
@@ -152,7 +152,7 @@ if ( ! function_exists('force_download'))
 			echo $data;
 		}
 
-		fclose($fp);
+		(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
 		exit;
 	}
 }

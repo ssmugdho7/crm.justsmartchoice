@@ -32,7 +32,7 @@ function handle_manufacturer_image($manufacturer_id){
             $filename    = unique_filename($path, $_FILES['manufacture_image']['name']);
             $newFilePath = $path . $filename;
                     // Upload the file into the temp dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
                 if (is_image($newFilePath)) {
                     create_img_thumb($newFilePath, $filename);
@@ -284,7 +284,7 @@ function handle_device_image($device_id){
             $filename    = unique_filename($path, $_FILES['primary_profile_image']['name']);
             $newFilePath = $path . $filename;
                     // Upload the file into the temp dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
                 if (is_image($newFilePath)) {
                     create_img_thumb($newFilePath, $filename);
@@ -341,7 +341,7 @@ function wshop_handle_device_attachments($id)
 
             $newFilePath = $path . $new_filename;
             // Upload the file into the temp dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
                 $CI                       = & get_instance();
                 $config                   = [];
@@ -966,7 +966,7 @@ function wshop_handle_transaction_attachments($id)
 
             $newFilePath = $path . $new_filename;
             // Upload the file into the temp dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
                 $CI                       = & get_instance();
                 $config                   = [];
@@ -1036,7 +1036,7 @@ function wshop_handle_note_attachments($id)
 
             $newFilePath = $path . $new_filename;
             // Upload the file into the temp dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
                 $CI                       = & get_instance();
                 $config                   = [];
@@ -1106,7 +1106,7 @@ function wshop_handle_workshop_attachments($id)
 
             $newFilePath = $path . $new_filename;
             // Upload the file into the temp dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
                 $CI                       = & get_instance();
                 $config                   = [];
@@ -1320,7 +1320,7 @@ function wshop_handle_inspection_attachments($id)
 
             $newFilePath = $path . $new_filename;
             // Upload the file into the temp dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
                 $CI                       = & get_instance();
                 $config                   = [];

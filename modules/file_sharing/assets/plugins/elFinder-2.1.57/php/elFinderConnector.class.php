@@ -281,21 +281,21 @@ class fs_elFinderConnector
                     // PHP < 5.6 has a bug of fpassthru
                     // see https://bugs.php.net/bug.php?id=66736
                     if (version_compare(PHP_VERSION, '5.6', '<')) {
-                        file_put_contents('php://output', $fp);
+                        (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')('php://output', $fp);
                     } else {
                         fpassthru($fp);
                     }
                 } else {
-                    $out = fopen('php://output', 'wb');
+                    $out = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('php://output', 'wb');
                     stream_copy_to_stream($fp, $out, $psize);
-                    fclose($out);
+                    (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($out);
                 }
             }
 
             if (!empty($data['volume'])) {
                 $data['volume']->close($fp, $data['info']['hash']);
             } else {
-                fclose($fp);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
             }
             exit();
         } else {

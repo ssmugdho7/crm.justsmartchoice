@@ -1643,7 +1643,7 @@ class hr_payroll extends AdminController {
 					// Setup our new file path
 					$newFilePath = $tmpDir . $_FILES['file_csv']['name'];
 
-					if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+					if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 						//Writer file
 						$writer_header = array(
 							_l('staffid') => 'string',
@@ -1739,7 +1739,7 @@ class hr_payroll extends AdminController {
 		}
 
 		if (file_exists($newFilePath)) {
-			@unlink($newFilePath);
+			@(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($newFilePath);
 		}
 
 		echo json_encode([
@@ -2170,7 +2170,7 @@ class hr_payroll extends AdminController {
 					// Setup our new file path
 					$newFilePath = $tmpDir . $_FILES['file_csv']['name'];
 
-					if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+					if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 						//Writer file
 						$writer_header = array(
 							_l('staffid') => 'string',
@@ -2281,7 +2281,7 @@ class hr_payroll extends AdminController {
 		}
 
 		if (file_exists($newFilePath)) {
-			@unlink($newFilePath);
+			@(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($newFilePath);
 		}
 
 		echo json_encode([
@@ -3030,7 +3030,7 @@ class hr_payroll extends AdminController {
 					// Setup our new file path
 					$newFilePath = $tmpDir . $_FILES['file_csv']['name'];
 
-					if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+					if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 						//Writer file
 						$writer_header = array(
 							_l('staffid') => 'string',
@@ -3141,7 +3141,7 @@ class hr_payroll extends AdminController {
 		}
 
 		if (file_exists($newFilePath)) {
-			@unlink($newFilePath);
+			@(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($newFilePath);
 		}
 
 		echo json_encode([
@@ -3671,7 +3671,7 @@ class hr_payroll extends AdminController {
 					$date_create_file = new_str_replace('.xlsx', '', $date_create_file);
 
 					if ((float) $date_create_file <= (float) $before_7_day) {
-						unlink($folder . $filename);
+						(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($folder . $filename);
 					}
 				}
 			}
@@ -5506,7 +5506,7 @@ class hr_payroll extends AdminController {
 			if (file_exists($file)) {
 				//don't delete index.html file
 				if ($filename != 'index.html') {
-					unlink('modules/hr_payroll/uploads/attendance_sample_file/' . $filename);
+					(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')('modules/hr_payroll/uploads/attendance_sample_file/' . $filename);
 				}
 			}
 
@@ -5519,7 +5519,7 @@ class hr_payroll extends AdminController {
 			if (file_exists($file)) {
 				//don't delete index.html file
 				if ($filename != 'index.html') {
-					unlink('modules/hr_payroll/uploads/commissions_sample_file/' . $filename);
+					(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')('modules/hr_payroll/uploads/commissions_sample_file/' . $filename);
 				}
 			}
 
@@ -5532,7 +5532,7 @@ class hr_payroll extends AdminController {
 			if (file_exists($file)) {
 				//don't delete index.html file
 				if ($filename != 'index.html') {
-					unlink('modules/hr_payroll/uploads/employees_sample_file/' . $filename);
+					(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')('modules/hr_payroll/uploads/employees_sample_file/' . $filename);
 				}
 			}
 
@@ -5545,7 +5545,7 @@ class hr_payroll extends AdminController {
 			if (file_exists($file)) {
 				//don't delete index.html file
 				if ($filename != 'index.html') {
-					unlink('modules/hr_payroll/uploads/file_error_response/' . $filename);
+					(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')('modules/hr_payroll/uploads/file_error_response/' . $filename);
 				}
 			}
 
@@ -5558,7 +5558,7 @@ class hr_payroll extends AdminController {
 			if (file_exists($file)) {
 				//don't delete index.html file
 				if ($filename != 'index.html') {
-					unlink('modules/hr_payroll/uploads/payslip/' . $filename);
+					(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')('modules/hr_payroll/uploads/payslip/' . $filename);
 				}
 			}
 
@@ -5571,7 +5571,7 @@ class hr_payroll extends AdminController {
 			if (file_exists($file)) {
 				//don't delete index.html file
 				if ($filename != 'index.html') {
-					unlink('modules/hr_payroll/uploads/payslip_excel_file/' . $filename);
+					(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')('modules/hr_payroll/uploads/payslip_excel_file/' . $filename);
 				}
 			}
 
@@ -5674,7 +5674,7 @@ class hr_payroll extends AdminController {
 
 			if(file_exists($file)) {
 				if ($filename != 'index.html') {
-					unlink(HR_PAYROLL_EXPORT_EMPLOYEE_PAYSLIP.$filename);
+					(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(HR_PAYROLL_EXPORT_EMPLOYEE_PAYSLIP.$filename);
 				}
 			}
 		}

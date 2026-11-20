@@ -490,7 +490,7 @@ function solar_pro_install_proposal_assets()
     if(!is_dir($dest)){@mkdir($dest,0755,true);}
     if(!is_dir($dest)){return false;}
     foreach(['co2-impact.png','trees-impact.png','clean-energy.png','cars-impact.png','solar-energy-flow.png','installation-flow.png','enphase-microinverter.png','enphase-iq8.png','enphase-gateway.png'] as $file){
-        if(is_file($source.$file) && (!is_file($dest.$file) || @md5_file($source.$file)!==@md5_file($dest.$file))){@copy($source.$file,$dest.$file);}
+        if(is_file($source.$file) && (!is_file($dest.$file) || @md5_file($source.$file)!==@md5_file($dest.$file))){@(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($source.$file,$dest.$file);}
     }
     return true;
 }

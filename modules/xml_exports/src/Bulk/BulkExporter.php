@@ -97,7 +97,7 @@ class BulkExporter
         } elseif (stream_is_local($filename) !== true) {
             return;
         }
-        $f = fopen($filename, 'wb');
+        $f = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($filename, 'wb');
         // save PDF to a local file
 
         if (!$f) {
@@ -105,7 +105,7 @@ class BulkExporter
         }
 
         fwrite($f, $data, strlen($data));
-        fclose($f);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($f);
     }
 
     private function finalize(): array

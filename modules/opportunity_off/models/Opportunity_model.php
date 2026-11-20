@@ -281,12 +281,12 @@ public function opportunityInfo($id)
             if (empty($attachment->external)) {
                 $relPath = get_upload_path_for_opportunity() . $attachment->rel_id . '/';
                 $fullPath = $relPath . $attachment->file_name;
-                unlink($fullPath);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($fullPath);
                 $fname = pathinfo($fullPath, PATHINFO_FILENAME);
                 $fext = pathinfo($fullPath, PATHINFO_EXTENSION);
                 $thumbPath = $relPath . $fname . '_thumb.' . $fext;
                 if (file_exists($thumbPath)) {
-                    unlink($thumbPath);
+                    (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($thumbPath);
                 }
             }
 
@@ -595,7 +595,7 @@ public function opportunityInfo($id)
 
         if ($attachment) {
             if (empty($attachment->external)) {
-                unlink(get_upload_path_for_opportunity() . $attachment->rel_id . '/' . $attachment->file_name);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(get_upload_path_for_opportunity() . $attachment->rel_id . '/' . $attachment->file_name);
             }
             $this->db->where('id', $attachment->id);
             $this->db->delete(db_prefix() . 'files');

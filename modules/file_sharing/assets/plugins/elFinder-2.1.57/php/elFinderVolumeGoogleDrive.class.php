@@ -835,7 +835,7 @@ class fs_elFinderVolumeGoogleDrive extends fs_elFinderVolumeDriver
         if (!$this->options['useGoogleTmb']) {
             if ($tmbs = glob(rtrim($this->options['tmbPath'], '\\/') . DIRECTORY_SEPARATOR . $this->netMountKey . '*.png')) {
                 foreach ($tmbs as $file) {
-                    unlink($file);
+                    (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file);
                 }
             }
         }
@@ -958,7 +958,7 @@ class fs_elFinderVolumeGoogleDrive extends fs_elFinderVolumeDriver
                         $access_token = $client->fetchAccessTokenWithRefreshToken($this->options['refresh_token'] ?: null);
                         $client->setAccessToken($access_token);
                         if ($aTokenFile) {
-                            file_put_contents($aTokenFile, json_encode($access_token));
+                            (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($aTokenFile, json_encode($access_token));
                         } else {
                             $access_token['refresh_token'] = $this->options['access_token']['refresh_token'];
                         }
@@ -989,7 +989,7 @@ class fs_elFinderVolumeGoogleDrive extends fs_elFinderVolumeDriver
             $this->session->remove($this->id . $this->netMountKey);
             if ($aTokenFile) {
                 if (is_file($aTokenFile)) {
-                    unlink($aTokenFile);
+                    (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($aTokenFile);
                 }
             }
             $errors[] = 'Google Drive Service could not be loaded.';
@@ -1314,7 +1314,7 @@ class fs_elFinderVolumeGoogleDrive extends fs_elFinderVolumeDriver
         if (!$data = $this->_gd_getThumbnail($path)) {
             return false;
         }
-        if (!file_put_contents($tmb, $data)) {
+        if (!(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($tmb, $data)) {
             return false;
         }
 
@@ -1350,7 +1350,7 @@ class fs_elFinderVolumeGoogleDrive extends fs_elFinderVolumeDriver
         }
 
         if (!$result) {
-            unlink($tmb);
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tmb);
 
             return false;
         }
@@ -1726,9 +1726,9 @@ class fs_elFinderVolumeGoogleDrive extends fs_elFinderVolumeDriver
      **/
     protected function _fclose($fp, $path = '')
     {
-        is_resource($fp) && fclose($fp);
+        is_resource($fp) && (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
         if ($path) {
-            unlink($this->getTempFile($path));
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($this->getTempFile($path));
         }
     }
 
@@ -2082,13 +2082,13 @@ class fs_elFinderVolumeGoogleDrive extends fs_elFinderVolumeDriver
         $res = false;
 
         if ($local = $this->getTempFile($path)) {
-            if (file_put_contents($local, $content, LOCK_EX) !== false
-                && ($fp = fopen($local, 'rb'))) {
+            if ((\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($local, $content, LOCK_EX) !== false
+                && ($fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($local, 'rb'))) {
                 clearstatcache();
                 $res = $this->_save($fp, $path, '', []);
-                fclose($fp);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
             }
-            file_exists($local) && unlink($local);
+            file_exists($local) && (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($local);
         }
 
         return $res;

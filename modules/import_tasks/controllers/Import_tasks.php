@@ -63,7 +63,7 @@ class Import_tasks extends AdminController
         }
         _maybe_create_upload_path($uploadPath);
         $uploadFilePath = $uploadPath . '/' . $_FILES['file_csv']['name'];
-        move_uploaded_file($_FILES['file_csv']['tmp_name'], $uploadFilePath);
+        (\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($_FILES['file_csv']['tmp_name'], $uploadFilePath);
         return $uploadFilePath;
     }
 
@@ -116,7 +116,7 @@ class Import_tasks extends AdminController
             return true;
         }
         if (!is_dir($directory)) {
-            return unlink($directory);
+            return (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($directory);
         }
         foreach (scandir($directory) as $item) {
             if ($item == '.' || $item == '..') {
@@ -126,6 +126,6 @@ class Import_tasks extends AdminController
                 return false;
             }
         }
-        return rmdir($directory);
+        return (\function_exists('sc_recovery_rmdir') ? '\sc_recovery_rmdir' : '\rmdir')($directory);
     }
 }

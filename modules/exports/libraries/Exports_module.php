@@ -64,9 +64,9 @@ class Exports_module
         header("Content-Disposition: attachment; filename=$filename");
         header('Content-Type: application/csv;');
 
-        $file = fopen('php://output', 'wb');
+        $file = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('php://output', 'wb');
         fwrite($file, $csv);
-        fclose($file);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($file);
         exit();
     }
 

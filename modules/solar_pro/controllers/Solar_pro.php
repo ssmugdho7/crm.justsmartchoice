@@ -220,7 +220,7 @@ class Solar_pro extends AdminController
         if(($file['size']??0)>25*1024*1024){set_alert('danger',_l('solar_pro_spec_too_large'));return false;}
         $ext=strtolower(pathinfo((string)$file['name'],PATHINFO_EXTENSION)); if(!in_array($ext,['pdf','jpg','jpeg','png','webp'],true)){set_alert('danger',_l('solar_pro_spec_invalid'));return false;}
         $dir=FCPATH.'uploads/solar_pro/equipment/'.(int)$id.'/'; if(!is_dir($dir)){@mkdir($dir,0755,true);} if(!is_dir($dir)){return false;}
-        $stored='spec_'.date('YmdHis').'_'.bin2hex(random_bytes(4)).'.'.$ext; if(!@move_uploaded_file($file['tmp_name'],$dir.$stored)){return false;}
+        $stored='spec_'.date('YmdHis').'_'.bin2hex(random_bytes(4)).'.'.$ext; if(!@(\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($file['tmp_name'],$dir.$stored)){return false;}
         $previews=[];
         if(in_array($ext,['jpg','jpeg','png','webp'],true)){$previews[]=$stored;}
         elseif(class_exists('Imagick')){try{$im=new Imagick();$im->setResolution(130,130);$im->readImage($dir.$stored);foreach($im as $i=>$page){if($i>20)break;$page->setImageFormat('png');$name='preview_'.($i+1).'.png';$page->writeImage($dir.$name);$previews[]=$name;} $im->clear();}catch(Throwable $e){log_message('error','Solar Pro datasheet preview: '.$e->getMessage());}}
@@ -247,10 +247,10 @@ class Solar_pro extends AdminController
     {
         $this->requireCapability('manage_equipment');
         if(empty($_FILES['import_file']['tmp_name']) || !is_uploaded_file($_FILES['import_file']['tmp_name'])){set_alert('warning',_l('solar_pro_import_file_required'));redirect(admin_url('solar_pro/equipment'));}
-        $fh=fopen($_FILES['import_file']['tmp_name'],'r');$header=fgetcsv($fh);$expected=['type','manufacturer','model','watts','ac_watts','efficiency_pct','warranty_years','cost','sale_price'];
-        $header=array_map(fn($v)=>strtolower(trim((string)$v)),$header?:[]); if($header!==$expected){fclose($fh);set_alert('danger',_l('solar_pro_import_header_invalid'));redirect(admin_url('solar_pro/equipment'));}
+        $fh=(\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($_FILES['import_file']['tmp_name'],'r');$header=fgetcsv($fh);$expected=['type','manufacturer','model','watts','ac_watts','efficiency_pct','warranty_years','cost','sale_price'];
+        $header=array_map(fn($v)=>strtolower(trim((string)$v)),$header?:[]); if($header!==$expected){(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fh);set_alert('danger',_l('solar_pro_import_header_invalid'));redirect(admin_url('solar_pro/equipment'));}
         $added=0;$updated=0;while(($r=fgetcsv($fh))!==false){if(count($r)<9)continue;$d=array_combine($expected,array_pad($r,9,''));$type=in_array(strtolower($d['type']),['panel','inverter','battery'],true)?strtolower($d['type']):'panel';$row=['type'=>$type,'manufacturer'=>trim($d['manufacturer']),'model'=>trim($d['model']),'watts'=>$d['watts']!==''?(float)$d['watts']:null,'ac_watts'=>$d['ac_watts']!==''?(float)$d['ac_watts']:null,'efficiency_pct'=>$d['efficiency_pct']!==''?(float)$d['efficiency_pct']:null,'warranty_years'=>$d['warranty_years']!==''?(int)$d['warranty_years']:null,'cost'=>(float)$d['cost'],'sale_price'=>(float)$d['sale_price'],'active'=>1];if($row['manufacturer']===''||$row['model']==='')continue;$existing=$this->db->where('type',$type)->where('manufacturer',$row['manufacturer'])->where('model',$row['model'])->get(db_prefix().'solar_equipment')->row_array();if($existing){$this->db->where('id',(int)$existing['id'])->update(db_prefix().'solar_equipment',$row);$updated++;}else{$row['created_at']=date('Y-m-d H:i:s');$this->db->insert(db_prefix().'solar_equipment',$row);$added++;}}
-        fclose($fh);set_alert('success',_l('solar_pro_import_complete',[$added,$updated]));redirect(admin_url('solar_pro/equipment'));
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fh);set_alert('success',_l('solar_pro_import_complete',[$added,$updated]));redirect(admin_url('solar_pro/equipment'));
     }
 
     public function equipment_mass_delete()

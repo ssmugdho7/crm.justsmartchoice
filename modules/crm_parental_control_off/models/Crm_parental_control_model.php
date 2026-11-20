@@ -46,7 +46,7 @@ class Crm_parental_control_model extends App_Model
     {
         $dir = FCPATH . 'uploads/crm_parental_control_backups/';
         if (!is_dir($dir)) { @mkdir($dir, 0755, true); }
-        if (!file_exists($dir . 'index.html')) { @file_put_contents($dir . 'index.html', ''); }
+        if (!file_exists($dir . 'index.html')) { @(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($dir . 'index.html', ''); }
         return $dir;
     }
 
@@ -92,7 +92,7 @@ class Crm_parental_control_model extends App_Model
         $path = $this->backup_dir() . $filename;
         $prefs = ['format' => 'gzip', 'filename' => 'smart_choice_crm_' . date('Ymd_His') . '.sql'];
         $backup = $this->dbutil->backup($prefs);
-        @file_put_contents($path, $backup);
+        @(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($path, $backup);
         $size = file_exists($path) ? filesize($path) : 0;
         $status = $size > 0 ? 'created' : 'failed';
         $message = $size > 0 ? 'Database backup created.' : 'Database backup failed or produced an empty file.';

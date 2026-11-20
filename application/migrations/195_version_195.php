@@ -139,11 +139,11 @@ class Migration_Version_195 extends CI_Migration
 
         if (!is_dir(CREDIT_NOTES_ATTACHMENTS_FOLDER)) {
             mkdir(CREDIT_NOTES_ATTACHMENTS_FOLDER, 0755);
-            fopen(CREDIT_NOTES_ATTACHMENTS_FOLDER . '.htaccess', 'w');
-            $fp = fopen(CREDIT_NOTES_ATTACHMENTS_FOLDER.'.htaccess', 'a+');
+            (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(CREDIT_NOTES_ATTACHMENTS_FOLDER . '.htaccess', 'w');
+            $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(CREDIT_NOTES_ATTACHMENTS_FOLDER.'.htaccess', 'a+');
             if ($fp) {
                 fwrite($fp, 'Order Deny,Allow'.PHP_EOL.'Deny from all');
-                fclose($fp);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
             }
         }
 

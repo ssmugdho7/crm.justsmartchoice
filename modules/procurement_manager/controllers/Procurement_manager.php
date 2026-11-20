@@ -96,7 +96,7 @@ class Procurement_manager extends AdminController
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename=procurement_items.csv');
 
-        $output = fopen('php://output', 'w');
+        $output = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('php://output', 'w');
 
         // Header row
         fputcsv($output, [
@@ -123,7 +123,7 @@ class Procurement_manager extends AdminController
             ]);
         }
 
-        fclose($output);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($output);
         exit;
     }
 
@@ -138,7 +138,7 @@ class Procurement_manager extends AdminController
 
         if (isset($_FILES['csv_file']['name']) && $_FILES['csv_file']['name'] != '') {
             $tmp_name = $_FILES['csv_file']['tmp_name'];
-            $handle   = fopen($tmp_name, 'r');
+            $handle   = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($tmp_name, 'r');
             if ($handle !== false) {
                 // Skip header row
                 fgetcsv($handle);
@@ -159,7 +159,7 @@ class Procurement_manager extends AdminController
                     $data['notes']             = $row[12] ?? null;
                     $this->procurement_manager_model->add_item($data);
                 }
-                fclose($handle);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($handle);
                 set_alert('success', _l('import_success'));
             } else {
                 set_alert('danger', _l('file_not_found'));

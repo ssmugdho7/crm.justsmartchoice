@@ -1185,7 +1185,7 @@ class simple_html_dom_node
         $ret = $this->outertext();
 
         if ($filepath !== '') {
-            file_put_contents($filepath, $ret, LOCK_EX);
+            (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($filepath, $ret, LOCK_EX);
         }
 
         return $ret;
@@ -1575,7 +1575,7 @@ class simple_html_dom
     function save($filepath = '')
     {
         $ret = $this->root->innertext();
-        if ($filepath !== '') { file_put_contents($filepath, $ret, LOCK_EX); }
+        if ($filepath !== '') { (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($filepath, $ret, LOCK_EX); }
         return $ret;
     }
 

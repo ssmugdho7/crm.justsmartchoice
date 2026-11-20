@@ -95,7 +95,7 @@ function socialmedialogin_activation_hook()
 	$curent_theme = FCPATH."/application/views/themes/".active_clients_theme()."/views/login.php";
     $my_login = FCPATH."/application/views/themes/".active_clients_theme()."/views/my_login.php";
 
-    copy($curent_theme, $my_login);
+    (\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($curent_theme, $my_login);
 
     $filename = $my_login;
     $code_add = file_get_contents(__DIR__."/views/code.php");
@@ -104,9 +104,9 @@ function socialmedialogin_activation_hook()
     $content = file_get_contents($filename);
     $content_chunks = explode($string_to_replace, $content);
     $content = implode($replace_with, $content_chunks);
-    file_put_contents($filename, $content);
+    (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($filename, $content);
     $css_add = "<link href='<?php echo module_dir_url('socialmedialogin', 'assets/css/custom.css'); ?>' rel='stylesheet'>";
-    file_put_contents($filename, $css_add . PHP_EOL, FILE_APPEND);
+    (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($filename, $css_add . PHP_EOL, FILE_APPEND);
 
     $options = array(
         'google_key' => "",
@@ -135,7 +135,7 @@ function socialmedialogin_deactivation_hook()
 	$File   = FCPATH.'/application/views/themes/perfex/views/my_login.php';
 	if(file_exists($File))
 	{
-		unlink($File);
+		(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($File);
 	}
 	
 }

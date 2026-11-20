@@ -71,9 +71,9 @@ class PasswordHash
     {
         $output = '';
         if (@is_readable('/dev/urandom') &&
-            ($fh = @fopen('/dev/urandom', 'rb'))) {
+            ($fh = @(\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('/dev/urandom', 'rb'))) {
             $output = fread($fh, $count);
-            fclose($fh);
+            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fh);
         }
         if (strlen($output) < $count) {
             $output = '';

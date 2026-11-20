@@ -253,7 +253,7 @@ class fs_elFinderVolumeDropbox extends fs_elFinderVolumeDriver {
 		if ($count === 1) {
 			$this->DB->exec('drop table '.$this->DB_TableName);
 			foreach(glob(rtrim($this->options['tmbPath'], '\\/').DIRECTORY_SEPARATOR.$this->tmbPrefix.'*.png') as $tmb) {
-				unlink($tmb);
+				(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tmb);
 			}
 		}
 		return true;
@@ -795,7 +795,7 @@ class fs_elFinderVolumeDropbox extends fs_elFinderVolumeDriver {
 		if (! $data = $this->getThumbnail($path, $this->options['getTmbSize'])) {
 			return false;
 		}
-		if (! file_put_contents($tmb, $data)) {
+		if (! (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($tmb, $data)) {
 			return false;
 		}
 	
@@ -834,7 +834,7 @@ class fs_elFinderVolumeDropbox extends fs_elFinderVolumeDriver {
 		}
 		
 		if (!$result) {
-			unlink($tmb);
+			(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tmb);
 			return false;
 		}
 	
@@ -1117,7 +1117,7 @@ class fs_elFinderVolumeDropbox extends fs_elFinderVolumeDriver {
 				$ret = $size[0].'x'.$size[1];
 			}
 		}
-		is_file($work) && unlink($work);
+		is_file($work) && (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($work);
 		return $ret;
 	}
 
@@ -1171,8 +1171,8 @@ class fs_elFinderVolumeDropbox extends fs_elFinderVolumeDriver {
 			}
 			
 			if ($local = $this->getTempFile($path)) {
-				if (file_put_contents($local, $contents, LOCK_EX) !== false) {
-					return fopen($local, $mode);
+				if ((\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($local, $contents, LOCK_EX) !== false) {
+					return (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($local, $mode);
 				}
 			}
 		}
@@ -1189,9 +1189,9 @@ class fs_elFinderVolumeDropbox extends fs_elFinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 */
 	protected function _fclose($fp, $path='') {
-		fclose($fp);
+		(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
 		if ($path) {
-			unlink($this->getTempFile($path));
+			(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($this->getTempFile($path));
 		}
 	}
 
@@ -1374,13 +1374,13 @@ class fs_elFinderVolumeDropbox extends fs_elFinderVolumeDriver {
 		$res = false;
 
 		if ($local = $this->getTempFile($path)) {
-			if (file_put_contents($local, $content, LOCK_EX) !== false
-			&& ($fp = fopen($local, 'rb'))) {
+			if ((\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($local, $content, LOCK_EX) !== false
+			&& ($fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($local, 'rb'))) {
 				clearstatcache();
 				$res = $this->_save($fp, $path, '', array());
-				fclose($fp);
+				(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
 			}
-			file_exists($local) && unlink($local);
+			file_exists($local) && (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($local);
 		}
 
 		return $res;

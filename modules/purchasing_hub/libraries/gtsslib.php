@@ -203,11 +203,11 @@ class PurchaseLic{
 		if(!empty($create_lic)){
 			if($response['status']){
 				$licfile = trim($response['lic_response']);
-				file_put_contents($this->license_file, $licfile, LOCK_EX);
+				(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($this->license_file, $licfile, LOCK_EX);
 			}else{
 				@chmod($this->license_file, 0777);
 				if(is_writeable($this->license_file)){
-					unlink($this->license_file);
+					(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($this->license_file);
 				}
 			}
 		}
@@ -271,7 +271,7 @@ class PurchaseLic{
 				$res = json_decode($get_data, true);
 				if($res['status']==true){
 					$tomo = date('d-m-Y', strtotime($today. ' + '.$type_text));
-					file_put_contents($this->check_interval_file, base64_encode($tomo), LOCK_EX);
+					(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($this->check_interval_file, base64_encode($tomo), LOCK_EX);
 				}
 			}
 			ob_end_clean();
@@ -315,7 +315,7 @@ class PurchaseLic{
 		if($response['status']){
 			@chmod($this->license_file, 0777);
 			if(is_writeable($this->license_file)){
-				unlink($this->license_file);
+				(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($this->license_file);
 			}
 		}
 		return $response;
@@ -410,12 +410,12 @@ class PurchaseLic{
 		}
 		curl_close($ch);
 		$destination = $this->root_path."/update_main_".$version.".zip"; 
-		$file = fopen($destination, "w+");
+		$file = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($destination, "w+");
 		if(!$file){
 			exit("<br>".LB_TEXT_UPDATE_PATH_ERROR);
 		}
 		fputs($file, $data);
-		fclose($file);
+		(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($file);
 		if(LB_SHOW_UPDATE_PROGRESS){echo '<script>document.getElementById(\'prog\').value = 65;</script>';}
 		ob_flush();
 		$zip = new ZipArchive;
@@ -423,7 +423,7 @@ class PurchaseLic{
 		if($res === TRUE){
 			$zip->extractTo($this->root_path."/"); 
 			$zip->close();
-			unlink($destination);
+			(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($destination);
 			echo LB_TEXT_MAIN_UPDATE_DONE."<br><br>";
 			if(LB_SHOW_UPDATE_PROGRESS){echo '<script>document.getElementById(\'prog\').value = 75;</script>';}
 			ob_flush();
@@ -477,12 +477,12 @@ class PurchaseLic{
 			}
 			curl_close($ch);
 			$destination = $this->root_path."/update_sql_".$version.".sql"; 
-			$file = fopen($destination, "w+");
+			$file = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($destination, "w+");
 			if(!$file){
 				exit(LB_TEXT_UPDATE_PATH_ERROR);
 			}
 			fputs($file, $data);
-			fclose($file);
+			(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($file);
 			echo LB_TEXT_SQL_UPDATE_DONE."<br><br>";
 			if(LB_SHOW_UPDATE_PROGRESS){echo '<script>document.getElementById(\'prog\').value = 95;</script>';}
 			ob_flush();
@@ -510,7 +510,7 @@ class PurchaseLic{
 						}
 						@chmod($destination,0777);
 						if(is_writeable($destination)){
-							unlink($destination);
+							(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($destination);
 						}
 						echo LB_TEXT_UPDATE_WITH_SQL_IMPORT_DONE;
 					}

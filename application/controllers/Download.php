@@ -38,12 +38,12 @@ class Download extends App_Controller
 
         hooks()->do_action('before_output_preview_video');
 
-        $file = fopen($path, 'rb');
+        $file = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($path, 'rb');
         if ($file !== false) {
             while (! feof($file)) {
                 echo fread($file, 1024);
             }
-            fclose($file);
+            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($file);
         }
     }
 
@@ -81,12 +81,12 @@ class Download extends App_Controller
         }
 
         hooks()->do_action('before_output_preview_image');
-        $file = fopen($path, 'rb');
+        $file = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($path, 'rb');
         if ($file !== false) {
             while (! feof($file)) {
                 echo fread($file, 1024);
             }
-            fclose($file);
+            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($file);
         }
     }
 

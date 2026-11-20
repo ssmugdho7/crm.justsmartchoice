@@ -19,7 +19,7 @@ class Debug_mode_log_reader
         $cutoff = $cutoff ?? strtotime('-7 days');
         foreach ($sources as $source) {
             $file = $source['path'];
-            $handle = @fopen($file, 'rb');
+            $handle = @(\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($file, 'rb');
             if (!$handle) { continue; }
             try {
                 $size = fstat($handle)['size'];
@@ -29,7 +29,7 @@ class Debug_mode_log_reader
                 }
                 $tail = stream_get_contents($handle, $maxBytes);
             } finally {
-                fclose($handle);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($handle);
             }
             $records = [];
             foreach (preg_split('/\r?\n/', $tail ?: '') as $line) {

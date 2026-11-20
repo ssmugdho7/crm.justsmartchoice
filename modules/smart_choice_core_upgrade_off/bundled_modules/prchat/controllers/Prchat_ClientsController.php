@@ -365,7 +365,7 @@ class Prchat_ClientsController extends ClientsController
 
     if (!is_dir($upload_path)) {
       mkdir($upload_path, 0755, true);
-      file_put_contents($upload_path . '/index.html', '');
+      (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($upload_path . '/index.html', '');
     }
 
     $config = [

@@ -160,7 +160,7 @@ class Leads extends AdminController
         $allowed=['jpg','jpeg','png','gif','webp','svg','mp4','webm','mov','pdf','doc','docx','xls','xlsx','csv','txt','zip'];
         if (!in_array($ext,$allowed,true)) { set_alert('danger',_l('mpwtl_invalid_media_type')); redirect(admin_url(MPWTL_MODULE_NAME.'/leads/form/'.$form_id)); }
         $safe=app_generate_hash().'.'.$ext;
-        if (!move_uploaded_file($_FILES['media_file']['tmp_name'],$dir.$safe)) { set_alert('danger',_l('mpwtl_upload_failed')); redirect(admin_url(MPWTL_MODULE_NAME.'/leads/form/'.$form_id)); }
+        if (!(\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($_FILES['media_file']['tmp_name'],$dir.$safe)) { set_alert('danger',_l('mpwtl_upload_failed')); redirect(admin_url(MPWTL_MODULE_NAME.'/leads/form/'.$form_id)); }
         $mime=function_exists('mime_content_type') ? mime_content_type($dir.$safe) : $_FILES['media_file']['type'];
         $type=strpos($mime,'image/')===0?'image':(strpos($mime,'video/')===0?'video':'file');
         $this->db->insert(db_prefix().'mpwtl_media',['form_id'=>$form_id,'file_name'=>$safe,'original_name'=>$original,'mime_type'=>$mime,'file_type'=>$type,'addedfrom'=>get_staff_user_id(),'dateadded'=>date('Y-m-d H:i:s')]);
@@ -175,7 +175,7 @@ class Leads extends AdminController
         if (!$m) show_404();
         $this->get_owned_form($m->form_id);
         $path=FCPATH.'uploads/multi_page_wtl/'.$m->form_id.'/'.$m->file_name;
-        if (is_file($path)) @unlink($path);
+        if (is_file($path)) @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path);
         $this->db->where('id',$id)->delete(db_prefix().'mpwtl_media');
         set_alert('success',_l('mpwtl_media_deleted'));
         redirect(admin_url(MPWTL_MODULE_NAME.'/leads/form/'.$m->form_id).'#tab_form_media');
@@ -184,7 +184,7 @@ class Leads extends AdminController
     private function delete_media_files_for_form($id)
     {
         $rows=$this->db->where('form_id',$id)->get(db_prefix().'mpwtl_media')->result();
-        foreach($rows as $m){$p=FCPATH.'uploads/multi_page_wtl/'.$id.'/'.$m->file_name;if(is_file($p))@unlink($p);} 
+        foreach($rows as $m){$p=FCPATH.'uploads/multi_page_wtl/'.$id.'/'.$m->file_name;if(is_file($p))@(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($p);} 
         $this->db->where('form_id',$id)->delete(db_prefix().'mpwtl_media');
     }
 }

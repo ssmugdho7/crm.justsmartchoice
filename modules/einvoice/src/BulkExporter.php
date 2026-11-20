@@ -354,7 +354,7 @@ class BulkExporter
         }
 
         // Open file for writing
-        $fileHandle = fopen($filePath, 'wb');
+        $fileHandle = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($filePath, 'wb');
         if (!$fileHandle) {
             throw new RuntimeException('Unable to create output file: ' . $filePath);
         }
@@ -367,7 +367,7 @@ class BulkExporter
             }
         } finally {
             // Always close the file handle
-            fclose($fileHandle);
+            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fileHandle);
         }
     }
 

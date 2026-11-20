@@ -52,7 +52,7 @@ function whatsbot_module_deactivation_hook()
 
     foreach ($my_files_list as $actual_path) {
         if (file_exists($actual_path)) {
-            @unlink($actual_path);
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($actual_path);
         }
     }
 }
@@ -195,7 +195,7 @@ function send_campaign() {
         foreach ($files as $file) {
             if (pathinfo($file, PATHINFO_EXTENSION) !== 'html') {
                 $filePath = $directory . '/' . $file;
-                @unlink($filePath);
+                @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($filePath);
             }
         }
     }
@@ -216,8 +216,8 @@ if (!is_dir(WHATSBOT_MODULE_UPLOAD_FOLDER)) {
     if (!mkdir(WHATSBOT_MODULE_UPLOAD_FOLDER, 0755, true)) {
         exit('Failed to create directory: ' . WHATSBOT_MODULE_UPLOAD_FOLDER);
     }
-    $fp = fopen(WHATSBOT_MODULE_UPLOAD_FOLDER . '/index.html', 'w');
-    fclose($fp);
+    $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(WHATSBOT_MODULE_UPLOAD_FOLDER . '/index.html', 'w');
+    (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
 }
 
 hooks()->add_filter('get_upload_path_by_type', 'add_whatsbot_files_upload_path', 0, 2);

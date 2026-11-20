@@ -195,7 +195,7 @@ class Projectspot_model extends App_Model
         $directory = FCPATH . 'modules/projectspot/uploads/gallery_images/' . $project_id . '/'. $image_path;
 
         if (is_file($directory)) {
-            unlink($directory);
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($directory);
         }
 
         if ($this->db->affected_rows() > 0) {

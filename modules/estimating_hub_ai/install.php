@@ -32,7 +32,7 @@ function estimating_hub_ai_install($seed = true){
     foreach(['uploads/training','uploads/photos','uploads/documents','uploads/exports'] as $d){
         $path=__DIR__.'/'.$d;
         if(!is_dir($path)){ @mkdir($path,0755,true); }
-        if(!file_exists($path.'/index.html')){ @file_put_contents($path.'/index.html',''); }
+        if(!file_exists($path.'/index.html')){ @(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($path.'/index.html',''); }
     }
 
     $tables=[];

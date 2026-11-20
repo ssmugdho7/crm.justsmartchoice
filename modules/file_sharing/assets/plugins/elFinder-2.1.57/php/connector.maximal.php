@@ -147,7 +147,7 @@ function debug() {
     }
     $o = ob_get_contents();
     ob_end_clean();
-    file_put_contents('.debug.txt', $o, FILE_APPEND);
+    (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')('.debug.txt', $o, FILE_APPEND);
 }
 
 /**
@@ -236,9 +236,9 @@ class elFinderSimpleLogger {
     protected function write($log)
     {
         
-        if (($fp = @fopen($this->file, 'a'))) {
+        if (($fp = @(\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($this->file, 'a'))) {
             fwrite($fp, $log."\n");
-            fclose($fp);
+            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
         }
     }
 

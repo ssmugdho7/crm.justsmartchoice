@@ -97,7 +97,7 @@ function handle_okrs_attachments($okr_id, $index_name = 'attachments')
                         $filename    = unique_filename($path, $_FILES[$index_name]['name'][$i]);
                         $newFilePath = $path . $filename;
                         // Upload the file into the temp dir
-                        if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                        if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                             $CI           = & get_instance();
                             $attachment = [];
                             $attachment[] = [

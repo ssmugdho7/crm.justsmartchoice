@@ -112,17 +112,17 @@ class Backup_module
         if (!is_dir(BACKUPS_FOLDER)) {
             mkdir(BACKUPS_FOLDER, 0755);
 
-            $fp = fopen(rtrim(BACKUPS_FOLDER, '/') . '/index.html', 'w');
+            $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(rtrim(BACKUPS_FOLDER, '/') . '/index.html', 'w');
             if ($fp) {
-                fclose($fp);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
             }
 
             $htaccess = BACKUPS_FOLDER . '.htaccess';
-            $fp = fopen($htaccess, 'w');
+            $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($htaccess, 'w');
 
             if ($fp) {
                 fwrite($fp, 'Order Deny,Allow' . PHP_EOL . 'Deny from all');
-                fclose($fp);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
             }
         }
     }
@@ -177,7 +177,7 @@ class Backup_module
                 }
 
                 if ((time() - filectime(BACKUPS_FOLDER . $b)) > $backups_days_to_seconds) {
-                    @unlink(BACKUPS_FOLDER . $b);
+                    @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(BACKUPS_FOLDER . $b);
                 }
             }
         }

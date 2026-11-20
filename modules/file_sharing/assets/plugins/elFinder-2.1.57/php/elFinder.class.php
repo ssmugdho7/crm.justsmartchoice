@@ -1996,7 +1996,7 @@ class fs_elFinder
                 }
             }
 
-            $fp = fopen($path, 'rb');
+            $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($path, 'rb');
             $file = fstat($fp);
             $result = array(
                 'pointer' => $fp,
@@ -2047,7 +2047,7 @@ class fs_elFinder
             $GLOBALS['elFinderTempFiles'][$tmpf] = true;
             if ($file = json_decode(file_get_contents($tmpf), true)) {
                 $src = base64_decode($file['file']);
-                if (!is_file($src) || !($fp = fopen($src, 'rb'))) {
+                if (!is_file($src) || !($fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($src, 'rb'))) {
                     return $a404;
                 }
                 if (strpos($src, $tmpdir) === 0) {
@@ -2607,7 +2607,7 @@ class fs_elFinder
         }
 
         $file = !empty($args['id']) ? sprintf($flagFile, $args['id']) : self::$abortCheckFile;
-        $file && is_file($file) && unlink($file);
+        $file && is_file($file) && (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file);
     }
 
     /**
@@ -2840,7 +2840,7 @@ class fs_elFinder
                     if ($_url === $url) {
                         sleep(1);
                     }
-                    fclose($fp);
+                    (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
                     return $this->fsock_get_contents($url, $timeout, $redirect_max, $ua, $outfp);
                 }
                 break;
@@ -2848,21 +2848,21 @@ class fs_elFinder
                 $ret = true;
         }
         if (!$ret) {
-            fclose($fp);
+            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
             return false;
         }
 
         $body = '';
         if (!$outfp) {
-            $outfp = fopen('php://temp', 'rwb');
+            $outfp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('php://temp', 'rwb');
             $body = true;
         }
         while (fwrite($outfp, fread($fp, $readsize))) {
             if ($timeout) {
                 $_status = socket_get_status($fp);
                 if ($_status['timed_out']) {
-                    fclose($outfp);
-                    fclose($fp);
+                    (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($outfp);
+                    (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
                     return false; // Request Time-out
                 }
             }
@@ -2870,11 +2870,11 @@ class fs_elFinder
         if ($body) {
             rewind($outfp);
             $body = stream_get_contents($outfp);
-            fclose($outfp);
+            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($outfp);
             $outfp = null;
         }
 
-        fclose($fp);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
 
         return $outfp ? $outfp : $body; // Data
     }
@@ -2893,12 +2893,12 @@ class fs_elFinder
     {
         $data = $name = $mime = '';
         // Scheme 'data://' require `allow_url_fopen` and `allow_url_include`
-        if ($fp = fopen('data://' . substr($str, 5), 'rb')) {
+        if ($fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('data://' . substr($str, 5), 'rb')) {
             if ($data = stream_get_contents($fp)) {
                 $meta = stream_get_meta_data($fp);
                 $mime = $meta['mediatype'];
             }
-            fclose($fp);
+            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
         } else if (preg_match('~^data:(.+?/.+?)?(?:;charset=.+?)?;base64,~', substr($str, 0, 128), $m)) {
             $data = base64_decode(substr($str, strlen($m[0])));
             if ($m[1]) {
@@ -3029,7 +3029,7 @@ class fs_elFinder
                 $gc = time() - 3600;
                 foreach (glob($tempDir . DIRECTORY_SEPARATOR . 'ELF*') as $cf) {
                     if (filemtime($cf) < $gc) {
-                        unlink($cf);
+                        (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($cf);
                     }
                 }
                 break;
@@ -3115,7 +3115,7 @@ class fs_elFinder
                 ignore_user_abort(true);
                 // chunked file upload fail
                 foreach (glob($base . '*') as $cf) {
-                    unlink($cf);
+                    (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($cf);
                 }
                 ignore_user_abort(false);
                 return null;
@@ -3138,15 +3138,15 @@ class fs_elFinder
                     }
                     // make temp file
                     $ok = false;
-                    if ($fp = fopen($tmp, 'wb')) {
+                    if ($fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($tmp, 'wb')) {
                         flock($fp, LOCK_EX);
                         $ok = ftruncate($fp, $size);
                         flock($fp, LOCK_UN);
-                        fclose($fp);
+                        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
                         touch($base);
                     }
                     if (!$ok) {
-                        unlink($tmp);
+                        (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tmp);
                         return array(self::ERROR_UPLOAD_TEMP, false);
                     }
                 } else {
@@ -3166,20 +3166,20 @@ class fs_elFinder
                 }
 
                 // write chunk data
-                $src = fopen($tmpname, 'rb');
-                $fp = fopen($tmp, 'cb');
+                $src = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($tmpname, 'rb');
+                $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($tmp, 'cb');
                 fseek($fp, $start);
                 $writelen = stream_copy_to_stream($src, $fp, $len);
-                fclose($fp);
-                fclose($src);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($src);
 
                 try {
                     // to check connection is aborted
                     fs_elFinder::checkAborted();
                 } catch (elFinderAbortException $e) {
-                    unlink($tmpname);
-                    is_file($tmp) && unlink($tmp);
-                    is_file($base) && unlink($base);
+                    (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tmpname);
+                    is_file($tmp) && (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tmp);
+                    is_file($base) && (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($base);
                     throw $e;
                 }
 
@@ -3188,17 +3188,17 @@ class fs_elFinder
                 }
 
                 // write counts
-                file_put_contents($base, "\0", FILE_APPEND | LOCK_EX);
+                (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($base, "\0", FILE_APPEND | LOCK_EX);
 
                 if (filesize($base) >= $clast + 1) {
                     // Completion
-                    unlink($base);
+                    (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($base);
                     return array($tmp, $fname);
                 }
             } else {
                 // old way
                 $part = $base . $m[2];
-                if (move_uploaded_file($tmpname, $part)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpname, $part)) {
                     chmod($part, 0600);
                     if ($clast < count(glob($base . '*'))) {
                         $parts = array();
@@ -3215,20 +3215,20 @@ class fs_elFinder
                             if (!is_file($base)) {
                                 touch($base);
                                 if ($resfile = tempnam($tempDir, 'ELF')) {
-                                    $target = fopen($resfile, 'wb');
+                                    $target = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($resfile, 'wb');
                                     foreach ($parts as $f) {
-                                        $fp = fopen($f, 'rb');
+                                        $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($f, 'rb');
                                         while (!feof($fp)) {
                                             fwrite($target, fread($fp, 8192));
                                         }
-                                        fclose($fp);
-                                        unlink($f);
+                                        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
+                                        (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($f);
                                     }
-                                    fclose($target);
-                                    unlink($base);
+                                    (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($target);
+                                    (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($base);
                                     return array($resfile, $fname);
                                 }
-                                unlink($base);
+                                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($base);
                             }
                         }
                     }
@@ -3321,13 +3321,13 @@ class fs_elFinder
                     if (substr($url, 0, 5) === 'data:') {
                         list($data, $args['name'][$i]) = $this->parse_data_scheme($url, $extTable, $args);
                     } else {
-                        $fp = fopen($tmpfname, 'wb');
+                        $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($tmpfname, 'wb');
                         if ($data = $this->get_remote_contents($url, 30, 5, 'Mozilla/5.0', $fp)) {
                             // to check connection is aborted
                             try {
                                 fs_elFinder::checkAborted();
                             } catch(elFinderAbortException $e) {
-                                fclose($fp);
+                                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
                                 throw $e;
                             }
                             $_name = preg_replace('~^.*?([^/#?]+)(?:\?.*)?(?:#.*)?$~', '$1', rawurldecode($url));
@@ -3343,7 +3343,7 @@ class fs_elFinder
                                 }
                             }
                         } else {
-                            fclose($fp);
+                            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
                         }
                     }
                     if ($data) {
@@ -3355,13 +3355,13 @@ class fs_elFinder
                             if (preg_match('/(\.[a-z0-9]{1,7})$/', $_name, $_match)) {
                                 $_ext = $_match[1];
                             }
-                            if ((is_resource($data) && fclose($data)) || file_put_contents($tmpfname, $data)) {
+                            if ((is_resource($data) && (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($data)) || (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($tmpfname, $data)) {
                                 $GLOBALS['elFinderTempFiles'][$tmpfname] = true;
                                 $_name = preg_replace($ngReg, '_', $_name);
                                 list($_a, $_b) = array_pad(explode('.', $_name, 2), 2, '');
                                 if ($_b === '') {
                                     if ($_ext) {
-                                        rename($tmpfname, $tmpfname . $_ext);
+                                        (\function_exists('sc_recovery_rename') ? '\sc_recovery_rename' : '\rename')($tmpfname, $tmpfname . $_ext);
                                         $tmpfname = $tmpfname . $_ext;
                                     }
                                     $_b = $this->detectFileExtension($volume, $tmpfname, $_name);
@@ -3380,7 +3380,7 @@ class fs_elFinder
                                 // set to auto rename
                                 $volume->setUploadOverwrite(false);
                             } else {
-                                unlink($tmpfname);
+                                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tmpfname);
                             }
                         }
                     }
@@ -3445,7 +3445,7 @@ class fs_elFinder
             try {
                 $this->trigger('upload.presave', array(&$thash, &$name, $tmpname, $this, $volume), $errors);
             } catch (elFinderTriggerException $e) {
-                if (!is_uploaded_file($tmpname) && unlink($tmpname) && $tmpfname) {
+                if (!is_uploaded_file($tmpname) && (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tmpname) && $tmpfname) {
                     unset($GLOBALS['elFinderTempFiles'][$tmpfname]);
                 }
                 continue;
@@ -3458,11 +3458,11 @@ class fs_elFinder
             }
 
             $fp = null;
-            if (!is_file($tmpname) || ($fp = fopen($tmpname, 'rb')) === false) {
+            if (!is_file($tmpname) || ($fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($tmpname, 'rb')) === false) {
                 $errors = array_merge($errors, array(self::ERROR_UPLOAD_FILE, $name, ($fp === false? self::ERROR_UPLOAD_TEMP : self::ERROR_UPLOAD_TRANSFER)));
                 $this->uploadDebug = 'Upload error: unable open tmp file';
                 if (!is_uploaded_file($tmpname)) {
-                    if (unlink($tmpname) && $tmpfname) unset($GLOBALS['elFinderTempFiles'][$tmpfname]);
+                    if ((\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tmpname) && $tmpfname) unset($GLOBALS['elFinderTempFiles'][$tmpfname]);
                     continue;
                 }
                 break;
@@ -3514,17 +3514,17 @@ class fs_elFinder
             }
             if (!$_target || ($file = $volume->upload($fp, $_target, $name, $tmpname, ($_target === $target) ? $hashes : array())) === false) {
                 $errors = array_merge($errors, $this->error(self::ERROR_UPLOAD_FILE, $name, $volume->error()));
-                fclose($fp);
-                if (!is_uploaded_file($tmpname) && unlink($tmpname)) {
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
+                if (!is_uploaded_file($tmpname) && (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tmpname)) {
                     unset($GLOBALS['elFinderTempFiles'][$tmpname]);
                 }
                 continue;
             }
 
-            is_resource($fp) && fclose($fp);
+            is_resource($fp) && (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
             if (!is_uploaded_file($tmpname)) {
                 clearstatcache();
-                if (!is_file($tmpname) || unlink($tmpname)) {
+                if (!is_file($tmpname) || (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tmpname)) {
                     unset($GLOBALS['elFinderTempFiles'][$tmpname]);
                 }
             }
@@ -3540,7 +3540,7 @@ class fs_elFinder
 
         if ($GLOBALS['elFinderTempFiles']) {
             foreach (array_keys($GLOBALS['elFinderTempFiles']) as $_temp) {
-                is_file($_temp) && is_writable($_temp) && unlink($_temp);
+                is_file($_temp) && is_writable($_temp) && (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($_temp);
             }
         }
         $result['removed'] = $volume->removed();
@@ -4417,7 +4417,7 @@ var go = function() {
         $lock = fs_elFinder::$commonTempPath . DIRECTORY_SEPARATOR . $hash . '.lock';
         if (file_exists($lock)) {
             if (filemtime($lock) + $this->itemLockExpire < time()) {
-                unlink($lock);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($lock);
                 return false;
             }
             return true;
@@ -4449,7 +4449,7 @@ var go = function() {
             } else {
                 $cnt = 1;
             }
-            if (file_put_contents($lock, $cnt, LOCK_EX)) {
+            if ((\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($lock, $cnt, LOCK_EX)) {
                 if ($autoUnlock) {
                     $this->autoUnlocks[] = $hash;
                 }
@@ -4472,10 +4472,10 @@ var go = function() {
         $lock = fs_elFinder::$commonTempPath . DIRECTORY_SEPARATOR . $hash . '.lock';
         $cnt = file_get_contents($lock);
         if (--$cnt < 1) {
-            unlink($lock);
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($lock);
             return true;
         } else {
-            file_put_contents($lock, $cnt, LOCK_EX);
+            (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($lock, $cnt, LOCK_EX);
             return false;
         }
     }
@@ -4612,7 +4612,7 @@ var go = function() {
         }
 
         $imgcnt = 0;
-        $fp = fopen($path, 'rb');
+        $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($path, 'rb');
         fread($fp, 4);
         $c = fread($fp, 1);
         if (ord($c) != 0x39) {  // GIF89a
@@ -4665,9 +4665,9 @@ var go = function() {
                 return false;
         }
 
-        $fp = fopen($path, 'rb');
+        $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($path, 'rb');
         $img_bytes = fread($fp, 1024);
-        fclose($fp);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
         if ($img_bytes) {
             if (strpos(substr($img_bytes, 0, strpos($img_bytes, 'IDAT')), 'acTL') !== false) {
                 return true;
@@ -5031,7 +5031,7 @@ var go = function() {
             }
             if ($data['url']) {
                 ++$data['cnt'];
-                fclose($stream);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($stream);
 
                 return self::getStreamByUrl($data, $redirectLimit);
             }
@@ -5227,7 +5227,7 @@ var go = function() {
             stream_set_blocking($pipes[1], 0);
             stream_set_blocking($pipes[2], 0);
 
-            fclose($pipes[0]);
+            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($pipes[0]);
 
             $tmpout = '';
             $tmperr = '';
@@ -5254,8 +5254,8 @@ var go = function() {
                 }
             }
 
-            fclose($pipes[1]);
-            fclose($pipes[2]);
+            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($pipes[1]);
+            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($pipes[2]);
 
             $output = $tmpout;
             $error_output = $tmperr;
@@ -5306,7 +5306,7 @@ var go = function() {
      */
     public static function rmFileInDisconnected($file)
     {
-        (connection_aborted() || connection_status() !== CONNECTION_NORMAL) && is_file($file) && unlink($file);
+        (connection_aborted() || connection_status() !== CONNECTION_NORMAL) && is_file($file) && (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file);
     }
 
     /**
@@ -5318,12 +5318,12 @@ var go = function() {
         self::$abortCheckFile = null;
         if (!empty($GLOBALS['elFinderTempFps'])) {
             foreach (array_keys($GLOBALS['elFinderTempFps']) as $fp) {
-                is_resource($fp) && fclose($fp);
+                is_resource($fp) && (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
             }
         }
         if (!empty($GLOBALS['elFinderTempFiles'])) {
             foreach (array_keys($GLOBALS['elFinderTempFiles']) as $f) {
-                is_file($f) && is_writable($f) && unlink($f);
+                is_file($f) && is_writable($f) && (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($f);
             }
         }
     }
@@ -5338,7 +5338,7 @@ var go = function() {
     {
         $now = time();
         foreach (glob($pattern) as $file) {
-            (filemtime($file) < ($now - $time)) && unlink($file);
+            (filemtime($file) < ($now - $time)) && (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file);
         }
     }
 

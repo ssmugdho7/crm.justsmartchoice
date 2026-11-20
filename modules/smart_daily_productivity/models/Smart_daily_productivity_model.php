@@ -354,7 +354,7 @@ class Smart_daily_productivity_model extends App_Model
                 if (basename($file) === 'index.html') {
                     continue;
                 }
-                @unlink($file);
+                @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file);
             }
         }
         $this->write_log('cache_cleanup', 'Safe cache cleanup completed without deleting index.html.', (int) get_staff_user_id());

@@ -101,7 +101,7 @@ function rel_handle_company_attachments_pdf($id, $index_name = 'attachments')
 			$newFilePath = $path . $filename;
 
 						// Upload the file into the temp dir
-			if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+			if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
 				$CI           = & get_instance();
 				$attachment   = [];
@@ -3359,7 +3359,7 @@ function real_handle_property_listing_attachments($id)
 
 			$newFilePath = $path . $new_filename;
             // Upload the file into the temp dir
-			if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+			if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
 				$CI                       = & get_instance();
 				$config                   = [];
@@ -3426,7 +3426,7 @@ function real_handle_property_listing_attachments1($id)
 			$filename    = $_FILES['file']['name'];
 			$newFilePath = $path . $filename;
             // Upload the file into the temp dir
-			if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+			if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
 				$CI           = & get_instance();
 				$attachment   = [];
@@ -3664,7 +3664,7 @@ function real_handle_property_listing_attachments2($id)
 
 			$newFilePath = $path . $new_filename;
             // Upload the file into the temp dir
-			if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+			if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
 				$CI                       = & get_instance();
 				$config                   = [];
@@ -3727,7 +3727,7 @@ function real_handle_property_listing_attachments3($id)
 
 			$newFilePath = $path . $new_filename;
             // Upload the file into the temp dir
-			if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+			if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
 				$attachment   = [];
 				$attachment[] = [
@@ -5985,7 +5985,7 @@ function handle_company_profile_image_upload($company_id = '')
 			$filename    = unique_filename($path, $_FILES['agent_profile_image']['name']);
 			$newFilePath = $path . '/' . $filename;
 			// Upload the file into the company uploads dir
-			if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+			if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 				$CI                       = & get_instance();
 				$CI->db->where('id', $company_id);
 				$CI->db->update(db_prefix() . 'real_companies', [
@@ -6092,7 +6092,7 @@ function handle_owner_profile_image_upload($owner_id = '')
 			$filename    = unique_filename($path, $_FILES['profile_image']['name']);
 			$newFilePath = $path . '/' . $filename;
 			// Upload the file into the owner uploads dir
-			if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+			if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 				$CI                       = & get_instance();
 				$CI->db->where('id', $owner_id);
 				$CI->db->update(db_prefix() . 'real_property_owners', [
@@ -6181,7 +6181,7 @@ function handle_supporting_document_file($id){
 			$filename    = unique_filename($path, $_FILES['introduce_yourself_file']['name']);
 			$newFilePath = $path . $filename;
             // Upload the file into the company uploads dir
-			if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+			if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 				$attachment   = [];
 				$attachment[] = [
 					'file_name' => $filename,
@@ -6215,7 +6215,7 @@ function handle_proof_income_file($id){
 			$filename    = unique_filename($path, $_FILES['income_source_file']['name']);
 			$newFilePath = $path . $filename;
             // Upload the file into the company uploads dir
-			if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+			if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 				$attachment   = [];
 				$attachment[] = [
 					'file_name' => $filename,
@@ -6249,7 +6249,7 @@ function handle_identity_document_file($id){
 			$filename    = unique_filename($path, $_FILES['identity_document_file']['name']);
 			$newFilePath = $path . $filename;
             // Upload the file into the company uploads dir
-			if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+			if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 				$attachment   = [];
 				$attachment[] = [
 					'file_name' => $filename,

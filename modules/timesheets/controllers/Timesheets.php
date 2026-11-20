@@ -4237,7 +4237,7 @@ public function check_in_ts() {
 				$rows = [];
 // Setup our new file path
 				$newFilePath = TIMESHEETS_PATH .'timesheets/' . $_FILES['file_timesheets']['name'];
-				if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+				if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 					$xlsx = new XLSXReader_fin($newFilePath);
 					$sheetNames = $xlsx->getSheetNames();
 					$data = $xlsx->getSheetData($sheetNames[1]);
@@ -5745,7 +5745,7 @@ public function check_in_ts() {
 			foreach ($files as $file) {
 				if (is_file($file)) {
 					// delete file
-					unlink($file);
+					(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file);
 				}
 			}
 			$filename = 'attendance_' . $month_filter . '.xlsx';

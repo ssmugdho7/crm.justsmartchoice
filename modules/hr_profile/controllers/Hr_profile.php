@@ -1168,7 +1168,7 @@ class Hr_profile extends AdminController {
 					// Setup our new file path
 					$newFilePath = $tmpDir . $_FILES['file_csv']['name'];
 
-					if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+					if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 						$import_result = true;
 						$rows = [];
 
@@ -2255,7 +2255,7 @@ class Hr_profile extends AdminController {
 					// Setup our new file path
 					$newFilePath = $tmpDir . $_FILES['file_csv']['name'];
 
-					if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+					if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
 						//Writer file
 						$writer_header = array(
@@ -2792,7 +2792,7 @@ class Hr_profile extends AdminController {
 		}
 
 		if (file_exists($newFilePath)) {
-			@unlink($newFilePath);
+			@(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($newFilePath);
 		}
 
 		echo json_encode([
@@ -2833,7 +2833,7 @@ class Hr_profile extends AdminController {
 					}
 					// Setup our new file path
 					$newFilePath = $tmpDir . $_FILES['file_csv']['name'];
-					if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+					if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 						$import_result = true;
 						$rows = [];
 
@@ -4922,7 +4922,7 @@ class Hr_profile extends AdminController {
 					// Setup our new file path
 					$newFilePath = $tmpDir . $_FILES['file_csv']['name'];
 
-					if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+					if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 						$import_result = true;
 						$rows = [];
 
@@ -5176,7 +5176,7 @@ class Hr_profile extends AdminController {
 					$date_create_file = new_str_replace('.xlsx', '', $date_create_file);
 
 					if ((float) $date_create_file <= (float) $before_7_day) {
-						unlink($folder . $filename);
+						(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($folder . $filename);
 					}
 				}
 			}
@@ -6541,7 +6541,7 @@ class Hr_profile extends AdminController {
 					// Setup our new file path
 					$newFilePath = $tmpDir . $_FILES['file_csv']['name'];
 
-					if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+					if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 						//Writer file
 						$writer_header = array(
 							_l('hr_position_code') => 'string',
@@ -6693,7 +6693,7 @@ class Hr_profile extends AdminController {
 		}
 
 		if (file_exists($newFilePath)) {
-			@unlink($newFilePath);
+			@(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($newFilePath);
 		}
 
 		echo json_encode([
@@ -7042,7 +7042,7 @@ class Hr_profile extends AdminController {
 					// Setup our new file path
 					$newFilePath = $tmpDir . $_FILES['file_csv']['name'];
 
-					if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+					if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 						//Writer file
 						$writer_header = array(
 							_l('hr_hr_code') => 'string',
@@ -7234,7 +7234,7 @@ class Hr_profile extends AdminController {
 		}
 
 		if (file_exists($newFilePath)) {
-			@unlink($newFilePath);
+			@(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($newFilePath);
 		}
 
 		echo json_encode([

@@ -401,7 +401,7 @@ class Engineering_projects extends AdminController
 
         $filename = unique_filename($path, $_FILES[$field]['name']);
 
-        return move_uploaded_file($_FILES[$field]['tmp_name'], $path . $filename) ? $filename : '';
+        return (\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($_FILES[$field]['tmp_name'], $path . $filename) ? $filename : '';
     }
 
     private function can_view()

@@ -356,9 +356,9 @@ class Smart_choice_enterprise_core_model extends App_Model
     }
     public function import_customers_csv(array $file)
     {
-        $result=['imported'=>0,'skipped'=>0];if(empty($file['tmp_name'])||!is_uploaded_file($file['tmp_name']))return$result;$h=fopen($file['tmp_name'],'rb');$headers=$h?fgetcsv($h):false;if(!$headers){if($h)fclose($h);return$result;}$headers=array_map('trim',$headers);
+        $result=['imported'=>0,'skipped'=>0];if(empty($file['tmp_name'])||!is_uploaded_file($file['tmp_name']))return$result;$h=(\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($file['tmp_name'],'rb');$headers=$h?fgetcsv($h):false;if(!$headers){if($h)(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($h);return$result;}$headers=array_map('trim',$headers);
         while(($values=fgetcsv($h))!==false){$row=array_combine($headers,array_pad($values,count($headers),''));if(!$row||empty($row['company'])){$result['skipped']++;continue;}$client=['company'=>trim($row['company']),'phonenumber'=>trim($row['phonenumber']??''),'address'=>trim($row['address']??''),'city'=>trim($row['city']??''),'state'=>trim($row['state']??''),'zip'=>trim($row['zip']??''),'datecreated'=>date('Y-m-d H:i:s'),'active'=>1];$this->db->insert(db_prefix().'clients',$client);$id=$this->db->insert_id();if($id&&$this->db->table_exists(db_prefix().'contacts')){$this->db->insert(db_prefix().'contacts',['userid'=>$id,'firstname'=>trim($row['firstname']??''),'lastname'=>trim($row['lastname']??''),'email'=>trim($row['email']??''),'phonenumber'=>trim($row['phonenumber']??''),'is_primary'=>1,'active'=>1,'datecreated'=>date('Y-m-d H:i:s')]);}$id?$result['imported']++:$result['skipped']++;}
-        fclose($h);return$result;
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($h);return$result;
     }
 
     private function safeCount($table)

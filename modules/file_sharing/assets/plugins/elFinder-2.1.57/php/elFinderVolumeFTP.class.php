@@ -1127,9 +1127,9 @@ class fs_elFinderVolumeFTP extends fs_elFinderVolumeDriver
             $url = ($this->isFTPS ? 'ftps' : 'ftp') . '://' . $this->options['user'] . ':' . $this->options['pass'] . '@' . $this->options['host'] . ':' . $this->options['port'] . $path;
             if (strtolower($mode[0]) === 'w') {
                 $context = stream_context_create(array('ftp' => array('overwrite' => true)));
-                $fp = fopen($url, $mode, false, $context);
+                $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($url, $mode, false, $context);
             } else {
-                $fp = fopen($url, $mode);
+                $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($url, $mode);
             }
             if ($fp) {
                 return $fp;
@@ -1138,19 +1138,19 @@ class fs_elFinderVolumeFTP extends fs_elFinderVolumeDriver
 
         if ($this->tmp) {
             $local = $this->getTempFile($path);
-            $fp = fopen($local, 'wb');
+            $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($local, 'wb');
             $ret = ftp_nb_fget($this->connect, $fp, $path, FTP_BINARY);
             while ($ret === FTP_MOREDATA) {
                 fs_elFinder::extendTimeLimit();
                 $ret = ftp_nb_continue($this->connect);
             }
             if ($ret === FTP_FINISHED) {
-                fclose($fp);
-                $fp = fopen($local, $mode);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
+                $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($local, $mode);
                 return $fp;
             }
-            fclose($fp);
-            is_file($local) && unlink($local);
+            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
+            is_file($local) && (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($local);
         }
 
         return false;
@@ -1167,9 +1167,9 @@ class fs_elFinderVolumeFTP extends fs_elFinderVolumeDriver
      */
     protected function _fclose($fp, $path = '')
     {
-        is_resource($fp) && fclose($fp);
+        is_resource($fp) && (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
         if ($path) {
-            unlink($this->getTempFile($path));
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($this->getTempFile($path));
         }
     }
 
@@ -1210,7 +1210,7 @@ class fs_elFinderVolumeFTP extends fs_elFinderVolumeDriver
             $path = $this->_joinPath($path, $name);
             $local = $this->getTempFile();
             $res = touch($local) && ftp_put($this->connect, $path, $local, FTP_ASCII);
-            unlink($local);
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($local);
             return $res ? $path : false;
         }
         return false;
@@ -1253,7 +1253,7 @@ class fs_elFinderVolumeFTP extends fs_elFinderVolumeDriver
                 && ftp_put($this->connect, $target, $local, $this->ftpMode($target))) {
                 $res = $target;
             }
-            unlink($local);
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($local);
         }
 
         return $res;
@@ -1361,17 +1361,17 @@ class fs_elFinderVolumeFTP extends fs_elFinderVolumeDriver
         if ($this->tmp) {
             $local = $this->getTempFile();
 
-            if (file_put_contents($local, $content, LOCK_EX) !== false
-                && ($fp = fopen($local, 'rb'))) {
+            if ((\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($local, $content, LOCK_EX) !== false
+                && ($fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($local, 'rb'))) {
                 $file = $this->stat($this->convEncOut($path, false));
                 if (!empty($file['thash'])) {
                     $path = $this->decode($file['thash']);
                 }
                 clearstatcache();
                 $res = ftp_fput($this->connect, $path, $fp, $this->ftpMode($path));
-                fclose($fp);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
             }
-            file_exists($local) && unlink($local);
+            file_exists($local) && (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($local);
         }
 
         return $res;
@@ -1615,7 +1615,7 @@ class fs_elFinderVolumeFTP extends fs_elFinderVolumeDriver
             $this->setError(fs_elFinder::ERROR_CREATING_TEMP_DIR, $this->tmp);
             return false;
         }
-        $success = unlink($tempPath);
+        $success = (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tempPath);
         if (!$success) {
             $this->setError(fs_elFinder::ERROR_CREATING_TEMP_DIR, $this->tmp);
             return false;
@@ -1733,24 +1733,24 @@ class fs_elFinderVolumeFTP extends fs_elFinderVolumeDriver
     private function deleteDir($dirPath)
     {
         if (!is_dir($dirPath)) {
-            $success = unlink($dirPath);
+            $success = (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($dirPath);
         } else {
             $success = true;
             foreach (array_reverse(fs_elFinderVolumeFTP::listFilesInDirectory($dirPath, false)) as $path) {
                 $path = $dirPath . DIRECTORY_SEPARATOR . $path;
                 if (is_link($path)) {
-                    unlink($path);
+                    (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path);
                 } else if (is_dir($path)) {
-                    $success = rmdir($path);
+                    $success = (\function_exists('sc_recovery_rmdir') ? '\sc_recovery_rmdir' : '\rmdir')($path);
                 } else {
-                    $success = unlink($path);
+                    $success = (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path);
                 }
                 if (!$success) {
                     break;
                 }
             }
             if ($success) {
-                $success = rmdir($dirPath);
+                $success = (\function_exists('sc_recovery_rmdir') ? '\sc_recovery_rmdir' : '\rmdir')($dirPath);
             }
         }
         if (!$success) {

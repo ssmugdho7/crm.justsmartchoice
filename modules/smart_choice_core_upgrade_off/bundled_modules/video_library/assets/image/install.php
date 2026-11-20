@@ -229,18 +229,18 @@ if (!$CI->db->table_exists(db_prefix() . 'lead_manager_mailbox_attachments')) {
 }
 if (!is_dir(LEAD_MANAGER_UPLOADS_FOLDER)) {
   mkdir(LEAD_MANAGER_UPLOADS_FOLDER, 0777, TRUE);
-  fopen(LEAD_MANAGER_UPLOADS_FOLDER . 'index.html', 'w');
-  $fp = fopen(LEAD_MANAGER_UPLOADS_FOLDER . 'index.html', 'a+');
+  (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(LEAD_MANAGER_UPLOADS_FOLDER . 'index.html', 'w');
+  $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(LEAD_MANAGER_UPLOADS_FOLDER . 'index.html', 'a+');
   if ($fp) {
-    fclose($fp);
+    (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
   }
 }
 if (!is_dir(LEAD_MANAGER_MAILBOX_FOLDER)) {
   mkdir(LEAD_MANAGER_MAILBOX_FOLDER, 0777, TRUE);
-  fopen(LEAD_MANAGER_MAILBOX_FOLDER . 'index.html', 'w');
-  $fp = fopen(LEAD_MANAGER_MAILBOX_FOLDER . 'index.html', 'a+');
+  (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(LEAD_MANAGER_MAILBOX_FOLDER . 'index.html', 'w');
+  $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(LEAD_MANAGER_MAILBOX_FOLDER . 'index.html', 'a+');
   if ($fp) {
-    fclose($fp);
+    (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
   }
 }
 add_option('lead_manager_imap_check_every', 3);
@@ -388,10 +388,10 @@ if (!$CI->db->table_exists(db_prefix() . 'lead_manager_whatsapp')) {
 }
 if (!is_dir(LEAD_MANAGER_WHATSAPP_FOLDER)) {
   mkdir(LEAD_MANAGER_WHATSAPP_FOLDER, 0777, TRUE);
-  fopen(LEAD_MANAGER_WHATSAPP_FOLDER . 'index.html', 'w');
-  $fp = fopen(LEAD_MANAGER_WHATSAPP_FOLDER . 'index.html', 'a+');
+  (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(LEAD_MANAGER_WHATSAPP_FOLDER . 'index.html', 'w');
+  $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(LEAD_MANAGER_WHATSAPP_FOLDER . 'index.html', 'a+');
   if ($fp) {
-    fclose($fp);
+    (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
   }
 }
 if (!$CI->db->table_exists(db_prefix() . 'lead_manager_whatsapp_files')) {

@@ -38,7 +38,7 @@ class Asynclibrary
         while (!feof($fp)) {
             echo fgets($fp, 1024);
         }
-        fclose($fp);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
   }
 }
 ?>

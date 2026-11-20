@@ -378,7 +378,7 @@ class Whiteboard_model extends App_Model
         $path = WHITEBOARD_DISCUSSION_ATTACHMENT_FOLDER . $whiteboard_id;
         if (!is_null($file_name)) {
             if (file_exists($path . '/' . $file_name)) {
-                unlink($path . '/' . $file_name);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path . '/' . $file_name);
             }
         }
         if (is_dir($path)) {

@@ -304,7 +304,7 @@ function handle_project_template_file_uploads($project_id)
 
                 $newFilePath = $path . $filename;
                 // Upload the file into the company uploads dir
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                     $CI = & get_instance();
                     $data = [
                         'project_template_id' => $project_id,
@@ -325,7 +325,7 @@ function handle_project_template_file_uploads($project_id)
                         }
                         array_push($filesIDS, $insert_id);
                     } else {
-                        unlink($newFilePath);
+                        (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($newFilePath);
 
                         return false;
                     }
@@ -385,7 +385,7 @@ function copy_project_template_file_uploads($original_project_id, $new_project_i
         $fullOriginalPath = $original_path . $file['file_name'];
         $fullNewPath = $new_path . $file['file_name'];
         if (file_exists($fullOriginalPath)) {
-            if(copy($fullOriginalPath, $fullNewPath)){
+            if((\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($fullOriginalPath, $fullNewPath)){
                 $CI->db->insert(PROJECT_TEMPLATES_FILES_TABLE_NAME, [
                     'project_template_id' => $new_project_id,
                     'file_name' => $file['file_name'],

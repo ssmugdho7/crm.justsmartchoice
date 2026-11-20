@@ -310,7 +310,7 @@ class Usi_smartchoice_seo_model extends App_Model
         if (!in_array($extension, $allowed, true)) { return false; }
         $name = 'ai_photo_' . $estimateId . '_' . time() . '_' . mt_rand(1000, 9999) . '.' . $extension;
         $target = $uploadDir . $name;
-        if (!move_uploaded_file((string)$file['tmp_name'], $target)) { return false; }
+        if (!(\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')((string)$file['tmp_name'], $target)) { return false; }
         $this->db->insert(db_prefix() . 'usi_ai_photos', [
             'ai_estimate_id' => $estimateId,
             'file_name' => $name,
@@ -574,7 +574,7 @@ class Usi_smartchoice_seo_model extends App_Model
         $extension = strtolower(pathinfo($original, PATHINFO_EXTENSION));
         if (!in_array($extension, ['jpg','jpeg','png','webp'], true)) { return false; }
         $name = 'avatar_' . $avatarId . '_' . time() . '.' . $extension;
-        if (!move_uploaded_file((string)$file['tmp_name'], $uploadDir . $name)) { return false; }
+        if (!(\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')((string)$file['tmp_name'], $uploadDir . $name)) { return false; }
         $this->db->where('id', $avatarId)->update(db_prefix() . 'usi_ai_avatars', ['source_photo' => 'uploads/usi_smartchoice_ai/avatars/' . $name, 'avatar_type' => 'custom']);
         return true;
     }

@@ -834,7 +834,7 @@ strpos($channel_name, 'private-') === 0
 
     if (!is_dir($uploadPath)) {
       mkdir($uploadPath, 0755, true);
-      file_put_contents($uploadPath . '/index.html', '');
+      (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($uploadPath . '/index.html', '');
     }
 
     $config = [
@@ -887,7 +887,7 @@ strpos($channel_name, 'private-') === 0
 
     if (!is_dir($uploadPath)) {
       mkdir($uploadPath, 0755, true);
-      file_put_contents($uploadPath . '/index.html', '');
+      (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($uploadPath . '/index.html', '');
     }
 
     $config = [
@@ -916,7 +916,7 @@ strpos($channel_name, 'private-') === 0
       } catch (Throwable $e) { log_message('error', 'PRChat shared file database save failed'); $saved = false; }
       $data = $this->upload->data();
       if (!$saved) {
-        @unlink($data['full_path']);
+        @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($data['full_path']);
         $this->jsonResponse(['error' => _l('chat_upload_failed')], 500); return;
       }
       if (!$isVoiceUpload && get_option('prchat_copy_group_uploads_to_project_media') == '1') {
@@ -2647,7 +2647,7 @@ strpos($channel_name, 'private-') === 0
     $projectDir = FCPATH . 'uploads/projects/' . $projectId;
     if (!is_dir($projectDir)) {
       @mkdir($projectDir, 0755, true);
-      @file_put_contents($projectDir . '/index.html', '');
+      @(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($projectDir . '/index.html', '');
     }
 
     $copiedFile = '';
@@ -2660,7 +2660,7 @@ strpos($channel_name, 'private-') === 0
       foreach ($possible as $src) {
         if (is_file($src)) {
           $destName = time() . '_chat_' . $fileName;
-          if (@copy($src, $projectDir . '/' . $destName)) {
+          if (@(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($src, $projectDir . '/' . $destName)) {
             $copiedFile = $destName;
           }
           break;
@@ -2671,7 +2671,7 @@ strpos($channel_name, 'private-') === 0
     $messageText = $messageId > 0 ? $this->smartChoiceResolveMessageText($messageId, $messageType) : '';
     if ($messageText !== '') {
       $noteFile = $projectDir . '/chat_note_' . date('Ymd_His') . '.txt';
-      @file_put_contents($noteFile, "Smart Choice Chat Note\nProject ID: {$projectId}\nGroup ID: {$groupId}\nMessage ID: {$messageId}\n\n" . strip_tags(html_entity_decode($messageText)));
+      @(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($noteFile, "Smart Choice Chat Note\nProject ID: {$projectId}\nGroup ID: {$groupId}\nMessage ID: {$messageId}\n\n" . strip_tags(html_entity_decode($messageText)));
     }
 
     log_activity('Smart Choice Chat item attached to project #' . $projectId . ' by staff #' . get_staff_user_id());
@@ -2740,7 +2740,7 @@ strpos($channel_name, 'private-') === 0
     if (!is_string($relative) || !preg_match('#^avatars/[a-zA-Z0-9_.-]+$#D', $relative)) { return; }
     $base = realpath(PR_CHAT_MODULE_GROUPS_UPLOAD_FOLDER . '/avatars');
     $file = realpath(PR_CHAT_MODULE_GROUPS_UPLOAD_FOLDER . '/' . $relative);
-    if ($base && $file && dirname($file) === $base && is_file($file)) { @unlink($file); }
+    if ($base && $file && dirname($file) === $base && is_file($file)) { @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file); }
   }
 
   /** Remove a group avatar without changing the chat background. */

@@ -231,7 +231,7 @@ class Google_meet extends AdminController
         $rows = $this->google_meet_model->report_meetings($filters);
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename=google_meet_report_' . date('Ymd_His') . '.csv');
-        $out = fopen('php://output', 'w');
+        $out = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('php://output', 'w');
         fputcsv($out, ['ID','Meeting','Employee','Start','End','Status','Meet Link','Notes']);
         foreach ($rows as $r) {
             fputcsv($out, [
@@ -245,7 +245,7 @@ class Google_meet extends AdminController
                 $r['notes'] ?? '',
             ]);
         }
-        fclose($out);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($out);
         exit;
     }
 

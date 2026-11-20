@@ -80,9 +80,9 @@ class Personal_assistant_model extends App_Model {
         $delete = $this->db->delete(db_prefix() . 'wtc_pa_files', ['id' => $attachment_id, 'pa_id' => $pa_id]);
         if ($delete) {
             $filepath = get_upload_path_by_type('personal_assistant') . $pa_id . '/' . $file['file_name'];
-            unlink($filepath);
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($filepath);
             $chunkpath = get_upload_path_by_type('personal_assistant') . $pa_id . '/chunks/' . pathinfo($file['file_name'], PATHINFO_FILENAME) . '.json';
-            unlink($chunkpath);
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($chunkpath);
         }
         return [
             'type' => 'danger',

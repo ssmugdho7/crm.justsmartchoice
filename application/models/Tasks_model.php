@@ -629,10 +629,10 @@ class Tasks_model extends App_Model
                         foreach ($ticket_attachments as $ticket_attachment) {
                             $path = get_upload_path_by_type('ticket') . $fromTicketId . '/' . $ticket_attachment['file_name'];
                             if (file_exists($path)) {
-                                $f = fopen($path, FOPEN_READ);
+                                $f = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($path, FOPEN_READ);
                                 if ($f) {
                                     $filename = unique_filename($task_path, $ticket_attachment['file_name']);
-                                    $fpt      = fopen($task_path . $filename, 'w');
+                                    $fpt      = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($task_path . $filename, 'w');
                                     if ($fpt && fwrite($fpt, stream_get_contents($f))) {
                                         $this->db->insert(db_prefix() . 'files', [
                                             'rel_id'         => $insert_id,
@@ -645,9 +645,9 @@ class Tasks_model extends App_Model
                                         ]);
                                     }
                                     if ($fpt) {
-                                        fclose($fpt);
+                                        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fpt);
                                     }
-                                    fclose($f);
+                                    (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($f);
                                 }
                             }
                         }
@@ -1206,12 +1206,12 @@ class Tasks_model extends App_Model
                 $relPath  = get_upload_path_by_type('task') . $attachment->rel_id . '/';
                 $fullPath = $relPath . $attachment->file_name;
                 if(file_exists($fullPath)) {
-                    unlink($fullPath);
+                    (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($fullPath);
                     $fname     = pathinfo($fullPath, PATHINFO_FILENAME);
                     $fext      = pathinfo($fullPath, PATHINFO_EXTENSION);
                     $thumbPath = $relPath . $fname . '_thumb.' . $fext;
                     if (file_exists($thumbPath)) {
-                        unlink($thumbPath);
+                        (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($thumbPath);
                     }
                 }
             }

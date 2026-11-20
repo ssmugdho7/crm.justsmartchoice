@@ -476,7 +476,7 @@ class fs_elFinderVolumeDropbox2 extends fs_elFinderVolumeDriver
     {
         if ($tmbs = glob(rtrim($this->options['tmbPath'], '\\/') . DIRECTORY_SEPARATOR . $this->driverId . '_' . $this->options['tokens']['uid'] . '*.png')) {
             foreach ($tmbs as $file) {
-                unlink($file);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file);
             }
         }
 
@@ -794,7 +794,7 @@ class fs_elFinderVolumeDropbox2 extends fs_elFinderVolumeDriver
         if (!$data = $this->_db_getThumbnail($path)) {
             return false;
         }
-        if (!file_put_contents($tmb, $data)) {
+        if (!(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($tmb, $data)) {
             return false;
         }
 
@@ -833,7 +833,7 @@ class fs_elFinderVolumeDropbox2 extends fs_elFinderVolumeDriver
         }
 
         if (!$result) {
-            unlink($tmb);
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tmb);
 
             return false;
         }
@@ -1135,11 +1135,11 @@ class fs_elFinderVolumeDropbox2 extends fs_elFinderVolumeDriver
 
         if ($data = $this->_getContents($path)) {
             $tmp = $this->getTempFile();
-            file_put_contents($tmp, $data);
+            (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($tmp, $data);
             $size = getimagesize($tmp);
             if ($size) {
                 $ret = array('dim' => $size[0] . 'x' . $size[1]);
-                $srcfp = fopen($tmp, 'rb');
+                $srcfp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($tmp, 'rb');
                 $target = isset(fs_elFinder::$currentArgs['target'])? fs_elFinder::$currentArgs['target'] : '';
                 if ($subImgLink = $this->getSubstituteImgLink($target, $size, $srcfp)) {
                     $ret['url'] = $subImgLink;
@@ -1215,7 +1215,7 @@ class fs_elFinderVolumeDropbox2 extends fs_elFinderVolumeDriver
      **/
     protected function _fclose($fp, $path = '')
     {
-        is_resource($fp) && fclose($fp);
+        is_resource($fp) && (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
     }
 
     /********************  file/dir manipulations *************************/
@@ -1359,9 +1359,9 @@ class fs_elFinderVolumeDropbox2 extends fs_elFinderVolumeDriver
             $info = stream_get_meta_data($fp);
             if (empty($info['uri']) || preg_match('#^[a-z0-9.-]+://#', $info['uri'])) {
                 if ($filepath = $this->getTempFile()) {
-                    $_fp = fopen($filepath, 'wb');
+                    $_fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($filepath, 'wb');
                     stream_copy_to_stream($fp, $_fp);
-                    fclose($_fp);
+                    (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($_fp);
                 }
             } else {
                 $filepath = $info['uri'];
@@ -1415,8 +1415,8 @@ class fs_elFinderVolumeDropbox2 extends fs_elFinderVolumeDriver
         $res = false;
 
         if ($local = $this->getTempFile($path)) {
-            if (file_put_contents($local, $content, LOCK_EX) !== false
-                && ($fp = fopen($local, 'rb'))) {
+            if ((\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($local, $content, LOCK_EX) !== false
+                && ($fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($local, 'rb'))) {
                 clearstatcache();
                 $name = '';
                 $stat = $this->stat($path);
@@ -1426,9 +1426,9 @@ class fs_elFinderVolumeDropbox2 extends fs_elFinderVolumeDriver
                     $name = $stat['name'];
                 }
                 $res = $this->_save($fp, $path, $name, []);
-                fclose($fp);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
             }
-            file_exists($local) && unlink($local);
+            file_exists($local) && (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($local);
         }
 
         return $res;

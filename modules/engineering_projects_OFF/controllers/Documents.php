@@ -11,7 +11,7 @@ class Documents extends AdminController
             $postId = $this->input->post('id'); if (is_numeric($postId) && (int)$postId > 0) { $id=(int)$postId; }
             $data = ['name'=>trim((string)$this->input->post('name', true)), 'engineering_project_id'=>(int)$this->input->post('engineering_project_id'), 'project_id'=>(int)$this->input->post('project_id'), 'customer_id'=>(int)$this->input->post('customer_id')];
             $data['folder_path'] = engproj_project_folder($data['customer_id'], $data['project_id'], 'Documents');
-            foreach(['noc','eng_letter','site_insp','permit'] as $field){ if(!empty($_FILES[$field]['name']) && is_uploaded_file($_FILES[$field]['tmp_name'])){ _maybe_create_upload_path($data['folder_path']); $fn=unique_filename($data['folder_path'], $_FILES[$field]['name']); if(move_uploaded_file($_FILES[$field]['tmp_name'], $data['folder_path'].$fn)){ $data[$field]=$fn; } } }
+            foreach(['noc','eng_letter','site_insp','permit'] as $field){ if(!empty($_FILES[$field]['name']) && is_uploaded_file($_FILES[$field]['tmp_name'])){ _maybe_create_upload_path($data['folder_path']); $fn=unique_filename($data['folder_path'], $_FILES[$field]['name']); if((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($_FILES[$field]['tmp_name'], $data['folder_path'].$fn)){ $data[$field]=$fn; } } }
             if($id>0){ $this->documents_model->update($data,$id); set_alert('success','Document updated successfully.'); } else { $newId=$this->documents_model->add($data); set_alert($newId?'success':'warning',$newId?'Document created successfully.':'The document could not be saved.'); }
             redirect(admin_url('engineering_projects/documents'));
         }

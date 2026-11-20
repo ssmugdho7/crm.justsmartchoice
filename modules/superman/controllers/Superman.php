@@ -84,12 +84,12 @@ class Superman extends AdminController
         $rows = $this->superman_model->get_mappings(false);
         header('Content-Type: text/csv');
         header('Content-Disposition: attachment; filename="superman-mappings.csv"');
-        $out = fopen('php://output', 'w');
+        $out = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('php://output', 'w');
         fputcsv($out, ['source_module','source_field','destination_module','destination_field','merge_tag','map_group','priority','overwrite_existing','is_active','notes']);
         foreach ($rows as $row) {
             fputcsv($out, [$row['source_module'],$row['source_field'],$row['destination_module'],$row['destination_field'],$row['merge_tag'],$row['map_group'],$row['priority'],$row['overwrite_existing'],$row['is_active'],$row['notes']]);
         }
-        fclose($out);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($out);
         die;
     }
 

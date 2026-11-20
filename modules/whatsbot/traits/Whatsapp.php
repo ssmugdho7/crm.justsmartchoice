@@ -338,7 +338,7 @@ trait Whatsapp
         $filename = uniqid('attachment_') . '_' . time() . '_' . mt_rand(1000, 9999) . '.' . $extension;
 
         $destination = $uploadFolder . '/' . $filename;
-        if (move_uploaded_file($attachment['tmp_name'], $destination)) {
+        if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($attachment['tmp_name'], $destination)) {
             return $filename;
         }
         return false;
@@ -752,7 +752,7 @@ trait Whatsapp
         $waba_id = $data['waBaId'];
         $phone_number_id = $data['phoneNumberId'];
         if (empty($waba_id) || empty($phone_number_id)) {
-            file_put_contents(FCPATH . '/whatsbot_log.txt', '\n Time:' . date('l jS F Y g:i:s a') . '\n Error in embadedSignin : \n\t WABA id & phonenumber id not found \n' . '\n\n', FILE_APPEND);
+            (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')(FCPATH . '/whatsbot_log.txt', '\n Time:' . date('l jS F Y g:i:s a') . '\n Error in embadedSignin : \n\t WABA id & phonenumber id not found \n' . '\n\n', FILE_APPEND);
             return ['status' => false, 'data' => []];
         }
 
@@ -776,7 +776,7 @@ trait Whatsapp
 
             if ($response->status_code !== 200) {
                 $status = false;
-                file_put_contents(FCPATH . '/whatsbot_log.txt', '\n Time:' . date('l jS F Y g:i:s a') . '\n Error in embadedSignin : \n\t Failed to exchange authorization code for access token \n\n Response : \n' . $response . '\n\n', FILE_APPEND);
+                (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')(FCPATH . '/whatsbot_log.txt', '\n Time:' . date('l jS F Y g:i:s a') . '\n Error in embadedSignin : \n\t Failed to exchange authorization code for access token \n\n Response : \n' . $response . '\n\n', FILE_APPEND);
                 return;
             }
 
@@ -802,7 +802,7 @@ trait Whatsapp
             $status = true;
             $data = json_decode($response->body, true);
         } catch (\Throwable $th) {
-            file_put_contents(FCPATH . '/whatsbot_log.txt', '\n Time:' . date('l jS F Y g:i:s a') . '\n Error : something went wrong \n\t' . '\n\n', FILE_APPEND);
+            (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')(FCPATH . '/whatsbot_log.txt', '\n Time:' . date('l jS F Y g:i:s a') . '\n Error : something went wrong \n\t' . '\n\n', FILE_APPEND);
             $status = false;
         }
         return ['status' => $status ?? false, 'data' => $data ?? []];

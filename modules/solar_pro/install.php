@@ -15,7 +15,7 @@ $cachePath = APPPATH . 'cache/';
 if (is_dir($cachePath) && is_writable($cachePath)) {
     foreach (glob($cachePath . '*') ?: [] as $file) {
         if (is_file($file) && !in_array(basename($file), ['index.html', '.htaccess'], true)) {
-            @unlink($file);
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file);
         }
     }
 }

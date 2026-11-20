@@ -65,6 +65,6 @@
     $outputContents .= "\n\n/*\n * Version: ".trim($versionDataEx[0])."\n * Build: ".trim($versionDataEx[1])."\n */\n\n";
     $outputContents .= $outputCode;
     
-    file_put_contents($outputFile, $outputContents);
+    (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($outputFile, $outputContents);
     
     

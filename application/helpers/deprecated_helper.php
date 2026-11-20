@@ -215,13 +215,13 @@ function add_encryption_key_old()
     $config_file = read_file($config_path);
     $config_file = trim($config_file);
     $config_file = str_replace("\$config['encryption_key'] = '';", "\$config['encryption_key'] = '" . $key . "';", $config_file);
-    if (!$fp = fopen($config_path, FOPEN_WRITE_CREATE_DESTRUCTIVE)) {
+    if (!$fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($config_path, FOPEN_WRITE_CREATE_DESTRUCTIVE)) {
         return false;
     }
     flock($fp, LOCK_EX);
     fwrite($fp, $config_file, strlen($config_file));
     flock($fp, LOCK_UN);
-    fclose($fp);
+    (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
     @chmod($config_path, FILE_READ_MODE);
 
     return $key;

@@ -36,7 +36,7 @@ function google_meet_cleanup_legacy_migrations()
     foreach ($legacy_files as $legacy_file) {
         $full_path = $migration_path . $legacy_file;
         if (is_file($full_path)) {
-            @unlink($full_path);
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($full_path);
         }
     }
 }

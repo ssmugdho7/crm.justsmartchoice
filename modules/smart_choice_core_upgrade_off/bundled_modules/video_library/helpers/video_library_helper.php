@@ -212,7 +212,7 @@ function handle_video_comment_attachments($discussion_id, $post_data, $insert_da
             _maybe_create_upload_path($path);
             $filename = unique_filename($path, $_FILES['file']['name']);
             $newFilePath = $path . $filename;
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                 $insert_data['file_name'] = $filename;
                 if (isset($_FILES['file']['type'])) {
                     $insert_data['file_mime_type'] = $_FILES['file']['type'];
@@ -243,7 +243,7 @@ function handle_video_library_video_upload($vlid = '')
                 $filename    = unique_filename($path, $_FILES['upload_video']['name']);
                 $newFilePath = $path . $filename;
                 // Upload the file into the video library uploads dir
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                     $CI             = &get_instance();
                     $CI->db->where('id', $vlid);
                     $CI->db->update(db_prefix() . 'upload_video', [
@@ -319,7 +319,7 @@ function thumbnail_image_upload()
                 $newFilePath = $path . $filename;
                 _maybe_create_upload_path($path);
                 // Upload the file into the company uploads dir
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                     update_option($index, $filename);
                     $success = true;
                 }
@@ -342,7 +342,7 @@ function handle_video_library_video_thumbnail_upload($vlid = '')
                     _maybe_create_upload_path($path);
                     $filename    = unique_filename($path, $_FILES['upload_video_thumbnail']['name']);
                     $newFilePath = $path . $filename;
-                    if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                    if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                         $CI             = &get_instance();
                         $CI->db->where('id', $vlid);
                         $CI->db->update(db_prefix() . 'upload_video', [

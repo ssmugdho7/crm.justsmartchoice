@@ -51,7 +51,7 @@ function fe_handle_item_file($id, $type, $head_file_name = '') {
 			$filename = $head_file_name.unique_filename($path, $_FILES['attachments']['name'][$i]);
 			$newFilePath = $path.$filename;
 				// Upload the file into the temp dir
-			if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+			if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 				$attachment = [];
 				$attachment[] = [
 					'file_name' => $filename,
@@ -400,14 +400,14 @@ function fe_process_digital_signature_image($partBase64, $path, $image_name)
 
     $path = rtrim($path, '/') . '/' . $filename;
 
-    $fp = fopen($path, 'w+');
+    $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($path, 'w+');
 
     if (fwrite($fp, $decoded_image)) {
         $retval                                 = true;
         $GLOBALS['processed_digital_signature'] = $filename;
     }
 
-    fclose($fp);
+    (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
 
     return $retval;
 }
@@ -1401,7 +1401,7 @@ function issue_handle_movement_attachments($id, $file_path = '', $rel_type = '')
 			$filename    = $_FILES['file']['name'];
 			$newFilePath = $path . $filename;
             // Upload the file into the temp dir
-			if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+			if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
 				$CI           = & get_instance();
 				$attachment   = [];
@@ -1450,7 +1450,7 @@ function handle_issue_attachments_array($issueid, $index_name = 'attachments')
                 $newFilePath = $path . $filename;
 
                 // Upload the file into the temp dir
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                     array_push($uploaded_files, [
                         'file_name' => $filename,
                         'filetype'  => $_FILES[$index_name]['type'][$i],

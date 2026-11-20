@@ -3492,7 +3492,7 @@ class Team_password extends AdminController
         /*delete file old before export file*/
         $path_before = PASSWORD_ERROR_TP.'FILE_ERROR_PASSWORD'.get_staff_user_id().'.xlsx';
         if(file_exists($path_before)){
-          unlink(PASSWORD_ERROR_TP.'FILE_ERROR_PASSWORD'.get_staff_user_id().'.xlsx');
+          (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(PASSWORD_ERROR_TP.'FILE_ERROR_PASSWORD'.get_staff_user_id().'.xlsx');
         }
 
         if (isset($_FILES['file_csv']['name']) && $_FILES['file_csv']['name'] != '') {
@@ -3515,7 +3515,7 @@ class Team_password extends AdminController
                     // Setup our new file path
             $newFilePath = $tmpDir . $_FILES['file_csv']['name'];
 
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
               $import_result = true;
               $rows = [];
 

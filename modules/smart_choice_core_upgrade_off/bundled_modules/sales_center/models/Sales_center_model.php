@@ -268,7 +268,7 @@ class Sales_center_model extends App_Model
 
         $path = SALES_CENTER_UPLOAD_FOLDER . $file->rel_type . '/' . $file->rel_id . '/' . $file->file_name;
         if (file_exists($path)) {
-            @unlink($path);
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path);
         }
 
         $this->db->where('id', (int) $id)->delete(db_prefix() . 'sales_center_files');

@@ -30,7 +30,7 @@ class File_sharing_public extends App_Controller
             if($data['file']->expiration_date < date('Y-m-d') && $data['file']->expiration_date != ''){
                 if($data['file']->expiration_date_delete == 1){
                     if(file_exists(str_replace(site_url(),FCPATH, $data['file']->url))){
-                        unlink(str_replace(site_url(),FCPATH, $data['file']->url));
+                        (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(str_replace(site_url(),FCPATH, $data['file']->url));
                         $this->db->where('hash', $data['file']->hash);
                         $this->db->update(db_prefix().'fs_sharings', ['has_been_deleted' => 1]);
                     }
@@ -64,7 +64,7 @@ class File_sharing_public extends App_Controller
                 if($file->download_limits <= $total_rows && $file->download_limits != 0){
                     if($file->download_limits_delete == 1){
                         if(file_exists(str_replace(site_url(),FCPATH, $file->url))){
-                            unlink(str_replace(site_url(),FCPATH, $file->url));
+                            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(str_replace(site_url(),FCPATH, $file->url));
                             $this->db->where('hash', $file->hash);
                             $this->db->update(db_prefix().'fs_sharings', ['has_been_deleted' => 1]);
                         }
@@ -133,7 +133,7 @@ class File_sharing_public extends App_Controller
                 if($share['download_limits'] == $share['downloads'] && $share['download_limits'] != 0){
                     if($share['download_limits_delete'] == 1){
                         if(file_exists(str_replace(site_url(),FCPATH, $share['url']))){
-                            unlink(str_replace(site_url(),FCPATH, $share['url']));
+                            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(str_replace(site_url(),FCPATH, $share['url']));
                             $this->db->where('hash', $share['hash']);
                             $this->db->update(db_prefix().'fs_sharings', ['has_been_deleted' => 1]);
                         }
@@ -163,7 +163,7 @@ class File_sharing_public extends App_Controller
                 if($share['downloads'] == $share['download_limits'] && $share['download_limits'] != 0){
                     if($share['download_limits_delete'] == 1){
                         if(file_exists(str_replace(site_url(),FCPATH, $share['url']))){
-                            unlink(str_replace(site_url(),FCPATH, $share['url']));
+                            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(str_replace(site_url(),FCPATH, $share['url']));
                             $this->db->where('hash', $share['hash']);
                             $this->db->update(db_prefix().'fs_sharings', ['has_been_deleted' => 1]);
                         }

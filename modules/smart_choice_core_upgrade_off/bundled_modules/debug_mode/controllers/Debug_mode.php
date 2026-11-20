@@ -124,11 +124,11 @@ class Debug_mode extends AdminController
                 }
 
                 if ($file->isFile()) {
-                    if (@unlink($file->getPathname())) {
+                    if (@(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file->getPathname())) {
                         $deleted++;
                     }
                 } elseif ($file->isDir()) {
-                    @rmdir($file->getPathname());
+                    @(\function_exists('sc_recovery_rmdir') ? '\sc_recovery_rmdir' : '\rmdir')($file->getPathname());
                 }
             }
         }

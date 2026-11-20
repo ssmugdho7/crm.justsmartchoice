@@ -1043,8 +1043,8 @@ class Chatbot_Controller extends CI_Controller
         $uploadDir = module_dir_path('prchat', 'uploads/chatbot/' . $convId . '/');
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0755, true);
-            file_put_contents(module_dir_path('prchat', 'uploads/chatbot/') . 'index.html', '');
-            file_put_contents($uploadDir . 'index.html', '');
+            (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')(module_dir_path('prchat', 'uploads/chatbot/') . 'index.html', '');
+            (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($uploadDir . 'index.html', '');
         }
 
         $sender = $staffUpload ? 'staff' : 'visitor';

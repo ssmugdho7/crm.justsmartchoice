@@ -12,48 +12,48 @@ class Migration_Version_109 extends CI_Migration
   {
     if (!is_dir(PROJECT_ATTACHMENTS_FOLDER)) {
       mkdir(PROJECT_ATTACHMENTS_FOLDER, 0755);
-      fopen(PROJECT_ATTACHMENTS_FOLDER . 'index.html', 'w');
-      $fp = fopen(PROJECT_ATTACHMENTS_FOLDER . 'index.html', 'a+');
+      (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(PROJECT_ATTACHMENTS_FOLDER . 'index.html', 'w');
+      $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(PROJECT_ATTACHMENTS_FOLDER . 'index.html', 'a+');
       if ($fp) {
-        fclose($fp);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
       }
     }
     if (!is_dir(PROJECT_DISCUSSION_ATTACHMENT_FOLDER)) {
       mkdir(PROJECT_DISCUSSION_ATTACHMENT_FOLDER, 0755);
-      fopen(PROJECT_DISCUSSION_ATTACHMENT_FOLDER . 'index.html', 'w');
-      $fp = fopen(PROJECT_DISCUSSION_ATTACHMENT_FOLDER . 'index.html', 'a+');
+      (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(PROJECT_DISCUSSION_ATTACHMENT_FOLDER . 'index.html', 'w');
+      $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(PROJECT_DISCUSSION_ATTACHMENT_FOLDER . 'index.html', 'a+');
       if ($fp) {
-        fclose($fp);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
       }
     }
 
     if (!is_dir(CONTACT_PROFILE_IMAGES_FOLDER)) {
       mkdir(CONTACT_PROFILE_IMAGES_FOLDER, 0755);
-      fopen(CONTACT_PROFILE_IMAGES_FOLDER . 'index.html', 'w');
-      $fp = fopen(CONTACT_PROFILE_IMAGES_FOLDER . 'index.html', 'a+');
+      (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(CONTACT_PROFILE_IMAGES_FOLDER . 'index.html', 'w');
+      $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(CONTACT_PROFILE_IMAGES_FOLDER . 'index.html', 'a+');
       if ($fp) {
-        fclose($fp);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
       }
     }
 
     if (file_exists(APPPATH . 'views/admin/settings/includes/newsfeed.php')) {
-      @unlink(APPPATH . 'views/admin/settings/includes/newsfeed.php');
+      @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'views/admin/settings/includes/newsfeed.php');
     }
 
     if (file_exists(APPPATH . 'views/admin/contracts/contract_attachments_template.php')) {
-      @unlink(APPPATH . 'views/admin/contracts/contract_attachments_template.php');
+      @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'views/admin/contracts/contract_attachments_template.php');
     }
 
     if (file_exists(APPPATH . 'views/admin/settings/includes/reminders.php')) {
-      @unlink(APPPATH . 'views/admin/settings/includes/reminders.php');
+      @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'views/admin/settings/includes/reminders.php');
     }
 
     if (file_exists(APPPATH . 'views/admin/clients/attachments_template.php')) {
-      @unlink(APPPATH . 'views/admin/clients/attachments_template.php');
+      @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'views/admin/clients/attachments_template.php');
     }
 
     if (file_exists(APPPATH . 'views/admin/leads/kan-ban-lead-content.php')) {
-      @unlink(APPPATH . 'views/admin/leads/kan-ban-lead-content.php');
+      @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'views/admin/leads/kan-ban-lead-content.php');
     }
 
     $this->db->query("CREATE TABLE IF NOT EXISTS `tblviewstracking` (

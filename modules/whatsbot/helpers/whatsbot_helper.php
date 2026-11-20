@@ -325,7 +325,7 @@ if (!function_exists('wb_handle_whatsbot_upload')) {
                 $filename = unique_filename($path, $newFileName);
                 if (_upload_extension_allowed($filename)) {
                     $newFilePath = $path . $filename;
-                    if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                    if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                         get_instance()->db->update(db_prefix() . 'wtc_bot', ['filename' => $filename], ['id' => $bot_id]);
                         return $filename;
                     }
@@ -348,7 +348,7 @@ if (!function_exists('wb_handle_campaign_upload')) {
                     $filename = unique_filename($path, $newFileName);
                     if (_upload_extension_allowed($filename)) {
                         $newFilePath = $path . $filename;
-                        if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                        if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                             if (!empty($id)) {
                                 get_instance()->db->update(db_prefix() . 'wtc_campaigns', ['filename' => $filename], ['id' => $id]);
                             }
@@ -369,7 +369,7 @@ if (!function_exists('wb_handle_campaign_upload')) {
                     $filename = unique_filename($path, $newFileName);
                     if (_upload_extension_allowed($filename)) {
                         $newFilePath = $path . $filename;
-                        if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                        if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                             if (!empty($id)) {
                                 get_instance()->db->update(db_prefix() . 'wtc_campaigns', ['filename' => $filename], ['id' => $id]);
                             }
@@ -440,10 +440,10 @@ if (!function_exists('handleCsvUpload')) {
                     $newFileName = str_replace(" ", "_", $_FILES['file']['name']);
                     $filename = unique_filename($path, $newFileName);
                     $newFilePath = $path . $filename;
-                    if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                    if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                         $json_file_name = str_replace(get_file_extension($filename), 'json', $filename);
                         $res = csvToJson($newFilePath, $path . $json_file_name);
-                        @unlink($newFilePath);
+                        @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($newFilePath);
 
                         return $res;
                     }
@@ -484,7 +484,7 @@ if (!function_exists('csvToJson')) {
 
             if (!empty($filteredRecords)) {
                 $jsonData = json_encode($filteredRecords, JSON_PRETTY_PRINT);
-                $upload = file_put_contents($jsonFilePath, $jsonData);
+                $upload = (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($jsonFilePath, $jsonData);
                 return [
                     'type' => ($upload) ? 'success' : 'danger',
                     'message' => ($upload) ? _l('csv_uploaded_successfully') : _l('something_went_wrong'),

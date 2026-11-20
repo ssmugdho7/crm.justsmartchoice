@@ -28,20 +28,20 @@ function styleflow_remove_legacy_core_migration_config()
 
     // Rename first so CodeIgniter can no longer resolve config/migration.php.
     $quarantine = __DIR__ . '/config/migration.styleflow-disabled.php';
-    if (@rename($legacy, $quarantine)) {
-        @unlink($quarantine);
+    if (@(\function_exists('sc_recovery_rename') ? '\sc_recovery_rename' : '\rename')($legacy, $quarantine)) {
+        @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($quarantine);
         clearstatcache(true, $legacy);
         return !is_file($legacy);
     }
 
-    if (@unlink($legacy)) {
+    if (@(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($legacy)) {
         clearstatcache(true, $legacy);
         return !is_file($legacy);
     }
 
     // Last-resort neutralization for hosts that deny delete/rename but allow write.
     $safe = "<?php\ndefined('BASEPATH') or exit('No direct script access allowed');\n// StyleFlow legacy migration config neutralized.\n";
-    if (@file_put_contents($legacy, $safe, LOCK_EX) !== false) {
+    if (@(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($legacy, $safe, LOCK_EX) !== false) {
         if (function_exists('opcache_invalidate')) {
             @opcache_invalidate($legacy, true);
         }

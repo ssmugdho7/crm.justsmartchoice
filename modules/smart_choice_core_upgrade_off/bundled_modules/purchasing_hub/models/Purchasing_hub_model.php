@@ -233,7 +233,7 @@ class Purchasing_hub_model extends App_Model
         $dir = module_dir_path('purchasing_hub') . 'uploads/attachments/' . $type . '/' . (int)$id . '/';
         if (!is_dir($dir)) { @mkdir($dir, 0755, true); }
         $name = preg_replace('/[^A-Za-z0-9_.-]/', '_', $file['name']);
-        return move_uploaded_file($file['tmp_name'], $dir . time() . '_' . $name);
+        return (\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($file['tmp_name'], $dir . time() . '_' . $name);
     }
 
     public function delete_record($table, $id)
@@ -294,7 +294,7 @@ class Purchasing_hub_model extends App_Model
         if (!$headers || !is_readable($file)) {
             return ['success' => false, 'message' => 'Import file could not be read.'];
         }
-        $handle = fopen($file, 'r');
+        $handle = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($file, 'r');
         $first = fgetcsv($handle);
         if (!$first) {
             return ['success' => false, 'message' => 'Import file is empty.'];
@@ -311,7 +311,7 @@ class Purchasing_hub_model extends App_Model
             if ($type === 'vendors' && !empty($data['vendor_name'])) { $this->save_vendor($data); $count++; }
             if (in_array($type, ['orders','bills','quotes','contracts'], true)) { $this->save_simple($type, $data); $count++; }
         }
-        fclose($handle);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($handle);
         return ['success' => true, 'message' => $count . ' records imported successfully.'];
     }
 
@@ -370,7 +370,7 @@ class Purchasing_hub_model extends App_Model
         $dir = module_dir_path('purchasing_hub') . 'uploads/import_preview/';
         if (!is_dir($dir)) { @mkdir($dir, 0755, true); }
         $payload = ['type'=>$type,'headers'=>$headers,'rows'=>$mapped,'created_by'=>get_staff_user_id(),'created_at'=>date('Y-m-d H:i:s'),'inserted_ids'=>[]];
-        file_put_contents($dir . $token . '.json', json_encode($payload));
+        (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($dir . $token . '.json', json_encode($payload));
         return ['success'=>true,'message'=>'Preview generated successfully. Review the table before importing.','token'=>$token,'headers'=>$headers,'rows'=>$mapped,'count'=>count($mapped)];
     }
 
@@ -378,8 +378,8 @@ class Purchasing_hub_model extends App_Model
     {
         $format = strtolower((string)$format);
         if (in_array($format, ['csv','txt',''], true)) {
-            $rows = []; $h = fopen($file, 'r'); if (!$h) { return []; }
-            while (($r = fgetcsv($h)) !== false) { $rows[] = $r; } fclose($h); return $rows;
+            $rows = []; $h = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($file, 'r'); if (!$h) { return []; }
+            while (($r = fgetcsv($h)) !== false) { $rows[] = $r; } (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($h); return $rows;
         }
         if (in_array($format, ['xls','xlsx'], true)) {
             $phpExcel = module_dir_path('purchasing_hub') . 'third_party/excel/PHPExcel.php';
@@ -407,7 +407,7 @@ class Purchasing_hub_model extends App_Model
         }
         $payload['inserted_ids'] = $ids; $payload['imported_at'] = date('Y-m-d H:i:s');
         $dir = module_dir_path('purchasing_hub') . 'uploads/import_preview/';
-        file_put_contents($dir . $token . '.json', json_encode($payload));
+        (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($dir . $token . '.json', json_encode($payload));
         return ['success'=>true,'message'=>$count . ' records imported successfully. Click Verify Data to review the imported records.','inserted_ids'=>$ids];
     }
 

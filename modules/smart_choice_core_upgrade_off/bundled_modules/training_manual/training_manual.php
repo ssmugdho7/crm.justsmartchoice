@@ -198,12 +198,12 @@ if (!function_exists('training_manual_handle_thumb_mindmap_upload')) {
           _maybe_create_upload_path($path);
 
           $decoded = base64_decode($content);
-          file_put_contents($new_file_path, $decoded);
+          (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($new_file_path, $decoded);
 
           if ($file_old) {
               $path_old = $path . $file_old;
               if (file_exists($path_old)) {
-                  unlink($path_old);
+                  (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path_old);
               }
           }
 
@@ -228,7 +228,7 @@ if (!function_exists('training_manual_copy_thumb_mindmap')) {
           _maybe_create_upload_path($path);
 
           if(file_exists($old_file_path)){
-            copy($old_file_path, $new_file_path);
+            (\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($old_file_path, $new_file_path);
 
             return $filename;
           }
@@ -246,7 +246,7 @@ if (!function_exists('training_manual_remove_thumb_mindmap')) {
 
           $old_file_path = $path . $old_image;
 
-          unlink($old_file_path);
+          (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($old_file_path);
       }
 
       return false;
@@ -266,7 +266,7 @@ if (!function_exists('training_manual_copy_default_mindmap_thumb')) {
     _maybe_create_upload_path($path);
 
     if(file_exists($default_file_path)){
-      copy($default_file_path, $new_file_path);
+      (\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($default_file_path, $new_file_path);
 
       return $new_file_name;
     }

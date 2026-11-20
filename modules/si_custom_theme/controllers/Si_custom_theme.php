@@ -120,7 +120,7 @@ class Si_custom_theme extends AdminController
 		$fileName = get_option(SI_CUSTOM_THEME_MODULE_NAME.'_bg_img_'.$type);
 		$path = SI_CUSTOM_THEME_UPLOAD_PATH. $fileName;
 		if (file_exists($path)) {
-			unlink($path);
+			(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path);
 		}
 		update_option(SI_CUSTOM_THEME_MODULE_NAME.'_bg_img_'.$type, '');
 		redirect(admin_url('si_custom_theme?tab=tab_settings'));

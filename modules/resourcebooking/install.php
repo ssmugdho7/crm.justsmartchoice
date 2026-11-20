@@ -4,8 +4,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 if (!is_dir(RESOURCEBOOKING_MODULE_UPLOAD_FOLDER)) {
   mkdir(RESOURCEBOOKING_MODULE_UPLOAD_FOLDER, 0755);
-  $fp = fopen(RESOURCEBOOKING_MODULE_UPLOAD_FOLDER . '/index.html', 'w');
-  fclose($fp);
+  $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(RESOURCEBOOKING_MODULE_UPLOAD_FOLDER . '/index.html', 'w');
+  (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
 }
 
 if (!$CI->db->table_exists(db_prefix() . 'resource_group')) {

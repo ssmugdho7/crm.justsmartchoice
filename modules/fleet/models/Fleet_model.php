@@ -2424,7 +2424,7 @@ public function update_event($data, $id)
     public function delete_driver_document_attachment($file, $document_id)
     {
         if (is_dir(FLEET_MODULE_UPLOAD_FOLDER .'/driver_documents/'. $document_id)) {
-            if (unlink(FLEET_MODULE_UPLOAD_FOLDER .'/driver_documents/'.$document_id.'/'. $file->file_name)) {
+            if ((\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(FLEET_MODULE_UPLOAD_FOLDER .'/driver_documents/'.$document_id.'/'. $file->file_name)) {
                 $this->db->where('id', $file->id);
                 $this->db->delete(db_prefix() . 'files');
 

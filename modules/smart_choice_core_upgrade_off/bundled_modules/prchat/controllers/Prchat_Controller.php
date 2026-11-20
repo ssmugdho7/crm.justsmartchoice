@@ -755,7 +755,7 @@ class Prchat_Controller extends AdminController
 
     if (!is_dir($uploadPath)) {
       mkdir($uploadPath, 0755, true);
-      file_put_contents($uploadPath . '/index.html', '');
+      (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($uploadPath . '/index.html', '');
     }
 
     $config = [
@@ -807,7 +807,7 @@ class Prchat_Controller extends AdminController
 
     if (!is_dir($uploadPath)) {
       mkdir($uploadPath, 0755, true);
-      file_put_contents($uploadPath . '/index.html', '');
+      (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($uploadPath . '/index.html', '');
     }
 
     $config = [

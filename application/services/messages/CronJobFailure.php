@@ -24,11 +24,11 @@ class CronJobFailure extends AbstractMessage
     {
         // Check and clean locks for all cases if the cron somehow is stuck or locked
         if (file_exists(get_temp_dir() . 'pcrm-cron-lock')) {
-            @unlink(get_temp_dir() . 'pcrm-cron-lock');
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(get_temp_dir() . 'pcrm-cron-lock');
         }
 
         if (file_exists(TEMP_FOLDER . 'pcrm-cron-lock')) {
-            @unlink(TEMP_FOLDER . 'pcrm-cron-lock');
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(TEMP_FOLDER . 'pcrm-cron-lock');
         } ?>
 <h4>Cron Job Warning</h4>
 <p>

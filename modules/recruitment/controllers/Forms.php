@@ -356,7 +356,7 @@ class Forms extends ClientsController
         $path = RECRUITMENT_MODULE_UPLOAD_FOLDER . '/candidate/driver_licenses/' . (int) $candidate_id . '/';
         _maybe_create_upload_path($path);
         $filename = unique_filename($path, $_FILES['driver_license']['name']);
-        if (!move_uploaded_file($_FILES['driver_license']['tmp_name'], $path . $filename)) {
+        if (!(\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($_FILES['driver_license']['tmp_name'], $path . $filename)) {
             return false;
         }
         $this->misc_model->add_attachment_to_database($candidate_id, 'rec_candidate_driver', [[

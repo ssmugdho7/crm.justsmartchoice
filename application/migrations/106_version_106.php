@@ -12,11 +12,11 @@ class Migration_Version_106 extends CI_Migration
     {
         // Version 1.0.6
         if (file_exists(APPPATH . 'views/admin/invoices/invoice_activity_log.php')) {
-            @unlink(APPPATH . 'views/admin/invoices/invoice_activity_log.php');
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'views/admin/invoices/invoice_activity_log.php');
         }
 
         if (file_exists(APPPATH . 'views/admin/estimates/estimate_activity_log.php')) {
-            @unlink(APPPATH . 'views/admin/estimates/estimate_activity_log.php');
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'views/admin/estimates/estimate_activity_log.php');
         }
 
 /*        if(!is_dir(BACKUPS_FOLDER)){
@@ -34,7 +34,7 @@ class Migration_Version_106 extends CI_Migration
         $theme = $this->db->get(db_prefix().'options')->row()->value;
 
         if($theme != 'perfex'){
-            copy(APPPATH . 'views/themes/perfex/template_parts/contract_attachments.php',APPPATH . 'views/themes/' . active_clients_theme() . '/template_parts/contract_attachments.php');
+            (\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')(APPPATH . 'views/themes/perfex/template_parts/contract_attachments.php',APPPATH . 'views/themes/' . active_clients_theme() . '/template_parts/contract_attachments.php');
         }
 
         $this->db->query("INSERT INTO `tblpermissions` (`permissionid`, `name`, `shortname`) VALUES (NULL, 'Use Bulk PDF Exporter', 'useBulkPdfExporter');");

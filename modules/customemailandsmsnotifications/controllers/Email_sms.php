@@ -103,7 +103,7 @@ class Email_sms extends AdminController
             
                 $destination = $upload_directory . "/" . $file_name;
             
-                if (move_uploaded_file($temp_name, $destination)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($temp_name, $destination)) {
                     $data['file_mail'] = json_encode([
                         "name" => $file_name,
                         "tmp_name" => $destination

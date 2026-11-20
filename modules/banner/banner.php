@@ -38,7 +38,7 @@ register_deactivation_hook(BANNER_MODULE, function () {
 
     foreach ($my_files_list as $actual_path) {
         if (file_exists($actual_path)) {
-            @unlink($actual_path);
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($actual_path);
         }
     }
 });

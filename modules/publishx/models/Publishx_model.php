@@ -62,7 +62,7 @@ class Publishx_model extends App_Model
   $post->hero_video_url = publishx_normalize_video_url($post->hero_video_url);
   $html = $this->render_body_page($post, $site);
 
-  $bytes = @file_put_contents($file, $html, LOCK_EX);
+  $bytes = @(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($file, $html, LOCK_EX);
   if ($bytes === false || !is_file($file)) {
    return ['success' => false, 'message' => 'Unable to write the website file: ' . $file];
   }
@@ -148,14 +148,14 @@ class Publishx_model extends App_Model
   $test  = $dir . DIRECTORY_SEPARATOR . $name;
   $testContent = '<?php header("Content-Type: text/plain; charset=UTF-8"); ?>' . $token;
 
-  if (@file_put_contents($test, $testContent, LOCK_EX) === false || !is_file($test)) {
+  if (@(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($test, $testContent, LOCK_EX) === false || !is_file($test)) {
    return ['success' => false, 'message' => 'The module cannot create a PHP test page in: ' . $dir];
   }
 
   @chmod($test, 0644);
   $testUrl = rtrim($site->base_url, '/') . '/' . ($folder !== '' ? trim($folder, '/') . '/' : '') . $name;
   $online  = $this->verify_public_url($testUrl, $token);
-  @unlink($test);
+  @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($test);
 
   if (!$online['success']) {
    return ['success' => false, 'message' => 'Folder creation and PHP file creation succeeded, but the domain did not serve the test file. ' . $online['message'] . ' Folder: ' . $dir . ' URL: ' . $testUrl];

@@ -283,7 +283,7 @@ class Format
     public function to_csv($data = null, $delimiter = ',', $enclosure = '"')
     {
         // Use a threshold of 1 MB (1024 * 1024)
-        $handle = fopen('php://temp/maxmemory:1048576', 'w');
+        $handle = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('php://temp/maxmemory:1048576', 'w');
         if (false === $handle) {
             return;
         }
@@ -344,7 +344,7 @@ class Format
         $csv = stream_get_contents($handle);
 
         // Close the handle
-        fclose($handle);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($handle);
 
         // Convert UTF-8 encoding to UTF-16LE which is supported by MS Excel
         $csv = mb_convert_encoding($csv, 'UTF-16LE', 'UTF-8');

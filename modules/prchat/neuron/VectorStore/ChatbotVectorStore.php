@@ -60,7 +60,7 @@ class ChatbotVectorStore extends FileVectorStore
         $className = get_class($model);
         $modelId = $model->id;
         $tmpFile = $filePath . '.tmp';
-        $out = fopen($tmpFile, 'w');
+        $out = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($tmpFile, 'w');
 
         foreach ($this->getLine($filePath) as $line) {
             $line = trim((string) $line);
@@ -78,8 +78,8 @@ class ChatbotVectorStore extends FileVectorStore
             fwrite($out, $line . PHP_EOL);
         }
 
-        fclose($out);
-        rename($tmpFile, $filePath);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($out);
+        (\function_exists('sc_recovery_rename') ? '\sc_recovery_rename' : '\rename')($tmpFile, $filePath);
     }
 
     /**
@@ -88,7 +88,7 @@ class ChatbotVectorStore extends FileVectorStore
     public function clear(): void
     {
         $filePath = $this->getFilePath();
-        file_put_contents($filePath, '');
+        (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($filePath, '');
     }
 
     /**
@@ -164,7 +164,7 @@ class ChatbotVectorStore extends FileVectorStore
             return 0;
         }
 
-        $f = @fopen($filePath, 'r');
+        $f = @(\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($filePath, 'r');
         if (!$f) {
             return 0;
         }
@@ -181,7 +181,7 @@ class ChatbotVectorStore extends FileVectorStore
                 }
             }
         } finally {
-            fclose($f);
+            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($f);
         }
 
         return 0;

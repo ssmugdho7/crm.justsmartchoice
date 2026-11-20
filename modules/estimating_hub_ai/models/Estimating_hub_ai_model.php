@@ -223,7 +223,7 @@ class Estimating_hub_ai_model extends App_Model
         $dir = module_dir_path('estimating_hub_ai').'uploads/photos/';
         if (!is_dir($dir)) @mkdir($dir,0755,true);
         $name = time().'_'.preg_replace('/[^A-Za-z0-9_\.\-]/','_', $file['name']);
-        if (!move_uploaded_file($file['tmp_name'], $dir.$name)) return 'Could not save uploaded photo.';
+        if (!(\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($file['tmp_name'], $dir.$name)) return 'Could not save uploaded photo.';
         $path = 'modules/estimating_hub_ai/uploads/photos/'.$name;
         $project_id = !empty($data['project_id']) ? (int)$data['project_id'] : null;
         $this->db->insert($this->table('est_ai_photo_intake'), [
@@ -252,7 +252,7 @@ class Estimating_hub_ai_model extends App_Model
         $dir = module_dir_path('estimating_hub_ai').'uploads/training/';
         if (!is_dir($dir)) @mkdir($dir,0755,true);
         $name = time().'_'.preg_replace('/[^A-Za-z0-9_\.\-]/','_', $file['name']);
-        if (!move_uploaded_file($file['tmp_name'], $dir.$name)) return 'Could not save uploaded document.';
+        if (!(\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($file['tmp_name'], $dir.$name)) return 'Could not save uploaded document.';
         $content = '';
         if (in_array(strtolower(pathinfo($name,PATHINFO_EXTENSION)), ['txt','md','csv'])) {
             $content = substr((string)@file_get_contents($dir.$name), 0, 500000);
@@ -408,7 +408,7 @@ class Estimating_hub_ai_model extends App_Model
     public function import_cost_database_csv($file)
     {
         $valid=$this->validate_upload($file,['csv']); if($valid!==true) return $valid;
-        $h=fopen($file['tmp_name'],'r'); if(!$h) return 'Could not read CSV file.';
+        $h=(\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($file['tmp_name'],'r'); if(!$h) return 'Could not read CSV file.';
         $header=fgetcsv($h); if(!$header) return 'CSV header is missing.';
         $map=[]; foreach($header as $i=>$name){ $map[strtolower(trim($name))]=$i; }
         $get=function($row,$names,$default='') use ($map){ foreach((array)$names as $n){ $k=strtolower(trim($n)); if(isset($map[$k]) && isset($row[$map[$k]])) return $row[$map[$k]]; } return $default; };
@@ -454,15 +454,15 @@ class Estimating_hub_ai_model extends App_Model
             ];
             $this->db->insert($this->table('est_ai_cost_database'),$data); $count++;
         }
-        fclose($h); $this->log('Cost Database Import',$count.' rows'); return $count.' cost items imported successfully.';
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($h); $this->log('Cost Database Import',$count.' rows'); return $count.' cost items imported successfully.';
     }
 
     public function import_home_depot_csv($file)
     {
         $valid=$this->validate_upload($file,['csv']); if($valid!==true) return $valid;
-        $h=fopen($file['tmp_name'],'r'); if(!$h) return 'Could not read CSV file.'; $header=fgetcsv($h); $count=0;
+        $h=(\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($file['tmp_name'],'r'); if(!$h) return 'Could not read CSV file.'; $header=fgetcsv($h); $count=0;
         while(($r=fgetcsv($h))!==false){ if(count($r)<2) continue; $this->add_home_depot_item(['sku'=>$r[0]??'','item_name'=>$r[1]??'Home Depot Item','url'=>$r[2]??'','unit'=>$r[3]??'each','last_price'=>$r[4]??0]); $count++; }
-        fclose($h); return $count.' Home Depot items imported successfully.';
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($h); return $count.' Home Depot items imported successfully.';
     }
 
     public function collector_api_receive()
@@ -513,9 +513,9 @@ class Estimating_hub_ai_model extends App_Model
     public function import_collector_csv($file)
     {
         $valid=$this->validate_upload($file,['csv']); if($valid!==true) return $valid;
-        $h=fopen($file['tmp_name'],'r'); if(!$h) return 'Could not read CSV file.'; fgetcsv($h); $count=0;
+        $h=(\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($file['tmp_name'],'r'); if(!$h) return 'Could not read CSV file.'; fgetcsv($h); $count=0;
         while(($r=fgetcsv($h))!==false){ $item=['vendor'=>$r[0]??'Public Source','sku'=>$r[1]??'','brand'=>$r[2]??'','item_name'=>$r[3]??'Collected Item','category'=>$r[4]??'Materials','unit'=>$r[5]??'each','price_low'=>$r[6]??0,'price_mid'=>$r[7]??0,'price_high'=>$r[8]??0,'last_price'=>$r[9]??0,'zip_code'=>$r[10]??'','source_url'=>$r[11]??'','image_url'=>$r[12]??'','source_type'=>'CSV Import']; if($this->save_external_price_source($item)) $count++; }
-        fclose($h); return $count.' collector records imported successfully.';
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($h); return $count.' collector records imported successfully.';
     }
 
     public function export_cost_database_csv(){ $this->csv('estimating_hub_ai_cost_database.csv',['Division','Trade','Category','Item Name','Description','Unit','Material Low','Material Typical','Material High','Labor Hours','Labor Rate','Waste Factor','Production Rate','Permit Required','Inspection Required','Region','Source'], array_map(function($r){return [$r['division'],$r['trade'],$r['category'],$r['item_name'],$r['description'],$r['unit'],$r['material_cost_low'],$r['material_cost_typical'],$r['material_cost_high'],$r['labor_hours'],$r['labor_rate'],$r['waste_factor'],$r['production_rate'],$r['permit_required'],$r['inspection_required'],$r['region'],$r['source'] ?? 'Manual'];},$this->get_cost_items('',50000))); }
@@ -523,7 +523,7 @@ class Estimating_hub_ai_model extends App_Model
     public function export_training_documents_csv(){ $this->csv('estimating_hub_ai_training_documents.csv',['Title','File Name','Status','Created'], array_map(function($r){return [$r['title'],$r['file_name'],$r['status'],$r['datecreated']];},$this->get_training_documents(50000))); }
     public function export_collector_csv(){ $this->csv('estimating_hub_ai_material_price_collector.csv',['Vendor','SKU','Brand','Item Name','Category','Unit','Low Price','Mid Price','High Price','Last Price','ZIP Code','Source URL','Image URL','Last Checked'], array_map(function($r){return [$r['vendor'],$r['sku'],$r['brand'],$r['item_name'],$r['category'],$r['unit'],$r['price_low'],$r['price_mid'],$r['price_high'],$r['last_price'],$r['zip_code'],$r['source_url'],$r['image_url'],$r['last_checked']];},$this->get_external_sources(50000))); }
     public function export_reports_csv(){ $this->csv('estimating_hub_ai_report_summary.csv',['Metric','Total'], [['Estimates',$this->safe_count('est_ai_estimates')],['Cost Items',$this->safe_count('est_ai_cost_database')],['Training Documents',$this->safe_count('est_ai_training_documents')],['Photos',$this->safe_count('est_ai_photo_intake')],['Home Depot Items',$this->safe_count('est_ai_vendor_price_links')],['Collector Records',$this->safe_count('est_ai_external_price_sources')]]); }
-    private function csv($filename,$header,$rows){ header('Content-Type: text/csv'); header('Content-Disposition: attachment; filename="'.$filename.'"'); $out=fopen('php://output','w'); fputcsv($out,$header); foreach($rows as $r) fputcsv($out,$r); exit; }
+    private function csv($filename,$header,$rows){ header('Content-Type: text/csv'); header('Content-Disposition: attachment; filename="'.$filename.'"'); $out=(\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('php://output','w'); fputcsv($out,$header); foreach($rows as $r) fputcsv($out,$r); exit; }
     public function sample_cost_database_csv(){ $this->csv('sample_estimating_cost_database.csv',['Division','Trade','Category','Item Name','Description','Unit','Material Low','Material Typical','Material High','Labor Hours','Labor Rate','Waste Factor','Production Rate','Permit Required','Inspection Required','Region','Source'], [['09','Drywall','Board And Finish','1/2 Inch Drywall','Hang finish texture','sf','2.25','3.85','5.75','0.045','65','0.08','500-900 sf/day','0','0','Tampa Bay','Sample']]); }
     public function sample_home_depot_csv(){ $this->csv('sample_home_depot_material_list.csv',['SKU','Item Name','Home Depot URL','Unit','Target Price'], [['123456','Example Material','https://www.homedepot.com/','each','99.99']]); }
     public function sample_training_documents_csv(){ $this->csv('sample_training_documents.csv',['Title','File Name','Status'], [['Florida Estimating SOP','estimating_sop.pdf','stored']]); }

@@ -246,7 +246,7 @@ class Smart_merge_fields_model extends App_Model
     public function export_mappings_csv()
     {
         $rows = $this->get_mappings();
-        $out = fopen('php://temp', 'r+');
+        $out = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('php://temp', 'r+');
         fputcsv($out, ['Name', 'Source Table', 'Source Field', 'Target Table', 'Target Field', 'Relation Source Field', 'Relation Target Field', 'Status', 'Last Run']);
         foreach ($rows as $row) {
             fputcsv($out, [$row['name'], $row['source_table'], $row['source_field'], $row['target_table'], $row['target_field'], $row['relation_source_field'], $row['relation_target_field'], $row['status'], $row['last_run']]);

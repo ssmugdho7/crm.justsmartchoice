@@ -177,7 +177,7 @@ function handle_si_lead_followup_attachments($id)
             }
 			$newFilePath = $path . $filename;
 			// Upload the file into the temp dir
-			if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+			if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 				$attachment   = [];
 				$attachment[] = [
 					'file_name' => $filename,

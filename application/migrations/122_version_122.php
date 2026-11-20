@@ -11,11 +11,11 @@ class Migration_Version_122 extends CI_Migration
     public function up(){
 
         if(file_exists(APPPATH.'controllers/update.php')){
-            @unlink(APPPATH.'controllers/update.php');
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH.'controllers/update.php');
         }
 
         if (file_exists(APPPATH . 'views/themes/' . active_clients_theme() . '/views/stripe_payment.php')) {
-            @unlink(APPPATH . 'views/themes/' . active_clients_theme() . '/views/stripe_payment.php');
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'views/themes/' . active_clients_theme() . '/views/stripe_payment.php');
         }
 
         $this->db->query("CREATE TABLE IF NOT EXISTS `tblsessions` (
@@ -33,13 +33,13 @@ class Migration_Version_122 extends CI_Migration
         $config_file = trim($config_file);
         $config_file = str_replace("\$config['sess_driver'] = 'files';", "\$config['sess_driver'] = 'database';", $config_file);
         $config_file = str_replace("\$config['sess_save_path'] = sys_get_temp_dir();", "\$config['sess_save_path'] = db_prefix().'sessions';", $config_file);
-        if (!$fp = fopen($config_path, FOPEN_WRITE_CREATE_DESTRUCTIVE)) {
+        if (!$fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($config_path, FOPEN_WRITE_CREATE_DESTRUCTIVE)) {
             return FALSE;
         }
         flock($fp, LOCK_EX);
         fwrite($fp, $config_file, strlen($config_file));
         flock($fp, LOCK_UN);
-        fclose($fp);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
         @chmod($config_path, FILE_READ_MODE);
 
 

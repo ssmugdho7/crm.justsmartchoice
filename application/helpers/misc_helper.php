@@ -113,7 +113,7 @@ function process_digital_signature_image($partBase64, $path)
 
     $filename = unique_filename($path, 'signature.png');
     $fullPath = $path . $filename;
-    $written  = @file_put_contents($fullPath, $decodedImage, LOCK_EX);
+    $written  = @(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($fullPath, $decodedImage, LOCK_EX);
     if ($written === false || $written < 1) {
         log_message('error', 'Unable to write contract signature file: ' . $fullPath);
         return false;
@@ -144,7 +144,7 @@ function process_digital_initials_image($partBase64, $path)
         return null;
     }
     $fullPath = $path . $filename;
-    $written = @file_put_contents($fullPath, $decoded, LOCK_EX);
+    $written = @(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($fullPath, $decoded, LOCK_EX);
     if ($written === false || $written < 1) {
         log_message('error', 'Unable to write contract initials file: ' . $fullPath);
         return null;

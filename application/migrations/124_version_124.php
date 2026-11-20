@@ -17,11 +17,11 @@ class Migration_Version_124 extends CI_Migration
         $config_file = trim($config_file);
 
         $config_file = str_replace("\$config['global_xss_filtering'] = FALSE;", "\$config['global_xss_filtering'] = TRUE;", $config_file);
-        $fp = fopen($config_path, FOPEN_WRITE_CREATE_DESTRUCTIVE);
+        $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($config_path, FOPEN_WRITE_CREATE_DESTRUCTIVE);
         flock($fp, LOCK_EX);
         fwrite($fp, $config_file, strlen($config_file));
         flock($fp, LOCK_UN);
-        fclose($fp);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
         @chmod($config_path, FILE_READ_MODE);
 
         $cfields_values = $this->db->get(db_prefix().'customfieldsvalues')->result_array();

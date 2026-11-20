@@ -34,7 +34,7 @@ class Migration_Version_105 extends App_module_migration
         }
 
         if (!file_exists(FCPATH . 'modules/notes/uploads/index.html')) {
-            @file_put_contents(FCPATH . 'modules/notes/uploads/index.html', '');
+            @(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')(FCPATH . 'modules/notes/uploads/index.html', '');
         }
     }
 

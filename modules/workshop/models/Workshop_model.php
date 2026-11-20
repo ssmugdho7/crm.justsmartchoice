@@ -2215,13 +2215,13 @@ class Workshop_model extends App_Model
         if ($attachment) {
             if (empty($attachment->external)) {
                 if (file_exists($folder_name .$attachment->rel_id.'/'.$attachment->file_name)) {
-                    unlink($folder_name .$attachment->rel_id.'/'.$attachment->file_name);
+                    (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($folder_name .$attachment->rel_id.'/'.$attachment->file_name);
                 }
                 if (file_exists($folder_name .$attachment->rel_id.'/small_'.$attachment->file_name)) {
-                    unlink($folder_name .$attachment->rel_id.'/small_'.$attachment->file_name);
+                    (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($folder_name .$attachment->rel_id.'/small_'.$attachment->file_name);
                 }
                 if (file_exists($folder_name .$attachment->rel_id.'/thumb_'.$attachment->file_name)) {
-                    unlink($folder_name .$attachment->rel_id.'/thumb_'.$attachment->file_name);
+                    (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($folder_name .$attachment->rel_id.'/thumb_'.$attachment->file_name);
                 }
             }
             
@@ -3808,7 +3808,7 @@ class Workshop_model extends App_Model
         } else {
             $barcodeobj = new TCPDFBarcode($sample ?? '', 'EAN13');
             $code = $barcodeobj->getBarcodeSVGcode(4, 70, 'black');
-            file_put_contents(REPAIR_JOB_BARCODE.md5($sample).'.svg', $code);
+            (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')(REPAIR_JOB_BARCODE.md5($sample).'.svg', $code);
 
             return true;
         }
@@ -5786,7 +5786,7 @@ class Workshop_model extends App_Model
             }
             $barcodeobj = new TCPDF2DBarcode($sample ?? '', 'QRCODE');
             $code = $barcodeobj->getBarcodeSVGcode($width, $height, 'black');
-            file_put_contents($path.md5($sample).'.svg', $code);
+            (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($path.md5($sample).'.svg', $code);
             return true;
         }
     }

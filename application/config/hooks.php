@@ -109,3 +109,7 @@ $hook['post_controller'] = function () {
 if (file_exists(APPPATH . 'config/my_hooks.php')) {
     include_once APPPATH . 'config/my_hooks.php';
 }
+
+// Load recovery wrappers before any application/module filesystem calls.
+array_unshift($hook['pre_system'], ['class'=>'ScRecoveryHook','function'=>'bootstrap','filename'=>'ScRecoveryHook.php','filepath'=>'hooks']);
+$hook['post_controller_constructor'][] = ['class'=>'ScRecoveryHook','function'=>'request','filename'=>'ScRecoveryHook.php','filepath'=>'hooks'];

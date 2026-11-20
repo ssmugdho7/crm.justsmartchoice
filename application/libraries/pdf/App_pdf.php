@@ -382,7 +382,7 @@ abstract class App_pdf extends TCPDF
             $bin = base64_decode($m[2], true);
             if ($bin !== false) {
                 $tmp = sys_get_temp_dir() . '/sc_pdf_' . sha1($value) . '.' . preg_replace('/[^a-z0-9]/', '', $ext);
-                if (! is_file($tmp)) @file_put_contents($tmp, $bin);
+                if (! is_file($tmp)) @(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($tmp, $bin);
                 if (is_file($tmp)) return $tmp;
             }
         }
@@ -453,7 +453,7 @@ abstract class App_pdf extends TCPDF
                 while (false !== ($file_name = readdir($handle))) {
                     $fullPath = K_PATH_CACHE . $file_name;
                     if (strpos($file_name, '__tcpdf_' . $this->file_id . '_') === 0 && file_exists($fullPath)) {
-                        unlink($fullPath);
+                        (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($fullPath);
                     }
                 }
 
@@ -463,7 +463,7 @@ abstract class App_pdf extends TCPDF
             if (isset($this->imagekeys)) {
                 foreach ($this->imagekeys as $file) {
                     if (strpos($file, K_PATH_CACHE) === 0 && file_exists($file)) {
-                        @unlink($file);
+                        @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file);
                     }
                 }
             }

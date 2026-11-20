@@ -87,7 +87,7 @@ class Drawings_model extends App_Model
   public function delete($id)
   {
     $record = $this->get($id);
-    foreach (['draf','final_doc'] as $field) { if ($record && !empty($record->{$field})) { $path = !empty($record->folder_path) ? $record->folder_path.$record->{$field} : get_upload_path_by_type_module('eng_drawing_files').$record->{$field}; if (is_file($path)) { @unlink($path); } } }
+    foreach (['draf','final_doc'] as $field) { if ($record && !empty($record->{$field})) { $path = !empty($record->folder_path) ? $record->folder_path.$record->{$field} : get_upload_path_by_type_module('eng_drawing_files').$record->{$field}; if (is_file($path)) { @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path); } } }
     $this->db->where('id', $id);
     $this->db->delete(db_prefix() . 'eng_drawings');
     if ($this->db->affected_rows() > 0) {

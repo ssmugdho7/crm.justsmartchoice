@@ -110,9 +110,9 @@ class File_sharing_client extends ClientsController
     }
 
     if (!file_exists($mediaPath . '/index.html')) {
-      $fp = fopen($mediaPath . '/index.html', 'w');
+      $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($mediaPath . '/index.html', 'w');
       if ($fp) {
-        fclose($fp);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
       }
     }
 
@@ -178,9 +178,9 @@ class File_sharing_client extends ClientsController
       }
 
       if (!file_exists($publicRootPath . '/index.html')) {
-        $fp = fopen($publicRootPath . '/index.html', 'w');
+        $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($publicRootPath . '/index.html', 'w');
         if ($fp) {
-          fclose($fp);
+          (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
         }
       }
 
@@ -193,9 +193,9 @@ class File_sharing_client extends ClientsController
         }
 
         if (!file_exists($clientFilesPath . '/index.html')) {
-            $fp = fopen($clientFilesPath . '/index.html', 'w');
+            $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($clientFilesPath . '/index.html', 'w');
             if ($fp) {
-                fclose($fp);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
             }
         }
 
@@ -207,9 +207,9 @@ class File_sharing_client extends ClientsController
           fs_new_file_database($path, '', '', 'directory', 1);
       }
       if (!file_exists($path . '/index.html')) {
-          $fp = fopen($path . '/index.html', 'w');
+          $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($path . '/index.html', 'w');
           if ($fp) {
-              fclose($fp);
+              (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
           }
       }
 
@@ -222,9 +222,9 @@ class File_sharing_client extends ClientsController
       }
 
       if (!file_exists($sharePath . '/index.html')) {
-          $fp = fopen($sharePath . '/index.html', 'w');
+          $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($sharePath . '/index.html', 'w');
           if ($fp) {
-              fclose($fp);
+              (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
           }
       }
 
@@ -237,9 +237,9 @@ class File_sharing_client extends ClientsController
         }
 
         if (!file_exists($trashPath . '/index.html')) {
-            $fp = fopen($trashPath . '/index.html', 'w');
+            $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($trashPath . '/index.html', 'w');
             if ($fp) {
-                fclose($fp);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
             }
         }
         
@@ -252,9 +252,9 @@ class File_sharing_client extends ClientsController
       }
 
       if (!file_exists($trashPath . '/index.html')) {
-          $fp = fopen($trashPath . '/index.html', 'w');
+          $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($trashPath . '/index.html', 'w');
           if ($fp) {
-              fclose($fp);
+              (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
           }
       }
 

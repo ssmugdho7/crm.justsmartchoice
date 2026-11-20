@@ -57,7 +57,7 @@ function exclude_graphql() {
     {
         
         
-        $myfile = fopen(APPPATH."config/config.php", "a") or die("Unable to open file!");
+        $myfile = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(APPPATH."config/config.php", "a") or die("Unable to open file!");
         $txt = "if(!isset(\$config['csrf_exclude_uris']))
         {
             \$config['csrf_exclude_uris']=[];
@@ -65,7 +65,7 @@ function exclude_graphql() {
         fwrite($myfile, "\n". $txt);
         $txt = "\$config['csrf_exclude_uris'] = array_merge(\$config['csrf_exclude_uris'],array('graphql'));";
         fwrite($myfile, "\n". $txt);
-        fclose($myfile);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($myfile);
         update_option('current_perfex_version',$update_info);
         update_option('excluded_uri_for_graphqlintegration_once', 1);
     }

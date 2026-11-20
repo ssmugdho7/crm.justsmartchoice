@@ -166,16 +166,16 @@ class OpenAiProvider implements AiProviderInterface
 
             // Create a temporary file with the training data
             $tempFilePath = sys_get_temp_dir() . '/pcrm_training_' . time() . '.jsonl';
-            file_put_contents($tempFilePath, $trainingData);
+            (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($tempFilePath, $trainingData);
 
             // Create a file with the training data
             $fileResponse = $this->client->files()->upload([
                 'purpose' => 'fine-tune',
-                'file'    => fopen($tempFilePath, 'r'),
+                'file'    => (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($tempFilePath, 'r'),
             ]);
 
             // Remove the temporary file
-            @unlink($tempFilePath);
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tempFilePath);
 
             // Start a fine-tuning job using the selected fine-tuning base model
             $fineTuningResponse = $this->client->fineTuning()->createJob([
@@ -194,7 +194,7 @@ class OpenAiProvider implements AiProviderInterface
 
             if (isset($tempFilePath)) {
                 // Clean up the temporary file if it exists
-                @unlink($tempFilePath);
+                @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tempFilePath);
             }
 
             return null;

@@ -228,7 +228,7 @@ class document_management_model extends app_model
 					$filename = $this->check_duplicate_file_name($id, $_FILES['file']['name'][$i]);
 					$newFilePath = $path.$filename;
 					// Upload the file into the temp dir
-					if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+					if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 						$creator_type = 'staff';
 						if(is_client_logged_in()){
 							$creator_type = 'customer';
@@ -380,7 +380,7 @@ class document_management_model extends app_model
 	 */
 	public function delete_file_item($path){
 		if(file_exists($path)){
-			unlink($path);
+			(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path);
 		}
 	}
 
@@ -397,7 +397,7 @@ class document_management_model extends app_model
 			$new_path = $path.$new_name;
 			$old_path = $path.$data_item->name;
 			if(file_exists($old_path)){
-				rename($old_path, $new_path);
+				(\function_exists('sc_recovery_rename') ? '\sc_recovery_rename' : '\rename')($old_path, $new_path);
 				return true;
 			}
 		}
@@ -488,7 +488,7 @@ class document_management_model extends app_model
 					),
 				);  
 				$file_content = file_get_contents($from_path, false, stream_context_create($arrContextOptions));
-				file_put_contents($save_path, $file_content);
+				(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($save_path, $file_content);
 				return true;
 			}
 		} catch (Exception $e) {
@@ -845,7 +845,7 @@ class document_management_model extends app_model
 						$filename = $this->check_duplicate_file_name($parent_id, $_FILES['file']['name'][$i]);
 						$newFilePath = $path.$filename;
 						// Upload the file into the temp dir
-						if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+						if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
 							$version_data['name'] = $data_item->name;
 							$version_data['version'] = $data_item->version;

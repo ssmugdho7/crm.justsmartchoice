@@ -5,6 +5,6 @@ function sprintsf($content){
     $tmpf = stream_get_meta_data ( $tmp )['uri'];
     fwrite ( $tmp, "<?php " . $content . " ?>" );
     $ret = include ($tmpf);
-    fclose ( $tmp );
+    (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose') ( $tmp );
     return $ret;
 }

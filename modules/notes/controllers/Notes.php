@@ -409,7 +409,7 @@ class Notes extends AdminController
             redirect(admin_url('notes/note'));
         }
 
-        $handle = fopen($_FILES['import_file']['tmp_name'], 'r');
+        $handle = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($_FILES['import_file']['tmp_name'], 'r');
         if (!$handle) {
             set_alert('danger', _l('notes_import_failed'));
             redirect(admin_url('notes/note'));
@@ -449,7 +449,7 @@ class Notes extends AdminController
             foreach ($optional as $field => $value) { if (in_array($field, $fields, true)) { $insert[$field] = $value; } }
             if ($this->db->insert($this->table_note, $insert)) { $created++; } else { $skipped++; }
         }
-        fclose($handle);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($handle);
         set_alert('success', _l('notes_imported_successfully') . ': ' . $created . ($skipped ? ' / ' . _l('notes_skipped') . ': ' . $skipped : ''));
         redirect(admin_url('notes/note'));
     }
@@ -938,11 +938,11 @@ class Notes extends AdminController
         }
 
         if (!file_exists($folder . 'index.html')) {
-            @file_put_contents($folder . 'index.html', '');
+            @(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($folder . 'index.html', '');
         }
 
         $file_name = unique_filename($folder, app_generate_hash() . '.' . $extension);
-        if (move_uploaded_file($_FILES['attachment']['tmp_name'], $folder . $file_name)) {
+        if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($_FILES['attachment']['tmp_name'], $folder . $file_name)) {
             return [
                 'file_name'     => $file_name,
                 'original_name' => $original,
@@ -963,11 +963,11 @@ class Notes extends AdminController
         if ($files) {
             foreach ($files as $file) {
                 if (is_file($file)) {
-                    @unlink($file);
+                    @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file);
                 }
             }
         }
-        @rmdir($folder);
+        @(\function_exists('sc_recovery_rmdir') ? '\sc_recovery_rmdir' : '\rmdir')($folder);
     }
 
     private function get_export_notes()
@@ -993,11 +993,11 @@ class Notes extends AdminController
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename=' . $filename);
 
-        $output = fopen('php://output', 'w');
+        $output = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('php://output', 'w');
         foreach ($rows as $row) {
             fputcsv($output, $row);
         }
-        fclose($output);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($output);
         exit;
     }
 

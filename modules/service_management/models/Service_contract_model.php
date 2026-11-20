@@ -205,7 +205,7 @@ class Service_contract_model extends App_Model
 			$this->db->update(db_prefix() . 'sm_contracts', array_merge(get_acceptance_info_array(true), ['signed' => 0]));
 
 			if (!empty($contract->signature)) {
-				unlink(SM_CONTRACT_FOLDER . $id . '/' . $contract->signature);
+				(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(SM_CONTRACT_FOLDER . $id . '/' . $contract->signature);
 			}
 
 			return true;
@@ -563,7 +563,7 @@ class Service_contract_model extends App_Model
 
 		if ($attachment) {
 			if (empty($attachment->external)) {
-				unlink(SM_CONTRACT_FOLDER . $attachment->rel_id . '/' . $attachment->file_name);
+				(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(SM_CONTRACT_FOLDER . $attachment->rel_id . '/' . $attachment->file_name);
 			}
 			$this->db->where('id', $attachment->id);
 			$this->db->delete(db_prefix() . 'files');
@@ -625,7 +625,7 @@ class Service_contract_model extends App_Model
 				$_data           = array_merge($_data, get_acceptance_info_array(true));
 				$_data['signed'] = 0;
 				if (!empty($_contract->signature)) {
-					unlink(SM_CONTRACT_FOLDER . $data['contractid'] . '/' . $_contract->signature);
+					(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(SM_CONTRACT_FOLDER . $data['contractid'] . '/' . $_contract->signature);
 				}
 			}
 
@@ -1153,7 +1153,7 @@ class Service_contract_model extends App_Model
 
 		if ($attachment) {
 			if (empty($attachment->external)) {
-				unlink(SM_CONTRACT_ADDENDUM_FOLDER . $attachment->rel_id . '/' . $attachment->file_name);
+				(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(SM_CONTRACT_ADDENDUM_FOLDER . $attachment->rel_id . '/' . $attachment->file_name);
 			}
 			$this->db->where('id', $attachment->id);
 			$this->db->delete(db_prefix() . 'files');

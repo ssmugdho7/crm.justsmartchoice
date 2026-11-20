@@ -241,7 +241,7 @@ class Contracts_model extends App_Model
             ]));
 
             if (!empty($contract->signature)) {
-                @unlink(get_upload_path_by_type('contract') . $id . '/' . $contract->signature);
+                @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(get_upload_path_by_type('contract') . $id . '/' . $contract->signature);
             }
             signature_backup_delete('contract', $id);
 
@@ -663,7 +663,7 @@ class Contracts_model extends App_Model
 
         if ($attachment) {
             if (empty($attachment->external)) {
-                unlink(get_upload_path_by_type('contract') . $attachment->rel_id . '/' . $attachment->file_name);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(get_upload_path_by_type('contract') . $attachment->rel_id . '/' . $attachment->file_name);
             }
             $this->db->where('id', $attachment->id);
             $this->db->delete(db_prefix() . 'files');
@@ -732,7 +732,7 @@ class Contracts_model extends App_Model
                 $_data           = array_merge($_data, get_acceptance_info_array(true));
                 $_data['signed'] = 0;
                 if (!empty($_contract->signature)) {
-                    @unlink(get_upload_path_by_type('contract') . $data['contractid'] . '/' . $_contract->signature);
+                    @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(get_upload_path_by_type('contract') . $data['contractid'] . '/' . $_contract->signature);
                 }
                 signature_backup_delete('contract', $data['contractid']);
             }

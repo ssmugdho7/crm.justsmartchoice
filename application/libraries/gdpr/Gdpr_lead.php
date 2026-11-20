@@ -93,9 +93,9 @@ class Gdpr_lead
         mkdir($tmpDirLeadData, 0755);
 
 
-        $fp = fopen($tmpDirLeadData . '/data.json', 'w');
+        $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($tmpDirLeadData . '/data.json', 'w');
         fwrite($fp, json_encode($json, JSON_PRETTY_PRINT));
-        fclose($fp);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
 
         $this->ci->zip->read_file($tmpDirLeadData . '/data.json');
 

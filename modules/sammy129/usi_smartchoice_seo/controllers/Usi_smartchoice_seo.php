@@ -684,9 +684,9 @@ class Usi_smartchoice_seo extends AdminController
         if ($type === 'project_handoffs') { $rows = $this->usi_seo->get_project_handoffs([]); }
         header('Content-Type: text/csv');
         header('Content-Disposition: attachment; filename="' . $type . '_export.csv"');
-        $out = fopen('php://output', 'w');
+        $out = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('php://output', 'w');
         if (!empty($rows)) { fputcsv($out, array_keys($rows[0])); foreach ($rows as $row) { fputcsv($out, $row); } }
-        fclose($out);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($out);
         exit;
     }
 

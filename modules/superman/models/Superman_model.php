@@ -102,10 +102,10 @@ class Superman_model extends App_Model
 
     public function import_mappings_csv($path)
     {
-        $handle = fopen($path, 'r');
+        $handle = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($path, 'r');
         if (!$handle) { return 0; }
         $headers = fgetcsv($handle);
-        if (!is_array($headers)) { fclose($handle); return 0; }
+        if (!is_array($headers)) { (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($handle); return 0; }
         $headers = array_map('trim', $headers);
         $count = 0;
         while (($row = fgetcsv($handle)) !== false) {
@@ -124,7 +124,7 @@ class Superman_model extends App_Model
                 'notes' => $data['notes'] ?? '',
             ])) { $count++; }
         }
-        fclose($handle);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($handle);
         return $count;
     }
 

@@ -282,12 +282,12 @@ class Tickets_model extends App_Model
 
                     if (!file_exists($path)) {
                         mkdir($path, 0755);
-                        $fp = fopen($path . 'index.html', 'w');
-                        fclose($fp);
+                        $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($path . 'index.html', 'w');
+                        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
                     }
 
                     $filename = unique_filename($path, $filename . '.' . $extension);
-                    file_put_contents($path . $filename, $attachment['data']);
+                    (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($path . $filename, $attachment['data']);
 
                     array_push($ticket_attachments, [
                         'file_name' => $filename,
@@ -657,7 +657,7 @@ class Tickets_model extends App_Model
         $this->db->where('id', $id);
         $attachment = $this->db->get(db_prefix() . 'ticket_attachments')->row();
         if ($attachment) {
-            if (unlink(get_upload_path_by_type('ticket') . $attachment->ticketid . '/' . $attachment->file_name)) {
+            if ((\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(get_upload_path_by_type('ticket') . $attachment->ticketid . '/' . $attachment->file_name)) {
                 $this->db->where('id', $attachment->id);
                 $this->db->delete(db_prefix() . 'ticket_attachments');
                 $deleted = true;

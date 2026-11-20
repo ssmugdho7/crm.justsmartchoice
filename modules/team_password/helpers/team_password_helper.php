@@ -472,7 +472,7 @@ function handle_item_password_file($id, $type) {
 				$filename = unique_filename($path, $_FILES['attachments']['name'][$i]);
 				$newFilePath = $path . $filename;
 				// Upload the file into the temp dir
-				if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+				if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 					$attachment = [];
 					$attachment[] = [
 						'file_name' => $filename,

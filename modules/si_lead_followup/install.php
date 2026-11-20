@@ -51,11 +51,11 @@ create_email_template('{email_subject}',
 $path = get_upload_path_by_type('si_lead_followup');
     _maybe_create_upload_path($path);
 if (!file_exists($path.'.htaccess') && is_writable($path)) {
-		fopen($path . '.htaccess', 'w');
-	$fp = fopen($path.'.htaccess','a+');
+		(\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($path . '.htaccess', 'w');
+	$fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($path.'.htaccess','a+');
 	if($fp)
 	{
 		fwrite($fp,'Order Deny,Allow'.PHP_EOL.'Deny from all');
-		fclose($fp);
+		(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
 	}
 }

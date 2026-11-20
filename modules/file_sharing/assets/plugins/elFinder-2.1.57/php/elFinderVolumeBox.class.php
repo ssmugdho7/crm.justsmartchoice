@@ -274,14 +274,14 @@ class fs_elFinderVolumeBox extends fs_elFinderVolumeDriver
                 $error = 'Tried to renew the access token, but did not get a response from the Box server.';
             }
             if ($error) {
-                $lock && unlink($lock);
+                $lock && (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($lock);
                 throw new \Exception('Box access token update failed. ('.$error.') If this message appears repeatedly, please notify the administrator.');
             }
 
             if (empty($decoded->access_token)) {
                 if ($aTokenFile) {
                     if (is_file($aTokenFile)) {
-                        unlink($aTokenFile);
+                        (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($aTokenFile);
                     }
                 }
                 $err = property_exists($decoded, 'error')? ' ' . $decoded->error : '';
@@ -300,7 +300,7 @@ class fs_elFinderVolumeBox extends fs_elFinderVolumeDriver
 
             if (!empty($decoded->refresh_token)) {
                 if (empty($this->options['netkey']) && $aTokenFile) {
-                    file_put_contents($aTokenFile, json_encode($token), LOCK_EX);
+                    (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($aTokenFile, json_encode($token), LOCK_EX);
                     $this->options['accessToken'] = $json;
                 } else if (!empty($this->options['netkey'])) {
                     // OAuth2 refresh token can be used only once,
@@ -308,7 +308,7 @@ class fs_elFinderVolumeBox extends fs_elFinderVolumeDriver
                     if ($aTokenFile && is_file($aTokenFile)) {
                         if ($_token = json_decode(file_get_contents($aTokenFile))) {
                             if ($_token->data->refresh_token === $refresh_token) {
-                                file_put_contents($aTokenFile, $json, LOCK_EX);
+                                (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($aTokenFile, $json, LOCK_EX);
                             }
                         }
                     }
@@ -320,7 +320,7 @@ class fs_elFinderVolumeBox extends fs_elFinderVolumeDriver
                     throw new \Exception(ERROR_CREATING_TEMP_DIR);
                 }
             }
-            $lock && unlink($lock);
+            $lock && (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($lock);
         }
 
         return true;
@@ -854,7 +854,7 @@ class fs_elFinderVolumeBox extends fs_elFinderVolumeDriver
     {
         if ($tmbs = glob(rtrim($this->options['tmbPath'], '\\/') . DIRECTORY_SEPARATOR . $this->tmbPrefix . '*.png')) {
             foreach ($tmbs as $file) {
-                unlink($file);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file);
             }
         }
 
@@ -921,11 +921,11 @@ class fs_elFinderVolumeBox extends fs_elFinderVolumeDriver
                         if (is_file($this->aTokenFile)) {
                             $this->token = json_decode(file_get_contents($this->aTokenFile));
                             if (!is_object($this->token)) {
-                                unlink($this->aTokenFile);
+                                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($this->aTokenFile);
                                 throw new Exception('Required option `accessToken` is invalid JSON.');
                             }
                         } else {
-                            file_put_contents($this->aTokenFile, json_encode($this->token), LOCK_EX);
+                            (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($this->aTokenFile, json_encode($this->token), LOCK_EX);
                         }
                     }
                 } else if (is_file($this->aTokenFile)) {
@@ -1206,7 +1206,7 @@ class fs_elFinderVolumeBox extends fs_elFinderVolumeDriver
                 return false;
             }
         }
-        if (!file_put_contents($tmb, $data)) {
+        if (!(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($tmb, $data)) {
             return false;
         }
 
@@ -1243,7 +1243,7 @@ class fs_elFinderVolumeBox extends fs_elFinderVolumeDriver
         }
 
         if (!$result) {
-            unlink($tmb);
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tmb);
 
             return false;
         }
@@ -1532,14 +1532,14 @@ class fs_elFinderVolumeBox extends fs_elFinderVolumeDriver
                 $cache['width'] = $size[0];
                 $cache['height'] = $size[1];
                 $ret = array('dim' => $size[0] . 'x' . $size[1]);
-                $srcfp = fopen($work, 'rb');
+                $srcfp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($work, 'rb');
                 $target = isset(fs_elFinder::$currentArgs['target'])? fs_elFinder::$currentArgs['target'] : '';
                 if ($subImgLink = $this->getSubstituteImgLink($target, $size, $srcfp)) {
                     $ret['url'] = $subImgLink;
                 }
             }
         }
-        is_file($work) && @unlink($work);
+        is_file($work) && @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($work);
 
         return $ret;
     }
@@ -1608,9 +1608,9 @@ class fs_elFinderVolumeBox extends fs_elFinderVolumeDriver
      */
     protected function _fclose($fp, $path = '')
     {
-        is_resource($fp) && fclose($fp);
+        is_resource($fp) && (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
         if ($path) {
-            unlink($this->getTempFile($path));
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($this->getTempFile($path));
         }
     }
 
@@ -1907,13 +1907,13 @@ class fs_elFinderVolumeBox extends fs_elFinderVolumeDriver
         $res = false;
 
         if ($local = $this->getTempFile($path)) {
-            if (file_put_contents($local, $content, LOCK_EX) !== false
-                && ($fp = fopen($local, 'rb'))) {
+            if ((\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($local, $content, LOCK_EX) !== false
+                && ($fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($local, 'rb'))) {
                 clearstatcache();
                 $res = $this->_save($fp, $path, '', array());
-                fclose($fp);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
             }
-            file_exists($local) && unlink($local);
+            file_exists($local) && (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($local);
         }
 
         return $res;

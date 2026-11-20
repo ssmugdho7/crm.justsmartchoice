@@ -75,7 +75,7 @@ class Whatsbot extends AdminController {
 
             // generate qr
             if (!empty(get_option('wac_default_phone_number')) && !is_image(module_dir_path('whatsbot', 'assets/images/qrcode.png'))) {
-                @unlink(module_dir_path('whatsbot', 'assets/images/qrcode.png'));
+                @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(module_dir_path('whatsbot', 'assets/images/qrcode.png'));
                 $qr = $this->generateUrlQR("https://wa.me/" . get_option('wac_default_phone_number'), true);
             }
 
@@ -145,7 +145,7 @@ class Whatsbot extends AdminController {
         $phone_number = preg_replace('/\D/', '', $this->input->post('wac_default_phone_number'));
         update_option('wac_default_phone_number', $phone_number, 0);
 
-        @unlink(module_dir_path('whatsbot', 'assets/images/qrcode.png'));
+        @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(module_dir_path('whatsbot', 'assets/images/qrcode.png'));
         $qr = $this->generateUrlQR("https://wa.me/$phone_number", true);
 
         set_alert('success', _l('default_number_updated'));
@@ -380,7 +380,7 @@ class Whatsbot extends AdminController {
         }
 
         if (!empty(get_option('wac_default_phone_number')) && !is_image(module_dir_path('whatsbot', 'assets/images/qrcode.png'))) {
-            @unlink(module_dir_path('whatsbot', 'assets/images/qrcode.png'));
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(module_dir_path('whatsbot', 'assets/images/qrcode.png'));
             $qr = $this->generateUrlQR("https://wa.me/" . get_option('wac_default_phone_number'), true);
         }
 

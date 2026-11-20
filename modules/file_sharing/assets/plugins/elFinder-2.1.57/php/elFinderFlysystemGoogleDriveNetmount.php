@@ -271,11 +271,11 @@ class fs_elFinderVolumeFlysystemGoogleDriveNetmount extends ExtDriver
     {
         $cache = $this->options['gdCacheDir'] . DIRECTORY_SEPARATOR . $this->options['gdCachePrefix'] . $this->netMountKey;
         if (file_exists($cache) && is_writeable($cache)) {
-            unlink($cache);
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($cache);
         }
         if ($tmbs = glob($this->tmbPath . DIRECTORY_SEPARATOR . $this->netMountKey . '*')) {
             foreach ($tmbs as $file) {
-                unlink($file);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file);
             }
         }
         return true;

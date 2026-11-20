@@ -31,7 +31,7 @@ class Migration_Version_204 extends App_module_migration
                 @mkdir($folder, 0755, true);
             }
             if (is_dir($folder) && !file_exists(rtrim($folder, '/') . '/index.html')) {
-                @file_put_contents(rtrim($folder, '/') . '/index.html', '');
+                @(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')(rtrim($folder, '/') . '/index.html', '');
             }
         }
     }

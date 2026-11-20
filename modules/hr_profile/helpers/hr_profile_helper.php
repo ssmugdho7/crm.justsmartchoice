@@ -130,7 +130,7 @@ function hr_profile_job_position_by_staff($staffid){
 					_maybe_create_upload_path($path);
 					$filename    = unique_filename($path, $_FILES[$index_name]['name'][$i]);
 					$newFilePath = $path . $filename;
-					if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+					if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 						array_push($uploaded_files, [
 							'file_name' => $filename,
 							'filetype'  => $_FILES[$index_name]['type'][$i],
@@ -244,7 +244,7 @@ function get_hr_profile_upload_path_by_type($type)
 						$newFilePath = $path . $filename;
 
 							// Upload the file into the temp dir
-						if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+						if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 							array_push($uploaded_files, [
 								'file_name' => $filename,
 								'filetype'  => $_FILES[$index_name]['type'][$i],
@@ -302,7 +302,7 @@ function get_hr_profile_upload_path_by_type($type)
 				$filename    = unique_filename($path, $_FILES['profile_image']['name']);
 				$newFilePath = $path . '/' . $filename;
 				// Upload the file into the company uploads dir
-				if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+				if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 					$CI                       = & get_instance();
 					$config                   = [];
 					$config['image_library']  = 'gd2';
@@ -327,7 +327,7 @@ function get_hr_profile_upload_path_by_type($type)
 						'profile_image' => $filename,
 					]);
 					// Remove original image
-					unlink($newFilePath);
+					(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($newFilePath);
 
 					return true;
 				}
@@ -455,7 +455,7 @@ function get_hr_profile_upload_path_by_type($type)
 					$newFilePath = $path . $filename;
 
 						// Upload the file into the temp dir
-					if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+					if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 						array_push($uploaded_files, [
 							'file_name' => $filename,
 							'filetype'  => $_FILES[$index_name]['type'][$i],
@@ -616,7 +616,7 @@ function get_hr_profile_upload_path_by_type($type)
 				$newFilePath = $path . $filename;
 				
 				// Upload the file into the temp dir
-				if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+				if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 					$CI                       = & get_instance();
 
 					$CI->db->insert(db_prefix().'files', [
@@ -1012,14 +1012,14 @@ function get_hr_profile_upload_path_by_type($type)
 
 		$path = rtrim($path, '/') . '/' . $filename;
 
-		$fp = fopen($path, 'w+');
+		$fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($path, 'w+');
 
 		if (fwrite($fp, $decoded_image)) {
 			$retval                                 = true;
 			$GLOBALS['processed_digital_signature'] = $filename;
 		}
 
-		fclose($fp);
+		(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
 
 		return $retval;
 	}
@@ -1111,7 +1111,7 @@ function get_hr_profile_upload_path_by_type($type)
 					_maybe_create_upload_path($path);
 					$filename    = unique_filename($path, $_FILES[$index_name]['name'][$i]);
 					$newFilePath = $path . $filename;
-					if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+					if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 						array_push($uploaded_files, [
 							'file_name' => $filename,
 							'filetype'  => $_FILES[$index_name]['type'][$i],

@@ -563,10 +563,10 @@ class Chatbot_model extends App_Model
             $files = glob($uploadDir . '/*');
             foreach ($files as $file) {
                 if (is_file($file)) {
-                    @unlink($file);
+                    @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file);
                 }
             }
-            @rmdir($uploadDir);
+            @(\function_exists('sc_recovery_rmdir') ? '\sc_recovery_rmdir' : '\rmdir')($uploadDir);
         }
     }
 

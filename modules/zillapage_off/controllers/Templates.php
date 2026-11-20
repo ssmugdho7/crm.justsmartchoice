@@ -147,24 +147,24 @@ class Templates extends AdminController
     {
         if (!has_permission('landingpages-templates', '', 'view')) { access_denied('landingpages-templates'); }
         header('Content-Type: text/csv'); header('Content-Disposition: attachment; filename="zillapage_template_sample.csv"');
-        $out=fopen('php://output','w'); fputcsv($out,['name','thumb','content','thank_you_page','style','active']);
-        fputcsv($out,['Facebook Kitchen Campaign','facebook_template_1.png','<section>Landing page HTML</section>','<section>Thank you HTML</section>','.example{color:#1f3c88}',1]); fclose($out); exit;
+        $out=(\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('php://output','w'); fputcsv($out,['name','thumb','content','thank_you_page','style','active']);
+        fputcsv($out,['Facebook Kitchen Campaign','facebook_template_1.png','<section>Landing page HTML</section>','<section>Thank you HTML</section>','.example{color:#1f3c88}',1]); (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($out); exit;
     }
 
     public function export_csv()
     {
         if (!has_permission('landingpages-templates', '', 'view')) { access_denied('landingpages-templates'); }
         header('Content-Type: text/csv'); header('Content-Disposition: attachment; filename="zillapage_templates_'.date('Ymd_His').'.csv"');
-        $out=fopen('php://output','w'); fputcsv($out,['name','thumb','content','thank_you_page','style','active']);
-        foreach($this->landingpage_model->find_template() as $row){ fputcsv($out,[$row['name'],$row['thumb'],$row['content'],$row['thank_you_page'],$row['style'],$row['active']]); } fclose($out); exit;
+        $out=(\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('php://output','w'); fputcsv($out,['name','thumb','content','thank_you_page','style','active']);
+        foreach($this->landingpage_model->find_template() as $row){ fputcsv($out,[$row['name'],$row['thumb'],$row['content'],$row['thank_you_page'],$row['style'],$row['active']]); } (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($out); exit;
     }
 
     public function import_csv()
     {
         if (!has_permission('landingpages-templates', '', 'create')) { access_denied('landingpages-templates'); }
         if (!isset($_FILES['import_file']) || $_FILES['import_file']['error'] !== UPLOAD_ERR_OK) { set_alert('danger',_l('zillapage_import_file_required')); redirect(admin_url('zillapage/templates')); }
-        $fh=fopen($_FILES['import_file']['tmp_name'],'r'); $header=fgetcsv($fh); $count=0;
-        while(($row=fgetcsv($fh))!==false){ $data=array_combine($header,array_pad($row,count($header),'')); if(empty($data['name'])) continue; $data['active']=isset($data['active'])?(int)$data['active']:1; $data['created_at']=date('Y-m-d H:i:s'); $this->db->insert(db_prefix().'landing_page_templates',$data); $count++; } fclose($fh);
+        $fh=(\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($_FILES['import_file']['tmp_name'],'r'); $header=fgetcsv($fh); $count=0;
+        while(($row=fgetcsv($fh))!==false){ $data=array_combine($header,array_pad($row,count($header),'')); if(empty($data['name'])) continue; $data['active']=isset($data['active'])?(int)$data['active']:1; $data['created_at']=date('Y-m-d H:i:s'); $this->db->insert(db_prefix().'landing_page_templates',$data); $count++; } (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fh);
         set_alert('success',sprintf(_l('zillapage_templates_imported'),$count)); redirect(admin_url('zillapage/templates'));
     }
 

@@ -256,9 +256,9 @@ class Utilities extends AdminController
         }
 
         if (!file_exists($mediaPath . '/index.html')) {
-            $fp = fopen($mediaPath . '/index.html', 'w');
+            $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($mediaPath . '/index.html', 'w');
             if ($fp) {
-                fclose($fp);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
             }
         }
 
@@ -327,9 +327,9 @@ class Utilities extends AdminController
                 mkdir($path, 0755);
             }
             if (!file_exists($path . '/index.html')) {
-                $fp = fopen($path . '/index.html', 'w');
+                $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($path . '/index.html', 'w');
                 if ($fp) {
-                    fclose($fp);
+                    (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
                 }
             }
             array_push($root_options['attributes'], [
@@ -354,9 +354,9 @@ class Utilities extends AdminController
         }
 
         if (!file_exists($publicRootPath . '/index.html')) {
-            $fp = fopen($publicRootPath . '/index.html', 'w');
+            $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($publicRootPath . '/index.html', 'w');
             if ($fp) {
-                fclose($fp);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
             }
         }
 

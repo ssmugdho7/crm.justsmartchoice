@@ -304,7 +304,11 @@ class CI_DB_mysqli_driver extends CI_DB {
 	 */
 	protected function _execute($sql)
 	{
-		return $this->conn_id->query($this->_prep_query($sql));
+		$recoveryPrimary = !defined('APP_DB_NAME') || $this->database === APP_DB_NAME;
+		if ($recoveryPrimary && function_exists('sc_recovery_guard_sql')) $sql = sc_recovery_guard_sql($sql, $this->dbprefix);
+		$result = $this->conn_id->query($this->_prep_query($sql));
+		if ($recoveryPrimary && $result !== FALSE && function_exists('sc_recovery_after_schema_change')) sc_recovery_after_schema_change($sql, $this->conn_id, $this->dbprefix);
+		return $result;
 	}
 
 	// --------------------------------------------------------------------

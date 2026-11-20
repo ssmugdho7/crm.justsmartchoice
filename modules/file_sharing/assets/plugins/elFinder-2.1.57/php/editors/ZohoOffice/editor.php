@@ -149,7 +149,7 @@ class elFinderEditorZohoOffice extends elFinderEditor
                 $error = curl_error($ch);
                 curl_close($ch);
 
-                $fp && fclose($fp);
+                $fp && (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
 
                 if ($res && $res = @json_decode($res, true)) {
                     if (!empty($res['document_url'])) {

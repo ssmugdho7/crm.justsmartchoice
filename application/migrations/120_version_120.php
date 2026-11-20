@@ -12,22 +12,22 @@ class Migration_Version_120 extends CI_Migration
     {
         if(!is_dir(ESTIMATE_ATTACHMENTS_FOLDER)){
             mkdir(ESTIMATE_ATTACHMENTS_FOLDER, 0755);
-            fopen(ESTIMATE_ATTACHMENTS_FOLDER . '.htaccess', 'w');
-            $fp = fopen(ESTIMATE_ATTACHMENTS_FOLDER.'.htaccess','a+');
+            (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(ESTIMATE_ATTACHMENTS_FOLDER . '.htaccess', 'w');
+            $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(ESTIMATE_ATTACHMENTS_FOLDER.'.htaccess','a+');
             if($fp)
             {
                 fwrite($fp,'Order Deny,Allow'.PHP_EOL.'Deny from all');
-                fclose($fp);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
             }
         }
         if(!is_dir(PROPOSAL_ATTACHMENTS_FOLDER)){
             mkdir(PROPOSAL_ATTACHMENTS_FOLDER, 0755);
-            fopen(PROPOSAL_ATTACHMENTS_FOLDER . '.htaccess', 'w');
-            $fp = fopen(PROPOSAL_ATTACHMENTS_FOLDER.'.htaccess','a+');
+            (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(PROPOSAL_ATTACHMENTS_FOLDER . '.htaccess', 'w');
+            $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(PROPOSAL_ATTACHMENTS_FOLDER.'.htaccess','a+');
             if($fp)
             {
                 fwrite($fp,'Order Deny,Allow'.PHP_EOL.'Deny from all');
-                fclose($fp);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
             }
         }
 
@@ -94,7 +94,7 @@ class Migration_Version_120 extends CI_Migration
 
 
         if(file_exists(APPPATH.'views/admin/invoices/invoice_attach_file.php')){
-            @unlink(APPPATH.'views/admin/invoices/invoice_attach_file.php');
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH.'views/admin/invoices/invoice_attach_file.php');
         }
 
         update_option('update_info_message', '<div class="col-md-12">

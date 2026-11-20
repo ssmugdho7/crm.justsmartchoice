@@ -20,7 +20,7 @@ if (!function_exists('perfex_mobile_api_remove_csrf_exception')) {
         $updated = preg_replace($pattern, '', $contents);
 
         if ($updated !== null && $updated !== $contents) {
-            file_put_contents($filePath, $updated, LOCK_EX);
+            (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($filePath, $updated, LOCK_EX);
         }
     }
 }

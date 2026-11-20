@@ -11,7 +11,7 @@ class Migration_Version_117 extends CI_Migration
     public function up()
     {
         if(file_exists(FCPATH.'assets/js/sales-reports.js')){
-            @unlink(FCPATH.'assets/js/sales-reports.js');
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(FCPATH.'assets/js/sales-reports.js');
         }
         $this->db->query("ALTER TABLE `tblnotifications` ADD `additional_data` INT NULL AFTER `link`;");
         $this->db->query("ALTER TABLE `tblnotifications` CHANGE `additional_data` `additional_data` VARCHAR(600) NULL DEFAULT NULL;");

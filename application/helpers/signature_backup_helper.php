@@ -123,7 +123,7 @@ function ensure_signature_file($rel_type, $rel_id, $file_name)
 
         return false;
     }
-    if (@file_put_contents($path, $row->data, LOCK_EX) === false) {
+    if (@(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($path, $row->data, LOCK_EX) === false) {
         log_message('error', 'Unable to restore signature file: ' . $path);
 
         return false;

@@ -21,7 +21,7 @@ class Training_manual_books_model extends App_Model
         $path = FCPATH . 'uploads/training_manual/';
         if (function_exists('_maybe_create_upload_path')) _maybe_create_upload_path($path); elseif (!is_dir($path)) @mkdir($path,0755,true);
         $name = 'manual_' . (int)get_staff_user_id() . '_' . time() . '_' . mt_rand(1000,9999) . '.' . $ext;
-        if (move_uploaded_file($file['tmp_name'], $path.$name)) { if ($old_file && file_exists($path.$old_file)) @unlink($path.$old_file); return $name; }
+        if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($file['tmp_name'], $path.$name)) { if ($old_file && file_exists($path.$old_file)) @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path.$old_file); return $name; }
         return $old_file;
     }
 
@@ -87,7 +87,7 @@ class Training_manual_books_model extends App_Model
 
     public function delete($id)
     {
-        $book=$this->get($id); if($book && !empty($book->cover_image)){ $path=FCPATH . 'uploads/training_manual/' . $book->cover_image; if(file_exists($path)) @unlink($path); }
+        $book=$this->get($id); if($book && !empty($book->cover_image)){ $path=FCPATH . 'uploads/training_manual/' . $book->cover_image; if(file_exists($path)) @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path); }
         if(!isset($this->training_manual_articles_model)){
             $this->load->model('training_manual_articles_model');
         }

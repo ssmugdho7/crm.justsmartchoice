@@ -333,7 +333,7 @@ class Products_model extends App_Model
         $product  = $this->get_by_id_product($id);
         $relPath  = get_upload_path_by_type('products').'/';
         $fullPath = $relPath.$product->product_image;
-        unlink($fullPath);
+        (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($fullPath);
         if (!empty($id)) {
             $this->db->where('id', $id);
         }

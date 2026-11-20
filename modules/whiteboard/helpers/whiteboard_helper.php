@@ -26,7 +26,7 @@ function handle_whiteboard_discussion_comment_attachments($discussion_id, $post_
             $filename    = unique_filename($path, $_FILES['file']['name']);
             $newFilePath = $path . $filename;
             // Upload the file into the temp dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                 $insert_data['file_name'] = $filename;
 
                 if (isset($_FILES['file']['type'])) {
@@ -43,10 +43,10 @@ function handle_whiteboard_discussion_comment_attachments($discussion_id, $post_
 
 if (!is_dir(WHITEBOARD_DISCUSSION_ATTACHMENT_FOLDER)) {
       mkdir(WHITEBOARD_DISCUSSION_ATTACHMENT_FOLDER, 0755);
-      fopen(WHITEBOARD_DISCUSSION_ATTACHMENT_FOLDER . 'index.html', 'w');
-      $fp = fopen(WHITEBOARD_DISCUSSION_ATTACHMENT_FOLDER . 'index.html', 'a+');
+      (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(WHITEBOARD_DISCUSSION_ATTACHMENT_FOLDER . 'index.html', 'w');
+      $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(WHITEBOARD_DISCUSSION_ATTACHMENT_FOLDER . 'index.html', 'a+');
       if ($fp) {
-        fclose($fp);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
       }
     }
 

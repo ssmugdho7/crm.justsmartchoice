@@ -97,7 +97,7 @@ class Master_crm_backup_service{
  private function database(array $s){
   @set_time_limit(0);
   $sql=$s['job_dir'].'/CRM Database '.$s['job_id'].'.sql';
-  $h=@fopen($sql,'wb');
+  $h=@(\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($sql,'wb');
   if(!$h){$s['errors'][]='Unable to create SQL file.';$s['status']='finalizing';$this->save($s);return $s;}
   fwrite($h,"-- Smart Choice CRM Database Backup\\nSET FOREIGN_KEY_CHECKS=0;\\n\\n");
   foreach($this->CI->db->list_tables() as $t){
@@ -115,10 +115,10 @@ class Master_crm_backup_service{
    }
    fwrite($h,"\\n");
   }
-  fwrite($h,"SET FOREIGN_KEY_CHECKS=1;\\n");fclose($h);
+  fwrite($h,"SET FOREIGN_KEY_CHECKS=1;\\n");(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($h);
   $z=new ZipArchive();$zp=$s['job_dir'].'/CRM Database.zip';
   if($z->open($zp,ZipArchive::CREATE|ZipArchive::OVERWRITE)===true){
-   $z->addFile($sql,basename($sql));$z->close();@unlink($sql);$s['database_exported']=true;
+   $z->addFile($sql,basename($sql));$z->close();@(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($sql);$s['database_exported']=true;
   } else {$s['errors'][]='Unable to compress database export.';}
   $s['status']='finalizing';$s['updated_at']=date('c');$this->save($s);return $s;
  }
@@ -131,8 +131,8 @@ class Master_crm_backup_service{
   $manifest=['backup_id'=>$s['job_id'],'created_at'=>$s['created_at'],'completed_at'=>date('c'),
    'total_source_files'=>$s['total_files'],'total_source_bytes'=>$s['total_bytes'],
    'database_exported'=>$s['database_exported'],'packs'=>$out,'errors'=>$s['errors']];
-  file_put_contents($s['job_dir'].'/BACKUP MANIFEST.json',json_encode($manifest,JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
-  file_put_contents($s['job_dir'].'/RESTORE INSTRUCTIONS.txt',
+  (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($s['job_dir'].'/BACKUP MANIFEST.json',json_encode($manifest,JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
+  (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($s['job_dir'].'/RESTORE INSTRUCTIONS.txt',
    "SMART CHOICE CRM MASTER RESTORE\\n\\n1. Put CRM in maintenance mode.\\n2. Extract CRM Pack files in numerical order into:\\n".
    $s['crm_root']."\\n3. Allow overwrite.\\n4. Import CRM Database.zip only when a database rollback is required.\\n".
    "5. Clear application/cache and test login, modules, email, PDF, cron, uploads, and client portal.\\n\\n".
@@ -156,7 +156,7 @@ class Master_crm_backup_service{
   return $s;
  }
 
- public function save(array $s){file_put_contents($s['job_dir'].'/state.json',json_encode($s,JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));}
+ public function save(array $s){(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($s['job_dir'].'/state.json',json_encode($s,JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));}
 
  public function file($id,$name){
   $id=$this->safeId($id);$name=basename($name);$base=realpath($this->backupRoot.'/'.$id);$f=realpath($base.'/'.$name);
@@ -167,8 +167,8 @@ class Master_crm_backup_service{
  public function delete($id){
   $id=$this->safeId($id);$dir=$this->backupRoot.'/'.$id;if(!is_dir($dir))return true;
   $it=new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir,FilesystemIterator::SKIP_DOTS),RecursiveIteratorIterator::CHILD_FIRST);
-  foreach($it as $x){$x->isDir()?@rmdir($x->getPathname()):@unlink($x->getPathname());}
-  return @rmdir($dir);
+  foreach($it as $x){$x->isDir()?@(\function_exists('sc_recovery_rmdir') ? '\sc_recovery_rmdir' : '\rmdir')($x->getPathname()):@(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($x->getPathname());}
+  return @(\function_exists('sc_recovery_rmdir') ? '\sc_recovery_rmdir' : '\rmdir')($dir);
  }
 
  public function archives(){
@@ -194,8 +194,8 @@ class Master_crm_backup_service{
  private function reports(array $s){
   $a="EXISTING ARCHIVES FOUND INSIDE CRM\\n\\n";
   foreach($s['archives'] as $x)$a.=$x['path'].' | '.$x['size']." bytes\\n";
-  file_put_contents($s['job_dir'].'/EXISTING ARCHIVES REPORT.txt',$a);
-  file_put_contents($s['job_dir'].'/EXCLUDED FILES.txt',"FILES EXCLUDED FROM THIS BACKUP\\n\\n".implode("\\n",$s['excluded']));
+  (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($s['job_dir'].'/EXISTING ARCHIVES REPORT.txt',$a);
+  (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($s['job_dir'].'/EXCLUDED FILES.txt',"FILES EXCLUDED FROM THIS BACKUP\\n\\n".implode("\\n",$s['excluded']));
  }
 
  private function safeId($id){

@@ -36,7 +36,7 @@ function add_csrf_support()
 	$csrfstring = 'admin/customemailandsmsnotifications/email_sms/sendEmailSms';
 	
 	if(strpos($searchforit,$csrfstring) == false) {
-		file_put_contents($configfile, str_replace('$config[\'csrf_exclude_uris\'] = [', '$config[\'csrf_exclude_uris\'] = [\'admin/customemailandsmsnotifications/email_sms/sendEmailSms\', ', $searchforit)); 
+		(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($configfile, str_replace('$config[\'csrf_exclude_uris\'] = [', '$config[\'csrf_exclude_uris\'] = [\'admin/customemailandsmsnotifications/email_sms/sendEmailSms\', ', $searchforit)); 
 	}
 }
 

@@ -220,9 +220,9 @@ hooks()->add_action("after_cron_run", function (){
 
                         try {
 
-                            $fp       = fopen($path.$filename, 'w');
+                            $fp       = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($path.$filename, 'w');
                             fwrite($fp, $attachment['data']);
-                            fclose($fp);
+                            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
 
                             $attac                  = [];
                             $attac['inbox_id']      = $inbox_id;

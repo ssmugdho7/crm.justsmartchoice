@@ -108,7 +108,7 @@ class Exit_popups extends AdminController
                     if ($popup->image_path) {
                         $old = get_upload_path_by_type('products') . 'exit_popups/' . $popup->image_path;
                         if (file_exists($old)) {
-                            @unlink($old);
+                            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($old);
                         }
                     }
                     $data['image_path'] = $filename;

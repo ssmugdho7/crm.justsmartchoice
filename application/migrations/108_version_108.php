@@ -13,8 +13,8 @@ class Migration_Version_108 extends CI_Migration
         // Merge mail lists to surveys
         if (file_exists(APPPATH . 'views/admin/mail_lists')) {
             @delete_dir(APPPATH . 'views/admin/mail_lists');
-            @unlink(APPPATH . 'controllers/admin/Mail_lists.php');
-            @unlink(APPPATH . 'models/Mail_lists_model.php');
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'controllers/admin/Mail_lists.php');
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'models/Mail_lists_model.php');
         }
 
         $default_tax = get_option('default_tax');

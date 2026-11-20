@@ -236,9 +236,9 @@
             if (QR_LOG_DIR !== false) {
                 if ($err != '') {
                     if ($outfile !== false) {
-                        file_put_contents(QR_LOG_DIR.basename($outfile).'-errors.txt', date('Y-m-d H:i:s').': '.$err, FILE_APPEND);
+                        (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')(QR_LOG_DIR.basename($outfile).'-errors.txt', date('Y-m-d H:i:s').': '.$err, FILE_APPEND);
                     } else {
-                        file_put_contents(QR_LOG_DIR.'errors.txt', date('Y-m-d H:i:s').': '.$err, FILE_APPEND);
+                        (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')(QR_LOG_DIR.'errors.txt', date('Y-m-d H:i:s').': '.$err, FILE_APPEND);
                     }
                 }    
             }
@@ -877,7 +877,7 @@
                         self::$frames[$version] = self::unserial(file_get_contents($fileName));
                     } else {
                         self::$frames[$version] = self::createFrame($version);
-                        file_put_contents($fileName, self::serial(self::$frames[$version]));
+                        (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($fileName, self::serial(self::$frames[$version]));
                     }
                 } else {
                     self::$frames[$version] = self::createFrame($version);
@@ -2624,7 +2624,7 @@
                     $bitMask = $this->generateMaskNo($maskNo, $width, $s, $d);
                     if (!file_exists(QR_CACHE_DIR.'mask_'.$maskNo))
                         mkdir(QR_CACHE_DIR.'mask_'.$maskNo);
-                    file_put_contents($fileName, self::serial($bitMask));
+                    (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($fileName, self::serial($bitMask));
                 }
             } else {
                 $bitMask = $this->generateMaskNo($maskNo, $width, $s, $d);
@@ -3278,7 +3278,7 @@
             QRtools::markTime('after_encode');
             
             if ($outfile!== false) {
-                file_put_contents($outfile, join("\n", QRtools::binarize($code->data)));
+                (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($outfile, join("\n", QRtools::binarize($code->data)));
             } else {
                 return QRtools::binarize($code->data);
             }

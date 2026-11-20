@@ -67,7 +67,7 @@ class Exit_popups_model extends App_Model
         if ($popup && !empty($popup->image_path)) {
             $path = get_upload_path_by_type('products') . 'exit_popups/' . $popup->image_path;
             if (file_exists($path)) {
-                @unlink($path);
+                @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path);
             }
         }
         $this->db->where('id', $id);

@@ -643,7 +643,7 @@ function pr_chat_staff_member_data_transfer($data)
 
   foreach ($group_files as $group_file) {
     if (is_dir(PR_CHAT_MODULE_GROUPS_UPLOAD_FOLDER)) {
-      unlink(PR_CHAT_MODULE_GROUPS_UPLOAD_FOLDER . '/' . $group_file['file_name']);
+      (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(PR_CHAT_MODULE_GROUPS_UPLOAD_FOLDER . '/' . $group_file['file_name']);
     }
   }
 
@@ -1090,7 +1090,7 @@ function pr_chat_ensure_directory($dir)
     @mkdir($dir, 0755, true);
   }
   if (is_dir($dir) && !file_exists($dir . '/index.html')) {
-    @file_put_contents($dir . '/index.html', '');
+    @(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($dir . '/index.html', '');
   }
   return is_dir($dir) && is_writable($dir);
 }
@@ -1113,7 +1113,7 @@ function pr_chat_copy_group_upload_to_project_media($sourcePath, $fileName, $gro
   }
   $safeName = preg_replace('/[^a-zA-Z0-9._-]/', '_', basename($fileName));
   $target = $targetDir . '/' . $safeName;
-  return @copy($sourcePath, $target);
+  return @(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($sourcePath, $target);
 }
 
 function pr_chat_projects_media_path_display()

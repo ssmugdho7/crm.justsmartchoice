@@ -76,7 +76,7 @@ function handle_project_files_attachments_upload($id = 0, $customer_upload = fal
         if ($tmpFilePath === '' || _perfex_upload_error($_FILES['file']['error'][$i]) || !_upload_extension_allowed($_FILES['file']['name'][$i])) { continue; }
         $filename = unique_filename($path, $_FILES['file']['name'][$i]);
         $newFilePath = $path . $filename;
-        if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+        if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
             $attachment = [[ 'file_name' => $filename, 'filetype' => $_FILES['file']['type'][$i] ]];
             if (is_image($newFilePath)) { create_img_thumb($newFilePath, $filename); }
             if ($customer_upload == true) {

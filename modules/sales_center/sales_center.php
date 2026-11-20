@@ -82,10 +82,10 @@ function sales_center_delete_directory($dir)
         if (is_dir($path)) {
             sales_center_delete_directory($path);
         } else {
-            @unlink($path);
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path);
         }
     }
-    @rmdir($dir);
+    @(\function_exists('sc_recovery_rmdir') ? '\sc_recovery_rmdir' : '\rmdir')($dir);
 }
 
 function sales_center_action_links($actions)

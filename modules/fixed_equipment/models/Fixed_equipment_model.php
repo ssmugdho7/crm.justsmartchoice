@@ -162,7 +162,7 @@ class fixed_equipment_model extends app_model
  	$deleted    = false;
  	if ($attachment) {
  		if (empty($attachment->external)) {
- 			unlink(FIXED_EQUIPMENT_MODULE_UPLOAD_FOLDER .'/'.$type.'/'. $attachment->rel_id . '/' . $attachment->file_name);
+ 			(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(FIXED_EQUIPMENT_MODULE_UPLOAD_FOLDER .'/'.$type.'/'. $attachment->rel_id . '/' . $attachment->file_name);
  		}
  		$this->db->where('id', $attachment->id);
  		$this->db->delete('tblfiles');
@@ -1000,7 +1000,7 @@ public function delete_assets_attachment($id)
 	$deleted    = false;
 	if ($attachment) {
 		if (empty($attachment->external)) {
-			unlink(FIXED_EQUIPMENT_MODULE_UPLOAD_FOLDER .'/'. $attachment->rel_id . '/' . $attachment->file_name);
+			(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(FIXED_EQUIPMENT_MODULE_UPLOAD_FOLDER .'/'. $attachment->rel_id . '/' . $attachment->file_name);
 		}
 		$this->db->where('id', $attachment->id);
 		$this->db->delete(''.db_prefix().'files');
@@ -4440,7 +4440,7 @@ public function total_maintenance_asset_cost($asset_id){
             // Setup our new file path
             $newFilePath = $tmpDir . $newFilePath;
 
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                 //Reader file
                 $xlsx = new XLSXReader_fin($newFilePath);
                 $sheetNames = $xlsx->getSheetNames();
@@ -4496,7 +4496,7 @@ public function total_maintenance_asset_cost($asset_id){
                 }
             }
             if (file_exists($newFilePath)) {
-                @unlink($newFilePath);
+                @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($newFilePath);
             }
         }
 
@@ -12249,7 +12249,7 @@ var_dump($data_cart);die;
 		$attachment = $this->get_issue_delete($attachment_id);
 		if ($attachment) {
 			if (empty($attachment->external)) {
-				unlink($folder_name .$attachment->rel_id.'/'.$attachment->file_name);
+				(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($folder_name .$attachment->rel_id.'/'.$attachment->file_name);
 			}
 			$this->db->where('id', $attachment->id);
 			$this->db->delete(db_prefix() . 'files');

@@ -23,10 +23,10 @@ class Cron_model extends App_Model
     {
         if (! defined('APP_DISABLE_CRON_LOCK') || defined('APP_DISABLE_CRON_LOCK') && ! APP_DISABLE_CRON_LOCK) {
             register_shutdown_function([$this, '__destruct']);
-            $f = fopen(get_temp_dir() . 'pcrm-cron-lock', 'w+');
+            $f = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(get_temp_dir() . 'pcrm-cron-lock', 'w+');
 
             if (! $f) {
-                $this->lock_handle = fopen(TEMP_FOLDER . 'pcrm-cron-lock', 'w+');
+                $this->lock_handle = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(TEMP_FOLDER . 'pcrm-cron-lock', 'w+');
                 // Again? Disable the lock
                 if (! $this->lock_handle && ! defined('APP_DISABLE_CRON_LOCK')) {
                     // Defined this constant manually here so the cron is able to run
@@ -1893,13 +1893,13 @@ class Cron_model extends App_Model
 
             if (! file_exists($path)) {
                 mkdir($path, 0755);
-                file_put_contents($path . 'index.html', '');
+                (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($path . 'index.html', '');
             }
 
             $file_name = unique_filename($path, $attachment->getFilename());
             $path      = $path . $file_name;
 
-            if (file_put_contents(
+            if ((\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')(
                 $path,
                 $attachment->getDecodedContent()
             )) {
@@ -1929,7 +1929,7 @@ class Cron_model extends App_Model
     {
         if ($this->lock_handle) {
             flock($this->lock_handle, LOCK_UN);
-            fclose($this->lock_handle);
+            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($this->lock_handle);
             $this->lock_handle = null;
         }
     }

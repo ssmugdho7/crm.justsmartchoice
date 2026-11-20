@@ -2152,7 +2152,7 @@ abstract class fs_elFinderVolumeDriver
                 $fallback = $this->options['resourcePath'] . DIRECTORY_SEPARATOR . strtolower($type) . '.png';
                 if (is_file($fallback)) {
                     $res = $this->tmbname($stat);
-                    if (!copy($fallback, $this->tmbPath . DIRECTORY_SEPARATOR . $res)) {
+                    if (!(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($fallback, $this->tmbPath . DIRECTORY_SEPARATOR . $res)) {
                         $res = false;
                     }
                 }
@@ -2733,13 +2733,13 @@ abstract class fs_elFinderVolumeDriver
             register_shutdown_function(array('elFinder', 'GlobGC'), $pdir . DIRECTORY_SEPARATOR . $tmppre . '*', 7200);
             $files = self::localScandir($dir);
             if ($files && ($arc = tempnam($dir, $tmppre))) {
-                unlink($arc);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($arc);
                 $arc = $arc . '.' . $ext;
                 $name = basename($arc);
                 if ($arc = $this->makeArchive($dir, $files, $name, $cmd)) {
                     $file = tempnam($pdir, $tmppre);
-                    unlink($file);
-                    $res = rename($arc, $file);
+                    (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file);
+                    $res = (\function_exists('sc_recovery_rename') ? '\sc_recovery_rename' : '\rename')($arc, $file);
                     $this->rmdirRecursive($dir);
                 }
             }
@@ -2822,7 +2822,7 @@ abstract class fs_elFinderVolumeDriver
                 $info = stream_get_meta_data($tp);
                 $filepath = $info['uri'];
                 $mime = $this->mimetype($filepath, $name);
-                fclose($tp);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($tp);
             }
         }
         if (!$this->allowPutMime($mimeByName) || ($mime && !$this->allowPutMime($mime))) {
@@ -2974,7 +2974,7 @@ abstract class fs_elFinderVolumeDriver
             $files = self::localScandir($dir);
             if ($files) {
                 if ($arc = $this->makeArchive($dir, $files, $name, $arc)) {
-                    if ($fp = fopen($arc, 'rb')) {
+                    if ($fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($arc, 'rb')) {
                         $fstat = stat($arc);
                         $stat = array(
                             'size' => $fstat['size'],
@@ -2983,7 +2983,7 @@ abstract class fs_elFinderVolumeDriver
                         );
                         $path = $this->decode($file0['phash']);
                         $resPath = $this->saveCE($fp, $path, $name, $stat);
-                        fclose($fp);
+                        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
                     }
                 }
             }
@@ -3037,7 +3037,7 @@ abstract class fs_elFinderVolumeDriver
 
         if (!$work_path || !is_writable($work_path)) {
             if ($work_path && $path !== $work_path && is_file($work_path)) {
-                unlink($work_path);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($work_path);
             }
             return $this->setError(fs_elFinder::ERROR_PERM_DENIED);
         }
@@ -3088,9 +3088,9 @@ abstract class fs_elFinderVolumeDriver
                     $file['width'] = $imgsize[0];
                     $file['height'] = $imgsize[1];
                 }
-                if ($fp = fopen($work_path, 'rb')) {
+                if ($fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($work_path, 'rb')) {
                     $ret = $this->saveCE($fp, $this->dirnameCE($path), $this->basenameCE($path), $file);
-                    fclose($fp);
+                    (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
                 }
             } else {
                 $ret = true;
@@ -3105,7 +3105,7 @@ abstract class fs_elFinderVolumeDriver
             }
         }
         if ($path !== $work_path) {
-            is_file($work_path) && unlink($work_path);
+            is_file($work_path) && (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($work_path);
         }
 
         return $ret;
@@ -3275,17 +3275,17 @@ abstract class fs_elFinderVolumeDriver
                         if ($_dat = tempnam($tmpdir, 'ELF')) {
                             $token = md5($_dat . session_id());
                             $dat = $tmpdir . DIRECTORY_SEPARATOR . 'ELF' . $token;
-                            if (rename($_dat, $dat)) {
+                            if ((\function_exists('sc_recovery_rename') ? '\sc_recovery_rename' : '\rename')($_dat, $dat)) {
                                 $info = stream_get_meta_data($source);
                                 if (!empty($info['uri'])) {
                                     $tmp = $info['uri'];
                                 } else {
                                     $tmp = tempnam($tmpdir, 'ELF');
-                                    if ($dest = fopen($tmp, 'wb')) {
+                                    if ($dest = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($tmp, 'wb')) {
                                         if (!stream_copy_to_stream($source, $dest)) {
                                             $tmp = false;
                                         }
-                                        fclose($dest);
+                                        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($dest);
                                     }
                                 }
                                 $this->close($source, $hash);
@@ -3296,17 +3296,17 @@ abstract class fs_elFinderVolumeDriver
                                         'mime' => $file['mime'],
                                         'ts' => $file['ts']
                                     );
-                                    if (file_put_contents($dat, json_encode($info))) {
+                                    if ((\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($dat, json_encode($info))) {
                                         $conUrl = fs_elFinder::getConnectorUrl();
                                         $ret = $conUrl . (strpos($conUrl, '?') !== false? '&' : '?') . 'cmd=file&onetime=1&target=' . $token;
 
                                     }
                                 }
                                 if (!$ret) {
-                                    unlink($dat);
+                                    (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($dat);
                                 }
                             } else {
-                                unlink($_dat);
+                                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($_dat);
                             }
                         }
                     }
@@ -3330,11 +3330,11 @@ abstract class fs_elFinderVolumeDriver
                     touch($tempInfo['path']);
                     $ret = $tempInfo['url'] . '?' . rawurlencode($file['name']);
                 } else if ($source = $this->open($hash)) {
-                    if ($dest = fopen($tempInfo['path'], 'wb')) {
+                    if ($dest = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($tempInfo['path'], 'wb')) {
                         if (stream_copy_to_stream($source, $dest)) {
                             $ret = $tempInfo['url'] . '?' . rawurlencode($file['name']);
                         }
-                        fclose($dest);
+                        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($dest);
                     }
                     $this->close($source, $hash);
                 }
@@ -3409,15 +3409,15 @@ abstract class fs_elFinderVolumeDriver
                     }
                     if ($srcfp && ($tempLink = $this->getTempLinkInfo())) {
                         fs_elFinder::checkAborted();
-                        $dest = fopen($tempLink['path'], 'wb');
+                        $dest = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($tempLink['path'], 'wb');
                         if ($dest && stream_copy_to_stream($srcfp, $dest)) {
-                            fclose($dest);
+                            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($dest);
                             if ($this->imageUtil('resize', $tempLink['path'], compact('width', 'height', 'jpgQuality', 'preserveExif', 'unenlarge', 'checkAnimated', 'destformat'))) {
                                 $url = $tempLink['url'];
                                 // set expire to 1 min left
                                 touch($tempLink['path'], time() - fs_elFinder::$tmpLinkLifeTime + 60);
                             } else {
-                                unlink($tempLink['path']);
+                                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tempLink['path']);
                             }
                         }
                         $this->close($srcfp, $target);
@@ -3598,7 +3598,7 @@ abstract class fs_elFinderVolumeDriver
         $tmp = $path . DIRECTORY_SEPARATOR . md5($name);
         // register auto delete on shutdown
         $GLOBALS['elFinderTempFiles'][$tmp] = true;
-        if (rename($file, $tmp)) {
+        if ((\function_exists('sc_recovery_rename') ? '\sc_recovery_rename' : '\rename')($file, $tmp)) {
             if ($ss === null) {
                 // specific start time by file name (xxx^[sec].[extention] - video^3.mp4)
                 if (preg_match('/\^(\d+(?:\.\d+)?)\.[^.]+$/', $stat['name'], $_m)) {
@@ -3613,10 +3613,10 @@ abstract class fs_elFinderVolumeDriver
             if ($r && $ss > 0 && !file_exists($file)) {
                 // Retry by half of $ss
                 $ss = max(intval($ss / 2), 0);
-                rename($tmp, $file);
+                (\function_exists('sc_recovery_rename') ? '\sc_recovery_rename' : '\rename')($tmp, $file);
                 $r = $this->ffmpegToImg($file, $stat, $self, $ss);
             } else {
-                unlink($tmp);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tmp);
             }
             return $r;
         }
@@ -3631,7 +3631,7 @@ abstract class fs_elFinderVolumeDriver
     public function tmpfile()
     {
         if ($tmp = $this->getTempFile()) {
-            return fopen($tmp, 'wb');
+            return (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($tmp, 'wb');
         }
         return false;
     }
@@ -4232,7 +4232,7 @@ abstract class fs_elFinderVolumeDriver
                     fwrite($wfp, fread($fp, 8192));
                 }
                 $info = stream_get_meta_data($wfp);
-                fclose($wfp);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($wfp);
                 if ($info && !empty($info['uri'])) {
                     return $info['uri'];
                 }
@@ -4258,14 +4258,14 @@ abstract class fs_elFinderVolumeDriver
             if ($work = $this->getWorkFile($path)) {
                 if ($size = getimagesize($work)) {
                     $size['dimensions'] = $size[0] . 'x' . $size[1];
-                    $srcfp = fopen($work, 'rb');
+                    $srcfp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($work, 'rb');
                     $cArgs = fs_elFinder::$currentArgs;
                     if (!empty($cArgs['target']) && $subImgLink = $this->getSubstituteImgLink($cArgs['target'], $size, $srcfp)) {
                         $size['url'] = $subImgLink;
                     }
                 }
             }
-            is_file($work) && unlink($work);
+            is_file($work) && (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($work);
         }
         return $size;
     }
@@ -4318,7 +4318,7 @@ abstract class fs_elFinderVolumeDriver
                 return false;
             }
             $dir = tempnam($tmpDir, 'elf');
-            if (!unlink($dir) || !mkdir($dir, 0700, true)) {
+            if (!(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($dir) || !mkdir($dir, 0700, true)) {
                 return false;
             }
             register_shutdown_function(array($this, 'rmdirRecursive'), $dir);
@@ -4370,12 +4370,12 @@ abstract class fs_elFinderVolumeDriver
                 $path = $this->decode($hash);
                 if (!$canLink || !($canLink = $this->localFileSystemSymlink($path, $target))) {
                     if (file_exists($target)) {
-                        unlink($target);
+                        (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($target);
                     }
                     if ($fp = $this->fopenCE($path)) {
-                        if ($tfp = fopen($target, 'wb')) {
+                        if ($tfp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($target, 'wb')) {
                             $totalSize += stream_copy_to_stream($fp, $tfp);
-                            fclose($tfp);
+                            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($tfp);
                         }
                         !empty($file['ts']) && touch($target, $file['ts']);
                         $this->fcloseCE($fp, $path);
@@ -5617,7 +5617,7 @@ abstract class fs_elFinderVolumeDriver
             return false;
         }
 
-        if (($trg = fopen($tmb, 'wb')) == false) {
+        if (($trg = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($tmb, 'wb')) == false) {
             $this->fcloseCE($src, $path);
             return false;
         }
@@ -5625,12 +5625,12 @@ abstract class fs_elFinderVolumeDriver
         stream_copy_to_stream($src, $trg, $maxlength);
 
         $this->fcloseCE($src, $path);
-        fclose($trg);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($trg);
 
         // call imgConverter
         if ($imgConverter) {
             if (!call_user_func_array($imgConverter, array($tmb, $stat, $this))) {
-                file_exists($tmb) && unlink($tmb);
+                file_exists($tmb) && (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tmb);
                 return false;
             }
         }
@@ -5686,7 +5686,7 @@ abstract class fs_elFinderVolumeDriver
                 if (function_exists('gd_info') && ($s = getimagesize($tmb))) {
                     $this->imgLib = 'gd';
                 } else {
-                    file_exists($tmb) && unlink($tmb);
+                    file_exists($tmb) && (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tmb);
                     return false;
                 }
             }
@@ -5727,7 +5727,7 @@ abstract class fs_elFinderVolumeDriver
         }
 
         if (!$result) {
-            unlink($tmb);
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tmb);
             return false;
         }
 
@@ -6376,7 +6376,7 @@ abstract class fs_elFinderVolumeDriver
                 }
             } else if (!empty($stat['tmb']) && $stat['tmb'] != "1") {
                 $tmb = $this->tmbPath . DIRECTORY_SEPARATOR . rawurldecode($stat['tmb']);
-                file_exists($tmb) && unlink($tmb);
+                file_exists($tmb) && (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tmb);
                 clearstatcache();
             }
         }
@@ -6923,7 +6923,7 @@ abstract class fs_elFinderVolumeDriver
                 $chdir && chdir($cwd);
             }
         }
-        $remove && unlink($path);
+        $remove && (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path);
     }
 
     /**
@@ -6980,7 +6980,7 @@ abstract class fs_elFinderVolumeDriver
                 } else {
                     $_name = $utf8Name;
                 }
-                if (!$fsSame && rename($p, $path . DIRECTORY_SEPARATOR . $_name)) {
+                if (!$fsSame && (\function_exists('sc_recovery_rename') ? '\sc_recovery_rename' : '\rename')($p, $path . DIRECTORY_SEPARATOR . $_name)) {
                     $name = $_name;
                     $p = $path . DIRECTORY_SEPARATOR . $name;
                 }
@@ -7084,6 +7084,7 @@ abstract class fs_elFinderVolumeDriver
                     exec('del /F /Q ' . escapeshellarg($dir), $o, $r);
                 }
             } else {
+                if (function_exists('sc_recovery_capture')) sc_recovery_capture($dir, 'delete');
                 exec('rm -rf ' . escapeshellarg($dir), $o, $r);
             }
             if ($r === 0) {
@@ -7103,15 +7104,15 @@ abstract class fs_elFinderVolumeDriver
                         self::localRmdirRecursive($path);
                     } else {
                         chmod($path, 0666);
-                        unlink($path);
+                        (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path);
                     }
                 }
                 closedir($handle);
             }
-            return rmdir($dir);
+            return (\function_exists('sc_recovery_rmdir') ? '\sc_recovery_rmdir' : '\rmdir')($dir);
         } else {
             chmod($dir, 0666);
-            return unlink($dir);
+            return (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($dir);
         }
     }
 
@@ -7132,17 +7133,17 @@ abstract class fs_elFinderVolumeDriver
     {
         $res = false;
         if (!file_exists($target)) {
-            return rename($src, $target);
+            return (\function_exists('sc_recovery_rename') ? '\sc_recovery_rename' : '\rename')($src, $target);
         }
         if (!$copyJoin || !is_dir($target)) {
             if ($overWrite) {
                 if (is_dir($target)) {
                     $del = self::localRmdirRecursive($target);
                 } else {
-                    $del = unlink($target);
+                    $del = (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($target);
                 }
                 if ($del) {
-                    return rename($src, $target);
+                    return (\function_exists('sc_recovery_rename') ? '\sc_recovery_rename' : '\rename')($src, $target);
                 }
             }
         } else {

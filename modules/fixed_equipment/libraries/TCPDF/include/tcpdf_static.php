@@ -1818,7 +1818,7 @@ class TCPDF_STATIC {
 		} elseif (stream_is_local($filename) !== true) {
 			return false;
 		}
-		return fopen($filename, $mode);
+		return (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($filename, $mode);
 	}
 
 	/**

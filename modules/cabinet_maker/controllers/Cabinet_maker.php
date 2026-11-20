@@ -42,11 +42,11 @@ class Cabinet_maker extends AdminController{
  public function download_module(){
   if(!is_admin()) access_denied('cabinet_maker');
   if(!class_exists('ZipArchive')) show_error('The PHP Zip extension is required to download this module.',500);
-  $source=module_dir_path('cabinet_maker'); $tmp=tempnam(sys_get_temp_dir(),'cabinet_maker_'); $zipPath=$tmp.'.zip'; @unlink($tmp);
+  $source=module_dir_path('cabinet_maker'); $tmp=tempnam(sys_get_temp_dir(),'cabinet_maker_'); $zipPath=$tmp.'.zip'; @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tmp);
   $zip=new ZipArchive(); if($zip->open($zipPath,ZipArchive::CREATE|ZipArchive::OVERWRITE)!==true) show_error('Unable to create the module package.',500);
   $it=new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source,FilesystemIterator::SKIP_DOTS));
   foreach($it as $file){$real=$file->getRealPath();$relative='cabinet_maker/'.str_replace('\\','/',substr($real,strlen($source)));if(strpos($relative,'/.git/')!==false||preg_match('/\.(zip|log)$/i',$relative))continue;$zip->addFile($real,$relative);}
-  $zip->close(); while(ob_get_level()>0){ob_end_clean();} header('Content-Type: application/zip');header('Content-Disposition: attachment; filename="cabinet_maker_v'.CABINET_MAKER_VERSION.'.zip"');header('Content-Length: '.filesize($zipPath));readfile($zipPath);@unlink($zipPath);exit;
+  $zip->close(); while(ob_get_level()>0){ob_end_clean();} header('Content-Type: application/zip');header('Content-Disposition: attachment; filename="cabinet_maker_v'.CABINET_MAKER_VERSION.'.zip"');header('Content-Length: '.filesize($zipPath));readfile($zipPath);@(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($zipPath);exit;
  }
 
 
@@ -75,9 +75,9 @@ class Cabinet_maker extends AdminController{
  }
  public function export_cutlist($id){
   $this->guard(); $d=$this->cabinet_maker_model->get_design($id); if(!$d) show_404(); $parts=$this->cabinet_maker_model->get_parts($id);
-  $fp=fopen('php://temp','w+'); fputcsv($fp,['Cabinet','Part','Type','Quantity','Width','Length','Thickness','Grain','Unit Cost','Total Cost']);
+  $fp=(\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('php://temp','w+'); fputcsv($fp,['Cabinet','Part','Type','Quantity','Width','Length','Thickness','Grain','Unit Cost','Total Cost']);
   foreach($parts as $p){fputcsv($fp,[$p->cabinet_uid,$p->part_name,$p->part_type??'sheet',$p->qty,$p->width,$p->length,$p->thickness,$p->grain,$p->unit_cost,$p->total_cost]);}
-  rewind($fp); $csv=stream_get_contents($fp); fclose($fp); $this->download_text(slug_it($d->name).'-cut-list.csv',$csv,'text/csv');
+  rewind($fp); $csv=stream_get_contents($fp); (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp); $this->download_text(slug_it($d->name).'-cut-list.csv',$csv,'text/csv');
  }
  public function export_dxf($id){
   $this->guard(); $d=$this->cabinet_maker_model->get_design($id); if(!$d) show_404();
@@ -109,7 +109,7 @@ class Cabinet_maker extends AdminController{
  public function import_materials(){ $this->guard('create'); $count=$this->import_csv(function($r){return $this->cabinet_maker_model->add_material($r);}); set_alert('success',$count.' materials imported.'); redirect(admin_url('cabinet_maker/materials')); }
  public function import_vendors(){ $this->guard('create'); $count=$this->import_csv(function($r){return $this->cabinet_maker_model->add_vendor($r);}); set_alert('success',$count.' vendors imported.'); redirect(admin_url('cabinet_maker/vendors')); }
  public function import_designs(){ $this->guard('create'); $count=$this->import_csv(function($r){return $this->cabinet_maker_model->create_design($r);}); set_alert('success',$count.' designs imported.'); redirect(admin_url('cabinet_maker')); }
- private function import_csv($callback){ if(empty($_FILES['file']['tmp_name'])||!is_uploaded_file($_FILES['file']['tmp_name']))return 0;$h=fopen($_FILES['file']['tmp_name'],'r');$headers=fgetcsv($h);if(!$headers){fclose($h);return 0;}$headers=array_map(function($v){return trim(strtolower($v));},$headers);$count=0;while(($row=fgetcsv($h))!==false){$data=[];foreach($headers as $i=>$key){$data[$key]=$row[$i]??'';}if(call_user_func($callback,$data))$count++;}fclose($h);return $count;}
+ private function import_csv($callback){ if(empty($_FILES['file']['tmp_name'])||!is_uploaded_file($_FILES['file']['tmp_name']))return 0;$h=(\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($_FILES['file']['tmp_name'],'r');$headers=fgetcsv($h);if(!$headers){(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($h);return 0;}$headers=array_map(function($v){return trim(strtolower($v));},$headers);$count=0;while(($row=fgetcsv($h))!==false){$data=[];foreach($headers as $i=>$key){$data[$key]=$row[$i]??'';}if(call_user_func($callback,$data))$count++;}(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($h);return $count;}
 
  private function json($data){ $this->output->set_content_type('application/json')->set_output(json_encode($data)); }
 }

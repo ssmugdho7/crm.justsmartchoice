@@ -68,7 +68,7 @@ class App_Controller extends CI_Controller
          */
         if ($lastUpdate = get_last_upgrade_copy_data()) {
             if ((time() - $lastUpdate->time) > _delete_temporary_files_older_then()) {
-                @unlink($lastUpdate->path);
+                @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($lastUpdate->path);
                 update_option('last_upgrade_copy_data', '');
             }
         }

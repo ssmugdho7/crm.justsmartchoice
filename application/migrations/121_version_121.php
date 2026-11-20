@@ -20,13 +20,13 @@ class Migration_Version_121 extends CI_Migration
             }
         }
         $content = "THIS FOLDER IS DEPRECATED AND IS NOT USED ANYMORE. IF YOU DONT HAVE ANY CUSTOM WORK YOU CAN DELETE THIS FOLDER.";
-        $fp = fopen(APPPATH . "controllers/getaways/README.txt","wb");
+        $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(APPPATH . "controllers/getaways/README.txt","wb");
         @fwrite($fp,$content);
-        fclose($fp);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
 
-        $fp = fopen(APPPATH . "libraries/getaways/README.txt","wb");
+        $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(APPPATH . "libraries/getaways/README.txt","wb");
         @fwrite($fp,$content);
-        fclose($fp);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
 
         update_option('update_info_message', '<div class="col-md-12">
             <div class="alert alert-success bold">

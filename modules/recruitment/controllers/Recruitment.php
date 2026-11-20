@@ -2636,7 +2636,7 @@ class recruitment extends AdminController {
         	$filename = array_pop($file_arr);
 
         	if(file_exists($file)) {
-        		unlink(TEMFOLDER_EXPORT_CANDIDATE.$filename);
+        		(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(TEMFOLDER_EXPORT_CANDIDATE.$filename);
         	}
         }
 
@@ -2984,7 +2984,7 @@ class recruitment extends AdminController {
 					// Setup our new file path
 					$newFilePath = $tmpDir . $_FILES['file_csv']['name'];
 
-					if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+					if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 						$import_result = true;
 						$rows = [];
 						$arr_cv = [];
@@ -3477,7 +3477,7 @@ class recruitment extends AdminController {
 					$date_create_file = new_str_replace('.xlsx', '', $date_create_file);
 
 					if ((float) $date_create_file <= (float) $before_7_day) {
-						unlink($folder . $filename);
+						(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($folder . $filename);
 					}
 				}
 			}

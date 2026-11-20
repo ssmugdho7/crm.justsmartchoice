@@ -218,7 +218,7 @@ class Requests_Transport_fsockopen implements Requests_Transport {
 		$options['hooks']->dispatch('fsockopen.after_send', array($out));
 
 		if (!$options['blocking']) {
-			fclose($socket);
+			(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($socket);
 			$fake_headers = '';
 			$options['hooks']->dispatch('fsockopen.after_request', array(&$fake_headers));
 			return '';
@@ -241,7 +241,7 @@ class Requests_Transport_fsockopen implements Requests_Transport {
 		$doingbody  = false;
 		$download   = false;
 		if ($options['filename']) {
-			$download = fopen($options['filename'], 'wb');
+			$download = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($options['filename'], 'wb');
 		}
 
 		while (!feof($socket)) {
@@ -287,12 +287,12 @@ class Requests_Transport_fsockopen implements Requests_Transport {
 		$this->headers = $headers;
 
 		if ($download) {
-			fclose($download);
+			(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($download);
 		}
 		else {
 			$this->headers .= "\r\n\r\n" . $body;
 		}
-		fclose($socket);
+		(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($socket);
 
 		$options['hooks']->dispatch('fsockopen.after_request', array(&$this->headers, &$this->info));
 		return $this->headers;

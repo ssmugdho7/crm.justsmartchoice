@@ -48,7 +48,7 @@ class XLSXWriter
 	{
 		if (!empty($this->temp_files)) {
 			foreach($this->temp_files as $temp_file) {
-				@unlink($temp_file);
+				@(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($temp_file);
 			}
 		}
 	}
@@ -84,7 +84,7 @@ class XLSXWriter
 
 		if ( file_exists( $filename ) ) {
 			if ( is_writable( $filename ) ) {
-				@unlink( $filename ); //if the zip already exists, remove it
+				@(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')( $filename ); //if the zip already exists, remove it
 			} else {
 				self::log( "Error in " . __CLASS__ . "::" . __FUNCTION__ . ", file is not writeable." );
 				return;
@@ -948,7 +948,7 @@ class XLSXWriter_BuffererWriter
 	public function __construct($filename, $fd_fopen_flags='w', $check_utf8=false)
 	{
 		$this->check_utf8 = $check_utf8;
-		$this->fd = fopen($filename, $fd_fopen_flags);
+		$this->fd = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($filename, $fd_fopen_flags);
 		if ($this->fd===false) {
 			XLSXWriter::log("Unable to open $filename for writing.");
 		}
@@ -978,7 +978,7 @@ class XLSXWriter_BuffererWriter
 	{
 		$this->purge();
 		if ($this->fd) {
-			fclose($this->fd);
+			(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($this->fd);
 			$this->fd=null;
 		}
 	}

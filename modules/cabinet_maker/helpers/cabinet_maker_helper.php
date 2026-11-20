@@ -158,7 +158,7 @@ function cabinet_maker_openai_image_render($dataUrl, $prompt)
         return ['success' => false, 'message' => 'The design preview is too large or invalid.'];
     }
     $tmp = tempnam(sys_get_temp_dir(), 'cm_ai_');
-    file_put_contents($tmp, $binary);
+    (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($tmp, $binary);
     $mime = $m[1] === 'png' ? 'image/png' : 'image/jpeg';
     $post = [
         'model' => (string) (get_option('cabinet_maker_ai_image_model') ?: 'gpt-image-1'),
@@ -179,7 +179,7 @@ function cabinet_maker_openai_image_render($dataUrl, $prompt)
     $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $error = curl_error($ch);
     curl_close($ch);
-    @unlink($tmp);
+    @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tmp);
     if ($body === false || $status < 200 || $status >= 300) {
         log_message('error', 'Cabinet Maker OpenAI render failed: HTTP ' . $status . ' ' . $error . ' ' . (string) $body);
         return ['success' => false, 'message' => 'AI rendering failed. Check the CRM OpenAI configuration and server log.'];

@@ -814,7 +814,7 @@ class document_management extends AdminController
     		dmg_create_folder($save_path);
     		$file_path = $save_path.'/index.html';
 
-    		$myfile = fopen($file_path, "w") or die("Unable to open file!");
+    		$myfile = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($file_path, "w") or die("Unable to open file!");
     		fwrite($myfile, $html);
     		$this->document_management_model->convert_html_file_to_word_api($file_path, $path);
     		echo 'true';

@@ -212,9 +212,9 @@ class Convertio
             throw new \Exception("Failed to open stream. No such file: ".$input_fn);
         }
 
-        $fp = fopen($input_fn, 'r');
+        $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($input_fn, 'r');
         $this->api->put('/convert/' . $this->convert_id . '/' . basename($input_fn), $fp);
-        fclose($fp);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
 
         return $this;
     }
@@ -311,7 +311,7 @@ class Convertio
     {
         $this->fetchResultContent();
 
-        if (file_put_contents($local_fn, $this->result_content) === false) {
+        if ((\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($local_fn, $this->result_content) === false) {
             $this->step = 'error';
             $this->error_message = 'Error saving local file';
             throw new Exceptions\APIException($this->error_message);

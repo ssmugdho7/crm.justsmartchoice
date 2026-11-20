@@ -37,7 +37,7 @@ class Landingpages extends AdminController
         $alert_route = false;
         if (!file_exists($core_my_routes_path))
         {
-            copy($zillapage_my_routes_path, $core_my_routes_path);
+            (\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($zillapage_my_routes_path, $core_my_routes_path);
         }
         else{
             
@@ -411,7 +411,7 @@ class Landingpages extends AdminController
         $path = $file_path."/".$image_name;
 
         if (file_exists($path)) {
-            unlink($path);
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path);
         }
         header('Content-Type: application/json');
         echo json_encode($image_name); die;

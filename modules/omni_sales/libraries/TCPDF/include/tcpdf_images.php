@@ -131,7 +131,7 @@ class TCPDF_IMAGES {
 		// get PNG image data
 		$retvars = self::_parsepng($tempfile);
 		// tidy up by removing temporary image
-		unlink($tempfile);
+		(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tempfile);
 		return $retvars;
 	}
 
@@ -149,7 +149,7 @@ class TCPDF_IMAGES {
 		imagedestroy($image);
 		$retvars = self::_parsejpeg($tempfile);
 		// tidy up by removing temporary image
-		unlink($tempfile);
+		(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tempfile);
 		return $retvars;
 	}
 
@@ -239,7 +239,7 @@ class TCPDF_IMAGES {
 	 * @public static
 	 */
 	public static function _parsepng($file) {
-		$f = @fopen($file, 'rb');
+		$f = @(\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($file, 'rb');
 		if ($f === false) {
 			// Can't open image file
 			return false;
@@ -267,22 +267,22 @@ class TCPDF_IMAGES {
 			$colspace = 'Indexed';
 		} else {
 			// alpha channel
-			fclose($f);
+			(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($f);
 			return 'pngalpha';
 		}
 		if (ord(fread($f, 1)) != 0) {
 			// Unknown compression method
-			fclose($f);
+			(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($f);
 			return false;
 		}
 		if (ord(fread($f, 1)) != 0) {
 			// Unknown filter method
-			fclose($f);
+			(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($f);
 			return false;
 		}
 		if (ord(fread($f, 1)) != 0) {
 			// Interlacing not supported
-			fclose($f);
+			(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($f);
 			return false;
 		}
 		fread($f, 4);
@@ -329,7 +329,7 @@ class TCPDF_IMAGES {
 				// get compression method
 				if (ord(fread($f, 1)) != 0) {
 					// Unknown filter method
-					fclose($f);
+					(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($f);
 					return false;
 				}
 				// read ICC Color Profile
@@ -346,10 +346,10 @@ class TCPDF_IMAGES {
 		} while ($n);
 		if (($colspace == 'Indexed') AND (empty($pal))) {
 			// Missing palette
-			fclose($f);
+			(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($f);
 			return false;
 		}
-		fclose($f);
+		(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($f);
 		return array('w' => $w, 'h' => $h, 'ch' => $channels, 'icc' => $icc, 'cs' => $colspace, 'bpc' => $bpc, 'f' => 'FlateDecode', 'parms' => $parms, 'pal' => $pal, 'trns' => $trns, 'data' => $data);
 	}
 

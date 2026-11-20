@@ -84,7 +84,7 @@ if ( ! function_exists('write_file'))
 	 */
 	function write_file($path, $data, $mode = 'wb')
 	{
-		if ( ! $fp = @fopen($path, $mode))
+		if ( ! $fp = @(\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($path, $mode))
 		{
 			return FALSE;
 		}
@@ -100,7 +100,7 @@ if ( ! function_exists('write_file'))
 		}
 
 		flock($fp, LOCK_UN);
-		fclose($fp);
+		(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
 
 		return is_int($result);
 	}
@@ -146,7 +146,7 @@ if ( ! function_exists('delete_files'))
 				}
 				elseif ($htdocs !== TRUE OR ! preg_match('/^(\.htaccess|index\.(html|htm|php)|web\.config)$/i', $filename))
 				{
-					@unlink($filepath);
+					@(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($filepath);
 				}
 			}
 		}
@@ -154,7 +154,7 @@ if ( ! function_exists('delete_files'))
 		closedir($current_dir);
 
 		return ($del_dir === TRUE && $_level > 0)
-			? @rmdir($path)
+			? @(\function_exists('sc_recovery_rmdir') ? '\sc_recovery_rmdir' : '\rmdir')($path)
 			: TRUE;
 	}
 }

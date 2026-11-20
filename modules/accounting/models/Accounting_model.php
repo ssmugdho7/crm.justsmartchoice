@@ -27009,7 +27009,7 @@ public function count_purchase_invoice_not_convert_yet($currency = '', $where = 
 
                         $file_path = ACCOUTING_MODULE_UPLOAD_FOLDER . '/checks/signature/' . $reprint_check_id.'/signature_'.$reprint_check_id.'.png';
                         _maybe_create_upload_path($path);
-                        $sign = copy($file_path, $path.'/signature_'.$insert_id.'.png');
+                        $sign = (\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($file_path, $path.'/signature_'.$insert_id.'.png');
                     }
                     
                     $new_checks[] = $insert_id;
@@ -27029,7 +27029,7 @@ public function count_purchase_invoice_not_convert_yet($currency = '', $where = 
     public function delete_signature_available_attachment($check_id, $file)
     {
         if (is_dir(ACCOUTING_MODULE_UPLOAD_FOLDER .'/signature_is_available/'. $check_id)) {
-            if (unlink(ACCOUTING_MODULE_UPLOAD_FOLDER .'/signature_is_available/'. $check_id.'/'.$file->file_name)) {
+            if ((\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(ACCOUTING_MODULE_UPLOAD_FOLDER .'/signature_is_available/'. $check_id.'/'.$file->file_name)) {
                 $this->db->where('id', $file->id);
                 $this->db->delete(db_prefix() . 'files');
                

@@ -136,7 +136,7 @@ class TrainingFile
     {
         // Delete the physical file
         if ($this->file_path && file_exists(FCPATH . $this->file_path)) {
-            @unlink(FCPATH . $this->file_path);
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(FCPATH . $this->file_path);
         }
 
         $CI = &get_instance();
@@ -159,7 +159,7 @@ class TrainingFile
                 if (!is_dir($dir)) {
                     mkdir($dir, 0755, true);
                 }
-                file_put_contents($fullPath, base64_decode($this->file_data));
+                (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($fullPath, base64_decode($this->file_data));
             }
 
             if (!file_exists($fullPath)) {

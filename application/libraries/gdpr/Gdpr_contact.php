@@ -204,9 +204,9 @@ class Gdpr_contact
         $tmpDirContactData = $tmpDir . '/' . $contact['id'] . time() . '-contact';
         mkdir($tmpDirContactData, 0755);
 
-        $fp = fopen($tmpDirContactData . '/data.json', 'w');
+        $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($tmpDirContactData . '/data.json', 'w');
         fwrite($fp, json_encode($json, JSON_PRETTY_PRINT));
-        fclose($fp);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
 
         $this->ci->zip->read_file($tmpDirContactData . '/data.json');
 

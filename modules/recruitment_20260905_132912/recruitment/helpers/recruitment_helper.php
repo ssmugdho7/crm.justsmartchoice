@@ -44,7 +44,7 @@ function handle_rec_proposal_file($id)
             $filename    = unique_filename($path, $_FILES['file']['name']);
             $newFilePath = $path . $filename;
             // Upload the file into the company uploads dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                 $CI           = & get_instance();
                 $attachment   = [];
                 $attachment[] = [
@@ -151,7 +151,7 @@ function handle_rec_campaign_file($id){
             $filename    = unique_filename($path, $_FILES['file']['name']);
             $newFilePath = $path . $filename;
             // Upload the file into the company uploads dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                 $CI           = & get_instance();
                 $attachment   = [];
                 $attachment[] = [
@@ -207,7 +207,7 @@ function handle_rec_candidate_file($id){
         }
         $filename = unique_filename($path, $originalName);
         $newFilePath = $path . $filename;
-        if (move_uploaded_file($tmpNames[$i], $newFilePath)) {
+        if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpNames[$i], $newFilePath)) {
             $attachment = [[
                 'file_name' => $filename,
                 'filetype'  => $types[$i] ?? get_mime_by_extension($newFilePath),
@@ -237,7 +237,7 @@ function handle_rec_candidate_avar_file($id){
             $filename    = unique_filename($path, $_FILES['cd_avar']['name']);
             $newFilePath = $path . $filename;
             // Upload the file into the company uploads dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                 $CI           = & get_instance();
                 $attachment   = [];
                 $attachment[] = [
@@ -424,7 +424,7 @@ function handle_rec_set_transfer_record($id){
             $filename    = unique_filename($path, $_FILES['attachment']['name']);
             $newFilePath = $path . $filename;
             // Upload the file into the company uploads dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                 $CI           = & get_instance();
                 $attachment   = [];
                 $attachment[] = [
@@ -476,7 +476,7 @@ function handle_rec_candidate_file_form($id){
             $filename    = unique_filename($path, $_FILES['file-input']['name']);
             $newFilePath = $path . $filename;
             // Upload the file into the company uploads dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                 $CI           = & get_instance();
                 $attachment   = [];
                 $attachment[] = [
@@ -742,7 +742,7 @@ function handle_company_attachments($id)
             $filename    = $_FILES['file']['name'];
             $newFilePath = $path . $filename;
             // Upload the file into the temp dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
                 $attachment   = [];
                 $attachment[] = [
@@ -1077,7 +1077,7 @@ function portal_handle_rec_candidate_file_form($id){
                     $filename    = unique_filename($path, $_FILES['file-input']['name'][$i]);
                     $newFilePath = $path . $filename;
                  // Upload the file into the company uploads dir
-                    if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                    if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                         $CI           = & get_instance();
                         $attachment   = [];
                         $attachment[] = [
@@ -1103,7 +1103,7 @@ function portal_handle_rec_candidate_file_form($id){
                 $filename    = unique_filename($path, $_FILES['file-input']['name']);
                 $newFilePath = $path . $filename;
             // Upload the file into the company uploads dir
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                     $CI           = & get_instance();
                     $attachment   = [];
                     $attachment[] = [
@@ -1839,7 +1839,7 @@ function recruitment_sync_candidate_resume_to_staff($candidate_id = 0, $staff_id
         }
         $target_name = unique_filename($target_dir, $attachment->file_name);
         $target = $target_dir . $target_name;
-        if (!@copy($source, $target)) {
+        if (!@(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($source, $target)) {
             continue;
         }
         $exists = $CI->db->where('rel_id', $staff_id)->where('rel_type', 'staff_resume')->where('file_name', $target_name)->get($files_table)->row();

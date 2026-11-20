@@ -130,7 +130,7 @@ if (!is_dir($uploadDir)) {
     @mkdir($uploadDir, 0755, true);
 }
 if (is_dir($uploadDir) && !file_exists($uploadDir . 'index.html')) {
-    @file_put_contents($uploadDir . 'index.html', '');
+    @(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($uploadDir . 'index.html', '');
 }
 
 // Copy bundled modules into the CRM modules folder for a test/staging install. Existing folders are not deleted.
@@ -179,7 +179,7 @@ function smart_choice_core_recursive_copy($src, $dst)
         if (is_dir($source)) {
             smart_choice_core_recursive_copy($source, $target);
         } else {
-            @copy($source, $target);
+            @(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($source, $target);
         }
     }
     closedir($dir);

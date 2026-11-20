@@ -62,7 +62,7 @@ class UrandomPseudoRandomStringGenerator implements PseudoRandomStringGeneratorI
     {
         $this->validateLength($length);
 
-        $stream = fopen('/dev/urandom', 'rb');
+        $stream = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('/dev/urandom', 'rb');
         if (!is_resource($stream)) {
             throw new FacebookSDKException(
                 static::ERROR_MESSAGE .
@@ -75,7 +75,7 @@ class UrandomPseudoRandomStringGenerator implements PseudoRandomStringGeneratorI
         }
 
         $binaryString = fread($stream, $length);
-        fclose($stream);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($stream);
 
         if (!$binaryString) {
             throw new FacebookSDKException(

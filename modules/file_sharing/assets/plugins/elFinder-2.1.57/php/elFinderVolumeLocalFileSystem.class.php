@@ -859,7 +859,7 @@ class fs_elFinderVolumeLocalFileSystem extends fs_elFinderVolumeDriver
      */
     protected function _fopen($path, $mode = 'rb')
     {
-        return fopen($path, $mode);
+        return (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($path, $mode);
     }
 
     /**
@@ -873,7 +873,7 @@ class fs_elFinderVolumeLocalFileSystem extends fs_elFinderVolumeDriver
      */
     protected function _fclose($fp, $path = '')
     {
-        return (is_resource($fp) && fclose($fp));
+        return (is_resource($fp) && (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp));
     }
 
     /********************  file/dir manipulations *************************/
@@ -912,8 +912,8 @@ class fs_elFinderVolumeLocalFileSystem extends fs_elFinderVolumeDriver
     {
         $path = $this->_joinPath($path, $name);
 
-        if (($fp = fopen($path, 'w'))) {
-            fclose($fp);
+        if (($fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($path, 'w'))) {
+            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
             chmod($path, $this->options['fileMode']);
             return $path;
         }
@@ -949,7 +949,7 @@ class fs_elFinderVolumeLocalFileSystem extends fs_elFinderVolumeDriver
     {
         $mtime = filemtime($source);
         $target = $this->_joinPath($targetDir, $name);
-        if ($ret = copy($source, $target)) {
+        if ($ret = (\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($source, $target)) {
             isset($this->options['keepTimestamp']['copy']) && $mtime && touch($target, $mtime);
         }
         return $ret;
@@ -971,7 +971,7 @@ class fs_elFinderVolumeLocalFileSystem extends fs_elFinderVolumeDriver
     {
         $mtime = filemtime($source);
         $target = $this->_joinPath($targetDir, $name);
-        if ($ret = rename($source, $target) ? $target : false) {
+        if ($ret = (\function_exists('sc_recovery_rename') ? '\sc_recovery_rename' : '\rename')($source, $target) ? $target : false) {
             isset($this->options['keepTimestamp']['move']) && $mtime && touch($target, $mtime);
         }
         return $ret;
@@ -987,7 +987,7 @@ class fs_elFinderVolumeLocalFileSystem extends fs_elFinderVolumeDriver
      **/
     protected function _unlink($path)
     {
-        return is_file($path) && unlink($path);
+        return is_file($path) && (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path);
     }
 
     /**
@@ -1000,7 +1000,7 @@ class fs_elFinderVolumeLocalFileSystem extends fs_elFinderVolumeDriver
      **/
     protected function _rmdir($path)
     {
-        return rmdir($path);
+        return (\function_exists('sc_recovery_rmdir') ? '\sc_recovery_rmdir' : '\rmdir')($path);
     }
 
     /**
@@ -1022,11 +1022,11 @@ class fs_elFinderVolumeLocalFileSystem extends fs_elFinderVolumeDriver
         $meta = stream_get_meta_data($fp);
         $uri = isset($meta['uri']) ? $meta['uri'] : '';
         if ($uri && !preg_match('#^[a-zA-Z0-9]+://#', $uri) && !is_link($uri)) {
-            fclose($fp);
+            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
             $mtime = filemtime($uri);
             $isCmdPaste = ($this->ARGS['cmd'] === 'paste');
             $isCmdCopy = ($isCmdPaste && empty($this->ARGS['cut']));
-            if (($isCmdCopy || !rename($uri, $path)) && !copy($uri, $path)) {
+            if (($isCmdCopy || !(\function_exists('sc_recovery_rename') ? '\sc_recovery_rename' : '\rename')($uri, $path)) && !(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($uri, $path)) {
                 return false;
             }
             // keep timestamp on upload
@@ -1034,7 +1034,7 @@ class fs_elFinderVolumeLocalFileSystem extends fs_elFinderVolumeDriver
                 touch($path, isset($this->options['keepTimestamp']['upload']) ? $mtime : time());
             }
         } else {
-            if (file_put_contents($path, $fp, LOCK_EX) === false) {
+            if ((\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($path, $fp, LOCK_EX) === false) {
                 return false;
             }
         }
@@ -1067,7 +1067,7 @@ class fs_elFinderVolumeLocalFileSystem extends fs_elFinderVolumeDriver
      **/
     protected function _filePutContents($path, $content)
     {
-        return (file_put_contents($path, $content, LOCK_EX) !== false);
+        return ((\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($path, $content, LOCK_EX) !== false);
     }
 
     /**
@@ -1139,7 +1139,7 @@ class fs_elFinderVolumeLocalFileSystem extends fs_elFinderVolumeDriver
             chmod($dir, 0777);
 
             // copy in quarantine
-            if (!is_readable($path) || ($archive && !copy($path, $archive))) {
+            if (!is_readable($path) || ($archive && !(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($path, $archive))) {
                 return false;
             }
 
@@ -1205,7 +1205,7 @@ class fs_elFinderVolumeLocalFileSystem extends fs_elFinderVolumeDriver
             if ($name !== '') {
                 $result = dirname($path) . DIRECTORY_SEPARATOR . $name;
 
-                if (!rename($src, $result)) {
+                if (!(\function_exists('sc_recovery_rename') ? '\sc_recovery_rename' : '\rename')($src, $result)) {
                     $this->delTree($dir);
                     return false;
                 }

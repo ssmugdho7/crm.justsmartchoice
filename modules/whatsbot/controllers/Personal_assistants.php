@@ -105,7 +105,7 @@ class Personal_assistants extends AdminController {
                         $newFilePath = $path . '/' . $filename;
 
                         // Move the file to the specified directory
-                        if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                        if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                             $this->initializeOpenAI($path);
                             $chunk = $this->createFileChunk($filename);
                             if (!$chunk) {

@@ -13,7 +13,7 @@ class Smart_choice_core_manager extends AdminController {
  }
  public function clear_cache(){
    $dirs=[APPPATH.'cache/']; $deleted=0;
-   foreach($dirs as $dir){ foreach(glob($dir.'*')?:[] as $f){ if(is_file($f) && basename($f)!=='index.html' && basename($f)!=='.htaccess'){ @unlink($f); $deleted++; } } }
+   foreach($dirs as $dir){ foreach(glob($dir.'*')?:[] as $f){ if(is_file($f) && basename($f)!=='index.html' && basename($f)!=='.htaccess'){ @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($f); $deleted++; } } }
    $this->audit('clear_cache',['deleted'=>$deleted]); set_alert('success','CRM cache files cleared successfully.'); redirect(admin_url('smart_choice_core_manager'));
  }
  public function cron_test(){
@@ -22,15 +22,15 @@ class Smart_choice_core_manager extends AdminController {
  }
  public function speed_test(){
    $start=microtime(true); $target=FCPATH.'temp/sc_speed_test.bin'; $bytes=2*1024*1024;
-   $data=random_bytes($bytes); file_put_contents($target,$data); $write=microtime(true)-$start;
-   $start=microtime(true); file_get_contents($target); $read=microtime(true)-$start; @unlink($target);
+   $data=random_bytes($bytes); (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($target,$data); $write=microtime(true)-$start;
+   $start=microtime(true); file_get_contents($target); $read=microtime(true)-$start; @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($target);
    $result=['server_write_mbps'=>round(($bytes*8/1000000)/max($write,.001),2),'server_read_mbps'=>round(($bytes*8/1000000)/max($read,.001),2),'tested_at'=>date('c')];
    update_option('sc_last_speed_test',json_encode($result)); $this->audit('speed_test',$result);
    set_alert('success','Server transfer diagnostic completed. This measures CRM server storage throughput, not the visitor\'s ISP line speed.'); redirect(admin_url('smart_choice_core_manager'));
  }
  public function download_module($name){
    $name=preg_replace('/[^a-zA-Z0-9_-]/','',$name); $path=module_dir_path($name); if(!$name||!is_dir($path)) show_404();
-   $tmp=FCPATH.'temp/'.$name.'_'.date('Y-m-d').'.zip'; $this->zipDirectory($path,$tmp,$name); $this->audit('download_module',['module'=>$name]); force_download($tmp,null); @unlink($tmp);
+   $tmp=FCPATH.'temp/'.$name.'_'.date('Y-m-d').'.zip'; $this->zipDirectory($path,$tmp,$name); $this->audit('download_module',['module'=>$name]); force_download($tmp,null); @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tmp);
  }
  public function download_core_manifest(){
    $data=['build'=>get_option('sc_core_build_version'),'crm_database_version'=>$this->current_db_version,'generated_at'=>date('c'),'php'=>PHP_VERSION,'manager'=>'1.0.0'];

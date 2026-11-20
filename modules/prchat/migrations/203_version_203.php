@@ -9,7 +9,7 @@ class Migration_Version_203 extends App_module_migration
         add_option('prchat_copy_group_uploads_to_project_media', '1');
         if (defined('PR_CHAT_MEDIA_PROJECTS_FOLDER') && !is_dir(PR_CHAT_MEDIA_PROJECTS_FOLDER)) {
             @mkdir(PR_CHAT_MEDIA_PROJECTS_FOLDER, 0755, true);
-            @file_put_contents(PR_CHAT_MEDIA_PROJECTS_FOLDER . '/index.html', '');
+            @(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')(PR_CHAT_MEDIA_PROJECTS_FOLDER . '/index.html', '');
         }
     }
 }

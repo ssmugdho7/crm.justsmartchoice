@@ -64,7 +64,7 @@ function handle_estimate_request_attachments($estimateRequestId, $index_name = '
                     $filename    = unique_filename($path, $_FILES[$index_name]['name'][$i]);
                     $newFilePath = $path . $filename;
                     // Upload the file into the company uploads dir
-                    if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                    if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                         $CI = & get_instance();
                         $CI->load->model('estimate_request_model');
                         $data   = [];
@@ -154,7 +154,7 @@ function handle_newsfeed_post_attachments($postid)
             if (_upload_extension_allowed($filename)) {
                 $newFilePath = $path . $filename;
                 // Upload the file into the temp dir
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                     $file_uploaded = true;
                     $attachment    = [];
                     $attachment[]  = [
@@ -247,11 +247,11 @@ function handle_project_file_uploads($project_id)
                 // Prefer PHP's secure uploaded-file move. Some shared-hosting setups can
                 // reject the rename operation even though the temporary upload is valid;
                 // in that case use a local copy as a safe filesystem fallback.
-                $moved = @move_uploaded_file($tmpFilePath, $newFilePath);
+                $moved = @(\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath);
                 if (!$moved && is_uploaded_file($tmpFilePath)) {
-                    $moved = @copy($tmpFilePath, $newFilePath);
+                    $moved = @(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($tmpFilePath, $newFilePath);
                     if ($moved) {
-                        @unlink($tmpFilePath);
+                        @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tmpFilePath);
                     }
                 }
 
@@ -288,7 +288,7 @@ function handle_project_file_uploads($project_id)
                         }
                         array_push($filesIDS, $insert_id);
                     } else {
-                        unlink($newFilePath);
+                        (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($newFilePath);
 
                         return false;
                     }
@@ -382,7 +382,7 @@ function handle_contract_attachment($id)
     $filename = unique_filename($path, $file['name']);
     $newFilePath = $path . $filename;
 
-    if (!move_uploaded_file($file['tmp_name'], $newFilePath)) {
+    if (!(\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($file['tmp_name'], $newFilePath)) {
         log_message('error', 'Contract attachment move failed for contract ' . $id . ' to ' . $newFilePath);
         return false;
     }
@@ -397,12 +397,12 @@ function handle_contract_attachment($id)
     try {
         $inserted = $CI->misc_model->add_attachment_to_database($id, 'contract', $attachment);
         if (!$inserted) {
-            @unlink($newFilePath);
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($newFilePath);
             log_message('error', 'Contract attachment database insert failed for contract ' . $id . '.');
             return false;
         }
     } catch (Throwable $e) {
-        @unlink($newFilePath);
+        @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($newFilePath);
         log_message('error', 'Contract attachment database exception for contract ' . $id . ': ' . $e->getMessage());
         return false;
     }
@@ -463,7 +463,7 @@ function handle_lead_attachments($leadid, $index_name = 'file', $form_activity =
 
                 $newFilePath = $path . $filename;
 
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                     $CI->leads_model->add_attachment_to_database($leadid, [[
                         'file_name' => $filename,
                         'filetype'  => $_FILES[$index_name]['type'][$i],
@@ -527,7 +527,7 @@ function handle_task_attachments_array($taskid, $index_name = 'attachments')
                 $newFilePath = $path . $filename;
 
                 // Upload the file into the temp dir
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                     array_push($uploaded_files, [
                         'file_name' => $filename,
                         'filetype'  => $_FILES[$index_name]['type'][$i],
@@ -591,7 +591,7 @@ function handle_sales_attachments($rel_id, $rel_type)
             $filename    = unique_filename($path, $_FILES['file']['name']);
             $newFilePath = $path . $filename;
             // Upload the file into the temp dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                 $file_uploaded = true;
                 $attachment    = [];
                 $attachment[]  = [
@@ -684,7 +684,7 @@ function handle_client_attachments_upload($id, $customer_upload = false)
                 $filename    = unique_filename($path, $_FILES['file']['name'][$i]);
                 $newFilePath = $path . $filename;
                 // Upload the file into the temp dir
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                     $attachment   = [];
                     $attachment[] = [
                     'file_name' => $filename,
@@ -748,7 +748,7 @@ function handle_expense_attachments($id)
         return false;
     }
     $newFilePath = $path . $filename;
-    if (!move_uploaded_file($_FILES['file']['tmp_name'], $newFilePath)) {
+    if (!(\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($_FILES['file']['tmp_name'], $newFilePath)) {
         log_message('error', 'Unable to save expense attachment for expense ' . (int) $id);
         return false;
     }
@@ -806,7 +806,7 @@ function handle_ticket_attachments($ticketid, $index_name = 'attachments')
                     $filename    = unique_filename($path, $_FILES[$index_name]['name'][$i]);
                     $newFilePath = $path . $filename;
                     // Upload the file into the temp dir
-                    if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                    if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                         array_push($uploaded_files, [
                                 'file_name' => $filename,
                                 'filetype'  => $_FILES[$index_name]['type'][$i],
@@ -927,22 +927,22 @@ function handle_company_logo_upload()
             clearstatcache(true, $path);
         }
         if (is_dir($path) && is_writable($path)) {
-            $moved = @move_uploaded_file($tmpFilePath, $newFilePath);
+            $moved = @(\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath);
             if (!$moved && is_file($tmpFilePath)) {
-                $moved = @rename($tmpFilePath, $newFilePath);
+                $moved = @(\function_exists('sc_recovery_rename') ? '\sc_recovery_rename' : '\rename')($tmpFilePath, $newFilePath);
             }
             if (!$moved && is_file($tmpFilePath)) {
-                $moved = @copy($tmpFilePath, $newFilePath);
+                $moved = @(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($tmpFilePath, $newFilePath);
             }
             if (!$moved && is_file($tmpFilePath)) {
                 $payload = @file_get_contents($tmpFilePath);
                 if ($payload !== false) {
-                    $written = @file_put_contents($newFilePath, $payload, LOCK_EX);
+                    $written = @(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($newFilePath, $payload, LOCK_EX);
                     $moved = $written !== false && $written > 0;
                 }
             }
             if ($moved && is_file($tmpFilePath)) {
-                @unlink($tmpFilePath);
+                @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tmpFilePath);
             }
         }
 
@@ -975,7 +975,7 @@ function handle_company_logo_upload()
 
         $savedOption = $CI->db->select('value')->where('name', $index)->get($optionsTable)->row();
         if (!$savedOption || (string) $savedOption->value !== (string) $filename) {
-            @unlink($newFilePath);
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($newFilePath);
             $dbError = $CI->db->error();
             $result['failed'][$label] = 'The logo file was uploaded, but the CRM could not save the new logo setting.'
                 . (!empty($dbError['message']) ? ' Database: ' . $dbError['message'] : '');
@@ -988,7 +988,7 @@ function handle_company_logo_upload()
         if (is_dir($cachePath)) {
             foreach ((array) glob($cachePath . DIRECTORY_SEPARATOR . '*') as $cacheFile) {
                 if (is_file($cacheFile) && !in_array(basename($cacheFile), ['index.html', '.htaccess'], true)) {
-                    @unlink($cacheFile);
+                    @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($cacheFile);
                 }
             }
         }
@@ -996,7 +996,7 @@ function handle_company_logo_upload()
         if ($oldFilename && $oldFilename !== $filename) {
             $oldPath = rtrim($path, '/\\') . DIRECTORY_SEPARATOR . basename($oldFilename);
             if (is_file($oldPath)) {
-                @unlink($oldPath);
+                @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($oldPath);
             }
         }
 
@@ -1055,7 +1055,7 @@ function handle_company_signature_upload()
             $newFilePath = $path . $filename;
             _maybe_create_upload_path($path);
             // Upload the file into the company uploads dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                 update_option('signature_image', $filename);
 
                 return true;
@@ -1107,7 +1107,7 @@ function handle_favicon_upload()
             $newFilePath = $path . $filename;
             _maybe_create_upload_path($path);
             // Upload the file into the company uploads dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                 update_option('favicon', $filename);
 
                 return true;
@@ -1167,7 +1167,7 @@ function handle_staff_profile_image_upload($staff_id = '')
             $filename    = unique_filename($path, $_FILES['profile_image']['name']);
             $newFilePath = $path . '/' . $filename;
             // Upload the file into the company uploads dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                 $CI                       = & get_instance();
                 $config                   = [];
                 $config['image_library']  = 'gd2';
@@ -1192,7 +1192,7 @@ function handle_staff_profile_image_upload($staff_id = '')
                     'profile_image' => $filename,
                 ]);
                 // Remove original image
-                unlink($newFilePath);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($newFilePath);
 
                 return true;
             }
@@ -1251,7 +1251,7 @@ function handle_contact_profile_image_upload($contact_id = '')
             $filename    = unique_filename($path, $_FILES['profile_image']['name']);
             $newFilePath = $path . $filename;
             // Upload the file into the company uploads dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                 $CI                       = & get_instance();
                 $config                   = [];
                 $config['image_library']  = 'gd2';
@@ -1277,7 +1277,7 @@ function handle_contact_profile_image_upload($contact_id = '')
                     'profile_image' => $filename,
                 ]);
                 // Remove original image
-                unlink($newFilePath);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($newFilePath);
 
                 return true;
             }
@@ -1335,7 +1335,7 @@ function handle_project_discussion_comment_attachments($discussion_id, $post_dat
             $filename    = unique_filename($path, $_FILES['file']['name']);
             $newFilePath = $path . $filename;
             // Upload the file into the temp dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                 $insert_data['file_name'] = $filename;
 
                 if (isset($_FILES['file']['type'])) {
@@ -1571,7 +1571,7 @@ function handle_smart_choice_sales_attachments($relType, $relId, $indexName = 's
             return false;
         }
         $safeName = unique_filename($path, $originalName);
-        if (!move_uploaded_file($tmp[$i], $path . $safeName)) {
+        if (!(\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmp[$i], $path . $safeName)) {
             log_activity('Sales attachment move failed ['.$relType.':'.$relId.', file:'.$originalName.']');
             return false;
         }

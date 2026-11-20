@@ -337,10 +337,10 @@ class Purchasing_hub extends AdminController
         if (!$headers) { show_404(); }
         header('Content-Type: text/csv');
         header('Content-Disposition: attachment; filename="purchasing_hub_' . $type . '_sample.csv"');
-        $out = fopen('php://output', 'w');
+        $out = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('php://output', 'w');
         fputcsv($out, $headers);
         fputcsv($out, array_fill(0, count($headers), 'Sample'));
-        fclose($out);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($out);
         exit;
     }
 }

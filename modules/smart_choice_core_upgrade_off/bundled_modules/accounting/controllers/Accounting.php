@@ -3783,7 +3783,7 @@ class Accounting extends AdminController
                     // Setup our new file path
                     $newFilePath = $tmpDir . $_FILES['file_csv']['name'];                    
 
-                    if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                    if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                         //Writer file
                         $writer_header = array(
                             _l('invoice_payments_table_date_heading').' (dd/mm/YYYY)'            =>'string',
@@ -3935,7 +3935,7 @@ class Accounting extends AdminController
 
 
         if (file_exists($newFilePath)) {
-            @unlink($newFilePath);
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($newFilePath);
         }
 
         echo json_encode([
@@ -5972,7 +5972,7 @@ class Accounting extends AdminController
         header('Cache-Control: must-revalidate');
         header('Pragma: public');
         readfile($file);
-        unlink($file);
+        (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file);
         exit();
     }
 
@@ -6014,7 +6014,7 @@ class Accounting extends AdminController
                     $date_create_file =  str_replace('.xlsx', '', $date_create_file);
 
                     if((float)$date_create_file <= (float)$before_7_day){
-                        unlink($folder.$filename);
+                        (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($folder.$filename);
                     }
                 }
             }
@@ -7614,7 +7614,7 @@ class Accounting extends AdminController
                     // Setup our new file path
                     $newFilePath = $tmpDir . $_FILES['file_csv']['name'];
 
-                    if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                    if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
                         $accounts = $this->accounting_model->get_accounts('', [], false);
 
@@ -7810,7 +7810,7 @@ class Accounting extends AdminController
         }
 
         if (file_exists($newFilePath)) {
-            @unlink($newFilePath);
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($newFilePath);
         }
 
         echo json_encode([
@@ -7927,7 +7927,7 @@ class Accounting extends AdminController
                     // Setup our new file path
                     $newFilePath = $tmpDir . $_FILES['file_csv']['name'];
 
-                    if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                    if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                         //Writer file
                         
                         if($import_type == 'month'){
@@ -8443,7 +8443,7 @@ class Accounting extends AdminController
         }
 
         if (file_exists($newFilePath)) {
-            @unlink($newFilePath);
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($newFilePath);
         }
 
         echo json_encode([
@@ -10314,7 +10314,7 @@ class Accounting extends AdminController
                     // Setup our new file path
                     $newFilePath = $tmpDir . $_FILES['file_csv']['name'];                    
 
-                    if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                    if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                         //Writer file
                         $writer_header = array(
                             _l('invoice_payments_table_date_heading').' (dd/mm/YYYY)'            =>'string',
@@ -10328,13 +10328,13 @@ class Accounting extends AdminController
                         $rowstyle[] =array('widths'=>[10,20,30,40]);
 
                         if($_FILES['file_csv']['type'] == 'text/csv'){
-                            $fd   = fopen($newFilePath, 'r');
+                            $fd   = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($newFilePath, 'r');
                             $data = [];
                             while ($row = fgetcsv($fd)) {
                                 $data[] = $row;
                             }
 
-                            fclose($fd);
+                            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fd);
                         }else{
                             $writer = new XLSXWriter();
                             $writer->writeSheetHeader('Sheet1', $writer_header,  $col_options = ['widths'=>[40,40,40,40,50,50]]);
@@ -10480,7 +10480,7 @@ class Accounting extends AdminController
 
 
         if (file_exists($newFilePath)) {
-            @unlink($newFilePath);
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($newFilePath);
         }
 
         echo json_encode([
@@ -12750,7 +12750,7 @@ public function purchase_invoice_table()
             
             $file_path = ACCOUTING_MODULE_UPLOAD_FOLDER . '/signature_is_available/' . $staffid . '/'.$file->file_name;
             _maybe_create_upload_path($path);
-            $sign = copy($file_path, $path.'/signature_'.$check.'.'.$filetype);
+            $sign = (\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($file_path, $path.'/signature_'.$check.'.'.$filetype);
         }
 
         if($sign){
@@ -12786,7 +12786,7 @@ public function purchase_invoice_table()
             
             $file_path = ACCOUTING_MODULE_UPLOAD_FOLDER . '/signature_is_available/' . $staffid . '/'.$file->file_name;
             _maybe_create_upload_path($path);
-            $sign = copy($file_path, $path.'/signature_'.$check.'.'.$filetype);
+            $sign = (\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($file_path, $path.'/signature_'.$check.'.'.$filetype);
         }
 
         if($sign){
@@ -14483,7 +14483,7 @@ public function purchase_invoice_table()
                     // Setup our new file path
                     $newFilePath = $tmpDir . $_FILES['file_csv']['name'];                    
 
-                    if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                    if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                         //Writer file
                         $writer_header = array(
                             _l('vendor_code')          =>'string',
@@ -14651,7 +14651,7 @@ public function purchase_invoice_table()
 
 
         if (file_exists($newFilePath)) {
-            @unlink($newFilePath);
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($newFilePath);
         }
 
         echo json_encode([
@@ -16040,7 +16040,7 @@ public function purchase_invoice_table()
             @mkdir($dir, 0755, true);
         }
         if (!file_exists($dir . 'index.html')) {
-            @file_put_contents($dir . 'index.html', '');
+            @(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($dir . 'index.html', '');
         }
         return $dir;
     }
@@ -16056,7 +16056,7 @@ public function purchase_invoice_table()
             }
         }
         $file = $dir . 'accounting_hub_backup_' . date('Ymd_His') . '.json';
-        file_put_contents($file, json_encode($payload, JSON_PRETTY_PRINT));
+        (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($file, json_encode($payload, JSON_PRETTY_PRINT));
         return $file;
     }
 

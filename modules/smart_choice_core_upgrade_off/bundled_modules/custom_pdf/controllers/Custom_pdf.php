@@ -85,7 +85,7 @@ class Custom_pdf extends AdminController
                         _maybe_create_upload_path($path);
 
                         // Upload the file into the company uploads dir
-                        if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                        if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                             $postData['settings'][$pdf][$control_name]['image'] = $filename;
                         }
                     }
@@ -144,7 +144,7 @@ class Custom_pdf extends AdminController
 
         // Check if the file exists and delete it
         if (file_exists($path)) {
-            unlink($path);
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path);
         }
 
         // Remove the image information from the PDF options

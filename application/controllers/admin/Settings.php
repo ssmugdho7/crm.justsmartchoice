@@ -93,7 +93,7 @@ class Settings extends AdminController
                 $cachePath = APPPATH . 'cache/';
                 foreach (glob($cachePath . '*') ?: [] as $cacheFile) {
                     if (is_file($cacheFile) && !in_array(basename($cacheFile), ['index.html', '.htaccess'], true)) {
-                        @unlink($cacheFile);
+                        @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($cacheFile);
                     }
                 }
             }
@@ -212,7 +212,7 @@ class Settings extends AdminController
 
         $sImage = get_option('signature_image');
         if (file_exists(get_upload_path_by_type('company') . '/' . $sImage)) {
-            unlink(get_upload_path_by_type('company') . '/' . $sImage);
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(get_upload_path_by_type('company') . '/' . $sImage);
         }
 
         update_option('signature_image', '');
@@ -245,9 +245,9 @@ class Settings extends AdminController
             $filename = 'sc_' . $suffix . '_login_background.' . $ext;
             $target = rtrim($path, '/\\') . DIRECTORY_SEPARATOR . $filename;
             foreach (glob(rtrim($path, '/\\') . DIRECTORY_SEPARATOR . 'sc_' . $suffix . '_login_background.*') ?: [] as $old) {
-                if (is_file($old)) @unlink($old);
+                if (is_file($old)) @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($old);
             }
-            if (@move_uploaded_file($_FILES[$field]['tmp_name'], $target)) {
+            if (@(\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($_FILES[$field]['tmp_name'], $target)) {
                 update_option($field, $filename);
                 $uploaded[] = $field;
             } else {
@@ -272,7 +272,7 @@ class Settings extends AdminController
 
         $path = get_upload_path_by_type('company') . '/' . $logoName;
         if (file_exists($path)) {
-            unlink($path);
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path);
         }
 
         update_option('company_logo' . ($type == 'dark' ? '_dark' : ''), '');
@@ -286,7 +286,7 @@ class Settings extends AdminController
             access_denied('settings');
         }
         if (file_exists(get_upload_path_by_type('company') . '/' . get_option('favicon'))) {
-            unlink(get_upload_path_by_type('company') . '/' . get_option('favicon'));
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(get_upload_path_by_type('company') . '/' . get_option('favicon'));
         }
         update_option('favicon', '');
         redirect(previous_url() ?: $_SERVER['HTTP_REFERER']);
@@ -345,9 +345,9 @@ class Settings extends AdminController
             $path = $directory . DIRECTORY_SEPARATOR . $item;
             if (is_dir($path) && !is_link($path)) {
                 $count += $this->smart_choice_clear_directory($path);
-                @rmdir($path);
+                @(\function_exists('sc_recovery_rmdir') ? '\sc_recovery_rmdir' : '\rmdir')($path);
             } elseif (is_file($path) || is_link($path)) {
-                if (@unlink($path)) {
+                if (@(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path)) {
                     $count++;
                 }
             }

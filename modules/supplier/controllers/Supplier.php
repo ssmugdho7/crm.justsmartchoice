@@ -162,7 +162,7 @@ class Supplier extends AdminController
                 redirect(admin_url('supplier/import'));
             }
 
-            $handle = fopen($_FILES['file_csv']['tmp_name'], 'r');
+            $handle = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($_FILES['file_csv']['tmp_name'], 'r');
             if (!$handle) {
                 set_alert('danger', _l('supplier_import_failed'));
                 redirect(admin_url('supplier/import'));
@@ -170,7 +170,7 @@ class Supplier extends AdminController
 
             $header = fgetcsv($handle);
             if (!$header) {
-                fclose($handle);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($handle);
                 set_alert('danger', _l('supplier_import_failed'));
                 redirect(admin_url('supplier/import'));
             }
@@ -178,7 +178,7 @@ class Supplier extends AdminController
             $header = array_map([$this, 'normalize_import_header'], (array)$header);
             $required = array_search('supplier_name', $header, true);
             if ($required === false) {
-                fclose($handle);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($handle);
                 set_alert('danger', _l('supplier_import_missing_supplier_name'));
                 redirect(admin_url('supplier/import'));
             }
@@ -219,7 +219,7 @@ class Supplier extends AdminController
                     $updatedOrSkipped++;
                 }
             }
-            fclose($handle);
+            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($handle);
 
             set_alert('success', sprintf(_l('supplier_import_success'), $imported));
             redirect(admin_url('supplier'));
@@ -328,12 +328,12 @@ class Supplier extends AdminController
 
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename="' . $filename . '.csv"');
-        $out = fopen('php://output', 'w');
+        $out = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('php://output', 'w');
         fputcsv($out, $headers);
         foreach ($rows as $row) {
             fputcsv($out, [$row['supplier_name'], $row['website'], $row['phone'], $row['email'], $row['trade'], $row['supplier_type'], $row['short_description'], $row['notes']]);
         }
-        fclose($out);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($out);
         exit;
     }
 
@@ -448,7 +448,7 @@ class Supplier extends AdminController
             $safe = preg_replace('/[^A-Za-z0-9\-_]/', '_', pathinfo($original, PATHINFO_FILENAME));
             $target = $uploadDir . $safe . '_' . date('Ymd_His') . '_' . $i . ($ext ? '.' . $ext : '');
 
-            if (@move_uploaded_file($_FILES['supplier_email_attachments']['tmp_name'][$i], $target)) {
+            if (@(\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($_FILES['supplier_email_attachments']['tmp_name'][$i], $target)) {
                 $attachments[] = [
                     'path' => $target,
                     'name' => $original,

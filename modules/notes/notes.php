@@ -27,7 +27,7 @@ function notes_module_activation_hook()
         }
 
         if (is_dir(NOTES_UPLOAD_FOLDER) && !file_exists(NOTES_UPLOAD_FOLDER . 'index.html')) {
-            @file_put_contents(NOTES_UPLOAD_FOLDER . 'index.html', '');
+            @(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')(NOTES_UPLOAD_FOLDER . 'index.html', '');
         }
 
         require_once __DIR__ . '/install.php';

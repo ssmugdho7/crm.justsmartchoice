@@ -79,12 +79,12 @@ define(\'APP_DB_NAME\',\'' . $db_name . '\');
 define(\'SESS_DRIVER\',\'' . $sess_driver . '\');
 define(\'SESS_SAVE_PATH\',\'' . $sess_save_path . '\');';
 
-        $fp = fopen(APPPATH . 'config/app-config.php', 'w');
+        $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(APPPATH . 'config/app-config.php', 'w');
         if ($fp) {
             fwrite($fp, $new_config_file);
-            fclose($fp);
+            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
 
-                $fp = fopen(APPPATH . 'config/database.php', 'w+');
+                $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(APPPATH . 'config/database.php', 'w+');
                 if ($fp) {
                     $update_old_db_config = '<?php defined(\'BASEPATH\') OR exit(\'No direct script access allowed\');
 include_once(APPPATH.\'config/app-config.php\');
@@ -191,7 +191,7 @@ $db[\'default\'] = array(
     \'save_queries\' => TRUE
 );';
                     fwrite($fp, $update_old_db_config);
-                    fclose($fp);
+                    (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
                 }
             }
 

@@ -243,13 +243,13 @@ function handle_reminder_other_attachments_upload($id)
 				}
 				if (!file_exists($path)) {
 					mkdir($path, 0755, true);
-					fopen(rtrim($path, '/') . '/' . 'index.html', 'w');
+					(\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(rtrim($path, '/') . '/' . 'index.html', 'w');
 				}
 
 				$filename    = unique_filename($path, $_FILES['file']['name'][$i]);
 				$newFilePath = $path . $filename;
 				// Upload the file into the temp dir
-				if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+				if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 					$attachment   = [];
 					$attachment[] = [
 						'file_name' => $filename,

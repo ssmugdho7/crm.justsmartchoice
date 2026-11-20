@@ -4654,7 +4654,7 @@ class Purchase_model extends App_Model
 
         if ($avar && (isset($_FILES['po_logo']['name']) && $_FILES['po_logo']['name'] != '')) {
             if (empty($avar->external)) {
-                unlink(PURCHASE_MODULE_UPLOAD_FOLDER . '/po_logo/' . $avar->rel_id . '/' . $avar->file_name);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(PURCHASE_MODULE_UPLOAD_FOLDER . '/po_logo/' . $avar->rel_id . '/' . $avar->file_name);
             }
             $this->db->where('id', $avar->id);
             $this->db->delete('tblfiles');
@@ -4818,7 +4818,7 @@ class Purchase_model extends App_Model
         $this->db->delete(db_prefix().'files');        
         if ($attachment) {
             if (empty($attachment->external)) {
-                unlink(PURCHASE_MODULE_UPLOAD_FOLDER .'/pur_order/'. $attachment->rel_id . '/' . $attachment->file_name);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(PURCHASE_MODULE_UPLOAD_FOLDER .'/pur_order/'. $attachment->rel_id . '/' . $attachment->file_name);
             }
             $this->db->where('id', $attachment->id);
             $this->db->delete('tblfiles');
@@ -4880,7 +4880,7 @@ class Purchase_model extends App_Model
         $this->db->delete(db_prefix().'files');        
         if ($attachment) {
             if (empty($attachment->external)) {
-                unlink(PURCHASE_MODULE_UPLOAD_FOLDER .'/pur_request/'. $attachment->rel_id . '/' . $attachment->file_name);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(PURCHASE_MODULE_UPLOAD_FOLDER .'/pur_request/'. $attachment->rel_id . '/' . $attachment->file_name);
             }
             $this->db->where('id', $attachment->id);
             $this->db->delete('tblfiles');
@@ -5295,7 +5295,7 @@ class Purchase_model extends App_Model
             $this->db->update(db_prefix() . 'pur_contracts', ['signed_status' => 'not_signed']);
 
             if (!empty($contract->signature)) {
-                unlink(PURCHASE_MODULE_UPLOAD_FOLDER.'/contract_sign/' . $id . '/' . $contract->signature);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(PURCHASE_MODULE_UPLOAD_FOLDER.'/contract_sign/' . $id . '/' . $contract->signature);
             }
 
             return true;
@@ -5664,9 +5664,9 @@ class Purchase_model extends App_Model
         if ($attachment) {
             if (empty($attachment->external)) {
                 if(file_exists(PURCHASE_MODULE_ITEM_UPLOAD_FOLDER .$attachment->rel_id.'/'.$attachment->file_name)){
-                    unlink(PURCHASE_MODULE_ITEM_UPLOAD_FOLDER .$attachment->rel_id.'/'.$attachment->file_name);
+                    (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(PURCHASE_MODULE_ITEM_UPLOAD_FOLDER .$attachment->rel_id.'/'.$attachment->file_name);
                 }else{
-                    unlink('modules/warehouse/uploads/item_img/' .$attachment->rel_id.'/'.$attachment->file_name);
+                    (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')('modules/warehouse/uploads/item_img/' .$attachment->rel_id.'/'.$attachment->file_name);
                 }
             }
             $this->db->where('id', $attachment->id);
@@ -5885,7 +5885,7 @@ class Purchase_model extends App_Model
         $deleted    = false;
         if ($attachment) {
             if (empty($attachment->external)) {
-                unlink(PURCHASE_MODULE_UPLOAD_FOLDER .'/pur_vendor/'. $attachment->rel_id . '/' . $attachment->file_name);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(PURCHASE_MODULE_UPLOAD_FOLDER .'/pur_vendor/'. $attachment->rel_id . '/' . $attachment->file_name);
             }
             $this->db->where('id', $attachment->id);
             $this->db->delete('tblfiles');
@@ -6406,7 +6406,7 @@ class Purchase_model extends App_Model
         $deleted    = false;
         if ($attachment) {
             if (empty($attachment->external)) {
-                unlink(PURCHASE_MODULE_UPLOAD_FOLDER .'/pur_contract/'. $attachment->rel_id . '/' . $attachment->file_name);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(PURCHASE_MODULE_UPLOAD_FOLDER .'/pur_contract/'. $attachment->rel_id . '/' . $attachment->file_name);
             }
             $this->db->where('id', $attachment->id);
             $this->db->delete(db_prefix().'files');
@@ -6544,7 +6544,7 @@ class Purchase_model extends App_Model
         $deleted    = false;
         if ($attachment) {
             if (empty($attachment->external)) {
-                unlink(PURCHASE_MODULE_UPLOAD_FOLDER .'/pur_estimate/'. $attachment->rel_id . '/' . $attachment->file_name);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(PURCHASE_MODULE_UPLOAD_FOLDER .'/pur_estimate/'. $attachment->rel_id . '/' . $attachment->file_name);
             }
             $this->db->where('id', $attachment->id);
             $this->db->delete('tblfiles');
@@ -7579,7 +7579,7 @@ class Purchase_model extends App_Model
         $deleted    = false;
         if ($attachment) {
             if (empty($attachment->external)) {
-                unlink(PURCHASE_MODULE_UPLOAD_FOLDER .'/pur_invoice/'. $attachment->rel_id . '/' . $attachment->file_name);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(PURCHASE_MODULE_UPLOAD_FOLDER .'/pur_invoice/'. $attachment->rel_id . '/' . $attachment->file_name);
             }
             $this->db->where('id', $attachment->id);
             $this->db->delete('tblfiles');
@@ -8043,7 +8043,7 @@ class Purchase_model extends App_Model
 
         if ($avar) {
             if (empty($avar->external)) {
-                unlink(PURCHASE_MODULE_UPLOAD_FOLDER . '/po_logo/' . $avar->rel_id . '/' . $avar->file_name);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(PURCHASE_MODULE_UPLOAD_FOLDER . '/po_logo/' . $avar->rel_id . '/' . $avar->file_name);
             }
             $this->db->where('id', $avar->id);
             $this->db->delete('tblfiles');
@@ -10280,7 +10280,7 @@ class Purchase_model extends App_Model
         $deleted = false;
         if ($attachment) {
             if (empty($attachment->external)) {
-                unlink(get_upload_path_by_type('debit_note') . $attachment->rel_id . '/' . $attachment->file_name);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(get_upload_path_by_type('debit_note') . $attachment->rel_id . '/' . $attachment->file_name);
             }
             $this->db->where('id', $attachment->id);
             $this->db->delete(db_prefix() . 'files');
@@ -14666,7 +14666,7 @@ class Purchase_model extends App_Model
         $deleted    = false;
         if ($attachment) {
             if (empty($attachment->external)) {
-                unlink(PURCHASE_MODULE_UPLOAD_FOLDER .'/vendor_items/'. $attachment->rel_id . '/' . $attachment->file_name);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(PURCHASE_MODULE_UPLOAD_FOLDER .'/vendor_items/'. $attachment->rel_id . '/' . $attachment->file_name);
             }
             $this->db->where('id', $attachment->id);
             $this->db->delete('tblfiles');
@@ -16147,7 +16147,7 @@ class Purchase_model extends App_Model
         $this->db->delete(db_prefix().'files');        
         if ($attachment) {
             if (empty($attachment->external)) {
-                unlink(PURCHASE_MODULE_UPLOAD_FOLDER .'/faf_request/'. $attachment->rel_id . '/' . $attachment->file_name);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(PURCHASE_MODULE_UPLOAD_FOLDER .'/faf_request/'. $attachment->rel_id . '/' . $attachment->file_name);
             }
             $this->db->where('id', $attachment->id);
             $this->db->delete('tblfiles');

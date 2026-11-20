@@ -845,7 +845,7 @@ function sa_handle_purchase_order_file($id)
             $filename    = unique_filename($path, $_FILES['file']['name']);
             $newFilePath = $path . $filename;
             // Upload the file into the company uploads dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                 $CI           = & get_instance();
                 $attachment   = [];
                 $attachment[] = [
@@ -886,14 +886,14 @@ function sa_process_digital_signature_image($partBase64, $path, $image_name)
 
     $path = rtrim($path, '/') . '/' . $filename;
 
-    $fp = fopen($path, 'w+');
+    $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($path, 'w+');
 
     if (fwrite($fp, $decoded_image)) {
         $retval                                 = true;
         $GLOBALS['processed_digital_signature'] = $filename;
     }
 
-    fclose($fp);
+    (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
 
     return $retval;
 }
@@ -1185,7 +1185,7 @@ function sa_handle_sale_invoice_file($id)
             $filename    = unique_filename($path, $_FILES['file']['name']);
             $newFilePath = $path . $filename;
             // Upload the file into the company uploads dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                 $CI           = & get_instance();
                 $attachment   = [];
                 $attachment[] = [

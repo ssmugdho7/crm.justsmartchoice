@@ -53,12 +53,12 @@ function smart_module_manager_delete_dir_safe($dir)
 
     foreach ($items as $item) {
         if ($item->isDir() && !$item->isLink()) {
-            @rmdir($item->getPathname());
+            @(\function_exists('sc_recovery_rmdir') ? '\sc_recovery_rmdir' : '\rmdir')($item->getPathname());
         } else {
             @chmod($item->getPathname(), 0644);
-            @unlink($item->getPathname());
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($item->getPathname());
         }
     }
 
-    return @rmdir($real);
+    return @(\function_exists('sc_recovery_rmdir') ? '\sc_recovery_rmdir' : '\rmdir')($real);
 }

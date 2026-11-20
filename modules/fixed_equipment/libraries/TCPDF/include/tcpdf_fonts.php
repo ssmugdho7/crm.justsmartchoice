@@ -188,7 +188,7 @@ class TCPDF_FONTS {
 			$fmetric['file'] .= '.z';
 			$fp = TCPDF_STATIC::fopenLocal($outpath.$fmetric['file'], 'wb');
 			fwrite($fp, gzcompress($data));
-			fclose($fp);
+			(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
 			// get font info
 			$fmetric['Flags'] = $flags;
 			preg_match ('#/FullName[\s]*\(([^\)]*)#', $font, $matches);
@@ -368,7 +368,7 @@ class TCPDF_FONTS {
 					$fmetric['file'] .= '.z';
 					$fp = TCPDF_STATIC::fopenLocal($outpath.$fmetric['file'], 'wb');
 					fwrite($fp, gzcompress($font));
-					fclose($fp);
+					(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
 				}
 			}
 			$offset += 4;
@@ -887,7 +887,7 @@ class TCPDF_FONTS {
 				// store compressed CIDToGIDMap
 				$fp = TCPDF_STATIC::fopenLocal($outpath.$fmetric['ctg'], 'wb');
 				fwrite($fp, gzcompress($cidtogidmap));
-				fclose($fp);
+				(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
 			}
 		}
 		$pfile .= '$desc=array(';
@@ -913,7 +913,7 @@ class TCPDF_FONTS {
 		// store file
 		$fp = TCPDF_STATIC::fopenLocal($outpath.$font_name.'.php', 'w');
 		fwrite($fp, $pfile);
-		fclose($fp);
+		(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
 		// return TCPDF font name
 		return $font_name;
 	}

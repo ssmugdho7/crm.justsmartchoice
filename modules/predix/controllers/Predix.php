@@ -249,7 +249,7 @@ class Predix extends AdminController
                     $path = FCPATH . 'modules/predix/uploads/generated_images/' . $fileId . '/';
                     _maybe_create_upload_path($path);
 
-                    file_put_contents($path . $file . '.png', $fileContent);
+                    (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($path . $file . '.png', $fileContent);
 
                     $fileUrl = substr(module_dir_url('predix/uploads/generated_images/' . $fileId . '/' . $file . '.png'), 0, -1);
 
@@ -355,7 +355,7 @@ class Predix extends AdminController
                     $newFilePath = $path . $filename;
 
                     // Upload the file into the temp dir
-                    if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                    if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
                         $tmp_file = $_FILES['AudioToTranslate']['tmp_name'];
                         $file_name = basename($_FILES['AudioToTranslate']['name']);
@@ -500,7 +500,7 @@ class Predix extends AdminController
                     $newFilePath = $path . $filename;
 
                     // Upload the file into the temp dir
-                    if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                    if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
                         $tmp_file = $_FILES['AudioToTranslate']['tmp_name'];
                         $file_name = basename($_FILES['AudioToTranslate']['name']);

@@ -94,7 +94,7 @@ class Migration_Version_230 extends CI_Migration
         }
 
         if (file_exists(VIEWPATH . 'themes/perfex/scripts.php')) {
-            @unlink(VIEWPATH . 'themes/perfex/scripts.php');
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(VIEWPATH . 'themes/perfex/scripts.php');
         }
 
         $themes = get_all_client_themes();
@@ -102,7 +102,7 @@ class Migration_Version_230 extends CI_Migration
         foreach ($themes as $theme) {
             if ($theme != 'perfex') {
                 if (!file_exists(VIEWPATH . 'themes/' . $theme . '/functions.php')) {
-                    copy(VIEWPATH . 'themes/perfex/functions.php', VIEWPATH . 'themes/' . $theme . '/functions.php');
+                    (\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')(VIEWPATH . 'themes/perfex/functions.php', VIEWPATH . 'themes/' . $theme . '/functions.php');
                 }
             }
         }
@@ -128,7 +128,7 @@ class Migration_Version_230 extends CI_Migration
 
         // Moved to third_party
         if (file_exists(APPPATH . 'helpers/simple_html_dom_helper.php')) {
-            @unlink(APPPATH . 'helpers/simple_html_dom_helper.php');
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'helpers/simple_html_dom_helper.php');
         }
     }
 }

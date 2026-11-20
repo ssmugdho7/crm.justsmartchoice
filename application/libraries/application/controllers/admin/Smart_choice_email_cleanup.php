@@ -48,7 +48,7 @@ class Smart_choice_email_cleanup extends AdminController
             }
 
             $backupFile = APPPATH . 'cache/smart_choice_email_template_backup_' . date('Ymd_His') . '_' . (int) $row->emailtemplateid . '.html';
-            @file_put_contents($backupFile, $row->message);
+            @(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($backupFile, $row->message);
 
             $this->db->where('emailtemplateid', $row->emailtemplateid);
             $this->db->update(db_prefix() . 'emailtemplates', [

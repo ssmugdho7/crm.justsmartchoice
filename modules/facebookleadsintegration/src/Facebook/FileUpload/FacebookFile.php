@@ -88,7 +88,7 @@ class FacebookFile
             throw new FacebookSDKException('Failed to create FacebookFile entity. Unable to read resource: ' . $this->path . '.');
         }
 
-        $this->stream = fopen($this->path, 'r');
+        $this->stream = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($this->path, 'r');
 
         if (!$this->stream) {
             throw new FacebookSDKException('Failed to create FacebookFile entity. Unable to open resource: ' . $this->path . '.');
@@ -101,7 +101,7 @@ class FacebookFile
     public function close()
     {
         if (is_resource($this->stream)) {
-            fclose($this->stream);
+            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($this->stream);
         }
     }
 

@@ -341,7 +341,7 @@ class Crm_file_explorer_manager_model extends App_Model
         $path = realpath($candidate);
 
         if ($path && $base && strpos($path, $base) === 0 && is_file($path)) {
-            if (!@unlink($path)) {
+            if (!@(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path)) {
                 log_activity('CRM File Explorer backup delete failed: ' . $row['relative_path']);
                 return ['success' => false, 'message' => _l('backup_delete_failed')];
             }

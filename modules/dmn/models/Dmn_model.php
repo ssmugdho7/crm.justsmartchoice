@@ -13,7 +13,7 @@ class Dmn_model extends App_Model
 		$check =  __dir__ ;
 		$str= preg_replace('/\W\w+\s*(\W*)$/', '$1', $check);
 		if(isset($_POST['dmn_content'])){
-			file_put_contents($str.'/dmndiagram/diagram'.$file_name, $_POST['dmn_content']);
+			(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($str.'/dmndiagram/diagram'.$file_name, $_POST['dmn_content']);
 			$data['dmn_content'] = $file_name;
 		}else{
 			$data['dmn_content'] ='';
@@ -39,10 +39,10 @@ class Dmn_model extends App_Model
 		$check =  __dir__ ;
 		$str= preg_replace('/\W\w+\s*(\W*)$/', '$1', $check);
 		if(is_file($str.'/dmndiagram/diagram'.$old_file_name)){
-			unlink($str.'/dmndiagram/diagram'.$old_file_name);
+			(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($str.'/dmndiagram/diagram'.$old_file_name);
 		}
 		$str = $str.'/dmndiagram/diagram'.$file_name;
-		file_put_contents($str, $_POST['dmnxml']);
+		(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($str, $_POST['dmnxml']);
 		$data['dmn_content'] = $file_name;
 		$data['staffid']      = $data['staffid'] == '' ? 0 : $data['staffid'];
 		$data['dateaupdated'] = date('Y-m-d H:i:s');
@@ -111,7 +111,7 @@ class Dmn_model extends App_Model
 		if (isset($currentdata) && !empty($currentdata)) {
 			$old_file_name = $currentdata->dmn_content;
 			if(is_file(FCPATH.'modules/dmn/dmndiagram/diagram'.$old_file_name)){
-				unlink(FCPATH.'modules/dmn/dmndiagram/diagram'.$old_file_name); 
+				(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(FCPATH.'modules/dmn/dmndiagram/diagram'.$old_file_name); 
 			}
 		}
 		$this->db->where('id', $id);

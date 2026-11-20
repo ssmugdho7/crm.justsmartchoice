@@ -1167,7 +1167,7 @@ class Omni_invoices_model extends App_Model
         $deleted    = false;
         if ($attachment) {
             if (empty($attachment->external)) {
-                unlink(get_upload_path_by_type('invoice') . $attachment->rel_id . '/' . $attachment->file_name);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(get_upload_path_by_type('invoice') . $attachment->rel_id . '/' . $attachment->file_name);
             }
             $this->db->where('id', $attachment->id);
             $this->db->delete(db_prefix() . 'files');

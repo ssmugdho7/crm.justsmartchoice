@@ -58,7 +58,7 @@ class Bots_model extends App_Model {
             $dir_name = ('template' == $type) ? 'template' : 'bot_files';
             $path = WHATSBOT_MODULE_UPLOAD_FOLDER . '/' . $dir_name . '/' . $bot['filename'];
             if (file_exists($path) && !is_dir($path)) {
-                unlink($path);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path);
             }
             $message = _l('bot_deleted_successfully');
         }
@@ -170,7 +170,7 @@ class Bots_model extends App_Model {
         $update = $this->db->update(db_prefix() . 'wtc_bot', ['filename' => null], ['id' => $id]);
         $path = WHATSBOT_MODULE_UPLOAD_FOLDER . '/bot_files/' . $bot['filename'];
         if ($update && file_exists($path)) {
-            unlink($path);
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path);
         }
 
         return [
@@ -184,7 +184,7 @@ class Bots_model extends App_Model {
             $bot_data['id'] = '';
             if (!empty($bot_data['filename'])) {
                 $new_file_name = time() . '.' . pathinfo($bot_data['filename'], PATHINFO_EXTENSION);
-                $bot_data['filename'] = copy(WHATSBOT_MODULE_UPLOAD_FOLDER . '/bot_files/' . $bot_data['filename'], WHATSBOT_MODULE_UPLOAD_FOLDER . '/bot_files/' . $new_file_name) ? $new_file_name : '';
+                $bot_data['filename'] = (\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')(WHATSBOT_MODULE_UPLOAD_FOLDER . '/bot_files/' . $bot_data['filename'], WHATSBOT_MODULE_UPLOAD_FOLDER . '/bot_files/' . $new_file_name) ? $new_file_name : '';
             }
             $clone_bot = $this->saveBots($bot_data);
         } else {
@@ -192,7 +192,7 @@ class Bots_model extends App_Model {
             $bot_data['id'] = '';
             if (!empty($bot_data['filename'])) {
                 $new_file_name = time() . '.' . pathinfo($bot_data['filename'], PATHINFO_EXTENSION);
-                $bot_data['filename'] = copy(WHATSBOT_MODULE_UPLOAD_FOLDER . '/template/' . $bot_data['filename'], WHATSBOT_MODULE_UPLOAD_FOLDER . '/template/' . $new_file_name) ? $new_file_name : '';
+                $bot_data['filename'] = (\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')(WHATSBOT_MODULE_UPLOAD_FOLDER . '/template/' . $bot_data['filename'], WHATSBOT_MODULE_UPLOAD_FOLDER . '/template/' . $new_file_name) ? $new_file_name : '';
             }
             $clone_bot = $this->saveTemplateBot($bot_data);
         }

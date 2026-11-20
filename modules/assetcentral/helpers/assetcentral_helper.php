@@ -177,7 +177,7 @@ if (!function_exists('assetcentral_handle_asset_main_image')) {
                 _maybe_create_upload_path($path);
                 $filename = $_FILES['file']['name'];
                 $newFilePath = $path . $filename;
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                     $attachment = [];
                     $attachment[] = [
                         'file_name' => $filename,
@@ -224,7 +224,7 @@ if (!function_exists('handle_asset_attachments_upload')) {
                     $filename = unique_filename($path, $_FILES['file']['name'][$i]);
                     $newFilePath = $path . $filename;
                     // Upload the file into the temp dir
-                    if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                    if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                         $attachment = [];
                         $attachment[] = [
                             'file_name' => $filename,

@@ -430,7 +430,7 @@ function handle_broker_profile_image_upload($broker_id = '')
 			$filename    = unique_filename($path, $_FILES['profile_image']['name']);
 			$newFilePath = $path . '/' . $filename;
 			// Upload the file into the company uploads dir
-			if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+			if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 				$CI                       = & get_instance();
 				$config                   = [];
 				$config['image_library']  = 'gd2';
@@ -455,7 +455,7 @@ function handle_broker_profile_image_upload($broker_id = '')
 					'profile_image' => $filename,
 				]);
 				// Remove original image
-				unlink($newFilePath);
+				(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($newFilePath);
 
 				return true;
 			}

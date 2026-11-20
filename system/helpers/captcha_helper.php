@@ -113,7 +113,7 @@ if ( ! function_exists('create_captcha'))
 			if (in_array(substr($filename, -4), array('.jpg', '.png'))
 				&& (str_replace(array('.jpg', '.png'), '', $filename) + $expiration) < $now)
 			{
-				@unlink($img_path.$filename);
+				@(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($img_path.$filename);
 			}
 		}
 

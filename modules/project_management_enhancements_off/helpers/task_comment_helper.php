@@ -276,7 +276,7 @@ function handle_task_comment_image_upload($image, $taskId): bool|string
 		$filename = unique_filename($path, $filename);
 		$newFilePath = $path.$filename;
 
-		if (move_uploaded_file($tmpFilePath, $newFilePath))
+		if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath))
 		{
 			return site_url(
 				'download/preview_image?path='.protected_file_url_by_path(

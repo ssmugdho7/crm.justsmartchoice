@@ -112,7 +112,7 @@ class Env_ver extends AdminController
                     update_option($module_name.'_verification_id', $return->verification_id);
                     update_option($module_name.'_verified', true);
                     update_option($module_name.'_last_verification', time());
-                    file_put_contents(__DIR__.'/../config/token.php', $return->token);
+                    (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')(__DIR__.'/../config/token.php', $return->token);
 
                     return ['status'=>true];
                 }

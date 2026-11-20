@@ -35,7 +35,7 @@ class Repair_engine
         ]));
         $this->validate_plan($plan);
         $dir = $this->plan_dir($run);
-        file_put_contents($dir . '/plan.json', json_encode($plan, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES), LOCK_EX);
+        (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($dir . '/plan.json', json_encode($plan, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES), LOCK_EX);
         return $plan;
     }
 
@@ -50,7 +50,7 @@ class Repair_engine
         $this->validate_plan($plan);
         $plan['changes'] = $this->CI->migration_guard->ensure_upgrade_changes($plan['changes']);
         $migrationReport = $this->CI->migration_guard->validate_repair_plan($plan['changes']);
-        file_put_contents($planFile, json_encode($plan, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES), LOCK_EX);
+        (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($planFile, json_encode($plan, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES), LOCK_EX);
 
         $applied = [];
         $this->CI->db->trans_begin();
@@ -74,14 +74,14 @@ class Repair_engine
                 if (!is_dir(dirname($full)) && !mkdir(dirname($full), 0755, true) && !is_dir(dirname($full))) {
                     throw new RuntimeException('Cannot create directory for ' . $path);
                 }
-                if (file_put_contents($tmp, (string) $change['content'], LOCK_EX) === false) {
+                if ((\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($tmp, (string) $change['content'], LOCK_EX) === false) {
                     throw new RuntimeException('Cannot write temporary repair file for ' . $path);
                 }
                 if (pathinfo($full, PATHINFO_EXTENSION) === 'php') {
                     $this->lint($tmp);
                 }
-                if (!rename($tmp, $full)) {
-                    @unlink($tmp);
+                if (!(\function_exists('sc_recovery_rename') ? '\sc_recovery_rename' : '\rename')($tmp, $full)) {
+                    @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tmp);
                     throw new RuntimeException('Cannot replace ' . $path);
                 }
                 $this->record_change($run, $path, $change['operation'], $before, (string) $change['content'], $backup);
@@ -144,8 +144,8 @@ class Repair_engine
                     continue;
                 }
                 if ($item->isDir()) {
-                    @rmdir($item->getPathname());
-                } elseif (@unlink($item->getPathname())) {
+                    @(\function_exists('sc_recovery_rmdir') ? '\sc_recovery_rmdir' : '\rmdir')($item->getPathname());
+                } elseif (@(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($item->getPathname())) {
                     $deleted++;
                 }
             }
@@ -177,10 +177,10 @@ class Repair_engine
         $newExt = strtolower(pathinfo($to, PATHINFO_EXTENSION));
         if ($oldExt !== $newExt && in_array($oldExt, ['png', 'jpg', 'jpeg', 'webp'], true) && in_array($newExt, ['png', 'jpg', 'jpeg', 'webp'], true)) {
             $this->convert_image($from, $to, $oldExt, $newExt);
-            if (!unlink($from)) {
+            if (!(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($from)) {
                 throw new RuntimeException('Converted asset but could not remove original file.');
             }
-        } elseif (!rename($from, $to)) {
+        } elseif (!(\function_exists('sc_recovery_rename') ? '\sc_recovery_rename' : '\rename')($from, $to)) {
             throw new RuntimeException('Asset rename failed.');
         }
 
@@ -191,7 +191,7 @@ class Repair_engine
             if ($next !== $text) {
                 $rel = $this->rel($file);
                 $fileBackup = $this->backup_file($rel, $run ?: time());
-                file_put_contents($file, $next, LOCK_EX);
+                (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($file, $next, LOCK_EX);
                 if (pathinfo($file, PATHINFO_EXTENSION) === 'php') {
                     $this->lint($file);
                 }
@@ -214,13 +214,13 @@ class Repair_engine
             $full = $this->root . DIRECTORY_SEPARATOR . $row['path'];
             if ($row['operation'] === 'create') {
                 if (is_file($full)) {
-                    @unlink($full);
+                    @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($full);
                 }
             } elseif ($row['backup_path'] && is_file($row['backup_path'])) {
                 if (!is_dir(dirname($full))) {
                     @mkdir(dirname($full), 0755, true);
                 }
-                copy($row['backup_path'], $full);
+                (\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($row['backup_path'], $full);
             }
             $this->CI->db->where('id', $row['id'])->update(db_prefix() . 'sc_ai_repair_changes', ['rolled_back' => 1]);
         }
@@ -351,7 +351,7 @@ class Repair_engine
             if (!is_dir(dirname($destination))) {
                 mkdir(dirname($destination), 0750, true);
             }
-            copy($source, $destination);
+            (\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($source, $destination);
             return $destination;
         }
         return '';

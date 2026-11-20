@@ -81,7 +81,7 @@ class Smart_network_manager extends AdminController
         $path = APPPATH . 'cache/';
         $deleted = 0;
         foreach (glob($path . '*') as $file) {
-            if (is_file($file) && basename($file) !== 'index.html') { @unlink($file); $deleted++; }
+            if (is_file($file) && basename($file) !== 'index.html') { @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file); $deleted++; }
         }
         $this->snm->log('info', 'cache', 'CRM cache cleaned safely.', ['deleted' => $deleted]);
         set_alert('success', 'Cache cleaned safely. index.html was preserved. Deleted files: ' . $deleted);

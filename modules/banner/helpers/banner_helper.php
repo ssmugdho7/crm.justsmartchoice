@@ -41,7 +41,7 @@ if (!function_exists('handleBannerImageUpload')) {
                 $newFilePath = $path.$filename;
 
                 // Upload the file into the temp dir
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                     $adminIds  = $CI->input->post('staff_ids');
                     $clientIds = $CI->input->post('client_ids');
 

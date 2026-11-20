@@ -450,7 +450,7 @@ function hrp_get_commission_status()
 	function hrp_file_force_contents($filename, $data, $flags = 0){
 		if(!is_dir(dirname($filename)))
 			mkdir(dirname($filename).'/', 0777, TRUE);
-		return file_put_contents($filename, $data,$flags);
+		return (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($filename, $data,$flags);
 	}
 	
 	/**

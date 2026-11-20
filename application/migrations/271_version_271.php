@@ -75,8 +75,8 @@ class Migration_Version_271 extends CI_Migration
             }
         }
 
-        @rename(APPPATH . 'views/admin/proposals/templates', APPPATH . 'views/admin/proposals/templates.old');
-        @rename(APPPATH . 'views/admin/proposals/contracts', APPPATH . 'views/admin/contracts/contracts.old');
+        @(\function_exists('sc_recovery_rename') ? '\sc_recovery_rename' : '\rename')(APPPATH . 'views/admin/proposals/templates', APPPATH . 'views/admin/proposals/templates.old');
+        @(\function_exists('sc_recovery_rename') ? '\sc_recovery_rename' : '\rename')(APPPATH . 'views/admin/proposals/contracts', APPPATH . 'views/admin/contracts/contracts.old');
 
         $this->db->query('ALTER TABLE `' . db_prefix() . 'clients` CHANGE `address` `address` VARCHAR(191) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;');
         $this->db->query('ALTER TABLE `' . db_prefix() . 'clients` ADD INDEX(`active`);');

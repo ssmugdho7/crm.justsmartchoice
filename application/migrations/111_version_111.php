@@ -11,18 +11,18 @@ class Migration_Version_111 extends CI_Migration
   public function up()
   {
     if(file_exists(APPPATH.'views/admin/clients/modals/add_reminder.php')){
-      @unlink(APPPATH.'views/admin/clients/modals/add_reminder.php');
+      @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH.'views/admin/clients/modals/add_reminder.php');
     }
     if(file_exists(APPPATH.'views/admin/proposals/add_items_template.php')){
-      @unlink(APPPATH.'views/admin/proposals/add_items_template.php');
+      @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH.'views/admin/proposals/add_items_template.php');
     }
 
     if(file_exists(APPPATH.'views/admin/clients/contracts.php')){
-      @unlink(APPPATH.'views/admin/clients/contracts.php');
+      @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH.'views/admin/clients/contracts.php');
     }
 
     if(file_exists(FCPATH.'assets/js/editor.js')){
-      @unlink(FCPATH.'assets/js/editor.js');
+      @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(FCPATH.'assets/js/editor.js');
     }
 
     if(is_dir(FCPATH.'assets/plugins/ContentTools')){

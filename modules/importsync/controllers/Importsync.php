@@ -131,7 +131,7 @@ class Importsync extends AdminController
         $path = FCPATH . 'modules/importsync/uploads/mapped_csv/' . $mappedCsvID . '/';
         _maybe_create_upload_path($path);
 
-        file_put_contents($path . $fileName, $combinedCsvContent);
+        (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($path . $fileName, $combinedCsvContent);
         $fileUrl = substr(module_dir_url('importsync/uploads/mapped_csv/' . $mappedCsvID . '/' .$fileName), 0, -1);
 
         $redirectUrl = '';

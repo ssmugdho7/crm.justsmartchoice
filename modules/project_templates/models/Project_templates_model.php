@@ -679,13 +679,13 @@ class Project_templates_model extends App_Model
                 $path     = PROJECT_TEMPLATES_ATTACHMENTS_FOLDER . $file->project_template_id . '/';
                 $fullPath = $path . $file->file_name;
                 if (file_exists($fullPath)) {
-                    unlink($fullPath);
+                    (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($fullPath);
                     $fname     = pathinfo($fullPath, PATHINFO_FILENAME);
                     $fext      = pathinfo($fullPath, PATHINFO_EXTENSION);
                     $thumbPath = $path . $fname . '_thumb.' . $fext;
 
                     if (file_exists($thumbPath)) {
-                        unlink($thumbPath);
+                        (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($thumbPath);
                     }
                 }
             }
@@ -989,7 +989,7 @@ class Project_templates_model extends App_Model
                 $fullOriginalPath = $original_path . $file['file_name'];
                 $fullNewPath = $new_path . $file['file_name'];
                 if (file_exists($fullOriginalPath)) {
-                    if(copy($fullOriginalPath, $fullNewPath)){
+                    if((\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($fullOriginalPath, $fullNewPath)){
                         $this->db->insert(db_prefix() . 'project_files', [
                             'project_id' => $insert_id,
                             'file_name' => $file['file_name'],

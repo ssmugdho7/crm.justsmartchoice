@@ -97,12 +97,12 @@ class Migration_Version_101 extends CI_Migration
         // Create the tasks attachments folder
         if(!is_dir(TASKS_ATTACHMENTS_FOLDER)){
             mkdir(TASKS_ATTACHMENTS_FOLDER, 0755);
-            fopen(TASKS_ATTACHMENTS_FOLDER . '.htaccess', 'w');
-            $fp = fopen(TASKS_ATTACHMENTS_FOLDER.'.htaccess','a+');
+            (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(TASKS_ATTACHMENTS_FOLDER . '.htaccess', 'w');
+            $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(TASKS_ATTACHMENTS_FOLDER.'.htaccess','a+');
             if($fp)
             {
                 fwrite($fp,'Order Deny,Allow'.PHP_EOL.'Deny from all');
-                fclose($fp);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
             }
         }
 

@@ -18,30 +18,30 @@ class Migration_Version_200 extends CI_Migration
             $defPath         = APPPATH . 'views/themes/perfex/';
             $activeThemePath = APPPATH . 'views/themes/' . $theme . '/';
             if (is_dir($defPath)) {
-                @copy($defPath . 'views/contracthtml.php', $activeThemePath . 'views/contracthtml.php');
-                @copy($defPath . 'views/consent.php', $activeThemePath . 'views/consent.php');
-                @copy($defPath . 'views/credit_card.php', $activeThemePath . 'views/credit_card.php');
-                @copy($defPath . 'views/gdpr.php', $activeThemePath . 'views/gdpr.php');
-                @copy($defPath . 'views/privacy_policy.php', $activeThemePath . 'views/privacy_policy.php');
-                @copy($defPath . 'views/subscriptionhtml.php', $activeThemePath . 'views/subscriptionhtml.php');
-                @copy($defPath . 'views/subscriptions.php', $activeThemePath . 'views/subscriptions.php');
-                @copy($defPath . 'views/terms_and_conditions.php', $activeThemePath . 'views/terms_and_conditions.php');
+                @(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($defPath . 'views/contracthtml.php', $activeThemePath . 'views/contracthtml.php');
+                @(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($defPath . 'views/consent.php', $activeThemePath . 'views/consent.php');
+                @(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($defPath . 'views/credit_card.php', $activeThemePath . 'views/credit_card.php');
+                @(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($defPath . 'views/gdpr.php', $activeThemePath . 'views/gdpr.php');
+                @(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($defPath . 'views/privacy_policy.php', $activeThemePath . 'views/privacy_policy.php');
+                @(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($defPath . 'views/subscriptionhtml.php', $activeThemePath . 'views/subscriptionhtml.php');
+                @(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($defPath . 'views/subscriptions.php', $activeThemePath . 'views/subscriptions.php');
+                @(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($defPath . 'views/terms_and_conditions.php', $activeThemePath . 'views/terms_and_conditions.php');
 
-                @copy($defPath . 'template_parts/projects/project_summary.php', $activeThemePath . 'template_parts/projects/project_summary.php');
+                @(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($defPath . 'template_parts/projects/project_summary.php', $activeThemePath . 'template_parts/projects/project_summary.php');
 
                 if(!file_exists($activeThemePath.'template_parts/identity_confirmation_form.php')) {
-                     @copy($defPath . 'template_parts/identity_confirmation_form.php', $activeThemePath . 'template_parts/identity_confirmation_form.php');
+                     @(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($defPath . 'template_parts/identity_confirmation_form.php', $activeThemePath . 'template_parts/identity_confirmation_form.php');
                 }
 
                 @mkdir($activeThemePath . 'template_parts/knowledge_base', 0755);
                 if (is_dir($activeThemePath . 'template_parts/knowledge_base')) {
-                    @copy($defPath . 'template_parts/knowledge_base/categories.php', $activeThemePath . 'template_parts/knowledge_base/categories.php');
+                    @(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($defPath . 'template_parts/knowledge_base/categories.php', $activeThemePath . 'template_parts/knowledge_base/categories.php');
 
-                    @copy($defPath . 'template_parts/knowledge_base/category_articles_list.php', $activeThemePath . 'template_parts/knowledge_base/category_articles_list.php');
+                    @(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($defPath . 'template_parts/knowledge_base/category_articles_list.php', $activeThemePath . 'template_parts/knowledge_base/category_articles_list.php');
 
-                    @copy($defPath . 'template_parts/knowledge_base/search.php', $activeThemePath . 'template_parts/knowledge_base/search.php');
+                    @(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($defPath . 'template_parts/knowledge_base/search.php', $activeThemePath . 'template_parts/knowledge_base/search.php');
 
-                    @copy($defPath . 'template_parts/knowledge_base/search_results.php', $activeThemePath . 'template_parts/knowledge_base/search_results.php');
+                    @(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($defPath . 'template_parts/knowledge_base/search_results.php', $activeThemePath . 'template_parts/knowledge_base/search_results.php');
                 }
             }
         }

@@ -225,7 +225,7 @@ if (!function_exists('handle_delete_file_perfex_popup')) {
         // delete file 
         if ($file_path) {
             if (file_exists($file_path)) {
-                unlink($file_path);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file_path);
                 return true;
             }
         }
@@ -255,7 +255,7 @@ if (!function_exists('perfex_recurse_copy')) {
       
                 } 
                 else { 
-                    copy($src . '/' . $file, $dst . '/' . $file); 
+                    (\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($src . '/' . $file, $dst . '/' . $file); 
                 } 
             } 
         } 
@@ -287,14 +287,14 @@ if (!function_exists('handle_thumb_template_upload')) {
 
                 _maybe_create_upload_path($path);
                 // Upload the file into the company uploads dir
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
                     // delete file old
                     if ($file_old) {
                         $file_path = FCPATH.PERFEX_POPUP_UPLOAD_PATH."/popup_thumb_templates";
                         $path_old = $path.$file_old;
                         if (file_exists($path_old)) {
-                            unlink($path_old);
+                            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path_old);
                         }
                     }
 
@@ -330,14 +330,14 @@ if (!function_exists('handle_thumb_block_upload')) {
 
                 _maybe_create_upload_path($path);
                 // Upload the file into the company uploads dir
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
                     // delete file old
                     if ($file_old) {
                         $file_path = FCPATH.PERFEX_POPUP_ASSETS_PATH."/images/thumb_blocks";
                         $path_old = $path.$file_old;
                         if (file_exists($path_old)) {
-                            unlink($path_old);
+                            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path_old);
                         }
                     }
 
@@ -373,14 +373,14 @@ if (!function_exists('handle_favicon_perfex_popup_upload')) {
 
                 _maybe_create_upload_path($path);
                 // Upload the file into the company uploads dir
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
                     // delete file old
                     if ($file_old) {
                         $file_path = FCPATH.PERFEX_POPUP_UPLOAD_PATH."/content_media";
                         $path_old = $path.$file_old;
                         if (file_exists($path_old)) {
-                            unlink($path_old);
+                            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path_old);
                         }
                     }
 
@@ -416,14 +416,14 @@ if (!function_exists('handle_social_image_perfex_popup_upload')) {
 
                 _maybe_create_upload_path($path);
                 // Upload the file into the company uploads dir
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
                     // delete file old
                     if ($file_old) {
                         $file_path = FCPATH.PERFEX_POPUP_UPLOAD_PATH."/content_media";
                         $path_old = $path.$file_old;
                         if (file_exists($path_old)) {
-                            unlink($path_old);
+                            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path_old);
                         }
                     }
                     

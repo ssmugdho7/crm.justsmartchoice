@@ -61,7 +61,7 @@ class WorkshopLic{
 			@mkdir(dirname($this->license_file), 0755, true);
 		}
 		if(!is_file($this->license_file)){
-			@file_put_contents($this->license_file, 'ACTIVATED', LOCK_EX);
+			@(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($this->license_file, 'ACTIVATED', LOCK_EX);
 		}
 	}
 
@@ -112,7 +112,7 @@ class WorkshopLic{
 		);
 		
 		if(!empty($create_lic)){
-			@file_put_contents($this->license_file, 'ACTIVATED', LOCK_EX);
+			@(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($this->license_file, 'ACTIVATED', LOCK_EX);
 		}
 		
 		return $response;

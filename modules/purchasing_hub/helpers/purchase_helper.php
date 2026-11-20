@@ -332,14 +332,14 @@ function purchase_process_digital_signature_image($partBase64, $path, $image_nam
 
     $path = rtrim($path, '/') . '/' . $filename;
 
-    $fp = fopen($path, 'w+');
+    $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($path, 'w+');
 
     if (fwrite($fp, $decoded_image)) {
         $retval                                 = true;
         $GLOBALS['processed_digital_signature'] = $filename;
     }
 
-    fclose($fp);
+    (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
 
     return $retval;
 }
@@ -364,7 +364,7 @@ function handle_request_quotation($id){
             $filename    = unique_filename($path, str_replace(" ", "_", $_FILES['attachment']['name']));
             $newFilePath = $path . $filename;
             // Upload the file into the company uploads dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                 return true;
             }
         }
@@ -463,7 +463,7 @@ function handle_purchase_order_file($id)
             $filename    = unique_filename($path, $_FILES['file']['name']);
             $newFilePath = $path . $filename;
             // Upload the file into the company uploads dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                 $CI           = & get_instance();
                 $attachment   = [];
                 $attachment[] = [
@@ -500,7 +500,7 @@ function handle_purchase_request_file($id)
             $filename    = unique_filename($path, $_FILES['file']['name']);
             $newFilePath = $path . $filename;
             // Upload the file into the company uploads dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                 $CI           = & get_instance();
                 $attachment   = [];
                 $attachment[] = [
@@ -617,7 +617,7 @@ function handle_item_attachments($id)
             $filename    = $_FILES['file']['name'];
             $newFilePath = $path . $filename;
             // Upload the file into the temp dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
                 $attachment   = [];
                 $attachment[] = [
@@ -749,7 +749,7 @@ function handle_pur_vendor_attachments_upload($id, $customer_upload = false)
                 $filename    = unique_filename($path, $_FILES['file']['name'][$i]);
                 $newFilePath = $path . $filename;
                 // Upload the file into the temp dir
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                     $attachment   = [];
                     $attachment[] = [
                     'file_name' => $filename,
@@ -838,7 +838,7 @@ function handle_vendor_contact_profile_image_upload($contact_id = '')
             $filename    = unique_filename($path, $_FILES['profile_image']['name']);
             $newFilePath = $path . $filename;
             // Upload the file into the company uploads dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                 $CI                       = & get_instance();
                 $config                   = [];
                 $config['image_library']  = 'gd2';
@@ -864,7 +864,7 @@ function handle_vendor_contact_profile_image_upload($contact_id = '')
                     'profile_image' => $filename,
                 ]);
                 // Remove original image
-                unlink($newFilePath);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($newFilePath);
 
                 return true;
             }
@@ -1260,7 +1260,7 @@ function handle_pur_contract_file($id){
                 $filename    = unique_filename($path, $_FILES['attachments']['name'][$i]);
                 $newFilePath = $path . $filename;
                 // Upload the file into the temp dir
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                     $attachment   = [];
                     $attachment[] = [
                     'file_name' => $filename,
@@ -1352,7 +1352,7 @@ function handle_purchase_estimate_file($id)
             $filename    = unique_filename($path, $_FILES['file']['name']);
             $newFilePath = $path . $filename;
             // Upload the file into the company uploads dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                 $CI           = & get_instance();
                 $attachment   = [];
                 $attachment[] = [
@@ -1607,7 +1607,7 @@ function handle_pur_invoice_file($id, $customer_upload = false) {
                 $filename = unique_filename($path, $_FILES['attachments']['name'][$i]);
                 $newFilePath = $path . $filename;
                 // Upload the file into the temp dir
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                     $attachment = [];
                     $attachment[] = [
                         'file_name' => $filename,
@@ -1649,7 +1649,7 @@ function handle_send_quotation($id){
             $filename    = unique_filename($path, str_replace(" ", "_", $_FILES['attachment']['name']));
             $newFilePath = $path . $filename;
             // Upload the file into the company uploads dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                 return true;
             }
         }
@@ -1677,7 +1677,7 @@ function handle_send_po($id){
             $filename    = unique_filename($path, str_replace(" ", "_", $_FILES['attachment']['name']));
             $newFilePath = $path . $filename;
             // Upload the file into the company uploads dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                 return true;
             }
         }
@@ -1739,7 +1739,7 @@ function handle_po_logo()
             $filename = 'po_logo_'.time().'.'.$extension;
             $newFilePath = $path . $filename;
             // Upload the file into the company uploads dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                 $CI           = & get_instance();
                 $attachment   = [];
                 $attachment[] = [
@@ -2402,7 +2402,7 @@ function handle_vendor_item_attachment($id) {
                 $filename = unique_filename($path, $_FILES['attachments']['name'][$i]);
                 $newFilePath = $path . $filename;
                 // Upload the file into the temp dir
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                     $attachment = [];
                     $attachment[] = [
                         'file_name' => $filename,
@@ -2583,7 +2583,7 @@ function handle_vendor_po_attachments_upload($id, $customer_upload = false, $pur
                 $filename    = unique_filename($path, $_FILES['file']['name'][$i]);
                 $newFilePath = $path . $filename;
                 // Upload the file into the temp dir
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                     $attachment   = [];
                     $attachment[] = [
                     'file_name' => $filename,
@@ -2647,7 +2647,7 @@ function handle_vendor_estimate_attachments_upload($id, $customer_upload = false
                 $filename    = unique_filename($path, $_FILES['file']['name'][$i]);
                 $newFilePath = $path . $filename;
                 // Upload the file into the temp dir
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                     $attachment   = [];
                     $attachment[] = [
                     'file_name' => $filename,
@@ -2862,7 +2862,7 @@ function handle_vendor_pr_attachments_upload($id, $customer_upload = false, $pur
                 $filename    = unique_filename($path, $_FILES['file']['name'][$i]);
                 $newFilePath = $path . $filename;
                 // Upload the file into the temp dir
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                     $attachment   = [];
                     $attachment[] = [
                     'file_name' => $filename,
@@ -3206,7 +3206,7 @@ function handle_upload_sign_image($rel_id, $rel_type, $approve_id){
             $filename = 'signature_'.$approve_id.'.'.$extension;
             $newFilePath = $path . $filename;
             // Upload the file into the company uploads dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                 
                 return true;
             }
@@ -3370,7 +3370,7 @@ if ( ! function_exists('force_download'))
             $filename = implode('.', $x);
         }
 
-        if ($data === NULL && ($fp = @fopen($filepath, 'rb')) === FALSE)
+        if ($data === NULL && ($fp = @(\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($filepath, 'rb')) === FALSE)
         {
             return;
         }
@@ -3401,7 +3401,7 @@ if ( ! function_exists('force_download'))
             echo $data;
         }
 
-        fclose($fp);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
         exit;
     }
 }
@@ -3893,7 +3893,7 @@ function handle_pur_faf_attachment($id){
                 $filename = unique_filename($path, $_FILES['attachments']['name'][$i]);
                 $newFilePath = $path . $filename;
                 // Upload the file into the temp dir
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                     $attachment = [];
                     $attachment[] = [
                         'file_name' => $filename,
@@ -3938,14 +3938,14 @@ function pur_process_requestor_faf_signature_image($id, $partBase64, $path, $ima
 
     $path = rtrim($path, '/') . '/' . $filename;
 
-    $fp = fopen($path, 'w+');
+    $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($path, 'w+');
 
     if (fwrite($fp, $decoded_image)) {
         $retval                                 = true;
         //$GLOBALS['processed_digital_signature'] = $filename;
     }
 
-    fclose($fp);
+    (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
 
 
     return $retval;
@@ -3973,7 +3973,7 @@ function handle_upload_requestor_sign_image($id){
             $filename = 'signature_'.$id.'.'.$extension;
             $newFilePath = $path . $filename;
             // Upload the file into the company uploads dir
-            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                 
                 return true;
             }

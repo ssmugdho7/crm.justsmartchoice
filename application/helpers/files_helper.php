@@ -29,7 +29,7 @@ function xcopy($source, $dest, $permissions = 0755)
 {
     // Simple copy for a file
     if (is_file($source)) {
-        return copy($source, $dest);
+        return (\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($source, $dest);
     }
     // Make destination directory
     if (!is_dir($dest)) {
@@ -68,10 +68,10 @@ function delete_dir($dirPath)
         if (is_dir($file)) {
             delete_dir($file);
         } else {
-            unlink($file);
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file);
         }
     }
-    if (rmdir($dirPath)) {
+    if ((\function_exists('sc_recovery_rmdir') ? '\sc_recovery_rmdir' : '\rmdir')($dirPath)) {
         return true;
     }
 
@@ -398,13 +398,13 @@ function replace_in_file($path, $find, $replace)
     $file = trim($file);
     $file = str_replace($find, $replace, $file);
     $file = trim($file);
-    if (!$fp = fopen($path, FOPEN_WRITE_CREATE_DESTRUCTIVE)) {
+    if (!$fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($path, FOPEN_WRITE_CREATE_DESTRUCTIVE)) {
         return false;
     }
     flock($fp, LOCK_EX);
     fwrite($fp, $file, strlen($file));
     flock($fp, LOCK_UN);
-    fclose($fp);
+    (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
     @chmod($path, FILE_READ_MODE);
 
     return true;
@@ -553,7 +553,7 @@ function app_temp_dir()
 
     // In case index.html is removed from the folder, re-create it again
     if (!file_exists(TEMP_FOLDER . '/index.html')) {
-        fopen(TEMP_FOLDER . '/index.html', 'w');
+        (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(TEMP_FOLDER . '/index.html', 'w');
     }
 
     return TEMP_FOLDER;
@@ -578,24 +578,24 @@ function app_maybe_delete_old_temporary_files()
             if ($data = get_last_upgrade_copy_data()) {
                 $basename = basename($data->path);
                 if ($basename == $file && (time() - $data->time) > $older_than) {
-                    @unlink($data->path);
+                    @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($data->path);
                     update_option('last_upgrade_copy_data', '');
                 }
             } else {
                 // Is probably an old upgrade file because of multiple upgrade tries
                 // Delete it in all cases
-                @unlink($path);
+                @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path);
             }
         } else {
             if ((time() - filectime($path)) > $older_than) {
-                @unlink($path);
+                @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path);
             }
         }
     }
 
     // In case index.html is removed from the folder, re-create it again
     if (!file_exists(TEMP_FOLDER . '/index.html')) {
-        fopen(TEMP_FOLDER . '/index.html', 'w');
+        (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(TEMP_FOLDER . '/index.html', 'w');
     }
 
     $folders = list_folders(TEMP_FOLDER);

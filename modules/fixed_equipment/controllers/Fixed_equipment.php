@@ -9435,7 +9435,7 @@ class fixed_equipment extends AdminController
 					$date_create_file = str_replace('.xlsx', '', $date_create_file);
 
 					if ((float) $date_create_file <= (float) $before_7_day) {
-						unlink($folder . $filename);
+						(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($folder . $filename);
 					}
 				}
 			}

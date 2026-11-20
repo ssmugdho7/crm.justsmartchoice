@@ -168,7 +168,7 @@ class CI_Session_files_driver extends CI_Session_driver implements SessionHandle
         if ($this->_file_handle === null) {
             $this->_file_new = ! file_exists($this->_file_path . $session_id);
 
-            if (($this->_file_handle = fopen($this->_file_path . $session_id, 'c+b')) === false) {
+            if (($this->_file_handle = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($this->_file_path . $session_id, 'c+b')) === false) {
                 log_message('error', "Session: Unable to open file '" . $this->_file_path . $session_id . "'.");
 
                 return $this->_failure;
@@ -176,7 +176,7 @@ class CI_Session_files_driver extends CI_Session_driver implements SessionHandle
 
             if (flock($this->_file_handle, LOCK_EX) === false) {
                 log_message('error', "Session: Unable to obtain lock for file '" . $this->_file_path . $session_id . "'.");
-                fclose($this->_file_handle);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($this->_file_handle);
                 $this->_file_handle = null;
 
                 return $this->_failure;
@@ -284,7 +284,7 @@ class CI_Session_files_driver extends CI_Session_driver implements SessionHandle
     {
         if (is_resource($this->_file_handle)) {
             flock($this->_file_handle, LOCK_UN);
-            fclose($this->_file_handle);
+            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($this->_file_handle);
 
             $this->_file_handle = $this->_file_new = $this->_session_id = null;
         }
@@ -310,7 +310,7 @@ class CI_Session_files_driver extends CI_Session_driver implements SessionHandle
             if (file_exists($this->_file_path . $session_id)) {
                 $this->_cookie_destroy();
 
-                return unlink($this->_file_path . $session_id)
+                return (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($this->_file_path . $session_id)
                     ? $this->_success
                     : $this->_failure;
             }
@@ -322,7 +322,7 @@ class CI_Session_files_driver extends CI_Session_driver implements SessionHandle
             if (file_exists($this->_file_path . $session_id)) {
                 $this->_cookie_destroy();
 
-                return unlink($this->_file_path . $session_id)
+                return (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($this->_file_path . $session_id)
                     ? $this->_success
                     : $this->_failure;
             }
@@ -373,7 +373,7 @@ class CI_Session_files_driver extends CI_Session_driver implements SessionHandle
                 continue;
             }
 
-            unlink($this->_config['save_path'] . DIRECTORY_SEPARATOR . $file);
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($this->_config['save_path'] . DIRECTORY_SEPARATOR . $file);
         }
 
         closedir($directory);

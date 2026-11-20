@@ -81,7 +81,7 @@ class EnhanceSecurity
 
     protected function cacheResults($results, $filename)
     {
-        file_put_contents(
+        (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')(
             $this->cachePath($filename),
             '<?php return ' . var_export($results, true) . ";\n"
         );

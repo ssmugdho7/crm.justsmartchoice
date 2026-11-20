@@ -878,13 +878,13 @@ class poly_utilities_common_helper
     public static function file_put_contents($path, $content)
     {
         @chmod($path, FILE_WRITE_MODE);
-        if (!$fp = fopen($path, FOPEN_WRITE_CREATE_DESTRUCTIVE)) {
+        if (!$fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($path, FOPEN_WRITE_CREATE_DESTRUCTIVE)) {
             return false;
         }
         flock($fp, LOCK_EX);
         fwrite($fp, $content, strlen($content));
         flock($fp, LOCK_UN);
-        fclose($fp);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
         @chmod($path, FILE_READ_MODE);
         return true;
     }
@@ -908,7 +908,7 @@ class poly_utilities_common_helper
             return 0;
         }
 
-        if ($is_overwrite && file_exists($file_path) && !unlink($file_path)) {
+        if ($is_overwrite && file_exists($file_path) && !(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file_path)) {
             return 0;
         }
 
@@ -916,7 +916,7 @@ class poly_utilities_common_helper
             return 0;
         }
 
-        return file_put_contents($file_path, $content) !== false ? 1 : 0;
+        return (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($file_path, $content) !== false ? 1 : 0;
     }
 
     // Helper function to delete old files
@@ -931,7 +931,7 @@ class poly_utilities_common_helper
                 FCPATH,
                 $fileUrl
             );
-            if (file_exists($filePath) && !unlink($filePath)) {
+            if (file_exists($filePath) && !(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($filePath)) {
                 return false; // Return false if unable to delete any file
             }
         }

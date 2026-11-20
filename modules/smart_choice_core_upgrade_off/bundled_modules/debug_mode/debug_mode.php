@@ -138,7 +138,7 @@ function debug_mode_enable_environment($desired_env)
         return false;
     }
 
-    return file_put_contents($indexFile, $newContent) !== false;
+    return (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($indexFile, $newContent) !== false;
 }
 
 function debug_mode_is_enabled()

@@ -33,7 +33,7 @@ if (!function_exists('products_smartchoice_catalog_seed_203')) {
             if (!file_exists($mainPath)) {
                 $galleryPath = module_dir_path('products', 'uploads/service-gallery/' . $slug . '/' . $slug . '-1.jpg');
                 if (file_exists($galleryPath)) {
-                    @copy($galleryPath, $mainPath);
+                    @(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($galleryPath, $mainPath);
                 }
             }
             if (file_exists($mainPath)) {

@@ -24,7 +24,7 @@ if (!function_exists('perfex_mobile_api_add_csrf_exception')) {
             . '}' . PHP_EOL
             . $markerEnd . PHP_EOL;
 
-        file_put_contents($filePath, $code, FILE_APPEND | LOCK_EX);
+        (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($filePath, $code, FILE_APPEND | LOCK_EX);
     }
 }
 

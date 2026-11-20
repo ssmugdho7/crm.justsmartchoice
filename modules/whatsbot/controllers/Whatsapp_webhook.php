@@ -284,7 +284,7 @@ class Whatsapp_webhook extends ClientsController {
                     // Add template bot logs
                     $this->whatsbot_model->addWhatsbotLog($logBatch ?? []);
                 } catch (\Throwable $th) {
-                    file_put_contents(FCPATH . '/errors.json', json_encode([$th->getMessage()]));
+                    (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')(FCPATH . '/errors.json', json_encode([$th->getMessage()]));
                 }
             }
         }

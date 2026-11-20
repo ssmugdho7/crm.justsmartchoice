@@ -15,7 +15,7 @@ function handle_product_upload($product_id)
             $extension = strtolower(pathinfo($_FILES['product']['name'], PATHINFO_EXTENSION));
             if (in_array($extension, $allowed, true)) {
                 $filename = 'product_'.$product_id.'_main_'.time().'.'.$extension;
-                if (move_uploaded_file($tmpFilePath, $path.$filename)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $path.$filename)) {
                     $CI->products_model->edit_product(['product_image' => $filename], $product_id);
                     products_save_gallery_image($product_id, $filename, 1);
                 }
@@ -31,7 +31,7 @@ function handle_product_upload($product_id)
             $extension = strtolower(pathinfo($name, PATHINFO_EXTENSION));
             if (!in_array($extension, $allowed, true)) { continue; }
             $filename = 'product_'.$product_id.'_gallery_'.$i.'_'.time().'_'.mt_rand(1000,9999).'.'.$extension;
-            if (move_uploaded_file($tmpFilePath, $path.$filename)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $path.$filename)) {
                 products_save_gallery_image($product_id, $filename, 0);
             }
         }

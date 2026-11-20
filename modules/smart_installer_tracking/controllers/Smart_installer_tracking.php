@@ -160,7 +160,7 @@ class Smart_installer_tracking extends AdminController
         if (is_dir($cachePath)) {
             foreach (glob($cachePath . '*') ?: [] as $file) {
                 if (is_file($file) && basename($file) !== 'index.html') {
-                    @unlink($file);
+                    @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file);
                 }
             }
         }

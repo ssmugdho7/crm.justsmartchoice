@@ -268,7 +268,7 @@ class Sales_center extends AdminController
                     continue;
                 }
                 $fileName = time() . '_' . $index . '_' . preg_replace('/[^A-Za-z0-9._-]/', '_', $original);
-                if (move_uploaded_file($_FILES['file']['tmp_name'][$index], $path . $fileName)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($_FILES['file']['tmp_name'][$index], $path . $fileName)) {
                     $this->sales_center_model->add_file($rel_id, $rel_type, [
                         'file_name' => $fileName,
                         'original_file_name' => $original,
@@ -281,7 +281,7 @@ class Sales_center extends AdminController
         } elseif (!empty($_FILES['file']['name'])) {
             $original = $_FILES['file']['name'];
             $fileName = time() . '_' . preg_replace('/[^A-Za-z0-9._-]/', '_', $original);
-            if (move_uploaded_file($_FILES['file']['tmp_name'], $path . $fileName)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($_FILES['file']['tmp_name'], $path . $fileName)) {
                 $this->sales_center_model->add_file($rel_id, $rel_type, [
                     'file_name' => $fileName,
                     'original_file_name' => $original,
@@ -513,7 +513,7 @@ class Sales_center extends AdminController
         $ext = pathinfo($original, PATHINFO_EXTENSION);
         $fileName = 'salesperson-profile-' . date('YmdHis') . '-' . mt_rand(1000, 9999) . '.' . strtolower($ext ?: 'png');
         $fileName = preg_replace('/[^A-Za-z0-9._-]/', '_', $fileName);
-        if (move_uploaded_file($_FILES['profile_image_file']['tmp_name'], $path . $fileName)) {
+        if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($_FILES['profile_image_file']['tmp_name'], $path . $fileName)) {
             return 'uploads/sales_center/profiles/' . $fileName;
         }
         return '';
@@ -829,7 +829,7 @@ class Sales_center extends AdminController
         $filename = 'sales-hub-' . $target . '-' . date('Ymd-His') . '.csv';
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename="' . $filename . '"');
-        $out = fopen('php://output', 'w');
+        $out = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('php://output', 'w');
         if (!empty($rows)) {
             fputcsv($out, array_keys($rows[0]));
             foreach ($rows as $row) {
@@ -839,7 +839,7 @@ class Sales_center extends AdminController
             fputcsv($out, ['message']);
             fputcsv($out, ['No records found.']);
         }
-        fclose($out);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($out);
         exit;
     }
 
@@ -853,10 +853,10 @@ class Sales_center extends AdminController
         $headers = $this->sales_center_sample_headers($target);
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename="sales-hub-' . $target . '-sample-header.csv"');
-        $out = fopen('php://output', 'w');
+        $out = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('php://output', 'w');
         fputcsv($out, $headers);
         fputcsv($out, array_map(function ($header) { return 'sample_' . strtolower(preg_replace('/[^a-z0-9]+/i', '_', $header)); }, $headers));
-        fclose($out);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($out);
         exit;
     }
 
@@ -977,7 +977,7 @@ class Sales_center extends AdminController
     {
         $rows = [];
         $headers = [];
-        $handle = fopen($path, 'r');
+        $handle = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($path, 'r');
         if (!$handle) { return $rows; }
         $line = 0;
         while (($data = fgetcsv($handle)) !== false && count($rows) < $limit) {
@@ -991,7 +991,7 @@ class Sales_center extends AdminController
             }
             $rows[] = $row;
         }
-        fclose($handle);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($handle);
         return $rows;
     }
 

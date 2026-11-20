@@ -497,14 +497,14 @@ class Staff extends AdminController
             set_alert('warning', 'Please select a valid CSV file.');
             redirect(admin_url('staff'));
         }
-        $handle = fopen($_FILES['staff_import_file']['tmp_name'], 'r');
+        $handle = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($_FILES['staff_import_file']['tmp_name'], 'r');
         if (!$handle) {
             set_alert('danger', 'Unable to read import file.');
             redirect(admin_url('staff'));
         }
         $header = fgetcsv($handle);
         if (!$header) {
-            fclose($handle);
+            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($handle);
             set_alert('warning', 'The CSV file is empty.');
             redirect(admin_url('staff'));
         }
@@ -553,7 +553,7 @@ class Staff extends AdminController
             $this->db->insert(db_prefix().'staff', $insert);
             if ($this->db->insert_id()) { $created++; }
         }
-        fclose($handle);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($handle);
         set_alert('success', 'Staff import finished. Created: '.$created.'. Skipped: '.$skipped.'.');
         redirect(admin_url('staff'));
     }
@@ -631,7 +631,7 @@ class Staff extends AdminController
                 }
                 $safeName = unique_filename($basePath, preg_replace('/[^A-Za-z0-9._-]/', '_', basename($originalName)));
                 $target = $basePath . $safeName;
-                if (!move_uploaded_file($_FILES[$field]['tmp_name'][$i], $target)) {
+                if (!(\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($_FILES[$field]['tmp_name'][$i], $target)) {
                     log_message('error', 'Unable to move staff document upload for staff ' . $staffId);
                     continue;
                 }

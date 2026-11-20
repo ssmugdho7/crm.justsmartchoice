@@ -12,8 +12,8 @@ class Migration_Version_130 extends App_module_migration
 
 		if (!is_dir(PR_CHAT_MODULE_GROUPS_UPLOAD_FOLDER)) {
 			mkdir(PR_CHAT_MODULE_GROUPS_UPLOAD_FOLDER, 0755);
-			$fp = fopen(PR_CHAT_MODULE_GROUPS_UPLOAD_FOLDER . '/index.html', 'w');
-			fclose($fp);
+			$fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(PR_CHAT_MODULE_GROUPS_UPLOAD_FOLDER . '/index.html', 'w');
+			(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
 		}
 
 		$chatgroups = db_prefix() . 'chatgroups';

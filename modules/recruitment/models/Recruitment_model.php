@@ -216,7 +216,7 @@ class Recruitment_model extends App_Model {
 		$deleted = false;
 		if ($attachment) {
 			if (empty($attachment->external)) {
-				unlink(RECRUITMENT_MODULE_UPLOAD_FOLDER . '/proposal/' . $attachment->rel_id . '/' . $attachment->file_name);
+				(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(RECRUITMENT_MODULE_UPLOAD_FOLDER . '/proposal/' . $attachment->rel_id . '/' . $attachment->file_name);
 			}
 			$this->db->where('id', $attachment->id);
 			$this->db->delete('tblfiles');
@@ -467,7 +467,7 @@ class Recruitment_model extends App_Model {
 		$deleted = false;
 		if ($attachment) {
 			if (empty($attachment->external)) {
-				unlink(RECRUITMENT_MODULE_UPLOAD_FOLDER . '/campaign/' . $attachment->rel_id . '/' . $attachment->file_name);
+				(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(RECRUITMENT_MODULE_UPLOAD_FOLDER . '/campaign/' . $attachment->rel_id . '/' . $attachment->file_name);
 			}
 			$this->db->where('id', $attachment->id);
 			$this->db->delete('tblfiles');
@@ -1138,7 +1138,7 @@ class Recruitment_model extends App_Model {
 
 		if ($avar && (isset($_FILES['cd_avar']['name']) && $_FILES['cd_avar']['name'] != '')) {
 			if (empty($avar->external)) {
-				unlink(RECRUITMENT_MODULE_UPLOAD_FOLDER . '/candidate/avartar/' . $avar->rel_id . '/' . $avar->file_name);
+				(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(RECRUITMENT_MODULE_UPLOAD_FOLDER . '/candidate/avartar/' . $avar->rel_id . '/' . $avar->file_name);
 			}
 			$this->db->where('id', $avar->id);
 			$this->db->delete('tblfiles');
@@ -1373,7 +1373,7 @@ class Recruitment_model extends App_Model {
 		$deleted = false;
 		if ($attachment) {
 			if (empty($attachment->external)) {
-				unlink(RECRUITMENT_MODULE_UPLOAD_FOLDER . '/candidate/files/' . $attachment->rel_id . '/' . $attachment->file_name);
+				(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(RECRUITMENT_MODULE_UPLOAD_FOLDER . '/candidate/files/' . $attachment->rel_id . '/' . $attachment->file_name);
 			}
 			$this->db->where('id', $attachment->id);
 			$this->db->delete('tblfiles');
@@ -1404,7 +1404,7 @@ class Recruitment_model extends App_Model {
 		$deleted = false;
 		if ($attachment) {
 			if (empty($attachment->external)) {
-				unlink(RECRUITMENT_MODULE_UPLOAD_FOLDER . '/candidate/avartar/' . $attachment->rel_id . '/' . $attachment->file_name);
+				(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(RECRUITMENT_MODULE_UPLOAD_FOLDER . '/candidate/avartar/' . $attachment->rel_id . '/' . $attachment->file_name);
 			}
 			$this->db->where('id', $attachment->id);
 			$this->db->delete('tblfiles');
@@ -2189,7 +2189,7 @@ class Recruitment_model extends App_Model {
 
 		if ($avar && (isset($_FILES['attachment']['name']) && $_FILES['attachment']['name'] != '')) {
 			if (empty($avar->external)) {
-				unlink(RECRUITMENT_MODULE_UPLOAD_FOLDER . '/set_transfer/' . $avar->rel_id . '/' . $avar->file_name);
+				(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(RECRUITMENT_MODULE_UPLOAD_FOLDER . '/set_transfer/' . $avar->rel_id . '/' . $avar->file_name);
 			}
 			$this->db->where('id', $avar->id);
 			$this->db->delete('tblfiles');
@@ -2238,7 +2238,7 @@ class Recruitment_model extends App_Model {
 
 		if ($avar) {
 			if (empty($avar->external)) {
-				unlink(RECRUITMENT_MODULE_UPLOAD_FOLDER . '/set_transfer/' . $avar->rel_id . '/' . $avar->file_name);
+				(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(RECRUITMENT_MODULE_UPLOAD_FOLDER . '/set_transfer/' . $avar->rel_id . '/' . $avar->file_name);
 			}
 			$this->db->where('id', $avar->id);
 			$this->db->delete('tblfiles');
@@ -3633,9 +3633,9 @@ class Recruitment_model extends App_Model {
 		if ($attachment) {
 			if (empty($attachment->external)) {
 				if (file_exists(RECRUITMENT_COMPANY_UPLOAD . $attachment->rel_id . '/' . $attachment->file_name)) {
-					unlink(RECRUITMENT_COMPANY_UPLOAD . $attachment->rel_id . '/' . $attachment->file_name);
+					(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(RECRUITMENT_COMPANY_UPLOAD . $attachment->rel_id . '/' . $attachment->file_name);
 				} else {
-					unlink('modules/recruitment/uploads/company_images/' . $attachment->rel_id . '/' . $attachment->file_name);
+					(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')('modules/recruitment/uploads/company_images/' . $attachment->rel_id . '/' . $attachment->file_name);
 				}
 			}
 			$this->db->where('id', $attachment->id);
@@ -3990,7 +3990,7 @@ class Recruitment_model extends App_Model {
 		$deleted = false;
 		if ($attachment) {
 			if (empty($attachment->external)) {
-				unlink(RECRUITMENT_MODULE_UPLOAD_FOLDER . '/set_transfer/' . $attachment->rel_id . '/' . $attachment->file_name);
+				(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(RECRUITMENT_MODULE_UPLOAD_FOLDER . '/set_transfer/' . $attachment->rel_id . '/' . $attachment->file_name);
 			}
 			$this->db->where('id', $attachment->id);
 			$this->db->delete('tblfiles');
@@ -4993,7 +4993,7 @@ class Recruitment_model extends App_Model {
 				if(file_exists($cv_path) && file_get_contents($cv_path)){
 					$filename    = unique_filename($path, basename($cv_path));
 					$file_contents = file_get_contents($cv_path);
-					file_put_contents(CANDIDATE_CV_UPLOAD.$cadidate_id.'/'.$filename, $file_contents);
+					(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')(CANDIDATE_CV_UPLOAD.$cadidate_id.'/'.$filename, $file_contents);
 
 					$attachment   = [];
 					$attachment[] = [

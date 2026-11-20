@@ -2260,7 +2260,7 @@ class Deals extends AdminController
             // remove file from folder if exist
             $path = get_upload_path_for_deal() . $deals_id . '/' . $file_name;
             if (file_exists($path)) {
-                unlink($path);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path);
             }
 
             $attachment = json_decode($attachment);
@@ -2333,7 +2333,7 @@ class Deals extends AdminController
                     header('Content-disposition: attachment; filename=' . $zipname);
                     header('Content-Length: ' . filesize($zipname));
                     readfile($zipname);
-                    unlink($zipname);
+                    (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($zipname);
                 } else {
                     // get attachments file according to file_name
                     foreach ($attachment as $v_attachment) {

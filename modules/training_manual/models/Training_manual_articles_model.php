@@ -64,9 +64,9 @@ class Training_manual_articles_model extends App_Model
 
         $filename = 'article_' . $this->current_staff_id() . '_' . time() . '_' . mt_rand(1000, 9999) . '.' . $ext;
         $destination = $path . $filename;
-        if (move_uploaded_file($file['tmp_name'], $destination)) {
+        if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($file['tmp_name'], $destination)) {
             if ($old_file && file_exists($path . $old_file)) {
-                @unlink($path . $old_file);
+                @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path . $old_file);
             }
             return $filename;
         }

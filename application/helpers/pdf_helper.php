@@ -372,7 +372,7 @@ function sc_append_sale_attachments_to_pdf($pdf, string $relType, int $relId): v
             } catch (Throwable $e) {
                 log_message('error', 'Sales PDF image attachment failed [' . $name . ']: ' . $e->getMessage());
             } finally {
-                if ($temporaryImage !== '' && is_file($temporaryImage)) { @unlink($temporaryImage); }
+                if ($temporaryImage !== '' && is_file($temporaryImage)) { @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($temporaryImage); }
             }
             continue;
         }
@@ -389,13 +389,13 @@ function sc_append_sale_attachments_to_pdf($pdf, string $relType, int $relId): v
                         $page->setImageFormat('png');
                         $tmp = tempnam(sys_get_temp_dir(), 'scpdf_');
                         $png = $tmp . '.png';
-                        @rename($tmp, $png);
+                        @(\function_exists('sc_recovery_rename') ? '\sc_recovery_rename' : '\rename')($tmp, $png);
                         $page->writeImage($png);
                         $pdf->AddPage();
                         $pdf->SetFont($pdf->get_font_name(), 'B', 10);
                         $pdf->Cell(0, 7, _l('attachment') . ': ' . $name . ' - ' . ($index + 1), 0, 1, 'L');
                         $pdf->Image($png, 15, $pdf->GetY() + 1, 180, 0, 'PNG', '', '', true, 150, 'C', false, false, 0, true, false, true);
-                        @unlink($png);
+                        @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($png);
                     }
                     $im->clear();
                     $im->destroy();
@@ -435,13 +435,13 @@ function sc_append_sale_attachments_to_pdf($pdf, string $relType, int $relId): v
                                     } catch (Throwable $e) {
                                         log_message('error', 'Ghostscript PDF attachment page failed [' . $name . ']: ' . $e->getMessage());
                                     }
-                                    @unlink($png);
+                                    @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($png);
                                 }
                                 $converted = count($pages) > 0;
                             } else {
                                 log_message('error', 'Ghostscript PDF attachment conversion failed [' . $name . ']: ' . implode(' | ', array_slice($output, -5)));
                             }
-                            @rmdir($tmpDir);
+                            @(\function_exists('sc_recovery_rmdir') ? '\sc_recovery_rmdir' : '\rmdir')($tmpDir);
                         }
                     }
                 }
@@ -471,11 +471,11 @@ function sc_append_sale_attachments_to_pdf($pdf, string $relType, int $relId): v
                                     } catch (Throwable $e) {
                                         log_message('error', 'pdftoppm attachment page failed [' . $name . ']: ' . $e->getMessage());
                                     }
-                                    @unlink($png);
+                                    @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($png);
                                 }
                                 $converted = count($pages) > 0;
                             }
-                            @rmdir($tmpDir);
+                            @(\function_exists('sc_recovery_rmdir') ? '\sc_recovery_rmdir' : '\rmdir')($tmpDir);
                         }
                     }
                 }

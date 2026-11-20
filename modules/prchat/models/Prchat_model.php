@@ -1332,7 +1332,7 @@ class Prchat_model extends App_Model
     if (!empty($files) && is_array($files)) {
       foreach ($files as $file) {
         if (is_dir(PR_CHAT_MODULE_GROUPS_UPLOAD_FOLDER)) {
-          unlink(PR_CHAT_MODULE_GROUPS_UPLOAD_FOLDER . '/' . $file['file_name']);
+          (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(PR_CHAT_MODULE_GROUPS_UPLOAD_FOLDER . '/' . $file['file_name']);
         }
       }
       $this->db->where('group_id', $group_id);
@@ -1367,7 +1367,7 @@ class Prchat_model extends App_Model
       if ($file_name && stripos($file_name, 'voice_') === false) {
         $clientFilePath = PR_CHAT_MODULE_UPLOAD_FOLDER . '/clients/' . $file_name;
         if (file_exists($clientFilePath)) {
-          @unlink($clientFilePath);
+          @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($clientFilePath);
         }
       }
     }
@@ -1406,7 +1406,7 @@ class Prchat_model extends App_Model
         if ($file_name && stripos($file_name, 'voice_') === false) {
           $groupFilePath = PR_CHAT_MODULE_GROUPS_UPLOAD_FOLDER . '/' . $file_name;
           if (file_exists($groupFilePath)) {
-            @unlink($groupFilePath);
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($groupFilePath);
           }
           $this->db->delete(db_prefix() . 'chatgroupsharedfiles', ['group_id' => $group_id, 'file_name' => $file_name]);
         }
@@ -1432,7 +1432,7 @@ class Prchat_model extends App_Model
         if ($file_name && stripos($file_name, 'voice_') === false) {
           $mainFilePath = PR_CHAT_MODULE_UPLOAD_FOLDER . '/' . $file_name;
           if (file_exists($mainFilePath)) {
-            @unlink($mainFilePath);
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($mainFilePath);
           }
         }
       }
@@ -1485,7 +1485,7 @@ class Prchat_model extends App_Model
       $safe = str_replace(['..', '\\'], '', $finallyFileToDelete);
       $audioPath = rtrim(PR_CHAT_MODULE_AUDIO_UPLOAD_FOLDER, '/') . '/' . $safe;
       if (is_file($audioPath)) {
-        @unlink($audioPath);
+        @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($audioPath);
       }
     }
 
@@ -1538,13 +1538,13 @@ class Prchat_model extends App_Model
             $file_name = pathinfo($file['message'], PATHINFO_BASENAME);
             if (strlen($file_name)) {
               if (is_dir(PR_CHAT_MODULE_UPLOAD_FOLDER . '/audio')) {
-                @unlink(PR_CHAT_MODULE_UPLOAD_FOLDER . '/audio/' . $file_name);
+                @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(PR_CHAT_MODULE_UPLOAD_FOLDER . '/audio/' . $file_name);
               }
             }
           }
 
           if (is_dir(PR_CHAT_MODULE_UPLOAD_FOLDER)) {
-            @unlink(PR_CHAT_MODULE_UPLOAD_FOLDER . '/' . $file_name);
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(PR_CHAT_MODULE_UPLOAD_FOLDER . '/' . $file_name);
           }
         }
       }
@@ -1681,7 +1681,7 @@ class Prchat_model extends App_Model
 
     foreach ($files as $file) {
       if (is_file($file) && basename($file) !== 'index.html' && basename($file) !== '.gitignore') {
-        @unlink($file);
+        @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file);
       }
     }
   }
@@ -2706,7 +2706,7 @@ class Prchat_model extends App_Model
     }
 
     // Create new csv file
-    $file = fopen('php://output', 'w');
+    $file = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('php://output', 'w');
 
     $header = [
       "" . _l('chat_header_message_id') . "",
@@ -2736,7 +2736,7 @@ class Prchat_model extends App_Model
       fputcsv($file, $line);
     }
 
-    fclose($file);
+    (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($file);
     exit;
   }
 

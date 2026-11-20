@@ -430,7 +430,7 @@ class Chatbot_Admin extends AdminController
         // Delete vector store file - use same path as ChatbotVectorStore
         $vectorFile = module_dir_path('prchat', 'uploads/vectors/') . 'chatbot_' . $chatbotId . '.json';
         if (file_exists($vectorFile)) {
-            unlink($vectorFile);
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($vectorFile);
         }
 
         set_alert('success', _l('chatbot_all_training_cleared'));
@@ -515,7 +515,7 @@ class Chatbot_Admin extends AdminController
             $relativePath = 'modules/prchat/uploads/training_files/' . $newFilename;
             $fullPath = FCPATH . $relativePath;
 
-            if (move_uploaded_file($_FILES['training_file']['tmp_name'], $fullPath)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($_FILES['training_file']['tmp_name'], $fullPath)) {
                 $fileData = base64_encode(file_get_contents($fullPath));
 
                 \PerfexChat\Neuron\Models\TrainingFile::create([
@@ -673,7 +673,7 @@ class Chatbot_Admin extends AdminController
 
         $progressFile = sys_get_temp_dir() . '/prchat_training_' . $id . '.json';
         $writeProgress = function (array $data) use ($progressFile) {
-            file_put_contents($progressFile, json_encode($data));
+            (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($progressFile, json_encode($data));
         };
 
         try {
@@ -803,7 +803,7 @@ class Chatbot_Admin extends AdminController
                 ]);
             }
 
-            @unlink($progressFile);
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($progressFile);
 
             $payload = [
                 'success'         => true,
@@ -825,7 +825,7 @@ class Chatbot_Admin extends AdminController
 
             prchat_training_send_json($payload);
         } catch (\Throwable $e) {
-            @unlink($progressFile);
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($progressFile);
             log_message('error', '[prchat training] chatbot #' . $id . ': ' . $e->getMessage());
             prchat_training_send_json([
                 'success'    => false,
@@ -1216,7 +1216,7 @@ class Chatbot_Admin extends AdminController
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename="' . $filename . '"');
 
-        $output = fopen('php://output', 'w');
+        $output = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('php://output', 'w');
         fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
         fputcsv($output, ['Date', 'Time', 'Role', 'Sender', 'Message']);
 
@@ -1246,7 +1246,7 @@ class Chatbot_Admin extends AdminController
             ]);
         }
 
-        fclose($output);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($output);
         exit;
     }
 

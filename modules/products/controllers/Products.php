@@ -352,14 +352,14 @@ class Products extends AdminController
     {
         if (!has_permission('products', '', 'create')) { access_denied('products'); }
         if (!empty($_FILES['import_file']['tmp_name'])) {
-            $file = fopen($_FILES['import_file']['tmp_name'], 'r');
+            $file = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($_FILES['import_file']['tmp_name'], 'r');
             if (!$file) {
                 set_alert('danger', 'The import file could not be read.');
                 redirect(admin_url('products'));
             }
             $header = fgetcsv($file, 0, ',', '"', '\\');
             if (!is_array($header) || !in_array('product_name', $header, true)) {
-                fclose($file);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($file);
                 set_alert('danger', 'Use the sample CSV header, including product_name.');
                 redirect(admin_url('products'));
             }
@@ -386,7 +386,7 @@ class Products extends AdminController
                 ]);
                 $count++;
             }
-            fclose($file);
+            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($file);
             set_alert($skipped ? 'warning' : 'success', $count.' products imported successfully.'.($skipped ? ' '.$skipped.' malformed rows skipped. Check the sample CSV header.' : ''));
         }
         redirect(admin_url('products'));

@@ -1670,7 +1670,7 @@ class Resourcebooking_model extends App_Model
 
                 $fullPath = $relPath . $attachment->file_name;
 
-                unlink($fullPath);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($fullPath);
 
                 $fname = pathinfo($fullPath, PATHINFO_FILENAME);
                 $fext = pathinfo($fullPath, PATHINFO_EXTENSION);
@@ -1678,7 +1678,7 @@ class Resourcebooking_model extends App_Model
                 $thumbPath = $relPath . $fname . "_thumb." . $fext;
 
                 if (file_exists($thumbPath)) {
-                    unlink($thumbPath);
+                    (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($thumbPath);
                 }
             }
 

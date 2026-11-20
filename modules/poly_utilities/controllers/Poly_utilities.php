@@ -1180,7 +1180,7 @@ class Poly_utilities extends AdminController
         } else {
             $file_path = POLY_UTILITIES_MODULE_UPLOAD_FOLDER . '/' . $resource . '/' . $file . $resourceExtension;
             if (file_exists($file_path)) {
-                if (!unlink($file_path)) {
+                if (!(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file_path)) {
                     poly_utilities_ajax_response_helper::response_data_not_saved(_l('poly_utilities_resource_access_error'));
                 }
             }
@@ -1236,7 +1236,7 @@ class Poly_utilities extends AdminController
                 update_option($resourceTable, json_encode($x));
                 $file_path = POLY_UTILITIES_MODULE_UPLOAD_FOLDER . '/' . $resource . '/' . $id . '.' . $resource;
                 if (file_exists($file_path)) {
-                    if (unlink($file_path)) {
+                    if ((\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file_path)) {
                         poly_utilities_ajax_response_helper::response_success("Remove & delete file: {$id}");
                     }
                 }
@@ -1914,7 +1914,7 @@ class Poly_utilities extends AdminController
 
                     $newFilePath = rtrim($path, '/') . '/' . $filename;
 
-                    if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                    if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                         $filesIDS[] = rtrim(POLY_UTILITIES_MEDIA_PATH, '/') . '/' . $filename;
                     }
                 }
@@ -2071,7 +2071,7 @@ class Poly_utilities extends AdminController
     
                     $newFilePath = rtrim($path, '/') . '/' . $filename;
     
-                    if (!move_uploaded_file($tmpFilePath, $newFilePath)) {
+                    if (!(\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                         $errors[$file['name'][$i]] = 'Failed to move uploaded file. Please check permissions.';
                     } else {
                         $filesIDS[$key] = rtrim(POLY_UTILITIES_MODULE_UPLOAD_APPEARANCE_PATH, '/') . '/' . $filename;

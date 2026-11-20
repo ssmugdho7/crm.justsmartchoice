@@ -62,7 +62,7 @@ class Banner_model extends App_Model
 
         // If a banner image is found and deleted, unlink the associated file
         if (!empty($bannerImage) && $this->db->affected_rows() > 0) {
-            unlink(get_upload_path_by_type('banner').'/'.$bannerImage->detail);
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(get_upload_path_by_type('banner').'/'.$bannerImage->detail);
         }
 
         // Return true if the banner is deleted, false otherwise

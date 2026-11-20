@@ -16,34 +16,34 @@ class Migration_Version_105 extends CI_Migration
         // Merge tickets
         if (file_exists(APPPATH . 'views/admin/tickets/predefined_replies')) {
             delete_dir(APPPATH . 'views/admin/predefined_replies');
-            unlink(APPPATH . 'controllers/admin/Predifined_replies.php');
-            unlink(APPPATH . 'models/Predefined_replies_model.php');
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'controllers/admin/Predifined_replies.php');
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'models/Predefined_replies_model.php');
         }
 
         if (file_exists(APPPATH . 'views/admin/tickets/priorities')) {
             delete_dir(APPPATH . 'views/admin/priorities');
-            unlink(APPPATH . 'controllers/admin/Priorities.php');
-            unlink(APPPATH . 'models/Priority_model.php');
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'controllers/admin/Priorities.php');
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'models/Priority_model.php');
         }
 
         if (file_exists(APPPATH . 'views/admin/tickets/services')) {
             delete_dir(APPPATH . 'views/admin/services');
-            unlink(APPPATH . 'controllers/admin/Services.php');
-            unlink(APPPATH . 'models/Services_model.php');
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'controllers/admin/Services.php');
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'models/Services_model.php');
         }
         if (file_exists(APPPATH . 'views/admin/tickets/tickets_statuses')) {
             delete_dir(APPPATH . 'views/admin/tickets_statuses');
-            unlink(APPPATH . 'controllers/admin/Ticket_statuses.php');
-            unlink(APPPATH . 'models/Ticket_statuses_model.php');
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'controllers/admin/Ticket_statuses.php');
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'models/Ticket_statuses_model.php');
         }
         // Merge media to utilities
         if (file_exists(APPPATH . 'views/admin/utilities')) {
-            unlink(APPPATH . 'controllers/admin/Media.php');
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'controllers/admin/Media.php');
             delete_dir(APPPATH . 'views/admin/media');
         }
 
         if (file_exists(APPPATH . 'helpers/db_autoload_helper.php')) {
-            unlink(APPPATH . 'helpers/db_autoload_helper.php');
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'helpers/db_autoload_helper.php');
         }
         $current_format = get_option('dateformat');
         if($current_format == 'Y.m.d|yyyy.mm.dd' || $current_format == 'd.m.Y|dd.mm.yyyy'){

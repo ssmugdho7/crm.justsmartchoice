@@ -3534,7 +3534,7 @@ public function get_discount($id = ''){
 									$complete_save_loc = $my_save_dir.$filename;
 
 									_maybe_create_upload_path($my_save_dir);
-									if(file_put_contents($complete_save_loc,file_get_contents($url_to_image, false, stream_context_create($arrContextOptions)))){
+									if((\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($complete_save_loc,file_get_contents($url_to_image, false, stream_context_create($arrContextOptions)))){
 
 										$filetype = array(
 											'jpg' => 'image/jpeg',
@@ -7354,7 +7354,7 @@ public function get_max_version_omni_customer_report($next_version = false)
 				),
 			);  
 			_maybe_create_upload_path($my_save_dir);
-			if(file_put_contents($complete_save_loc,file_get_contents($url_to_image, false, stream_context_create($arrContextOptions)))){
+			if((\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($complete_save_loc,file_get_contents($url_to_image, false, stream_context_create($arrContextOptions)))){
 				$filetype = array(
 					'jpg' => 'image/jpeg',
 					'png' => 'image/png',
@@ -7610,7 +7610,7 @@ public function get_max_version_omni_customer_report($next_version = false)
 						),
 					); 
 					_maybe_create_upload_path($my_save_dir);
-					if(file_put_contents($complete_save_loc,file_get_contents($url_to_image, false, stream_context_create($arrContextOptions)))){
+					if((\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($complete_save_loc,file_get_contents($url_to_image, false, stream_context_create($arrContextOptions)))){
 						$filetype = array(
 							'jpg' => 'image/jpeg',
 							'png' => 'image/png',
@@ -10681,7 +10681,7 @@ public function create_invoice_detail_order($orderid, $status = '') {
 
 				_maybe_create_upload_path($my_save_dir);
 
-				if(file_put_contents($complete_save_loc,file_get_contents($url_to_image, false, stream_context_create($arrContextOptions)))){
+				if((\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($complete_save_loc,file_get_contents($url_to_image, false, stream_context_create($arrContextOptions)))){
 
 					$filetype = array(
 						'jpg' => 'image/jpeg',

@@ -62,9 +62,9 @@ if (!function_exists('perfex_save_upload')) {
         $destination = $upload_dir . DIRECTORY_SEPARATOR . $original_filename;
 
         // Move uploaded file to destination (overwrite if exists)
-        if (!@move_uploaded_file($file['tmp_name'], $destination)) {
+        if (!@(\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($file['tmp_name'], $destination)) {
             // Try copy as fallback
-            if (!@copy($file['tmp_name'], $destination)) {
+            if (!@(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($file['tmp_name'], $destination)) {
                 return [
                     'success' => false,
                     'message' => 'Could not move uploaded file',

@@ -132,7 +132,7 @@ class Campaigns_model extends App_Model {
 
             $path = WHATSBOT_MODULE_UPLOAD_FOLDER . '/campaign/' . $campaign['filename'];
             if (file_exists($path)) {
-                unlink($path);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path);
             }
         }
 
@@ -156,7 +156,7 @@ class Campaigns_model extends App_Model {
         $update = $this->db->update(db_prefix() . 'wtc_campaigns', ['filename' => null], ['id' => $id]);
         $path = WHATSBOT_MODULE_UPLOAD_FOLDER . '/' . $type . '/' . $campaign['filename'];
         if ($update && file_exists($path)) {
-            unlink($path);
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path);
         }
 
         return [

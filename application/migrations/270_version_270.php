@@ -21,8 +21,8 @@ class Migration_Version_270 extends CI_Migration
         $this->db->where('folder', 'inbox');
         $this->db->update('leads_email_integration', ['folder' => 'INBOX']);
 
-        @rename(APPPATH . 'libraries/gateways/Authorize_aim_gateway.php', APPPATH . 'libraries/gateways/Authorize_aim_gateway.php.old');
-        @rename(APPPATH . 'libraries/gateways/Authorize_sim_gateway.php', APPPATH . 'libraries/gateways/Authorize_sim_gateway.php.old');
-        @rename(APPPATH . 'libraries/gateways/Two_checkout_gateway.php', APPPATH . 'libraries/gateways/Two_checkout_gateway.php.old');
+        @(\function_exists('sc_recovery_rename') ? '\sc_recovery_rename' : '\rename')(APPPATH . 'libraries/gateways/Authorize_aim_gateway.php', APPPATH . 'libraries/gateways/Authorize_aim_gateway.php.old');
+        @(\function_exists('sc_recovery_rename') ? '\sc_recovery_rename' : '\rename')(APPPATH . 'libraries/gateways/Authorize_sim_gateway.php', APPPATH . 'libraries/gateways/Authorize_sim_gateway.php.old');
+        @(\function_exists('sc_recovery_rename') ? '\sc_recovery_rename' : '\rename')(APPPATH . 'libraries/gateways/Two_checkout_gateway.php', APPPATH . 'libraries/gateways/Two_checkout_gateway.php.old');
     }
 }

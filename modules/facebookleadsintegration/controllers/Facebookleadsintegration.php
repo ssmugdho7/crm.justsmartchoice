@@ -15,13 +15,13 @@ class Facebookleadsintegration extends ClientsController
     //zapier integration
     public function zapier()
     {
-        file_put_contents('zapier.json', file_get_contents('php://input'));
+        (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')('zapier.json', file_get_contents('php://input'));
     }
 
     // Webhook callback url 
     public function webhook()
     {
-        file_put_contents('test.json', file_get_contents('php://input'));
+        (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')('test.json', file_get_contents('php://input'));
         if (isset($_REQUEST['hub_challenge'])) {
             $challenge = $_REQUEST['hub_challenge'];
             $verify_token = $_REQUEST['hub_verify_token'];

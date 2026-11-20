@@ -99,7 +99,7 @@ class Video_library_modal extends App_Model
         $data = $this->db->select('*')->from(db_prefix() . 'upload_video')->where('id', $edit_id)->get()->row();
         if (isset($data) && !empty($data)) {
             if (is_file(VIDEO_LIBRARY_UPLOADS_FOLDER . $data->upload_video)) {
-                unlink(VIDEO_LIBRARY_UPLOADS_FOLDER . $data->upload_video);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(VIDEO_LIBRARY_UPLOADS_FOLDER . $data->upload_video);
                 $this->db->where('id', $edit_id);
                 $this->db->update(db_prefix() . 'upload_video', ['upload_video' => NULL]);
                 return true;
@@ -157,7 +157,7 @@ class Video_library_modal extends App_Model
         $data = $this->db->get_where(db_prefix() . 'upload_video', ['id' => $del_id])->row();
         if (isset($data) && !empty($data)) {
             if (is_file(VIDEO_LIBRARY_UPLOADS_FOLDER . $data->upload_video)) {
-                unlink(VIDEO_LIBRARY_UPLOADS_FOLDER . $data->upload_video);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(VIDEO_LIBRARY_UPLOADS_FOLDER . $data->upload_video);
             }
         }
         $this->db->where('id', $del_id);
@@ -199,7 +199,7 @@ class Video_library_modal extends App_Model
         if (isset($data) && !empty($data)) {
             foreach ($data as $video) {
                 if (is_file(VIDEO_LIBRARY_UPLOADS_FOLDER . $video->upload_video)) {
-                    unlink(VIDEO_LIBRARY_UPLOADS_FOLDER . $video->upload_video);
+                    (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(VIDEO_LIBRARY_UPLOADS_FOLDER . $video->upload_video);
                 }
                 $this->db->where('id', $video->id);
                 $this->db->delete(db_prefix() . 'upload_video');
@@ -410,7 +410,7 @@ class Video_library_modal extends App_Model
         $path = VIDEO_LIBRARY_DISCUSSIONS_ATTACHMENT_FOLDER . $video_id;
         if (!is_null($file_name)) {
             if (file_exists($path . '/' . $file_name)) {
-                unlink($path . '/' . $file_name);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path . '/' . $file_name);
             }
         }
         if (is_dir($path)) {
@@ -435,7 +435,7 @@ Drive Upload Update
         $data = $this->db->select('*')->from(db_prefix() . 'upload_video')->where('id', $edit_id)->get()->row();
         if (isset($data) && !empty($data)) {
             if (is_file(VIDEO_LIBRARY_UPLOADS_FOLDER . $data->upload_video_thumbnail)) {
-                unlink(VIDEO_LIBRARY_UPLOADS_FOLDER . $data->upload_video_thumbnail);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(VIDEO_LIBRARY_UPLOADS_FOLDER . $data->upload_video_thumbnail);
                 $this->db->where('id', $edit_id);
                 $this->db->update(db_prefix() . 'upload_video', ['upload_video_thumbnail' => NULL]);
                 return true;

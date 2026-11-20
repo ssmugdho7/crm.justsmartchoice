@@ -1206,12 +1206,12 @@ class Clients_model extends App_Model
             if (empty($attachment->external)) {
                 $relPath  = get_upload_path_by_type('customer') . $attachment->rel_id . '/';
                 $fullPath = $relPath . $attachment->file_name;
-                unlink($fullPath);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($fullPath);
                 $fname     = pathinfo($fullPath, PATHINFO_FILENAME);
                 $fext      = pathinfo($fullPath, PATHINFO_EXTENSION);
                 $thumbPath = $relPath . $fname . '_thumb.' . $fext;
                 if (file_exists($thumbPath)) {
-                    unlink($thumbPath);
+                    (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($thumbPath);
                 }
             }
 

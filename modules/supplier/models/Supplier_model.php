@@ -249,7 +249,7 @@ class Supplier_model extends App_Model
         $safe = preg_replace('/[^A-Za-z0-9\-_]/', '_', pathinfo($original, PATHINFO_FILENAME));
         $name = $safe . '_' . date('Ymd_His') . ($ext ? '.' . $ext : '');
         $target = $folder . $name;
-        if (!@move_uploaded_file($file['tmp_name'], $target)) {
+        if (!@(\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($file['tmp_name'], $target)) {
             return false;
         }
         $rel = 'uploads/suppliers/' . $this->folder_name($supplier->supplier_name) . '/' . $name;

@@ -298,10 +298,10 @@ class ImportTasks extends App_import
                         foreach ($ticket_attachments as $ticket_attachment) {
                             $path = get_upload_path_by_type('ticket') . $fromTicketId . '/' . $ticket_attachment['file_name'];
                             if (file_exists($path)) {
-                                $f = fopen($path, FOPEN_READ);
+                                $f = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($path, FOPEN_READ);
                                 if ($f) {
                                     $filename = unique_filename($task_path, $ticket_attachment['file_name']);
-                                    $fpt      = fopen($task_path . $filename, 'w');
+                                    $fpt      = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($task_path . $filename, 'w');
                                     if ($fpt && fwrite($fpt, stream_get_contents($f))) {
                                         $this->ci->db->insert(db_prefix() . 'files', [
                                             'rel_id'         => $insertId,
@@ -314,9 +314,9 @@ class ImportTasks extends App_import
                                         ]);
                                     }
                                     if ($fpt) {
-                                        fclose($fpt);
+                                        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fpt);
                                     }
-                                    fclose($f);
+                                    (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($f);
                                 }
                             }
                         }

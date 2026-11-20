@@ -601,7 +601,7 @@ abstract class App_import
     {
         $newFilePath = $this->tmpDir . $this->filename;
 
-        if (move_uploaded_file($this->temporaryFileFromFormLocation, $newFilePath)) {
+        if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($this->temporaryFileFromFormLocation, $newFilePath)) {
             $this->tmpFileStoragePath = $newFilePath;
 
             return true;
@@ -616,13 +616,13 @@ abstract class App_import
      */
     protected function readFileRows()
     {
-        $fd   = fopen($this->tmpFileStoragePath, 'r');
+        $fd   = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($this->tmpFileStoragePath, 'r');
         $rows = [];
         while ($row = fgetcsv($fd)) {
             $rows[] = $row;
         }
 
-        fclose($fd);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fd);
 
         $this->totalRows = count($rows);
 

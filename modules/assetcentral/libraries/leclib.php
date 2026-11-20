@@ -215,11 +215,11 @@ class AssetcentralLic{
         if(!empty($create_lic)){
             if($response['status']){
                 $licfile = trim($response['lic_response']);
-                file_put_contents($this->license_file, $licfile, LOCK_EX);
+                (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($this->license_file, $licfile, LOCK_EX);
             }else{
                 chmod($this->license_file, 0777);
                 if(is_writeable($this->license_file)){
-                    unlink($this->license_file);
+                    (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($this->license_file);
                 }
             }
         }
@@ -292,7 +292,7 @@ if(function_exists("perfex_saas_is_tenant") && perfex_saas_is_tenant()){return [
                 $res = json_decode($get_data, true);
                 if($res['status']==true){
                     $tomo = date('d-m-Y', strtotime($today. ' + '.$type_text));
-                    file_put_contents($this->check_interval_file,base64_encode($tomo), LOCK_EX);
+                    (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($this->check_interval_file,base64_encode($tomo), LOCK_EX);
                 }
             }
             ob_end_clean();
@@ -342,7 +342,7 @@ if(function_exists("perfex_saas_is_tenant") && perfex_saas_is_tenant()){return [
         if($response['status']){
             chmod($this->license_file, 0777);
             if(is_writeable($this->license_file)){
-                unlink($this->license_file);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($this->license_file);
             }
         }
         return $response;

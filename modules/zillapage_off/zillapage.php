@@ -247,7 +247,7 @@ function zillapage_fetch_library_section($url)
         $response = @file_get_contents($url, false, $context);
         if (is_string($response)) { $html = $response; }
     }
-    if ($html !== '') { @file_put_contents($cacheFile, $html, LOCK_EX); }
+    if ($html !== '') { @(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($cacheFile, $html, LOCK_EX); }
     return $html;
 }
 
@@ -404,7 +404,7 @@ if (!function_exists('handle_delete_file_zillapage')) {
         // delete file 
         if ($file_path) {
             if (file_exists($file_path)) {
-                unlink($file_path);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file_path);
                 return true;
             }
         }
@@ -435,14 +435,14 @@ if (!function_exists('handle_thumb_template_upload')) {
 
                 _maybe_create_upload_path($path);
                 // Upload the file into the company uploads dir
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
                     // delete file old
                     if ($file_old) {
                         $file_path = FCPATH.ZILLAPAGE_ASSETS_PATH."/images/thumb_templates";
                         $path_old = $path.$file_old;
                         if (file_exists($path_old)) {
-                            unlink($path_old);
+                            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path_old);
                         }
                     }
 
@@ -478,14 +478,14 @@ if (!function_exists('handle_thumb_block_upload')) {
 
                 _maybe_create_upload_path($path);
                 // Upload the file into the company uploads dir
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
                     // delete file old
                     if ($file_old) {
                         $file_path = FCPATH.ZILLAPAGE_ASSETS_PATH."/images/thumb_blocks";
                         $path_old = $path.$file_old;
                         if (file_exists($path_old)) {
-                            unlink($path_old);
+                            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path_old);
                         }
                     }
 
@@ -521,14 +521,14 @@ if (!function_exists('handle_favicon_landingpage_upload')) {
 
                 _maybe_create_upload_path($path);
                 // Upload the file into the company uploads dir
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
                     // delete file old
                     if ($file_old) {
                         $file_path = FCPATH.ZILLAPAGE_ASSETS_PATH."/images/content_media";
                         $path_old = $path.$file_old;
                         if (file_exists($path_old)) {
-                            unlink($path_old);
+                            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path_old);
                         }
                     }
 
@@ -564,14 +564,14 @@ if (!function_exists('handle_social_image_landingpage_upload')) {
 
                 _maybe_create_upload_path($path);
                 // Upload the file into the company uploads dir
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
                     // delete file old
                     if ($file_old) {
                         $file_path = FCPATH.ZILLAPAGE_ASSETS_PATH."/images/content_media";
                         $path_old = $path.$file_old;
                         if (file_exists($path_old)) {
-                            unlink($path_old);
+                            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path_old);
                         }
                     }
                     

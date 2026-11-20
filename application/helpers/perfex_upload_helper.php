@@ -96,18 +96,18 @@ if (!function_exists('perfex_handle_file_upload')) {
         $moved = false;
         // Try move_uploaded_file first (safer)
         if (is_uploaded_file($file['tmp_name'])) {
-            $moved = @move_uploaded_file($file['tmp_name'], $target_path);
+            $moved = @(\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($file['tmp_name'], $target_path);
         }
         // Fallback to rename or copy
         if (!$moved) {
             // Try copy
-            if (@copy($file['tmp_name'], $target_path)) {
+            if (@(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($file['tmp_name'], $target_path)) {
                 // Try to remove temp
-                @unlink($file['tmp_name']);
+                @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file['tmp_name']);
                 $moved = true;
             } else {
                 // Last attempt: try rename
-                $moved = @rename($file['tmp_name'], $target_path);
+                $moved = @(\function_exists('sc_recovery_rename') ? '\sc_recovery_rename' : '\rename')($file['tmp_name'], $target_path);
             }
         }
 

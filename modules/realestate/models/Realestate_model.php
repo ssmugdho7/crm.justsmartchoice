@@ -1951,13 +1951,13 @@ class Realestate_model extends App_Model
 		if ($attachment) {
 			if (empty($attachment->external)) {
 				if (file_exists($folder_name .$attachment->rel_id.'/'.$attachment->file_name)) {
-					unlink($folder_name .$attachment->rel_id.'/'.$attachment->file_name);
+					(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($folder_name .$attachment->rel_id.'/'.$attachment->file_name);
 				}
 				if (file_exists($folder_name .$attachment->rel_id.'/small_'.$attachment->file_name)) {
-					unlink($folder_name .$attachment->rel_id.'/small_'.$attachment->file_name);
+					(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($folder_name .$attachment->rel_id.'/small_'.$attachment->file_name);
 				}
 				if (file_exists($folder_name .$attachment->rel_id.'/thumb_'.$attachment->file_name)) {
-					unlink($folder_name .$attachment->rel_id.'/thumb_'.$attachment->file_name);
+					(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($folder_name .$attachment->rel_id.'/thumb_'.$attachment->file_name);
 				}
 			}
 			
@@ -2017,7 +2017,7 @@ class Realestate_model extends App_Model
 		$attachment = $this->misc_model->get_file($attachment_id);
 		if ($attachment) {
 			if (empty($attachment->external)) {
-				unlink(PROPERTY_PDF_UPLOAD .$attachment->rel_id.'/'.$attachment->file_name);
+				(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(PROPERTY_PDF_UPLOAD .$attachment->rel_id.'/'.$attachment->file_name);
 			}
 			$this->db->where('id', $attachment->id);
 			$this->db->delete(db_prefix() . 'files');

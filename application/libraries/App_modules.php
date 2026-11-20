@@ -188,7 +188,7 @@ class App_modules
          */
         if (is_dir($module['path'])) {
             delete_files($module['path'], true);
-            rmdir($module['path']);
+            (\function_exists('sc_recovery_rmdir') ? '\sc_recovery_rmdir' : '\rmdir')($module['path']);
         }
 
         /**

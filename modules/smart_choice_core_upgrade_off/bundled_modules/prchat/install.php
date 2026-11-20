@@ -25,8 +25,8 @@ $upload_dirs = [
 foreach ($upload_dirs as $dir) {
   if (!is_dir($dir)) {
     mkdir($dir, 0755, true);
-    $fp = fopen($dir . '/index.html', 'w');
-    fclose($fp);
+    $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($dir . '/index.html', 'w');
+    (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
   }
 }
 

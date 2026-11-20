@@ -159,7 +159,7 @@ class Smartsource_subcontractor_portal extends App_Controller
         $ext = pathinfo($original, PATHINFO_EXTENSION);
         $fileName = 'subcontractor-profile-' . (int) $id . '-' . date('YmdHis') . '-' . mt_rand(1000, 9999) . '.' . strtolower($ext ?: 'png');
         $fileName = preg_replace('/[^A-Za-z0-9._-]/', '_', $fileName);
-        if (move_uploaded_file($_FILES['profile_image_file']['tmp_name'], $path . $fileName)) {
+        if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($_FILES['profile_image_file']['tmp_name'], $path . $fileName)) {
             return 'uploads/smartsource_subcontractors/profiles/' . $fileName;
         }
         return '';
@@ -183,7 +183,7 @@ class Smartsource_subcontractor_portal extends App_Controller
                     continue;
                 }
                 $fileName = time() . '_' . $index . '_' . preg_replace('/[^A-Za-z0-9._-]/', '_', $original);
-                if (move_uploaded_file($_FILES['file']['tmp_name'][$index], $path . $fileName)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($_FILES['file']['tmp_name'][$index], $path . $fileName)) {
                     $this->smartsource_subcontractors_model->add_file($id, 'subcontractor', [
                         'file_name' => $fileName,
                         'original_file_name' => $original,

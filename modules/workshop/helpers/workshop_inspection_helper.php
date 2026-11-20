@@ -834,7 +834,7 @@ function wshop_handle_inspection_form_attachment_post($rel_id, $attachment_files
 
                         $newFilePath = $path . $new_filename;
                         // Upload the file into the temp dir
-                        if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                        if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
 
                             $CI                       = & get_instance();
                             $config                   = [];

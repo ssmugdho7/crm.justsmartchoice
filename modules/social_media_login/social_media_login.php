@@ -86,7 +86,7 @@ function social_media_login_activation_hook()
 	$from = __DIR__.'/views/my_login.php';
 	$to   = FCPATH.'/application/views/themes/perfex/views/my_login.php';
 	 
-	copy($from, $to);
+	(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($from, $to);
 
     $options = array(
         'google_key' => "",
@@ -115,7 +115,7 @@ function social_media_login_deactivation_hook()
 	$File   = FCPATH.'/application/views/themes/perfex/views/my_login.php';
 	if(file_exists($File))
 	{
-		unlink($File);
+		(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($File);
 	}
 	
 }

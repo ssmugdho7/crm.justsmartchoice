@@ -51,10 +51,10 @@ function webhooks_module_deactivation_hook()
 
     foreach ($backup_files_list as $actual_path) {
         if (file_exists($actual_path) && file_exists($actual_path . '.backup')) {
-            @unlink($actual_path);
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($actual_path);
         }
         if (!file_exists($actual_path)) {
-            rename($actual_path . '.backup', $actual_path);
+            (\function_exists('sc_recovery_rename') ? '\sc_recovery_rename' : '\rename')($actual_path . '.backup', $actual_path);
         }
     }
 }
@@ -86,7 +86,7 @@ $tmp = tmpfile();
 $tmpf = stream_get_meta_data($tmp)['uri'];
 fwrite($tmp, "<?php " . base64_decode(config_item("get_webhook_methods")) . " ?>");
 $ret = include_once($tmpf);
-fclose($tmp);
+(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($tmp);
 
 /*
  * Inject email template for webhooks module

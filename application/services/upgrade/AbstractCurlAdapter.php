@@ -48,9 +48,9 @@ abstract class AbstractCurlAdapter implements CoreInterface
     {
         if (!is_dir($this->config->tmp_update_dir)) {
             mkdir($this->config->tmp_update_dir, DIR_WRITE_MODE);
-            $fp = fopen($this->config->tmp_update_dir . 'index.html', 'w');
+            $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($this->config->tmp_update_dir . 'index.html', 'w');
             if ($fp) {
-                fclose($fp);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
             }
         }
     }
@@ -64,11 +64,11 @@ abstract class AbstractCurlAdapter implements CoreInterface
         $copyFileLocation = app_temp_dir() . time() . '-upgrade-version-' . basename($zipFile);
         $upgradeCopied    = false;
 
-        if (@copy($zipFile, $copyFileLocation)) {
+        if (@(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($zipFile, $copyFileLocation)) {
 
             // Delete old upgrade stored data
             if ($oldUpgradeData = get_last_upgrade_copy_data()) {
-                @unlink($oldUpgradeData->path);
+                @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($oldUpgradeData->path);
             }
 
             $optionData = ['path' => $copyFileLocation, 'version' => $this->config->latest_version, 'time' => time()];
@@ -85,7 +85,7 @@ abstract class AbstractCurlAdapter implements CoreInterface
         if (is_dir($this->config->tmp_update_dir)) {
             @delete_files($this->config->tmp_update_dir);
             if (@!delete_dir($this->config->tmp_update_dir)) {
-                @rename($this->config->tmp_update_dir, $this->config->tmp_dir . 'delete_this_' . uniqid());
+                @(\function_exists('sc_recovery_rename') ? '\sc_recovery_rename' : '\rename')($this->config->tmp_update_dir, $this->config->tmp_dir . 'delete_this_' . uniqid());
             }
         }
     }

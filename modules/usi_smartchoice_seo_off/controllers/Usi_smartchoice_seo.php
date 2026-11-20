@@ -659,7 +659,7 @@ class Usi_smartchoice_seo extends AdminController
         $this->require_create_or_edit(0);
         $imported = 0;
         if (!empty($_FILES['import_file']['tmp_name']) && is_uploaded_file($_FILES['import_file']['tmp_name'])) {
-            $handle = fopen($_FILES['import_file']['tmp_name'], 'r');
+            $handle = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($_FILES['import_file']['tmp_name'], 'r');
             if ($handle !== false) {
                 $header = fgetcsv($handle);
                 while (($row = fgetcsv($handle)) !== false) {
@@ -670,7 +670,7 @@ class Usi_smartchoice_seo extends AdminController
                         $imported++;
                     }
                 }
-                fclose($handle);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($handle);
             }
         }
         set_alert($imported > 0 ? 'success' : 'warning', $imported > 0 ? ($imported . ' voices imported.') : 'No voices imported. Use the Sample Header format.');
@@ -682,7 +682,7 @@ class Usi_smartchoice_seo extends AdminController
         $this->require_create_or_edit(0);
         $imported = 0;
         if (!empty($_FILES['import_file']['tmp_name']) && is_uploaded_file($_FILES['import_file']['tmp_name'])) {
-            $handle = fopen($_FILES['import_file']['tmp_name'], 'r');
+            $handle = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($_FILES['import_file']['tmp_name'], 'r');
             if ($handle !== false) {
                 $header = fgetcsv($handle);
                 while (($row = fgetcsv($handle)) !== false) {
@@ -693,7 +693,7 @@ class Usi_smartchoice_seo extends AdminController
                         $imported++;
                     }
                 }
-                fclose($handle);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($handle);
             }
         }
         set_alert($imported > 0 ? 'success' : 'warning', $imported > 0 ? ($imported . ' avatars imported.') : 'No avatars imported. Use the Sample Header format.');
@@ -747,9 +747,9 @@ class Usi_smartchoice_seo extends AdminController
         if ($type === 'purchase_orders') { $rows = $this->usi_seo->get_purchase_orders([]); }
         header('Content-Type: text/csv');
         header('Content-Disposition: attachment; filename="' . $type . '_export.csv"');
-        $out = fopen('php://output', 'w');
+        $out = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('php://output', 'w');
         if (!empty($rows)) { fputcsv($out, array_keys($rows[0])); foreach ($rows as $row) { fputcsv($out, $row); } }
-        fclose($out);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($out);
         exit;
     }
 

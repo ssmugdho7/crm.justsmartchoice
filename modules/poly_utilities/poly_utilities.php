@@ -271,7 +271,7 @@ class POLYUTILITIES
                         $fileParts = explode('_', $fileNameWithoutExt);
                         $fileNumber = intval($fileParts[0]);
                         if ($fileNumber !== $latestNumber) {
-                            unlink($file);
+                            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file);
                         }
                     }
                 }

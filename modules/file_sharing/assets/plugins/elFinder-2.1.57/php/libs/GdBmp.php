@@ -82,38 +82,38 @@ class elFinderLibGdBmp
 
     public static function loadFromFile($filename)
     {
-        $fp = fopen($filename, "rb");
+        $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($filename, "rb");
         if ($fp === false) {
             return false;
         }
 
         $bmp = self::loadFromStream($fp);
 
-        fclose($fp);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
         return $bmp;
     }
 
     public static function loadFromString($str)
     {
         //data scheme より古いバージョンから対応しているようなので php://memory を使う
-        $fp = fopen("php://memory", "r+b");
+        $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')("php://memory", "r+b");
         if ($fp === false) {
             return false;
         }
 
         if (fwrite($fp, $str) != strlen($str)) {
-            fclose($fp);
+            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
             return false;
         }
 
         if (fseek($fp, 0) === -1) {
-            fclose($fp);
+            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
             return false;
         }
 
         $bmp = self::loadFromStream($fp);
 
-        fclose($fp);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
         return $bmp;
     }
 

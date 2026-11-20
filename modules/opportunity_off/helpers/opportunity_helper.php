@@ -252,8 +252,8 @@ function opportunity_move_temp_file($file_name, $target_path, $related_to = "", 
         return $new_filename;
     } else {
         if (file_exists($source_path)) {
-            copy($source_path, $target_path . $new_filename);
-            unlink($source_path);
+            (\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($source_path, $target_path . $new_filename);
+            (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($source_path);
             return $new_filename;
         }
     }
@@ -296,13 +296,13 @@ function opportunity_copy_text_based_image($source_path, $target_path)
 {
     $buffer_size = 3145728;
     $byte_number = 0;
-    $file_open = fopen($source_path, "rb");
-    $file_wirte = fopen($target_path, "w");
+    $file_open = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($source_path, "rb");
+    $file_wirte = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($target_path, "w");
     while (!feof($file_open)) {
         $byte_number += fwrite($file_wirte, fread($file_open, $buffer_size));
     }
-    fclose($file_open);
-    fclose($file_wirte);
+    (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($file_open);
+    (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($file_wirte);
     return $byte_number;
 }
 
@@ -440,7 +440,7 @@ function handle_opportunity_attachments($opportunity_id, $index_name = 'file', $
 
                 $newFilePath = $path . $filename;
 
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                     $CI->opportunity_model->add_attachment_opportunity_database($opportunity_id, [[
                         'file_name' => $filename,
                         'filetype' => $_FILES[$index_name]['type'][$i],
@@ -506,7 +506,7 @@ if (!function_exists('upload_file_to_temp')) {
                 }
             }
             $target_file = $target_path . $file_name;
-            copy($temp_file, $target_file);
+            (\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($temp_file, $target_file);
         }
     }
 }
@@ -538,8 +538,8 @@ if (!function_exists('move_temp_file')) {
             return $new_filename;
         } else {
             if (file_exists($source_path)) {
-                copy($source_path, $target_path . $new_filename);
-                unlink($source_path);
+                (\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($source_path, $target_path . $new_filename);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($source_path);
                 return $new_filename;
             }
         }
@@ -677,7 +677,7 @@ function opportunity_force_download($filename = '', $data = '', $set_mime = FALS
         $filename = implode('.', $x);
     }
 
-    if ($data === NULL && ($fp = @fopen($filepath, 'rb')) === FALSE) {
+    if ($data === NULL && ($fp = @(\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($filepath, 'rb')) === FALSE) {
         return;
     }
 
@@ -704,7 +704,7 @@ function opportunity_force_download($filename = '', $data = '', $set_mime = FALS
         echo $data;
     }
 
-    fclose($fp);
+    (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
     exit;
 }
 
@@ -759,7 +759,7 @@ function handle_opportunity_attachments_array($opportunity_id, $index_name = 'at
                 $newFilePath = $path . $filename;
 
                 // Upload the file into the temp dir
-                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpFilePath, $newFilePath)) {
                     array_push($uploaded_files, [
                         'file_name' => $filename,
                         'filetype' => $_FILES[$index_name]['type'][$i],

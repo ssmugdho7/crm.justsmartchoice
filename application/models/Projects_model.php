@@ -484,13 +484,13 @@ class Projects_model extends App_Model
                 $path     = get_upload_path_by_type('project') . $file->project_id . '/';
                 $fullPath = $path . $file->file_name;
                 if (file_exists($fullPath)) {
-                    unlink($fullPath);
+                    (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($fullPath);
                     $fname     = pathinfo($fullPath, PATHINFO_FILENAME);
                     $fext      = pathinfo($fullPath, PATHINFO_EXTENSION);
                     $thumbPath = $path . $fname . '_thumb.' . $fext;
 
                     if (file_exists($thumbPath)) {
-                        unlink($thumbPath);
+                        (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($thumbPath);
                     }
                 }
             }
@@ -1795,7 +1795,7 @@ class Projects_model extends App_Model
         $path = PROJECT_DISCUSSION_ATTACHMENT_FOLDER . $discussion_id;
         if (! is_null($file_name)) {
             if (file_exists($path . '/' . $file_name)) {
-                unlink($path . '/' . $file_name);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($path . '/' . $file_name);
             }
         }
         if (is_dir($path)) {

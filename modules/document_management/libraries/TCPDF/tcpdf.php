@@ -6899,11 +6899,11 @@ class TCPDF {
 				$this->Error('Unable to write file: '.$file);
 			}
 			fwrite($fp, $imgdata);
-			fclose($fp);
+			(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
 			unset($imgdata);
 			$imsize = @getimagesize($file);
 			if ($imsize === FALSE) {
-				unlink($file);
+				(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file);
 				$file = $original_file;
 			}
 		}
@@ -7138,7 +7138,7 @@ class TCPDF {
 					$tempname = TCPDF_STATIC::getObjFilename('img', $this->file_id);
 					$img->writeImage($tempname);
 					$info = TCPDF_IMAGES::_parsejpeg($tempname);
-					unlink($tempname);
+					(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($tempname);
 					$img->destroy();
 				} catch(Exception $e) {
 					$info = false;
@@ -7609,7 +7609,7 @@ class TCPDF {
 			}
 			$pdfdoc_length = strlen($pdfdoc);
 			fwrite($f, $pdfdoc, $pdfdoc_length);
-			fclose($f);
+			(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($f);
 			// get digital signature via openssl library
 			$tempsign = TCPDF_STATIC::getObjFilename('sig', $this->file_id);
 			if (empty($this->signature_data['extracerts'])) {
@@ -7697,7 +7697,7 @@ class TCPDF {
 					$this->Error('Unable to create output file: '.$name);
 				}
 				fwrite($f, $this->getBuffer(), $this->bufferlen);
-				fclose($f);
+				(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($f);
 				if ($dest == 'FI') {
 					// send headers to browser
 					header('Content-Type: application/pdf');
@@ -7780,7 +7780,7 @@ class TCPDF {
 			if ($handle = @opendir(K_PATH_CACHE)) {
 				while ( false !== ( $file_name = readdir( $handle ) ) ) {
 					if (strpos($file_name, '__tcpdf_'.$this->file_id.'_') === 0) {
-						unlink(K_PATH_CACHE.$file_name);
+						(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(K_PATH_CACHE.$file_name);
 					}
 				}
 				closedir($handle);
@@ -7788,7 +7788,7 @@ class TCPDF {
 			if (isset($this->imagekeys)) {
 				foreach($this->imagekeys as $file) {
 					if (strpos($file, K_PATH_CACHE) === 0) {
-						@unlink($file);
+						@(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file);
 					}
 				}
 			}
@@ -10849,7 +10849,7 @@ class TCPDF {
 				}
 				$envelope_length = strlen($envelope);
 				fwrite($f, $envelope, $envelope_length);
-				fclose($f);
+				(\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($f);
 				$tempencfile = TCPDF_STATIC::getObjFilename('enc', $this->file_id);
 				if (!openssl_pkcs7_encrypt($tempkeyfile, $tempencfile, $pubkey['c'], array(), PKCS7_BINARY | PKCS7_DETACHED)) {
 					$this->Error('Unable to encrypt the file: '.$tempkeyfile);

@@ -44,7 +44,7 @@ class Sql_doctor extends AdminController
                     if ($file->isDir()) {
                         $index = $file->getPathname().DIRECTORY_SEPARATOR.'index.html';
                         if (!file_exists($index)) {
-                            @file_put_contents($index, '<!DOCTYPE html><html><head><title>403 Forbidden</title></head><body><p>Directory access is forbidden.</p></body></html>');
+                            @(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($index, '<!DOCTYPE html><html><head><title>403 Forbidden</title></head><body><p>Directory access is forbidden.</p></body></html>');
                             $created++;
                         }
                     }
@@ -87,7 +87,7 @@ class Sql_doctor extends AdminController
             $out .= "\n";
         }
         $out .= "SET FOREIGN_KEY_CHECKS=1;\n";
-        @file_put_contents($path, $out);
+        @(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($path, $out);
 
         if (file_exists($path)) {
             $this->db->insert(db_prefix().'sql_doctor_backups', [
@@ -126,7 +126,7 @@ class Sql_doctor extends AdminController
             }
             $full = rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$file;
             if (is_file($full)) {
-                @unlink($full); $count++;
+                @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($full); $count++;
             }
         }
         return $count;

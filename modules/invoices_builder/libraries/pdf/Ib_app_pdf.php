@@ -415,7 +415,7 @@ abstract class Ib_app_pdf extends TCPDF
                 while (false !== ($file_name = readdir($handle))) {
                     $fullPath = K_PATH_CACHE . $file_name;
                     if (strpos($file_name, '__tcpdf_' . $this->file_id . '_') === 0 && file_exists($fullPath)) {
-                        unlink($fullPath);
+                        (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($fullPath);
                     }
                 }
 
@@ -425,7 +425,7 @@ abstract class Ib_app_pdf extends TCPDF
             if (isset($this->imagekeys)) {
                 foreach ($this->imagekeys as $file) {
                     if (strpos($file, K_PATH_CACHE) === 0 && file_exists($file)) {
-                        @unlink($file);
+                        @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file);
                     }
                 }
             }

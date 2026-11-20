@@ -159,7 +159,7 @@ class Sales_center_portal extends App_Controller
         $ext = pathinfo($original, PATHINFO_EXTENSION);
         $fileName = 'salesperson-profile-' . (int) $id . '-' . date('YmdHis') . '-' . mt_rand(1000, 9999) . '.' . strtolower($ext ?: 'png');
         $fileName = preg_replace('/[^A-Za-z0-9._-]/', '_', $fileName);
-        if (move_uploaded_file($_FILES['profile_image_file']['tmp_name'], $path . $fileName)) {
+        if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($_FILES['profile_image_file']['tmp_name'], $path . $fileName)) {
             return 'uploads/sales_center/profiles/' . $fileName;
         }
         return '';
@@ -190,7 +190,7 @@ class Sales_center_portal extends App_Controller
                 }
 
                 $fileName = time() . '_' . $index . '_' . preg_replace('/[^A-Za-z0-9._-]/', '_', $original);
-                if (move_uploaded_file($tmpName, $path . $fileName)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpName, $path . $fileName)) {
                     $this->sales_center_model->add_file($id, 'salesperson', [
                         'file_name' => $fileName,
                         'original_file_name' => $original,
@@ -205,7 +205,7 @@ class Sales_center_portal extends App_Controller
             $tmpName  = (string) ($_FILES['file']['tmp_name'] ?? '');
             if ($original !== '' && $tmpName !== '' && is_uploaded_file($tmpName)) {
                 $fileName = time() . '_' . preg_replace('/[^A-Za-z0-9._-]/', '_', $original);
-                if (move_uploaded_file($tmpName, $path . $fileName)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($tmpName, $path . $fileName)) {
                     $this->sales_center_model->add_file($id, 'salesperson', [
                         'file_name' => $fileName,
                         'original_file_name' => $original,

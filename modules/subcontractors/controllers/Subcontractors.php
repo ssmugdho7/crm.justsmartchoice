@@ -448,7 +448,7 @@ class Subcontractors extends AdminController
                     continue;
                 }
                 $fileName = time() . '_' . $index . '_' . preg_replace('/[^A-Za-z0-9._-]/', '_', $original);
-                if (move_uploaded_file($_FILES['file']['tmp_name'][$index], $path . $fileName)) {
+                if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($_FILES['file']['tmp_name'][$index], $path . $fileName)) {
                     $this->smartsource_subcontractors_model->add_file($rel_id, $rel_type, [
                         'file_name' => $fileName,
                         'original_file_name' => $original,
@@ -461,7 +461,7 @@ class Subcontractors extends AdminController
         } elseif (!empty($_FILES['file']['name'])) {
             $original = $_FILES['file']['name'];
             $fileName = time() . '_' . preg_replace('/[^A-Za-z0-9._-]/', '_', $original);
-            if (move_uploaded_file($_FILES['file']['tmp_name'], $path . $fileName)) {
+            if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($_FILES['file']['tmp_name'], $path . $fileName)) {
                 $this->smartsource_subcontractors_model->add_file($rel_id, $rel_type, [
                     'file_name' => $fileName,
                     'original_file_name' => $original,
@@ -777,7 +777,7 @@ class Subcontractors extends AdminController
         $contracts = $this->smartsource_subcontractors_model->get_contract('', ['include_trash' => '1']);
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename="subcontractor-contracts-export-' . date('Ymd-His') . '.csv"');
-        $out = fopen('php://output', 'w');
+        $out = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('php://output', 'w');
         fputcsv($out, ['ID','Subject','Subcontractor','Project','Contract Type','Status','Value','Start Date','End Date']);
         foreach ($contracts as $contract) {
             fputcsv($out, [
@@ -785,7 +785,7 @@ class Subcontractors extends AdminController
                 $contract['contract_type'], $contract['status'], $contract['contract_value'], $contract['start_date'], $contract['end_date']
             ]);
         }
-        fclose($out);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($out);
         exit;
     }
 
@@ -841,7 +841,7 @@ class Subcontractors extends AdminController
         $ext = pathinfo($original, PATHINFO_EXTENSION);
         $fileName = 'subcontractor-profile-' . date('YmdHis') . '-' . mt_rand(1000, 9999) . '.' . strtolower($ext ?: 'png');
         $fileName = preg_replace('/[^A-Za-z0-9._-]/', '_', $fileName);
-        if (move_uploaded_file($_FILES['profile_image_file']['tmp_name'], $path . $fileName)) {
+        if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($_FILES['profile_image_file']['tmp_name'], $path . $fileName)) {
             return 'uploads/smartsource_subcontractors/profiles/' . $fileName;
         }
         return '';

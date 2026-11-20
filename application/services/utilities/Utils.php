@@ -12,7 +12,7 @@ class Utils
         //website, port  (try 80 or 443)
         if ($connected) {
             $is_conn = true; //action when connected
-            fclose($connected);
+            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($connected);
         } else {
             $is_conn = false; //action in connection failure
         }

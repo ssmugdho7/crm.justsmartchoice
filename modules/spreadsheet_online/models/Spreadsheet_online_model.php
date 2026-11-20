@@ -242,7 +242,7 @@ class Spreadsheet_online_model extends App_Model {
 
 		$dir = SPREAD_ONLINE_MODULE_UPLOAD_FOLDER . '/spreadsheet_online/' . $data['id'] . '-' . $data_old->name . '.txt';
 		if (file_exists($dir)) {
-			unlink($dir);
+			(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($dir);
 		}
 
 		handle_spreadsheet_add_file($data['id']);
@@ -280,7 +280,7 @@ class Spreadsheet_online_model extends App_Model {
 
 		$dir = SPREAD_ONLINE_MODULE_UPLOAD_FOLDER . '/spreadsheet_online/' . $id . '-' . $data->name . '.txt';
 		if (file_exists($dir)) {
-			unlink($dir);
+			(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($dir);
 		}
 		$this->db->where('id', $id);
 		$this->db->delete(db_prefix() . 'spreadsheet_online_my_folder');
@@ -297,7 +297,7 @@ class Spreadsheet_online_model extends App_Model {
 					$dir_child = SPREAD_ONLINE_MODULE_UPLOAD_FOLDER . '/spreadsheet_online/' . $value['id'] . '-' . $data_child->name . '.txt';
 
 					if (file_exists($dir_child)) {
-						unlink($dir_child);
+						(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($dir_child);
 					}
 
 					$this->db->where('id', $value['id']);

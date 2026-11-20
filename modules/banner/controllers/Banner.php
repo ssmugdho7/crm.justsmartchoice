@@ -168,7 +168,7 @@ class Banner extends AdminController
         $data = base64_decode($img);
 
         $filepath = FCPATH . '/uploads/banner/';
-        file_put_contents($filepath . $postData['image_name'], $data);
+        (\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($filepath . $postData['image_name'], $data);
 
         set_alert('success', _l('image_cropped_success'));
         echo json_encode(true);

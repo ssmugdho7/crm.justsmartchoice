@@ -15,11 +15,11 @@ class Migration_Version_129 extends CI_Migration
     {
         // Merged to main.js
         if (file_exists(FCPATH . 'assets/js/leads.js')) {
-            @unlink(FCPATH . 'assets/js/leads.js');
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(FCPATH . 'assets/js/leads.js');
         }
         // Merged to main.js
         if (file_exists(FCPATH . 'assets/js/newsfeed.js')) {
-            @unlink(FCPATH . 'assets/js/newsfeed.js');
+            @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(FCPATH . 'assets/js/newsfeed.js');
         }
 
         $this->db->query("ALTER TABLE `tblcustomeradmins` ADD INDEX(`customer_id`);");

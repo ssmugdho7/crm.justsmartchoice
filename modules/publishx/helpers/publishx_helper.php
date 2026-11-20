@@ -21,7 +21,7 @@ function publishx_handle_post_feature_image_upload($postId)
     $path = module_dir_path('publishx', 'uploads/posts/' . (int) $postId . '/');
     _maybe_create_upload_path($path);
     $name = slug_it(pathinfo($_FILES['featured_image']['name'], PATHINFO_FILENAME)) . '-' . time() . '.' . $ext;
-    if (move_uploaded_file($_FILES['featured_image']['tmp_name'], $path . $name)) {
+    if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($_FILES['featured_image']['tmp_name'], $path . $name)) {
         return ['success' => true, 'file_name' => $name, 'url' => module_dir_url('publishx', 'uploads/posts/' . (int) $postId . '/' . rawurlencode($name))];
     }
     return ['success' => false, 'message' => 'The image could not be uploaded.'];
@@ -49,7 +49,7 @@ function publishx_handle_library_upload()
     $path = publishx_media_root_path();
     _maybe_create_upload_path($path);
     $name = slug_it(pathinfo($_FILES['blogging_media']['name'], PATHINFO_FILENAME)) . '-' . time() . '.' . $ext;
-    if (move_uploaded_file($_FILES['blogging_media']['tmp_name'], $path . $name)) {
+    if ((\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($_FILES['blogging_media']['tmp_name'], $path . $name)) {
         return ['success' => true, 'file_name' => $name, 'url' => publishx_media_root_url() . rawurlencode($name)];
     }
     return ['success' => false, 'message' => 'The media file could not be uploaded.'];
@@ -137,7 +137,7 @@ function publishx_handle_post_video_upload($postId)
     $path=module_dir_path('publishx','uploads/posts/'.(int)$postId.'/');
     if(!is_dir($path) && !mkdir($path,0755,true)) return ['success'=>false,'message'=>'Unable to create the post video folder.'];
     $name='video-'.date('YmdHis').'-'.slug_it(pathinfo($_FILES['hero_video_file']['name'],PATHINFO_FILENAME)).'.'.$ext;
-    if(!move_uploaded_file($_FILES['hero_video_file']['tmp_name'],$path.$name)) return ['success'=>false,'message'=>'Unable to upload the video.'];
+    if(!(\function_exists('sc_recovery_move_uploaded_file') ? '\sc_recovery_move_uploaded_file' : '\move_uploaded_file')($_FILES['hero_video_file']['tmp_name'],$path.$name)) return ['success'=>false,'message'=>'Unable to upload the video.'];
     return ['success'=>true,'url'=>module_dir_url('publishx','uploads/posts/'.(int)$postId.'/'.rawurlencode($name))];
 }
 

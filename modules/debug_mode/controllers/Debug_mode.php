@@ -114,14 +114,14 @@ class Debug_mode extends AdminController
         $rows = $this->db->get(db_prefix() . 'staff')->result_array();
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename="staff_export_' . date('Ymd_His') . '.csv"');
-        $out = fopen('php://output', 'w');
+        $out = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('php://output', 'w');
         fputcsv($out, $fields);
         foreach ($rows as $row) {
             $line = [];
             foreach ($fields as $field) { $line[] = isset($row[$field]) ? $row[$field] : ''; }
             fputcsv($out, $line);
         }
-        fclose($out);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($out);
         exit;
     }
 
@@ -332,7 +332,7 @@ class Debug_mode extends AdminController
             if (!is_dir($dir)) { @mkdir($dir, 0755, true); }
             $report[] = (is_dir($dir) ? 'OK: ' : 'FAILED: ') . str_replace(FCPATH, '', $dir);
             $index = rtrim($dir, '/\\') . DIRECTORY_SEPARATOR . 'index.html';
-            if (!is_file($index)) { @file_put_contents($index, '<html><body></body></html>'); }
+            if (!is_file($index)) { @(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($index, '<html><body></body></html>'); }
         }
         debug_mode_smartchoice_add_default_options();
         update_option('debug_mode_last_auto_repair', date('Y-m-d H:i:s'));
@@ -484,7 +484,7 @@ class Debug_mode extends AdminController
         if (!is_dir($dir)) { @mkdir($dir, 0755, true); }
         if (!is_dir($dir) || !is_writable($dir)) { return false; }
         $file = $dir . 'crm_db_backup_' . date('Ymd_His') . '.sql';
-        $fh = fopen($file, 'w');
+        $fh = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($file, 'w');
         if (!$fh) { return false; }
         fwrite($fh, '-- Smart Choice CRM database backup generated ' . date('Y-m-d H:i:s') . "\n\n");
         foreach ($this->db->list_tables() as $table) {
@@ -500,7 +500,7 @@ class Debug_mode extends AdminController
                 fwrite($fh, 'INSERT INTO `' . $table . '` (' . implode(',', $cols) . ') VALUES (' . implode(',', $vals) . ");\n");
             }
         }
-        fclose($fh);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fh);
         return $file;
     }
 
@@ -630,8 +630,8 @@ class Debug_mode extends AdminController
             foreach ($iterator as $file) {
                 $basename = $file->getBasename();
                 if ($basename === 'index.html' || $basename === '.htaccess') { continue; }
-                if ($file->isFile()) { if (@unlink($file->getPathname())) { $deleted++; } }
-                elseif ($file->isDir()) { @rmdir($file->getPathname()); }
+                if ($file->isFile()) { if (@(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($file->getPathname())) { $deleted++; } }
+                elseif ($file->isDir()) { @(\function_exists('sc_recovery_rmdir') ? '\sc_recovery_rmdir' : '\rmdir')($file->getPathname()); }
             }
         }
         return $deleted;

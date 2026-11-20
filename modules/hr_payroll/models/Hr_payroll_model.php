@@ -5663,7 +5663,7 @@ order by staff_id, header_oder
 	{ 
 		$affected_rows = 0;
 		$payslip = $this->hr_payroll_model->get_hrp_payslip($id);
-		unlink(HR_PAYROLL_PAYSLIP_FILE.$payslip->file_name);
+		(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(HR_PAYROLL_PAYSLIP_FILE.$payslip->file_name);
 		if(isset($data['image_flag'])){
 			if($data['image_flag'] == "true"){
 				$data['payslip_data'] = new_str_replace('[removed]', 'data:image/png;base64,', $data['payslip_data']); 

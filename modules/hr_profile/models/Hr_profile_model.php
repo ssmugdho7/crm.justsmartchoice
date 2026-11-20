@@ -4326,7 +4326,7 @@ public function add_attachment_to_database($rel_id, $rel_type, $attachment, $ext
 		$attachment = $this->get_hr_profile_attachments_delete($attachment_id);
 		if ($attachment) {
 			if (empty($attachment->external)) {
-				unlink(HR_PROFILE_FILE_ATTACHMENTS_UPLOAD_FOLDER.'/' .$attachment->rel_id.'/'.$attachment->file_name);
+				(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(HR_PROFILE_FILE_ATTACHMENTS_UPLOAD_FOLDER.'/' .$attachment->rel_id.'/'.$attachment->file_name);
 			}
 			$this->db->where('id', $attachment->id);
 			$this->db->delete(db_prefix() . 'files');
@@ -4789,7 +4789,7 @@ public function add_attachment_to_database($rel_id, $rel_type, $attachment, $ext
 		$attachment = $this->get_hr_profile_attachments_delete($attachment_id);
 		if ($attachment) {
 			if (empty($attachment->external)) {
-				unlink(get_hr_profile_upload_path_by_type('job_position') .$attachment->rel_id.'/'.$attachment->file_name);
+				(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(get_hr_profile_upload_path_by_type('job_position') .$attachment->rel_id.'/'.$attachment->file_name);
 			}
 			$this->db->where('id', $attachment->id);
 			$this->db->delete(db_prefix() . 'files');
@@ -5724,7 +5724,7 @@ public function add_attachment_to_database($rel_id, $rel_type, $attachment, $ext
 		$attachment = $this->get_hr_profile_attachments_delete($attachment_id);
 		if ($attachment) {
 			if (empty($attachment->external)) {
-				unlink(get_hr_profile_upload_path_by_type('kb_article_files') .$attachment->rel_id.'/'.$attachment->file_name);
+				(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(get_hr_profile_upload_path_by_type('kb_article_files') .$attachment->rel_id.'/'.$attachment->file_name);
 			}
 			$this->db->where('id', $attachment->id);
 			$this->db->delete(db_prefix() . 'files');
@@ -5780,7 +5780,7 @@ public function add_attachment_to_database($rel_id, $rel_type, $attachment, $ext
 		$attachment = $this->get_hr_profile_attachments_delete($attachment_id);
 		if ($attachment) {
 			if (empty($attachment->external)) {
-				unlink(get_hr_profile_upload_path_by_type('staff_contract') .$attachment->rel_id.'/'.$attachment->file_name);
+				(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(get_hr_profile_upload_path_by_type('staff_contract') .$attachment->rel_id.'/'.$attachment->file_name);
 			}
 			$this->db->where('id', $attachment->id);
 			$this->db->delete(db_prefix() . 'files');
@@ -6343,7 +6343,7 @@ public function add_attachment_to_database($rel_id, $rel_type, $attachment, $ext
         $attachment = $this->get_hr_profile_attachments_delete($attachment_id);
         if ($attachment) {
             if (empty($attachment->external)) {
-                unlink(get_hr_profile_upload_path_by_type('kb_article_files') .$attachment->rel_id.'/'.$attachment->file_name);
+                (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(get_hr_profile_upload_path_by_type('kb_article_files') .$attachment->rel_id.'/'.$attachment->file_name);
             }
             $this->db->where('id', $attachment->id);
             $this->db->delete(db_prefix() . 'files');
@@ -6949,7 +6949,7 @@ public function add_attachment_to_database($rel_id, $rel_type, $attachment, $ext
 			$this->db->update(db_prefix() . 'hr_staff_contract', ['signature' => null]);
 
 			if (!empty($contract->signature)) {
-				unlink(HR_PROFILE_CONTRACT_SIGN .$contract->id_contract.'/'.$contract->signature);
+				(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(HR_PROFILE_CONTRACT_SIGN .$contract->id_contract.'/'.$contract->signature);
 			}
 
 			return true;
@@ -7367,7 +7367,7 @@ public function add_attachment_to_database($rel_id, $rel_type, $attachment, $ext
 		$attachment = $this->get_hr_profile_attachments_delete($attachment_id);
 		if ($attachment) {
 			if (empty($attachment->external)) {
-				unlink(get_hr_profile_upload_path_by_type('training_program') .$attachment->rel_id.'/'.$attachment->file_name);
+				(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(get_hr_profile_upload_path_by_type('training_program') .$attachment->rel_id.'/'.$attachment->file_name);
 			}
 			$this->db->where('id', $attachment->id);
 			$this->db->delete(db_prefix() . 'files');

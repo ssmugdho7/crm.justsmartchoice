@@ -19,18 +19,18 @@ if (!$CI->db->table_exists(db_prefix() . 'upload_video')) {
 }
 if (!is_dir(VIDEO_LIBRARY_UPLOADS_FOLDER)) {
    mkdir(VIDEO_LIBRARY_UPLOADS_FOLDER, 0777, TRUE);
-   fopen(VIDEO_LIBRARY_UPLOADS_FOLDER . 'index.html', 'w');
-   $fp = fopen(VIDEO_LIBRARY_UPLOADS_FOLDER . 'index.html', 'a+');
+   (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(VIDEO_LIBRARY_UPLOADS_FOLDER . 'index.html', 'w');
+   $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(VIDEO_LIBRARY_UPLOADS_FOLDER . 'index.html', 'a+');
    if ($fp) {
-      fclose($fp);
+      (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
    }
 }
 if (!is_dir(VIDEO_LIBRARY_DISCUSSIONS_ATTACHMENT_FOLDER)) {
    mkdir(VIDEO_LIBRARY_DISCUSSIONS_ATTACHMENT_FOLDER, 0777, TRUE);
-   fopen(VIDEO_LIBRARY_DISCUSSIONS_ATTACHMENT_FOLDER . 'index.html', 'w');
-   $fp = fopen(VIDEO_LIBRARY_DISCUSSIONS_ATTACHMENT_FOLDER . 'index.html', 'a+');
+   (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(VIDEO_LIBRARY_DISCUSSIONS_ATTACHMENT_FOLDER . 'index.html', 'w');
+   $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(VIDEO_LIBRARY_DISCUSSIONS_ATTACHMENT_FOLDER . 'index.html', 'a+');
    if ($fp) {
-      fclose($fp);
+      (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
    }
 }
 if (!$CI->db->table_exists(db_prefix() . 'video_library_videos_comments')) {

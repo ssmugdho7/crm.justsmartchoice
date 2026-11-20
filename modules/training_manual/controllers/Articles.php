@@ -350,7 +350,7 @@ class Articles extends AdminController
         $articles = $this->training_manual_articles_model->get_all_articles([]);
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename="training_manual_articles_' . date('Ymd_His') . '.csv"');
-        $out = fopen('php://output', 'w');
+        $out = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('php://output', 'w');
         fputcsv($out, ['Book', 'Title', 'Description', 'Content', 'Language', 'Style', 'Published']);
         foreach ($articles as $article) {
             fputcsv($out, [
@@ -363,7 +363,7 @@ class Articles extends AdminController
                 !empty($article['is_publish']) ? 'Yes' : 'No',
             ]);
         }
-        fclose($out);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($out);
         exit;
     }
 
@@ -374,10 +374,10 @@ class Articles extends AdminController
         }
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename="training_manual_articles_sample_header.csv"');
-        $out = fopen('php://output', 'w');
+        $out = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')('php://output', 'w');
         fputcsv($out, ['book_id', 'title', 'description', 'content', 'language_code', 'style_preset', 'is_publish']);
         fputcsv($out, ['1', 'Sales Hub Training', 'How to use the Sales Hub module.', '<div class="sc-manual"><h2>Sales Hub Training</h2><p>Paste article content here.</p></div>', 'en', 'smart_choice', '1']);
-        fclose($out);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($out);
         exit;
     }
 
@@ -393,7 +393,7 @@ class Articles extends AdminController
             set_alert('warning', 'Please select a CSV file to import.');
             redirect(admin_url('training_manual/articles'));
         }
-        $handle = fopen($_FILES['import_file']['tmp_name'], 'r');
+        $handle = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($_FILES['import_file']['tmp_name'], 'r');
         if (!$handle) {
             set_alert('warning', 'The import file could not be opened.');
             redirect(admin_url('training_manual/articles'));
@@ -423,7 +423,7 @@ class Articles extends AdminController
                 }
             }
         }
-        fclose($handle);
+        (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($handle);
         set_alert('success', $imported . ' training article records imported successfully.');
         redirect(admin_url('training_manual/articles'));
     }

@@ -13,7 +13,7 @@ class CurlCoreUpgradeAdapter extends AbstractCurlAdapter
 
     public function perform($zipFile)
     {
-        $zipResource = fopen($zipFile, 'w+');
+        $zipResource = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')($zipFile, 'w+');
 
         // Get The Zip File From Server
         $ch = curl_init();

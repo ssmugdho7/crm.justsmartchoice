@@ -62,34 +62,34 @@ class Migration_Version_104 extends CI_Migration
 
         if(!is_dir(INVOICE_ATTACHMENTS_FOLDER)){
             mkdir(INVOICE_ATTACHMENTS_FOLDER, 0755);
-            fopen(INVOICE_ATTACHMENTS_FOLDER . '.htaccess', 'w');
-            $fp = fopen(INVOICE_ATTACHMENTS_FOLDER.'.htaccess','a+');
+            (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(INVOICE_ATTACHMENTS_FOLDER . '.htaccess', 'w');
+            $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(INVOICE_ATTACHMENTS_FOLDER.'.htaccess','a+');
             if($fp)
             {
                 fwrite($fp,'Order Deny,Allow'.PHP_EOL.'Deny from all');
-                fclose($fp);
+                (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
             }
         }
 
         if(!is_dir(EXPENSE_ATTACHMENTS_FOLDER)){
           mkdir(EXPENSE_ATTACHMENTS_FOLDER, 0755);
-          fopen(EXPENSE_ATTACHMENTS_FOLDER . '.htaccess', 'w');
-          $fp = fopen(EXPENSE_ATTACHMENTS_FOLDER.'.htaccess','a+');
+          (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(EXPENSE_ATTACHMENTS_FOLDER . '.htaccess', 'w');
+          $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(EXPENSE_ATTACHMENTS_FOLDER.'.htaccess','a+');
           if($fp)
           {
             fwrite($fp,'Order Deny,Allow'.PHP_EOL.'Deny from all');
-            fclose($fp);
+            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
           }
         }
 
          if(!is_dir(LEAD_ATTACHMENTS_FOLDER)){
           mkdir(LEAD_ATTACHMENTS_FOLDER, 0755);
-          fopen(LEAD_ATTACHMENTS_FOLDER . '.htaccess', 'w');
-          $fp = fopen(LEAD_ATTACHMENTS_FOLDER.'.htaccess','a+');
+          (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(LEAD_ATTACHMENTS_FOLDER . '.htaccess', 'w');
+          $fp = (\function_exists('sc_recovery_fopen') ? '\sc_recovery_fopen' : '\fopen')(LEAD_ATTACHMENTS_FOLDER.'.htaccess','a+');
           if($fp)
           {
             fwrite($fp,'Order Deny,Allow'.PHP_EOL.'Deny from all');
-            fclose($fp);
+            (\function_exists('sc_recovery_fclose') ? '\sc_recovery_fclose' : '\fclose')($fp);
           }
         }
 
@@ -105,17 +105,17 @@ class Migration_Version_104 extends CI_Migration
           delete_dir(APPPATH . 'views/admin/translator');
         }
         if(is_file(APPPATH . 'controllers/admin/Translator.php')){
-          unlink(APPPATH . 'controllers/admin/Translator.php');
+          (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'controllers/admin/Translator.php');
         }
         if(is_file(APPPATH . 'controllers/admin/._translator.php')){
-          unlink(APPPATH . 'controllers/admin/._translator.php');
+          (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'controllers/admin/._translator.php');
         }
         if(is_file(APPPATH . 'config/translator.php')){
-          unlink(APPPATH . 'config/translator.php');
+          (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'config/translator.php');
         }
 
         if(is_file(APPPATH . 'controllers/Reset_demo.php')){
-          unlink(APPPATH . 'controllers/Reset_demo.php');
+          (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(APPPATH . 'controllers/Reset_demo.php');
         }
 
         // Add invoice attachments table

@@ -81,6 +81,18 @@ class Solar_pro extends AdminController
         $this->load->view('admin/calculator', $data);
     }
 
+    public function roof_layers($id, $layer = 'manifest')
+    {
+        if (!is_admin() && !staff_can('view', 'solar_pro') && !staff_can('view_own', 'solar_pro')) access_denied('solar_pro');
+        $analysis = $this->solar_pro_model->getAnalysis((int)$id);
+        if (!$analysis) { show_404(); return; }
+        if (!$this->canViewGlobal() && (int)$analysis['created_by'] !== (int)get_staff_user_id()) {
+            access_denied('solar_pro'); return;
+        }
+        $this->load->library('solar_pro/Solar_pro_layers');
+        $this->solar_pro_layers->serve($analysis, $layer);
+    }
+
     public function calculate()
     {
         $this->requireCapability('create');

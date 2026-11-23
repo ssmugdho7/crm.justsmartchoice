@@ -453,3 +453,14 @@ $lang['solar_pro_required_address'] = 'La dirección de la propiedad es obligato
 $lang['solar_pro_duplicate_email'] = 'Este correo electrónico ya está registrado en el CRM.';
 $lang['solar_pro_duplicate_phone'] = 'Este número de teléfono ya está registrado en el CRM.';
 $lang['solar_pro_module_menu'] = 'Menú Solar Pro';
+
+$lang['solar_pro_roof_title'] = 'Luz solar y sombra del techo';
+$lang['solar_pro_roof_description'] = 'Explore las imágenes solares de Google alrededor de esta propiedad. Los colores se aplican a los techos del área.';
+$lang['solar_pro_roof_load'] = 'Cargar imágenes del techo';
+$lang['solar_pro_roof_layer'] = 'Vista';
+$lang['solar_pro_roof_sunlight'] = 'Luz solar anual';
+$lang['solar_pro_roof_shade'] = 'Sombra por hora';
+$lang['solar_pro_roof_month'] = 'Mes';
+$lang['solar_pro_roof_day'] = 'Día';
+$lang['solar_pro_roof_hour'] = 'Hora';
+$lang['solar_pro_roof_note'] = 'Luz y sombra modeladas, no clima en vivo ni garantía de producción eléctrica. Las horas usan la hora estándar local, sin horario de verano.';

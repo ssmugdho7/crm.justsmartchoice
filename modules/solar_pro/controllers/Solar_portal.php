@@ -127,6 +127,14 @@ class Solar_portal extends App_Controller
         $this->load->view('public/report', $data);
     }
 
+    public function roof_layers($token, $layer = 'manifest')
+    {
+        $analysis = $this->solar_pro_model->getByToken($token);
+        if (!$analysis) { show_404(); return; }
+        $this->load->library('solar_pro/Solar_pro_layers');
+        $this->solar_pro_layers->serve($analysis, $layer);
+    }
+
     public function pdf($token)
     {
         $analysis = $this->solar_pro_model->getByToken($token);

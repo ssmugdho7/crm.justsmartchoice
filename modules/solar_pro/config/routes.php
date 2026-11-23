@@ -11,6 +11,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * The supported public aliases deliberately begin with /solar_pro/.
  */
 $route['solar_pro/estimate'] = 'solar_portal/estimate';
+$route['solar_pro/portal/(:any)/roof_layers/(:any)'] = 'solar_portal/roof_layers/$1/$2';
 $route['solar_pro/portal/(:any)/pdf'] = 'solar_portal/pdf/$1';
 $route['solar_pro/portal/(:any)/document/(:num)'] = 'solar_portal/document/$1/$2';
 $route['solar_pro/portal/(:any)/sign'] = 'solar_portal/sign/$1';

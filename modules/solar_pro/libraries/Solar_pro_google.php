@@ -49,6 +49,19 @@ class Solar_pro_google
         return $this->request($url, 'google_solar');
     }
 
+    public function dataLayers($latitude, $longitude)
+    {
+        $key = solar_pro_setting('solar_pro_google_api_key', '');
+        if (!$key) return ['success' => false, 'error' => 'missing_key'];
+        $quality = solar_pro_setting('solar_pro_google_required_quality', 'BASE');
+        if (!in_array($quality, ['BASE', 'MEDIUM', 'HIGH'], true)) $quality = 'BASE';
+        return $this->request('https://solar.googleapis.com/v1/dataLayers:get?' . http_build_query([
+            'location.latitude' => $latitude, 'location.longitude' => $longitude,
+            'radiusMeters' => 50, 'pixelSizeMeters' => 0.5,
+            'view' => 'FULL_LAYERS', 'requiredQuality' => $quality, 'key' => $key,
+        ]), 'google_solar_layers');
+    }
+
     private function request($url, $provider)
     {
         $ch = curl_init($url);

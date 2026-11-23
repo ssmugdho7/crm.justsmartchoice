@@ -91,3 +91,11 @@ Contracts receive unique public tokens. Required initial fields use `{solar_init
 
 ## v1.0.5 CRM compatibility repair
 Solar Pro does not define its own CRM core `migration_version`; its HMVC migration bridge dynamically imports the authoritative CRM core migration configuration. Module database upgrades are handled by Perfex `App_module_migration` and run only against the Solar Pro module version. Opening Solar Pro therefore loads the module dashboard instead of invoking the CRM core database-upgrade screen. Solar Pro Settings are registered inside the native CRM Settings page under General and use the `solar_pro` settings group.
+
+## Rooftop sunlight and hourly shade
+
+Staff and customer HTML reports offer an on-demand rooftop imagery section. The existing Solar API key fetches dataLayers FULL_LAYERS at 0.5 m/pixel within 50 m of the analysis coordinates. No new Google API or browser key is required. Staff routes enforce global/own-report permissions; public routes require the report token. Provider URLs remain in the server session for at most 50 minutes; raster data is streamed without persistent storage. Requests to create a layer manifest are throttled per session.
+
+The image viewer uses Google's RGB image, roof mask, annual flux, and per-month hourly shade GeoTIFFs. Colors apply to all roof pixels in the surrounding image. Annual values are kWh/kW/year, not generated household kWh. Shade uses local standard time and a 365-day model (no daylight saving or leap day). Missing imagery does not change the production estimate. Google Maps attribution and imagery date/quality appear with the image. PDF exports do not include this interactive viewer.
+
+Verification: `php tests/solar_roof_regression.php` and `node tests/solar_roof_regression.js`. Browser fixture checks cover annual and shade rendering, February bounds, and imagery failure/retry.

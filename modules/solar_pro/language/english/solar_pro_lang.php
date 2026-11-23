@@ -453,3 +453,14 @@ $lang['solar_pro_required_address'] = 'Property address is required.';
 $lang['solar_pro_duplicate_email'] = 'This email address is already registered in the CRM.';
 $lang['solar_pro_duplicate_phone'] = 'This phone number is already registered in the CRM.';
 $lang['solar_pro_module_menu'] = 'Solar Pro Menu';
+
+$lang['solar_pro_roof_title'] = 'Rooftop sunlight & shading';
+$lang['solar_pro_roof_description'] = 'Explore Google solar imagery around this property. Colors apply to rooftop pixels in the surrounding area.';
+$lang['solar_pro_roof_load'] = 'Load rooftop imagery';
+$lang['solar_pro_roof_layer'] = 'View';
+$lang['solar_pro_roof_sunlight'] = 'Annual sunlight';
+$lang['solar_pro_roof_shade'] = 'Hourly shade';
+$lang['solar_pro_roof_month'] = 'Month';
+$lang['solar_pro_roof_day'] = 'Day';
+$lang['solar_pro_roof_hour'] = 'Hour';
+$lang['solar_pro_roof_note'] = 'Modeled sunlight and shade, not live weather or a guarantee of electricity production. Shade times use local standard time, without daylight saving.';

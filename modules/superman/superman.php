@@ -74,11 +74,9 @@ function superman_admin_init()
         }
     }
 
-    $CI->app->add_settings_section('superman', [
-        'name'     => _l('superman_settings_title'),
-        'view'     => 'superman/settings/index',
-        'position' => 60,
-    ]);
+    // No Settings-sidebar section: superman/settings/index is a full standalone
+    // page (init_head/init_tail) and fatals when embedded in admin/settings.
+    // Superman settings stay reachable via Setup > Superman (superman/settings).
 
     register_staff_capabilities('superman', [
         'capabilities' => [

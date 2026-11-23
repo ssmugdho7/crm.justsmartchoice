@@ -111,7 +111,7 @@ function purchasing_hub_admin_init()
 
         $CI->app_menu->add_sidebar_children_item('purchasing-hub', [
             'slug'     => 'purchasing-hub-settings-child',
-            'name'     => 'Settings',
+            'name'     => 'General Settings',
             'href'     => admin_url('purchasing_hub/settings'),
             'position' => 8,
         ]);
@@ -163,21 +163,37 @@ function purchasing_hub_admin_init()
         ]);
     }
 
-    $CI->app->add_settings_section('purchasing_hub_settings', [
-        'name'     => 'Purchasing Hub Settings',
-        'view'     => 'purchasing_hub/settings/general',
+    // One "Purchasing Hub" heading with three clickable settings links. The
+    // child ids keep the existing ?group= URLs (purchasing_hub_settings,
+    // purchasing_hub_health, purchasing_hub_help) working.
+    $CI->app->add_settings_section('purchasing_hub', [
+        'title'    => 'Purchasing Hub',
         'position' => 65,
-    ]);
-
-    $CI->app->add_settings_section('purchasing_hub_health', [
-        'name'     => 'Purchasing Hub Health Check',
-        'view'     => 'purchasing_hub/settings/health',
-        'position' => 66,
-    ]);
-
-    $CI->app->add_settings_section('purchasing_hub_help', [
-        'name'     => 'Purchasing Hub How To',
-        'view'     => 'purchasing_hub/settings/help',
-        'position' => 67,
+        'children' => [
+            [
+                'id'       => 'purchasing_hub_settings',
+                'name'     => 'General Settings',
+                'view'     => 'purchasing_hub/settings/general',
+                'icon'     => 'fa-solid fa-cart-shopping',
+                'position' => 10,
+                'without_submit_button' => true,
+            ],
+            [
+                'id'       => 'purchasing_hub_health',
+                'name'     => 'Health Check',
+                'view'     => 'purchasing_hub/settings/health',
+                'icon'     => 'fa-solid fa-heart-pulse',
+                'position' => 20,
+                'without_submit_button' => true,
+            ],
+            [
+                'id'       => 'purchasing_hub_help',
+                'name'     => 'How To',
+                'view'     => 'purchasing_hub/settings/help',
+                'icon'     => 'fa-regular fa-circle-question',
+                'position' => 30,
+                'without_submit_button' => true,
+            ],
+        ],
     ]);
 }

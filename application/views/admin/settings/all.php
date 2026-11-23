@@ -32,7 +32,7 @@
                                             if (in_array(strtolower($childNameCheck), $smartChoiceHiddenLower, true) || in_array(strtolower($childIdCheck), $smartChoiceHiddenLower, true)) { continue; }
                                             $visibleChildren[] = $candidateChild;
                                         }
-                                        if (count($visibleChildren) === 0 && in_array(strtolower($sectionTitle), $smartChoiceHiddenLower, true)) { continue; }
+                                        if (count($visibleChildren) === 0) { continue; } // never render a heading without a clickable setting
                                     ?>
                                     <div>
                                         <h4 class="tw-mt-0 tw-mb-4 tw-text-sm tw-text-neutral-500 tw-font-medium">

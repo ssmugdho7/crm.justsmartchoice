@@ -96,25 +96,67 @@ class App
     }
 
     public function get_settings_sections()
-{
-    $sections = app_sort_by_position($this->settingsSections);
-
-    foreach ($sections as $key => $section) {
-        if (!isset($section['children']) || !is_array($section['children'])) {
-            $sections[$key]['children'] = [];
-        } else {
-            $sections[$key]['children'] = app_sort_by_position($section['children']);
-        }
-
-        if (!isset($sections[$key]['title']) || $sections[$key]['title'] === '') {
-            $sections[$key]['title'] = isset($section['name']) && $section['name'] !== ''
-                ? $section['name']
-                : ucwords(str_replace(['_', '-'], ' ', (string) $key));
-        }
+    {
+        return self::normalize_settings_sections($this->settingsSections);
     }
 
-    return $sections;
-}
+    /**
+     * Normalize registered settings sections for the Settings sidebar and the
+     * ?group= resolver in admin/Settings, which only looks at section children.
+     *
+     * - A section registered the pre-3.2 way (top-level 'view', no 'children')
+     *   is turned into a section with one child built from itself, so it gets a
+     *   clickable sidebar link and its ?group= URL resolves instead of 404ing.
+     * - A section with neither children nor a view is dropped, so no empty
+     *   heading is ever rendered.
+     */
+    public static function normalize_settings_sections(array $settingsSections): array
+    {
+        $sections = app_sort_by_position($settingsSections);
+
+        foreach ($sections as $key => $section) {
+            $children = (isset($section['children']) && is_array($section['children'])) ? $section['children'] : [];
+
+            if (count($children) === 0 && !empty($section['view'])) {
+                $child = $section;
+                unset($child['children'], $child['title']);
+
+                foreach (['group', 'id'] as $idKey) {
+                    if (isset($section[$idKey]) && is_string($section[$idKey]) && $section[$idKey] !== '') {
+                        $child['id'] = $section[$idKey];
+
+                        break;
+                    }
+                }
+
+                if (!isset($child['id']) || $child['id'] === '') {
+                    $child['id'] = (string) $key;
+                }
+
+                if (!isset($child['name']) || $child['name'] === '') {
+                    $child['name'] = ucwords(str_replace(['_', '-'], ' ', (string) $child['id']));
+                }
+
+                $children = [$child];
+            }
+
+            if (count($children) === 0) {
+                unset($sections[$key]);
+
+                continue;
+            }
+
+            $sections[$key]['children'] = app_sort_by_position($children);
+
+            if (!isset($sections[$key]['title']) || $sections[$key]['title'] === '') {
+                $sections[$key]['title'] = isset($section['name']) && $section['name'] !== ''
+                    ? $section['name']
+                    : ucwords(str_replace(['_', '-'], ' ', (string) $key));
+            }
+        }
+
+        return $sections;
+    }
 
     public function add_settings_section($id, $data)
     {

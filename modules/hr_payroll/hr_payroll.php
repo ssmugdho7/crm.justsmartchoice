@@ -492,6 +492,7 @@ function hr_payroll_register_native_settings()
         'url'      => $payrollSettingsUrl,
         'position' => 45,
         'icon'     => 'fa-solid fa-money-check-dollar',
+        'without_submit_button' => true,
     ]);
 }
 

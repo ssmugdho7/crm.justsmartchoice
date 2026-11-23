@@ -706,6 +706,7 @@ function accounting_register_settings_section() {
             'view'     => 'accounting/setting/settings_link',
             'position' => 61,
             'icon'     => 'fa fa-calculator',
+            'without_submit_button' => true,
         ]);
     }
 }

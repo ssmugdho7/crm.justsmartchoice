@@ -38,6 +38,7 @@ function sql_doctor_admin_init()
         'name'     => _l('sql_doctor_settings'),
         'view'     => 'sql_doctor/settings',
         'position' => 65,
+        'without_submit_button' => true,
     ]);
 }
 

@@ -17,6 +17,6 @@
 <p class="sp-roof-credit" hidden><strong>Google Maps</strong> · <span></span></p>
 <p class="sp-roof-note"><?php echo _l('solar_pro_roof_note'); ?></p>
 </section>
-<link rel="stylesheet" href="<?php echo module_dir_url('solar_pro', 'assets/css/solar-roof.css'); ?>">
+<style><?php echo file_get_contents(module_dir_path('solar_pro', 'assets/css/solar-roof.css')); ?></style>
 <script src="<?php echo module_dir_url('solar_pro', 'assets/vendor/geotiff/geotiff.js'); ?>"></script>
 <script src="<?php echo module_dir_url('solar_pro', 'assets/js/solar-roof.js'); ?>" defer></script>

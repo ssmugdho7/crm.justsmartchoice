@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') or exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed'); $CI = &get_instance(); $CI->load->helper('solar_pro/solar_pro_custom_pdf'); echo solar_pro_custom_pdf_bookend('proposals', 'cover_page');
 $template=$proposal['template']??[];
 $contract=!empty($proposal['include_contract'])?($analysis['contract']??null):null;
 $img=function($name){return solar_pro_pdf_image_src($name);};
@@ -40,3 +40,5 @@ body{font-family:helvetica;color:#24343b}.hero{background:#0E6F5B;color:#fff;pad
 
 <?php foreach(['panel_equipment','inverter_equipment'] as $ek):$eq=$analysis[$ek]??null;if(!$eq)continue;?><div class="pagebreak"></div><h1><?php echo html_escape(trim($eq['manufacturer'].' '.$eq['model'])); ?> — <?php echo _l('solar_pro_equipment_specs'); ?></h1><table class="grid"><tr><th><?php echo _l('solar_pro_type'); ?></th><td><?php echo html_escape(solar_pro_humanize($eq['type'])); ?></td><th><?php echo _l('solar_pro_warranty_years'); ?></th><td><?php echo html_escape($eq['warranty_years']); ?></td></tr><tr><th><?php echo _l('solar_pro_dc_watts'); ?></th><td><?php echo html_escape($eq['watts']); ?></td><th><?php echo _l('solar_pro_ac_watts'); ?></th><td><?php echo html_escape($eq['ac_watts']); ?></td></tr></table><?php $pre=json_decode($eq['spec_preview_json']??'[]',true);if(is_array($pre)):foreach($pre as $pn):$pp=FCPATH.'uploads/solar_pro/equipment/'.(int)$eq['id'].'/'.$pn;if(is_file($pp)):?><p><img src="<?php echo $pp; ?>" style="max-width:100%;max-height:700px"></p><?php endif;endforeach;endif;?><?php endforeach;?>
 <?php if($contract):?><div class="pagebreak"></div><h1><?php echo html_escape($contract['title']); ?></h1><?php echo solar_pro_render_contract_content($contract,$analysis,false); ?><?php endif;?>
+
+<?php echo solar_pro_custom_pdf_bookend('proposals', 'closing_page'); ?>

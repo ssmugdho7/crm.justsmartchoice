@@ -19,3 +19,9 @@
 
 /* 1.1.2 bilingual + mandatory portal fields */
 .sp-language-toggle{margin-top:16px}.sp-language-button{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.96);color:#0E6F5B!important;padding:9px 15px;border-radius:999px;font-weight:700;text-decoration:none;box-shadow:0 5px 16px rgba(0,0,0,.12)}.sp-required{color:#dc2626;font-size:18px;line-height:1;font-weight:900}.sp-required-notice{padding:10px 12px;margin-bottom:16px;border-left:4px solid #dc2626;background:#fff5f5;color:#991b1b;border-radius:7px;font-size:13px}.sp-field-error input,.sp-field-error select,.sp-field-error textarea{border:2px solid #dc2626!important;box-shadow:0 0 0 2px rgba(220,38,38,.08)!important}.sp-field-error small{display:block;color:#b91c1c;font-weight:700;margin-top:5px}.sp-field-error:before{content:'↳';color:#dc2626;font-weight:900;margin-right:5px}
+
+/* v1.1.4: align analysis-method controls without affecting other form inputs */
+.sp-form-card .sp-choice{display:flex;align-items:flex-start;gap:12px;text-transform:none;letter-spacing:normal;font-size:14px;line-height:1.5;cursor:pointer}
+.sp-form-card .sp-choice input[type="radio"]{appearance:auto;-webkit-appearance:radio;display:inline-block;flex:0 0 18px;width:18px;height:18px;min-width:18px;padding:0;margin:2px 0 0;border:initial;border-radius:50%;box-shadow:none;vertical-align:middle}
+.sp-form-card .sp-choice .sp-choice-text{display:block;flex:1;min-width:0;overflow-wrap:anywhere}
+.sp-form-card .sp-choice .sp-choice-text strong{color:#184d44}

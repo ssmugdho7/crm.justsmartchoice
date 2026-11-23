@@ -4,15 +4,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
 Module Name: Solar Pro - Design, Savings & Proposal System
-Description: Solar sizing, Google Solar analysis, utility economics, CRM lead workflow, proposals, contracts, signatures, and customer portal.
-Version: 1.1.2
+Description: Solar sizing, Google Solar analysis, utility economics, CRM lead workflow, proposals, contracts, signatures, and customer portal. https://justsmartchoice.com
+Version: 1.1.4
 Requires at least: 3.4.0
 Author: Smart Choice Contractors USA / Harold Cabrera
 Author URI: https://justsmartchoice.com
 */
 
 define('SOLAR_PRO_MODULE_NAME', 'solar_pro');
-define('SOLAR_PRO_VERSION', '1.1.2');
+define('SOLAR_PRO_VERSION', '1.1.4');
 
 register_language_files(SOLAR_PRO_MODULE_NAME, ['solar_pro']);
 register_activation_hook(SOLAR_PRO_MODULE_NAME, 'solar_pro_activation_hook');

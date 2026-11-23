@@ -81,7 +81,9 @@ $hook['pre_controller_constructor'][] = [
 $hook['post_controller'] = function () {
     $ci = get_instance();
 
-    if (! $ci->input->is_ajax_request()) {
+    $destination = strtolower($_SERVER['HTTP_SEC_FETCH_DEST'] ?? 'document');
+    if (! $ci->input->is_ajax_request() && $ci->input->method(true) === 'GET' && in_array($destination, ['document', 'iframe'], true)
+        && stripos((string) $ci->output->get_content_type(), 'text/html') !== false) {
         $currentUrl = current_full_url();
 
         $skip = [

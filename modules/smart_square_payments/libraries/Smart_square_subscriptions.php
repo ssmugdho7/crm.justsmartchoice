@@ -26,8 +26,7 @@ class Smart_square_subscriptions
 
     public function configured(): bool
     {
-        return (string) $this->gateway->getSetting('active') === '1'
-            && trim((string) $this->gateway->secret('access_token')) !== ''
+        return trim((string) $this->gateway->secret('access_token')) !== ''
             && trim((string) $this->gateway->getSetting('application_id')) !== ''
             && trim((string) $this->gateway->getSetting('location_id')) !== '';
     }

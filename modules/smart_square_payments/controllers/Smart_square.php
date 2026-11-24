@@ -4,6 +4,35 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Smart_square extends ClientsController
 {
+    public function webhook()
+    {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            show_404();
+        }
+
+        $rawBody = (string) file_get_contents('php://input');
+        $signature = (string) ($this->input->get_request_header('x-square-hmacsha256-signature') ?: '');
+        $this->load->library('smart_square_payments/smart_square_subscriptions');
+        if (!$this->smart_square_subscriptions->verifyWebhook($rawBody, $signature)) {
+            $this->output->set_status_header(401)->set_output('invalid signature');
+            return;
+        }
+
+        $event = json_decode($rawBody, true);
+        if (!is_array($event)) {
+            $this->output->set_status_header(400)->set_output('invalid payload');
+            return;
+        }
+        $this->load->model('subscriptions_model');
+        try {
+            $this->smart_square_subscriptions->handleWebhook($event);
+        } catch (Throwable $exception) {
+            log_message('error', 'Smart Square webhook failed: ' . $exception->getMessage());
+            $this->output->set_status_header(500)->set_output('retry');
+            return;
+        }
+        $this->output->set_status_header(200)->set_output('ok');
+    }
     public function charge()
     {
         if (strtoupper($this->input->method()) !== 'POST' || !$this->input->is_ajax_request()) {

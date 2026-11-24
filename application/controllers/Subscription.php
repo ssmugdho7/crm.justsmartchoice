@@ -11,6 +11,7 @@ class Subscription extends ClientsController
         $this->load->model('subscriptions_model');
         $this->load->library('stripe_subscriptions');
         $this->load->library('stripe_core');
+        $this->load->library('smart_square_payments/smart_square_subscriptions');
     }
 
     public function index($hash = '')
@@ -23,10 +24,25 @@ class Subscription extends ClientsController
 
         $language               = load_client_language($subscription->clientid);
         $data['locale']         = get_locale_key($language);
-        $data['publishableKey'] = $this->stripe_subscriptions->get_publishable_key();
-        $plan                   = $this->stripe_subscriptions->get_plan($subscription->stripe_plan_id);
+        $isSquare = $this->smart_square_subscriptions->isSquarePlan($subscription->stripe_plan_id);
+        $data['paymentProvider'] = $isSquare ? 'square' : 'stripe';
+        if ($isSquare) {
+            $plan = $this->smart_square_subscriptions->get_plan($subscription->stripe_plan_id);
+            if (!$plan) { show_404(); }
+            $data['publishableKey'] = $this->smart_square_subscriptions->applicationId();
+            $data['squareApplicationId'] = $this->smart_square_subscriptions->applicationId();
+            $data['squareLocationId'] = $this->smart_square_subscriptions->locationId();
+            $data['squareSandbox'] = $this->smart_square_subscriptions->sandbox();
+            $mapping = $this->db->where('crm_subscription_id', (int) $subscription->id)->get(db_prefix() . 'smart_square_subscriptions')->row();
+            $data['squareSubscription'] = $mapping;
+        } else {
+            $data['publishableKey'] = $this->stripe_subscriptions->get_publishable_key();
+            $plan = $this->stripe_subscriptions->get_plan($subscription->stripe_plan_id);
+        }
 
-        check_stripe_subscription_environment($subscription);
+        if (!$isSquare) {
+            check_stripe_subscription_environment($subscription);
+        }
 
         if (! empty($subscription->stripe_subscription_id) && ! empty($data['publishableKey'])) {
             $data['stripeSubscription'] = $this->stripe_subscriptions->get_subscription([
@@ -68,7 +84,7 @@ class Subscription extends ClientsController
         }
 
         $data['total'] = $upcomingInvoice->total;
-        $product       = $this->stripe_subscriptions->get_product($plan->product);
+        $product       = $isSquare ? ($plan->product ?? (object) ['name' => $subscription->name]) : $this->stripe_subscriptions->get_product($plan->product);
 
         $upcomingInvoice->lines       = new stdClass();
         $upcomingInvoice->lines->data = [];
@@ -102,8 +118,22 @@ class Subscription extends ClientsController
             show_404();
         }
 
-        $stripe_customer_id = $subscription->stripe_customer_id;
         $cancelUrl          = site_url('subscription/' . $subscription_hash);
+
+        if ($this->smart_square_subscriptions->isSquarePlan($subscription->stripe_plan_id)) {
+            $sourceId = trim((string) $this->input->post('source_id'));
+            $address = $this->input->post('billing_address');
+            try {
+                $this->smart_square_subscriptions->createSubscription($subscription, $sourceId, is_array($address) ? $address : []);
+                set_alert('success', _l('customer_successfully_subscribed_to_subscription', $subscription->name));
+            } catch (Throwable $exception) {
+                log_message('error', 'Square subscription setup failed: ' . $exception->getMessage());
+                set_alert('warning', 'Square could not set up this monthly payment. Please check the card details and try again.');
+            }
+            redirect($cancelUrl);
+        }
+
+        $stripe_customer_id = $subscription->stripe_customer_id;
 
         $sessionData = [
             'payment_method_types' => ['card'],

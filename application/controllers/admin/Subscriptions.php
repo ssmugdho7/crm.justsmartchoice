@@ -8,6 +8,7 @@ class Subscriptions extends AdminController
     {
         parent::__construct();
         $this->load->library('stripe_subscriptions');
+        $this->load->library('smart_square_payments/smart_square_subscriptions');
         $this->load->model('subscriptions_model');
         $this->load->model('currencies_model');
         $this->load->model('taxes_model');
@@ -62,13 +63,20 @@ class Subscriptions extends AdminController
         }
 
         $data['plans'] = [];
+        $data['square_enabled'] = $this->smart_square_subscriptions->configured();
+        $data['squareSubscription'] = null;
 
         try {
-            $data['plans'] = $this->stripe_subscriptions->get_plans();
-            $this->load->library('stripe_core');
-            $data['stripe_tax_rates'] = $this->stripe_core->get_tax_rates();
+            if ($data['square_enabled']) {
+                $data['plans'] = $this->smart_square_subscriptions->get_plans();
+                $data['stripe_tax_rates'] = (object) ['data' => []];
+            } else {
+                $data['plans'] = $this->stripe_subscriptions->get_plans();
+                $this->load->library('stripe_core');
+                $data['stripe_tax_rates'] = $this->stripe_core->get_tax_rates();
+            }
         } catch (Exception $e) {
-            if ($this->stripe_subscriptions->has_api_key()) {
+            if ($data['square_enabled'] || $this->stripe_subscriptions->has_api_key()) {
                 $data['subscription_error'] = $e->getMessage();
             } else {
                 $data['subscription_error'] = _l('api_key_not_set_error_message', '<a href="' . admin_url('settings?group=payment_gateways&tab=online_payments_stripe_tab') . '">Stripe Checkout</a>');
@@ -99,7 +107,10 @@ class Subscriptions extends AdminController
             show_404();
         }
 
-        check_stripe_subscription_environment($subscription);
+        $squareSubscription = $this->smart_square_subscriptions->isSquarePlan($subscription->stripe_plan_id);
+        if (!$squareSubscription) {
+            check_stripe_subscription_environment($subscription);
+        }
 
         $data = [];
 
@@ -131,7 +142,9 @@ class Subscriptions extends AdminController
 
             try {
                 $prorate = $this->input->post('prorate') ? true : false;
-                $this->stripe_subscriptions->update_subscription($stripeSubscriptionId, $update, $subscription, $prorate);
+                if (!$squareSubscription) {
+                    $this->stripe_subscriptions->update_subscription($stripeSubscriptionId, $update, $subscription, $prorate);
+                }
             } catch (Exception $e) {
                 set_alert('warning', $e->getMessage());
                 redirect(admin_url('subscriptions/edit/' . $id));
@@ -147,11 +160,17 @@ class Subscriptions extends AdminController
 
         try {
             $data['plans'] = [];
-            $data['plans'] = $this->stripe_subscriptions->get_plans();
-            $this->load->library('stripe_core');
-            $data['stripe_tax_rates'] = $this->stripe_core->get_tax_rates();
+            $data['plans'] = $squareSubscription
+                ? $this->smart_square_subscriptions->get_plans()
+                : $this->stripe_subscriptions->get_plans();
+            if ($squareSubscription) {
+                $data['stripe_tax_rates'] = (object) ['data' => []];
+            } else {
+                $this->load->library('stripe_core');
+                $data['stripe_tax_rates'] = $this->stripe_core->get_tax_rates();
+            }
 
-            if (! empty($subscription->stripe_subscription_id)) {
+            if (! empty($subscription->stripe_subscription_id) && !$squareSubscription) {
                 $data['stripeSubscription'] = $this->stripe_subscriptions->get_subscription($subscription->stripe_subscription_id);
 
                 /*                              $data['stripeSubscription']->billing_cycle_anchor = 'now';
@@ -180,6 +199,9 @@ class Subscriptions extends AdminController
         $data = array_merge($data, prepare_mail_preview_data('subscription_send_to_customer', $subscription->clientid));
 
         $data['child_invoices'] = $this->subscriptions_model->get_child_invoices($id);
+        $data['squareSubscription'] = $squareSubscription
+            ? $this->db->where('crm_subscription_id', (int) $id)->get(db_prefix() . 'smart_square_subscriptions')->row()
+            : null;
         $data['subscription']   = $subscription;
         $data['title']          = $data['subscription']->name;
         $data['taxes']          = $this->taxes_model->get();

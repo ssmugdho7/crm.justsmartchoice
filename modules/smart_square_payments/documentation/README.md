@@ -1,4 +1,4 @@
-# Smart Choice Square Payments 1.2.2
+# Smart Choice Square Payments 1.2.3
 
 Square invoice checkout for Perfex CRM 3.4.1. The module registers Square as an online payment gateway, supports USD invoices, stores credentials through Perfex encrypted gateway settings, and records completed provider payments in the CRM.
 
@@ -25,6 +25,18 @@ Use Square Sandbox test cards for a complete payment test. Do not use production
 On 26 October 2026, the actual payment controller was exercised in an isolated local fixture using authenticated Square Sandbox credentials: a USD 3.00 payment completed, Square's GetPayment endpoint confirmed `COMPLETED` and 300 minor units, a declined-card token returned failure, and repeated successful requests returned the same provider payment ID. The fixture replaced CRM persistence with a local test ledger; this does not certify production database posting or customer email delivery. The production token/location were checked read-only with Square's Locations API. No live charge was made.
 
 The 1.2.2 follow-up limits idempotency keys to 40 characters (Square allows at most 45), retains decimal balances without a floating-point conversion, and renders checkout as a standalone responsive document. Gateway settings pass language keys to Perfex's native renderers.
+
+## Square monthly subscriptions
+
+When Square is active and configured, the CRM subscription editor uses Square Catalog subscription-plan variations as the billing-plan list. The customer subscription page uses Square Web Payments to tokenize a card in the browser, then the server creates a Square customer, card-on-file, and monthly subscription with deterministic idempotency keys. Card details never enter the CRM. Stripe remains available for existing Stripe plans.
+
+Register this webhook URL in the Square Developer Console:
+
+`https://crm.justsmartchoice.com/smart_square_payments/webhook`
+
+Subscribe to `subscription.created`, `subscription.updated`, `invoice.payment_made`, and `invoice.payment_failed`. The endpoint verifies Square's HMAC signature against the exact notification URL and raw request body, records each event once, creates one paid CRM invoice per Square invoice, and marks failed billing as `PAST_DUE`. The unique event and invoice ledgers make retries safe.
+
+Use Square Sandbox for acceptance testing first. Create a Sandbox plan variation, configure Sandbox credentials, complete the customer card form with a Square test card, and send test webhook events from Square. Move to production only after the CRM subscription record, recurring invoice, failure status, and duplicate-delivery behavior have been verified.
 
 ## Branded checkout and receipts
 

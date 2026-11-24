@@ -2,7 +2,7 @@
 /**
  * Module Name: Smart Choice Square Payments
  * Description: Square invoice payment gateway for Perfex CRM 3.4.1.
- * Version: 1.2.2
+ * Version: 1.2.3
  * Requires at least: 3.4.1
  * Author: Smart Choice Contractors USA
  * Creator: Smart Choice Development

@@ -23,13 +23,18 @@
                 <div class="tw-flex tw-items-end tw-space-x-2 tw-mt-3 sm:tw-mt-0">
                     <?php
           if (! empty($publishableKey)) {
-              if (empty($subscription->stripe_subscription_id)) {
+              $isSquare = ($paymentProvider ?? 'stripe') === 'square';
+              $isSubscribed = $isSquare ? !empty($squareSubscription->square_subscription_id ?? '') : !empty($subscription->stripe_subscription_id);
+              if (!$isSubscribed) {
                   echo form_open(site_url('subscription/subscribe/' . $hash), ['class' => 'action-button', 'id' => 'sourceForm', 'onsubmit' => 'document.getElementById(\'subscribe-button\').setAttribute(\'disabled\', true);']);
+                  if ($isSquare) {
+                      echo '<div id="square-card-container" class="tw-mb-2"></div><input type="hidden" name="source_id" id="square-source-id">';
+                  }
                   echo '<button type="submit" name="subscribe" id="subscribe-button" value="true" class="btn btn-success action-button">';
                   echo _l('subscribe');
                   echo '</button>';
                   echo form_close();
-              } elseif (isset($stripeSubscription) && $stripeSubscription->status === 'incomplete') {
+              } elseif (!$isSquare && isset($stripeSubscription) && $stripeSubscription->status === 'incomplete') {
                   echo '<a href="' . $stripeSubscription->latest_invoice->hosted_invoice_url . '" class="btn btn-primary">' . _l('subscription_complete_payment') . '</a>';
               }
           }
@@ -47,6 +52,34 @@ if (can_logged_in_contact_view_subscriptions()) {
     </div>
 </div>
 <div class="clearfix"></div>
+<?php if (($paymentProvider ?? 'stripe') === 'square' && empty($squareSubscription->square_subscription_id ?? '')) { ?>
+<script src="<?= e(($squareSandbox ?? false) ? 'https://sandbox.web.squarecdn.com/v1/square.js' : 'https://web.squarecdn.com/v1/square.js'); ?>"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async function () {
+    const form = document.getElementById('sourceForm');
+    const button = document.getElementById('subscribe-button');
+    const source = document.getElementById('square-source-id');
+    if (!form || !window.Square || !source) return;
+    try {
+        const payments = window.Square.payments(<?= json_encode($squareApplicationId); ?>, <?= json_encode($squareLocationId); ?>);
+        const card = await payments.card();
+        await card.attach('#square-card-container');
+        form.addEventListener('submit', async function (event) {
+            if (source.value) return;
+            event.preventDefault();
+            button.disabled = true;
+            const result = await card.tokenize();
+            if (result.status !== 'OK') { button.disabled = false; alert('Please check the card details and try again.'); return; }
+            source.value = result.token;
+            form.submit();
+        });
+    } catch (error) {
+        button.disabled = true;
+        console.error('Square card initialization failed', error);
+    }
+});
+</script>
+<?php } ?>
 <div class="panel_s tw-mt-6">
     <div class="panel-body">
         <div class="col-md-10 col-md-offset-1">

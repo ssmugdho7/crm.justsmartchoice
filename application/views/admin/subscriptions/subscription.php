@@ -13,13 +13,13 @@
                 <div class="panel_s">
                     <div class="panel-body accounting-template">
                         <?php if (isset($subscription)) {
-                            if (! empty($subscription->stripe_subscription_id)
+                            if ((!empty($subscription->stripe_subscription_id) || !empty($squareSubscription->square_subscription_id ?? ''))
                                 && $subscription->status != 'canceled' && $subscription->status != 'incomplete_expired' && $subscription->status != 'incomplete') {
                                 ?>
                         <div class="alert alert-success">
                             <b><?= _l('customer_is_subscribed_to_subscription_info'); ?></b><br />
                             Subscription ID:
-                            <?= e($subscription->stripe_subscription_id); ?>
+                            <?= e($squareSubscription->square_subscription_id ?? $subscription->stripe_subscription_id); ?>
                         </div>
                         <?php } ?>
                         <input type="hidden" name="isedit">
@@ -36,7 +36,7 @@
                             <?= _l('view_subscription'); ?>
                         </a>
                         <?php } ?>
-                        <?php if (! empty($subscription->stripe_subscription_id) && $subscription->status != 'canceled' && $subscription->status != 'incomplete_expired' && empty($subscription->ends_at)) { ?>
+                        <?php if (!empty($subscription->stripe_subscription_id) && $subscription->status != 'canceled' && $subscription->status != 'incomplete_expired' && empty($subscription->ends_at)) { ?>
                         <?php if (staff_can('edit', 'subscriptions')) { ?>
                         <div class="btn-group">
                             <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown"

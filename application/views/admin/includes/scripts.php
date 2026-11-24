@@ -74,6 +74,12 @@ if (get_option('pusher_realtime_notifications') == 1) { ?>
   $(function(){arm();});
 })(window,document,jQuery);
 </script>
+<?php
+$scLeadManagerSmsCompat = FCPATH . 'assets/js/lead_manager_sms_compat.js';
+if (is_file($scLeadManagerSmsCompat)) {
+    echo '<script id="sc-lead-manager-sms-compat">' . file_get_contents($scLeadManagerSmsCompat) . '</script>';
+}
+?>
 <div class="modal fade" id="sc-idle-warning-modal" tabindex="-1"><div class="modal-dialog modal-sm"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button><h4 class="modal-title"><i class="fa fa-clock"></i> <?= _l('sc_idle_warning_title'); ?></h4></div><div class="modal-body"><p><?= _l('sc_idle_warning_message', (int)(get_option('sc_staff_idle_timeout_minutes') ?: 10)); ?></p></div><div class="modal-footer"><button type="button" class="btn btn-primary" data-dismiss="modal"><?= _l('continue'); ?></button></div></div></div></div>
 
 <script id="sc-two-language-ui">$(function(){ $('select[name="default_language"]').each(function(){var $s=$(this);$s.find('option[value=""]').remove();if(!$s.val()){$s.val('english');}try{$s.selectpicker('refresh');}catch(e){}}); });</script>

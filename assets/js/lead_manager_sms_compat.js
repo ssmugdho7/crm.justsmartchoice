@@ -1,5 +1,6 @@
 (function () {
     'use strict';
+    window.__scLeadManagerCompatLoaded = true;
 
     // Lead Manager is a legacy jQuery module. Some browser extensions define a
     // read-only `$`, which prevents jQuery from booting and leaves its inline

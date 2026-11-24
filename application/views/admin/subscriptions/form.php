@@ -1,4 +1,5 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<?php $squareBilling = !empty($square_enabled) || (isset($subscription) && strpos((string) $subscription->stripe_plan_id, 'square:') === 0); ?>
 <?php if (isset($subscription_error)) { ?>
 <div class="alert alert-warning">
     <?= $subscription_error; ?>
@@ -11,10 +12,10 @@
             class="tw-bg-neutral-50 tw-p-6 tw-border-y -tw-mt-6 -tw-mx-6 tw-border-solid tw-border-neutral-200 tw-mb-4">
             <div class="form-group select-placeholder">
                 <label
-                    for="stripe_plan_id"><?= _l('billing_plan'); ?></label>
+                    for="stripe_plan_id"><?= $squareBilling ? 'Square billing plan' : _l('billing_plan'); ?></label>
                 <select id="stripe_plan_id" name="stripe_plan_id" class="selectpicker" data-live-search="true"
                     data-width="100%"
-                    data-none-selected-text="<?= _l('stripe_subscription_select_plan'); ?>">
+                    data-none-selected-text="<?= $squareBilling ? 'Select Square plan' : _l('stripe_subscription_select_plan'); ?>">
                     <option value=""></option>
                     <?php if (isset($plans->data)) { ?>
                     <?php foreach ($plans->data as $plan) {
@@ -48,7 +49,7 @@
                                     } elseif (isset($plan->product->name)) {
                                         echo $plan->product->name;
                                     } else {
-                                        echo '[Plan Name Not Set in Stripe, ID:' . $plan->id . ']';
+                                        echo '[' . ($squareBilling ? 'Plan Name Not Set in Square' : 'Plan Name Not Set in Stripe') . ', ID:' . $plan->id . ']';
                                     } ?>
                     </option>
                     <?php
@@ -159,7 +160,7 @@ foreach ($currencies as $currency) {
                 <div class="form-group select-placeholder">
                     <label class="control-label"
                         for="tax"><?= _l('tax_1'); ?>
-                        (Stripe)</label>
+                        <?= $squareBilling ? '(Square)' : '(Stripe)'; ?></label>
                     <select class="selectpicker" data-width="100%" name="stripe_tax_id"
                         data-none-selected-text="<?= _l('no_tax'); ?>">
                         <option value=""></option>
@@ -194,7 +195,7 @@ foreach ($currencies as $currency) {
                 <div class="form-group select-placeholder">
                     <label class="control-label"
                         for="tax"><?= _l('tax_2'); ?>
-                        (Stripe)</label>
+                        <?= $squareBilling ? '(Square)' : '(Stripe)'; ?></label>
                     <select class="selectpicker" data-width="100%" name="stripe_tax_id_2"
                         data-none-selected-text="<?= _l('no_tax'); ?>">
                         <option value=""></option>

@@ -43,7 +43,9 @@ function _init_admin_assets()
     // Javascript
     $CI->app_scripts->add('vendor-js', 'assets/builds/vendor-admin.js');
 
-    $CI->app_scripts->add('jquery-migrate-js', 'assets/plugins/jquery/jquery-migrate.' . (ENVIRONMENT === 'production' ? 'min.' : '') . 'js');
+    // Keep legacy admin modules compatible with the bundled vendor assets.
+    $CI->app_scripts->add('jquery-js', 'assets/plugins/jquery/jquery.min.js', 'admin', ['vendor-js']);
+    $CI->app_scripts->add('jquery-migrate-js', 'assets/plugins/jquery/jquery-migrate.' . (ENVIRONMENT === 'production' ? 'min.' : '') . 'js', 'admin', ['jquery-js']);
 
     add_datatables_js_assets();
     add_moment_js_assets();

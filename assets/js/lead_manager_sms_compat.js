@@ -1,7 +1,5 @@
 (function () {
     'use strict';
-    window.__scLeadManagerCompatLoaded = true;
-
     // Lead Manager is a legacy jQuery module. Some browser extensions define a
     // read-only `$`, which prevents jQuery from booting and leaves its inline
     // SMS handlers undefined. Keep this fallback dependency-free.
@@ -56,7 +54,7 @@
         return false;
     }
 
-    window.leadManagerMessage = function (leadId) {
+    function openComposer(leadId) {
         fetch((window.admin_url || '/admin/') + 'lead_manager/send_sms_modal?id=' + encodeURIComponent(leadId), {
             credentials: 'same-origin',
             headers: { 'X-Requested-With': 'XMLHttpRequest' }
@@ -76,14 +74,22 @@
         }).catch(function (error) {
             window.alert(error.message || 'Unable to open SMS composer.');
         });
-    };
-
-    window.validate_sms_form = function (leadId) {
-        var form = document.querySelector('#sms-form-' + leadId) || document.querySelector('#lead-manager-sms-modal form');
-        return sendForm(form);
-    };
+    }
 
     document.addEventListener('click', function (event) {
+        var messageLink = event.target.closest && event.target.closest('a[data-title="Message"]');
+        if (messageLink) {
+            event.preventDefault();
+            var row = messageLink.closest('tr[id^="lead_"]');
+            if (row) openComposer(row.id.replace('lead_', ''));
+            return;
+        }
+        var send = event.target.closest && event.target.closest('#lead-manager-sms-modal .send_sms_btn_lm');
+        if (send) {
+            event.preventDefault();
+            sendForm(send.closest('.modal-content').querySelector('form'));
+            return;
+        }
         var close = event.target.closest && event.target.closest('#lead-manager-sms-modal [data-dismiss="modal"], #lead-manager-sms-modal .close');
         if (close) { event.preventDefault(); hideModal(); }
     });

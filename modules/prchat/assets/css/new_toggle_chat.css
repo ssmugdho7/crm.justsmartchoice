@@ -3529,3 +3529,27 @@
   width: 218px;
   box-sizing: border-box;
 }
+
+/* Keep the floating composer inside its flex slot, including under admin form styles. */
+#chatApp .chat-input-container .input-textarea-wrap {
+  flex: 1 1 0%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+#chatApp .chat-input-container .message-input {
+  flex: 1 1 0%;
+  width: 0;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+#chatApp .chat-input-container .send-btn-inline {
+  position: static;
+  flex: 0 0 28px;
+  box-sizing: border-box;
+  margin: 3px;
+}

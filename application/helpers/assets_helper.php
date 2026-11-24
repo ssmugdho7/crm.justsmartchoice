@@ -73,6 +73,7 @@ function _init_admin_assets()
     );
 
     $CI->app_scripts->add('app-v3', 'assets/builds/app.js');
+    $CI->app_scripts->add('lead-manager-sms-compat', 'assets/js/lead_manager_sms_compat.js', 'admin', ['app-v3']);
     $CI->app_scripts->add('sc-money-format', base_url('assets/js/sc_money_format.js') . '?mtime=' . filemtime(FCPATH . 'assets/js/sc_money_format.js'), 'admin', ['app-js']);
 
     // CSS

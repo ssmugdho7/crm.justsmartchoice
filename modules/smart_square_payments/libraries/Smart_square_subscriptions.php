@@ -73,10 +73,12 @@ class Smart_square_subscriptions
                 $phases = $variationData['phases'] ?? [];
                 $phase = $phases[0] ?? [];
                 $pricing = $phase['pricing'] ?? [];
-                $money = $pricing['price_money'] ?? [];
+                // Catalog subscription phases use `price`, while older Square
+                // responses used `price_money`. Accept both representations.
+                $money = $pricing['price'] ?? ($pricing['price_money'] ?? []);
                 $cadence = strtoupper((string) ($phase['cadence'] ?? 'MONTHLY'));
                 $interval = $cadence === 'YEARLY' ? 'year' : ($cadence === 'WEEKLY' ? 'week' : 'month');
-                $intervalCount = max(1, (int) ($phase['ordinal'] ?? 1));
+                $intervalCount = max(1, (int) ($phase['periods'] ?? 1));
                 $id = (string) ($variation['id'] ?? '');
                 if ($id === '' || ($pricing['type'] ?? 'STATIC') !== 'STATIC') {
                     continue;

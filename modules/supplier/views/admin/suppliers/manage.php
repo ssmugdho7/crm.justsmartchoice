@@ -166,13 +166,13 @@
             <div class="panel_s">
                <div class="panel-body">
                   <div class="_buttons">
-                     <?php if (has_permission('customers','','create')) { ?>
-                     <a href="<?php echo admin_url('supplier/client' ); ?>" class="btn btn-info mright5 test pull-left display-block">
+                     <?php if (has_permission('supplier','','create')) { ?>
+                     <a href="<?php echo admin_url('supplier?new=1' ); ?>" class="btn btn-info mright5 test pull-left display-block">
                      <?php echo _l('new_supplier'); ?></a>
                      <a href="<?php echo admin_url('supplier/import'); ?>" class="btn btn-info pull-left display-block mright5 hidden-xs">
                      <?php echo _l('import_suppliers'); ?></a>
                      <?php } ?>
-                     <?php if (has_permission('items','','')) { ?>
+                     <?php if (has_permission('items','','view')) { ?>
                       <a href="<?php echo admin_url('invoice_items' ); ?>" class="btn btn-info mright5 test pull-left display-block">
                            <?php echo _l('items'); ?></a>
                      <?php }?>

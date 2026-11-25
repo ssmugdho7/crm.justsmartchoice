@@ -5,7 +5,7 @@ class Smart_choice_call_center extends AdminController {
  private function page($view,$data=[]){$data['title']=_l('sccc_menu');$data['stats']=$this->cc->stats();$data['calls']=$this->cc->calls(100,!sccc_can('view'));$this->load->view('smart_choice_call_center/'.$view,$data);}
  public function index(){redirect(admin_url('smart_choice_call_center/dashboard'));}
  public function dashboard(){sccc_require(sccc_can('view')?'view':'view_own');$this->page('dashboard');}
- public function dialer(){sccc_require(sccc_can('view')?'view':'view_own');$this->page('dialer');}
+ public function dialer(){sccc_require(sccc_can('view')?'view':'view_own');$this->page('dialer',['employee_directory'=>$this->cc->get_employee_directory()]);}
  public function calls(){sccc_require(sccc_can('view')?'view':'view_own');$this->page('calls');}
  public function campaigns(){sccc_require('manage_campaigns');$this->page('campaigns',['campaigns'=>$this->cc->get_campaigns(),'lists'=>$this->cc->get_lists(),'agents'=>$this->cc->get_ai_agents()]);}
  public function lists(){sccc_require('view');$this->page('lists',['lists'=>$this->cc->get_lists()]);}

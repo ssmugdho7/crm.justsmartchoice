@@ -2,6 +2,12 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 class Call_center_model extends App_Model {
  public function __construct(){parent::__construct();$this->load->helper('smart_choice_call_center/smart_choice_call_center');}
+ public function get_employee_directory(){
+  // These are the four staff accounts with provisioned direct employee lines.
+  $p=db_prefix();$rows=$this->db->query("SELECT s.staffid AS staff_id,s.firstname,s.lastname,v.value AS phone FROM {$p}staff s JOIN {$p}customfieldsvalues v ON v.relid=s.staffid AND v.fieldto='staff' JOIN {$p}customfields f ON f.id=v.fieldid AND f.fieldto='staff' WHERE s.active=1 AND s.staffid IN (42,44,45,47) AND f.slug='staff_twilio_phone_number' ORDER BY s.firstname,s.lastname")->result_array();
+  $directory=[];foreach($rows as $row){$phone=sccc_phone($row['phone']);if(!$phone)continue;$id=(int)$row['staff_id'];if(isset($directory[$id]))continue;$directory[$id]=['staff_id'=>$id,'name'=>trim(trim($row['firstname']).' '.trim($row['lastname'])),'phone'=>$phone];}
+  return array_values($directory);
+ }
  public function calls($limit=100,$own=false){if($own)$this->db->where('staff_id',get_staff_user_id());return $this->db->order_by('id','DESC')->limit($limit)->get(db_prefix().'sccc_calls')->result_array();}
  public function stats(){ $t=db_prefix().'sccc_calls'; $today=date('Y-m-d 00:00:00');$r=[];$r['total']=(int)$this->db->count_all($t);$r['today']=(int)$this->db->where('created_at >=',$today)->count_all_results($t);$r['answered']=(int)$this->db->where_in('status',['in-progress','completed'])->count_all_results($t);$r['successful']=(int)$this->db->join(db_prefix().'sccc_dispositions d','d.slug='.$t.'.disposition','left')->where('d.is_success',1)->count_all_results($t);$r['leads']=(int)$this->db->where('lead_id IS NOT NULL',null,false)->count_all_results($t);return $r; }
  public function get_lists(){return $this->db->order_by('id','DESC')->get(db_prefix().'sccc_lists')->result_array();}

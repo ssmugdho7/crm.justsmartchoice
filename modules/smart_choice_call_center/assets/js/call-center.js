@@ -1,11 +1,11 @@
 (function($){'use strict';
-var device=null,activeCall=null,ready=false;
+var device=null,activeCall=null,ready=false,connecting=false;
 function fmt(v){var d=(v||'').replace(/\D/g,'');if(d.length>0&&d[0]==='1')d=d.substring(1);d=d.substring(0,10);var o='+1 ';if(d.length)o+='('+d.substring(0,3);if(d.length>=3)o+=') ';if(d.length>3)o+=d.substring(3,6);if(d.length>=6)o+='-';if(d.length>6)o+=d.substring(6,10);return o;}
 function setState(text,type){$('.sccc-dialer-title .label').text(text||'').removeClass('label-success label-warning label-danger label-info').addClass(type||'label-info');}
 function idleState(){setState(ready?'READY':'OFFLINE',ready?'label-success':'label-warning');}
 function watchCall(call){
- activeCall=call;$('#scccCallButton').prop('disabled',true);$('#scccHangup').prop('disabled',false);
- function ended(){if(activeCall!==call)return;activeCall=null;$('#scccCallButton').prop('disabled',false);$('#scccHangup').prop('disabled',true);idleState();}
+ activeCall=call;$('#scccCallButton, .sccc-directory-call').prop('disabled',true);$('#scccHangup').prop('disabled',false);
+ function ended(){if(activeCall!==call)return;activeCall=null;$('#scccCallButton, .sccc-directory-call').prop('disabled',false);$('#scccHangup').prop('disabled',true);idleState();}
  call.on('accept',function(){setState('ON CALL','label-info');});
  ['disconnect','cancel','reject'].forEach(function(event){call.on(event,ended);});
  call.on('error',function(e){ended();alert_float('danger',(e&&e.message)||'Call failed');});
@@ -20,18 +20,23 @@ async function initDevice(){
   device.on('unregistered',function(){ready=false;if(!activeCall)idleState();});
   device.on('error',function(e){ready=false;setState('ERROR','label-danger');if(window.console)console.error('Call Center device error',e);});
   device.on('tokenWillExpire',async function(){try{device.updateToken(await getToken());}catch(e){ready=false;setState('TOKEN EXPIRED','label-danger');}});
-  device.on('incoming',function(call){if(activeCall){call.reject();return;}watchCall(call);setState('RINGING','label-warning');if(window.confirm((window.scccIncomingCall||'Incoming call')+' '+((call.parameters&&call.parameters.From)||''))){call.accept();}else{call.reject();}});
+  device.on('incoming',function(call){if(activeCall||connecting){call.reject();return;}watchCall(call);setState('RINGING','label-warning');if(window.confirm((window.scccIncomingCall||'Incoming call')+' '+((call.parameters&&call.parameters.From)||''))){call.accept();}else{call.reject();}});
   await device.register();
  }catch(e){ready=false;setState('NOT CONFIGURED','label-warning');if(window.console)console.error('Call Center initialization failed:',e.message);}
 }
 $(document).on('click','.sccc-key',function(){var $p=$('#scccPhone'),raw=$p.val()+$(this).data('key');if(/[\*#]/.test(raw)){$p.val(raw);return;}$p.val(fmt(raw));});
 $(document).on('input','#scccPhone',function(){if(!/[\*#]/.test(this.value))this.value=fmt(this.value);});
 $(document).on('click','#scccBackspace',function(){var $p=$('#scccPhone'),d=$p.val().replace(/\D/g,'');if(d.length&&d[0]==='1')d=d.substring(1);d=d.slice(0,-1);$p.val(fmt(d));});
-$(document).on('click','#scccCallButton',async function(){
- var phone=$('#scccPhone').val();if(!phone||activeCall)return;
+async function startCall(phone){
+ if(!phone||activeCall||connecting)return;
  if(!device||!ready){alert_float('warning',window.scccSoftphoneNotReady||'Browser softphone is not ready. Check Twilio settings and microphone permission.');return;}
- var $b=$(this).prop('disabled',true);setState('CALLING','label-warning');
- try{watchCall(await device.connect({params:{To:phone}}));}catch(e){$b.prop('disabled',false);idleState();alert_float('danger',(e&&e.message)||'Call failed');}
+ connecting=true;$('#scccCallButton, .sccc-directory-call').prop('disabled',true);setState('CALLING','label-warning');
+ try{watchCall(await device.connect({params:{To:phone}}));}catch(e){$('#scccCallButton, .sccc-directory-call').prop('disabled',false);idleState();alert_float('danger',(e&&e.message)||'Call failed');}finally{connecting=false;}
+}
+$(document).on('click','#scccCallButton',function(){return startCall($('#scccPhone').val());});
+$(document).on('click','.sccc-directory-call',function(){
+ if(activeCall||connecting)return;
+ var phone=$(this).attr('data-phone');$('#scccPhone').val(fmt(phone));return startCall(phone);
 });
 $(document).on('click','#scccHangup',function(){if(activeCall){if(activeCall.status()==='pending')activeCall.reject();else activeCall.disconnect();}});
 if(window.scccChartData&&window.Chart&&document.getElementById('scccCallChart')){new Chart(document.getElementById('scccCallChart'),{type:'doughnut',data:{labels:['Answered','Other','Successful'],datasets:[{data:window.scccChartData}]},options:{responsive:true,plugins:{legend:{position:'bottom'}}}});}

@@ -60,7 +60,7 @@ function sccc_admin_init(){
 }
 function sccc_admin_head(){
     if (!is_staff_logged_in()) return;
-    echo '<link rel="stylesheet" href="'.module_dir_url(SCCC_MODULE_NAME,'assets/css/call-center.css?v='.SCCC_VERSION).'">';
+    echo '<link rel="stylesheet" href="'.module_dir_url(SCCC_MODULE_NAME,'assets/css/call-center.css?v='.SCCC_VERSION.'-'.filemtime(__DIR__.'/assets/css/call-center.css')).'">';
     $call = html_escape(get_option('sccc_dialpad_color') ?: '#16a34a');
     $key  = html_escape(get_option('sccc_dialpad_key_color') ?: '#f8fafc');
     $text = html_escape(get_option('sccc_dialpad_text_color') ?: '#0f172a');

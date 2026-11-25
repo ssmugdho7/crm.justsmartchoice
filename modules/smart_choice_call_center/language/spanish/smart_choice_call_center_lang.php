@@ -170,3 +170,10 @@ $lang['sccc_ai_provider_help'] = 'Conecte un servicio de voz IA existente. Los s
 
 $lang['sccc_crm_openai'] = 'CRM OpenAI + Twilio speech';
 $lang['sccc_crm_ai_missing'] = 'Configure the existing CRM OpenAI API key and model.';
+
+$lang['sccc_employee_directory'] = 'Números del equipo';
+$lang['sccc_employee_directory_help'] = 'Llame a un miembro del equipo a su número de Twilio. Debe mantener abierto el marcador del CRM para recibir llamadas.';
+$lang['sccc_no_employee_numbers'] = 'No hay números asignados al equipo.';
+$lang['sccc_your_number'] = 'Su número';
+$lang['sccc_call_employee'] = 'Llamar a %s';
+$lang['sccc_call'] = 'Llamar';

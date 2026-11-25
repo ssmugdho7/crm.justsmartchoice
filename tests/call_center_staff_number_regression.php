@@ -28,6 +28,11 @@ verify($w->db->params===['+17156717259'],'Lookup must normalize destination to E
 verify($w->cc->created[0]['staff_id']===45 && $w->cc->created[0]['direction']==='inbound','Call log must belong to receiving employee');
 verify(strpos((string)$xml->Dial['action'],'browser_complete?call_id=71')!==false,'Direct call must persist completion status');
 verify((string)$xml->Dial['record']==='record-from-answer-dual','Existing recording setting must be honored');
+foreach([44=>'+16189823347',42=>'+18145846912',47=>'+13617334434'] as $staff=>$number){
+ $w->db->matches=[['staff_id'=>$staff]];$w->input->data['To']=$number;$w->incoming();$xml=simplexml_load_string($w->output->body);
+ verify((string)$xml->Dial->Client==='staff_'.$staff,'Each employee number must ring its own CRM identity');
+ verify(end($w->cc->created)['staff_id']===$staff,'Each inbound call must be assigned to its receiving employee');
+}
 $lookup=new ReflectionMethod(Webhook::class,'assigned_staff_number');if(PHP_VERSION_ID<80100)$lookup->setAccessible(true);
 $w->db->matches=[];verify($lookup->invoke($w,'+18559066053')===null,'Unassigned number must use the existing shared IVR');
 $w->db->matches=[['staff_id'=>45],['staff_id'=>44]];verify($lookup->invoke($w,'+17156717259')===null,'Ambiguous assignment must not route to an arbitrary employee');

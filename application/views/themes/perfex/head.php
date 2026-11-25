@@ -12,6 +12,9 @@
 		src="<?= base_url('assets/plugins/jquery/jquery.min.js'); ?>">
 	</script>
 	<?php app_customers_head(); ?>
+    <?php if (is_client_logged_in() && $navigationEnabled) { ?>
+    <link rel="stylesheet" href="<?= e(base_url('assets/css/portal-wallpapers.css?v=1')); ?>">
+    <?php } ?>
 </head>
 
 <body

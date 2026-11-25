@@ -11,6 +11,9 @@
 	<script src="<?= base_url('assets/plugins/jquery/jquery.min.js'); ?>"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 	<?php app_customers_head(); ?>
+    <?php if (is_client_logged_in() && $navigationEnabled) { ?>
+    <link rel="stylesheet" href="<?= e(base_url('assets/css/portal-wallpapers.css?v=1')); ?>">
+    <?php } ?>
 </head>
 
 <body

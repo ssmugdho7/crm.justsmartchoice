@@ -1,0 +1,30 @@
+@media screen {
+    body.admin > #wrapper {
+        background: url('../images/sc-admin-dino-pattern.svg') 20px 12px / 220px auto repeat,
+            linear-gradient(135deg, #29121d, #16121b) fixed !important;
+    }
+
+    body.customers > #wrapper {
+        background: url('../images/sc-customer-dino-pattern.svg') 0 0 / 248px auto repeat,
+            linear-gradient(135deg, #13313a, #111c27) fixed !important;
+    }
+
+    /* Keep native headings, links, and forms on a high-contrast surface. */
+    body.admin > #wrapper > .content,
+    body.customers > #wrapper > #content {
+        border-radius: 12px;
+    }
+
+    body.admin > #wrapper > .content {
+        background: #f5f4f6;
+        margin: clamp(10px, 2vw, 24px);
+    }
+
+    body.customers > #wrapper > #content {
+        background: #f3f7f7;
+    }
+
+    body.customers > #wrapper:not(.sc-portal-layout) > #content {
+        margin-inline: clamp(10px, 2vw, 24px);
+    }
+}

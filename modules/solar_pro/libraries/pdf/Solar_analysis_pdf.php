@@ -31,7 +31,10 @@ class Solar_analysis_pdf extends Sales_document_pdf
         $name=(string)($settings[$section]['image']??'');
         $root=realpath(FCPATH.'uploads/custom_pdf/estimate');
         $path=$root&&$name!==''&&basename($name)===$name?realpath($root.'/'.$name):false;
-        if(!$path||strpos($path,$root.DIRECTORY_SEPARATOR)!==0||!is_readable($path)||!@getimagesize($path)){parent::renderPresentationPage($section);return;}
+        if(!$path||strpos($path,$root.DIRECTORY_SEPARATOR)!==0||!is_readable($path)||!@getimagesize($path)){
+            $path=FCPATH.'modules/custom_pdf/assets/bookends/'.($section==='cover_page'?'estimate-cover.png':'closing-page.png');
+            if(!is_readable($path)||!@getimagesize($path)){parent::renderPresentationPage($section);return;}
+        }
         $this->renderingPresentation=true;$this->presentationPages[$this->page]=true;
         $margin=$this->getBreakMargin();$auto=$this->getAutoPageBreak();$this->SetAutoPageBreak(false,0);
         $this->Image($path,0,0,$this->getPageWidth(),$this->getPageHeight());

@@ -208,7 +208,7 @@ class Smart_square_subscriptions
         $type = (string) ($event['type'] ?? '');
         $object = $event['data']['object'] ?? [];
         $squareSubscription = $object['subscription'] ?? [];
-        $squareId = (string) ($squareSubscription['id'] ?? $object['subscription_id'] ?? '');
+        $squareId = (string) ($squareSubscription['id'] ?? $object['invoice']['subscription_id'] ?? $object['subscription_id'] ?? '');
         $mapping = $squareId !== '' ? $this->findMappingBySquareId($squareId) : null;
         if (!$mapping) {
             return;
@@ -221,7 +221,7 @@ class Smart_square_subscriptions
             }
             return;
         }
-        if ($type === 'invoice.payment_failed') {
+        if (in_array($type, ['invoice.scheduled_charge_failed', 'invoice.payment_failed'], true)) {
             $this->CI->db->where('crm_subscription_id', (int) $mapping->crm_subscription_id)->update(db_prefix() . 'smart_square_subscriptions', ['status' => 'PAST_DUE', 'updated_at' => date('Y-m-d H:i:s')]);
             return;
         }

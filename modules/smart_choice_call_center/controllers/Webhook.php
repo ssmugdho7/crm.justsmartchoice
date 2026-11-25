@@ -4,7 +4,19 @@ class Webhook extends App_Controller {
  public function __construct(){parent::__construct();$this->load->helper('smart_choice_call_center/smart_choice_call_center');if(!sccc_valid_twilio_request((string)$this->input->get_request_header('X-Twilio-Signature'),$this->input->post(null,false)?:[]))show_error('Invalid Twilio signature',403);$this->load->model('smart_choice_call_center/Call_center_model','cc');}
  private function xml($x){$this->output->set_content_type('text/xml')->set_output($x);}
  private function greeting($id){$g=$id?$this->db->where('id',(int)$id)->get(db_prefix().'sccc_greetings')->row_array():null;if($g&&$g['file_path'])return '<Play>'.sccc_xml(base_url($g['file_path'])).'</Play>';if($g&&$g['text_to_speech'])return '<Say voice="'.sccc_xml($g['voice']?:'Polly.Joanna').'" language="'.sccc_xml($g['language']?:'en-US').'">'.sccc_xml($g['text_to_speech']).'</Say>';return '<Say>'.sccc_xml(_l('sccc_default_greeting')).'</Say>';}
+ private function assigned_staff_number($number){
+  $number=sccc_phone($number);if($number==='')return null;
+  $p=db_prefix();$rows=$this->db->query("SELECT DISTINCT v.relid AS staff_id FROM {$p}customfieldsvalues v JOIN {$p}customfields f ON f.id=v.fieldid JOIN {$p}staff s ON s.staffid=v.relid WHERE f.fieldto='staff' AND f.slug='staff_twilio_phone_number' AND v.fieldto='staff' AND v.value=? AND s.active=1 LIMIT 2",[$number])->result_array();
+  return count($rows)===1?(int)$rows[0]['staff_id']:null;
+ }
  public function incoming(){
+  $staff=$this->assigned_staff_number($this->input->post('To'));
+  if($staff){
+   $id=$this->cc->create_call(['twilio_sid'=>$this->input->post('CallSid'),'staff_id'=>$staff,'direction'=>'inbound','from_number'=>$this->input->post('From'),'to_number'=>sccc_phone($this->input->post('To')),'status'=>'ringing']);
+   $action=site_url('smart_choice_call_center/webhook/browser_complete?call_id='.$id);
+   $record=get_option('sccc_record_calls')==='1'?' record="record-from-answer-dual" recordingStatusCallback="'.sccc_xml(site_url('smart_choice_call_center/webhook/recording?call_id='.$id)).'"':'';
+   $this->xml('<?xml version="1.0" encoding="UTF-8"?><Response><Dial timeout="25" action="'.sccc_xml($action).'" method="POST"'.$record.'><Client>staff_'.$staff.'</Client></Dial></Response>');return;
+  }
   $from=$this->input->post('From');$to=$this->input->post('To');$sid=$this->input->post('CallSid');$id=$this->cc->create_call(['twilio_sid'=>$sid,'direction'=>'inbound','from_number'=>$from,'to_number'=>$to,'status'=>'ringing']);$g=$this->greeting((int)get_option('sccc_main_greeting_id'));$action=site_url('smart_choice_call_center/webhook/ivr_route?call_id='.$id);$prompt=_l('sccc_ivr_prompt');$xml='<?xml version="1.0" encoding="UTF-8"?><Response>'.$g.'<Gather input="dtmf speech" numDigits="3" timeout="5" speechTimeout="auto" action="'.sccc_xml($action).'" method="POST"><Say>'.sccc_xml($prompt).'</Say></Gather><Redirect method="POST">'.sccc_xml($action).'</Redirect></Response>';$this->xml($xml);
  }
  public function ivr_route(){

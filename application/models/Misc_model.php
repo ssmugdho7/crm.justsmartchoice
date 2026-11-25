@@ -549,25 +549,107 @@ class Misc_model extends App_Model
      */
     public function perform_search($q)
     {
-        $q = trim((string) $q);
-        $result = [];
-        $limit = get_option('limit_top_search_bar_results_to');
-        $have_assigned_customers = have_assigned_customers();
-        $have_permission_customers_view = staff_can('view', 'customers');
-
+        [$scope, $q] = $this->parseSearchScope(trim((string) $q));
         if ($q === '') {
+            return [];
+        }
+
+        $limit = get_option('limit_top_search_bar_results_to');
+        $nameOnly = $scope !== null;
+        $assignedOnly = have_assigned_customers() && !staff_can('view', 'customers');
+        $whereContacts = $assignedOnly
+            ? db_prefix() . 'contacts.userid IN (SELECT customer_id FROM ' . db_prefix() . 'customer_admins WHERE staff_id=' . get_staff_user_id() . ')'
+            : '';
+
+        // Keep the search limited to the existing customer workflow categories.
+        $searches = [
+            'clients' => fn () => $this->searchCustomers($q, $limit, $assignedOnly, $nameOnly),
+            'contacts' => fn () => $this->_search_contacts($q, $limit, $whereContacts, $nameOnly),
+            'leads' => fn () => $this->_search_leads($q, $limit, [], $nameOnly),
+            'proposals' => fn () => $this->_search_proposals($q, $limit),
+            'invoices' => fn () => $this->_search_invoices($q, $limit),
+            'estimates' => fn () => $this->_search_estimates($q, $limit),
+            'projects' => fn () => $this->_search_projects($q, $limit),
+            'contracts' => fn () => $this->_search_contracts($q, $limit),
+        ];
+
+        if ($scope !== null) {
+            $match = $searches[$scope]();
+
+            return empty($match['result']) ? [] : [$match];
+        }
+
+        $result = [];
+        foreach ($searches as $search) {
+            $match = $search();
+            if (!empty($match['result'])) {
+                $result[] = $match;
+            }
+        }
+
+        $filtered = hooks()->apply_filters('global_search_result_query', $result, $q, $limit);
+        $normalized = [];
+        foreach ((array) $filtered as $group) {
+            if (!is_string($group['type'] ?? null) || !isset($searches[$group['type']])) {
+                continue;
+            }
+            if ($group['type'] === 'contracts') {
+                $group['search_heading'] = _l('contracts');
+            }
+            $normalized[] = $group;
+        }
+
+        return $normalized;
+    }
+
+    private function parseSearchScope(string $query): array
+    {
+        if (!preg_match('/^([a-z]+)\s*:\s*(.*)$/is', $query, $match)) {
+            return [null, $query];
+        }
+
+        $aliases = [
+            'clients' => ['cus', 'cust', 'customer', 'customers', 'cli', 'client', 'clients'],
+            'contacts' => ['con', 'contact', 'contacts'],
+            'leads' => ['lead', 'leads'],
+            'proposals' => ['prop', 'proposal', 'proposals'],
+            'invoices' => ['inv', 'invoice', 'invoices'],
+            'estimates' => ['est', 'estimate', 'estimates'],
+            'projects' => ['proj', 'project', 'projects'],
+            'contracts' => ['ctr', 'contract', 'contracts'],
+        ];
+        $prefix = strtolower($match[1]);
+        foreach ($aliases as $type => $names) {
+            if (in_array($prefix, $names, true)) {
+                return [$type, trim($match[2])];
+            }
+        }
+
+        return [null, $query];
+    }
+
+    private function searchCustomers($q, $limit, bool $assignedOnly, bool $nameOnly): array
+    {
+        $result = ['result' => [], 'type' => 'clients', 'search_heading' => _l('clients')];
+        if (!$assignedOnly && !staff_can('view', 'customers')) {
             return $result;
         }
 
-        // Customers
-        if ($have_assigned_customers || $have_permission_customers_view) {
-            $this->db->select(implode(',', prefixed_table_fields_array(db_prefix() . 'clients')) . ',' . get_sql_select_client_company());
-            $this->db->join(db_prefix() . 'countries', db_prefix() . 'countries.country_id = ' . db_prefix() . 'clients.country', 'left');
-            $this->db->join(db_prefix() . 'contacts', db_prefix() . 'contacts.userid = ' . db_prefix() . 'clients.userid AND is_primary = 1', 'left');
-            $this->db->from(db_prefix() . 'clients');
-            if ($have_assigned_customers && !$have_permission_customers_view) {
-                $this->db->where(db_prefix() . 'clients.userid IN (SELECT customer_id FROM ' . db_prefix() . 'customer_admins WHERE staff_id=' . get_staff_user_id() . ')');
-            }
+        $clients = db_prefix() . 'clients';
+        $contacts = db_prefix() . 'contacts';
+        $this->db->from($clients);
+        $this->db->join($contacts, $contacts . '.userid = ' . $clients . '.userid AND is_primary = 1', 'left');
+        if ($assignedOnly) {
+            $this->db->where($clients . '.userid IN (SELECT customer_id FROM ' . db_prefix() . 'customer_admins WHERE staff_id=' . get_staff_user_id() . ')');
+        }
+
+        if ($nameOnly) {
+            $displayName = "COALESCE(NULLIF(TRIM({$clients}.company), ''), TRIM(CONCAT_WS(' ', {$contacts}.firstname, {$contacts}.lastname)))";
+            $this->db->select($clients . '.userid, ' . $displayName . ' AS company', false);
+            $this->matchSearchName($displayName, $q);
+        } else {
+            $this->db->select(implode(',', prefixed_table_fields_array($clients)) . ',' . get_sql_select_client_company());
+            $this->db->join(db_prefix() . 'countries', db_prefix() . 'countries.country_id = ' . $clients . '.country', 'left');
             $this->db->where('(company LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
                 OR vat LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
                 OR ' . db_prefix() . 'clients.phonenumber LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
@@ -579,49 +661,21 @@ class Misc_model extends App_Model
                 OR email LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
                 OR CONCAT(firstname, \' \', lastname) LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
                 OR CONCAT(lastname, \' \', firstname) LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\')');
-            $this->db->limit($limit);
-            $clients = $this->db->get()->result_array();
-            if ($clients) {
-                $result[] = ['result' => $clients, 'type' => 'clients', 'search_heading' => _l('clients')];
-            }
         }
+        $this->db->limit($limit);
+        $result['result'] = $this->db->get()->result_array();
 
-        $where_contacts = '';
-        if ($have_assigned_customers && !$have_permission_customers_view) {
-            $where_contacts = db_prefix() . 'contacts.userid IN (SELECT customer_id FROM ' . db_prefix() . 'customer_admins WHERE staff_id=' . get_staff_user_id() . ')';
-        }
+        return $result;
+    }
 
-        // Deliberately limited to customer workflow records. Custom-field values and item-content
-        // searches are excluded so sensitive/internal fields do not appear and proposal results are not duplicated.
-        $searches = [
-            $this->_search_contacts($q, $limit, $where_contacts),
-            $this->_search_leads($q, $limit),
-            $this->_search_proposals($q, $limit),
-            $this->_search_invoices($q, $limit),
-            $this->_search_estimates($q, $limit),
-            $this->_search_projects($q, $limit),
-            $this->_search_contracts($q, $limit),
-        ];
+    private function matchSearchName(string $name, string $query): void
+    {
+        $pattern = $this->db->escape_like_str($query);
+        $exact = $this->db->escape($query);
 
-        foreach ($searches as $search) {
-            if (!empty($search['result'])) {
-                $result[] = $search;
-            }
-        }
-
-        $filtered = hooks()->apply_filters('global_search_result_query', $result, $q, $limit);
-        $allowedTypes = ['clients','contacts','leads','proposals','invoices','estimates','projects','contracts'];
-        $normalized = [];
-        foreach ((array) $filtered as $group) {
-            if (!isset($group['type']) || !in_array($group['type'], $allowedTypes, true)) {
-                continue;
-            }
-            if ($group['type'] === 'contracts') {
-                $group['search_heading'] = _l('contracts');
-            }
-            $normalized[] = $group;
-        }
-        return $normalized;
+        $this->db->where("$name LIKE '%{$pattern}%' ESCAPE '!'", null, false);
+        $this->db->order_by("CASE WHEN $name = $exact THEN 0 WHEN $name LIKE '{$pattern}%' ESCAPE '!' THEN 1 ELSE 2 END", 'ASC', false);
+        $this->db->order_by($name, 'ASC', false);
     }
 
     public function _search_proposals($q, $limit = 0)
@@ -681,7 +735,7 @@ class Misc_model extends App_Model
         return $result;
     }
 
-    public function _search_leads($q, $limit = 0, $where = [])
+    public function _search_leads($q, $limit = 0, $where = [], bool $nameOnly = false)
     {
         $result = [
             'result'         => [],
@@ -700,7 +754,9 @@ class Misc_model extends App_Model
                 $this->db->where('(assigned = ' . get_staff_user_id() . ' OR addedfrom = ' . get_staff_user_id() . ' OR is_public=1)');
             }
 
-            if (!startsWith($q, '#')) {
+            if ($nameOnly) {
+                $this->matchSearchName(db_prefix() . 'leads.name', $q);
+            } elseif (!startsWith($q, '#')) {
                 $this->db->where('(name LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
                     OR title LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
                     OR company LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
@@ -807,7 +863,7 @@ class Misc_model extends App_Model
         return $result;
     }
 
-    public function _search_contacts($q, $limit = 0, $where = '')
+    public function _search_contacts($q, $limit = 0, $where = '', bool $nameOnly = false)
     {
         $result = [
             'result'         => [],
@@ -817,7 +873,7 @@ class Misc_model extends App_Model
 
         $have_assigned_customers        = have_assigned_customers();
         $have_permission_customers_view = staff_can('view',  'customers');
-        $tickets_contacts = $this->input->post('tickets_contacts') && get_option('staff_members_open_tickets_to_all_contacts') == 1;
+        $tickets_contacts = !$nameOnly && $this->input->post('tickets_contacts') && get_option('staff_members_open_tickets_to_all_contacts') == 1;
 
         if ($have_assigned_customers || $have_permission_customers_view || $tickets_contacts) {
             // Contacts
@@ -825,15 +881,19 @@ class Misc_model extends App_Model
             $this->db->from(db_prefix() . 'contacts');
 
             $this->db->join(db_prefix() . 'clients', '' . db_prefix() . 'clients.userid=' . db_prefix() . 'contacts.userid', 'left');
-            $this->db->where('(firstname LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
-                OR lastname LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
-                OR email LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
-                OR CONCAT(firstname, \' \', lastname) LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
-                OR CONCAT(lastname, \' \', firstname) LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
-                OR ' . db_prefix() . 'contacts.phonenumber LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
-                OR ' . db_prefix() . 'contacts.title LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
-                OR company LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
-                )');
+            if ($nameOnly) {
+                $this->matchSearchName("TRIM(CONCAT_WS(' ', firstname, lastname))", $q);
+            } else {
+                $this->db->where('(firstname LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
+                    OR lastname LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
+                    OR email LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
+                    OR CONCAT(firstname, \' \', lastname) LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
+                    OR CONCAT(lastname, \' \', firstname) LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
+                    OR ' . db_prefix() . 'contacts.phonenumber LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
+                    OR ' . db_prefix() . 'contacts.title LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
+                    OR company LIKE "%' . $this->db->escape_like_str($q) . '%" ESCAPE \'!\'
+                    )');
+            }
 
             if ($where != '') {
                 $this->db->where($where);

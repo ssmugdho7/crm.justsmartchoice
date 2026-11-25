@@ -121,6 +121,10 @@ class Smart_square_subscriptions
         }
 
         $map = $this->findMapping((int) $crmSubscription->id);
+        if (!empty($map->square_subscription_id)) {
+            return ['id' => $map->square_subscription_id, 'status' => $map->status];
+        }
+
         $customerId = $map ? (string) $map->square_customer_id : '';
         if ($customerId === '') {
             $customer = $this->request('POST', '/v2/customers', [
@@ -135,12 +139,18 @@ class Smart_square_subscriptions
             }
         }
 
+        $cardDetails = [
+            'customer_id' => $customerId,
+            'cardholder_name' => trim((string) ($crmSubscription->company ?? $crmSubscription->name)),
+        ];
+        if ($billingAddress !== []) {
+            $cardDetails['billing_address'] = $billingAddress;
+        }
+
         $card = $this->request('POST', '/v2/cards', [
             'idempotency_key' => $this->idempotency('card', $crmSubscription->id),
             'source_id' => $sourceId,
-            'card' => ['customer_id' => $customerId],
-            'cardholder_name' => trim((string) ($crmSubscription->company ?? $crmSubscription->name)),
-            'billing_address' => $billingAddress,
+            'card' => $cardDetails,
         ]);
         $cardId = (string) ($card['card']['id'] ?? '');
         if ($cardId === '') {
@@ -274,7 +284,11 @@ class Smart_square_subscriptions
         $raw = curl_exec($curl); $status = (int) curl_getinfo($curl, CURLINFO_HTTP_CODE); $error = curl_error($curl); curl_close($curl);
         $decoded = json_decode((string) $raw, true);
         if ($error !== '' || !is_array($decoded) || $status < 200 || $status >= 300) {
-            log_message('error', 'Square subscription API failure HTTP ' . $status . ': ' . ($error ?: 'provider rejected request'));
+            $codes = array_filter(array_column($decoded['errors'] ?? [], 'code'), static function ($code) {
+                return is_string($code) && preg_match('/^[A-Z0-9_]+$/D', $code);
+            });
+            $operation = explode('/', $path)[2] ?? 'unknown';
+            log_message('error', 'Square subscription API failure [' . $operation . '] HTTP ' . $status . ': ' . (implode(', ', $codes) ?: 'request failed'));
             throw new RuntimeException('Square could not complete the subscription request.');
         }
         return $decoded;

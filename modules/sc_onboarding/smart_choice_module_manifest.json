@@ -1,0 +1,13 @@
+{
+  "module": "sc_onboarding",
+  "version": "1.0.0",
+  "core_files_modified": [],
+  "database_tables_created": ["sc_onboarding_state"],
+  "core_tables_modified": [],
+  "core_tables_read": ["staff"],
+  "permissions_reused": {},
+  "global_css": true,
+  "global_javascript": true,
+  "hooks": ["admin_init", "app_admin_head", "app_admin_footer", "admin_navbar_start"],
+  "uninstall_deletes_data": false
+}

@@ -25,3 +25,5 @@
 .sp-form-card .sp-choice input[type="radio"]{appearance:auto;-webkit-appearance:radio;display:inline-block;flex:0 0 18px;width:18px;height:18px;min-width:18px;padding:0;margin:2px 0 0;border:initial;border-radius:50%;box-shadow:none;vertical-align:middle}
 .sp-form-card .sp-choice .sp-choice-text{display:block;flex:1;min-width:0;overflow-wrap:anywhere}
 .sp-form-card .sp-choice .sp-choice-text strong{color:#184d44}
+
+.sp-invalid-field{display:block!important}.sp-invalid-field input,.sp-invalid-field select{border:2px solid #dc2626!important}.sp-invalid-field small{display:block;color:#b91c1c;margin-top:5px}

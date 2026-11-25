@@ -6,3 +6,11 @@
 <h3><?php echo _l('solar_pro_monthly_breakdown'); ?></h3><table cellpadding="5" border="1"><tr><th><?php echo _l('solar_pro_month'); ?></th><th><?php echo _l('solar_pro_production'); ?></th><th><?php echo _l('solar_pro_consumption'); ?></th><th><?php echo _l('solar_pro_before_solar'); ?></th><th><?php echo _l('solar_pro_after_solar'); ?></th><th><?php echo _l('solar_pro_savings'); ?></th></tr><?php foreach($analysis['monthly'] as $m): ?><tr><td><?php echo $months[(int)$m['month_number']]; ?></td><td><?php echo number_format($m['production_kwh']); ?> kWh</td><td><?php echo number_format($m['consumption_kwh']); ?> kWh</td><td><?php echo app_format_money($m['utility_cost_without_solar'],get_base_currency()); ?></td><td><?php echo app_format_money($m['utility_cost_with_solar'],get_base_currency()); ?></td><td><?php echo app_format_money($m['savings'],get_base_currency()); ?></td></tr><?php endforeach; ?></table>
 
 <?php echo solar_pro_custom_pdf_bookend('estimate', 'closing_page'); ?>
+
+<h3><?php echo _l('solar_pro_financial_snapshot'); ?></h3>
+<p><?php echo _l('solar_pro_annual_generation'); ?>: <?php echo number_format($analysis['annual_production_kwh']); ?> kWh · <?php echo _l('solar_pro_solar_offset'); ?>: <?php echo number_format($analysis['solar_offset_pct'],1); ?>%</p>
+<p><?php echo _l('solar_pro_year1_savings'); ?>: $<?php echo number_format($analysis['year1_savings'],2); ?> · <?php echo _l('solar_pro_payback'); ?>: <?php echo $analysis['payback_years']!==null?number_format($analysis['payback_years'],1):_l('solar_pro_not_reached'); ?> · <?php echo _l('solar_pro_lifetime_net_savings'); ?>: $<?php echo number_format($analysis['lifetime_savings'],2); ?></p>
+<h3><?php echo _l('solar_pro_analysis_details'); ?></h3>
+<p><?php echo _l('solar_pro_data_source'); ?>: <?php echo _l($analysis['analysis_source']==='google_solar'?'solar_pro_google_solar':'solar_pro_fallback_estimate'); ?></p>
+<p><?php echo html_escape(_l('solar_pro_estimate_disclaimer')); ?></p>
+<?php $pdf->writeHTML(ob_get_clean(),true,false,true,false,''); ?>

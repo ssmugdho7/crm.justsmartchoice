@@ -141,7 +141,7 @@ class Solar_portal extends App_Controller
         if (!$analysis) { show_404(); }
         $this->load->helper('pdf');
         $pdf = app_pdf('solar-analysis', module_dir_path('solar_pro','libraries/pdf/Solar_analysis_pdf'), $analysis);
-        $pdf->Output('solar-proposal-' . (int)$analysis['id'] . '.pdf', 'D');
+        $pdf->Output('solar-proposal-' . (int)$analysis['id'] . '.pdf', $this->input->get('print') === '1' ? 'I' : 'D');
     }
 
     public function document($token, $documentId)

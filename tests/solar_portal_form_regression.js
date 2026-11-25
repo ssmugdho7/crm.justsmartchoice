@@ -1,0 +1,9 @@
+const vm=require('vm'),fs=require('fs'),assert=require('assert');
+const controls=[{name:'first_name',type:'text',value:'Jonathan'},{name:'phone',type:'tel',value:'bad phone'},{name:'analysis_method',type:'radio',value:'quick_estimate',checked:true},{name:'id_document[]',type:'file',files:['selected.pdf']}];
+let moved=[],handlers={},replaced=false,url='';
+const fresh=controls.map(x=>({name:x.name,type:x.type,value:x.type==='radio'?x.value:'',replaceWith:old=>moved.push(old)}));fresh.push({name:'portal_lang',type:'hidden',replaceWith:()=>{throw Error('language hidden input must be refreshed');}});
+const current={querySelectorAll:()=>controls,replaceWith:()=>replaced=true};const root={querySelectorAll:()=>fresh};
+const context={document:{querySelector:()=>current,addEventListener:(e,f)=>handlers[e]=f,documentElement:{}},DOMParser:class{parseFromString(){return {querySelector:()=>root,title:'Spanish form'};}},URL,history:{replaceState:(x,y,u)=>url=u},location:{href:'https://crm.test/solar_pro/estimate?lang=en',assign:()=>{}},window:{alert:m=>{throw Error(m);}},fetch:async()=>({ok:true,redirected:false,url:'https://crm.test/solar_pro/estimate?lang=es',text:async()=>'<form></form>'}),FormData:class{}};
+vm.runInNewContext(fs.readFileSync(__dirname+'/../modules/solar_pro/assets/js/solar-portal-form.js','utf8'),context);
+handlers.click({target:{closest:()=>({href:'https://crm.test/solar_pro/estimate?lang=es'})},preventDefault(){}});
+setImmediate(()=>{assert(replaced);assert.equal(url,'https://crm.test/solar_pro/estimate?lang=es');assert.equal(moved.length,4);controls.forEach((x,i)=>assert.strictEqual(moved[i],x));assert.deepEqual(moved[3].files,['selected.pdf']);console.log('PASS language navigation preserves actual text, invalid phone, radio and uploaded-file controls; new language and CSRF fields remain server-owned');});

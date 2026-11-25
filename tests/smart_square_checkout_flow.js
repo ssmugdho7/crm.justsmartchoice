@@ -7,16 +7,25 @@ const script = source.match(/<script>\s*([\s\S]*?)<\/script>/)[1]
     .replace(/<\?= json_encode\(site_url\('invoice\/'[\s\S]*?\)\); \?>/g, JSON.stringify('https://crm.test/invoice/122/hash'))
     .replace(/<\?=[\s\S]*?\?>/g, JSON.stringify('fixture'));
 
-async function run(responses, valid = true) {
+async function run(responses, valid = true, subscription = false) {
     let click, tokens = 0;
-    const requests = [], redirects = [];
+    const requests = [], redirects = [], enrollments = [];
     const button = { disabled: true };
     const status = { textContent: '' };
     const elements = {'smart-square-pay':button,'smart-square-status':status};
     for (const id of ['square-street','square-city','square-state','square-postal','square-same-address','square-terms','smart-square-edit','smart-square-billing']) {
         elements[id] = {value:'',checked:false,disabled:false,handlers:{},addEventListener(event,fn){this.handlers[event]=fn;},scrollIntoView(){},focus(){}};
     }
-    elements['smart-square-checkout-form'] = {reportValidity:()=>valid,addEventListener:(_,fn)=>{click=fn;}};
+    if (subscription) {
+        delete elements['square-same-address'];
+        delete elements['smart-square-edit'];
+        elements['smart-square-subscription-source'] = { value: '' };
+    }
+    elements['smart-square-checkout-form'] = {
+        reportValidity: () => valid,
+        addEventListener: (_, fn) => { click = fn; },
+        submit: () => enrollments.push(elements['smart-square-subscription-source'].value),
+    };
     const context = {
         document: { getElementById: id => elements[id] },
         URLSearchParams,
@@ -36,14 +45,16 @@ async function run(responses, valid = true) {
     vm.runInNewContext(script, context);
     await new Promise(resolve => setImmediate(resolve));
     assert.equal(button.disabled, false, 'Card attachment enables Pay');
-    elements['square-same-address'].checked = true;
-    elements['square-same-address'].handlers.change();
-    assert.equal(elements['square-city'].value,'Tampa','Same-address fills invoice city');
+    if (!subscription) {
+        elements['square-same-address'].checked = true;
+        elements['square-same-address'].handlers.change();
+        assert.equal(elements['square-city'].value,'Tampa','Same-address fills invoice city');
+    }
     for (let i = 0; i < 2 && responses.length; i++) {
         await click({preventDefault(){}});
         if (i === 0 && requests.length) elements['square-street'].value = 'Changed after request';
     }
-    return { button, tokens, requests, redirects, status, elements };
+    return { button, tokens, requests, redirects, enrollments, status, elements };
 }
 
 (async () => {
@@ -64,5 +75,11 @@ async function run(responses, valid = true) {
     assert.equal(invalidJson.button.disabled, false, 'Interrupted request can be retried');
     const expired = await run([{ ok: false, status: 419 }]);
     assert.equal(expired.redirects.length, 0, 'Expired session never reports success');
-    console.log('Square checkout success, interruption, retry, invalid JSON, and expiry checks passed.');
+    const subscription = await run([{ok:true}], true, true);
+    assert.deepEqual(subscription.enrollments, ['one-card-token'], 'Subscription submits its token once through its own form');
+    assert.equal(subscription.requests.length, 0, 'Subscription never calls the invoice charge endpoint');
+    assert.equal(subscription.button.disabled, true, 'Enrollment remains disabled while the form navigates');
+    const unaccepted = await run([{ok:true}], false, true);
+    assert.equal(unaccepted.tokens, 0, 'Unaccepted terms prevent subscription tokenization');
+    console.log('Square invoice payment, retry, expiry, and subscription checkout checks passed.');
 })().catch(error => { console.error(error); process.exitCode = 1; });

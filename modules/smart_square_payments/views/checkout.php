@@ -6,17 +6,22 @@ $applicationId = trim((string) $gateway->getSetting('application_id'));
 $locationId = trim((string) $gateway->getSetting('location_id'));
 $sandbox = (int) $gateway->getSetting('sandbox') === 1;
 $ready = $applicationId !== '' && $locationId !== '' && trim((string) $gateway->secret('access_token')) !== '';
-$invoiceId = (int) $invoice->id;
+$isSubscription = isset($subscriptionCheckout);
+$subscription = $subscriptionCheckout['subscription'] ?? null;
+$enrolled = $subscriptionCheckout['enrolled'] ?? false;
+$canPay = $ready && !$enrolled;
+$invoiceId = $isSubscription ? 0 : (int) $invoice->id;
+$billingRecord = $billingRecord ?? $invoice;
 $customer = $customer ?? [];
 $billing = [
-    'address_line_1' => (string) ($invoice->billing_street ?? ''),
-    'locality' => (string) ($invoice->billing_city ?? ''),
-    'administrative_district_level_1' => (string) ($invoice->billing_state ?? ''),
-    'postal_code' => (string) ($invoice->billing_zip ?? ''),
+    'address_line_1' => (string) ($billingRecord->billing_street ?? ''),
+    'locality' => (string) ($billingRecord->billing_city ?? ''),
+    'administrative_district_level_1' => (string) ($billingRecord->billing_state ?? ''),
+    'postal_code' => (string) ($billingRecord->billing_zip ?? ''),
     'country' => 'US',
 ];
-if (!empty($invoice->billing_country) && function_exists('get_country')) {
-    $country = get_country((int) $invoice->billing_country);
+if (!empty($billingRecord->billing_country) && function_exists('get_country')) {
+    $country = get_country((int) $billingRecord->billing_country);
     if ($country && !empty($country->iso2)) { $billing['country'] = strtoupper($country->iso2); }
 }
 $fullAddress = implode(', ', array_filter(array_slice($billing, 0, 4), static fn($value) => trim($value) !== ''));
@@ -33,12 +38,12 @@ $icon = static function ($name) {
 };
 ?>
 <!doctype html>
-<html lang="<?= html_escape(get_option('active_language') === 'spanish' ? 'es' : 'en'); ?>">
+<html lang="<?= html_escape(($language ?? get_option('active_language')) === 'spanish' ? 'es' : 'en'); ?>">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?= html_escape(_l('smart_square_pay_securely')); ?></title>
-    <link rel="stylesheet" href="<?= html_escape(base_url('modules/smart_square_payments/assets/checkout.css?v=20261027c')); ?>">
+    <title><?= html_escape($isSubscription ? $subscription->name : _l('smart_square_pay_securely')); ?></title>
+    <link rel="stylesheet" href="<?= html_escape(base_url('modules/smart_square_payments/assets/checkout.css?v=20261126')); ?>">
 </head>
 <body>
 <main class="smart-square-checkout">
@@ -55,15 +60,57 @@ $icon = static function ($name) {
                     <dd><?= html_escape($field === 'address' ? ($fullAddress ?: ($customer[$field] ?? '')) : ($customer[$field] ?? '')) ?: html_escape(_l('smart_square_not_provided')); ?></dd>
                 </div>
             <?php } ?>
-            <?php if ($ready) { ?><div class="checkout-edit-action"><dt class="sr-only"><?= html_escape(_l('smart_square_edit_address')); ?></dt><dd><button class="checkout-edit" type="button" id="smart-square-edit"><?= $icon('edit'); ?><?= html_escape(_l('smart_square_edit')); ?></button></dd></div><?php } ?>
+            <?php if ($canPay && !$isSubscription) { ?><div class="checkout-edit-action"><dt class="sr-only"><?= html_escape(_l('smart_square_edit_address')); ?></dt><dd><button class="checkout-edit" type="button" id="smart-square-edit"><?= $icon('edit'); ?><?= html_escape(_l('smart_square_edit')); ?></button></dd></div><?php } ?>
         </dl>
+        <?php if ($isSubscription) { ?>
+            <section class="checkout-panel checkout-subscription" aria-label="<?= html_escape(_l('subscription')); ?>">
+                <div>
+                    <h2><?= html_escape($subscription->name); ?></h2>
+                    <?php if (!empty($subscription->description)) { ?>
+                        <p><?= html_escape(trim(strip_tags(clear_textarea_breaks($subscription->description)))); ?></p>
+                    <?php } ?>
+                    <?php if (!$enrolled && !empty($subscription->date) && $subscription->date > date('Y-m-d')) { ?>
+                        <p><?= html_escape(_l('smart_square_subscription_starts', _d($subscription->date))); ?></p>
+                    <?php } ?>
+                </div>
+                <strong><?= html_escape($subscriptionCheckout['rate']); ?></strong>
+            </section>
+            <?php foreach (['success', 'warning', 'danger'] as $type) {
+                $message = $this->session->flashdata('message-' . $type);
+                if ($message) { ?>
+                    <p class="checkout-notice checkout-notice-<?= $type; ?>" role="<?= $type === 'success' ? 'status' : 'alert'; ?>"><?= html_escape($message); ?></p>
+                <?php }
+            } ?>
+        <?php } ?>
         <?php if ($sandbox) { ?><p class="checkout-notice" role="status"><?= html_escape(_l('smart_square_sandbox_notice')); ?></p><?php } ?>
-        <?php if (!$ready) { ?>
+        <?php if ($enrolled) {
+            $state = $subscriptionCheckout['status'];
+            $statusLabel = $this->lang->line('subscription_' . $state, false) ?: ucwords(str_replace('_', ' ', $state)); ?>
+            <section class="checkout-panel checkout-payment">
+                <div class="payment-heading"><h2><?= $icon('receipt'); ?><?= html_escape(_l('smart_square_subscription_status')); ?></h2></div>
+                <p><?= html_escape($statusLabel); ?></p>
+                <?php if ($subscriptionCheckout['invoices']) { ?>
+                    <h3><?= html_escape(_l('invoices')); ?></h3>
+                    <ul class="checkout-invoices">
+                    <?php foreach ($subscriptionCheckout['invoices'] as $billingInvoice) {
+                        if (!$billingInvoice) { continue; } ?>
+                        <li><a href="<?= html_escape(site_url('invoice/' . $billingInvoice->id . '/' . $billingInvoice->hash)); ?>"><?= html_escape(format_invoice_number($billingInvoice->id)); ?></a></li>
+                    <?php } ?>
+                    </ul>
+                <?php } ?>
+            </section>
+        <?php } elseif (!$ready) { ?>
             <div class="alert alert-danger"><?= html_escape(_l('smart_square_not_configured_contact')); ?></div>
         <?php } else { ?>
-            <form id="smart-square-checkout-form" class="checkout-panel checkout-payment">
+            <?php if ($isSubscription) {
+                echo form_open($subscriptionCheckout['action'], ['id' => 'smart-square-checkout-form', 'class' => 'checkout-panel checkout-payment']);
+                echo '<input type="hidden" name="source_id" id="smart-square-subscription-source">';
+            } else { ?>
+                <form id="smart-square-checkout-form" class="checkout-panel checkout-payment">
+            <?php } ?>
             <div class="payment-heading"><h2><?= $icon('card'); ?><?= html_escape(_l('smart_square_payment_information')); ?></h2><div class="card-brands" aria-label="Visa, Mastercard, American Express, Discover"><span>VISA</span><span class="mastercard" aria-hidden="true"></span><span class="amex">AMERICAN<br>EXPRESS</span><span class="discover">DISCOVER</span></div></div>
             <div id="smart-square-card"></div>
+            <?php if (!$isSubscription) { ?>
             <div class="billing-heading"><?= $icon('pin'); ?><?= html_escape(_l('smart_square_customer_address')); ?></div>
             <fieldset class="billing-fields" id="smart-square-billing">
                 <legend class="sr-only"><?= html_escape(_l('smart_square_customer_address')); ?></legend>
@@ -73,11 +120,22 @@ $icon = static function ($name) {
                 <label class="postal"><span class="sr-only"><?= html_escape(_l('smart_square_postal')); ?></span><input id="square-postal" name="postal_code" autocomplete="billing postal-code" maxlength="20" required placeholder="<?= html_escape(_l('smart_square_postal')); ?>"></label>
             </fieldset>
             <label class="checkbox-row"><input type="checkbox" id="square-same-address"><span><?= html_escape(_l('smart_square_same_address')); ?></span></label>
+            <?php } ?>
             <div id="smart-square-status" role="alert" aria-live="polite"></div>
             <button type="submit" class="pay-button" id="smart-square-pay" disabled>
-                <?= $icon('lock'); ?><span><?= html_escape(_l('smart_square_pay_amount', app_format_money($amount, $invoice->currency_name ?? 'USD'))); ?></span>
+                <?= $icon('lock'); ?><span><?= html_escape($isSubscription
+                    ? _l('smart_square_subscribe_amount', $subscriptionCheckout['rate'])
+                    : _l('smart_square_pay_amount', app_format_money($amount, $invoice->currency_name ?? 'USD'))); ?></span>
             </button>
-            <p class="checkout-note"><?= html_escape(_l('smart_square_receipt_notice')); ?></p>
+            <p class="checkout-note"><?= html_escape($isSubscription
+                ? _l('smart_square_recurring_notice', $subscriptionCheckout['rate'])
+                : _l('smart_square_receipt_notice')); ?></p>
+            <?php if ($isSubscription && !empty($subscription->terms)) { ?>
+                <details class="checkout-note">
+                    <summary><?= html_escape(_l('smart_square_subscription_terms')); ?></summary>
+                    <p><?= nl2br(html_escape(strip_tags(clear_textarea_breaks($subscription->terms)))); ?></p>
+                </details>
+            <?php } ?>
             <label class="checkbox-row terms-row"><input type="checkbox" id="square-terms" required><span><?= html_escape(_l('smart_square_terms_prefix')); ?> <a href="<?= html_escape(site_url('terms-and-conditions')); ?>" target="_blank" rel="noopener"><?= html_escape(_l('smart_square_terms')); ?></a> <?= html_escape(_l('smart_square_and')); ?> <a href="<?= html_escape(site_url('privacy-policy')); ?>" target="_blank" rel="noopener"><?= html_escape(_l('smart_square_privacy')); ?></a>.</span></label>
             </form>
             <div class="checkout-trust"><?php foreach (['shield' => 'secure_payment', 'lock' => 'processed_square', 'receipt' => 'receipt_email', 'pin' => 'private_details'] as $symbol => $key) { ?><div><?= $icon($symbol); ?><span><?= html_escape(_l('smart_square_' . $key)); ?></span></div><?php } ?></div>
@@ -88,6 +146,7 @@ $icon = static function ($name) {
                 const button = document.getElementById('smart-square-pay');
                 const status = document.getElementById('smart-square-status');
                 const form = document.getElementById('smart-square-checkout-form');
+                const subscriptionSource = document.getElementById('smart-square-subscription-source');
                 const billingFields = document.getElementById('smart-square-billing');
                 const sameAddress = document.getElementById('square-same-address');
                 const terms = document.getElementById('square-terms');
@@ -99,20 +158,22 @@ $icon = static function ($name) {
                     postal_code: document.getElementById('square-postal'),
                 };
                 const customerBilling = <?= json_encode($billing, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
-                sameAddress.addEventListener('change', function() {
-                    Object.entries(addressInputs).forEach(([key, input]) => { input.value = sameAddress.checked ? (customerBilling[key] || '') : ''; });
-                });
-                Object.values(addressInputs).forEach(input => input.addEventListener('input', function() { sameAddress.checked = false; }));
-                edit.addEventListener('click', function() {
-                    addressInputs.address_line_1.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    addressInputs.address_line_1.focus();
-                });
+                if (sameAddress) {
+                    sameAddress.addEventListener('change', function() {
+                        Object.entries(addressInputs).forEach(([key, input]) => { input.value = sameAddress.checked ? (customerBilling[key] || '') : ''; });
+                    });
+                    Object.values(addressInputs).forEach(input => input.addEventListener('input', function() { sameAddress.checked = false; }));
+                    edit.addEventListener('click', function() {
+                        addressInputs.address_line_1.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        addressInputs.address_line_1.focus();
+                    });
+                }
                 const applicationId = <?= json_encode($applicationId); ?>;
                 const locationId = <?= json_encode($locationId); ?>;
                 const endpoint = <?= json_encode(site_url('smart_square_payments/charge')); ?>;
-                const invoiceUrl = <?= json_encode(site_url('invoice/' . $invoiceId . '/' . $invoice->hash)); ?>;
+                const invoiceUrl = <?= json_encode(site_url('invoice/' . $invoiceId . '/' . ($invoice->hash ?? ''))); ?>;
                 const invoiceId = <?= $invoiceId; ?>;
-                const invoiceHash = <?= json_encode($invoice->hash); ?>;
+                const invoiceHash = <?= json_encode($invoice->hash ?? ''); ?>;
                 const csrfName = <?= json_encode($this->security->get_csrf_token_name()); ?>;
                 const csrfHash = <?= json_encode($this->security->get_csrf_hash()); ?>;
                 const messages = {
@@ -162,6 +223,14 @@ $icon = static function ($name) {
                             sourceToken = result.token;
                         }
 
+                        if (subscriptionSource) {
+                            subscriptionSource.value = sourceToken;
+                            // The existing subscription endpoint handles enrollment and redirects back.
+                            form.submit();
+                            completed = true;
+                            return;
+                        }
+
                         if (!requestBody) {
                             const body = new URLSearchParams();
                             body.set('invoice_id', String(invoiceId));
@@ -209,7 +278,11 @@ $icon = static function ($name) {
             })();
             </script>
         <?php } ?>
-        <a class="back-link" href="<?= html_escape(site_url('invoice/' . $invoiceId . '/' . $invoice->hash)); ?>"><?= html_escape(_l('smart_square_back_to_invoice')); ?></a>
+        <?php if (!$isSubscription) { ?>
+            <a class="back-link" href="<?= html_escape(site_url('invoice/' . $invoiceId . '/' . $invoice->hash)); ?>"><?= html_escape(_l('smart_square_back_to_invoice')); ?></a>
+        <?php } elseif (can_logged_in_contact_view_subscriptions()) { ?>
+            <a class="back-link" href="<?= html_escape(site_url('clients/subscriptions')); ?>"><?= html_escape(_l('client_go_to_dashboard')); ?></a>
+        <?php } ?>
     </div>
 </main>
 </body>

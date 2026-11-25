@@ -4,3 +4,19 @@
 .checkout-customer .checkout-edit-action{position:absolute;inset:0;pointer-events:none}.checkout-edit-action button{pointer-events:auto}#smart-square-card .sq-card-message:empty{display:none}
 .checkout-logo a{display:flex;align-items:center;justify-content:center;min-height:90px}.checkout-logo img{object-fit:contain}.checkout-logo .logo-text{font-size:20px;line-height:1.3}
 .smart-square-checkout{margin-top:10px}.checkout-note{font-size:14px;line-height:1.6;color:#263f57}.checkbox-row{font-size:13px;line-height:1.5;color:#263f57}.checkout-customer dt{font-size:14px;color:#4c637a}.checkout-trust div{font-size:13px;color:#344e68}.checkout-security{font-size:12px;color:#455d75}.back-link{font-size:14px;color:#365a7d}.billing-fields input::placeholder{color:#53667a}
+
+.checkout-subscription {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px 18px;
+    margin-bottom: 12px;
+    padding: 15px 20px;
+}
+.checkout-subscription h2 { margin: 0; font-size: 19px; color: #0b2c4e; }
+.checkout-subscription p { margin: 4px 0 0; color: #4c637a; font-size: 14px; }
+.checkout-subscription strong { color: #0b2c4e; font-size: 18px; }
+.checkout-notice-success { background: #e8f7ee; color: #195432; }
+.checkout-notice-danger { background: #feecec; color: #8a2222; }
+.checkout-invoices { margin-bottom: 0; padding-left: 20px; }

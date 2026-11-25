@@ -22,27 +22,15 @@ class Subscription extends ClientsController
             show_404();
         }
 
-        $language               = load_client_language($subscription->clientid);
-        $data['locale']         = get_locale_key($language);
-        $isSquare = $this->smart_square_subscriptions->isSquarePlan($subscription->stripe_plan_id);
-        $data['paymentProvider'] = $isSquare ? 'square' : 'stripe';
-        if ($isSquare) {
-            $plan = $this->smart_square_subscriptions->get_plan($subscription->stripe_plan_id);
-            if (!$plan) { show_404(); }
-            $data['publishableKey'] = $this->smart_square_subscriptions->applicationId();
-            $data['squareApplicationId'] = $this->smart_square_subscriptions->applicationId();
-            $data['squareLocationId'] = $this->smart_square_subscriptions->locationId();
-            $data['squareSandbox'] = $this->smart_square_subscriptions->sandbox();
-            $mapping = $this->db->where('crm_subscription_id', (int) $subscription->id)->get(db_prefix() . 'smart_square_subscriptions')->row();
-            $data['squareSubscription'] = $mapping;
-        } else {
-            $data['publishableKey'] = $this->stripe_subscriptions->get_publishable_key();
-            $plan = $this->stripe_subscriptions->get_plan($subscription->stripe_plan_id);
+        if ($this->smart_square_subscriptions->isSquarePlan($subscription->stripe_plan_id)) {
+            return $this->squareCheckout($subscription);
         }
 
-        if (!$isSquare) {
-            check_stripe_subscription_environment($subscription);
-        }
+        $language               = load_client_language($subscription->clientid);
+        $data['locale']         = get_locale_key($language);
+        $data['publishableKey'] = $this->stripe_subscriptions->get_publishable_key();
+        $plan                   = $this->stripe_subscriptions->get_plan($subscription->stripe_plan_id);
+        check_stripe_subscription_environment($subscription);
 
         if (! empty($subscription->stripe_subscription_id) && ! empty($data['publishableKey'])) {
             $data['stripeSubscription'] = $this->stripe_subscriptions->get_subscription([
@@ -84,7 +72,7 @@ class Subscription extends ClientsController
         }
 
         $data['total'] = $upcomingInvoice->total;
-        $product       = $isSquare ? ($plan->product ?? (object) ['name' => $subscription->name]) : $this->stripe_subscriptions->get_product($plan->product);
+        $product       = $this->stripe_subscriptions->get_product($plan->product);
 
         $upcomingInvoice->lines       = new stdClass();
         $upcomingInvoice->lines->data = [];
@@ -108,6 +96,41 @@ class Subscription extends ClientsController
         $this->data($data);
         $this->view('subscriptionhtml');
         $this->layout();
+    }
+
+    private function squareCheckout($subscription)
+    {
+        $language = load_client_language($subscription->clientid);
+        $this->load->helper('smart_square_payments/smart_square_payments');
+
+        $square = $this->smart_square_subscriptions;
+        $plan = $square->get_plan($subscription->stripe_plan_id);
+        if (!$plan) {
+            show_404();
+        }
+
+        $client = $this->clients_model->get($subscription->clientid);
+        $contact = $this->clients_model->get_contact(get_primary_contact_user_id($subscription->clientid));
+        $mapping = $this->db->where('crm_subscription_id', (int) $subscription->id)
+            ->get(db_prefix() . 'smart_square_subscriptions')->row();
+        $enrolled = !empty($mapping->square_subscription_id);
+        $currency = strtoupper($plan->currency);
+        $amount = app_format_money($currency === 'JPY' ? $plan->amount : $plan->amount / 100, $currency);
+
+        $this->load->view('smart_square_payments/checkout', [
+            'gateway' => $this->smart_square_gateway,
+            'language' => $language,
+            'billingRecord' => $client,
+            'customer' => smart_square_checkout_customer((object) ['client' => $client], (array) $contact),
+            'subscriptionCheckout' => [
+                'subscription' => $subscription,
+                'action' => site_url('subscription/subscribe/' . $subscription->hash),
+                'rate' => $amount . ' / ' . $this->billingInterval($plan),
+                'enrolled' => $enrolled,
+                'status' => strtolower((string) ($mapping->status ?? '')),
+                'invoices' => $enrolled ? $this->subscriptions_model->get_child_invoices($subscription->id) : [],
+            ],
+        ]);
     }
 
     public function subscribe($subscription_hash)
@@ -301,7 +324,7 @@ class Subscription extends ClientsController
         redirect(site_url('subscription/' . $hash));
     }
 
-    protected function lineProductDescription($product, $plan, $currency)
+    private function billingInterval($plan)
     {
         $intervals = ['day', 'week', 'month', 'year'];
         $interval  = $plan->interval;
@@ -314,10 +337,15 @@ class Subscription extends ClientsController
             }
         }
 
+        return $interval;
+    }
+
+    protected function lineProductDescription($product, $plan, $currency)
+    {
         $productName = (! empty($plan->nickname) ? $plan->nickname : $product->name);
 
         return $productName . ' (' . app_format_money(strcasecmp($plan->currency, 'JPY') == 0 ?
                 $plan->amount :
-                $plan->amount / 100, strtoupper($currency)) . ' / ' . $interval . ')';
+                $plan->amount / 100, strtoupper($currency)) . ' / ' . $this->billingInterval($plan) . ')';
     }
 }

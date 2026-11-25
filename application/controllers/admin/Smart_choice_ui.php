@@ -56,6 +56,16 @@ class Smart_choice_ui extends AdminController
         return $this->output->set_content_type('application/json')->set_output(json_encode(['success'=>true]));
     }
 
+    public function active_time_heartbeat()
+    {
+        if (!is_staff_logged_in() || !$this->input->is_ajax_request() || $this->input->method() !== 'post') {
+            return $this->output->set_status_header(403)->set_content_type('application/json')->set_output('{"success":false}');
+        }
+        $this->load->model('staff_activity_model');
+        $ok=$this->staff_activity_model->heartbeat($this->input->post('active')==='1');
+        return $this->output->set_status_header($ok?200:503)->set_content_type('application/json')->set_output(json_encode(['success'=>(bool)$ok]));
+    }
+
     public function timezones()
     {
         if (!is_staff_logged_in()) {

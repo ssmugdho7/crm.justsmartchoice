@@ -102,3 +102,5 @@ if (is_file($scLeadManagerSmsCompat)) {
  $(d).on('click','#sc-save-world-clocks',function(){var list=[];$('#sc-world-clock-editor .sc-clock-editor-row').each(function(){var label=$.trim($(this).find('.sc-clock-label').val()),zone=$(this).find('.sc-clock-zone').val();if(label&&zone){list.push({label:label,zone:zone});}});var data={clocks:JSON.stringify(list)};if(typeof csrfData!=='undefined'){data[csrfData.token_name]=csrfData.hash;}$.post(admin_url+'smart_choice_ui/save_world_clocks',data).done(function(resp){if(typeof resp==='string'){try{resp=JSON.parse(resp);}catch(e){resp={success:false};}}if(resp&&resp.success){alert_float('success','<?= e(_l('settings_updated')); ?>');$('#sc-world-clock-manager-modal').modal('hide');window.location.reload();}else{alert_float('danger','<?= e(_l('problem_updating')); ?>');}});});
 })(window,document,jQuery);
 </script>
+
+<script src="<?= base_url('assets/js/staff-active-time.js'); ?>?v=<?= filemtime(FCPATH.'assets/js/staff-active-time.js'); ?>"></script>

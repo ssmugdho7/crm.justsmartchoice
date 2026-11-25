@@ -939,6 +939,8 @@ class Staff_model extends App_Model
         $result['this_week']  = array_sum($result['this_week']);
         $result['last_week']  = array_sum($result['last_week']);
 
+        $this->load->model('staff_activity_model');
+        $result['crm_active'] = $this->staff_activity_model->summary($id);
         return $result;
     }
 }

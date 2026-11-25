@@ -362,7 +362,7 @@
     function appointlyConfirmDelete(onConfirm) {
         var modal = $('<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="appointly-delete-title"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 id="appointly-delete-title">Delete appointment?</h4></div><div class="modal-body"><p>This permanently deletes the appointment. Type DELETE to continue.</p><label for="appointly-delete-word">Confirmation</label><input id="appointly-delete-word" class="form-control" autocomplete="off"></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Keep appointment</button><button type="button" class="btn btn-danger" data-delete-confirm disabled>Delete appointment</button></div></div></div></div>');
         modal.find('input').on('input', function() { modal.find('[data-delete-confirm]').prop('disabled', this.value !== 'DELETE'); });
-        modal.find('[data-delete-confirm]').one('click', function() { $(this).prop('disabled', true); modal.modal('hide'); onConfirm(); });
+        modal.find('[data-delete-confirm]').one('click', function() { $(this).prop('disabled', true); modal.modal('hide'); if(window.SCDelete){ window.SCDelete.withApproval(onConfirm); } else { onConfirm(); } });
         modal.on('hidden.bs.modal', function() { modal.remove(); });
         modal.on('shown.bs.modal', function() { modal.find('input').focus(); });
         modal.appendTo('body').modal('show');

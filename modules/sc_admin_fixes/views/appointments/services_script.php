@@ -1,8 +1,8 @@
 async function delete_service(id) {
 var scafFinish=window.scafAppointmentBegin('services_script:0');if(!scafFinish)return false;try{
 
-    if ((await SCAF.confirm({title:'Confirm appointment action',message:app.lang.confirm_action_prompt,typed:'CONFIRM',actionLabel:'Confirm'}))) {
-        $.post(admin_url + 'appointly/services/delete/' + id)
+    if ((await SCAF.confirm({title:'Confirm appointment action',message:app.lang.confirm_action_prompt,typed:'DELETE',actionLabel:'Delete'}))) {
+        $.post(admin_url + 'appointly/services/delete/' + id, {delete_confirmation:'DELETE'})
             .done(function(response) {
                 try {
                     response = JSON.parse(response);

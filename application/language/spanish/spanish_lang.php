@@ -4199,3 +4199,5 @@ $lang['sc_admin_theme_style_inactive'] = 'Active el módulo Theme Style para edi
 $lang['theme_style'] = 'Estilo del tema';
 
 $lang['sc_google_calendar_unavailable'] = '%s calendario(s) de Google no están disponibles. Los eventos del CRM y los calendarios de Google accesibles siguen funcionando. Revisa los identificadores guardados, los permisos de Google y la configuración de la API.';
+
+$lang['sc_type_delete_to_confirm'] = 'Escriba DELETE para confirmar la eliminación.';

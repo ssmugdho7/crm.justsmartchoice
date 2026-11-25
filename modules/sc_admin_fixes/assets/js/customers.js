@@ -26,7 +26,7 @@
   if (!await window.SCAF.confirm({title:deleting?t('Delete selected customers?','¿Eliminar clientes seleccionados?'):t('Update selected customers?','¿Actualizar clientes seleccionados?'),message:ids.length+' '+t('selected customers will be affected.','clientes seleccionados se verán afectados.'),actionLabel:t('Continue','Continuar')})) return false;
   if (deleting && !await window.SCAF.confirm({title:t('Permanently delete customers','Eliminar clientes permanentemente'),message:t('This removes the selected customer records.','Se eliminarán los clientes seleccionados.'),typed:'DELETE',actionLabel:t('Delete customers','Eliminar clientes')})) return false;
   var data={ids:ids};
-  if(deleting) data.mass_delete=true;
+  if(deleting) {data.mass_delete=true;data.delete_confirmation='DELETE';}
   else {data.groups=$('select[name="move_to_groups_customers_bulk[]"]').val()||[];if(!data.groups.length){
    if (!await window.SCAF.confirm({title:t('Clear group memberships?','¿Eliminar pertenencia a grupos?'),message:t('No groups are selected. This removes all group memberships from these customers.','No hay grupos seleccionados. Se eliminará la pertenencia a todos los grupos de estos clientes.'),actionLabel:t('Clear groups','Eliminar grupos')})) return false;
    data.groups='remove_all'; data.scaf_clear_groups='1';

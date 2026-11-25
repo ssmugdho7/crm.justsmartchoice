@@ -147,7 +147,7 @@ $autoload['helper'] = [
         'general',
         'misc',
         'signature_backup',
-        'smart_choice_sales_links', 'smart_choice_sales_discussions', 'smart_choice_maps', 'smart_choice_bulk',
+        'smart_choice_sales_links', 'smart_choice_sales_discussions', 'smart_choice_maps', 'smart_choice_bulk', 'sc_delete_confirmation',
         'func',
         'gdpr',
         'datatables',

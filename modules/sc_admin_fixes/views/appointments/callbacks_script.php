@@ -78,8 +78,8 @@ var scafFinish=window.scafAppointmentBegin('callbacks_script:1082');if(!scafFini
     async function delete_callback_note(wrapper, id, callback_id) {
 var scafFinish=window.scafAppointmentBegin('callbacks_script:2474');if(!scafFinish)return false;try{
 
-        if ((await SCAF.confirm({title:'Confirm appointment action',message:'Confirm this action?',typed:'CONFIRM',actionLabel:'Confirm'}))) {
-            requestGetJSON('appointly/Callbacks/delete_note/' + id + '/' + callback_id).done(function(response) {
+        if ((await SCAF.confirm({title:'Confirm appointment action',message:'Confirm this action?',typed:'DELETE',actionLabel:'Delete'}))) {
+            $.post(admin_url + 'appointly/Callbacks/delete_note/' + id + '/' + callback_id, {delete_confirmation:'DELETE'}, null, 'json').done(function(response) {
                 if (response.success === true || response.success === 'true') {
                     $(wrapper).parents('.callback-note').remove();
                 }

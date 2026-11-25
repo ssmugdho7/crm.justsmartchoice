@@ -317,10 +317,12 @@
         var release = source && SCAF.busy ? SCAF.busy(source) : function(){};
         var submitted = false;
         try {
-            if(!await SCAF.confirm({title:SCAF.t('Delete selected records?','¿Eliminar registros seleccionados?'),message:SCAF.t('This permanently deletes the selected records. Linked records remain protected by the existing server checks.','Esto elimina permanentemente los registros seleccionados. Los registros vinculados siguen protegidos por las comprobaciones del servidor.'),typed:'DELETE',actionLabel:SCAF.t('Delete','Eliminar')})) return;
+            if(!await (window.SCDelete ? window.SCDelete.confirm(ids.length+' '+SCAF.t('selected records will be deleted.','registros seleccionados se eliminarán.')) : SCAF.confirm({title:SCAF.t('Delete selected records?','¿Eliminar registros seleccionados?'),message:SCAF.t('This permanently deletes the selected records. Linked records remain protected by the existing server checks.','Esto elimina permanentemente los registros seleccionados. Los registros vinculados siguen protegidos por las comprobaciones del servidor.'),typed:'DELETE',actionLabel:SCAF.t('Delete','Eliminar')}))) return;
             var form = document.createElement('form');
             form.method = 'post';
             form.action = adminBase() + 'sales_center/mass_delete/' + target;
+            var confirmation = document.createElement('input');
+            confirmation.type = 'hidden'; confirmation.name = 'delete_confirmation'; confirmation.value = 'DELETE'; form.appendChild(confirmation);
             ids.forEach(function(id){
                 var input = document.createElement('input'); input.type = 'hidden'; input.name = 'ids[]'; input.value = id; form.appendChild(input);
             });

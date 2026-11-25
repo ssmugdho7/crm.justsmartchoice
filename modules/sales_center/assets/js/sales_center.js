@@ -304,17 +304,19 @@
         scope.querySelectorAll('.sc-bulk-row:checked,.sales-center-row-checkbox:checked,input[type="checkbox"][name="ids[]"]:checked,input[type="checkbox"][name="id[]"]:checked').forEach(function(cb){ if(cb.value){ ids.push(cb.value); } });
         return ids;
     }
-    function submitMassDelete(target, ids, source){
+    async function submitMassDelete(target, ids, source){
         if(['invoices','estimates','proposals','credit_notes','payments'].indexOf(target)!==-1){
             if(window.scBulkActions){window.scBulkActions.deleteSelected(source);}
             else if(typeof alert_float==='function'){alert_float('warning','Refresh the page to load the deletion confirmation.');}
             return;
         }
         if(!ids.length){ alert('Select at least one record first.'); return; }
-        if(!confirm('Delete selected records?')){ return; }
+        if(!window.SCDelete || !await window.SCDelete.confirm(ids.length+' selected records will be deleted.')) return;
         var form = document.createElement('form');
         form.method = 'post';
         form.action = adminBase() + 'sales_center/mass_delete/' + target;
+        var confirmation = document.createElement('input');
+        confirmation.type = 'hidden'; confirmation.name = 'delete_confirmation'; confirmation.value = 'DELETE'; form.appendChild(confirmation);
         ids.forEach(function(id){
             var input = document.createElement('input'); input.type = 'hidden'; input.name = 'ids[]'; input.value = id; form.appendChild(input);
         });

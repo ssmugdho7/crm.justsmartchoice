@@ -15,7 +15,8 @@
  function notify(type,text){if(window.SCAF&&SCAF.toast)SCAF.toast(type,text);else if(typeof alert_float==='function')alert_float(type,text);}
  function update(table){
   var bar=table._scBulkBar;if(!bar)return;
-  var rows=Array.from(table.querySelectorAll('.sc-bulk-row')).filter(function(row){return row.dataset.feature===featureFor(table);});
+  var feature=featureFor(table);
+  var rows=Array.from(table.querySelectorAll('.sc-bulk-row')).filter(function(row){return row.dataset.feature===feature;});
   var count=rows.filter(function(row){return row.checked;}).length;
   bar.querySelector('.sc-bulk-count').textContent=count?count+' selected':'';
   bar.classList.toggle('scaf-floating-batch',count>0);
@@ -31,14 +32,14 @@
   pending.add(table);
   var release=window.SCAF&&SCAF.busy?SCAF.busy(source):function(){};
   try{
-   if(!window.SCAF||!SCAF.confirm){notify('error','Confirmation is unavailable. Refresh the page before trying again.');return;}
-   if(!await SCAF.confirm({title:'Delete selected records?',message:ids.length+' selected records. Existing server safeguards still apply.',typed:'DELETE',actionLabel:'Delete'}))return;
+   if(!window.SCDelete){notify('error','Refresh the page to load the deletion confirmation.');return;}
+   if(!await SCDelete.confirm(ids.length+' selected records will be deleted.'))return;
    var result=await $.ajax({url:admin_url+'smart_choice_bulk/delete/'+feature,type:'POST',data:{ids:ids,delete_confirmation:'DELETE'},dataType:'json'});
-   if(!result||result.success!==true||!Number.isInteger(result.deleted)||result.deleted<1){notify('error','No deletion was confirmed.');return;}
+   if(!result||!Number.isInteger(result.deleted)){notify('error','No deletion was confirmed.');return;}
    var failed=Array.isArray(result.failed)?result.failed.length:Math.max(0,ids.length-result.deleted);
    notify(failed?'warning':'success',result.deleted+' deleted'+(failed?' · '+failed+' not deleted':''));
    if($.fn.DataTable&&$.fn.DataTable.isDataTable(table))$(table).DataTable().ajax.reload(null,false);
-  }catch(_){notify('error','Unable to confirm deletion. Refresh before retrying.');}
+  }catch(xhr){notify('error',xhr.responseJSON?.message||'Unable to confirm deletion. Refresh before retrying.');}
   finally{pending.delete(table);release();}
  }
  window.scBulkActions={deleteSelected:deleteSelected};

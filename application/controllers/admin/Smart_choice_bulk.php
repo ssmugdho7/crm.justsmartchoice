@@ -8,7 +8,7 @@ class Smart_choice_bulk extends AdminController
     {
         if (!$this->input->is_ajax_request()) { show_404(); return; }
         if ($this->input->method(true) !== 'POST') { show_error('POST required',405); return; }
-        if (strtoupper(trim((string)$this->input->post('delete_confirmation'))) !== 'DELETE') {
+        if ($this->input->post('delete_confirmation') !== 'DELETE') {
             show_error('Type DELETE to confirm deletion',422); return;
         }
         $map = [

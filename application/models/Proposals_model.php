@@ -881,8 +881,8 @@ class Proposals_model extends App_Model
 
         $this->db->where('id', $id);
         $this->db->delete(db_prefix() . 'proposals');
-        signature_backup_delete('proposal', $id);
         if ($this->db->affected_rows() > 0) {
+            signature_backup_delete('proposal', $id);
             if (! is_null($proposal->short_link)) {
                 app_archive_short_link($proposal->short_link);
             }

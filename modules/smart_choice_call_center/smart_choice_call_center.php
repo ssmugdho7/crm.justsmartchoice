@@ -71,7 +71,7 @@ function sccc_admin_footer(){
     if (!(is_admin() || staff_can('view','smart_choice_call_center') || staff_can('view_own','smart_choice_call_center'))) return;
     echo '<script>window.scccTokenUrl='.json_encode(admin_url('smart_choice_call_center/token')).';window.scccBrowserEnabled=true;</script>';
     $CI = &get_instance();
-    if ($CI->router->fetch_class() === 'lead_manager'
+    if (in_array($CI->router->fetch_class(), ['lead_manager', 'clients'], true)
         && staff_can('can_audio_call', 'lead_manager')
         && staff_can('create', SCCC_MODULE_NAME)) {
         echo '<script>window.scccLeadDialerUrl='.json_encode(admin_url('smart_choice_call_center/dialer')).';window.scccLeadDialerLabel='.json_encode(_l('sccc_make_call'), JSON_HEX_TAG).';</script>';

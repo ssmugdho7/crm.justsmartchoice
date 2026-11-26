@@ -494,10 +494,18 @@ if (isset($app_csrf_exclude_uris)) {
     $config['csrf_exclude_uris'] = array_unique($config['csrf_exclude_uris']);
 }
 
-if ($config['csrf_protection'] == true
-    && isset($_SERVER['REQUEST_URI'])
-    && strpos($_SERVER['REQUEST_URI'], 'gateways/') !== false) {
-    $config['csrf_protection'] = false;
+// Payment gateway callbacks (site_url('gateways/...')) are posted by the providers without a CSRF token.
+// Match only the path right after the app base path, so "?gateways/" or "/admin/x/gateways/" can't switch CSRF off.
+if ($config['csrf_protection'] == true && isset($_SERVER['REQUEST_URI'])) {
+    $scCsrfPath = (string) parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    $scCsrfBase = rtrim((string) parse_url(APP_BASE_URL, PHP_URL_PATH), '/');
+    if ($scCsrfBase !== '' && strpos($scCsrfPath, $scCsrfBase . '/') === 0) {
+        $scCsrfPath = substr($scCsrfPath, strlen($scCsrfBase));
+    }
+    if (preg_match('#^/(index\.php/)?gateways/#', $scCsrfPath)) {
+        $config['csrf_protection'] = false;
+    }
+    unset($scCsrfPath, $scCsrfBase);
 }
 
 /*

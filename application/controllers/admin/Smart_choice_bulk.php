@@ -18,6 +18,8 @@ class Smart_choice_bulk extends AdminController
             'contracts'  => ['model'=>'contracts_model','method'=>'delete','permission'=>'contracts'],
             'credit_notes'=>['model'=>'credit_notes_model','method'=>'delete','permission'=>'credit_notes'],
             'payments'   => ['model'=>'payments_model','method'=>'delete','permission'=>'payments'],
+            'projects'   => ['model'=>'projects_model','method'=>'delete','permission'=>'projects'],
+            'estimate_request'=>['model'=>'estimate_request_model','method'=>'delete','permission'=>'estimate_request'],
         ];
         if (!isset($map[$feature]) || staff_cant('delete', $map[$feature]['permission'])) { ajax_access_denied(); return; }
         $raw = $this->input->post('ids');

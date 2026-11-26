@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 function sc_bulk_table_targets()
 {
-    return ['invoices','estimates','proposals','contracts'];
+    return ['invoices','estimates','proposals','contracts','projects','estimate_request'];
 }
 function sc_bulk_checkbox_html($feature, $id)
 {
@@ -19,6 +19,18 @@ foreach (sc_bulk_table_targets() as $scFeature) {
         }
         return $row;
     }, 10, 2);
+}
+
+/** CSRF-protected button for module activate / deactivate / uninstall on the Modules page. */
+function sc_module_action_form($action, $systemName, $label)
+{
+    $CI      = &get_instance();
+    $danger  = $action === 'uninstall';
+    $confirm = $danger ? ' onsubmit="return confirm_delete();"' : '';
+
+    return '<form method="post" action="' . admin_url('modules/' . $action . '/' . rawurlencode($systemName)) . '" class="sc-module-action-form"' . $confirm . ' style="display:inline">'
+        . '<input type="hidden" name="' . e($CI->security->get_csrf_token_name()) . '" value="' . e($CI->security->get_csrf_hash()) . '">'
+        . '<button type="submit" class="btn btn-link sc-module-action-btn' . ($danger ? ' text-danger' : '') . '">' . e($label) . '</button></form>';
 }
 
 hooks()->add_action('app_admin_footer', function(){

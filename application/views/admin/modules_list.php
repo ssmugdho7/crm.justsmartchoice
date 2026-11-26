@@ -18,6 +18,8 @@
 .smart-choice-modules-page .sc-module-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:24px;min-width:72px;padding:3px 7px;border-radius:6px;background:#f5f5f5;color:#374151;border:1px solid #d1d5db;font-size:11px;line-height:1.2;text-decoration:none;text-align:center}
 .smart-choice-modules-page .sc-module-actions a.text-success{background:#e8f7ee;color:#007A3D;border-color:#bfe8cf}
 .smart-choice-modules-page .sc-module-actions a.text-danger{background:#fff0ed;color:#b42318;border-color:#ffd0c7}
+.smart-choice-modules-page .sc-module-actions .sc-module-action-btn{display:inline-flex;align-items:center;justify-content:center;min-height:24px;min-width:72px;padding:3px 7px;border-radius:6px;background:#f5f5f5;color:#374151;border:1px solid #d1d5db;font-size:11px;line-height:1.2;text-decoration:none;text-align:center}
+.smart-choice-modules-page .sc-module-actions .sc-module-action-btn.text-danger{background:#fff0ed;color:#b42318;border-color:#ffd0c7}
 .smart-choice-modules-page .sc-module-description{font-size:12px;line-height:1.3;color:#374151;margin:0 0 6px;word-break:normal;overflow-wrap:anywhere}
 .smart-choice-modules-page .sc-module-meta{font-size:11px;color:#6b7280;line-height:1.25}
 .smart-choice-modules-page .label{font-size:10px;padding:3px 6px;border-radius:10px}
@@ -81,11 +83,11 @@
                                         $action_links[] = '<a href="' . admin_url('modules/download/' . $system_name) . '"><i class="fa fa-download"></i> Download</a>';
 
                                         if ($module['activated'] === 0 && $versionRequirementMet) {
-                                            $action_links[] = '<a href="' . admin_url('modules/activate/' . $system_name) . '">' . _l('module_activate') . '</a>';
+                                            $action_links[] = sc_module_action_form('activate', $system_name, _l('module_activate'));
                                         }
 
                                         if ($module['activated'] === 1) {
-                                            $action_links[] = '<a href="' . admin_url('modules/deactivate/' . $system_name) . '">' . _l('module_deactivate') . '</a>';
+                                            $action_links[] = sc_module_action_form('deactivate', $system_name, _l('module_deactivate'));
                                         }
 
                                         if ($status['can_upgrade']) {
@@ -93,7 +95,7 @@
                                         }
 
                                         if ($module['activated'] === 0 && !in_array($system_name, uninstallable_modules())) {
-                                            $action_links[] = '<a href="' . admin_url('modules/uninstall/' . $system_name) . '" class="_delete text-danger">' . _l('module_uninstall') . '</a>';
+                                            $action_links[] = sc_module_action_form('uninstall', $system_name, _l('module_uninstall'));
                                         }
 
                                         $description = $module['headers']['description'] ?? '';

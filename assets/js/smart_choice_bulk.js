@@ -1,6 +1,6 @@
 (function ($) {
  'use strict';
- var features=['invoices','estimates','proposals','contracts','credit_notes','payments'];
+ var features=['invoices','estimates','proposals','contracts','credit_notes','payments','projects','estimate_request'];
  var pending=new WeakSet();
  function featureFor(table){var input=table.querySelector('.sc-bulk-row[data-feature],.sc-bulk-select-all[data-feature]');return input?input.dataset.feature:'';}
  function tableFor(source){

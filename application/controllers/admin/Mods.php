@@ -29,20 +29,33 @@ class Mods extends AdminController
 
     public function activate($name)
     {
+        $this->require_post_action();
         $this->app_modules->activate($name);
         $this->to_modules();
     }
 
     public function deactivate($name)
     {
+        $this->require_post_action();
         $this->app_modules->deactivate($name);
         $this->to_modules();
     }
 
     public function uninstall($name)
     {
+        $this->require_post_action();
         $this->app_modules->uninstall($name);
         $this->to_modules();
+    }
+
+    /** Module state changes must come from a CSRF-checked POST form, never from a plain link. */
+    private function require_post_action()
+    {
+        if ($this->input->method() !== 'post') {
+            set_alert('warning', 'Use the buttons on the Modules page to change a module.');
+            $this->to_modules();
+            exit;
+        }
     }
 
 

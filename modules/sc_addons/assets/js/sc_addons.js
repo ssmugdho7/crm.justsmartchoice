@@ -307,8 +307,9 @@
       if (r.entry.settings_url) $link.attr('href', r.entry.settings_url).parent().show(); else $link.parent().hide();
       // OAuth integrations: one click saves the keys and continues to the provider's sign-in page.
       var oauth = !!r.entry.oauth_start_url;
-      $('#scao-config-oauth').toggle(oauth).text(oauth ? fmt(T.save_signin, r.entry.oauth_provider || r.entry.name) : '');
-      $('#scao-config-connect').toggle(connects).text(T.connect).toggleClass('btn-primary', !oauth).toggleClass('btn-default', oauth);
+      // Use the hidden attribute: theme CSS can override an inline display:none on buttons.
+      $('#scao-config-oauth').prop('hidden', !oauth).text(oauth ? fmt(T.save_signin, r.entry.oauth_provider || r.entry.name) : '');
+      $('#scao-config-connect').prop('hidden', !connects).text(T.connect).toggleClass('btn-primary', !oauth).toggleClass('btn-default', oauth);
       $('#scao-config-modal').modal('show');
     }).fail(function (x) { toast('danger', errMsg(x)); }).always(function () {
       opening = false;

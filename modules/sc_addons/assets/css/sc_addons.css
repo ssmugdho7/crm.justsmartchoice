@@ -107,3 +107,4 @@
   .scao-toolbar{gap:8px;margin-bottom:10px}
   .scao-section h3{margin:10px 0 8px}
 }
+#scao-config-modal .modal-footer [hidden]{display:none!important}

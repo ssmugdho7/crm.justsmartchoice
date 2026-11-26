@@ -90,7 +90,7 @@
         <button type="button" class="btn btn-default" data-dismiss="modal"><?= _l('sc_addons_cancel'); ?></button>
         <button type="submit" class="btn btn-default" data-mode="save" id="scao-config-save"><?= _l('sc_addons_save'); ?></button>
         <button type="submit" class="btn btn-primary" data-mode="connect" id="scao-config-connect"><?= _l('sc_addons_save_connect'); ?></button>
-        <button type="submit" class="btn btn-primary" data-mode="oauth" id="scao-config-oauth" style="display:none"></button>
+        <button type="submit" class="btn btn-primary" data-mode="oauth" id="scao-config-oauth" hidden></button>
       </div>
     </form>
   </div>

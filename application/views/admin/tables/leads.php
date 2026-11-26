@@ -14,7 +14,7 @@ if (is_gdpr() && get_option('gdpr_enable_consent_for_leads') == '1') {
 $rules = [
     App_table_filter::new('name', 'TextRule')->label(_l('leads_dt_name')),
     App_table_filter::new('phonenumber', 'TextRule')->label(_l('leads_dt_phonenumber')),
-    App_table_filter::new('country', 'SelectRule')->label(_l('lead_country'))->options(function ($ci) {
+    App_table_filter::new('country', 'MultiSelectRule')->label(_l('lead_country'))->options(function ($ci) {
         return collect(get_all_countries())->map(fn ($country) => [
             'value' => $country['country_id'],
             'label' => $country['short_name'],
@@ -45,7 +45,7 @@ $rules = [
     }),
 ];
 
-$rules[] = App_table_filter::new('assigned', 'SelectRule')->label(_l('leads_dt_assigned'))
+$rules[] = App_table_filter::new('assigned', 'MultiSelectRule')->label(_l('leads_dt_assigned'))
     ->withEmptyOperators()
     ->emptyOperatorValue(0)
     ->isVisible(fn () => staff_can('view', 'leads'))

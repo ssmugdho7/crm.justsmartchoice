@@ -236,7 +236,7 @@ return App_table::find('clients')
         App_table_filter::new('city', 'TextRule')->label(_l('clients_city')),
         App_table_filter::new('zip', 'TextRule')->label(_l('clients_zip')),
         App_table_filter::new('state', 'TextRule')->label(_l('clients_state')),
-        App_table_filter::new('country', 'SelectRule')->label(_l('clients_country'))
+        App_table_filter::new('country', 'MultiSelectRule')->label(_l('clients_country'))
             ->options(function ($ci) {
                 return collect($ci->clients_model->get_clients_distinct_countries())->map(fn ($data) => [
                     'value' => $data['country_id'],

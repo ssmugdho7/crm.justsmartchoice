@@ -64,6 +64,28 @@ if (window.scccLeadDialerUrl) {
  $(function() { linkLeadCalls(document); });
  $(document).on('draw.dt', function(event) { linkLeadCalls(event.target); });
 }
+function linkCustomerCalls(root) {
+ var rows = root.querySelectorAll('tr');
+ Array.prototype.forEach.call(rows, function(row) {
+  var blocked = row.querySelector('li.fa-stack > a .fa-ban');
+  if (!blocked) return;
+  var phone = (row.innerText || '').match(/(?:\+?1[\s.-]?)?\(?[2-9]\d{2}\)?[\s.-]\d{3}[\s.-]\d{4}/);
+  if (!phone) return;
+  var link = blocked.closest('a');
+  if (!link) return;
+  link.href = window.scccLeadDialerUrl + '#phone=' + phone[0].replace(/\D/g, '').slice(-10);
+  link.title = window.scccLeadDialerLabel;
+  link.setAttribute('aria-label', link.title);
+  blocked.remove();
+  var icon = link.querySelector('.fa-phone');
+  if (icon) icon.classList.remove('fa-stack-1x');
+  link.parentElement.classList.remove('fa-stack');
+ });
+}
+if (window.scccLeadDialerUrl) {
+ $(function() { linkCustomerCalls(document); });
+ $(document).on('draw.dt', function(event) { linkCustomerCalls(event.target); });
+}
 $(function() {
  var phone = document.getElementById('scccPhone');
  if (!phone) return;

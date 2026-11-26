@@ -109,6 +109,53 @@ function sc_google_map_field($entity, $record = null)
     if (is_object($record)) $value = (string)($record->google_map_link ?? '');
     if (is_array($record)) $value = (string)($record['google_map_link'] ?? '');
     $html = render_input('google_map_link', 'sc_google_map_link', $value, 'text', ['placeholder' => _l('sc_google_map_link_placeholder')]);
+    $html .= '<p class="text-muted small sc-address-format-hint">Paste like: 123 Main St, Tampa, FL 33601. Include city, state, and ZIP so the CRM can fill those fields.</p>';
+    $html .= '<label class="checkbox-inline sc-address-copy-option"><input type="checkbox" class="sc-copy-address-fields"> Use this address for the related address fields</label>';
+    static $script_added = false;
+    if (!$script_added) {
+        $script_added = true;
+        $html .= <<<'HTML'
+<script>
+(function () {
+  if (window.scAddressAutofillReady) return;
+  window.scAddressAutofillReady = true;
+  function parse(value) {
+    var text = String(value || '').trim();
+    try { text = new URL(text).searchParams.get('query') || text; } catch (e) {}
+    text = decodeURIComponent(text).replace(/\s+/g, ' ').trim();
+    var match = text.match(/^(.*?),\s*([^,]+),\s*([A-Za-z]{2})\s+(\d{5}(?:-\d{4})?)(?:,?\s*United States)?$/i);
+    if (!match) return null;
+    return { address: match[1].trim(), city: match[2].trim(), state: match[3].toUpperCase(), zip: match[4] };
+  }
+  function fields(scope) {
+    var root = scope.closest('form') || document;
+    return { root: root, address: root.querySelector('[name="address"]'), city: root.querySelector('[name="city"]'), state: root.querySelector('[name="state"]'), zip: root.querySelector('[name="zip"]') };
+  }
+  function apply(input) {
+    var data = parse(input.value), f = fields(input);
+    if (!data || !f.city || !f.state || !f.zip) return;
+    if (f.address && !f.address.value.trim()) f.address.value = data.address;
+    if (!f.city.value.trim()) f.city.value = data.city;
+    if (!f.state.value.trim()) f.state.value = data.state;
+    if (!f.zip.value.trim()) f.zip.value = data.zip;
+    if (window.jQuery) window.jQuery(f.root).find('select.selectpicker').selectpicker('refresh');
+  }
+  document.addEventListener('paste', function (event) {
+    var target = event.target;
+    if (target && target.matches('[name="google_map_link"], [name="address"]')) setTimeout(function () { apply(target); }, 0);
+  });
+  document.addEventListener('change', function (event) {
+    if (!event.target.matches('.sc-copy-address-fields')) return;
+    var f = fields(event.target), source = f.root.querySelector('[name="address"]');
+    if (!event.target.checked || !source) return;
+    var data = parse(source.value), city = f.root.querySelector('[name="city"]'), state = f.root.querySelector('[name="state"]'), zip = f.root.querySelector('[name="zip"]');
+    if (!data || !city || !state || !zip) return;
+    city.value = data.city; state.value = data.state; zip.value = data.zip;
+  });
+})();
+</script>
+HTML;
+    }
     if ($value !== '') {
         $html .= '<p class="tw-mt-1"><a href="' . e(sc_google_map_normalize($value)) . '" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i> ' . _l('sc_open_google_map') . '</a></p>';
     }

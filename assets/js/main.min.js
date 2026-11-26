@@ -559,7 +559,9 @@ $(function () {
     });
   });
 
-  $("#search_input").on("click focus", function () {
+  // Focus can reveal recent searches for keyboard users, but clicking the
+  // input should dismiss an already-open history list instead of reopening it.
+  $("#search_input").on("focus", function () {
     if ($(this).val() == "") {
       var $searchHistory = $("#search-history");
       if ($searchHistory.find("li").length > 0) {
@@ -569,6 +571,10 @@ $(function () {
         // $searchHistory.addClass('display-block');
       }
     }
+  });
+
+  $("#search_input").on("click", function () {
+    $("#search-history").removeClass("display-block").hide();
   });
 
   $("#search-history").on("click", "a.history", function (e) {
@@ -1937,12 +1943,11 @@ $(function () {
     $searchInput.focus();
   });
 
-  // Fix for dropdown search to close if user click anyhere on html except on dropdown
+  // Close both search dropdowns when the user clicks outside the global search.
   $("body").click(function (e) {
-    if (
-      !$(e.target).parents("#top_search_dropdown").hasClass("search-results")
-    ) {
+    if (!$(e.target).closest("#top_search").length) {
       $("#top_search_dropdown").remove();
+      $("#search-history").removeClass("display-block").hide();
     }
   });
 

@@ -4,6 +4,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 hooks()->add_action('admin_auth_init', 'init_admin_auth_assets');
 hooks()->add_action('app_admin_assets', '_init_admin_assets');
+hooks()->add_action('before_compile_scripts_assets', 'sc_register_lead_manager_voice_refresh');
+
+function sc_register_lead_manager_voice_refresh($group)
+{
+    $scripts = get_instance()->app_scripts;
+    $softphone = 'lead_manager-soft-phone-js';
+    if ($group !== 'admin' || !isset($scripts->get()[$group][$softphone])) {
+        return;
+    }
+
+    $asset = 'assets/js/lead_manager_voice_refresh.js';
+    $scripts->add('lead-manager-voice-refresh', base_url($asset) . '?v=' . filemtime(FCPATH . $asset), $group, [$softphone]);
+}
 
 function init_admin_assets()
 {

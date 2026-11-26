@@ -21,6 +21,8 @@ class AdminController extends App_Controller
         hooks()->do_action('pre_admin_init');
 
         if (!is_staff_logged_in()) {
+            $this->rejectUnauthenticatedSoftphoneRequest();
+
             if (strpos(current_full_url(), get_admin_uri() . '/authentication') === false) {
                 redirect_after_login_to_current_url();
             }
@@ -67,6 +69,7 @@ class AdminController extends App_Controller
         // Deleted or inactive but have session
         if (!$currentUser || $currentUser->active == 0) {
             $this->authentication_model->logout();
+            $this->rejectUnauthenticatedSoftphoneRequest();
             redirect(admin_url('authentication'));
         }
 
@@ -93,6 +96,22 @@ class AdminController extends App_Controller
         */
         $vars = hooks()->apply_filters('admin_area_auto_loaded_vars', $vars);
         $this->load->vars($vars);
+    }
+
+    private function rejectUnauthenticatedSoftphoneRequest(): void
+    {
+        if (!$this->input->is_ajax_request()
+            || strcasecmp($this->router->fetch_class(), 'Lead_manager') !== 0
+            || strcasecmp($this->router->fetch_method(), 'generateClientToken') !== 0) {
+            return;
+        }
+
+        $this->output->set_status_header(401)
+            ->set_header('Cache-Control: no-store')
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['code' => 'session_expired']))
+            ->_display();
+        exit;
     }
 
     private function init_quick_actions_links()

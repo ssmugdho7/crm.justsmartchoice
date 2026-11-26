@@ -96,6 +96,9 @@ if (isset($subscription) && ! empty($subscription->stripe_subscription_id) && $s
                 class="control-label"><?= _l('client'); ?></label>
             <select id="clientid" name="clientid" data-live-search="true" data-width="100%"
                 class="ajax-search ays-ignore"
+                <?php if (staff_can('create', 'customers') && empty($subscription->stripe_subscription_id) && empty($squareSubscription->square_subscription_id)) { ?>
+                    data-new-customer-label="<?= e(_l('new_client')); ?>"
+                <?php } ?>
                 data-none-selected-text="<?= _l('dropdown_non_selected_tex'); ?>"
                 <?php if (isset($subscription) && ! empty($subscription->stripe_subscription_id)) {
                     echo ' disabled';

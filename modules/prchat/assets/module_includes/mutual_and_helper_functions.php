@@ -363,17 +363,10 @@
       }
     });
 
-    // Only run animation on actual mobile devices, not desktop
-    if (window.matchMedia("only screen and (max-width: 735px)").matches && window.innerWidth <= 735) {
-      var contentWidth = $("#frame .content");
-      setTimeout(function () {
-        isContentActive = true;
-      }, 1000);
-      contentWidth.css("display", "flex").animate({
-        "left": "0",
-        "opacity": "1"
-      }, 50, "linear");
-      $("#frame #sidepanel").fadeOut(50);
+    if (window.matchMedia("(max-width: 735px)").matches) {
+      isContentActive = true;
+      $("#frame").addClass("prchat-conversation-open");
+      updateMobileChatHeight();
 
       // Ensure skeleton is hidden after messages load (fallback)
       setTimeout(function () {
@@ -385,16 +378,8 @@
   }
 
   function chatBackMobile() {
-    if (window.matchMedia("only screen and (max-width: 735px)").matches) {
-      $("#frame #sidepanel").fadeIn(50);
-      $("#frame .content").animate({
-        "left": "+=100%",
-        "opacity": "0"
-      }, 200, "linear", function () {
-        $(this).hide();
-      });
-      isContentActive = false;
-    }
+    $("#frame").removeClass("prchat-conversation-open");
+    isContentActive = false;
   }
   window.chatBackMobile = chatBackMobile;
 

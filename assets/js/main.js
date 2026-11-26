@@ -8856,6 +8856,26 @@ function init_ajax_search(type, selector, server_data, url) {
       options.locale.emptyTitle = ajaxSelector.data("empty-title");
     }
     ajaxSelector.selectpicker().ajaxSelectPicker(options);
+    ajaxSelector.each(function () {
+      var $select = $(this);
+      var label = $select.attr("data-new-customer-label");
+      if (!label || $select.prop("disabled")) {
+        return;
+      }
+
+      var $menu = $select.data("selectpicker").$menu;
+      if (!$menu.children(".sc-new-customer-action").length) {
+        $("<div>", { class: "sc-new-customer-action bs-searchbox" })
+          .append($("<a>", {
+            class: "btn btn-default btn-sm",
+            href: admin_url + "clients/client",
+            target: "_blank",
+            rel: "noopener",
+            text: "+ " + label,
+          }))
+          .insertAfter($menu.children(".bs-searchbox").first());
+      }
+    });
   }
 }
 

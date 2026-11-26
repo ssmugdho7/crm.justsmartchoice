@@ -3429,14 +3429,24 @@
       }, forceScroll ? 0 : 100); // Small delay to let content render, unless forced
     }
 
-    /*---------------* For mobile devices vh ports adjust for better UX *---------------*/
-    var vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty("--vh", vh + "px");
+    function updateMobileChatHeight() {
+      var wrapper = document.getElementById("wrapper");
+      var viewport = window.visualViewport;
+      var bottom = viewport ? viewport.offsetTop + viewport.height : window.innerHeight;
+      var toolbar = document.querySelector(".sc-staff-mobile-nav");
+      if (toolbar && toolbar.getClientRects().length) {
+        bottom = Math.min(bottom, toolbar.getBoundingClientRect().top);
+      }
+      wrapper.style.setProperty("--prchat-mobile-height",
+        Math.max(0, bottom - wrapper.getBoundingClientRect().top) + "px");
+    }
 
-    window.addEventListener("resize", function() {
-      var vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty("--vh", vh + "px");
-    });
+    $(updateMobileChatHeight);
+    window.addEventListener("resize", updateMobileChatHeight);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", updateMobileChatHeight);
+      window.visualViewport.addEventListener("scroll", updateMobileChatHeight);
+    }
 
     /*---------------* Theme events  *---------------*/
     $("#bottom-bar").on("click", "#switchTheme", function() {
@@ -3750,9 +3760,7 @@
      */
     window.addEventListener("hashchange", function(event) {
       if (window.matchMedia("only screen and (max-width: 735px)").matches && isContentActive) {
-        $("body").find("#frame #sidepanel").fadeIn(50);
-        $("body").find("#frame .content").hide(1);
-        isContentActive = false;
+        chatBackMobile();
       }
     });
 

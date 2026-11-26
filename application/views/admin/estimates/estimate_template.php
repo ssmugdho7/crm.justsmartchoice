@@ -14,6 +14,9 @@
                             class="control-label"><?php echo _l('estimate_select_customer'); ?></label>
                         <select id="clientid" name="clientid" data-live-search="true" data-width="100%" class="ajax-search<?php if (isset($estimate) && empty($estimate->clientid)) {
                 echo ' customer-removed';
+            } ?>" <?php if (staff_can('create', 'customers') && ! isset($estimate)) { ?>
+            } ?>"     data-new-customer-label="<?= e(_l('new_client')); ?>"
+            } ?>" <?php } ?>
             } ?>" data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
                             <?php $selected = (isset($estimate) ? $estimate->clientid : '');
                  if ($selected == '') {

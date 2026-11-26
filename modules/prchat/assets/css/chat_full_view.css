@@ -2420,8 +2420,8 @@ body #wrapper #frame #clients_container #bottom-bar .clients_settings.dropup but
   }
 
   #frame .content .message-input.prchat-composer-row .message-actions {
-    order: 0;
-    flex-shrink: 0;
+    order: -1;
+    flex: 0 0 100%;
     gap: 2px !important;
     align-items: center;
   }
@@ -2465,19 +2465,19 @@ body #wrapper #frame #clients_container #bottom-bar .clients_settings.dropup but
     height: 18px;
   }
 
-  body.Prchat_Controller #wrapper {
-    height: calc(100dvh - 58px) !important;
-    min-height: calc(100dvh - 58px) !important;
-    max-height: calc(100dvh - 58px) !important;
-    overflow: hidden;
+  body.app.admin.Prchat_Controller #wrapper.desktop_chat {
+    height: var(--prchat-mobile-height, calc(100dvh - 58px)) !important;
+    min-height: var(--prchat-mobile-height, calc(100dvh - 58px)) !important;
+    max-height: var(--prchat-mobile-height, calc(100dvh - 58px)) !important;
+    overflow: hidden !important;
     display: flex;
     flex-direction: column;
   }
 
-  body.Prchat_Controller.perfex_office_theme_initiated #wrapper {
-    height: calc(100dvh - 64px) !important;
-    min-height: calc(100dvh - 64px) !important;
-    max-height: calc(100dvh - 64px) !important;
+  body.app.admin.Prchat_Controller.perfex_office_theme_initiated #wrapper.desktop_chat {
+    height: var(--prchat-mobile-height, calc(100dvh - 64px)) !important;
+    min-height: var(--prchat-mobile-height, calc(100dvh - 64px)) !important;
+    max-height: var(--prchat-mobile-height, calc(100dvh - 64px)) !important;
   }
 
   #frame {
@@ -2505,13 +2505,14 @@ body #wrapper #frame #clients_container #bottom-bar .clients_settings.dropup but
     z-index: 100;
   }
 
-  /* When content is shown on mobile, use flex */
-  #frame .content[style*="left: 0"],
-  #frame .content[style*="left:0"],
-  #frame .content[style*="opacity: 1"],
-  #frame .content[style*="opacity:1"] {
+  #frame.prchat-conversation-open #sidepanel {
+    display: none !important;
+  }
+
+  #frame.prchat-conversation-open .content {
     display: flex !important;
-    min-height: 0;
+    left: 0;
+    opacity: 1;
   }
 
   /* Ensure hidden containers don't break flex layout */

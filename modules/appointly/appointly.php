@@ -67,7 +67,7 @@ if (! function_exists('appointly_head_components')) {
     function appointly_head_components()
     {
         echo '<script src="' . module_dir_url(APPOINTLY_MODULE_NAME, 'assets/js/sc_money_compat.js?v=2.2.0') . '"></script>';
-        echo '<link href="' . module_dir_url(APPOINTLY_MODULE_NAME, 'assets/css/styles.css?v=2.2.0') . '" rel="stylesheet" type="text/css">';
+        echo '<link href="' . module_dir_url(APPOINTLY_MODULE_NAME, 'assets/css/styles.css?v=2.2.0-' . filemtime(__DIR__ . '/assets/css/styles.css')) . '" rel="stylesheet" type="text/css">';
     }
 }
 

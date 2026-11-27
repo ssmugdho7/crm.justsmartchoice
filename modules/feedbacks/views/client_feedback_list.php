@@ -29,7 +29,7 @@
                   <td ><?php echo $cm['description'];?></td>
                    <td ><?php echo $cm['datecreated'];?></td>
 				 
-				  <td ><a  href="<?php echo base_url();echo"feedbacks/feedback/".$cm['feedbackid'];echo"/"?><?php echo $cm['hash'];?>">Join</a></td>
+				  <td ><a  href="<?php echo base_url();echo"feedbacks/participate/index/".$cm['feedbackid'];echo"/"?><?php echo $cm['hash'];?>">Join</a></td>
 				 
                </tr>
                <?php } ?>

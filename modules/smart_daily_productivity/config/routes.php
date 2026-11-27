@@ -11,3 +11,10 @@ $route['admin/smart_daily_productivity/health'] = 'smart_daily_productivity/smar
 $route['admin/smart_daily_productivity/database_checker'] = 'smart_daily_productivity/smart_daily_productivity/database_checker';
 $route['admin/smart_daily_productivity/delete_entry/(:num)'] = 'smart_daily_productivity/smart_daily_productivity/delete_entry/$1';
 $route['admin/smart_daily_productivity/update_entry/(:num)'] = 'smart_daily_productivity/smart_daily_productivity/update_entry/$1';
+
+$route['admin/smart_daily_productivity/reminders'] = 'smart_daily_productivity/smart_daily_productivity/reminders';
+$route['admin/smart_daily_productivity/reminder_due'] = 'smart_daily_productivity/smart_daily_productivity/reminder_due';
+
+$route['admin/smart_daily_productivity/checklist'] = 'smart_daily_productivity/smart_daily_productivity/checklist';
+
+$route['admin/smart_daily_productivity/manage_tasks'] = 'smart_daily_productivity/smart_daily_productivity/manage_tasks';

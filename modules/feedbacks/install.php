@@ -141,3 +141,11 @@ if (!$CI->db->table_exists(db_prefix() . 'emaillists')) {
     $CI->db->query('ALTER TABLE `' . db_prefix() . 'emaillists`
   MODIFY `listid` int(11) NOT NULL AUTO_INCREMENT;');
 }
+
+// Smart Choice 2.5.0 ownership field for View Own permission.
+if ($CI->db->table_exists(db_prefix() . 'feedbacks') && !$CI->db->field_exists('created_by', db_prefix() . 'feedbacks')) {
+    $CI->db->query('ALTER TABLE `' . db_prefix() . 'feedbacks` ADD `created_by` INT NULL DEFAULT NULL');
+}
+
+require_once __DIR__.'/schema_upgrade.php';
+if (!feedbacks_upgrade_schema()) { throw new RuntimeException('Questionnaire schema installation failed'); }

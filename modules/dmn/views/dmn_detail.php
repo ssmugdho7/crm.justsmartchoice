@@ -20,7 +20,7 @@
     <div class="col-lg-12">
       <div class="panel_s">
         <div class="panel-body">
-          <h4 class="no-margin"><?= isset($dmn) ? $dmn->title : _l('dmn_create_new').' '._l('dmn') ?>
+          <a class="btn btn-default pull-right" href="<?= admin_url('dmn') ?>"><?= _l('dmn_back') ?></a><h4 class="no-margin"><?= isset($dmn) ? $dmn->title : _l('dmn_create_new').' '._l('dmn') ?>
             <input type="hidden" name="id" value="<?php echo isset($dmn) ? $dmn->id: ''?>">
           </h4>
           <hr class="hr-panel-heading" />
@@ -32,6 +32,9 @@
               echo render_textarea('description',_l('clients_dmn_description'),$value,array('rows'=>4),array());
               $selected = (isset($dmn) ? $dmn->project_id : '');
               echo render_select('project_id',$projects,array('id','name'),'project_group',$selected);
+              $this->load->model('staff_model');
+              echo render_select('assigned_staff_id',$this->staff_model->get('', ['active'=>1]),array('staffid',array('firstname','lastname')),'dmn_assigned_employee',isset($dmn)?($dmn->assigned_staff_id ?? 0):0);
+              echo '<p class="text-muted">'.html_escape(_l('dmn_assignment_hint')).'</p>';
               ?>
             </div>
           </div>
@@ -51,7 +54,7 @@
     appValidateForm($('#dmn-detail-form'), {
       title: 'required',
       description : 'required',
-      project_id : 'required',
+
     });
   }
   $('body').on('click','button#dmn-detail-form-btn', function() {

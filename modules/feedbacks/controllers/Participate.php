@@ -36,7 +36,22 @@ class Participate extends ClientsController
         }
 
         if ($this->input->post()) {
-            $success = $this->feedbacks_model->add_feedback_result($id, $this->input->post());
+            $validAnswers = true;
+            foreach ($feedback->questions as $question) {
+                $type = $question['advanced_type'] ?? '';
+                if ($type === '') { continue; }
+                $answer = $this->input->post('question');
+                $value = isset($answer[$question['questionid']][0]) ? trim((string)$answer[$question['questionid']][0]) : '';
+                if ((int)$question['required'] === 1 && $value === '') { $validAnswers = false; break; }
+                if ($value === '') { continue; }
+                if (in_array($type, ['number','currency','percentage'], true) && !is_numeric($value)) { $validAnswers = false; break; }
+                if ($type === 'email' && !filter_var($value, FILTER_VALIDATE_EMAIL)) { $validAnswers = false; break; }
+                if ($type === 'url' && !filter_var($value, FILTER_VALIDATE_URL)) { $validAnswers = false; break; }
+                if ($type === 'dropdown' && !in_array($value, $question['advanced_options'] ?? [], true)) { $validAnswers = false; break; }
+                if (in_array($type, ['rating','linear_scale'], true)) { $settings=$question['advanced_settings'] ?? []; $min=(int)($settings['min'] ?? 1); $max=(int)($settings['max'] ?? 5); if (!is_numeric($value) || (float)$value<$min || (float)$value>$max) { $validAnswers=false; break; } }
+            }
+            if (!$validAnswers) { set_alert('warning', 'Please review the required fields and answer formats.'); }
+            $success = $validAnswers ? $this->feedbacks_model->add_feedback_result($id, $this->input->post()) : false;
             if ($success) {
                 $feedback = $this->feedbacks_model->get($id);
                 if ($feedback->redirect_url !== '') {
@@ -45,7 +60,7 @@ class Participate extends ClientsController
                 // Message is by default in English because there is no easy way to know the customer language
                 set_alert('success', hooks()->apply_filters('feedback_success_message', 'Thank you for participating in this feedback. Your answers are very important to us.'));
 
-                redirect(hooks()->apply_filters('feedback_default_redirect', site_url('feedbacks/feedback/' . $id . '/' . $hash . '?participated=yes')));
+                redirect(hooks()->apply_filters('feedback_default_redirect', site_url('feedbacks/participate/index/' . $id . '/' . $hash . '?participated=yes')));
             }
         }
 

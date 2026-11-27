@@ -1,11 +1,11 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 /*
-Module Name: Dmn
-Description: Module to draw Dmn Canvas
-Version: 1.0.0
-Author: Zonvoir
-Author URI: https://zonvoir.com/
+Module Name: DMN
+Description: Decision Model and Notation diagram management. Quality target: 5 stars.
+Version: 1.0.2
+Author: Smart Choice Contractors USA / Harold Cabrera
+Author URI: https://justsmartchoice.com/
 Requires at least: 2.3.*
 */
 $CI = &get_instance();
@@ -34,6 +34,7 @@ function dmn_staff_permissions()
 	$capabilities = [];
 	$capabilities['capabilities'] = [
 		'view'   => _l('permission_view') . '(' . _l('permission_global') . ')',
+		'view_own' => _l('permission_view_own'),
 		'create' => _l('permission_create'),
 		'edit'   => _l('permission_edit'),
 		'delete' => _l('permission_delete'),
@@ -56,7 +57,7 @@ register_language_files(DMN_MODULE_NAME, ['dmn']);
 function dmn_admin_init_menu_items()
 {
 	$CI = &get_instance();
-	$CI->app_menu->add_sidebar_menu_item('dmn_menu', [
+	if (dmn_can_view() || has_permission('dmn','','create')) $CI->app_menu->add_sidebar_menu_item('dmn_menu', [
 		'name' => 'DMN',
 		'href' => admin_url('dmn'),
 		'position' => 10,

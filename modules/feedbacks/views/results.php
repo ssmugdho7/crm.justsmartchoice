@@ -1,7 +1,7 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php init_head(); ?>
 <div id="wrapper">
-    <div class="content">
+    <div class="content"><?php $this->load->view('feedbacks/_navigation'); ?>
         <div class="row">
             <div class="col-md-6 animated fadeIn">
                 <div class="panel_s">

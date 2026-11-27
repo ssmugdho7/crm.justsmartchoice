@@ -9,7 +9,8 @@
         .login_admin .authentication-form-wrapper { padding-top: 3rem !important; }
         .login_admin .company-logo { margin-bottom: 14px !important; }
         .login_admin .company-logo img { max-height: 95px !important; width: auto !important; max-width: 100% !important; object-fit: contain !important; }
-        .login_admin .company-logo + .text-center { margin-bottom: 18px !important; }
+        .login_admin .sc-admin-login-intro h1,
+        .login_admin .sc-admin-login-intro p { color: #000; }
     </style>
 
     <div class="tw-max-w-md tw-mx-auto tw-pt-12 authentication-form-wrapper tw-relative tw-z-20">
@@ -17,17 +18,15 @@
             <?php get_dark_company_logo(); ?>
         </div>
 
-        <div class=" text-center tw-mb-5">
-            <h1 class="tw-text-neutral-800 tw-text-2xl tw-font-bold tw-mb-1">
-                <?= _l('admin_auth_login_heading'); ?>
-            </h1>
-            <p class="tw-text-neutral-600">
-                <?= _l('welcome_back_sign_in'); ?>
-            </p>
-        </div>
-
         <div
             class="tw-bg-white tw-mx-2 sm:tw-mx-6 tw-py-8 tw-px-6 sm:tw-px-8 tw-shadow-sm tw-rounded-lg tw-border tw-border-solid tw-border-neutral-600/20">
+
+            <div class="sc-admin-login-intro text-center tw-mb-5">
+                <h1 class="tw-text-2xl tw-font-bold tw-mb-1">
+                    <?= _l('admin_auth_login_heading'); ?>
+                </h1>
+                <p><?= _l('welcome_back_sign_in'); ?></p>
+            </div>
 
             <?php $this->load->view('authentication/includes/alerts'); ?>
 

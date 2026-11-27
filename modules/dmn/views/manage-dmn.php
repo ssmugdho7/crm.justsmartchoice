@@ -18,7 +18,7 @@ if ($this->session->has_userdata('dmn_grid_view') && $this->session->userdata('d
                         foreach($staffs as $staff){
                             echo form_hidden('staffid_'.$staff['staffid']);
                         }
-                        foreach($groups as $group){
+                        foreach(($groups ?? []) as $group){
                             echo form_hidden('dmn_group_id_'.$group['id']);
                          }
                         ?>
@@ -36,7 +36,7 @@ if ($this->session->has_userdata('dmn_grid_view') && $this->session->userdata('d
                                 </div>
                             </div>
                             <div class="col-md-3 col-xs-5 text-right">
-                                <?php echo icon_btn('dmn/switch_grid/'.$switch_grid,$switch_view_icon); ?>
+                                <a class="btn btn-default" style="color:#111!important" href="<?= admin_url('dmn/switch_grid/'.(int)$switch_grid) ?>"><i class="fa fa-<?= $switch_view_icon ?>"></i> <?= _l($isGridView ? 'dmn_switch_to_list_view' : 'dmn_switch_to_grid_view') ?></a>
                             </div>
                         </div>       
                         <div class="clearfix"></div>
@@ -49,9 +49,9 @@ if ($this->session->has_userdata('dmn_grid_view') && $this->session->userdata('d
                                         <div class="col-md-12">
                                             <p class="bold"><?php echo _l('filter_by'); ?></p>
                                         </div>
-                                        <?php if(has_permission('dmn','','view')){ ?>
+                                        <?php if(dmn_can_view()){ ?>
                                             <div class="col-md-3 dmn-filter-column">
-                                                <?php echo render_select('view_assigned',$staffs,array('staffid',array('firstname','lastname')),'','',array('data-width'=>'100%','data-none-selected-text'=>_l('dmn_staff')),array(),'no-mbot'); ?>
+                                                <?php echo render_select('view_assigned',$staffs,array('staffid',array('firstname','lastname')),'','',array('data-width'=>'100%','data-none-selected-text'=>_l('dmn_staff'),'multiple'=>true),array(),'no-mbot'); ?>
                                             </div>
                                         <?php } ?>
                                         <div class="col-md-3 dmn-filter-column ma_t">
@@ -73,6 +73,8 @@ if ($this->session->has_userdata('dmn_grid_view') && $this->session->userdata('d
                                 <?php } else { ?>
                                     <?php 
                                     render_datatable(array(
+                                        '<input type="checkbox" id="dmn-select-all" aria-label="Select all">',
+                                        '#',
                                         _l('dmn_title'),
                                         _l('dmn_desc'),
                                         _l('dmn_staff'),
@@ -82,7 +84,7 @@ if ($this->session->has_userdata('dmn_grid_view') && $this->session->userdata('d
                                     array(
                                       'id'=>'table-dmn',
                                       'data-last-order-identifier'=>'dmn',
-                                      'data-default-order'=>get_table_last_order('dmn'),
+                                      'data-default-order'=>'[[6,"desc"]]',
                                   )); ?>
                               <?php } ?>
                           </div>
@@ -93,6 +95,7 @@ if ($this->session->has_userdata('dmn_grid_view') && $this->session->userdata('d
         </div>
     </div>
 </div>
+<?= form_open(admin_url('dmn/bulk_delete'),['id'=>'dmn-bulk-form','class'=>'hide']) ?><?= form_close() ?>
 <?php init_tail(); ?>
 <script>
     "use strict";
@@ -107,13 +110,34 @@ if ($this->session->has_userdata('dmn_grid_view') && $this->session->userdata('d
     var _lnth = 12;
     $(function(){
         var TblServerParams = {
-            "assigned": "[name='view_assigned']",
+            "assigned": "#view_assigned",
             "project": "[name='view_project']",
         };
         if(<?php echo $isGridView ?> == 0) {
-            var tAPI = initDataTable('.table-dmn', admin_url+'dmn/table', [2, 3], [2, 3], TblServerParams,[4, 'desc']);
+            var tAPI = initDataTable('.table-dmn', admin_url+'dmn/table', [0], [0], TblServerParams,[6, 'desc']);
+            var wrapper = $('#table-dmn').closest('.dataTables_wrapper');
+            var search = wrapper.find('.dataTables_filter input').first().detach();
+            if(search.length){
+                var filter = wrapper.find('.dataTables_filter').first().empty();
+                filter.append($('<div class="dmn-search"><i class="fa fa-search" aria-hidden="true"></i></div>').append(search));
+                search.attr('aria-label','Search').attr('placeholder',<?= json_encode(_l('dmn_search')) ?>);
+            }
+            <?php if(has_permission('dmn','','delete')) { ?>
+            var bulk = $('<button type="button" class="btn btn-danger btn-sm dmn-bulk"><?= html_escape(_l('dmn_bulk_delete')) ?></button>');
+            var buttons = wrapper.find('.dt-buttons');
+            var refresh = buttons.find('.btn-dt-reload, .buttons-reload, button:has(.fa-refresh), a:has(.fa-refresh)').first();
+            if(refresh.length) bulk.insertBefore(refresh); else if(buttons.length) buttons.append(bulk); else wrapper.prepend(bulk);
+            bulk.on('click',function(){
+                var ids = wrapper.find('.dmn-select:checked').map(function(){return this.value;}).get();
+                if(!ids.length || !confirm(<?= json_encode(_l('dmn_bulk_confirm')) ?>)) return;
+                var form = $('#dmn-bulk-form'); form.find('[name="ids[]"]').remove();
+                ids.forEach(function(id){form.append($('<input>',{type:'hidden',name:'ids[]',value:id}));}); form.submit();
+            });
+            wrapper.on('change','#dmn-select-all',function(){wrapper.find('.dmn-select').prop('checked',this.checked);});
+            tAPI.on('draw',function(){wrapper.find('#dmn-select-all').prop('checked',false);});
+            <?php } ?>
             $.each(TblServerParams, function(i, obj) {
-                $('select' + obj).on('change', function() {
+                $(obj).on('change', function() {
                     $('table.table-dmn').DataTable().ajax.reload()
                     .columns.adjust()
                     .responsive.recalc();
@@ -122,7 +146,7 @@ if ($this->session->has_userdata('dmn_grid_view') && $this->session->userdata('d
         }
         else{
             loadGridView();
-            $(document).off().on('click','a.paginate',function(e){
+            $(document).off('click.dmnPagination','a.paginate').on('click.dmnPagination','a.paginate',function(e){
                 e.preventDefault();
                 var pageno = $(this).data('ci-pagination-page');
                 var formData = {

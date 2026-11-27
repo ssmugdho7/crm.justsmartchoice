@@ -50,3 +50,11 @@ $lang['rating']												= 'Rating';
 $lang['add_email']											= 'Add Email';
 $lang['save']												= 'Save';
 $lang['close']												= 'Close';
+$lang['dmn_back']='Back to DMN';
+$lang['dmn_bulk_delete']='Delete Selected';
+$lang['dmn_bulk_confirm']='Delete the selected diagrams?';
+
+$lang['dmn_assigned_employee'] = 'Assigned Employee';
+$lang['dmn_assignment_hint'] = 'Choose a project, an employee, or both. Neither is required.';
+$lang['dmn_invalid_employee'] = 'Invalid employee selection.';
+$lang['dmn_upgrade_success'] = 'DMN database upgraded successfully.';

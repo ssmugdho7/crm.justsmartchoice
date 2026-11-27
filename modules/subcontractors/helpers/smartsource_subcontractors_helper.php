@@ -126,7 +126,12 @@ function smartsource_send_registered_template_email($slug, $to, array $tokens = 
     if (!$CI->db->table_exists($table)) {
         return false;
     }
-    $template = $CI->db->where('slug', $slug)->where('active', 1)->get($table)->row();
+    $locale = isset($tokens['{language}']) && in_array($tokens['{language}'], ['spanish','english'], true) ? $tokens['{language}'] : 'english';
+    unset($tokens['{language}']);
+    $template = $CI->db->where('slug', $slug)->where('language', $locale)->where('active', 1)->get($table)->row();
+    if (!$template && $locale !== 'english') {
+        $template = $CI->db->where('slug', $slug)->where('language', 'english')->where('active', 1)->get($table)->row();
+    }
     if (!$template) {
         return false;
     }
@@ -168,7 +173,10 @@ function smartsource_send_basic_email($to, $subject, $message)
         $subject = 'SmartSource Subcontractors Notification';
     }
 
-    $message = smartsource_email_layout($subject, (string) $message);
+    // Use the CRM-managed email header and footer instead of the module's custom layout.
+    $header = (string) get_option('email_header');
+    $footer = (string) get_option('email_footer');
+    $message = $header . (string) $message . $footer;
 
     try {
         $CI->load->library('email');

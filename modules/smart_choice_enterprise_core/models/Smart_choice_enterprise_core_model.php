@@ -74,6 +74,38 @@ class Smart_choice_enterprise_core_model extends App_Model
         return ['total' => count($rows), 'found' => $found, 'missing' => count($rows) - $found];
     }
 
+    private function check($name, $passed, $detail = '')
+    {
+        return ['name' => (string) $name, 'passed' => (bool) $passed, 'detail' => (string) $detail];
+    }
+
+    private function normalizeVersion($version)
+    {
+        if (preg_match('/\d+(?:\.\d+){0,2}/', (string) $version, $match)) return $match[0];
+        return '0.0.0';
+    }
+
+    private function sumNative($suffix, $field, $statusField = null, $statuses = [])
+    {
+        $table = db_prefix() . $suffix;
+        if (!$this->db->table_exists($table) || !$this->db->field_exists($field, $table)) return 0.0;
+        if ($statusField && $statuses && $this->db->field_exists($statusField, $table)) $this->db->where_in($statusField, $statuses);
+        $row = $this->db->select_sum($field, 'amount_total')->get($table)->row_array();
+        return (float) ($row['amount_total'] ?? 0);
+    }
+
+    public function get_financial_overview()
+    {
+        $invoiced = $this->sumNative('invoices', 'total', 'status', [1,2,3,4,5,6]);
+        $paid = $this->sumNative('invoicepaymentrecords', 'amount');
+        // Native Perfex payment records are the primary source; avoid counting
+        // both invoicepaymentrecords and payments when both tables exist.
+        if (!$this->db->table_exists(db_prefix().'invoicepaymentrecords')) $paid = $this->sumNative('payments', 'amount');
+        return ['invoiced'=>$invoiced, 'received'=>$paid, 'outstanding'=>max(0, $invoiced-$paid),
+            'sales_goals'=>$this->countTable('sce_sales_goals'), 'projects'=>$this->countTable('projects'),
+            'expenses'=>$this->sumNative('expenses','amount'), 'currency'=>get_base_currency()];
+    }
+
     public function get_system_health()
     {
         $checks = [];
@@ -302,12 +334,12 @@ class Smart_choice_enterprise_core_model extends App_Model
     public function get_dashboard_domain_counts()
     {
         $groups = [
-            'Customers'=>['clients'], 'Sales'=>['sce_opportunities','sce_sales_goals','sce_sales_commissions'],
+            'Customers'=>['clients'], 'Sales'=>['invoices','estimates','proposals','invoicepaymentrecords','sce_opportunities','sce_sales_goals','sce_sales_commissions'],
             'Field Operations'=>['sce_field_visits','sce_time_clock','sce_daily_logs'], 'Dispatch'=>['sce_dispatch_assignments'],
             'Equipment and Inventory'=>['sce_equipment','sce_inventory_items','sce_inventory_movements'],
-            'Project Controls'=>['sce_project_phases','sce_rfis','sce_submittals','sce_permits','sce_change_orders'],
-            'Documents'=>['sce_document_versions','sce_document_approvals'], 'Communications'=>['sce_communications','sce_call_logs'],
-            'Marketing'=>['sce_campaigns','sce_campaign_attribution'], 'Workflows'=>['sce_workflows','sce_workflow_runs'],
+            'Project Controls'=>['projects','tasks','sce_project_phases','sce_rfis','sce_submittals','sce_permits','sce_change_orders'],
+            'Documents'=>['files','sce_document_versions','sce_document_approvals'], 'Communications'=>['sce_communications','sce_call_logs'],
+            'Marketing'=>['leads','sce_campaigns','sce_campaign_attribution'], 'Workflows'=>['sce_workflows','sce_workflow_runs'],
             'QR Codes'=>['sce_qr_codes'], 'Reports'=>['sce_report_definitions','sce_scheduled_reports']
         ];
         $out=[]; foreach($groups as $name=>$tables){$count=0;foreach($tables as $suffix){$count += $suffix==='clients' ? $this->safeCount(db_prefix().'clients') : $this->countTable($suffix);} $out[$name]=$count;} return $out;
@@ -334,7 +366,7 @@ class Smart_choice_enterprise_core_model extends App_Model
         foreach(['sce_opportunities','sce_sales_goals','sce_sales_commissions'] as $suffix){$cards[]=['table'=>$suffix,'label'=>ucwords(str_replace('_',' ',preg_replace('/^sce_/','',$suffix))),'count'=>$this->countTable($suffix),'available'=>$this->db->table_exists(db_prefix().$suffix),'core'=>false];}
         $recent=[];
         foreach([['invoices','date'],['estimates','date'],['proposals','datecreated'],['payments','date'],['contracts','dateadded'],['projects','date_created']] as $spec){$table=db_prefix().$spec[0];if(!$this->db->table_exists($table))continue;$fields=$this->db->list_fields($table);$select=array_values(array_intersect(['id','number','subject','name','status','total','date','datecreated','dateadded','date_created'],$fields));if(!$select)continue;$this->db->select(implode(',',$select));if(in_array($spec[1],$fields,true))$this->db->order_by($spec[1],'DESC');$rows=$this->db->limit(8)->get($table)->result_array();foreach($rows as $r){$recent[]=['source'=>ucwords($spec[0]),'record'=>$r];}}
-        return ['cards'=>$cards,'recent'=>array_slice($recent,0,40)];
+        return ['cards'=>$cards,'recent'=>array_slice($recent,0,40),'financial'=>$this->get_financial_overview()];
     }
     public function get_dispatch_workspace()
     {
@@ -352,7 +384,7 @@ class Smart_choice_enterprise_core_model extends App_Model
         $currency=get_base_currency();$totals=[];
         foreach(['invoices','estimates','proposals','payments','projects','contracts','clients'] as $suffix)$totals[$suffix]=$this->safeCount(db_prefix().$suffix);
         $sum=function($suffix,$field){$table=db_prefix().$suffix;if(!$this->db->table_exists($table)||!$this->db->field_exists($field,$table))return 0.0;$row=$this->db->select_sum($field)->get($table)->row_array();return(float)($row[$field]??0);};
-        return ['cards'=>$this->get_domain_cards(['sce_report_definitions','sce_scheduled_reports']),'domains'=>$this->get_dashboard_domain_counts(),'core_totals'=>$totals,'invoice_value'=>$sum('invoices','total'),'payments_value'=>$sum('payments','amount'),'currency'=>$currency];
+        return ['cards'=>$this->get_domain_cards(['sce_report_definitions','sce_scheduled_reports']),'domains'=>$this->get_dashboard_domain_counts(),'core_totals'=>$totals,'invoice_value'=>$sum('invoices','total'),'payments_value'=>$this->get_financial_overview()['received'],'currency'=>$currency];
     }
     public function import_customers_csv(array $file)
     {

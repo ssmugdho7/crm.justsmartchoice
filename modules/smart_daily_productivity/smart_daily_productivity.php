@@ -5,14 +5,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /*
 Module Name: Smart Daily Productivity
 Description: Smart Choice Contractors USA productivity module for completed tasks, ticket activity, manual daily work logs, employee scorecards, department reports, and end-of-day reporting inside Perfex CRM.
-Version: 1.0.1
+Version: 1.0.8
 Requires at least: 3.4.0
 Author: Smart Choice Contractors USA / Harold Cabrera
 Author URI: https://justsmartchoice.com
 */
 
 define('SMART_DAILY_PRODUCTIVITY_MODULE_NAME', 'smart_daily_productivity');
-define('SMART_DAILY_PRODUCTIVITY_VERSION', '1.0.2');
+define('SMART_DAILY_PRODUCTIVITY_VERSION', '1.0.8');
 
 hooks()->add_action('admin_init', 'smart_daily_productivity_admin_init');
 hooks()->add_action('admin_init', 'smart_daily_productivity_permissions');
@@ -135,6 +135,7 @@ function smart_daily_productivity_admin_init(): void
 {
     $CI = &get_instance();
 
+    if (!is_admin() && !has_permission('smart_daily_productivity', '', 'view') && !has_permission('smart_daily_productivity', '', 'view_own')) { return; }
     $CI->app_menu->add_sidebar_menu_item('smart-daily-productivity', [
         'name'     => smart_daily_productivity_label('smart_daily_productivity_menu'),
         'href'     => admin_url('smart_daily_productivity'),
@@ -150,39 +151,63 @@ function smart_daily_productivity_admin_init(): void
     ]);
 
     $CI->app_menu->add_sidebar_children_item('smart-daily-productivity', [
+        'slug' => 'smart-daily-productivity-reminders',
+        'name' => 'Audio Alarms',
+        'href' => admin_url('smart_daily_productivity/reminders'),
+        'position' => 2,
+        'icon' => 'fa fa-bell',
+    ]);
+
+    $CI->app_menu->add_sidebar_children_item('smart-daily-productivity', [
+        'slug' => 'smart-daily-productivity-checklist',
+        'name' => 'Daily Reminders',
+        'href' => admin_url('smart_daily_productivity/checklist'),
+        'position' => 3,
+        'icon' => 'fa fa-check-square-o',
+    ]);
+
+    $CI->app_menu->add_sidebar_children_item('smart-daily-productivity', [
+        'slug' => 'smart-daily-productivity-manage-tasks',
+        'name' => 'Manage Daily Tasks',
+        'href' => admin_url('smart_daily_productivity/manage_tasks'),
+        'position' => 4,
+        'icon' => 'fa fa-cog',
+    ]);
+
+    $CI->app_menu->add_sidebar_children_item('smart-daily-productivity', [
         'slug'     => 'smart-daily-productivity-my-day',
         'name'     => smart_daily_productivity_label('smart_daily_productivity_my_day'),
         'href'     => admin_url('smart_daily_productivity/my_day'),
-        'position' => 2,
+        'position' => 5,
     ]);
 
-    $CI->app_menu->add_sidebar_children_item('smart-daily-productivity', [
+    if (is_admin() || has_permission('smart_daily_productivity', '', 'reports')) { $CI->app_menu->add_sidebar_children_item('smart-daily-productivity', [
         'slug'     => 'smart-daily-productivity-reports',
         'name'     => smart_daily_productivity_label('smart_daily_productivity_reports'),
         'href'     => admin_url('smart_daily_productivity/reports'),
-        'position' => 3,
-    ]);
+        'position' => 6,
+    ]); }
 
-    $CI->app_menu->add_sidebar_children_item('smart-daily-productivity', [
+    if (is_admin() || has_permission('smart_daily_productivity', '', 'health')) { $CI->app_menu->add_sidebar_children_item('smart-daily-productivity', [
         'slug'     => 'smart-daily-productivity-health',
         'name'     => smart_daily_productivity_label('smart_daily_productivity_health_checker'),
         'href'     => admin_url('smart_daily_productivity/health'),
-        'position' => 4,
-    ]);
+        'position' => 7,
+    ]); }
 
 
     $CI->app_menu->add_sidebar_children_item('smart-daily-productivity', [
         'slug'     => 'smart-daily-productivity-help',
         'name'     => smart_daily_productivity_label('smart_daily_productivity_help_guide'),
         'href'     => admin_url('smart_daily_productivity/help'),
-        'position' => 5,
+        'position' => 8,
     ]);
 
-    $CI->app->add_settings_section('smart_daily_productivity', [
+    if (is_admin() || has_permission('smart_daily_productivity', '', 'settings')) { $CI->app->add_settings_section('smart_daily_productivity', [
         'name'     => smart_daily_productivity_label('smart_daily_productivity_settings_section'),
         'view'     => 'smart_daily_productivity/settings',
         'position' => 45,
-    ]);
+    ]); }
 }
 
 function smart_daily_productivity_permissions(): void

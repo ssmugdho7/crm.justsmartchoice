@@ -29,6 +29,7 @@
     <?= form_open('authentication/register', ['id' => 'register-form']); ?>
     <div class="panel_s">
         <div class="panel-body">
+            <?php $this->load->view('themes/partials/customer_auth_logo'); ?>
             <div class="row">
                 <div class="col-md-6">
                     <h4 class="bold register-contact-info-heading">

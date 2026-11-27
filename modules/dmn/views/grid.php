@@ -15,7 +15,7 @@ $sTable       = db_prefix() . 'dmn';
 $join = [
    'LEFT JOIN ' . db_prefix() . 'projects ON ' . db_prefix() . 'projects.id = ' . db_prefix() . 'dmn.project_id',
 ];
-$where        = [];
+$where = dmn_own_scope() ? ['AND ('.db_prefix().'dmn.staffid = '.(int)get_staff_user_id().' OR '.db_prefix().'dmn.assigned_staff_id = '.(int)get_staff_user_id().')'] : [];
 $filter = [];
 $join = hooks()->apply_filters('dmn_grid_sql_join', $join);
 $result = get_dmn_grid_query($aColumns, $sIndexColumn, $sTable, $join, $where, [db_prefix() . 'dmn.id', db_prefix() . 'dmn.dmn_content']);

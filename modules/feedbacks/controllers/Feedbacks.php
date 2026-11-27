@@ -11,10 +11,26 @@ class Feedbacks extends AdminController
         $this->load->model('feedbacks_model');
     }
 
+    private function can_view_feedback_record($id)
+    {
+        if (has_permission('feedbacks', '', 'view')) { return true; }
+        if (!has_permission('feedbacks', '', 'view_own')) { return false; }
+        if (!$this->db->field_exists('created_by', db_prefix().'feedbacks')) { return false; }
+        return $this->db->where('feedbackid',(int)$id)->where('created_by',(int)get_staff_user_id())->count_all_results(db_prefix().'feedbacks') > 0;
+    }
+
+    private function can_edit_question($id) {
+        $q = $this->db->where('questionid',(int)$id)->where('rel_type','feedback')->get(db_prefix().'form_questions')->row();
+        return $q && $this->can_view_feedback_record($q->rel_id);
+    }
+    private function can_edit_box_description($id) {
+        $q = $this->db->where('questionboxdescriptionid',(int)$id)->get(db_prefix().'form_question_box_description')->row();
+        return $q && $this->can_edit_question($q->questionid);
+    }
     /* List all feedbacks */
     public function index()
     {
-        if (!has_permission('feedbacks', '', 'view')) {
+        if (!has_permission('feedbacks', '', 'view') && !has_permission('feedbacks', '', 'view_own')) {
             access_denied('feedbacks');
         }
         if ($this->input->is_ajax_request()) {
@@ -27,9 +43,9 @@ class Feedbacks extends AdminController
     /* Add new feedback or update existing */
     public function feedback($id = '')
     {
-        if (!has_permission('feedbacks', '', 'view')) {
-            access_denied('feedbacks');
-        }
+        if ($id === '') {
+            if (!has_permission('feedbacks', '', 'create')) { access_denied('feedbacks'); }
+        } elseif (!$this->can_view_feedback_record($id)) { access_denied('feedbacks'); }
         if ($this->input->post()) {
             $data                    = $this->input->post();
             $data['description']     = html_purify($this->input->post('description', false));
@@ -64,7 +80,8 @@ class Feedbacks extends AdminController
             $feedback                   = $this->feedbacks_model->get($id);
             $data['send_log']         = $this->feedbacks_model->get_feedback_send_log($id);
             $data['feedback']           = $feedback;
-            $title                    = $feedback->subject;
+            $title                    = $feedback ? $feedback->subject : 'Questionnaire not found';
+            if (!$feedback) { show_404(); return; }
         }
         $this->load->model('feedbacks_model');
         $data['mail_lists']          = $this->feedbacks_model->get_mail_lists();
@@ -85,7 +102,6 @@ class Feedbacks extends AdminController
         }
 
         $data['title'] = $title;
-        $this->app_scripts->add('feedbacks-js', module_dir_url('feedbacks', 'assets/js/feedbacks.js'), 'admin', ['app-js']);
         $this->app_css->add('feedbacks-css', module_dir_url('feedbacks', 'assets/css/feedbacks.css'), 'admin', ['app-css']);
 
         $this->load->view('feedbacks/feedback', $data);
@@ -94,7 +110,7 @@ class Feedbacks extends AdminController
     /* Send feedback to mail list */
     public function send($feedbackid)
     {
-        if (!has_permission('feedbacks', '', 'edit')) {
+        if (!has_permission('feedbacks', '', 'edit') || !$this->can_view_feedback_record($feedbackid)) {
             access_denied('feedbacks');
         }
         if (!$feedbackid) {
@@ -104,8 +120,9 @@ class Feedbacks extends AdminController
 
         $_lists      = [];
         $_all_emails = [];
-        if ($this->input->post('send_feedback_to')) {
-            $lists = $this->input->post('send_feedback_to');
+        if ($this->input->post('send_feedback_to') || $this->input->post('audience_ids')) {
+            $lists = (array) $this->input->post('send_feedback_to');
+            if (!has_permission('feedbacks','','view')) { $lists = []; }
             foreach ($lists as $key => $val) {
                 // is mail list
                 if (is_int($key)) {
@@ -222,6 +239,16 @@ class Feedbacks extends AdminController
                     }
                 }
             }
+            $audienceIds = $this->input->post('audience_ids');
+            if (is_array($audienceIds)) {
+                foreach (array_unique(array_map('intval', $audienceIds)) as $audienceId) {
+                    if ($audienceId < 1 || !has_permission('feedbacks','','view') || !$this->db->table_exists(db_prefix().'feedbacks_audience_members')) { continue; }
+                    $members = $this->db->where('audience_id', $audienceId)->get(db_prefix().'feedbacks_audience_members')->result_array();
+                    foreach ($members as $member) { if (filter_var($member['email'], FILTER_VALIDATE_EMAIL)) { $_all_emails[] = $member['email']; } }
+                    if ($members) { $_lists[] = 'Audience #' . $audienceId; }
+                }
+            }
+            $_all_emails = array_values(array_unique($_all_emails, SORT_REGULAR));
         } else {
             set_alert('warning', _l('feedback_no_mail_lists_selected'));
             redirect(admin_url('feedbacks/feedback/' . $feedbackid));
@@ -269,6 +296,8 @@ class Feedbacks extends AdminController
         if (!has_permission('feedbacks', '', 'delete')) {
             access_denied('feedbacks');
         }
+        $log = $this->db->where('id',(int)$id)->get(db_prefix().'feedbacksendlog')->row();
+        if (!$log || !$this->can_view_feedback_record($log->feedbackid)) { access_denied('feedbacks'); }
         $this->feedbacks_model->remove_feedback_send($id);
         redirect($_SERVER['HTTP_REFERER']);
     }
@@ -276,6 +305,7 @@ class Feedbacks extends AdminController
     /* View feedback participating results*/
     public function results($id)
     {
+        if (!$this->can_view_feedback_record($id)) { access_denied('feedbacks'); }
         if (!$id) {
             redirect(admin_url('feedbacks'));
         }
@@ -290,7 +320,7 @@ class Feedbacks extends AdminController
     /* Delete feedback from database */
     public function delete($id)
     {
-        if (!has_permission('feedbacks', '', 'delete')) {
+        if (!has_permission('feedbacks', '', 'delete') || !$this->can_view_feedback_record($id)) {
             access_denied('feedbacks');
         }
         if (!$id) {
@@ -309,6 +339,7 @@ class Feedbacks extends AdminController
     /* Remove feedback question */
     public function remove_question($questionid)
     {
+        if (!$this->can_edit_question($questionid)) { access_denied('feedbacks'); }
         if (!has_permission('feedbacks', '', 'edit')) {
             echo json_encode([
                 'success' => false,
@@ -326,6 +357,7 @@ class Feedbacks extends AdminController
     /* Removes feedback checkbox/radio description*/
     public function remove_box_description($questionboxdescriptionid)
     {
+        if (!$this->can_edit_box_description($questionboxdescriptionid)) { access_denied('feedbacks'); }
         if (!has_permission('feedbacks', '', 'edit')) {
             echo json_encode([
                 'success' => false,
@@ -343,6 +375,7 @@ class Feedbacks extends AdminController
     /* Add box description */
     public function add_box_description($questionid, $boxid)
     {
+        if (!$this->can_edit_question($questionid) || !$this->db->where('boxid',(int)$boxid)->where('questionid',(int)$questionid)->count_all_results(db_prefix().'form_question_box')) { access_denied('feedbacks'); }
         if (!has_permission('feedbacks', '', 'edit')) {
             echo json_encode([
                 'success' => false,
@@ -361,6 +394,7 @@ class Feedbacks extends AdminController
     /* New feedback question */
     public function add_feedback_question()
     {
+        if (!$this->can_view_feedback_record((int)$this->input->post('feedbackid')) || !in_array($this->input->post('type'), ['checkbox','radio','input','textarea'], true)) { access_denied('feedbacks'); }
         if (!has_permission('feedbacks', '', 'edit')) {
             echo json_encode([
                 'success' => false,
@@ -384,6 +418,8 @@ class Feedbacks extends AdminController
     /* Update question */
     public function update_question()
     {
+        if (!$this->can_edit_question((int)$this->input->post('questionid'))) { access_denied('feedbacks'); }
+        foreach ((array)$this->input->post('boxes_description') as $box) { if (!$this->can_edit_box_description($box[0])) { access_denied('feedbacks'); } }
         if (!has_permission('feedbacks', '', 'edit')) {
             echo json_encode([
                 'success' => false,
@@ -401,6 +437,7 @@ class Feedbacks extends AdminController
     /* Reorder feedbacks */
     public function update_feedback_questions_orders()
     {
+        foreach ((array)$this->input->post('data') as $q) { if (!$this->can_edit_question($q[0])) { access_denied('feedbacks'); } }
         if (has_permission('feedbacks', '', 'edit')) {
             if ($this->input->is_ajax_request()) {
                 if ($this->input->post()) {
@@ -413,6 +450,7 @@ class Feedbacks extends AdminController
     /* Change feedback status active or inactive*/
     public function change_feedback_status($id, $status)
     {
+        if (!$this->can_view_feedback_record($id)) { access_denied('feedbacks'); }
         if (has_permission('feedbacks', '', 'edit')) {
             if ($this->input->is_ajax_request()) {
                 $this->feedbacks_model->change_feedback_status($id, $status);
@@ -437,6 +475,7 @@ class Feedbacks extends AdminController
     /* Add or update mail list */
     public function mail_list($id = '')
     {
+        if (!has_permission('feedbacks','','view')) { access_denied('feedbacks'); }
         if ($this->input->post()) {
             if ($id == '') {
                 if (!has_permission('feedbacks', '', 'create')) {
@@ -548,6 +587,7 @@ class Feedbacks extends AdminController
     /* Add single email to mail list / ajax*/
     public function add_email_to_list()
     {
+        if (!has_permission('feedbacks','','view')) { access_denied('feedbacks'); }
         if (!has_permission('feedbacks', '', 'create')) {
             echo json_encode([
                 'success'       => false,
@@ -566,6 +606,7 @@ class Feedbacks extends AdminController
     /* Remove single email from mail list / ajax */
     public function remove_email_from_mail_list($emailid)
     {
+        if (!has_permission('feedbacks','','view')) { access_denied('feedbacks'); }
         if (!has_permission('feedbacks', '', 'delete')) {
             echo json_encode([
                 'success' => false,
@@ -586,6 +627,7 @@ class Feedbacks extends AdminController
     /* Remove mail list custom field */
     public function remove_list_custom_field($fieldid)
     {
+        if (!has_permission('feedbacks','','view')) { access_denied('feedbacks'); }
         if (!has_permission('feedbacks', '', 'delete')) {
             echo json_encode([
                 'success' => false,
@@ -602,6 +644,7 @@ class Feedbacks extends AdminController
     /* Import .xls file with emails */
     public function import_emails()
     {
+        if (!has_permission('feedbacks','','view')) { access_denied('feedbacks'); }
         if (!has_permission('feedbacks', '', 'create')) {
             access_denied('feedbacks');
         }
@@ -673,6 +716,7 @@ class Feedbacks extends AdminController
     /* Delete mail list from database */
     public function delete_mail_list($id)
     {
+        if (!has_permission('feedbacks','','view')) { access_denied('feedbacks'); }
         if (!has_permission('feedbacks', '', 'delete')) {
             access_denied('feedbacks');
         }
@@ -685,4 +729,294 @@ class Feedbacks extends AdminController
         }
         redirect(admin_url('feedbacks/mail_lists'));
     }
+
+    /** Built-in editable construction-business template library. */
+    public function templates()
+    {
+        if (!has_permission('feedbacks', '', 'view') && !has_permission('feedbacks', '', 'view_own') && !has_permission('feedbacks', '', 'view_all_templates') && !has_permission('feedbacks', '', 'create')) {
+            access_denied('feedbacks');
+        }
+        $data['templates'] = require(__DIR__ . '/../libraries/questionnaire_templates.php');
+        $data['title'] = _l('fb_template_library');
+        $this->load->view('feedbacks/templates', $data);
+    }
+
+    /** Create a normal editable questionnaire from a built-in template. */
+    public function create_from_template($template_index)
+    {
+        if (!has_permission('feedbacks', '', 'create')) {
+            access_denied('feedbacks');
+        }
+        $templates = require(__DIR__ . '/../libraries/questionnaire_templates.php');
+        $index = (int) $template_index;
+        if (!isset($templates[$index])) {
+            show_404();
+        }
+        $template = $templates[$index];
+        $this->db->trans_begin();
+        $feedbackId = $this->feedbacks_model->add([
+            'subject' => $template['title'],
+            'description' => '<p>' . html_escape($template['description']) . '</p>',
+            'viewdescription' => '<p>' . html_escape($template['description']) . '</p>',
+            'redirect_url' => '',
+            'fromname' => get_option('companyname'),
+        ]);
+        if (!$feedbackId) {
+            $this->db->trans_rollback();
+            set_alert('danger', _l('fb_template_create_failed'));
+            redirect(admin_url('feedbacks/templates'));
+        }
+        foreach ($template['questions'] as $order => $question) {
+            $created = $this->feedbacks_model->add_feedback_question([
+                'feedbackid' => $feedbackId,
+                'type' => in_array($question['type'], ['radio', 'checkbox', 'input', 'textarea'], true) ? $question['type'] : 'input',
+            ]);
+            if (!$created || empty($created['questionid'])) {
+                $this->db->trans_rollback();
+                set_alert('danger', _l('fb_template_create_failed'));
+                redirect(admin_url('feedbacks/templates'));
+            }
+            $this->feedbacks_model->update_question([
+                'questionid' => $created['questionid'],
+                'question' => ['value' => $question['question'], 'required' => 'false'],
+            ]);
+            $this->db->where('questionid', $created['questionid']);
+            $this->db->update(db_prefix() . 'form_questions', ['question_order' => $order + 1]);
+            if (in_array($question['type'], ['radio', 'checkbox'], true) && !empty($question['options'])) {
+                // The legacy model creates one blank option; remove it before adding the template choices.
+                $this->db->where('questionid', $created['questionid']);
+                $this->db->where('description', '');
+                $this->db->delete(db_prefix() . 'form_question_box_description');
+                foreach ($question['options'] as $option) {
+                    $this->feedbacks_model->add_box_description($created['questionid'], $created['boxid'], $option);
+                }
+            }
+        }
+        if ($this->db->trans_status() === false) {
+            $this->db->trans_rollback();
+            set_alert('danger', _l('fb_template_create_failed'));
+            redirect(admin_url('feedbacks/templates'));
+        }
+        $this->db->trans_commit();
+        log_activity('Questionnaire created from built-in template [ID: ' . $feedbackId . ', Template: ' . $template['title'] . ']');
+        set_alert('success', _l('fb_template_created'));
+        redirect(admin_url('feedbacks/feedback/' . $feedbackId));
+    }
+
+    /** Secure bulk deletion of selected questionnaires. */
+    public function bulk_delete()
+    {
+        if (!has_permission('feedbacks', '', 'delete')) {
+            access_denied('feedbacks');
+        }
+        $ids = $this->input->post('ids');
+        if (!is_array($ids) || empty($ids)) {
+            set_alert('warning', _l('fb_select_records'));
+            redirect(admin_url('feedbacks'));
+        }
+        $ids = array_values(array_unique(array_filter(array_map('intval', $ids), function ($id) { return $id > 0; })));
+        $deleted = 0;
+        $this->db->trans_begin();
+        foreach ($ids as $id) {
+            if (!$this->can_view_feedback_record($id)) { continue; }
+            if ($this->feedbacks_model->delete($id)) {
+                $deleted++;
+            }
+        }
+        if ($this->db->trans_status() === false) {
+            $this->db->trans_rollback();
+            set_alert('danger', _l('problem_deleting', _l('feedbacks')));
+        } else {
+            $this->db->trans_commit();
+            log_activity('Bulk deleted questionnaires [Count: ' . $deleted . ']');
+            set_alert('success', _l('fb_bulk_deleted', $deleted));
+        }
+        redirect(admin_url('feedbacks'));
+    }
+
+    /** Initial reporting overview, based on existing questionnaire and participation tables. */
+    public function reports()
+    {
+        if (!has_permission('feedbacks', '', 'view') && !has_permission('feedbacks', '', 'view_own')) { access_denied('feedbacks'); }
+        $ownOnly = !has_permission('feedbacks', '', 'view') && has_permission('feedbacks', '', 'view_own');
+        $data['title'] = _l('fb_reports');
+        if ($ownOnly) { $this->db->where('created_by',(int)get_staff_user_id()); }
+        $data['total_questionnaires'] = $this->db->count_all_results(db_prefix() . 'feedbacks');
+        if ($ownOnly) { $this->db->where('created_by',(int)get_staff_user_id()); }
+        $data['active_questionnaires'] = $this->db->where('active', 1)->count_all_results(db_prefix() . 'feedbacks');
+        $this->db->from(db_prefix().'feedbackresultsets');
+        if ($ownOnly) { $this->db->where('feedbackid IN (SELECT feedbackid FROM '.db_prefix().'feedbacks WHERE created_by='.(int)get_staff_user_id().')', null, false); }
+        if ($this->input->get('date_from')) { $this->db->where('date >=', $this->input->get('date_from').' 00:00:00'); }
+        if ($this->input->get('date_to')) { $this->db->where('date <=', $this->input->get('date_to').' 23:59:59'); }
+        if ($this->input->get('feedbackid')) { $this->db->where('feedbackid',(int)$this->input->get('feedbackid')); }
+        if ($this->input->get('staff_id') && $this->db->table_exists(db_prefix().'feedbacks_participants')) { $this->db->where('resultsetid IN (SELECT resultsetid FROM '.db_prefix().'feedbacks_participants WHERE participant_type=\'staff\' AND participant_id='.(int)$this->input->get('staff_id').')', null, false); }
+        $data['total_participation'] = $this->db->count_all_results();
+        if ($ownOnly) { $this->db->where('created_by',(int)get_staff_user_id()); }
+        $data['questionnaires'] = $this->db->select('feedbackid,subject')->order_by('subject','ASC')->get(db_prefix().'feedbacks')->result_array();
+        $this->load->model('staff_model');
+        $data['staff_members'] = $this->staff_model->get('', ['active'=>1]);
+        $data['questions'] = [];
+        if ($this->input->get('feedbackid')) { $data['questions'] = $this->db->where('rel_type','feedback')->where('rel_id',(int)$this->input->get('feedbackid'))->order_by('question_order','ASC')->get(db_prefix().'form_questions')->result_array(); }
+        $this->db->select('f.feedbackid,f.subject,COUNT(r.resultsetid) AS responses');
+        $this->db->from(db_prefix().'feedbacks f');
+        $this->db->join(db_prefix().'feedbackresultsets r','r.feedbackid=f.feedbackid','left');
+        if ($ownOnly) { $this->db->where('f.created_by',(int)get_staff_user_id()); }
+        if ($this->input->get('date_from')) { $this->db->where('r.date >=',$this->input->get('date_from').' 00:00:00'); }
+        if ($this->input->get('date_to')) { $this->db->where('r.date <=',$this->input->get('date_to').' 23:59:59'); }
+        if ($this->input->get('feedbackid')) { $this->db->where('f.feedbackid',(int)$this->input->get('feedbackid')); }
+        if ($this->input->get('staff_id')) { $this->db->join(db_prefix().'feedbacks_participants p','p.resultsetid=r.resultsetid AND p.participant_type=\'staff\' AND p.participant_id='.(int)$this->input->get('staff_id'),'inner'); }
+        $data['response_breakdown']=$this->db->group_by('f.feedbackid')->order_by('responses','DESC')->get()->result_array();
+        $data['question_breakdown'] = [];
+        if ($this->input->get('questionid')) { $this->db->select('COALESCE(opt.description, fr.answer) AS answer,COUNT(*) AS total', false)->from(db_prefix().'form_results fr')->join(db_prefix().'form_question_box_description opt','opt.questionboxdescriptionid=fr.boxdescriptionid','left')->where('fr.questionid',(int)$this->input->get('questionid'))->group_by('answer')->order_by('total','DESC'); $data['question_breakdown']=$this->db->get()->result_array(); }
+        $this->load->view('feedbacks/reports', $data);
+    }
+
+
+    /** Download a questionnaire interchange JSON file. */
+    public function export_questionnaire($id)
+    {
+        if (!$this->can_view_feedback_record($id)) { access_denied('feedbacks'); }
+        $feedback = $this->feedbacks_model->get((int) $id);
+        if (!$feedback) { show_404(); }
+        $payload = ['format' => 'smartchoice-feedbacks', 'format_version' => 1, 'questionnaire' => [
+            'subject' => $feedback->subject, 'description' => $feedback->description,
+            'viewdescription' => $feedback->viewdescription, 'questions' => []
+        ]];
+        foreach ($feedback->questions as $q) {
+            $payload['questionnaire']['questions'][] = [
+                'question' => $q['question'], 'type' => !empty($q['advanced_type']) ? $q['advanced_type'] : $q['boxtype'],
+                'required' => (bool) $q['required'], 'options' => !empty($q['box_descriptions']) ? array_column($q['box_descriptions'], 'description') : [],
+                'settings' => !empty($q['advanced_settings']) ? $q['advanced_settings'] : []
+            ];
+        }
+        $this->output->set_content_type('application/json')->set_header('Content-Disposition: attachment; filename="questionnaire-' . (int)$id . '.json"')->set_output(json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+    }
+
+    /** Import a questionnaire JSON export while preserving the legacy response engine. */
+    public function import_questionnaire()
+    {
+        if (!has_permission('feedbacks', '', 'create')) { access_denied('feedbacks'); }
+        if (empty($_FILES['questionnaire_file']['tmp_name']) || !is_uploaded_file($_FILES['questionnaire_file']['tmp_name']) || !in_array(strtolower(pathinfo($_FILES['questionnaire_file']['name'], PATHINFO_EXTENSION)), ['json','csv'], true)) {
+            set_alert('warning', _l('fb_import_choose_file')); redirect(admin_url('feedbacks'));
+        }
+        $raw = file_get_contents($_FILES['questionnaire_file']['tmp_name']);
+        $data = json_decode($raw, true);
+        if (is_array($data) && ($data['format'] ?? '') === 'smartchoice-feedbacks') {
+            $q = $data['questionnaire'] ?? [];
+        } else {
+            // CSV template format: subject,description,question,type,required,options.
+            $fh = fopen($_FILES['questionnaire_file']['tmp_name'], 'r');
+            $headers = array_map(function($v){ return strtolower(trim((string)$v)); }, fgetcsv($fh) ?: []);
+            $rows = []; $subject = ''; $description = '';
+            while (($row = fgetcsv($fh)) !== false) {
+                $item = []; foreach ($headers as $i => $key) { $item[$key] = $row[$i] ?? ''; }
+                if ($subject === '' && !empty($item['subject'])) { $subject = trim($item['subject']); }
+                if ($description === '' && !empty($item['description'])) { $description = trim($item['description']); }
+                if (!empty($item['question'])) { $rows[] = ['question'=>$item['question'],'type'=>$item['type'] ?: 'input','required'=>in_array(strtolower($item['required'] ?? ''),['1','yes','true'],true),'options'=>array_values(array_filter(array_map('trim',explode('|',$item['options'] ?? '')))),'settings'=>[]]; }
+            }
+            fclose($fh); $q = ['subject'=>$subject,'description'=>$description,'viewdescription'=>$description,'questions'=>$rows];
+        }
+        if (!is_array($q) || empty($q['subject']) || !is_array($q['questions'] ?? null)) {
+            set_alert('danger', _l('fb_import_invalid')); redirect(admin_url('feedbacks'));
+        }
+        $this->db->trans_begin();
+        $id = $this->feedbacks_model->add(['subject' => $q['subject'], 'description' => html_purify($q['description'] ?? ''), 'viewdescription' => html_purify($q['viewdescription'] ?? ''), 'redirect_url' => '', 'fromname' => get_option('companyname')]);
+        $allowed = ['radio','checkbox','input','textarea','dropdown','toggle','rating','number','currency','percentage','date','time','email','phone','url','linear_scale'];
+        foreach ($q['questions'] as $order => $item) {
+            $type = in_array($item['type'] ?? '', $allowed, true) ? $item['type'] : 'input';
+            $legacy = in_array($type, ['radio','checkbox','textarea'], true) ? $type : 'input';
+            $created = $this->feedbacks_model->add_feedback_question(['feedbackid' => $id, 'type' => $legacy]);
+            if (!$created) { $this->db->trans_rollback(); set_alert('danger', _l('fb_import_failed')); redirect(admin_url('feedbacks')); }
+            $this->feedbacks_model->update_question(['questionid' => $created['questionid'], 'question' => ['value' => $item['question'] ?? '', 'required' => !empty($item['required']) ? 'true' : 'false']]);
+            $this->db->where('questionid', $created['questionid'])->update(db_prefix().'form_questions', ['question_order' => $order + 1]);
+            if (in_array($type, ['radio','checkbox'], true)) {
+                $this->db->where('questionid', $created['questionid'])->where('description', '')->delete(db_prefix().'form_question_box_description');
+                foreach (($item['options'] ?? []) as $option) { $this->feedbacks_model->add_box_description($created['questionid'], $created['boxid'], $option); }
+            }
+            $this->db->insert(db_prefix().'feedbacks_question_meta', ['feedbackid'=>$id,'questionid'=>$created['questionid'],'field_type'=>$type,'options_json'=>json_encode($item['options'] ?? []),'settings_json'=>json_encode($item['settings'] ?? []),'datecreated'=>date('Y-m-d H:i:s')]);
+        }
+        if ($this->db->trans_status() === false) { $this->db->trans_rollback(); set_alert('danger', _l('fb_import_failed')); redirect(admin_url('feedbacks')); }
+        $this->db->trans_commit();
+        $this->db->insert(db_prefix().'feedbacks_import_log', ['staff_id'=>get_staff_user_id(),'filename'=>basename($_FILES['questionnaire_file']['name']),'status'=>'success','details'=>'Imported questionnaire ID '.$id,'datecreated'=>date('Y-m-d H:i:s')]);
+        set_alert('success', _l('fb_import_success')); redirect(admin_url('feedbacks/feedback/'.$id));
+    }
+
+    /** Download CSV column headers and a sample row for audience imports. */
+    public function sample_header()
+    {
+        if (!has_permission('feedbacks', '', 'create')) { access_denied('feedbacks'); }
+        $this->output->set_content_type('text/csv')->set_header('Content-Disposition: attachment; filename="smartchoice-questionnaire-import-template.csv"');
+        $this->output->set_output("subject,description,question,type,required,options\r\n\"Customer Feedback\",\"Tell us about your experience\",\"How would you rate our service?\",rating,1,\"1|2|3|4|5\"\r\n");
+    }
+
+    /** Create advanced field through the compatible legacy input storage plus typed metadata. */
+    public function add_advanced_question()
+    {
+        if (!has_permission('feedbacks', '', 'edit')) { access_denied('feedbacks'); }
+        $feedbackId = (int) $this->input->post('feedbackid');
+        $type = (string) $this->input->post('field_type');
+        $allowed = ['dropdown','toggle','rating','number','currency','percentage','date','time','email','phone','url','linear_scale'];
+        if (!$feedbackId || !$this->can_view_feedback_record($feedbackId) || !in_array($type, $allowed, true)) { show_error('Invalid questionnaire field.', 400); }
+        $created = $this->feedbacks_model->add_feedback_question(['feedbackid'=>$feedbackId,'type'=>'input']);
+        if (!$created) { show_error('Unable to create question.', 500); }
+        $this->db->insert(db_prefix().'feedbacks_question_meta', ['feedbackid'=>$feedbackId,'questionid'=>$created['questionid'],'field_type'=>$type,'options_json'=>json_encode(array_values(array_filter(array_map('trim', preg_split('/\r?\n|\|/', (string)$this->input->post('options_text', true)))) ?: ['1','2','3','4','5'])),'settings_json'=>json_encode(['min'=>max(0,(int)$this->input->post('min_value')),'max'=>max(1,(int)$this->input->post('max_value')),'step'=>1,'placeholder'=>'']),'datecreated'=>date('Y-m-d H:i:s')]);
+        if ($this->input->is_ajax_request()) {
+            $this->output->set_content_type('application/json')->set_output(json_encode(['success'=>true,'questionid'=>$created['questionid'],'type'=>$type]));
+        } else {
+            set_alert('success', _l('fb_advanced_field_added'));
+            redirect(admin_url('feedbacks/feedback/'.$feedbackId));
+        }
+    }
+
+    /** Save appearance and public-form header/footer settings. */
+    public function save_design($id)
+    {
+        if (!has_permission('feedbacks', '', 'edit') || !$this->can_view_feedback_record($id)) { access_denied('feedbacks'); }
+        $id = (int)$id; if (!$this->feedbacks_model->get($id)) { show_404(); }
+        $settings = ['theme'=>$this->input->post('theme', true) ?: 'smartchoice','footer_mode'=>$this->input->post('footer_mode', true) === 'custom' ? 'custom' : 'crm','primary_color'=>$this->input->post('primary_color', true) ?: '#2f7d32','background_color'=>$this->input->post('background_color', true) ?: '#ffffff','corner_radius'=>max(0,min(32,(int)$this->input->post('corner_radius'))),'font_size'=>max(12,min(22,(int)$this->input->post('font_size')))];
+        $header = html_purify($this->input->post('header_html', false) ?: ''); $footer = html_purify($this->input->post('footer_html', false) ?: '');
+        if (!$this->db->table_exists(db_prefix().'feedbacks_design')) { show_error('Questionnaire design table is unavailable. Complete the database upgrade first.', 503); return; }
+        $existing = $this->db->where('feedbackid',$id)->get(db_prefix().'feedbacks_design')->row();
+        $record = ['settings_json'=>json_encode($settings),'header_html'=>$header,'footer_html'=>$footer,'dateupdated'=>date('Y-m-d H:i:s')];
+        if ($existing) { $this->db->where('feedbackid',$id)->update(db_prefix().'feedbacks_design',$record); }
+        else { $record['feedbackid']=$id; $this->db->insert(db_prefix().'feedbacks_design',$record); }
+        set_alert('success', _l('fb_design_saved')); redirect(admin_url('feedbacks/feedback/'.$id));
+    }
+
+    /** Audience segments manager with manually maintained members; CRM segments can be extended later. */
+    public function audiences()
+    {
+        if (!$this->db->table_exists(db_prefix().'feedbacks_audiences') || !$this->db->table_exists(db_prefix().'feedbacks_audience_members')) { set_alert('warning',_l('fb_upgrade_required')); redirect(admin_url('feedbacks')); }
+        if (!has_permission('feedbacks', '', 'view')) { access_denied('feedbacks'); }
+        if ($this->input->post('name')) {
+            if (!has_permission('feedbacks', '', 'create')) { access_denied('feedbacks'); }
+            $this->db->insert(db_prefix().'feedbacks_audiences',['name'=>$this->input->post('name',true),'description'=>$this->input->post('description',true),'criteria_json'=>json_encode(['source'=>'manual_or_import']),'created_by'=>get_staff_user_id(),'datecreated'=>date('Y-m-d H:i:s')]);
+            set_alert('success', _l('fb_audience_created')); redirect(admin_url('feedbacks/audiences'));
+        }
+        $data['audiences']=$this->db->order_by('name','ASC')->get(db_prefix().'feedbacks_audiences')->result_array();
+        $data['title']=_l('fb_audiences'); $this->load->view('feedbacks/audiences',$data);
+    }
+
+    public function audience_add_member($id)
+    {
+        if (!has_permission('feedbacks','','view')) { access_denied('feedbacks'); }
+        if (!has_permission('feedbacks', '', 'create') && !has_permission('feedbacks', '', 'edit')) { access_denied('feedbacks'); }
+        $email=strtolower(trim((string)$this->input->post('email',true))); $name=trim((string)$this->input->post('name',true));
+        if (!filter_var($email,FILTER_VALIDATE_EMAIL)) { set_alert('danger',_l('fb_invalid_email')); redirect(admin_url('feedbacks/audiences')); }
+        $exists=$this->db->where('audience_id',(int)$id)->where('email',$email)->count_all_results(db_prefix().'feedbacks_audience_members');
+        if (!$exists) { $this->db->insert(db_prefix().'feedbacks_audience_members',['audience_id'=>(int)$id,'name'=>$name,'email'=>$email,'source'=>'manual','datecreated'=>date('Y-m-d H:i:s')]); }
+        set_alert('success',_l('fb_audience_member_saved')); redirect(admin_url('feedbacks/audiences'));
+    }
+
+    /** CSV member import into an audience. */
+    public function audience_import($id)
+    {
+        if (!has_permission('feedbacks','','view')) { access_denied('feedbacks'); }
+        if (!has_permission('feedbacks', '', 'create') && !has_permission('feedbacks', '', 'edit')) { access_denied('feedbacks'); }
+        if (empty($_FILES['audience_csv']['tmp_name'])) { set_alert('warning',_l('fb_import_choose_file')); redirect(admin_url('feedbacks/audiences')); }
+        $fh=fopen($_FILES['audience_csv']['tmp_name'],'r'); $header=fgetcsv($fh); $map=array_flip(array_map('strtolower',$header ?: [])); $added=0;
+        while (($row=fgetcsv($fh)) !== false) { $email=trim($row[$map['email'] ?? -1] ?? ''); $name=trim($row[$map['name'] ?? -1] ?? ''); if (filter_var($email,FILTER_VALIDATE_EMAIL)) { $exists=$this->db->where('audience_id',(int)$id)->where('email',$email)->count_all_results(db_prefix().'feedbacks_audience_members'); if (!$exists) { $this->db->insert(db_prefix().'feedbacks_audience_members',['audience_id'=>(int)$id,'name'=>$name,'email'=>strtolower($email),'source'=>'csv','datecreated'=>date('Y-m-d H:i:s')]); $added++; } } }
+        fclose($fh); set_alert('success',_l('fb_audience_imported',$added)); redirect(admin_url('feedbacks/audiences'));
+    }
+
 }

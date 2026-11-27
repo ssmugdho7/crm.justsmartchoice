@@ -5,7 +5,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /*
 Module Name: Smart Choice Enterprise Core
 Description: Enterprise 360 operating platform for Customer 360, Sales, Field Operations, Dispatch, Equipment, Inventory, Projects, Documents, Communications, Call Center, Marketing, Workflows, Reporting, QR Codes, Security, Performance, global search, audit, queue, and permissions.
-Version: 1.5.1
+Version: 1.5.2
 Requires at least: 3.4.*
 Author: Smart Choice Contractors USA / Harold Cabrera
 Author URI: https://justsmartchoice.com
@@ -13,7 +13,7 @@ Quality: ★★★★★
 */
 
 define('SMART_CHOICE_ENTERPRISE_CORE_MODULE_NAME', 'smart_choice_enterprise_core');
-define('SMART_CHOICE_ENTERPRISE_CORE_VERSION', '1.5.1');
+define('SMART_CHOICE_ENTERPRISE_CORE_VERSION', '1.5.2');
 
 register_activation_hook(SMART_CHOICE_ENTERPRISE_CORE_MODULE_NAME, 'smart_choice_enterprise_core_activate');
 register_deactivation_hook(SMART_CHOICE_ENTERPRISE_CORE_MODULE_NAME, 'smart_choice_enterprise_core_deactivate');

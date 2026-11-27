@@ -1,0 +1,2 @@
+DMN 1.0.2 — Smart Choice Contractors USA / Harold Cabrera
+List endpoint returns JSON explicitly; qualified SQL fields and explicit aliases; staff assignment separate from creator; existing records retained; migration 102 adds assigned_staff_id only and sets success alert after schema check. Fixed Swedish syntax and unclosed CSS media rule. PHP 8.4 CLI lint; live Perfex/PHP 8.5 and database tests pending. Existing direct diagram file access remains a limitation. Back up DB and module including diagram files; upload over existing module, upgrade, do not uninstall.

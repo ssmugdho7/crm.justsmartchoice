@@ -1,24 +1,26 @@
 <?php
     $CI          = & get_instance();
-    $custom_fields = get_table_custom_fields('dmn');
+    $customFieldsColumns = [];
+$custom_fields = get_table_custom_fields('dmn');
     $CI->db->query("SET sql_mode = ''");
     $aColumns = ['title',db_prefix() . 'dmn.description','staffid',db_prefix() . 'projects.name',db_prefix() . 'dmn.dateadded',];
     $sIndexColumn = 'id';
     $sTable       = db_prefix() . 'dmn';
     $join = ['LEFT JOIN ' . db_prefix() . 'projects ON ' . db_prefix() . 'projects.id = ' . db_prefix() . 'dmn.project_id',];
-    $where = [ 'AND project_id=' . $_GET['project_id'],];
+    $where = ['AND project_id=' . (int)$CI->input->get('project_id')];
+    if (dmn_own_scope()) $where[] = 'AND ('.db_prefix().'dmn.staffid = '.(int)get_staff_user_id().' OR '.db_prefix().'dmn.assigned_staff_id = '.(int)get_staff_user_id().')';
     $filter = [];
     foreach ($custom_fields as $key => $field) 
     {
         $selectAs = (is_cf_date($field) ? 'date_picker_cvalue_' . $key : 'cvalue_' . $key);
         array_push($customFieldsColumns, $selectAs);
         array_push($aColumns, 'ctable_' . $key . '.value as ' . $selectAs);
-        array_push($join, 'LEFT JOIN '.db_prefix().'customfieldsvalues as ctable_' . $key . ' ON '.db_prefix().'clients.userid = ctable_' . $key . '.relid AND ctable_' . $key . '.fieldto="' . $field['fieldto'] . '" AND ctable_' . $key . '.fieldid=' . $field['id']);
+        array_push($join, 'LEFT JOIN '.db_prefix().'customfieldsvalues as ctable_' . $key . ' ON '.db_prefix().'dmn.id = ctable_' . $key . '.relid AND ctable_' . $key . '.fieldto="' . $field['fieldto'] . '" AND ctable_' . $key . '.fieldid=' . $field['id']);
     }
     $join = hooks()->apply_filters('dmn_table_sql_join', $join);
     $staffIds = [];
     if ($CI->input->post('assigned')) {
-        array_push($staffIds, $CI->input->post('assigned'));
+        $staffIds = array_filter(array_map('intval',(array)$CI->input->post('assigned')));
     }
     if (count($staffIds) > 0) {
         array_push($filter, 'AND '.db_prefix().'dmn.staffid IN (' . implode(', ', $staffIds) . ')');
@@ -41,7 +43,7 @@
         $row = [];
         for ($i = 0; $i < count($aColumns); $i++) 
         {
-            $_data = $aRow[$aColumns[$i]];
+            $_data = html_escape($aRow[$aColumns[$i]] ?? '');
             if ($aColumns[$i] == 'title') 
             {
                 $hrefAttr = 'href="' . admin_url('dmn/index/' . $aRow['id']) . '" onclick="init_dmn_modal(' . $aRow['id'] . ');return false;"';
@@ -60,7 +62,9 @@
             elseif ($aColumns[$i] == 'staffid') 
             {
                 if($_data > 0) {
-                    $oStaff = $this->ci->staff_model->get($_data);
+                    $CI->load->model('staff_model');
+                $oStaff = $CI->staff_model->get($_data);
+                if (!$oStaff) { $row[] = ''; continue; }
                     $_data = staff_profile_image($oStaff->staffid, array('img', 'img-responsive', 'staff-profile-image-small', 'pull-left')) . '<a href="' . admin_url('profile/' . $oStaff->staffid) . '">' . $oStaff->firstname . ' ' . $oStaff->lastname . '</a><br>';
                 }else{
                     $_data = '';

@@ -6,6 +6,7 @@ $CI = &get_instance();
 $CI->load->dbforge();
 
 $options = [
+    'ga_visitors_enabled'           => '0',
     'ga_enabled'                    => '0',
     'ga_track_admin'                => '0',
     'ga_track_client'               => '1',
@@ -22,6 +23,8 @@ foreach ($options as $name => $value) {
 }
 
 $prefix = db_prefix();
+require_once __DIR__.'/visitor_schema.php';
+foreach (ga_visitor_schema($prefix) as $statement) $CI->db->query($statement);
 if (!$CI->db->table_exists($prefix . 'ga_websites')) {
     $CI->db->query("CREATE TABLE `{$prefix}ga_websites` (
         `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,

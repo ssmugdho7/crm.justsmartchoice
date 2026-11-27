@@ -58,6 +58,51 @@ class Google_analytics extends AdminController
         ]);
     }
 
+    public function visitors()
+    {
+        // IP addresses and browsing histories require administrator access,
+        // independently of the ordinary Google Analytics view permission.
+        if (!is_admin()) { access_denied('Live Visitors'); return; }
+        if ($this->input->method() === 'post') {
+            $action=$this->input->post('visitor_logging');
+            if (!in_array($action,['0','1'],true)) { show_error('Invalid logging setting.',400); return; }
+            update_option('ga_visitors_enabled',$action);
+            set_alert('success',$action==='1'?'Website visitor logging enabled.':'Website visitor logging paused.');
+            redirect(admin_url('google_analytics/visitors')); return;
+        }
+        $timezone = 'America/New_York';
+        $zone = new DateTimeZone($timezone);
+        $today = new DateTimeImmutable('today', $zone);
+        $date = $this->input->get('date') ?: $today->format('Y-m-d');
+        $parsed = is_string($date) ? DateTimeImmutable::createFromFormat('!Y-m-d', $date, $zone) : false;
+        $search = $this->input->get('ip') ?: '';
+        $before = $this->input->get('before') ?: '0';
+        if (!$parsed || $parsed->format('Y-m-d') !== $date || $parsed > $today || $parsed < $today->modify('-29 days')
+            || !is_string($search) || ($search !== '' && !filter_var($search, FILTER_VALIDATE_IP))
+            || !is_string($before) || !preg_match('/^[0-9]{1,18}$/D',$before)) {
+            show_error('Select a valid date within the last 30 days and a valid IP address.',400); return;
+        }
+        $data = ['title'=>'Live Visitors','date'=>$date,'timezone'=>$timezone,'search'=>$search,'report'=>null,'error'=>null,'detail'=>null,'logging_enabled'=>get_option('ga_visitors_enabled')==='1'];
+        try {
+            require_once dirname(__DIR__).'/libraries/Visitor_store.php';
+            $store = new Visitor_store(Visitor_store::connect(), db_prefix(), APP_ENC_KEY);
+            $store->purge();
+            $data['report'] = $store->report($date,$timezone,(int)$before,$search);
+            $id = $this->input->get('visit');
+            if ($id !== null) {
+                if (!is_string($id) || !preg_match('/^[a-f0-9]{32}$/D',$id)) { show_error('Invalid visit.',400); return; }
+                $data['detail'] = $store->session($id);
+                if (!$data['detail']) { show_404(); return; }
+            }
+        } catch (Throwable $e) {
+            log_message('error','Live visitor reporting unavailable.');
+            $data['error'] = 'Visitor reporting is unavailable. Check that the visitor tables are installed and the database connection is available.';
+        }
+        $this->output->set_header('Cache-Control: no-store, private');
+        $this->output->set_header('Referrer-Policy: no-referrer');
+        $this->load->view('visitors',$data);
+    }
+
     public function websites()
     {
         $this->require_capability('view');

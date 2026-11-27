@@ -29,4 +29,7 @@ if (!$CI->db->table_exists(db_prefix() . 'dmn_votes')) {
     PRIMARY KEY (id)
   ) ENGINE=InnoDB DEFAULT CHARSET=" . $CI->db->char_set . ';');
 }
-?>
+
+if (!$CI->db->field_exists("assigned_staff_id", db_prefix()."dmn")) {
+    $CI->db->query("ALTER TABLE `".db_prefix()."dmn` ADD `assigned_staff_id` INT NOT NULL DEFAULT 0");
+}

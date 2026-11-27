@@ -37,7 +37,7 @@
                   <span class="dislike_canvas" onclick="likeCanvas('dislike');"><i class="fa fa-thumbs-o-down" aria-hidden="true" style="<?= isset($vote) && $vote->thumb=='dislike' ? 'color: red' : ''?>"></i><span><?=$votes->dislike;?></span></span>
                 </a>
               </div>
-              <div class="col-xs-3">
+              <div class="col-xs-3"><a class="btn btn-default pull-right" href="<?= admin_url('dmn') ?>"><?= _l('dmn_back') ?></a>
                 <div class="btn-group pull-right mleft4 btn-with-tooltip-group ">
                   <button type="button" class="btn btn-primary dropdown-toggle text-center-c" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false ">
                     <i class="fa fa-cog" aria-hidden="true"></i>
@@ -98,6 +98,9 @@
         echo render_textarea('description',_l('dmn_description'),$value,array('rows'=>4),array());
         $selected = (isset($dmn) ? $dmn->project_id : '');
         echo render_select('project_id',$projects,array('id','name'),'project_group',$selected);
+              $this->load->model('staff_model');
+              echo render_select('assigned_staff_id',$this->staff_model->get('', ['active'=>1]),array('staffid',array('firstname','lastname')),'dmn_assigned_employee',isset($dmn)?($dmn->assigned_staff_id ?? 0):0);
+              echo '<p class="text-muted">'.html_escape(_l('dmn_assignment_hint')).'</p>';
         ?>
       </div>
       <div class="modal-footer">

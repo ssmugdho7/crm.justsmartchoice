@@ -5,10 +5,12 @@
     <div class="content">
         <div class="row">
             <div class="col-md-12">
-                <div class="tw-flex tw-flex-wrap tw-gap-2 tw-items-center tw-mb-3">
+                <div class="tw-flex tw-flex-wrap tw-gap-2 tw-items-center tw-mb-2">
                     <a href="#" class="btn btn-primary btn-sm" onclick="slideToggle('.usernote'); return false;">
                         <i class="fa-regular fa-plus tw-mr-1"></i><?php echo _l('new_note'); ?>
                     </a>
+                </div>
+                <div class="notes-toolbar-secondary tw-flex tw-flex-wrap tw-gap-2 tw-items-center tw-mb-3">
                     <button type="button" class="btn btn-default btn-sm" onclick="slideToggle('.notes-filter-wrapper'); return false;">
                         <i class="fa fa-filter tw-mr-1"></i><?php echo _l('notes_filter'); ?>
                     </button>
@@ -239,6 +241,7 @@
 <?php init_tail(); ?>
 
 <style>
+    .notes-toolbar-secondary { padding-top: 2px; }
     .notes-health-panel { border-left: 4px solid #169179; }
     .notes-health-panel .label { display:inline-block; margin-top:4px; }
     .notes-module-candidates { max-width:42%; }

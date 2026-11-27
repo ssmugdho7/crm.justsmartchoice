@@ -458,9 +458,20 @@ function notes_make_columns_resizable(selector) {
     var $headers = $table.find('thead th');
     var widths = [3, 20, 8, 14, 27, 8, 5, 10, 5];
     var $cols = $('<colgroup>').prependTo($table);
-    $.each(widths, function(_, width) {
-        $('<col>').css('width', width + '%').appendTo($cols);
+    var rules = [];
+    $.each(widths, function(index, width) {
+        var property = '--notes-column-' + index;
+        $table[0].style.setProperty(property, width + '%');
+        $('<col>').css('width', 'var(' + property + ')').appendTo($cols);
+        // DataTables and module styles can retain widths on individual cells.
+        // Use the same live width for the header and every body/footer cell.
+        var column = ':nth-child(' + (index + 1) + ')';
+        rules.push('table.notes-resizable-table > thead > tr > th' + column +
+            ',table.notes-resizable-table > tbody > tr > td' + column +
+            ',table.notes-resizable-table > tfoot > tr > td' + column +
+            '{width:var(' + property + ')!important;min-width:0!important;max-width:none!important;}');
     });
+    $('<style>').text(rules.join('\n')).insertAfter($table);
     $headers.css('width', '');
     var active = null;
     function resize(index, delta) {
@@ -468,8 +479,8 @@ function notes_make_columns_resizable(selector) {
         var next = Math.max(3, Math.min(total - 3, widths[index] + delta));
         widths[index] = next;
         widths[index + 1] = total - next;
-        $cols.children().eq(index).css('width', next + '%');
-        $cols.children().eq(index + 1).css('width', (total - next) + '%');
+        $table[0].style.setProperty('--notes-column-' + index, next + '%');
+        $table[0].style.setProperty('--notes-column-' + (index + 1), (total - next) + '%');
     }
     $headers.each(function(index) {
         if (index === $headers.length - 1) { return; }

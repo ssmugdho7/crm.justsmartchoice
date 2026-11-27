@@ -81,6 +81,7 @@
                                             <?= _l('more'); ?> <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a href="#" class="sc-sales-copy-menu-link" data-copy-url="<?= e(admin_url('payments/payment/' . $payment->paymentid)); ?>"><?= _l('sc_sales_copy_link'); ?></a></li>
                                             <li><a href="<?= admin_url('payments/delete/' . $payment->paymentid); ?>"
                                                 class="text-danger delete-text _delete"><?= _l('sc_sales_delete_payment'); ?></a></li>
                                         </ul>

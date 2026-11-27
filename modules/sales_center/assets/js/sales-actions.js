@@ -1,6 +1,19 @@
 (function () {
   'use strict';
   if (!/^\/admin\/(invoices|proposals|estimates|payments|credit_notes)(\/|$)/.test(location.pathname)) return;
+  document.addEventListener('click', async function (event) {
+    const link = event.target.closest('.sc-sales-copy-menu-link');
+    if (!link) return;
+    event.preventDefault();
+    const spanish = (document.documentElement.lang || '').startsWith('es');
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
+      await navigator.clipboard.writeText(link.dataset.copyUrl);
+      toast(spanish ? 'Enlace copiado.' : 'Link copied.', 'success');
+    } catch (_) {
+      toast(spanish ? 'No se pudo copiar el enlace.' : 'Unable to copy the link.', 'error');
+    }
+  });
   function organize() {
     const wrapper = document.getElementById('wrapper');
     if (!wrapper) return;

@@ -168,6 +168,7 @@ if ($estimate->sent == 1) {
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a href="#" class="sc-sales-copy-menu-link" data-copy-url="<?= e(site_url('estimate/' . $estimate->id . '/' . $estimate->hash)); ?>"><?= _l('sc_sales_copy_link'); ?></a></li>
                                 <li>
                                     <a href="<?= site_url('estimate/' . $estimate->id . '/' . $estimate->hash) ?>"
                                         target="_blank">

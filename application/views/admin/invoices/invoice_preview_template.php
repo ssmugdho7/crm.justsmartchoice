@@ -228,6 +228,7 @@ if ($invoice->sent == 1 && is_date($invoice->datesend)) {
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a href="#" class="sc-sales-copy-menu-link" data-copy-url="<?= e(site_url('invoice/' . $invoice->id . '/' . $invoice->hash)); ?>"><?= _l('sc_sales_copy_link'); ?></a></li>
                                     <li>
                                         <a href="<?= site_url('invoice/' . $invoice->id . '/' . $invoice->hash) ?>"
                                             target="_blank"><?= _l('view_invoice_as_customer_tooltip'); ?>

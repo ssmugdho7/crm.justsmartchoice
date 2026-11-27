@@ -166,6 +166,7 @@
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a href="#" class="sc-sales-copy-menu-link" data-copy-url="<?= e(site_url('proposal/' . $proposal->id . '/' . $proposal->hash)); ?>"><?= _l('sc_sales_copy_link'); ?></a></li>
                         <li>
                             <a href="<?= site_url('proposal/' . $proposal->id . '/' . $proposal->hash); ?>"
                                 target="_blank"><?= _l('sc_sales_view_proposal_as_customer'); ?></a>

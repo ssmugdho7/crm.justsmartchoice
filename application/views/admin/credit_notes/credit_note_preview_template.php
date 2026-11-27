@@ -141,6 +141,7 @@ if ($total_reminders > 0) {
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a href="#" class="sc-sales-copy-menu-link" data-copy-url="<?= e(admin_url('credit_notes/list_credit_notes/' . $credit_note->id)); ?>"><?= _l('sc_sales_copy_link'); ?></a></li>
                                 <?php hooks()->do_action('credit_note_menu_links_start', $credit_note); ?>
                                 <?php
                                    if ($credit_note->status == 1 && staff_can('edit', 'credit_notes')) { ?>

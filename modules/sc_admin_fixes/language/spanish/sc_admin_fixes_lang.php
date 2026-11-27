@@ -31,3 +31,4 @@ $lang['sc_sales_view_payment_pdf'] = 'Ver PDF del pago';
 $lang['sc_sales_view_payment_pdf_new_window'] = 'Ver PDF del pago en nueva pestaña';
 $lang['sc_sales_download_payment_pdf'] = 'Descargar PDF del pago';
 $lang['sc_sales_print_payment_receipt'] = 'Imprimir recibo de pago';
+$lang['sc_sales_copy_link'] = 'Copiar enlace';

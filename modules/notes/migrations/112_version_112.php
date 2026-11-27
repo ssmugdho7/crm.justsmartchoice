@@ -30,11 +30,6 @@ class Migration_Version_112 extends App_module_migration
             }
         }
 
-        // Preserve all legacy notes. Add a readable title only when one does not exist.
-        if ($CI->db->field_exists('title', $table)) {
-            $CI->db->query("UPDATE `{$table}` SET `title` = CONCAT('Legacy Note #', `id`) WHERE `title` IS NULL OR TRIM(`title`) = ''");
-        }
-
         return true;
     }
 

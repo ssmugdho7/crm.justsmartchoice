@@ -145,22 +145,11 @@ class Notes extends AdminController
         foreach ($result['rResult'] as $aRow) {
             $noteId = (int) $aRow['id'];
             $safeColor = $this->safe_brand_color($aRow['note_color'] ?? '#00A651');
-            $title = trim((string) ($aRow['title'] ?? ''));
-            if ($title === '') {
-                $title = _l('notes_legacy_note') . ' #' . $noteId;
-            }
+            $title = $this->note_display_title($aRow['title'] ?? '', $aRow['description'] ?? '');
 
             $row = [];
             $row[] = '<div class="checkbox"><input type="checkbox" class="note-export-checkbox" value="' . $noteId . '"><label></label></div>';
-            $row[] = html_escape($title);
-            $row[] = '<span class="label" style="background:' . html_escape($safeColor) . ';">' . html_escape($this->source_label($aRow['rel_type'] ?? '')) . '</span>';
-            $row[] = $this->build_relation_output_safe($aRow['rel_type'] ?? '', (int) ($aRow['rel_id'] ?? 0));
-            $row[] = $this->render_description($aRow['description'] ?? '', $noteId);
-            $row[] = $this->priority_badge($aRow['priority'] ?? 'medium');
-            $row[] = '<span class="note-color-dot note-color-dot-only" style="background:' . html_escape($safeColor) . ';" title="' . html_escape($safeColor) . '"></span>';
-            $row[] = !empty($aRow['dateadded']) ? _dt($aRow['dateadded']) : '';
-            $row[] = $this->attachment_link($noteId, $aRow['attachment'] ?? '', $aRow['attachment_original_name'] ?? '');
-
+            $titleCell = '<a href="#" class="note-title-link" onclick="note_module_model_get_detail(' . $noteId . '); return false;" aria-label="' . html_escape(_l('view') . ': ' . $title) . '">' . html_escape($title) . '</a>';
             $actions = '<div class="notes-action-grid">';
             $actions .= '<a class="btn btn-default btn-xs" href="' . admin_url('notes/notes/view/' . $noteId) . '" title="' . _l('view') . '"><i class="fa fa-eye"></i><span>' . _l('view') . '</span></a>';
             if (is_admin() || staff_can('edit', 'note_manage')) {
@@ -171,7 +160,14 @@ class Notes extends AdminController
                 $actions .= '<button type="button" class="btn btn-danger btn-xs" onclick="notes_delete_one(' . $noteId . ');" title="' . _l('delete') . '"><i class="fa fa-trash"></i><span>' . _l('delete') . '</span></button>';
             }
             $actions .= '</div>';
-            $row[] = $actions;
+            $row[] = '<div class="note-title-cell">' . $titleCell . $actions . '</div>';
+            $row[] = '<span class="label" style="background:' . html_escape($safeColor) . ';">' . html_escape($this->source_label($aRow['rel_type'] ?? '')) . '</span>';
+            $row[] = $this->build_relation_output_safe($aRow['rel_type'] ?? '', (int) ($aRow['rel_id'] ?? 0));
+            $row[] = $this->render_description($aRow['description'] ?? '', $noteId);
+            $row[] = $this->priority_badge($aRow['priority'] ?? 'medium');
+            $row[] = '<span class="note-color-dot note-color-dot-only" style="background:' . html_escape($safeColor) . ';" title="' . html_escape($safeColor) . '"></span>';
+            $row[] = !empty($aRow['dateadded']) ? _dt($aRow['dateadded']) : '';
+            $row[] = $this->attachment_link($noteId, $aRow['attachment'] ?? '', $aRow['attachment_original_name'] ?? '');
             $output['aaData'][] = $row;
         }
 
@@ -264,6 +260,10 @@ class Notes extends AdminController
 
     public function note_module_model_get_detail()
     {
+        if (!$this->can_manage_notes()) {
+            ajax_access_denied();
+        }
+
         if (!$this->input->is_ajax_request()) {
             show_404();
         }
@@ -273,6 +273,7 @@ class Notes extends AdminController
 
         if (!empty($note_detail)) {
             $note_detail->description = check_for_links($note_detail->description);
+            $note_detail->title = $this->note_display_title($note_detail->title ?? '', $note_detail->description ?? '');
             echo json_encode(['detail' => $note_detail]);
         }
     }
@@ -459,7 +460,7 @@ class Notes extends AdminController
         if (!$this->can_manage_notes()) { access_denied('notes'); }
         $note = $this->db->where('id', (int)$note_id)->get($this->table_note)->row();
         if (!$note) { show_404(); }
-        $data['title'] = !empty($note->title) ? $note->title : _l('note') . ' #' . (int)$note_id;
+        $data['title'] = $this->note_display_title($note->title ?? '', $note->description ?? '');
         $data['note'] = $note;
         $data['source'] = $this->get_source_config($note->rel_type);
         $data['type'] = $this->get_note_type_config($note->note_type ?? 'general');
@@ -473,6 +474,7 @@ class Notes extends AdminController
         if (!(is_admin() || staff_can('edit', 'note_manage'))) { access_denied('notes'); }
         $note = $this->db->where('id', (int)$note_id)->get($this->table_note)->row();
         if (!$note) { show_404(); }
+        $note->title = $this->note_display_title($note->title ?? '', $note->description ?? '');
         $data['title'] = _l('notes_edit_note');
         $data['note'] = $note;
         $data['rel_type'] = $this->get_sources();
@@ -862,6 +864,28 @@ class Notes extends AdminController
         }
 
         return html_escape($plain);
+    }
+
+    /**
+     * Return the entered title, or a useful content-derived title for records
+     * created before the notes title field existed. Never expose migration
+     * placeholders such as "Legacy Note #72" to staff.
+     */
+    private function note_display_title($title, $description)
+    {
+        $title = trim((string) $title);
+        if ($title !== '' && !preg_match('/^legacy\s+note\s*#?\s*\d+$/i', $title)) {
+            return $title;
+        }
+
+        $plain = html_entity_decode(strip_tags((string) $description), ENT_QUOTES, 'UTF-8');
+        $plain = trim((string) preg_replace('/\s+/u', ' ', $plain));
+        if ($plain !== '') {
+            $sentence = preg_split('/(?<=[.!?])\s+/u', $plain, 2)[0] ?? $plain;
+            return trim(mb_strimwidth($sentence, 0, 80, '…', 'UTF-8'));
+        }
+
+        return _l('notes_untitled');
     }
 
     private function priority_badge($priority)

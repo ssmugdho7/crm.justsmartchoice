@@ -186,7 +186,6 @@
                                         <th><?php echo _l('notes_brand_color'); ?></th>
                                         <th><?php echo _l('notes_created_date'); ?></th>
                                         <th><?php echo _l('notes_attachment'); ?></th>
-                                        <th><?php echo _l('options'); ?></th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -204,7 +203,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="noteModuleModalLabel"><span class="edit-title"><?php echo _l('notes_smart_choice_notes'); ?></span></h4>
+                <h4 class="modal-title" id="noteModuleModalLabel"><span id="note_module_modal_title"><?php echo _l('notes_smart_choice_notes'); ?></span></h4>
             </div>
             <div class="modal-body">
                 <div id="description_modal"></div>
@@ -258,22 +257,25 @@
         width: 24px;
         height: 24px;
     }
-    .table-responsive { overflow-x: visible !important; }
+    .table-responsive { overflow-x: hidden !important; }
     .table_notes { width:100% !important; table-layout:fixed; }
     .table_notes th, .table_notes td { vertical-align:middle !important; white-space:normal !important; word-break:break-word; }
-    .table_notes th:nth-child(1), .table_notes td:nth-child(1) { width:38px; }
-    .table_notes th:nth-child(2), .table_notes td:nth-child(2) { width:14%; }
-    .table_notes th:nth-child(3), .table_notes td:nth-child(3) { width:10%; }
-    .table_notes th:nth-child(4), .table_notes td:nth-child(4) { width:15%; }
+    .table_notes th:nth-child(1), .table_notes td:nth-child(1) { width:3%; }
+    .table_notes th:nth-child(2), .table_notes td:nth-child(2) { width:20%; }
+    .table_notes th:nth-child(3), .table_notes td:nth-child(3) { width:8%; }
+    .table_notes th:nth-child(4), .table_notes td:nth-child(4) { width:14%; }
     .table_notes th:nth-child(5), .table_notes td:nth-child(5) { width:27%; }
-    .table_notes th:nth-child(6), .table_notes td:nth-child(6) { width:9%; }
-    .table_notes th:nth-child(7), .table_notes td:nth-child(7) { width:6%; text-align:center; }
-    .table_notes th:nth-child(8), .table_notes td:nth-child(8) { width:11%; }
-    .table_notes th:nth-child(9), .table_notes td:nth-child(9) { width:7%; }
-    .table_notes th:nth-child(10), .table_notes td:nth-child(10) { width:150px; }
+    .table_notes th:nth-child(6), .table_notes td:nth-child(6) { width:8%; }
+    .table_notes th:nth-child(7), .table_notes td:nth-child(7) { width:5%; text-align:center; }
+    .table_notes th:nth-child(8), .table_notes td:nth-child(8) { width:10%; }
+    .table_notes th:nth-child(9), .table_notes td:nth-child(9) { width:5%; }
+    .note-title-cell { min-width:0; }
+    .note-title-link { display:block; color:#1f2937; font-weight:600; line-height:1.35; overflow-wrap:anywhere; }
+    .note-title-link:hover, .note-title-link:focus { color:#0e6f5b; text-decoration:underline; }
     .note-color-dot-only { margin-right:0; width:18px; height:18px; }
-    .notes-action-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:3px; width:142px; }
+    .notes-action-grid { display:flex; flex-wrap:wrap; gap:3px; margin-top:5px; }
     .notes-action-grid .btn { margin:0 !important; padding:2px 5px; min-height:24px; font-size:11px; line-height:18px; width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .notes-action-grid .btn { width:auto; flex:0 1 auto; }
     .notes-action-grid .btn i { margin-right:3px; }
     .table_notes .btn { margin:2px 0; }
     @media (max-width: 767px) {
@@ -300,7 +302,7 @@
         serverParams.note_color = '[name="filter_note_color"]';
         serverParams.assigned_staff_id = '[name="filter_assigned_staff_id"]';
 
-        initDataTable('.table_notes', admin_url + 'notes/notes/note_lists', [0, 9], [0, 9], serverParams, [7, 'desc']);
+        initDataTable('.table_notes', admin_url + 'notes/notes/note_lists', [0], [0], serverParams, [7, 'desc']);
 
         note_rel_id_select();
         handle_note_source_change();
@@ -383,12 +385,14 @@ function reload_the_table() {
 }
 
 function note_module_model_get_detail(record_id) {
-    $.post(admin_url + 'notes/notes/note_module_model_get_detail', {record_id: record_id}).done(function(response) {
-        response = JSON.parse(response);
+    $.post(admin_url + 'notes/notes/note_module_model_get_detail', {record_id: record_id}, null, 'json').done(function(response) {
         if (response.detail) {
-            $('#description_modal').html(response.detail.description);
+            $('#note_module_modal_title').text(response.detail.title || '<?php echo _l('notes_smart_choice_notes'); ?>');
+            $('#description_modal').html(response.detail.description || '');
         }
         $('#note_module_modal').modal('show');
+    }).fail(function() {
+        alert_float('danger', '<?php echo _l('notes_note_not_found'); ?>');
     });
 }
 

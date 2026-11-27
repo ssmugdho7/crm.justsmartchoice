@@ -50,7 +50,8 @@ try {
 
             $title = trim((string) ($projectNote['title'] ?? ''));
             if ($title === '') {
-                $title = 'Project Note #' . $legacyId;
+                $plainTitle = trim((string) preg_replace('/\s+/u', ' ', strip_tags((string) ($projectNote['content'] ?? $projectNote['description'] ?? ''))));
+                $title = $plainTitle !== '' ? mb_strimwidth($plainTitle, 0, 80, '…', 'UTF-8') : null;
             }
 
             $description = (string) ($projectNote['content'] ?? $projectNote['description'] ?? '');

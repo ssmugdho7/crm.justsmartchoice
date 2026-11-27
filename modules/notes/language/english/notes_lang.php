@@ -84,6 +84,7 @@ $lang['notes_detected_folders'] = 'Detected Notes Folders';
 $lang['notes_confirm_delete_one'] = 'Delete this note?';
 $lang['notes_delete_failed'] = 'The note could not be deleted.';
 $lang['notes_note_not_found'] = 'The note was not found.';
+$lang['notes_untitled'] = 'Untitled note';
 $lang['notes_legacy_note'] = 'Legacy Note';
 $lang['notes_settings'] = 'Notes Settings';
 $lang['notes_sources'] = 'Note Sources';

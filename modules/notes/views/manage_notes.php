@@ -10,35 +10,6 @@
                         <i class="fa-regular fa-plus tw-mr-1"></i><?php echo _l('new_note'); ?>
                     </a>
                 </div>
-                <div class="notes-toolbar-secondary tw-flex tw-flex-wrap tw-gap-2 tw-items-center tw-mb-3">
-                    <button type="button" class="btn btn-default btn-sm" onclick="slideToggle('.notes-filter-wrapper'); return false;">
-                        <i class="fa fa-filter tw-mr-1"></i><?php echo _l('notes_filter'); ?>
-                    </button>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-file-export tw-mr-1"></i><?php echo _l('notes_export_selected'); ?> <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a href="#" onclick="notes_export_selected('csv'); return false;">CSV</a></li>
-                            <li><a href="#" onclick="notes_export_selected('excel'); return false;">Excel</a></li>
-                            <li><a href="#" onclick="notes_export_selected('pdf'); return false;">PDF</a></li>
-                        </ul>
-                    </div>
-                    <?php echo form_open(admin_url('notes/notes/export_csv'), ['id' => 'notes_export_form', 'class' => 'hide']); ?>
-                    <?php echo form_close(); ?>
-                    <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#notes_import_modal">
-                        <i class="fa fa-upload tw-mr-1"></i><?php echo _l('notes_import'); ?>
-                    </button>
-                    <a href="<?php echo admin_url('notes/notes/sample_csv'); ?>" class="btn btn-default btn-sm">
-                        <i class="fa fa-download tw-mr-1"></i><?php echo _l('notes_sample_header'); ?>
-                    </a>
-                    <button type="button" class="btn btn-danger btn-sm" onclick="notes_bulk_delete();">
-                        <i class="fa fa-trash tw-mr-1"></i><?php echo _l('notes_mass_delete'); ?>
-                    </button>
-                    <button type="button" class="btn btn-default btn-sm" onclick="reload_the_table();">
-                        <i class="fa fa-refresh tw-mr-1"></i><?php echo _l('notes_reload'); ?>
-                    </button>
-                </div>
             </div>
         </div>
 
@@ -173,6 +144,33 @@
                     <hr>
                 </div>
 
+                <div class="notes-table-actions hide">
+                    <button type="button" class="btn btn-default btn-sm" onclick="slideToggle('.notes-filter-wrapper'); return false;">
+                        <i class="fa fa-filter tw-mr-1"></i><?php echo _l('notes_filter'); ?>
+                    </button>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-file-export tw-mr-1"></i><?php echo _l('notes_export_selected'); ?> <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" onclick="notes_export_selected('csv'); return false;">CSV</a></li>
+                            <li><a href="#" onclick="notes_export_selected('excel'); return false;">Excel</a></li>
+                            <li><a href="#" onclick="notes_export_selected('pdf'); return false;">PDF</a></li>
+                        </ul>
+                    </div>
+                    <?php echo form_open(admin_url('notes/notes/export_csv'), ['id' => 'notes_export_form', 'class' => 'hide']); ?>
+                    <?php echo form_close(); ?>
+                    <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#notes_import_modal">
+                        <i class="fa fa-upload tw-mr-1"></i><?php echo _l('notes_import'); ?>
+                    </button>
+                    <a href="<?php echo admin_url('notes/notes/sample_csv'); ?>" class="btn btn-default btn-sm">
+                        <i class="fa fa-download tw-mr-1"></i><?php echo _l('notes_sample_header'); ?>
+                    </a>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="notes_bulk_delete();">
+                        <i class="fa fa-trash tw-mr-1"></i><?php echo _l('notes_mass_delete'); ?>
+                    </button>
+                </div>
+
                 <div class="row">
                     <div class="col-md-12">
                         <div class="table-responsive">
@@ -241,7 +239,8 @@
 <?php init_tail(); ?>
 
 <style>
-    .notes-toolbar-secondary { padding-top: 2px; }
+    .notes-table-actions { display:inline-flex; flex-wrap:wrap; align-items:center; gap:6px; margin-left:6px; vertical-align:middle; }
+    .notes-table-actions .btn { margin:0 !important; }
     .notes-health-panel { border-left: 4px solid #169179; }
     .notes-health-panel .label { display:inline-block; margin-top:4px; }
     .notes-module-candidates { max-width:42%; }
@@ -306,6 +305,16 @@
         serverParams.assigned_staff_id = '[name="filter_assigned_staff_id"]';
 
         initDataTable('.table_notes', admin_url + 'notes/notes/note_lists', [0], [0], serverParams, [7, 'desc']);
+
+        // Keep note actions beside the DataTable's own Export and reload controls.
+        var $notesTable = $('.table_notes');
+        var $notesActions = $('.notes-table-actions');
+        var $dtButtons = $notesTable.closest('.dataTables_wrapper').find('.dt-buttons').first();
+        if ($dtButtons.length) {
+            $dtButtons.append($notesActions.removeClass('hide'));
+        } else {
+            $notesActions.removeClass('hide').insertBefore($notesTable.closest('.table-responsive'));
+        }
 
         note_rel_id_select();
         handle_note_source_change();

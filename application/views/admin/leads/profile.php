@@ -375,7 +375,7 @@ if (isset($lead)
     $assigned_attrs['disabled'] = true;
 }
 if (!isset($assigned_attrs['disabled'])) echo form_hidden('assigned_staff_present', '1');
-echo render_select('assigned_staff[]', $members, ['staffid', ['firstname', 'lastname']], 'lead_add_edit_assigned', $selected, $assigned_attrs); ?>
+echo render_select('assigned_staff[]', $members, ['staffid', ['firstname', 'lastname']], 'lead_add_edit_assigned', $selected, $assigned_attrs, [], '', '', false); ?>
             </div>
             <div class="clearfix"></div>
             <hr class="mtop5 mbot10" />

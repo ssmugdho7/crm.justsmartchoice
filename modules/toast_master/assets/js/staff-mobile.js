@@ -13,27 +13,31 @@
     var searchButton = document.querySelector('#top_search_button button');
     function closeSearch() {
       if (!search || !searchInput || !searchButton) return;
-      search.classList.remove('sc-mobile-search-open');
+      var results = document.getElementById('search_results');
+      if (!searchInput.value && document.activeElement !== searchInput && !(results && results.childElementCount)) return;
       searchInput.value = ''; searchInput.blur();
+      // Reset main.js search state so the same query fetches again next time.
+      if ('original_top_search_val' in window) window.original_top_search_val = '';
+      if (window.content_wrapper && typeof window.content_wrapper.unhighlight === 'function') window.content_wrapper.unhighlight();
       searchButton.classList.remove('search_remove');
       searchButton.innerHTML = '<i class="fa fa-search" aria-hidden="true"></i>';
-      searchButton.setAttribute('aria-expanded', 'false');
       searchButton.setAttribute('aria-label', labels.search);
-      var results = document.getElementById('search_results'); if (results) results.replaceChildren();
+      if (results) results.replaceChildren();
     }
     if (searchButton) searchButton.setAttribute('aria-label', labels.search);
+    // On phones the search box is always visible: the magnifier focuses it, the × clears it.
     if (searchButton) searchButton.addEventListener('click', function (event) {
       if (!mobile.matches) return;
       event.preventDefault(); event.stopImmediatePropagation();
-      if (search.classList.contains('sc-mobile-search-open')) { closeSearch(); return; }
+      if (searchInput.value) closeSearch();
       setQuick(false); hideDrawer();
-      search.classList.add('sc-mobile-search-open');
-      searchButton.classList.add('search_remove');
-      searchButton.innerHTML = '<i class="fa fa-times" aria-hidden="true"></i>';
-      searchButton.setAttribute('aria-expanded', 'true');
-      searchButton.setAttribute('aria-label', labels.close);
       searchInput.focus();
     }, true);
+    if (searchInput) searchInput.addEventListener('focus', function () {
+      if (!mobile.matches) return;
+      hideDrawer();
+      if (quickOpen) { setQuick(false); searchInput.focus(); }
+    });
     function setQuick(open, trigger) {
       if (!quickPanel || quickOpen === open) return;
       quickOpen = open;

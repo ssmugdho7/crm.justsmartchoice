@@ -2,6 +2,7 @@
 <?php init_head(); ?>
 <div id="wrapper">
     <div class="content">
+        <?php $this->load->view('admin/includes/sales_workspace'); ?>
         <div class="row">
             <div class="col-md-12">
                 <?php if (staff_can('delete', 'items')) { ?>
@@ -80,6 +81,7 @@
                 </div>
                 <div class="clearfix"></div>
                 <?php } ?>
+                <div class="sc-items-layout">
                 <div class="panel-table-full">
 
                     <div class="panel_s">
@@ -111,6 +113,17 @@ foreach ($cf as $custom_field) {
 render_datatable($table_data, 'invoice-items'); ?>
                         </div>
                     </div>
+                </div>
+                <section id="sc-item-preview" class="panel_s hide" aria-label="<?= e(_l('sc_item_details')); ?>" tabindex="-1">
+                    <div class="panel-body">
+                        <div class="sc-item-preview-actions">
+                            <?php if (staff_can('edit', 'items')) { ?><a href="#" class="btn btn-default" data-toggle="modal" data-target="#sales_item_modal" id="sc-item-preview-edit"><?= _l('edit'); ?></a><?php } ?>
+                            <button type="button" class="btn btn-default" id="sc-item-preview-close"><?= _l('close'); ?></button>
+                        </div>
+                        <h3 id="sc-item-preview-title"></h3>
+                        <dl id="sc-item-preview-fields"></dl>
+                    </div>
+                </section>
                 </div>
             </div>
         </div>

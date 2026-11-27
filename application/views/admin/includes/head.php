@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php $isRTL = (is_rtl() ? 'true' : 'false'); ?>
-<?php $scSalesWorkspace = in_array(strtolower($this->router->fetch_class()), ['proposals', 'estimates', 'invoices', 'payments', 'credit_notes'], true); ?>
+<?php $scSalesWorkspace = in_array(strtolower($this->router->fetch_class()), ['proposals', 'estimates', 'invoices', 'payments', 'credit_notes', 'invoice_items', 'contracts'], true); ?>
 
 <!DOCTYPE html>
 <html lang="<?= e($locale); ?>"

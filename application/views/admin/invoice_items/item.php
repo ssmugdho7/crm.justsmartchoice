@@ -190,10 +190,10 @@
             $itemModal.find('select').selectpicker('val', '').selectpicker('refresh');
             $('select[name="tax2"]').selectpicker('val', '').change();
             $('select[name="tax"]').selectpicker('val', '').change();
-            $itemModal.find('.add-title').removeClass('hide');
-            $itemModal.find('.edit-title').addClass('hide');
-
             var id = $(event.relatedTarget).data('id');
+            var editing = typeof id !== 'undefined';
+            $itemModal.find('.add-title').toggleClass('hide', editing);
+            $itemModal.find('.edit-title').toggleClass('hide', !editing);
             // If id found get the text from the datatable
             if (typeof(id) !== 'undefined') {
 

@@ -30,16 +30,16 @@ class SalesWorkspaceFixture
     }
 }
 
-$sections = ['proposals', 'estimates', 'invoices', 'payments', 'credit_notes'];
+$sections = ['proposals', 'estimates', 'invoices', 'payments', 'credit_notes', 'invoice_items', 'contracts'];
 $fixture = new SalesWorkspaceFixture();
-for ($mask = 0; $mask < 32; $mask++) {
+for ($mask = 0; $mask < 128; $mask++) {
     $children = [];
     foreach ($sections as $index => $section) {
         if ($mask & (1 << $index)) $children[] = ['href' => admin_url($section), 'name' => '<unsafe>'];
     }
     // Ignore unrelated routes, external lookalikes, hash placeholders, and duplicate allowed links.
     $menu = [['children' => array_merge($children, [
-        ['href' => admin_url('contracts')], ['href' => 'https://untrusted.example/admin/invoices'], ['href' => '#'],
+        ['href' => 'https://untrusted.example/admin/invoices'], ['href' => '#'],
         ['children' => $children],
     ])]];
     foreach ($sections as $active) {
@@ -57,7 +57,7 @@ for ($mask = 0; $mask < 32; $mask++) {
         }
     }
 }
-echo "PASS 160 Sales navigation variants: permission filtering, duplicate handling, active section and escaping\n";
+echo "PASS 896 Sales navigation variants: permission filtering, duplicate handling, active section and escaping\n";
 
 // Render the actual financial template with deliberately different amounts, currencies and year filters.
 function app_format_money($value, $currency) { return $currency . ' ' . $value; }
@@ -115,7 +115,7 @@ class SalesHeadFixture
     }
 }
 $fixture = new SalesHeadFixture();
-foreach (array_merge($sections, ['dashboard', 'staff', 'contracts', 'clients']) as $controller) {
+foreach (array_merge($sections, ['dashboard', 'staff', 'clients']) as $controller) {
     $html = $fixture->render(ucfirst($controller));
     $dom = new DOMDocument(); @$dom->loadHTML($html); $x = new DOMXPath($dom);
     $sales = in_array($controller, $sections, true);

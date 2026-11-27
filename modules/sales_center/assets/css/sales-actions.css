@@ -50,3 +50,11 @@ html.sc-sales-ui .sc-payment-mode{display:inline-block;border-radius:999px;paddi
 html.sc-sales-ui .sc-payment-mode-stripe{background:#ede9fe;color:#5b21b6}
 html.sc-sales-ui .sc-payment-mode-wire{background:#dbeafe;color:#1e40af}
 html.sc-sales-ui .sc-payment-mode-check{background:#d1fae5;color:#065f46}
+/* Items use the same list/detail relationship as the Sales documents. */
+.sc-items-layout{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+.sc-items-layout.sc-item-selected{grid-template-columns:minmax(0,1fr) minmax(320px,1fr)}
+.sc-items-layout>.panel-table-full{min-width:0}
+#sc-item-preview{align-self:start;min-width:0}
+.sc-item-preview-actions{display:flex;justify-content:flex-end;gap:8px}
+#sc-item-preview-fields dd{white-space:pre-wrap;overflow-wrap:anywhere;margin-bottom:16px}
+@media(max-width:991px){.sc-items-layout.sc-item-selected{grid-template-columns:minmax(0,1fr)}}

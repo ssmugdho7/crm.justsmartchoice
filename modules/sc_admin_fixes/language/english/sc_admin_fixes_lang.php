@@ -35,3 +35,4 @@ $lang['sc_sales_copy_link'] = 'Copy link';
 $lang['sc_sales_copy_contract'] = 'Copy Contract';
 $lang['sc_sales_delete_contract'] = 'Delete Contract';
 $lang['sc_sales_delete_invoice'] = 'Delete Invoice';
+$lang['sc_item_details'] = 'Item details';

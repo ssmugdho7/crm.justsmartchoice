@@ -2,7 +2,7 @@
 <?php
 if (function_exists('smartchoice_admin_theme_is_modern') && !smartchoice_admin_theme_is_modern()) { return; }
 // Reuse the permission-filtered sidebar; do not expose extra records or query totals for navigation.
-$scSalesSections = ['proposals', 'estimates', 'invoices', 'payments', 'credit_notes'];
+$scSalesSections = ['proposals', 'estimates', 'invoices', 'payments', 'credit_notes', 'invoice_items', 'contracts'];
 $scSalesLinks = [];
 $scCollectSalesLinks = static function (array $items) use (&$scCollectSalesLinks, &$scSalesLinks, $scSalesSections) {
     foreach ($items as $item) {
@@ -19,7 +19,7 @@ $scCollectSalesLinks = static function (array $items) use (&$scCollectSalesLinks
 };
 $scCollectSalesLinks($this->app_menu->get_sidebar_menu_items());
 $scActiveSalesSection = strtolower($this->router->fetch_class());
-$scSalesIcons = ['proposals' => 'fa-file-lines', 'estimates' => 'fa-calculator', 'invoices' => 'fa-file-invoice-dollar', 'payments' => 'fa-credit-card', 'credit_notes' => 'fa-receipt'];
+$scSalesIcons = ['proposals' => 'fa-file-lines', 'estimates' => 'fa-calculator', 'invoices' => 'fa-file-invoice-dollar', 'payments' => 'fa-credit-card', 'credit_notes' => 'fa-receipt', 'invoice_items' => 'fa-list', 'contracts' => 'fa-file-signature'];
 ?>
 <header class="sales-header">
     <p class="sales-eyebrow"><?= e(get_option('companyname')); ?> <span aria-hidden="true">&bull;</span> <?= _l('sc_sales_workspace_subtitle'); ?></p>

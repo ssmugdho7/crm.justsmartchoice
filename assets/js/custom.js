@@ -108,6 +108,11 @@
       wrapper.attr('role', 'search');
       input.attr('aria-label', input.attr('aria-label') || 'Search');
       $(filter).find('label').contents().filter(function () { return this.nodeType === 3; }).remove();
+      // Some modules add a separate icon-only trigger beside the filter. The icon belongs
+      // inside the unified field; remove only those redundant siblings.
+      $(filter).children('button, a, .btn').filter(function () {
+        return $(this).find('.fa-search, .fa-magnifying-glass').length && $.trim($(this).text()) === '';
+      }).remove();
     });
   }
   $(function () {

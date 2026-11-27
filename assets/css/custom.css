@@ -211,3 +211,4 @@ body.admin .dataTables_filter .fb-search-single:focus-within{border-color:#64748
 body.admin .dataTables_filter .fb-search-single>i{position:static;color:#64748b;}
 body.admin .dataTables_filter .fb-search-single>input{border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;padding:5px 0!important;height:32px!important;min-height:32px!important;width:100%!important;}
 body.admin input.form-control:not([type="search"]):focus,body.admin textarea.form-control:focus,body.admin select.form-control:focus{outline:0!important;box-shadow:none!important;border-color:#cbd5e1!important;}
+body.admin .dataTables_filter>button:has(.fa-search),body.admin .dataTables_filter>.btn:has(.fa-search),body.admin .dataTables_filter>a:has(.fa-search){display:none!important;}

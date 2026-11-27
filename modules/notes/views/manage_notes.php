@@ -148,7 +148,7 @@
                     <button type="button" class="btn btn-default btn-sm" onclick="slideToggle('.notes-filter-wrapper'); return false;">
                         <i class="fa fa-filter tw-mr-1"></i><?php echo _l('notes_filter'); ?>
                     </button>
-                    <div class="btn-group">
+                    <div class="btn-group notes-export-dropdown">
                         <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fa fa-file-export tw-mr-1"></i><?php echo _l('notes_export_selected'); ?> <span class="caret"></span>
                         </button>
@@ -241,6 +241,9 @@
 <style>
     .notes-table-actions { display:inline-flex; flex-wrap:wrap; align-items:center; gap:6px; margin-left:6px; vertical-align:middle; }
     .notes-table-actions .btn { margin:0 !important; }
+    #wrapper .notes-table-actions .notes-export-dropdown { position:relative; display:inline-flex; flex:0 0 auto; }
+    #wrapper .notes-export-dropdown > .dropdown-menu { top:100%; left:0; right:auto; margin-top:2px; transform:none; }
+
     .notes-health-panel { border-left: 4px solid #169179; }
     .notes-health-panel .label { display:inline-block; margin-top:4px; }
     .notes-module-candidates { max-width:42%; }
@@ -304,6 +307,11 @@
         // Keep note actions beside the DataTable's own Export and reload controls.
         var $notesTable = $('.table_notes');
         var $notesActions = $('.notes-table-actions');
+        // The generic responsive-table portal positions relative to the whole toolbar.
+        // This toolbar dropdown has room outside the table and must stay with its trigger.
+        $notesActions.on('shown.bs.dropdown hide.bs.dropdown', '.notes-export-dropdown', function(event) {
+            event.stopPropagation();
+        });
         var $dtButtons = $notesTable.closest('.dataTables_wrapper').find('.dt-buttons').first();
         if ($dtButtons.length) {
             $dtButtons.append($notesActions.removeClass('hide'));

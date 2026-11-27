@@ -260,8 +260,8 @@
         height: 24px;
     }
     .table-responsive { overflow-x: hidden !important; }
-    .table_notes { width:100% !important; min-width:0 !important; table-layout:fixed !important; }
-    .table_notes th, .table_notes td { vertical-align:middle !important; white-space:normal !important; word-break:break-word; }
+    #wrapper table.table.table_notes { width:100% !important; min-width:0 !important; max-width:100% !important; table-layout:fixed !important; }
+    #wrapper table.table_notes th, #wrapper table.table_notes td { vertical-align:middle !important; white-space:normal !important; overflow-wrap:anywhere; word-break:break-word; }
     .table_notes th { position:relative; }
     .notes-resize-handle { position:absolute; top:0; right:-3px; bottom:0; width:7px; cursor:col-resize; touch-action:none; z-index:5; }
     .notes-resize-handle:hover, body.notes-column-resizing .notes-resize-handle { background:rgba(22,145,121,.25); }

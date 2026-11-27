@@ -103,6 +103,69 @@ function sc_google_map_sync($entity, $id)
     sc_google_map_update_where($meta[0],[$meta[1]=>$id],$link);
 }
 
+/**
+ * Address autofill field map for sc-address-parser.js, keyed by the entity
+ * passed to sc_google_map_field(). Custom fields are resolved by slug, with the
+ * known IDs as a fallback. Entities not listed here return null and the script
+ * uses the plain address/city/state/zip inputs (leads, clients, ...).
+ * Address slugs are in priority order for "Create map link from address".
+ */
+function sc_google_map_address_fields($entity)
+{
+    static $cache = [];
+    $defs = [
+        'project' => [
+            'fieldto' => 'projects',
+            'address' => ['projects_project_address' => 89, 'projects_property_address' => 140],
+            'city'    => ['projects_property_city' => 141],
+            'state'   => ['projects_property_state' => 142],
+            'zip'     => ['projects_property_zip' => 143],
+        ],
+        'contract' => [
+            'fieldto' => 'contracts',
+            'address' => ['contracts_property_address' => 214],
+            'city'    => ['contracts_property_city' => 215],
+            'state'   => ['contracts_property_state' => 216],
+            'zip'     => ['contracts_property_zip' => 217],
+        ],
+    ];
+    if (!isset($defs[$entity])) {
+        return null;
+    }
+    if (array_key_exists($entity, $cache)) {
+        return $cache[$entity];
+    }
+    $def   = $defs[$entity];
+    $slugs = [];
+    foreach (['address', 'city', 'state', 'zip'] as $key) {
+        $slugs = array_merge($slugs, array_keys($def[$key]));
+    }
+    $ids = [];
+    $CI  = &get_instance();
+    $rows = $CI->db->select('id, slug')
+        ->where('fieldto', $def['fieldto'])
+        ->where_in('slug', $slugs)
+        ->get(db_prefix() . 'customfields')
+        ->result_array();
+    foreach ($rows as $row) {
+        $ids[$row['slug']] = (int) $row['id'];
+    }
+    $selector = function ($slug, $fallbackId) use ($def, $ids) {
+        $id = $ids[$slug] ?? $fallbackId;
+        return '[name="custom_fields[' . $def['fieldto'] . '][' . (int) $id . ']"]';
+    };
+    $map = ['address' => []];
+    foreach ($def['address'] as $slug => $id) {
+        $map['address'][] = $selector($slug, $id);
+    }
+    foreach (['city', 'state', 'zip'] as $key) {
+        $slug      = array_key_first($def[$key]);
+        $map[$key] = $selector($slug, $def[$key][$slug]);
+    }
+
+    return $cache[$entity] = $map;
+}
+
 function sc_google_map_field($entity, $record = null)
 {
     $value = '';
@@ -114,83 +177,16 @@ function sc_google_map_field($entity, $record = null)
     static $script_added = false;
     if (!$script_added) {
         $script_added = true;
-        $html .= <<<'HTML'
-<script>
-(function () {
-  function formFields(input) {
-    var root = input.closest('form') || document;
-    return { root: root, address: root.querySelector('[name="address"]'), city: root.querySelector('[name="city"]'), state: root.querySelector('[name="state"]'), zip: root.querySelector('[name="zip"]') };
-  }
-  function parse(value) {
-    var text = String(value || '').replace(/\s+/g, ' ').trim();
-    var match = text.match(/^(.*?),\s*([^,]+),\s*([A-Za-z]{2})\s+(\d{5}(?:-\d{4})?)(?:,?\s*(?:United States(?: of America)?|USA|US))?$/i);
-    if (!match) return null;
-    return { city: match[2].trim(), state: match[3].toUpperCase(), zip: match[4] };
-  }
-  function notify(input) {
-    input.dispatchEvent(new Event('change', { bubbles: true }));
-  }
-  function completeAddress(input) {
-    var data = parse(input.value), fields = formFields(input);
-    if (!data) return;
-    ['city', 'state', 'zip'].forEach(function (key) {
-      var field = fields[key];
-      if (!field || (field.value.trim() && field.value !== field.dataset.scAutofilled)) return;
-      field.value = data[key];
-      field.dataset.scAutofilled = data[key];
-      notify(field);
-    });
-  }
-  function setup() {
-    document.querySelectorAll('.sc-google-map-field').forEach(function (wrapper) {
-      var fields = formFields(wrapper), map = wrapper.querySelector('[name="google_map_link"]');
-      if (map) {
-        map.placeholder = 'https://maps.app.goo.gl/…';
-        map.setAttribute('inputmode', 'url');
-      }
-      if (!fields.address || fields.address.dataset.scAddressHint) return;
-      fields.address.dataset.scAddressHint = '1';
-      var hint = document.createElement('p');
-      hint.className = 'text-muted small sc-address-format-hint';
-      hint.textContent = 'Paste a full address, e.g. 123 Main St, Tampa, FL 33601. City, state and ZIP fill automatically. You can edit them.';
-      var group = fields.address.closest('.form-group') || fields.address.parentElement;
-      group.appendChild(hint);
-    });
-  }
-  setup();
-  if (window.scAddressAutofillReady) return;
-  window.scAddressAutofillReady = true;
-  document.addEventListener('input', function (event) {
-    if (event.target.matches('[name="address"]')) completeAddress(event.target);
-    if (event.target.matches('[name="city"], [name="state"], [name="zip"]')) delete event.target.dataset.scAutofilled;
-  });
-  document.addEventListener('change', function (event) {
-    if (event.target.matches('[name="address"]')) completeAddress(event.target);
-  });
-  document.addEventListener('click', function (event) {
-    var button = event.target.closest('.sc-map-from-address');
-    if (!button) return;
-    var fields = formFields(button), wrapper = button.closest('.sc-google-map-field');
-    var map = wrapper.querySelector('[name="google_map_link"]');
-    if (!fields.address || !fields.address.value.trim() || !map) {
-      if (fields.address) fields.address.focus();
-      return;
-    }
-    var address = fields.address.value.trim();
-    if (!parse(address)) address = [address, fields.city && fields.city.value, fields.state && fields.state.value, fields.zip && fields.zip.value].filter(Boolean).join(', ');
-    map.value = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(address);
-    notify(map);
-  });
-  if (window.jQuery) window.jQuery(document).on('shown.bs.modal', setup);
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setup);
-})();
-</script>
-HTML;
+        $script = 'assets/js/sc-address-parser.js';
+        $version = @filemtime(FCPATH . $script) ?: time();
+        $html .= '<script src="' . e(base_url($script) . '?v=' . $version) . '"></script>';
     }
     if ($value !== '') {
         $html .= '<p class="tw-mt-1"><a href="' . e(sc_google_map_normalize($value)) . '" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i> ' . _l('sc_open_google_map') . '</a></p>';
     }
-    return '<div class="sc-google-map-field" data-sc-entity="'.e($entity).'">'.$html.'</div>';
+    $fields = sc_google_map_address_fields($entity);
+    $fieldsAttr = $fields ? ' data-sc-fields="' . e(json_encode($fields)) . '"' : '';
+    return '<div class="sc-google-map-field" data-sc-entity="' . e($entity) . '"' . $fieldsAttr . '>' . $html . '</div>';
 }
 
 hooks()->add_action('after_client_created', function($payload){ sc_google_map_sync('client', is_array($payload) ? ($payload['id'] ?? 0) : $payload); });

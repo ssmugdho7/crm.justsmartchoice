@@ -198,3 +198,10 @@ body.admin #wrapper #expenses_total { min-height: 112px; }
   body.admin #wrapper #invoices_total,
   body.admin #wrapper #estimates_total { min-height: 160px; }
 }
+/* Unified DataTables search control: one labelled field with one icon. */
+body.admin .dataTables_filter .fb-search-single{position:relative;display:inline-flex;align-items:center;max-width:100%;}
+body.admin .dataTables_filter .fb-search-single>i{position:absolute;left:11px;z-index:2;color:#64748b;pointer-events:none;}
+body.admin .dataTables_filter .fb-search-single>input{width:220px!important;min-height:36px;padding-left:32px!important;margin:0!important;border-radius:7px!important;}
+body.admin .dataTables_filter .fb-search-single>input:focus{box-shadow:0 0 0 2px rgba(4,120,87,.18)!important;border-color:#047857!important;}
+body.admin .dataTables_filter .fb-search-single+.fb-search-single{display:none!important;}
+@media(max-width:767px){body.admin .dataTables_filter .fb-search-single,body.admin .dataTables_filter .fb-search-single>input{width:100%!important;}.dataTables_filter{float:none!important;}}

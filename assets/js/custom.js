@@ -87,3 +87,32 @@
     });
   });
 })(jQuery);
+
+/* Normalize every DataTables search field to the single fb-search-single control. */
+(function ($) {
+  'use strict';
+  function normalizeDataTableSearch(root) {
+    $(root || document).find('.dataTables_filter').each(function () {
+      var filter = this;
+      var inputs = $(filter).find('input[type="search"]');
+      if (!inputs.length) return;
+      var input = inputs.first();
+      inputs.slice(1).remove();
+      var wrapper = input.closest('.fb-search-single');
+      if (!wrapper.length) {
+        wrapper = $('<div class="fb-search-single"></div>');
+        input.before(wrapper);
+        wrapper.append(input);
+      }
+      if (!wrapper.children('i.fa-search').length) wrapper.prepend('<i class="fa fa-search" aria-hidden="true"></i>');
+      wrapper.attr('role', 'search');
+      input.attr('aria-label', input.attr('aria-label') || 'Search');
+      $(filter).find('label').contents().filter(function () { return this.nodeType === 3; }).remove();
+    });
+  }
+  $(function () {
+    normalizeDataTableSearch(document);
+    $(document).on('draw.dt init.dt', function (event) { normalizeDataTableSearch(event.target || document); });
+    new MutationObserver(function () { normalizeDataTableSearch(document); }).observe(document.body, {childList:true, subtree:true});
+  });
+})(jQuery);

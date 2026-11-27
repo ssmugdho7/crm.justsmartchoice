@@ -215,3 +215,4 @@ body.admin .dataTables_filter>button:has(.fa-search),body.admin .dataTables_filt
 /* Keep the global header search quiet when focused, matching module search fields. */
 body.admin #header #search_input:focus,body.admin #header #search_input:focus-visible{outline:0!important;box-shadow:none!important;border-color:#dbe3ea!important;}
 body.admin #header #top_search:focus-within{box-shadow:none!important;}
+body.admin input[type="search"]:focus,body.admin input[type="search"]:focus-visible{outline:0!important;box-shadow:none!important;border-color:#cbd5e1!important;}

@@ -205,3 +205,9 @@ body.admin .dataTables_filter .fb-search-single>input{width:220px!important;min-
 body.admin .dataTables_filter .fb-search-single>input:focus{box-shadow:0 0 0 2px rgba(4,120,87,.18)!important;border-color:#047857!important;}
 body.admin .dataTables_filter .fb-search-single+.fb-search-single{display:none!important;}
 @media(max-width:767px){body.admin .dataTables_filter .fb-search-single,body.admin .dataTables_filter .fb-search-single>input{width:100%!important;}.dataTables_filter{float:none!important;}}
+/* Match Questionnaire's quiet search treatment and prevent Bootstrap's blue focus chrome. */
+body.admin .dataTables_filter .fb-search-single{gap:9px;border:1px solid #cbd5e1;border-radius:7px;padding:0 10px;background:#fff;width:260px;box-shadow:none!important;}
+body.admin .dataTables_filter .fb-search-single:focus-within{border-color:#64748b;box-shadow:none!important;}
+body.admin .dataTables_filter .fb-search-single>i{position:static;color:#64748b;}
+body.admin .dataTables_filter .fb-search-single>input{border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;padding:5px 0!important;height:32px!important;min-height:32px!important;width:100%!important;}
+body.admin input.form-control:not([type="search"]):focus,body.admin textarea.form-control:focus,body.admin select.form-control:focus{outline:0!important;box-shadow:none!important;border-color:#cbd5e1!important;}

@@ -18,8 +18,8 @@ class Feedbacks_module
             if ($found_emails > 0) {
                 $total_emails_per_cron = get_option('feedback_send_emails_per_cron_run');
                 // Initialize mail library
-                $this->ci->email->initialize();
                 $this->ci->load->library('email');
+                $this->ci->email->initialize();
                 // Load feedback model
                 $this->ci->load->model('feedbacks_model');
                 // Get all feedbacks send log where sending emails is not finished
@@ -28,7 +28,7 @@ class Feedbacks_module
                 foreach ($unfinished_feedbacks_send_log as $_feedback) {
                     $feedbackid = $_feedback['feedbackid'];
                     // Get feedback emails that has been not sent yet.
-                    $this->ci->db->where('feedbackid', $feedbackid);
+                    $this->ci->db->where('log_id', $_feedback['id']);
                     $this->ci->db->limit($total_emails_per_cron);
                     $emails = $this->ci->db->get(db_prefix().'feedbacksemailsendcron')->result_array();
                     $feedback = $this->ci->feedbacks_model->get($feedbackid);
@@ -36,7 +36,7 @@ class Feedbacks_module
                         $feedback->fromname = get_option('companyname');
                     }
                     if (stripos($feedback->description, '{feedback_link}') !== false) {
-                        $feedback->description = str_ireplace('{feedback_link}', '<a href="' . site_url('feedbacks/feedback/' . $feedback->feedbackid . '/' . $feedback->hash) . '" target="_blank">' . $feedback->subject . '</a>', $feedback->description);
+                        $feedback->description = str_ireplace('{feedback_link}', '<a href="' . site_url('feedbacks/participate/index/' . $feedback->feedbackid . '/' . $feedback->hash) . '" target="_blank">' . $feedback->subject . '</a>', $feedback->description);
                     }
                     $total = $_feedback['total'];
                     foreach ($emails as $data) {
@@ -62,7 +62,7 @@ class Feedbacks_module
 
                         if ($this->ci->email->send(true)) {
                             $total++;
-                        }
+                        } else { log_message('error','Questionnaire email delivery failed for queue ID '.(int)$data['id']); continue; }
 
                         $this->ci->db->where('id', $data['id']);
                         $this->ci->db->delete(db_prefix().'feedbacksemailsendcron');
@@ -73,7 +73,7 @@ class Feedbacks_module
                         'total' => $total,
                     ]);
                     // Check if all emails send
-                    $this->ci->db->where('feedbackid', $feedbackid);
+                    $this->ci->db->where('log_id', $_feedback['id']);
                     $found_emails = $this->ci->db->count_all_results(db_prefix().'feedbacksemailsendcron');
                     if ($found_emails == 0) {
                         // Update that feedback send is finished

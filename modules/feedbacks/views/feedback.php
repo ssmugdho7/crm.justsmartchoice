@@ -1,7 +1,7 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php init_head(); ?>
 <div id="wrapper">
-    <div class="content">
+    <div class="content"><?php $this->load->view('feedbacks/_navigation'); ?>
         <div class="row">
             <div class="col-md-5" id="feedback-add-edit-wrapper">
                 <div class="row">
@@ -9,10 +9,11 @@
                         <h4 class="tw-mt-0 tw-font-semibold tw-text-lg tw-text-neutral-700">
                             <?php echo $title; ?>
                         </h4>
+                        <?php if (isset($feedback) && $feedback) { $scSavedDesign = null; $scSavedSettings = []; if ($this->db->table_exists(db_prefix().'feedbacks_design')) { $scSavedDesign = $this->db->where('feedbackid', (int)$feedback->feedbackid)->get(db_prefix().'feedbacks_design')->row(); if ($scSavedDesign) { $scSavedSettings = json_decode($scSavedDesign->settings_json, true) ?: []; } } ?>
+                        <div class="panel_s"><div class="panel-body"><h4><?php echo _l('fb_design_title'); ?></h4><div class="btn-group mtop10"><a class="btn btn-default" href="<?php echo admin_url('feedbacks/export_questionnaire/'.$feedback->feedbackid); ?>"><i class="fa fa-download"></i> <?php echo _l('fb_export_json'); ?></a></div><form method="post" action="<?php echo admin_url('feedbacks/save_design/'.$feedback->feedbackid); ?>" class="mtop15"><input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>"><div class="row"><div class="col-md-3"><label><?php echo _l('fb_theme'); ?></label><select name="theme" class="form-control"><option value="smartchoice"><?php echo _l('fb_theme_smartchoice'); ?></option><option value="light"><?php echo _l('fb_theme_light'); ?></option><option value="dark"><?php echo _l('fb_theme_dark'); ?></option></select></div><div class="col-md-3"><label><?php echo _l('fb_primary_color'); ?></label><input type="color" name="primary_color" class="form-control" value="<?php echo html_escape($scSavedSettings['primary_color'] ?? '#2f7d32'); ?>"></div><div class="col-md-3"><label><?php echo _l('fb_background_color'); ?></label><input type="color" name="background_color" class="form-control" value="<?php echo html_escape($scSavedSettings['background_color'] ?? '#ffffff'); ?>"></div><div class="col-md-3"><label><?php echo _l('fb_corner_radius'); ?></label><input type="number" name="corner_radius" min="0" max="32" value="<?php echo (int)($scSavedSettings['corner_radius'] ?? 12); ?>" class="form-control"></div><div class="col-md-3"><label><?php echo _l('fb_font_size'); ?></label><input type="number" name="font_size" min="12" max="22" value="<?php echo (int)($scSavedSettings['font_size'] ?? 16); ?>" class="form-control"></div></div><div class="row mtop10"><div class="col-md-6"><label><?php echo _l('fb_custom_html_header'); ?></label><textarea name="header_html" rows="4" class="form-control" placeholder="Optional custom header HTML"><?php echo html_escape($scSavedDesign->header_html ?? ''); ?></textarea></div><div class="col-md-6"><label><?php echo _l('fb_footer_mode'); ?></label><select name="footer_mode" class="form-control"><option value="crm"><?php echo _l('fb_footer_crm'); ?></option><option value="custom"><?php echo _l('fb_footer_custom'); ?></option></select><label><?php echo _l('fb_custom_html_footer'); ?></label><textarea name="footer_html" rows="4" class="form-control" placeholder="Optional custom footer HTML"><?php echo html_escape($scSavedDesign->footer_html ?? ''); ?></textarea></div></div><button class="btn btn-primary mtop10" type="submit"><?php echo _l('fb_save_design'); ?></button></form><hr><form method="post" action="<?php echo admin_url('feedbacks/add_advanced_question'); ?>" class="row"><input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>"><input type="hidden" name="feedbackid" value="<?php echo (int)$feedback->feedbackid; ?>"><div class="col-md-4"><label><?php echo _l('fb_advanced_question_type'); ?></label><select name="field_type" class="form-control"><option value="dropdown"><?php echo _l('fb_dropdown'); ?></option><option value="toggle"><?php echo _l('fb_yes_no_toggle'); ?></option><option value="rating"><?php echo _l('fb_rating'); ?></option><option value="linear_scale"><?php echo _l('fb_linear_scale'); ?></option><option value="number"><?php echo _l('fb_number_keypad'); ?></option><option value="currency"><?php echo _l('fb_currency_keypad'); ?></option><option value="percentage"><?php echo _l('fb_percentage'); ?></option><option value="date"><?php echo _l('fb_date'); ?></option><option value="time"><?php echo _l('fb_time'); ?></option><option value="email"><?php echo _l('fb_email'); ?></option><option value="phone"><?php echo _l('fb_phone'); ?></option><option value="url"><?php echo _l('fb_url'); ?></option></select></div><div class="col-md-3"><label><?php echo _l('fb_dropdown_options'); ?></label><input type="text" name="options_text" class="form-control" placeholder="Excellent|Good|Average|Poor"></div><div class="col-md-1"><label>Min</label><input type="number" name="min_value" class="form-control" value="1"></div><div class="col-md-1"><label>Max</label><input type="number" name="max_value" class="form-control" value="5"></div><div class="col-md-3"><label>&nbsp;</label><button class="btn btn-success btn-block" type="submit"><?php echo _l('fb_add_advanced_field'); ?></button></div></form><p class="text-muted mtop10"><?php echo _l('fb_advanced_field_note'); ?></p></div></div>
+                        <?php } ?>
                         <?php echo form_open($this->uri->uri_string(), ['id' => 'feedback_form']); ?>
-                        <div class="panel_s">
-
-                            <div class="panel-body">
+                        <div class="panel_s"><div class="panel-body">
                                 <?php $value = (isset($feedback) ? $feedback->subject : ''); ?>
                                 <?php $attrs = (isset($feedback) ? [] : ['autofocus' => true]); ?>
                                 <?php echo render_input('subject', 'feedback_add_edit_subject', $value, 'text', $attrs); ?>
@@ -121,7 +122,7 @@
                                             class="fa fa-area-chart"></i></a>
                                     <?php } ?>
                                     <!-- Single button -->
-                                    <a href="<?php echo site_url('feedbacks/feedback/' . $feedback->feedbackid . '/' . $feedback->hash); ?>"
+                                    <a href="<?php echo site_url('feedbacks/participate/index/' . $feedback->feedbackid . '/' . $feedback->hash); ?>"
                                          class="btn btn-success pull-right mleft10 btn-with-tooltip"
                                         data-toggle="tooltip" data-placement="bottom"
                                         data-title="<?php echo _l('feedback_list_view_tooltip'); ?>"><i
@@ -180,7 +181,7 @@
                              <a href="#" onclick="update_question(this,\'' . $question['boxtype'] . '\',' . $question['questionid'] . '); return false;" class="pull-right update-question-button"><i class="fa fa-refresh text-success question_update"></i></a>
                              <a href="#" onclick="remove_question_from_database(this,' . $question['questionid'] . '); return false;" class="pull-right"><i class="fa fa-remove text-danger"></i></a>
                          </label>';
-                                $question_area .= '<input type="text" onblur="update_question(this,\'' . $question['boxtype'] . '\',' . $question['questionid'] . ');" data-questionid="' . $question['questionid'] . '" class="form-control questionid" value="' . $question['question'] . '">';
+                                $question_area .= '<input type="text" onblur="update_question(this,\'' . $question['boxtype'] . '\',' . $question['questionid'] . ');" data-questionid="' . $question['questionid'] . '" class="form-control questionid" value="' . html_escape($question['question']) . '">';
                                 if ($question['boxtype'] == 'textarea') {
                                     $question_area .= '<textarea class="form-control mtop20" disabled="disabled" rows="6">' . _l('feedback_question_only_for_preview') . '</textarea>';
                                 } elseif ($question['boxtype'] == 'checkbox' || $question['boxtype'] == 'radio') {
@@ -201,7 +202,7 @@
                                         $question_area .= '<input type="' . $question['boxtype'] . '" disabled="disabled"/>';
                                         $question_area .= '
                             <label>
-                                <input type="text" onblur="update_question(this,\'' . $question['boxtype'] . '\',' . $question['questionid'] . ');" data-box-descriptionid="' . $box_description['questionboxdescriptionid'] . '" value="' . $box_description['description'] . '" class="feedback_input_box_description">
+                                <input type="text" onblur="update_question(this,\'' . $question['boxtype'] . '\',' . $question['questionid'] . ');" data-box-descriptionid="' . $box_description['questionboxdescriptionid'] . '" value="' . html_escape($box_description['description']) . '" class="feedback_input_box_description">
                             </label>';
                                         $question_area .= '</div>';
                                         $question_area .= '</div>';
@@ -334,6 +335,9 @@
                                     <?php } ?>
 
 
+                                    <?php
+                                    $scAudiences = []; if ($this->db->table_exists(db_prefix().'feedbacks_audiences') && $this->db->table_exists(db_prefix().'feedbacks_audience_members') && has_permission('feedbacks','','view')) { $scAudiences = $this->db->order_by('name','ASC')->get(db_prefix().'feedbacks_audiences')->result_array(); }
+                                    if (!empty($scAudiences)) { ?><hr><p class="bold">Custom audiences</p><?php foreach ($scAudiences as $scAudience) { $scCount=$this->db->where('audience_id',(int)$scAudience['id'])->count_all_results(db_prefix().'feedbacks_audience_members'); ?><div class="checkbox checkbox-primary"><input type="checkbox" name="audience_ids[]" id="sc_audience_<?php echo (int)$scAudience['id']; ?>" value="<?php echo (int)$scAudience['id']; ?>"><label for="sc_audience_<?php echo (int)$scAudience['id']; ?>"><?php echo html_escape($scAudience['name']); ?> (<?php echo $scCount; ?>)</label></div><?php } } ?>
                                     <?php if (total_rows(db_prefix() . 'feedbacksendlog', ['iscronfinished' => 0, 'feedbackid' => $feedback->feedbackid]) > 0) { ?>
                                     <p class="text-warning"><?php echo _l('feedback_send_notice'); ?></p>
                                     <?php } ?>
@@ -382,8 +386,12 @@
         </div>
     </div>
     <?php init_tail(); ?>
+<script src="<?php echo module_dir_url('feedbacks','assets/js/feedbacks.js'); ?>?v=255"></script>
     <script>
     $(function() {
+        $('#feedback_questions_wrapper').on('click', '[data-toggle=dropdown]', function(e) { if (!$.fn.dropdown) { e.preventDefault(); $(this).parent().toggleClass('open'); } });
+        $('#feedback_questions_wrapper').on('click', 'a[data-toggle=tab]', function(e) { if (!$.fn.tab) { e.preventDefault(); $(this).parent().addClass('active').siblings().removeClass('active'); $($(this).attr('href')).addClass('active').siblings('.tab-pane').removeClass('active'); } });
+        if (location.search.indexOf('tab=feedback_send_tab') !== -1) $('a[href="#feedback_send_tab"]').tab('show');
         init_editor('.tinymce-email-description');
         init_editor('.tinymce-view-description');
     });

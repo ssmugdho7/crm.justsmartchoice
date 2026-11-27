@@ -9,11 +9,8 @@ class Migration_Version_114 extends App_module_migration
         $CI = &get_instance();
         require_once module_dir_path('notes', 'install.php');
 
-        // Make legacy records readable without changing their relation data.
-        $table = db_prefix() . 'notes';
-        if ($CI->db->table_exists($table) && $CI->db->field_exists('title', $table)) {
-            $CI->db->query("UPDATE `{$table}` SET `title` = CONCAT('Legacy Note #', `id`) WHERE `title` IS NULL OR TRIM(`title`) = ''");
-        }
+        // Leave blank titles blank; the notes UI derives a readable display
+        // title from the note content without inventing a Legacy Note label.
     }
 
     public function down()

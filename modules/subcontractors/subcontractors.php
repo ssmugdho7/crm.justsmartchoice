@@ -5,7 +5,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /*
 Module Name: Subcontractors
 Description: Quality ★★★★★.  Complete Subcontractors system for Smart Choice CRM / Perfex CRM. Includes subcontractor profiles, public portal registration, project integration, subcontractor contracts, templates, signatures, initials, PDF/print views, attachments, settings, notifications, application alerts, task automation, email/SMS auto-replies, health check, and custom field support.
-Version: 3.3.4
+Version: 3.3.5
 Requires at least: 3.4.0
 Author: Smart Choice Contractors USA / Harold Cabrera
 Author URI: https://justsmartchoice.com/webdeveloper.php

@@ -34,7 +34,7 @@ $lang['clients_dmn_tittle']									= 'Title';
 $lang['clients_dmn_description']							= 'Description';
 $lang['clients_dmn_staff']									= 'Staff';
 $lang['clients_dmn_group']									= 'Group';
-$lang['clients_dmn_created_at']								= 'Created At';.
+$lang['clients_dmn_created_at']								= 'Created At';
 
 $lang['properties']									 	  	= 'Edit Details';
 $lang['edit_canvas']									 	= 'Edit Canvas';

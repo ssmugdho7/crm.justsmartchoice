@@ -1,7 +1,7 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php init_head(); ?>
 <div id="wrapper">
-    <div class="content">
+    <div class="content"><?php $this->load->view('feedbacks/_navigation'); ?>
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <div class="tw-flex tw-justify-between tw-mb-2 sm:tw-mb-4">

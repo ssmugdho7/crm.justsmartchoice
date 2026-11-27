@@ -11,8 +11,23 @@ class Subcontractor_portal extends App_Controller
         $this->load->helper('subcontractors/smartsource_subcontractors');
     }
 
+    /** Load public portal translations without changing the logged-in staff language. */
+    private function apply_portal_language()
+    {
+        $locale = strtolower((string) $this->input->get('lang')) === 'es' ? 'spanish' : 'english';
+        $path = dirname(__DIR__) . '/language/' . $locale . '/smartsource_subcontractors_lang.php';
+        if (is_file($path)) {
+            $lang = [];
+            include $path;
+            if (is_array($lang) && isset($this->lang->language) && is_array($this->lang->language)) {
+                $this->lang->language = array_merge($this->lang->language, $lang);
+            }
+        }
+    }
+
     public function register()
     {
+        $this->apply_portal_language();
         if ($this->input->post()) {
             $data = $this->input->post();
             $fieldErrors = $this->validate_portal_submission($data);
@@ -90,6 +105,7 @@ class Subcontractor_portal extends App_Controller
 
     public function profile($token = '')
     {
+        $this->apply_portal_language();
         $subcontractor = $this->smartsource_subcontractors_model->get_by_portal_token($token);
         if (!$subcontractor) {
             show_404();
@@ -159,6 +175,7 @@ class Subcontractor_portal extends App_Controller
 
     public function success($token = '')
     {
+        $this->apply_portal_language();
         $token = $token !== '' ? $token : (string) $this->input->get('token');
         if ($token !== '') {
             $subcontractor = $this->smartsource_subcontractors_model->get_by_portal_token($token);
@@ -375,11 +392,14 @@ class Subcontractor_portal extends App_Controller
             ? smartsource_portal_profile_url($token)
             : site_url('subcontractor-portal');
 
+        $applicationLocale = strtolower((string) $this->input->get('lang')) === 'es' || strtolower((string) $this->input->post('lang')) === 'es' ? 'spanish' : 'english';
         $title = $event_type === 'updated_application'
-            ? 'Subcontractor Application Updated'
-            : 'New Subcontractor Application Received';
+            ? ($applicationLocale === 'spanish' ? 'Solicitud de subcontratista actualizada' : 'Subcontractor Application Updated')
+            : ($applicationLocale === 'spanish' ? 'Nueva solicitud de subcontratista recibida' : 'New Subcontractor Application Received');
 
-        $message = $company . ' submitted subcontractor application information.';
+        $message = $applicationLocale === 'spanish'
+            ? $company . ' envió información de su solicitud de subcontratista.'
+            : $company . ' submitted subcontractor application information.';
         if ($trade !== '') {
             $message .= ' Trade: ' . $trade . '.';
         }
@@ -413,7 +433,14 @@ class Subcontractor_portal extends App_Controller
         if ((string) get_option('smartsource_application_send_email') === '1' && $email !== '' && function_exists('smartsource_send_basic_email')) {
             $subject = $this->replace_application_tokens((string) get_option('smartsource_application_email_subject'), $company, $contact, $email, $phone, $trade, $portal_link);
             $body = $this->replace_application_tokens((string) get_option('smartsource_application_email_body'), $company, $contact, $email, $phone, $trade, $portal_link);
-            $email_sent = smartsource_send_basic_email($email, $subject, $body) ? 1 : 0;
+            $slug = 'smartsource-subcontractor-application-received';
+            $email_sent = smartsource_send_registered_template_email($slug, $email, [
+                '{language}' => $applicationLocale,
+                '{contact_name}' => $contact,
+                '{subcontractor_name}' => $company,
+                '{company}' => $company,
+                '{portal_link}' => $portal_link,
+            ]) ? 1 : (smartsource_send_basic_email($email, $subject, $body) ? 1 : 0);
         }
 
         $sms_sent = 0;

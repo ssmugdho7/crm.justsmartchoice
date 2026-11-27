@@ -1,7 +1,7 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php init_head(); ?>
 <div id="wrapper"><div id="sc-enterprise-app">
-    <div class="content">
+    <div class="content"><div class="sc-enterprise-quicknav panel_s"><div class="panel-body" style="display:flex;flex-wrap:wrap;gap:8px"><a class="btn btn-default btn-sm" href="<?php echo admin_url('smart_choice_enterprise_core'); ?>"><?php echo _l('enterprise_dashboard'); ?></a><a class="btn btn-default btn-sm" href="<?php echo admin_url('smart_choice_enterprise_core/sales_operations'); ?>"><?php echo _l('enterprise_sales_operations'); ?></a><a class="btn btn-default btn-sm" href="<?php echo admin_url('smart_choice_enterprise_core/project_controls'); ?>"><?php echo _l('enterprise_project_controls'); ?></a><a class="btn btn-default btn-sm" href="<?php echo admin_url('smart_choice_enterprise_core/reporting'); ?>"><?php echo _l('enterprise_reporting'); ?></a><a class="btn btn-default btn-sm" href="<?php echo admin_url('smart_choice_enterprise_core/health'); ?>"><?php echo _l('system_health'); ?></a><a class="btn btn-info btn-sm" href="<?php echo admin_url('smart_choice_enterprise_core/help_guide'); ?>"><?php echo _l('enterprise_help_guide'); ?></a></div></div>
         <div class="panel_s">
             <div class="panel-body">
                 <div class="sc-enterprise-header">

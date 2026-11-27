@@ -723,8 +723,17 @@ class Tasks extends AdminController
 
         if (staff_can('edit', 'tasks') ||
                 ($task->current_user_is_creator && staff_can('create', 'tasks'))) {
+            $success = false;
+            foreach ($this->_task_staff_ids_to_add($task, 'follower') as $staffId) {
+                if ($this->tasks_model->add_task_followers([
+                    'taskid'   => $task->id,
+                    'follower' => $staffId,
+                ])) {
+                    $success = true;
+                }
+            }
             echo json_encode([
-                'success'  => $this->tasks_model->add_task_followers($this->input->post()),
+                'success'  => $success,
                 'taskHtml' => $this->get_task_data($this->input->post('taskid'), true),
             ]);
         }
@@ -737,11 +746,59 @@ class Tasks extends AdminController
 
         if (staff_can('edit', 'tasks') ||
                 ($task->current_user_is_creator && staff_can('create', 'tasks'))) {
+            $success = false;
+            foreach ($this->_task_staff_ids_to_add($task, 'assignee') as $staffId) {
+                if ($this->tasks_model->add_task_assignees([
+                    'taskid'   => $task->id,
+                    'assignee' => $staffId,
+                ])) {
+                    $success = true;
+                }
+            }
             echo json_encode([
-                'success'  => $this->tasks_model->add_task_assignees($this->input->post()),
+                'success'  => $success,
                 'taskHtml' => $this->get_task_data($this->input->post('taskid'), true),
             ]);
         }
+    }
+
+    /**
+     * Normalise the posted follower/assignee value (a single id or an array of ids
+     * from the multi-select) into a list of active staff ids that can be added.
+     * @param  object $task  task object
+     * @param  string $field 'follower' or 'assignee'
+     * @return array
+     */
+    private function _task_staff_ids_to_add($task, $field)
+    {
+        $posted = $this->input->post($field);
+        if (! is_array($posted)) {
+            $posted = [$posted];
+        }
+
+        $existing = $field === 'follower' ? $task->followers_ids : $task->assignees_ids;
+        $existing = array_map('intval', (array) $existing);
+        $ids      = [];
+
+        foreach ($posted as $staffId) {
+            if (! is_scalar($staffId)) {
+                continue;
+            }
+            $staffId = (int) $staffId;
+            if ($staffId <= 0 || in_array($staffId, $existing, true) || in_array($staffId, $ids, true)) {
+                continue;
+            }
+            if (total_rows(db_prefix() . 'staff', ['staffid' => $staffId, 'active' => 1]) == 0) {
+                continue;
+            }
+            if ($field === 'assignee' && $task->rel_type == 'project'
+                && total_rows(db_prefix() . 'project_members', ['project_id' => $task->rel_id, 'staff_id' => $staffId]) == 0) {
+                continue;
+            }
+            $ids[] = $staffId;
+        }
+
+        return $ids;
     }
 
     public function edit_comment()

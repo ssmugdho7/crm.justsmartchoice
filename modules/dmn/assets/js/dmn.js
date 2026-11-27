@@ -30,7 +30,7 @@ $("button.dmn-btn").on('click', function (e) {
   $.ajax({
     url: admin_url+'dmn/update_dmn',
     data: ({[csrfName]: csrfHash, 'id':dmn_id,'title':title,
-      'description':description,'project_id':project_id,staffid:staffid}),
+      'description':description,'project_id':project_id,'assigned_staff_id':$('#assigned_staff_id').val(),staffid:staffid}),
     type: 'post',
     success: function(data) {
       window.location.reload(true);
@@ -38,7 +38,7 @@ $("button.dmn-btn").on('click', function (e) {
   });
 })
 var current_user_is_admin = $('input[name="current_user_is_admin"]').val();
-var project_id = $('input[name="project_id"]').val(1);
+
 function validate_dmn_form(){
   var response = appValidateForm($j('#dmn-form'), {
     title: 'required',

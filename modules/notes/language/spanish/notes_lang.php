@@ -84,6 +84,7 @@ $lang['notes_detected_folders'] = 'Carpetas de Notas Detectadas';
 $lang['notes_confirm_delete_one'] = '¿Eliminar esta nota?';
 $lang['notes_delete_failed'] = 'No se pudo eliminar la nota.';
 $lang['notes_note_not_found'] = 'No se encontró la nota.';
+$lang['notes_untitled'] = 'Nota sin título';
 $lang['notes_legacy_note'] = 'Nota Anterior';
 $lang['notes_settings'] = 'Configuración de Notas';
 $lang['notes_sources'] = 'Orígenes de Notas';

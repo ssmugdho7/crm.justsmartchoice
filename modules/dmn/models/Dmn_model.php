@@ -18,8 +18,11 @@ class Dmn_model extends App_Model
 		}else{
 			$data['dmn_content'] ='';
 		}
-		$data['hash'] = app_generate_hash();
-		$data['staffid']      = $data['staffid'] == '' ? 0 : $data['staffid'];
+		$data = array_intersect_key($data,array_flip(['title','description','project_id','assigned_staff_id','dmn_content']));
+        $data['project_id'] = (int)($data['project_id'] ?? 0);
+        $data = $this->normalize_assignment($data);
+        $data['hash'] = app_generate_hash();
+		$data['staffid'] = get_staff_user_id();
 		$data['dateadded'] = date('Y-m-d H:i:s');
 		$this->db->insert(db_prefix() . 'dmn', $data);
 		$insert_id = $this->db->insert_id();
@@ -33,20 +36,25 @@ class Dmn_model extends App_Model
 	{   
 		$this->db->where('id', $id);
 		$currentdata = $this->db->get(db_prefix() . 'dmn')->row();
-		$old_file_name = $currentdata->dmn_content;
+		if (!$currentdata) return false;
+        $old_file_name = $currentdata->dmn_content;
 		$file_name = rand(111111111,999999999);
 		$file_name = $file_name.'.dmn';
 		$check =  __dir__ ;
 		$str= preg_replace('/\W\w+\s*(\W*)$/', '$1', $check);
-		if(is_file($str.'/dmndiagram/diagram'.$old_file_name)){
+		if (!empty($data['dmnxml'])) {
+        if(false && is_file($str.'/dmndiagram/diagram'.$old_file_name)){
 			(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($str.'/dmndiagram/diagram'.$old_file_name);
 		}
 		$str = $str.'/dmndiagram/diagram'.$file_name;
 		(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($str, $_POST['dmnxml']);
 		$data['dmn_content'] = $file_name;
-		$data['staffid']      = $data['staffid'] == '' ? 0 : $data['staffid'];
-		$data['dateaupdated'] = date('Y-m-d H:i:s');
-		$this->db->where('id', $id);
+        } else { unset($data['dmn_content']); }
+        $data = array_intersect_key($data,array_flip(['title','description','project_id','assigned_staff_id','dmn_content','dmnxml']));
+        if (array_key_exists('project_id',$data)) $data['project_id'] = (int)$data['project_id'];
+		$data = $this->normalize_assignment($data);
+        $data['dateaupdated'] = date('Y-m-d H:i:s');
+        $this->db->where('id', $id);
 		$this->db->update(db_prefix() . 'dmn', $data);
 		if ($this->db->affected_rows() > 0) {
 			log_activity('dmn Updated [ID:' . $id . ']');
@@ -54,7 +62,15 @@ class Dmn_model extends App_Model
 		}
 		return false;
 	}
-	public function get($id = '')
+	private function normalize_assignment($data) {
+        if (array_key_exists('assigned_staff_id', $data)) {
+            $staff = (int)$data['assigned_staff_id'];
+            if ($staff && !$this->db->where('staffid',$staff)->get(db_prefix().'staff')->row()) show_error(_l('dmn_invalid_employee'),400);
+            $data['assigned_staff_id'] = $staff;
+        }
+        return $data;
+    }
+    public function get($id = '')
 	{
 		if (is_numeric($id)) {
 			$this->db->where('id', $id);
@@ -68,7 +84,8 @@ class Dmn_model extends App_Model
 	}
 	public function get_canvas_vote_count($post)
 	{
-		$return_data['like'] = 0;
+		$post['dmn_id'] = (int)$post['dmn_id'];
+        $return_data['like'] = 0;
 		$return_data['dislike'] = 0;
 		$result = $this->db->query("SELECT (select count(thumb) from ".db_prefix()."dmn_votes WHERE thumb = 'like' AND dmn_id = ".$post['dmn_id'].") as liked,(select count(thumb) from ".db_prefix()."dmn_votes WHERE thumb = 'dislike' AND dmn_id = ".$post['dmn_id'].") as disliked  FROM ".db_prefix()."dmn_votes WHERE dmn_id = ".$post['dmn_id']." GROUP BY dmn_id")->row();
 		if($result){
@@ -123,7 +140,10 @@ class Dmn_model extends App_Model
 		return false;
 	}
 	public function dmn_update_details($data, $id){
-		$this->db->where('id', $id);
+        $data = array_intersect_key($data,array_flip(['title','description','project_id','assigned_staff_id']));
+        if (isset($data['project_id'])) $data['project_id'] = (int)$data['project_id'];
+		$data = $this->normalize_assignment($data);
+        $this->db->where('id', $id);
 		$this->db->update(db_prefix() . 'dmn', $data);		
 		if ($this->db->affected_rows() > 0) {
 			log_activity('dmn Updated [ID:' . $id . ']');

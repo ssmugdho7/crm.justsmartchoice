@@ -234,3 +234,7 @@
 /* 3.3.2: business and contract names must remain left aligned. */
 .smartsource-subcontractors-table td,.smartsource-subcontractors-table th,.table-subcontractors td,.table-subcontractors th,.table-contracts td,.table-contracts th{vertical-align:middle;}
 .smartsource-subcontractors-table td.company,.smartsource-subcontractors-table td.contract-name,.table-subcontractors td:nth-child(2),.table-contracts td:nth-child(2){text-align:left!important;}
+
+/* v3.3.5 public portal submit button contrast */
+.btn-smart, .submit-row .btn-smart, .submit-row button[type="submit"] { background:#169179!important; border-color:#117b66!important; color:#111!important; opacity:1!important; }
+.btn-smart:hover,.submit-row .btn-smart:hover {background:#20a98c!important;color:#111!important;}

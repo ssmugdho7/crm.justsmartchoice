@@ -1,4 +1,13 @@
 <?php
+function dmn_can_view() { return has_permission('dmn','','view') || has_permission('dmn','','view_own'); }
+function dmn_own_scope() { return !has_permission('dmn','','view'); }
+function dmn_can_record($id) {
+    $CI = &get_instance();
+    if (!dmn_can_view()) return false;
+    $row = $CI->db->where('id',(int)$id)->get(db_prefix().'dmn')->row();
+    return $row && (!dmn_own_scope() || ((int)$row->staffid === (int)get_staff_user_id() || (int)($row->assigned_staff_id ?? 0) === (int)get_staff_user_id()));
+}
+
 function get_dmn_grid_query($aColumns, $sIndexColumn, $sTable, $join = [], $where = [], $additionalSelect = [], $sGroupBy = '', $searchAs = [])
 {
     $CI          = & get_instance();

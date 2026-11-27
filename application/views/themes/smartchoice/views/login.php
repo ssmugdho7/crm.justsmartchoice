@@ -26,6 +26,7 @@ body.customers,body{--sc-green:#00A651;--sc-orange:#F96302;--sc-yellow:#F5B400;-
         <?php hooks()->do_action('clients_login_form_start'); ?>
         <div class="panel_s">
             <div class="panel-body">
+                <?php $this->load->view('themes/partials/customer_auth_logo'); ?>
 
                 <?php if (! is_language_disabled()) { ?>
                 <div class="form-group">

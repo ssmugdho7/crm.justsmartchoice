@@ -47,3 +47,11 @@ $lang['rating']												= 'Rating';
 $lang['add_email']											= 'Add Email';
 $lang['save']												= 'Save';
 $lang['close']												= 'Close';
+$lang['dmn_back']='Volver a DMN';
+$lang['dmn_bulk_delete']='Eliminar seleccionados';
+$lang['dmn_bulk_confirm']='¿Eliminar los diagramas seleccionados?';
+
+$lang['dmn_assigned_employee'] = 'Empleado asignado';
+$lang['dmn_assignment_hint'] = 'Seleccione un proyecto, un empleado o ambos. Ninguno es obligatorio.';
+$lang['dmn_invalid_employee'] = 'Empleado no válido.';
+$lang['dmn_upgrade_success'] = 'Base de datos DMN actualizada correctamente.';

@@ -56,9 +56,19 @@ class feedbacks_model extends App_Model
         foreach ($questions as $question) {
             $this->db->where('questionid', $question['questionid']);
             $box                      = $this->db->get(db_prefix().'form_question_box')->row();
-            $questions[$i]['boxid']   = $box->boxid;
-            $questions[$i]['boxtype'] = $box->boxtype;
-            if ($box->boxtype == 'checkbox' || $box->boxtype == 'radio') {
+            // Legacy imports may contain a question without its box row.
+            $questions[$i]['boxid']   = $box ? $box->boxid : 0;
+            $questions[$i]['boxtype'] = $box ? $box->boxtype : 'input';
+            $metaTable = db_prefix() . 'feedbacks_question_meta';
+            if ($this->db->table_exists($metaTable)) {
+                $meta = $this->db->where('questionid', $question['questionid'])->get($metaTable)->row_array();
+                if ($meta) {
+                    $questions[$i]['advanced_type'] = $meta['field_type'];
+                    $questions[$i]['advanced_options'] = json_decode($meta['options_json'] ?: '[]', true) ?: [];
+                    $questions[$i]['advanced_settings'] = json_decode($meta['settings_json'] ?: '{}', true) ?: [];
+                }
+            }
+            if ($box && ($box->boxtype == 'checkbox' || $box->boxtype == 'radio')) {
                 $this->db->order_by('questionboxdescriptionid', 'asc');
                 $this->db->where('boxid', $box->boxid);
                 $boxes_description = $this->db->get(db_prefix().'form_question_box_description')->result_array();
@@ -145,7 +155,7 @@ class feedbacks_model extends App_Model
             $data['onlyforloggedin'] = 0;
         }
         $datecreated = date('Y-m-d H:i:s');
-        $this->db->insert(db_prefix().'feedbacks', [
+        $insertData = [
             'subject'         => $data['subject'],
             'slug'            => slug_it($data['subject']),
             'description'     => $data['description'],
@@ -157,7 +167,9 @@ class feedbacks_model extends App_Model
             'redirect_url'    => $data['redirect_url'],
             'hash'            => md5($datecreated),
             'fromname'        => $data['fromname'],
-        ]);
+        ];
+        if ($this->db->field_exists('created_by', db_prefix().'feedbacks')) { $insertData['created_by'] = (int)get_staff_user_id(); }
+        $this->db->insert(db_prefix().'feedbacks', $insertData);
         $feedbackid = $this->db->insert_id();
         if (!$feedbackid) {
             // return false;
@@ -200,6 +212,9 @@ class feedbacks_model extends App_Model
 
             $this->db->where('feedbackid', $feedbackid);
             $this->db->delete(db_prefix().'feedbackresultsets');
+            foreach (['feedbacks_question_meta','feedbacks_design','feedbacks_participants'] as $extraTable) {
+                if ($this->db->table_exists(db_prefix().$extraTable)) { $this->db->where('feedbackid',$feedbackid)->delete(db_prefix().$extraTable); }
+            }
         }
         if ($affectedRows > 0) {
             log_activity('feedback Deleted [ID: ' . $feedbackid . ']');
@@ -278,6 +293,12 @@ class feedbacks_model extends App_Model
         ]);
         $resultsetid = $this->db->insert_id();
         if ($resultsetid) {
+            $participantType = 'anonymous'; $participantId = null;
+            if (function_exists('is_staff_logged_in') && is_staff_logged_in()) { $participantType = 'staff'; $participantId = (int)get_staff_user_id(); }
+            elseif (function_exists('is_client_logged_in') && is_client_logged_in() && function_exists('get_contact_user_id')) { $participantType = 'contact'; $participantId = (int)get_contact_user_id(); }
+            if ($this->db->table_exists(db_prefix().'feedbacks_participants')) {
+                $this->db->insert(db_prefix().'feedbacks_participants', ['resultsetid'=>$resultsetid,'feedbackid'=>(int)$id,'participant_type'=>$participantType,'participant_id'=>$participantId,'datecreated'=>date('Y-m-d H:i:s')]);
+            }
             if (isset($result['selectable']) && sizeof($result['selectable']) > 0) {
                 foreach ($result['selectable'] as $boxid => $question_answers) {
                     foreach ($question_answers as $questionid => $answer) {
@@ -325,6 +346,7 @@ class feedbacks_model extends App_Model
     public function remove_question($questionid)
     {
         $affectedRows = 0;
+        if ($this->db->table_exists(db_prefix().'feedbacks_question_meta')) { $this->db->where('questionid',(int)$questionid)->delete(db_prefix().'feedbacks_question_meta'); }
         $this->db->where('questionid', $questionid);
         $this->db->delete(db_prefix().'form_question_box_description');
         if ($this->db->affected_rows() > 0) {

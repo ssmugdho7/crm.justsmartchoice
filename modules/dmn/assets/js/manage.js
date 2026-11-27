@@ -34,14 +34,14 @@ function gridViewDataCall(formData, successFn, errorFn) {
 }
 function __renderGridViewdmn() {
     $('div[id^="map_"]').each(function(index) {    
-        setTimeout('', 200)
+        
         var mId= $(this).attr('id');
         var filename = $('textarea#m_'+mId).val();
         $('#ifrm_'+mId).attr('src', site_url+'modules/dmn/views/iframe.php?filename='+filename);
     });
 }
 $("button.dmn-btn").on('click', function (e) {
-    if($('#title').val() == '' || $('#dmn_group_id').val() == '' || $('#description').val() == ''){
+    if($('#title').val() == '' || $('#description').val() == ''){
         validate_dmn_form();
     }else{
         $('#dmn-form').submit();

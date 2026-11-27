@@ -9,11 +9,13 @@ class Dmn extends AdminController
     }
     public function index()
     {
-        if (!has_permission('dmn', '', 'view')) {
+        if (!dmn_can_view()) {
             access_denied('dmn');
         }
         if ($this->input->is_ajax_request()) {
-            $this->app->get_table_data(module_views_path('dmn', 'table'));
+            require __DIR__.'/../views/table.php';
+            $this->output->set_content_type('application/json')->set_output(json_encode($output));
+            return;
         }
         $data['switch_grid'] = false;
         if ($this->session->userdata('dmn_grid_view') == 'true') {
@@ -31,17 +33,20 @@ class Dmn extends AdminController
     }
     public function table()
     {
-        if (!has_permission('dmn', '', 'view')) {
+        if (!dmn_can_view()) {
             access_denied('dmn');
         }
-        $this->app->get_table_data(module_views_path('dmn', 'table'));
+        require __DIR__.'/../views/table.php';
+            $this->output->set_content_type('application/json')->set_output(json_encode($output));
+            return;
     }
     public function dmn_detail($id=null)
     {
-        if (!has_permission('dmn', '', 'view')) {
+        if (!dmn_can_view()) {
             access_denied('dmn');
         }
         if($id){
+            if (!dmn_can_record($id)) access_denied('dmn');
             if ($this->input->post()) 
             {
                 if (!has_permission('dmn', '', 'edit')) {
@@ -77,8 +82,9 @@ class Dmn extends AdminController
         }
     }
     public function dmn_create($id)
-    {  
-        if (!has_permission('dmn', '', 'view')) {
+    {
+        if (!dmn_can_record($id)) access_denied('dmn');  
+        if (!dmn_can_view()) {
             access_denied('dmn');
         }
         if ($this->input->post()) 
@@ -133,17 +139,21 @@ class Dmn extends AdminController
             'dmn_grid_view' => $set,
         ]);
         if ($manual == false) {
-            redirect($_SERVER['HTTP_REFERER']);
+            redirect(admin_url('dmn'));
         }
     }
     public function grid()
     {
+        if (!dmn_can_view()) access_denied('dmn');
         echo $this->load->view('dmn/grid', [], true);
     }
     public function likeCanvas()
     {
         if ($this->input->is_ajax_request()) {
             $post_data = $this->input->post();
+            if (!dmn_can_record((int)($post_data['dmn_id'] ?? 0))) access_denied('dmn');
+            $post_data['dmn_id'] = (int)$post_data['dmn_id'];
+            $post_data = array_intersect_key($post_data,array_flip(['dmn_id','thumb']));
             $post_data['user_id'] = get_staff_user_id();
             $post_data['user_type'] = 'staff';
             $resp = $this->dmn_model->add_canvas_vote($post_data);
@@ -158,6 +168,7 @@ class Dmn extends AdminController
         if (!$id) {
             redirect(admin_url('dmn'));
         }
+        if (!dmn_can_record($id)) access_denied('dmn');
         $response = $this->dmn_model->delete($id);
         if ($response == true) {
             set_alert('success', _l('dmn_deleted', _l('dmn')));
@@ -174,6 +185,7 @@ class Dmn extends AdminController
         if (!$id) {
             redirect(admin_url('dmn'));
         }
+        if (!dmn_can_record($id) || !has_permission('dmn','','edit')) access_denied('dmn');
         $success = $this->dmn_model->dmn_update_details($post_data, $id);
         if ($success && ($this->input->server('REQUEST_METHOD') === 'POST')) {
             set_alert('success', _l('updated_successfully', _l('dmn')));
@@ -181,7 +193,8 @@ class Dmn extends AdminController
     }
     public function preview($id = 0)
     {
-        if (!has_permission('dmn', '', 'view')) {
+        if (!dmn_can_record($id)) access_denied('dmn');
+        if (!dmn_can_view()) {
             access_denied('dmn');
         }
         $data['dmn'] = $this->dmn_model->get($id);
@@ -211,9 +224,19 @@ class Dmn extends AdminController
         $this->app_scripts->add('preview-js','modules/dmn/assets/js/preview.js');
         $this->load->view('preview', $data);
     }
+    public function bulk_delete()
+    {
+        if (!$this->input->post() || !has_permission('dmn','','delete') || !dmn_can_view()) access_denied('dmn');
+        $ids = array_unique(array_map('intval',(array)$this->input->post('ids')));
+        foreach ($ids as $id) if (!dmn_can_record($id)) access_denied('dmn');
+        $count = 0;
+        foreach ($ids as $id) if ($this->dmn_model->delete($id)) $count++;
+        set_alert('success', _l('dmn_deleted').' ('.$count.')');
+        redirect(admin_url('dmn'));
+    }
     public function project_table()
     {
-        if (!has_permission('dmn', '', 'view')) {
+        if (!dmn_can_view()) {
             access_denied('dmn');
         }
         $this->app->get_table_data(module_views_path('dmn', 'admin/project_table'));

@@ -1150,7 +1150,8 @@ echo $comments;
                 id="add_task_assignees"
                 class="text-muted task-action-select selectpicker" name="select-assignees" data-live-search="true"
                 title='<?= _l('task_single_assignees_select_title'); ?>'
-                data-none-selected-text="<?= _l('dropdown_non_selected_tex'); ?>">
+                data-none-selected-text="<?= _l('dropdown_non_selected_tex'); ?>"
+                data-actions-box="false" multiple>
                 <?php
                $options = '';
 
@@ -1208,7 +1209,8 @@ echo $_assignees;
                 data-task-id="<?= e($task->id); ?>"
                 class="text-muted selectpicker task-action-select" name="select-followers" data-live-search="true"
                 title='<?= _l('task_single_followers_select_title'); ?>'
-                data-none-selected-text="<?= _l('dropdown_non_selected_tex'); ?>">
+                data-none-selected-text="<?= _l('dropdown_non_selected_tex'); ?>"
+                data-actions-box="false" multiple>
                 <?php
 $options = '';
 

@@ -33,6 +33,7 @@ hooks()->add_action('admin_init', 'google_analytics_register_menu_items');
 hooks()->add_action('app_admin_head', 'google_analytics_load_admin_assets');
 hooks()->add_action('app_admin_footer', 'google_analytics_inject_admin_tracking');
 hooks()->add_action('app_customers_footer', 'google_analytics_inject_client_tracking');
+hooks()->add_action('after_cron_run', 'google_analytics_purge_visitor_logs');
 hooks()->add_filter('module_google_analytics_action_links', 'google_analytics_action_links');
 
 function google_analytics_register_permissions()
@@ -91,6 +92,10 @@ function google_analytics_register_menu_items()
 
     if (is_admin()) {
         $CI->app_menu->add_sidebar_children_item('google-analytics', [
+            'slug' => 'google-analytics-visitors', 'name' => 'Live Visitors',
+            'href' => admin_url('google_analytics/visitors'), 'icon' => 'fa fa-users', 'position' => 4,
+        ]);
+        $CI->app_menu->add_sidebar_children_item('google-analytics', [
             'slug' => 'google-analytics-internal', 'name' => 'Internal CRM reports',
             'href' => admin_url('google_analytics/internal'), 'icon' => 'fa fa-building', 'position' => 5,
         ]);
@@ -102,6 +107,19 @@ function google_analytics_register_menu_items()
             'icon'     => 'fa fa-line-chart',
             'position' => 66,
         ]);
+    }
+}
+
+function google_analytics_purge_visitor_logs()
+{
+    $CI = &get_instance();
+    if (!$CI->db->table_exists(db_prefix().'ga_visitor_sessions')) return;
+    require_once __DIR__.'/libraries/Visitor_store.php';
+    try {
+        $store = new Visitor_store(Visitor_store::connect(), db_prefix(), APP_ENC_KEY);
+        $store->purge();
+    } catch (Throwable $e) {
+        log_message('error', 'Visitor log retention cleanup failed.');
     }
 }
 
@@ -155,19 +173,47 @@ function google_analytics_render_tracking_tag($area)
 
     $measurementId = strtoupper($measurementId);
     $areaName = $area === 'admin' ? 'crm_admin' : 'crm_client_portal';
+    $CI = &get_instance();
+    // Controller/action names describe the screen without exposing record IDs,
+    // sharing tokens, query parameters, or customer names from document titles.
+    $route = [
+        method_exists($CI->router, 'fetch_module') ? $CI->router->fetch_module() : '',
+        $CI->router->fetch_class(),
+        $CI->router->fetch_method(),
+    ];
+    $route = array_values(array_filter(array_map(static function ($part) {
+        return preg_replace('/[^a-z0-9_-]/', '', strtolower((string) $part));
+    }, $route)));
+    $pagePath = '/' . ($area === 'admin' ? 'admin' : 'portal') . '/' . implode('/', $route);
+    $base = parse_url(base_url());
+    $origin = ($base['scheme'] ?? 'https') . '://' . ($base['host'] ?? '');
+    if (isset($base['port'])) $origin .= ':' . (int) $base['port'];
+    $parameters = [
+        'page_location' => $origin . $pagePath,
+        'page_title' => 'CRM ' . ($area === 'admin' ? 'Admin' : 'Customer Portal') . ' / ' . implode(' / ', $route),
+        'page_referrer' => '',
+        'crm_area' => $areaName,
+        'allow_google_signals' => false,
+        'allow_ad_personalization_signals' => false,
+    ];
+    $configuration = $parameters + ['send_page_view' => false];
+    $pageView = $parameters + ['send_to' => $measurementId];
     ?>
-<script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo html_escape($measurementId); ?>"></script>
 <script>
+(function () {
+if (window.scCrmAnalyticsConfigured) return;
+window.scCrmAnalyticsConfigured = true;
 window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', '<?php echo html_escape($measurementId); ?>', {
-    'anonymize_ip': true,
-    'cookie_flags': 'SameSite=None;Secure',
-    'page_location': window.location.href,
-    'page_title': document.title,
-    'crm_area': '<?php echo html_escape($areaName); ?>'
-});
+window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+window.gtag('js', new Date());
+window.gtag('set', <?php echo json_encode($parameters, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>);
+window.gtag('config', '<?php echo html_escape($measurementId); ?>', <?php echo json_encode($configuration, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>);
+window.gtag('event', 'page_view', <?php echo json_encode($pageView, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>);
+var loader = document.createElement('script');
+loader.async = true;
+loader.src = 'https://www.googletagmanager.com/gtag/js?id=<?php echo html_escape($measurementId); ?>';
+document.head.appendChild(loader);
+}());
 </script>
     <?php
 }

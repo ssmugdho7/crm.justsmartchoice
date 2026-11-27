@@ -4,9 +4,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
 Module Name: Questionnaire
-Description: Questionnaire module for sending questions to customers
-Version: 2.3.0
-Requires at least: 2.3.*
+Description: Smart Choice construction-business questionnaire, feedback and survey management | Quality: ★★★★★
+Version: 2.5.5
+Author: Harold Cabrera - Smart Choice Contractors USA
+Author URI: https://justsmartchoice.com
+Requires at least: 3.4.1
 */
 
 require(__DIR__ . '/vendor/autoload.php');
@@ -101,10 +103,12 @@ function feedbacks_permissions()
     $capabilities = [];
 
     $capabilities['capabilities'] = [
-        'view'   => _l('permission_view') . '(' . _l('permission_global') . ')',
+        'view_own' => _l('view_own'),
+        'view' => _l('view_global'),
         'create' => _l('permission_create'),
-        'edit'   => _l('permission_edit'),
+        'edit' => _l('permission_edit'),
         'delete' => _l('permission_delete'),
+        'view_all_templates' => _l('fb_view_all_templates'),
     ];
 
     register_staff_capabilities('feedbacks', $capabilities, _l('feedbacks'));
@@ -167,7 +171,7 @@ function feedbacks_module_init_menu_items()
         'icon'       => 'fa-regular fa-circle-question',
     ]);
 
-    if (has_permission('feedbacks', '', 'view')) {
+    if (has_permission('feedbacks', '', 'view') || has_permission('feedbacks', '', 'view_own') || has_permission('feedbacks', '', 'create')) {
         $CI->app_menu->add_sidebar_menu_item('feedbacks', [
             'slug'     => 'feedbacks',
             'name'     => _l('feedbacks'),
@@ -224,20 +228,13 @@ if (function_exists('hooks')) {
 }
 if (!function_exists('feedbacks_smart_choice_standard_head')) {
     function feedbacks_smart_choice_standard_head() {
-        echo '<link href="' . module_dir_url('feedbacks', 'assets/css/smart_choice_module_standard.css') . '?v=100" rel="stylesheet" type="text/css" />';
+        if (get_instance()->router->fetch_class() !== 'feedbacks') { return; }
+        echo '<link href="' . module_dir_url('feedbacks', 'assets/css/smart_choice_module_standard.css') . '?v=255" rel="stylesheet" type="text/css" />';
     }
 }
 if (!function_exists('feedbacks_smart_choice_standard_footer')) {
     function feedbacks_smart_choice_standard_footer() {
-        echo '<script src="' . module_dir_url('feedbacks', 'assets/js/smart_choice_module_standard.js') . '?v=101"></script>';
+        if (get_instance()->router->fetch_class() !== 'feedbacks') { return; }
+        echo '<script src="' . module_dir_url('feedbacks', 'assets/js/smart_choice_module_standard.js') . '?v=255"></script>';
     }
-}
-if (function_exists('register_staff_capabilities')) {
-    register_staff_capabilities('feedbacks', [
-        'view_own' => _l('view_own'),
-        'view' => _l('view_global'),
-        'create' => _l('create'),
-        'edit' => _l('edit'),
-        'delete' => _l('delete'),
-    ], _l('feedbacks'));
 }

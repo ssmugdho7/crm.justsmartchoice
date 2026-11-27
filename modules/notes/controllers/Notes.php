@@ -150,14 +150,14 @@ class Notes extends AdminController
             $row = [];
             $row[] = '<div class="checkbox"><input type="checkbox" class="note-export-checkbox" value="' . $noteId . '"><label></label></div>';
             $titleCell = '<a href="#" class="note-title-link" onclick="note_module_model_get_detail(' . $noteId . '); return false;" aria-label="' . html_escape(_l('view') . ': ' . $title) . '">' . html_escape($title) . '</a>';
-            $actions = '<div class="notes-action-grid">';
-            $actions .= '<a class="btn btn-default btn-xs" href="' . admin_url('notes/notes/view/' . $noteId) . '" title="' . _l('view') . '"><i class="fa fa-eye"></i><span>' . _l('view') . '</span></a>';
+            $actions = '<div class="notes-action-links">';
+            $actions .= '<a class="note-action-link" href="' . admin_url('notes/notes/view/' . $noteId) . '" title="' . _l('view') . '">' . _l('view') . '</a>';
             if (is_admin() || staff_can('edit', 'note_manage')) {
-                $actions .= '<a class="btn btn-primary btn-xs" href="' . admin_url('notes/notes/edit/' . $noteId) . '" title="' . _l('edit') . '"><i class="fa fa-pencil"></i><span>' . _l('edit') . '</span></a>';
+                $actions .= '<span class="note-action-separator">|</span><a class="note-action-link" href="' . admin_url('notes/notes/edit/' . $noteId) . '" title="' . _l('edit') . '">' . _l('edit') . '</a>';
             }
-            $actions .= '<button type="button" class="btn btn-info btn-xs" onclick="notes_share_one(' . $noteId . ');" title="' . _l('notes_share') . '"><i class="fa fa-share-alt"></i><span>' . _l('notes_share') . '</span></button>';
+            $actions .= '<span class="note-action-separator">|</span><a class="note-action-link" href="#" onclick="notes_share_one(' . $noteId . '); return false;" title="' . _l('notes_share') . '">' . _l('notes_share') . '</a>';
             if (is_admin() || staff_can('delete', 'note_manage')) {
-                $actions .= '<button type="button" class="btn btn-danger btn-xs" onclick="notes_delete_one(' . $noteId . ');" title="' . _l('delete') . '"><i class="fa fa-trash"></i><span>' . _l('delete') . '</span></button>';
+                $actions .= '<span class="note-action-separator">|</span><a class="note-action-link note-action-danger" href="#" onclick="notes_delete_one(' . $noteId . '); return false;" title="' . _l('delete') . '">' . _l('delete') . '</a>';
             }
             $actions .= '</div>';
             $row[] = '<div class="note-title-cell">' . $titleCell . $actions . '</div>';

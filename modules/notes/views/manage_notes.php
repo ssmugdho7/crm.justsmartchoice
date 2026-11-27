@@ -260,26 +260,20 @@
         height: 24px;
     }
     .table-responsive { overflow-x: hidden !important; }
-    .table_notes { width:100% !important; table-layout:fixed; }
+    .table_notes { width:100% !important; min-width:0 !important; table-layout:fixed !important; }
     .table_notes th, .table_notes td { vertical-align:middle !important; white-space:normal !important; word-break:break-word; }
-    .table_notes th:nth-child(1), .table_notes td:nth-child(1) { width:3%; }
-    .table_notes th:nth-child(2), .table_notes td:nth-child(2) { width:20%; }
-    .table_notes th:nth-child(3), .table_notes td:nth-child(3) { width:8%; }
-    .table_notes th:nth-child(4), .table_notes td:nth-child(4) { width:14%; }
-    .table_notes th:nth-child(5), .table_notes td:nth-child(5) { width:27%; }
-    .table_notes th:nth-child(6), .table_notes td:nth-child(6) { width:8%; }
-    .table_notes th:nth-child(7), .table_notes td:nth-child(7) { width:5%; text-align:center; }
-    .table_notes th:nth-child(8), .table_notes td:nth-child(8) { width:10%; }
-    .table_notes th:nth-child(9), .table_notes td:nth-child(9) { width:5%; }
+    .table_notes th { position:relative; }
+    .notes-resize-handle { position:absolute; top:0; right:-3px; bottom:0; width:7px; cursor:col-resize; touch-action:none; z-index:5; }
+    .notes-resize-handle:hover, body.notes-column-resizing .notes-resize-handle { background:rgba(22,145,121,.25); }
     .note-title-cell { min-width:0; }
     .note-title-link { display:block; color:#1f2937; font-weight:600; line-height:1.35; overflow-wrap:anywhere; }
     .note-title-link:hover, .note-title-link:focus { color:#0e6f5b; text-decoration:underline; }
     .note-color-dot-only { margin-right:0; width:18px; height:18px; }
-    .notes-action-grid { display:flex; flex-wrap:wrap; gap:3px; margin-top:5px; }
-    .notes-action-grid .btn { margin:0 !important; padding:2px 5px; min-height:24px; font-size:11px; line-height:18px; width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-    .notes-action-grid .btn { width:auto; flex:0 1 auto; }
-    .notes-action-grid .btn i { margin-right:3px; }
-    .table_notes .btn { margin:2px 0; }
+    .notes-action-links { display:flex; flex-wrap:wrap; align-items:center; gap:0 5px; margin-top:3px; font-size:11px; line-height:16px; }
+    .notes-action-links .note-action-link { padding:0; border:0; background:transparent; color:#64748b; font-weight:400; text-decoration:none; white-space:nowrap; }
+    .notes-action-links .note-action-link:hover, .notes-action-links .note-action-link:focus { color:#0e6f5b; text-decoration:underline; }
+    .notes-action-links .note-action-danger { color:#b42318; }
+    .note-action-separator { color:#cbd5e1; user-select:none; }
     @media (max-width: 767px) {
         .table-responsive { overflow-x:auto !important; }
         .table_notes { min-width:760px; table-layout:auto; }
@@ -305,6 +299,7 @@
         serverParams.assigned_staff_id = '[name="filter_assigned_staff_id"]';
 
         initDataTable('.table_notes', admin_url + 'notes/notes/note_lists', [0], [0], serverParams, [7, 'desc']);
+        notes_make_columns_resizable('.table_notes');
 
         // Keep note actions beside the DataTable's own Export and reload controls.
         var $notesTable = $('.table_notes');
@@ -460,38 +455,50 @@ function notes_delete_one(noteId) {
 
 function notes_make_columns_resizable(selector) {
     var $table = $(selector);
-    $table.find('thead th').each(function() {
-        var $th = $(this);
-        if ($th.find('.notes-resize-handle').length === 0) {
-            $th.append('<span class="notes-resize-handle"></span>');
-        }
+    var $headers = $table.find('thead th');
+    var widths = [3, 20, 8, 14, 27, 8, 5, 10, 5];
+    var $cols = $('<colgroup>').prependTo($table);
+    $.each(widths, function(_, width) {
+        $('<col>').css('width', width + '%').appendTo($cols);
     });
-
-    var startX = 0;
-    var startWidth = 0;
-    var $activeTh = null;
-
-    $(document).on('mousedown', '.notes-resize-handle', function(e) {
-        $activeTh = $(this).closest('th');
-        startX = e.pageX;
-        startWidth = $activeTh.outerWidth();
-        $('body').addClass('notes-column-resizing');
-        e.preventDefault();
-    });
-
-    $(document).on('mousemove', function(e) {
-        if (!$activeTh) {
-            return;
-        }
-        var newWidth = Math.max(60, startWidth + (e.pageX - startX));
-        $activeTh.css('width', newWidth + 'px');
-    });
-
-    $(document).on('mouseup', function() {
-        if ($activeTh) {
-            $activeTh = null;
-            $('body').removeClass('notes-column-resizing');
-        }
+    $headers.css('width', '');
+    var active = null;
+    function resize(index, delta) {
+        var total = widths[index] + widths[index + 1];
+        var next = Math.max(3, Math.min(total - 3, widths[index] + delta));
+        widths[index] = next;
+        widths[index + 1] = total - next;
+        $cols.children().eq(index).css('width', next + '%');
+        $cols.children().eq(index + 1).css('width', (total - next) + '%');
+    }
+    $headers.each(function(index) {
+        if (index === $headers.length - 1) { return; }
+        $('<span class="notes-resize-handle" role="separator" tabindex="0" aria-orientation="vertical" aria-label="Resize column">')
+            .appendTo(this)
+            .on('click', function(e) { e.preventDefault(); e.stopPropagation(); })
+            .on('keydown', function(e) {
+                if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                    e.preventDefault(); e.stopPropagation();
+                    resize(index, e.key === 'ArrowRight' ? 1 : -1);
+                }
+            })
+            .on('pointerdown', function(e) {
+                if (e.button !== 0) { return; }
+                e.preventDefault(); e.stopPropagation();
+                active = {index:index, x:e.originalEvent.clientX};
+                this.setPointerCapture(e.originalEvent.pointerId);
+                $('body').addClass('notes-column-resizing');
+            })
+            .on('pointermove', function(e) {
+                if (!active) { return; }
+                var x = e.originalEvent.clientX;
+                resize(active.index, (x - active.x) / $table.outerWidth() * 100);
+                active.x = x;
+            })
+            .on('pointerup pointercancel lostpointercapture', function() {
+                active = null;
+                $('body').removeClass('notes-column-resizing');
+            });
     });
 }
 

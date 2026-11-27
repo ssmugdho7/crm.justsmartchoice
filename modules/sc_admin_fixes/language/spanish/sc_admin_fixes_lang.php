@@ -32,3 +32,6 @@ $lang['sc_sales_view_payment_pdf_new_window'] = 'Ver PDF del pago en nueva pesta
 $lang['sc_sales_download_payment_pdf'] = 'Descargar PDF del pago';
 $lang['sc_sales_print_payment_receipt'] = 'Imprimir recibo de pago';
 $lang['sc_sales_copy_link'] = 'Copiar enlace';
+$lang['sc_sales_copy_contract'] = 'Copiar contrato';
+$lang['sc_sales_delete_contract'] = 'Eliminar contrato';
+$lang['sc_sales_delete_invoice'] = 'Eliminar factura';

@@ -1,6 +1,6 @@
 (function () {
   'use strict';
-  if (!/^\/admin\/(invoices|proposals|estimates|payments|credit_notes)(\/|$)/.test(location.pathname)) return;
+  if (!/^\/admin\/(invoices|proposals|estimates|payments|credit_notes|contracts)(\/|$)/.test(location.pathname)) return;
   document.addEventListener('click', async function (event) {
     const link = event.target.closest('.sc-sales-copy-menu-link');
     if (!link) return;

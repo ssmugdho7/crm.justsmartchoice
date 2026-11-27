@@ -71,18 +71,21 @@
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right">
+
                                 <li>
                                     <a href="<?= site_url('contract/' . $contract->id . '/' . $contract->hash); ?>"
                                         target="_blank">
                                         <?= _l('view_contract'); ?>
                                     </a>
                                 </li>
+
                                 <li>
                                     <a href="<?= site_url('contract/' . $contract->id . '/' . $contract->hash . '?view_as_customer=1'); ?>"
                                         target="_blank">
                                         <i class="fa-regular fa-user tw-mr-1"></i> View as Customer
                                     </a>
                                 </li>
+                                <li><a href="#" class="sc-sales-copy-menu-link" data-copy-url="<?= e(site_url('contract/' . $contract->id . '/' . $contract->hash)); ?>"><?= _l('sc_sales_copy_link'); ?></a></li>
                                 <?php if (! $isSignedOrMarkedSigned && staff_can('edit', 'contracts')) { ?>
                                 <li>
                                     <a
@@ -103,7 +106,7 @@
                                 <li>
                                     <a
                                         href="<?= admin_url('contracts/copy/' . $contract->id); ?>">
-                                        <?= _l('contract_copy'); ?>
+                                        <?= _l('sc_sales_copy_contract'); ?>
                                     </a>
                                 </li>
                                 <?php } ?>
@@ -118,8 +121,8 @@
                                 <?php if (staff_can('delete', 'contracts')) { ?>
                                 <li>
                                     <a href="<?= admin_url('contracts/delete/' . $contract->id); ?>"
-                                        class="_delete">
-                                        <?= _l('delete'); ?>
+                                        class="text-danger delete-text _delete">
+                                        <?= _l('sc_sales_delete_contract'); ?>
                                     </a>
                                 </li>
                                 <?php } ?>

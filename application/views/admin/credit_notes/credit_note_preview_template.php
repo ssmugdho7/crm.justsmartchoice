@@ -142,6 +142,11 @@ if ($total_reminders > 0) {
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right">
                                 <li><a href="#" class="sc-sales-copy-menu-link" data-copy-url="<?= e(admin_url('credit_notes/list_credit_notes/' . $credit_note->id)); ?>"><?= _l('sc_sales_copy_link'); ?></a></li>
+                                <li>
+                                    <a href="#" data-toggle="modal" data-target="#sales_attach_file">
+                                        <?= _l('invoice_attach_file'); ?>
+                                    </a>
+                                </li>
                                 <?php hooks()->do_action('credit_note_menu_links_start', $credit_note); ?>
                                 <?php
                                    if ($credit_note->status == 1 && staff_can('edit', 'credit_notes')) { ?>
@@ -167,11 +172,7 @@ if ($credit_note->status != 2 && $credit_note->status != 3 && ! $credit_note->cr
                                     </a>
                                 </li>
                                 <?php } ?>
-                                <li>
-                                    <a href="#" data-toggle="modal" data-target="#sales_attach_file">
-                                        <?= _l('invoice_attach_file'); ?>
-                                    </a>
-                                </li>
+
                                 <?php
 if (staff_can('delete', 'credit_notes')) {
     $delete_tooltip = '';

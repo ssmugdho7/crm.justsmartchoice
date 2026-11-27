@@ -74,7 +74,6 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <?php if (staff_can('delete', 'payments')) { ?>
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
                                             aria-haspopup="true" aria-expanded="false">
@@ -82,11 +81,12 @@
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-right">
                                 <li><a href="#" class="sc-sales-copy-menu-link" data-copy-url="<?= e(admin_url('payments/payment/' . $payment->paymentid)); ?>"><?= _l('sc_sales_copy_link'); ?></a></li>
+                                            <?php if (staff_can('delete', 'payments')) { ?>
                                             <li><a href="<?= admin_url('payments/delete/' . $payment->paymentid); ?>"
                                                 class="text-danger delete-text _delete"><?= _l('sc_sales_delete_payment'); ?></a></li>
+                                            <?php } ?>
                                         </ul>
                                     </div>
-                                    <?php } ?>
                                 </div>
                             </div>
 

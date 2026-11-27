@@ -32,3 +32,6 @@ $lang['sc_sales_view_payment_pdf_new_window'] = 'View Payment PDF in New Tab';
 $lang['sc_sales_download_payment_pdf'] = 'Download Payment PDF';
 $lang['sc_sales_print_payment_receipt'] = 'Print Payment Receipt';
 $lang['sc_sales_copy_link'] = 'Copy link';
+$lang['sc_sales_copy_contract'] = 'Copy Contract';
+$lang['sc_sales_delete_contract'] = 'Delete Contract';
+$lang['sc_sales_delete_invoice'] = 'Delete Invoice';

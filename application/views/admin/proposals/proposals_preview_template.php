@@ -166,11 +166,12 @@
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-right">
-                                <li><a href="#" class="sc-sales-copy-menu-link" data-copy-url="<?= e(site_url('proposal/' . $proposal->id . '/' . $proposal->hash)); ?>"><?= _l('sc_sales_copy_link'); ?></a></li>
+
                         <li>
                             <a href="<?= site_url('proposal/' . $proposal->id . '/' . $proposal->hash); ?>"
                                 target="_blank"><?= _l('sc_sales_view_proposal_as_customer'); ?></a>
                         </li>
+                                <li><a href="#" class="sc-sales-copy-menu-link" data-copy-url="<?= e(site_url('proposal/' . $proposal->id . '/' . $proposal->hash)); ?>"><?= _l('sc_sales_copy_link'); ?></a></li>
                         <?php hooks()->do_action('after_proposal_view_as_client_link', $proposal); ?>
                         <?php if (! empty($proposal->open_till) && date('Y-m-d') < $proposal->open_till && ($proposal->status == 4 || $proposal->status == 1) && is_proposals_expiry_reminders_enabled()) { ?>
                         <li>

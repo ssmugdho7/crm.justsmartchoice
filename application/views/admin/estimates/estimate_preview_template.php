@@ -168,13 +168,14 @@ if ($estimate->sent == 1) {
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right">
-                                <li><a href="#" class="sc-sales-copy-menu-link" data-copy-url="<?= e(site_url('estimate/' . $estimate->id . '/' . $estimate->hash)); ?>"><?= _l('sc_sales_copy_link'); ?></a></li>
+
                                 <li>
                                     <a href="<?= site_url('estimate/' . $estimate->id . '/' . $estimate->hash) ?>"
                                         target="_blank">
                                         <?= _l('view_estimate_as_client'); ?>
                                     </a>
                                 </li>
+                                <li><a href="#" class="sc-sales-copy-menu-link" data-copy-url="<?= e(site_url('estimate/' . $estimate->id . '/' . $estimate->hash)); ?>"><?= _l('sc_sales_copy_link'); ?></a></li>
                                 <?php hooks()->do_action('after_estimate_view_as_client_link', $estimate); ?>
                                 <?php if ((! empty($estimate->expirydate) && date('Y-m-d') < $estimate->expirydate && ($estimate->status == 2 || $estimate->status == 5)) && is_estimates_expiry_reminders_enabled()) { ?>
                                 <li>

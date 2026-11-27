@@ -367,6 +367,10 @@ function sales_center_admin_head()
             echo $type === 'css' ? '<link rel="stylesheet" href="' . $url . '">' : '<script defer src="' . $url . '"></script>';
         }
     }
+    if ($CI->uri->segment(2) === 'contracts') {
+        $path = 'assets/js/sales-actions.js';
+        echo '<script defer src="' . module_dir_url(SALES_CENTER_MODULE_NAME, $path) . '?v=' . filemtime(__DIR__ . '/' . $path) . '"></script>';
+    }
     if ($CI->uri->segment(2) === 'invoices' && in_array((string) $CI->uri->segment(3), ['', 'list_invoices', 'recurring'], true)) {
         $css = 'assets/css/invoice-split.css';
         $js = 'assets/js/invoice-split.js';

@@ -228,12 +228,13 @@ if ($invoice->sent == 1 && is_date($invoice->datesend)) {
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-right">
-                                <li><a href="#" class="sc-sales-copy-menu-link" data-copy-url="<?= e(site_url('invoice/' . $invoice->id . '/' . $invoice->hash)); ?>"><?= _l('sc_sales_copy_link'); ?></a></li>
+
                                     <li>
                                         <a href="<?= site_url('invoice/' . $invoice->id . '/' . $invoice->hash) ?>"
                                             target="_blank"><?= _l('view_invoice_as_customer_tooltip'); ?>
                                         </a>
                                     </li>
+                                <li><a href="#" class="sc-sales-copy-menu-link" data-copy-url="<?= e(site_url('invoice/' . $invoice->id . '/' . $invoice->hash)); ?>"><?= _l('sc_sales_copy_link'); ?></a></li>
                                     <?php hooks()->do_action('after_invoice_view_as_client_link', $invoice); ?>
                                     <li>
                                         <?php if (is_invoice_overdue($invoice) && is_invoices_overdue_reminders_enabled()) { ?>
@@ -256,12 +257,6 @@ if ($invoice->sent == 1 && is_date($invoice->datesend)) {
                                         <a href="#" data-toggle="modal"
                                             data-target="#sales_attach_file"><?= _l('invoice_attach_file'); ?></a>
                                     </li>
-                                    <?php if (staff_can('create', 'invoices')) { ?>
-                                    <li>
-                                        <a
-                                            href="<?= admin_url('invoices/copy/' . $invoice->id); ?>"><?= _l('invoice_copy'); ?></a>
-                                    </li>
-                                    <?php } ?>
                                     <?php if ($invoice->sent == 0) { ?>
                                     <li>
                                         <a
@@ -307,11 +302,17 @@ if ($invoice->sent == 1 && is_date($invoice->datesend)) {
                                         <?php } ?>
                                     </li>
                                     <?php } ?>
+                                    <?php if (staff_can('create', 'invoices')) { ?>
+                                    <li>
+                                        <a
+                                            href="<?= admin_url('invoices/copy/' . $invoice->id); ?>"><?= _l('invoice_copy'); ?></a>
+                                    </li>
+                                    <?php } ?>
                                     <?php if (staff_can('delete', 'invoices')) { ?>
                                     <li data-toggle="tooltip"
                                         data-title="<?= _l('delete_invoice_tooltip'); ?>">
                                         <a href="<?= admin_url('invoices/delete/' . $invoice->id); ?>"
-                                            class="text-danger delete-text _delete"><?= _l('delete_invoice'); ?></a>
+                                            class="text-danger delete-text _delete"><?= _l('sc_sales_delete_invoice'); ?></a>
                                     </li>
                                     <?php } ?>
                                     <?php hooks()->do_action('after_invoice_preview_more_menu'); ?>

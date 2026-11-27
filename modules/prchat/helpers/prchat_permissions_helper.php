@@ -70,6 +70,15 @@ function prchat_authorize_staff_request($method, $input)
 {
     if (!prchat_staff_can_chat() || get_option('pusher_chat_enabled') != '1') { return false; }
     $method = strtolower($method);
+    // Company group history is retained; only administrators may erase it for everyone.
+    if (!(function_exists('is_admin') && is_admin())) {
+        if (in_array($method, ['deletegroup', 'purgeconversations'], true)) { return false; }
+        if ($method === 'deletemessage' && $input->post('group_id')) { return false; }
+        if ($method === 'deletechatconversation' && $input->post('table') === 'chatgroupmessages') { return false; }
+        if ($method === 'deletemessagescoped' && $input->post('message_type') === 'group'
+            && in_array($input->post('scope'), ['everyone', 'member'], true)) { return false; }
+    }
+
     $capabilities = [
         'create' => ['addchatgroup', 'staff_announcement', 'staff_get_selected_members', 'clients_announcement', 'clients_announcement_message', 'send_staff_sms'],
         'edit' => ['editmessage', 'editclientmessage', 'renamechatgroup', 'updatechatgroupassociation', 'uploadgroupavatar', 'removegroupavatar', 'addchatgroupmembers', 'addnewchatgroupmembersmodal'],

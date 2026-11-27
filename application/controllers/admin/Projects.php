@@ -686,6 +686,20 @@ class Projects extends AdminController
 
     public function remove_file($project_id, $id)
     {
+        $project_id = filter_var($project_id, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        $id = filter_var($id, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        if (!$project_id || !$id || !(is_admin() || staff_can('delete', 'projects'))) {
+            access_denied('Projects');
+            return;
+        }
+        if (!(is_admin() || staff_can('view', 'projects') || $this->projects_model->is_member($project_id, get_staff_user_id()))) {
+            access_denied('Projects');
+            return;
+        }
+        if (!$this->projects_model->get_file($id, $project_id)) {
+            show_404();
+            return;
+        }
         $this->projects_model->remove_file($id);
         redirect(admin_url('projects/view/' . $project_id . '?group=project_files'));
     }
@@ -786,24 +800,44 @@ class Projects extends AdminController
 
     public function bulk_action_files()
     {
+        if ($this->input->method(true) !== 'POST') {
+            show_error('POST required.', 405);
+            return;
+        }
+        $massDelete = filter_var($this->input->post('mass_delete'), FILTER_VALIDATE_BOOLEAN);
+        if (!(is_admin() || staff_can($massDelete ? 'delete' : 'edit', 'projects'))) {
+            access_denied('Projects');
+            return;
+        }
+        $ids = $this->input->post('ids');
+        if (!is_array($ids) || count($ids) > 500) {
+            show_error('Select valid project files.', 422);
+            return;
+        }
+        $validatedIds = [];
+        // Validate the whole selection before deleting or exposing any company file.
+        foreach ($ids as $id) {
+            $id = filter_var($id, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+            $file = $id ? $this->projects_model->get_file($id) : false;
+            if (!$file || !(is_admin() || staff_can('view', 'projects') || $this->projects_model->is_member($file->project_id, get_staff_user_id()))) {
+                access_denied('Projects');
+                return;
+            }
+            $validatedIds[$id] = $id;
+        }
         hooks()->do_action('before_do_bulk_action_for_project_files');
-        $total_deleted       = 0;
-        $hasPermissionDelete = staff_can('delete', 'projects');
-        // bulk action for projects currently only have delete button
-        if ($this->input->post()) {
-            $fVisibility = $this->input->post('visible_to_customer') == 'true' ? 1 : 0;
-            $ids         = $this->input->post('ids');
-            if (is_array($ids)) {
-                foreach ($ids as $id) {
-                    if ($hasPermissionDelete && $this->input->post('mass_delete') && $this->projects_model->remove_file($id)) {
-                        $total_deleted++;
-                    } else {
-                        $this->projects_model->change_file_visibility($id, $fVisibility);
-                    }
+        $total_deleted = 0;
+        $fVisibility = filter_var($this->input->post('visible_to_customer'), FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
+        foreach ($validatedIds as $id) {
+            if ($massDelete) {
+                if ($this->projects_model->remove_file($id)) {
+                    $total_deleted++;
                 }
+            } else {
+                $this->projects_model->change_file_visibility($id, $fVisibility);
             }
         }
-        if ($this->input->post('mass_delete')) {
+        if ($massDelete) {
             set_alert('success', _l('total_files_deleted', $total_deleted));
         }
     }

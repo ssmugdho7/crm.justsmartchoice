@@ -630,8 +630,11 @@ function clickable($ret)
  */
 function pr_chat_staff_member_data_transfer($data)
 {
-  $deleted = $data['id'];
-  $transfer_data_to = $data['transfer_data_to'];
+  $deleted = filter_var($data['id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+  $transfer_data_to = filter_var($data['transfer_data_to'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+  if (!$deleted || !$transfer_data_to || $deleted === $transfer_data_to) {
+    return false;
+  }
   $CI = &get_instance();
 
   $CI->db->trans_start();
@@ -640,7 +643,9 @@ function pr_chat_staff_member_data_transfer($data)
   $CI->db->delete(TABLE_CHATGROUPMEMBERS);
 
   $CI->db->where('sender_id', $deleted);
-  $CI->db->delete(TABLE_CHATGROUPMESSAGES);
+  // Company group history belongs to the group, not to the departing account.
+  // Follow the native project-file transfer behavior when the employee is deleted.
+  $CI->db->update(TABLE_CHATGROUPMESSAGES, ['sender_id' => $transfer_data_to]);
 
   $CI->db->group_start();
   $CI->db->where('sender_id', $deleted);
@@ -654,23 +659,11 @@ function pr_chat_staff_member_data_transfer($data)
   $CI->db->where('created_by_id', $deleted);
   $CI->db->update(TABLE_CHATGROUPS, ['created_by_id' => $transfer_data_to]);
 
-  $group_files = $CI->db->select('file_name')->where('sender_id', $deleted)->get(db_prefix() . 'chatgroupsharedfiles')->result_array();
-  // File tracking removed - files tracked via message content
-
-  foreach ($group_files as $group_file) {
-    if (is_dir(PR_CHAT_MODULE_GROUPS_UPLOAD_FOLDER)) {
-      (\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')(PR_CHAT_MODULE_GROUPS_UPLOAD_FOLDER . '/' . $group_file['file_name']);
-    }
-  }
-
-
   $CI->db->where('sender_id', $deleted);
-  $CI->db->delete(TABLE_CHATGROUPSHAREDFILES);
-
-  $CI->db->where('sender_id', $deleted);
-  // File tracking table removed - files tracked via message content
+  $CI->db->update(TABLE_CHATGROUPSHAREDFILES, ['sender_id' => $transfer_data_to]);
 
   if ($CI->db->trans_complete()) {
+    log_activity('Company chat retained after staff deletion [Original Staff ID: ' . $deleted . ', Transferred To: ' . $transfer_data_to . ']');
     return true;
   }
 

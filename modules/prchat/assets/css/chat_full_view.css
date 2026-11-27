@@ -12924,3 +12924,46 @@ textarea.prchat-editing {
   object-fit: cover !important;
   border-radius: 50% !important;
 }
+
+/* Company project documents: keep document actions available without hover. */
+#frame .file-item:focus-within .file-actions { opacity: 1; }
+@media (hover: none), (pointer: coarse) {
+  #frame .file-item .file-actions { opacity: 1; }
+}
+@media (max-width: 1024px) {
+  #frame .file-item .file-actions { opacity: 1; flex-shrink: 0; }
+  #frame .file-item .file-action-btn,
+  #frame .history-close-btn { min-width: 44px; min-height: 44px; }
+  #frame .file-item .file-name { white-space: normal; overflow-wrap: anywhere; }
+  #frame .file-item { padding: 8px 4px; gap: 6px; }
+  #frame .chat_group_options { max-width: 100%; }
+  #frame .modern-group-panel, #frame .modern-group-body { min-height: 0; min-width: 0; }
+  #frame .modern-group-body { overflow-y: auto; overscroll-behavior: contain; }
+  #frame .grp-opt-footer { flex-wrap: wrap; }
+  #frame #sharedFiles .tab-content,
+  #frame #sharedFiles .tab-content > .active { width: 100% !important; min-width: 0; box-sizing: border-box; }
+}
+@media (max-width: 735px) {
+  #frame .content .contact-profile svg.chat_back_mobile { width: 44px; height: 44px; padding: 10px; box-sizing: border-box; }
+}
+.prchat-project-picker {
+  box-sizing: border-box; width: min(480px, calc(100vw - 24px)); max-height: calc(100dvh - 24px);
+  border: 1px solid #dce5e1; border-radius: 12px; padding: 20px; overflow-y: auto;
+  color: #172b24; background: #fff; box-shadow: 0 12px 48px #0f172a40;
+}
+.prchat-project-picker::backdrop { background: #0f172a80; }
+.prchat-project-picker h3 { margin: 0 0 10px; font-size: 19px; }
+.prchat-project-picker label { display: block; margin: 12px 0 5px; }
+.prchat-project-picker input, .prchat-project-picker select {
+  display: block; width: 100%; box-sizing: border-box; font: inherit; font-size: 16px;
+  padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; color: #172b24;
+}
+.prchat-project-picker select { min-height: 150px; }
+.prchat-project-picker select option { padding: 8px; white-space: normal; }
+.prchat-project-picker [role="status"] { margin-top: 12px; min-height: 20px; }
+.prchat-project-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+.prchat-project-actions button { min-height: 44px; padding: 8px 14px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; color: #172b24; }
+.prchat-project-actions .prchat-project-save { background: #047857; border-color: #047857; color: #fff; }
+.prchat-project-actions button:disabled { opacity: .55; cursor: default; }
+.prchat-project-open:not([hidden]) { display: inline-block; padding: 10px 0; font-weight: 600; }
+.prchat-project-picker :focus-visible { outline: 2px solid #047857; outline-offset: 2px; }

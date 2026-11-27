@@ -955,45 +955,107 @@
     $menu.hide();
   });
 
+  // Keep the selected source fixed while the user searches projects or changes chats.
+  function prchatSmartChoiceSaveToProject(item) {
+    if (!prchatSettings.smartChoiceProjectPicker || !prchatSettings.attachChatItemToProject) {
+      alert_float('danger', 'Project documents are unavailable. Refresh and try again.'); return;
+    }
+    var existing = document.getElementById('prchat-project-picker');
+    if (existing) { existing.focus(); return; }
+    var trigger = document.activeElement;
+    var dialog = document.createElement('dialog');
+    dialog.id = 'prchat-project-picker';
+    dialog.className = 'prchat-project-picker';
+    dialog.setAttribute('aria-labelledby', 'prchat-project-picker-title');
+    dialog.innerHTML = '<h3 id="prchat-project-picker-title">Save to project documents</h3>' +
+      '<p>The company keeps this copy with the project.</p>' +
+      '<label for="prchat-project-query">Find project</label>' +
+      '<input id="prchat-project-query" type="search" autocomplete="off" placeholder="Search by project name">' +
+      '<label for="prchat-project-results">Choose project</label>' +
+      '<select id="prchat-project-results" size="5" aria-describedby="prchat-project-status"></select>' +
+      '<p id="prchat-project-status" role="status" aria-live="polite"></p>' +
+      '<a class="prchat-project-open" hidden>Open project documents</a>' +
+      '<div class="prchat-project-actions"><button type="button" class="prchat-project-cancel">Cancel</button>' +
+      '<button type="button" class="prchat-project-save" disabled>Save copy</button></div>';
+    document.body.appendChild(dialog);
+    var $dialog = $(dialog), $query = $dialog.find('input'), $results = $dialog.find('select');
+    var $status = $dialog.find('[role="status"]'), $save = $dialog.find('.prchat-project-save');
+    var pending = null, timer = null, generation = 0, saving = false, saved = false, closed = false;
+    function close() {
+      if (saving) return;
+      closed = true; generation++; clearTimeout(timer);
+      if (pending && pending.abort) pending.abort();
+      dialog.close(); dialog.remove();
+      if (trigger && trigger.isConnected) trigger.focus();
+    }
+    function fail(message) { $status.text(message); }
+    function search() {
+      var current = ++generation;
+      if (pending && pending.abort) pending.abort();
+      $results.empty(); $save.prop('disabled', true); $status.text('Loading projects…');
+      pending = $.ajax({url: prchatSettings.smartChoiceProjectPicker, type: 'POST', dataType: 'json', data: {q: $query.val().trim()}});
+      pending.done(function(rows) {
+        if (closed || current !== generation) return;
+        if (!Array.isArray(rows)) { fail('Unable to load projects. Try searching again.'); return; }
+        rows.forEach(function(row) {
+          if (!row || !/^[1-9][0-9]*$/.test(String(row.id)) || typeof row.text !== 'string') return;
+          $('<option>').val(String(row.id)).text(row.text).appendTo($results);
+        });
+        $results.prop('selectedIndex', -1);
+        $status.text($results.children().length ? 'Select a project, then save the copy.' : 'No matching projects you can upload to.');
+      }).fail(function(xhr, state) {
+        if (!closed && current === generation && state !== 'abort') fail('Unable to load projects. Check your connection and search again.');
+      });
+    }
+    $query.on('input', function() {
+      generation++; if (pending && pending.abort) pending.abort(); clearTimeout(timer);
+      $results.empty(); $save.prop('disabled', true); $status.text('Searching…'); timer = setTimeout(search, 250);
+    });
+    $results.on('change', function() { $save.prop('disabled', !$results.val() || saving || saved); });
+    $dialog.find('.prchat-project-cancel').on('click', close);
+    dialog.addEventListener('cancel', function(e) { e.preventDefault(); close(); });
+    $save.on('click', function() {
+      var projectId = $results.val();
+      if (saving || saved || !projectId) return;
+      saving = true; $save.prop('disabled', true); $query.prop('disabled', true); $results.prop('disabled', true);
+      $dialog.find('.prchat-project-cancel').prop('disabled', true); $status.text('Saving company copy…');
+      $.ajax({url: prchatSettings.attachChatItemToProject, type: 'POST', dataType: 'json', data: $.extend({}, item, {project_id: projectId})})
+        .done(function(resp) {
+          if (!resp || resp.success !== true) { fail((resp && resp.message) || 'The copy could not be saved.'); return; }
+          saved = true; $status.text(resp.message || 'Saved to project documents.');
+          try {
+            var url = new URL(resp.project_url, window.location.href);
+            if (resp.project_url && url.origin === window.location.origin) $dialog.find('.prchat-project-open').attr('href', url.href).prop('hidden', false);
+          } catch (e) {}
+          $dialog.find('.prchat-project-cancel').text('Done');
+        }).fail(function(xhr) {
+          fail((xhr.responseJSON && xhr.responseJSON.message) || 'Unable to confirm the save. Check project documents before retrying.');
+        }).always(function() {
+          saving = false; $save.prop('disabled', saved); $query.prop('disabled', saved); $results.prop('disabled', saved);
+          $dialog.find('.prchat-project-cancel').prop('disabled', false);
+        });
+    });
+    dialog.showModal(); $query.trigger('focus'); search();
+  }
+
   $('body').on('click', '._attachChatToProject', function(e) {
     e.preventDefault(); e.stopPropagation();
     var $btn = $(this), $menu = $btn.closest('.optionsMore');
     var $msg = $btn.closest('.modern-message-item, li');
-    var messageId = $menu.attr('data-id');
-    var type = prchatSmartChoiceMessageType($btn);
-    var projectId = prchatSmartChoiceFindProjectId();
-    if (!projectId) return;
-    var fileName = prchatSmartChoiceFindFileName($msg);
-    $.post(prchatSettings.attachChatItemToProject, {message_id: messageId, message_type: type, project_id: projectId, file_name: fileName}, function(resp){
-      if (resp && resp.success) {
-        alert_float('success', resp.message || 'Chat item attached to project.');
-        prchatSmartChoiceToast('Saved To Project', 'The chat item was attached to the selected project.', 'photo');
-      } else {
-        alert_float('danger', (resp && resp.message) || 'Could not attach item.');
-      }
-    }, 'json');
-    $menu.hide();
+    var item = {message_id: $menu.attr('data-id'), message_type: prchatSmartChoiceMessageType($btn), file_name: prchatSmartChoiceFindFileName($msg)};
+    var groupId = $btn.closest('.group_messages').attr('id');
+    if (item.message_type === 'group' && /^[1-9][0-9]*$/.test(groupId || '')) item.group_id = groupId;
+    $menu.hide(); prchatSmartChoiceSaveToProject(item);
   });
 
   $('body').on('contextmenu', '.modern-message-item img, .chat_group_messages img, .messages img', function(e) {
     if (String(prchatSettings.smartChoiceToastEnabled || '1') !== '1') return;
-    if (!confirm('Add this photo to a CRM project?')) return;
     e.preventDefault();
-    var $img = $(this);
-    var $msg = $img.closest('.modern-message-item, li');
-    var projectId = prchatSmartChoiceFindProjectId();
-    if (!projectId) return;
-    var fileName = prchatSmartChoiceFindFileName($msg);
-    var messageId = $msg.attr('data-message-id') || $msg.attr('id') || 0;
-    var type = $img.closest('.group_messages, .chat_group_messages').length ? 'group' : 'staff';
-    $.post(prchatSettings.attachChatItemToProject, {message_id: messageId, message_type: type, project_id: projectId, file_name: fileName}, function(resp){
-      if (resp && resp.success) {
-        alert_float('success', 'Photo added to project.');
-        prchatSmartChoiceToast('Photo Saved', 'The photo was added to the selected project.', 'photo');
-      } else {
-        alert_float('danger', (resp && resp.message) || 'Could not save photo.');
-      }
-    }, 'json');
+    var $img = $(this), $msg = $img.closest('.modern-message-item, li');
+    var item = {message_id: $msg.attr('data-message-id') || $msg.attr('id') || 0, message_type: prchatSmartChoiceMessageType($img), file_name: prchatSmartChoiceFindFileName($msg)};
+    var groupId = $img.closest('.group_messages').attr('id');
+    if (item.message_type === 'group' && /^[1-9][0-9]*$/.test(groupId || '')) item.group_id = groupId;
+    prchatSmartChoiceSaveToProject(item);
   });
 
 

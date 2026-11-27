@@ -1789,7 +1789,7 @@ class Prchat_model extends App_Model
     }
     foreach ($dir as $file_name) {
       foreach ($from_messages_table as $value) {
-        if (strpos($file_name, $value['file_name']) !== false) {
+        if ($file_name === $value['file_name']) {
           if (!in_array($file_name, $files)) {
             $files[] = $file_name;
           }
@@ -1820,7 +1820,7 @@ class Prchat_model extends App_Model
     $html .= '<span class="text-center shared_items_span">' . _l('chat_shared_files_text') . '</span>';
 
     foreach ($files as $file) {
-      if (preg_match("/^[^\?]+\.('" . $docFiles . "')$/", $file)) {
+      if (preg_match("/^[^\?]+\.(" . $docFiles . ")$/", $file)) {
         $html .= "<div class='col-md-12'><a target='_blank' href ='" . base_url('modules/prchat/uploads/groups/' . $file) . "'><i class='fa fa-file icon_shared_files' aria-hidden='true'></i>" . $file . '</a></div>';
       }
     }

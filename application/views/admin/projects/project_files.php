@@ -1,6 +1,16 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<link rel="stylesheet" href="<?= base_url('assets/css/project-document-library.css?v=' . get_app_version()); ?>">
+<section id="project-document-library" aria-label="Project documents">
+<div class="project-documents-toolbar">
+    <div><h4>Project documents</h4><p class="text-muted">Open a document to preview it, download it, or read its comments.</p></div>
+    <div class="project-documents-search" hidden>
+        <label for="project-document-search">Search project documents</label>
+        <div class="project-documents-search-field"><i class="fa fa-search" aria-hidden="true"></i><input id="project-document-search" type="search" class="form-control" placeholder="Search files, people, or dates" autocomplete="off" aria-describedby="project-document-count"></div>
+        <p id="project-document-count" role="status" aria-live="polite"></p>
+    </div>
+</div>
 <?= form_open_multipart(admin_url('projects/upload_file/' . $project->id), ['class' => 'dropzone', 'id' => 'project-files-upload']); ?>
-<input type="file" name="file" multiple />
+<input type="file" name="file" multiple aria-label="Upload project documents" />
 <?= form_close(); ?>
 <span
     class="tw-mt-4 tw-inline-block tw-text-sm"><?= _l('project_file_visible_to_customer'); ?></span><br />
@@ -97,7 +107,7 @@
             <tbody>
                 <?php foreach ($files as $file) {
                     $path = get_upload_path_by_type('project') . $project->id . '/' . $file['file_name']; ?>
-                <tr>
+                <tr class="project-document-row">
                     <td>
                         <div class="checkbox"><input type="checkbox"
                                 value="<?= e($file['id']); ?>"><label></label>
@@ -105,14 +115,13 @@
                     </td>
                     <td
                         data-order="<?= e($file['original_file_name'] ?: $file['file_name']); ?>">
-                        <a href="#"
+                        <a href="#" class="project-document-name"
                             onclick="view_project_file(<?= e($file['id']); ?>,<?= e($file['project_id']); ?>); return false;">
                             <?php if (is_image(PROJECT_ATTACHMENTS_FOLDER . $project->id . '/' . $file['file_name']) || (! empty($file['external']) && ! empty($file['thumbnail_link']))) {
                                 echo '<div class="text-left"><i class="fa fa-spinner fa-spin mtop30"></i></div>';
-                                echo '<img class="project-file-image img-table-loading" src="#" data-orig="' . e(project_file_url($file, true)) . '" width="100">';
-                                echo '</div>';
+                                echo '<img class="project-file-image img-table-loading" src="#" data-orig="' . e(project_file_url($file, true)) . '" width="100" alt="">';
                             }
-                    echo e($file['original_file_name'] ?: $file['subject']); ?></a>
+                    echo '<span>' . e($file['original_file_name'] ?: ($file['subject'] ?: $file['file_name'])) . '</span>'; ?></a>
                     </td>
                     <td
                         data-order="<?= e($file['filetype']); ?>">
@@ -180,14 +189,14 @@
                                 data-file-name="<?= e($file['original_file_name']); ?>"
                                 data-path="<?= PROJECT_ATTACHMENTS_FOLDER . $project->id . '/' . $file['file_name']; ?>"
                                 data-target="#send_file"
-                                class="tw-text-neutral-500 hover:tw-text-neutral-700 focus:tw-text-neutral-700 tw-mt-1">
+                                class="tw-text-neutral-500 hover:tw-text-neutral-700 focus:tw-text-neutral-700 tw-mt-1" aria-label="Email document">
                                 <i class="fa-regular fa-envelope fa-lg"></i>
                             </a>
                             <?php
                             } ?>
-                            <?php if ($file['staffid'] == get_staff_user_id() || staff_can('delete', 'projects')) { ?>
+                            <?php if (is_admin() || staff_can('delete', 'projects')) { ?>
                             <a href="<?= admin_url('projects/remove_file/' . $project->id . '/' . $file['id']); ?>"
-                                class="tw-text-neutral-500 hover:tw-text-neutral-700 focus:tw-text-neutral-700 _delete">
+                                class="tw-text-neutral-500 hover:tw-text-neutral-700 focus:tw-text-neutral-700 _delete" aria-label="Delete document">
                                 <i class="fa-regular fa-trash-can fa-lg"></i>
                             </a>
                             <?php } ?>
@@ -202,3 +211,5 @@
 </div>
 <div id="project_file_data"></div>
 <?php include_once APPPATH . 'views/admin/clients/modals/send_file_modal.php'; ?>
+</section>
+<script src="<?= base_url('assets/js/project-document-library.js?v=' . get_app_version()); ?>" defer></script>

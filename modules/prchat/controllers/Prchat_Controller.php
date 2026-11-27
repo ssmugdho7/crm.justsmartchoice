@@ -919,6 +919,19 @@ strpos($channel_name, 'private-') === 0
         @(\function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink')($data['full_path']);
         $this->jsonResponse(['error' => _l('chat_upload_failed')], 500); return;
       }
+      $group = $this->db->where('id', (int) $to_group)->get(db_prefix() . 'chatgroups')->row();
+      if (!$isVoiceUpload && $group && ($group->related_type ?? '') === 'project' && (int) ($group->related_id ?? 0) > 0) {
+        $this->load->helper('prchat/prchat_project_documents');
+        try {
+          $document = prchat_store_project_document((int) $group->related_id, $data['full_path'], $data['orig_name'] ?? $data['file_name']);
+          $data['project_document_saved'] = true;
+          $data['project_document_id'] = $document['file_id'];
+        } catch (Throwable $error) {
+          $data['project_document_saved'] = false;
+          $data['project_document_warning'] = 'Uploaded to chat, but the project copy was not saved. Use Save to project to try again.';
+          log_message('error', 'PRChat project copy failed for group ' . (int) $to_group);
+        }
+      }
       if (!$isVoiceUpload && get_option('prchat_copy_group_uploads_to_project_media') == '1') {
         $copied = pr_chat_copy_group_upload_to_project_media($data['full_path'], $data['file_name'], (int) $to_group);
         $data['project_media_copied'] = $copied ? 1 : 0;
@@ -1779,7 +1792,14 @@ strpos($channel_name, 'private-') === 0
 
     try {
       if ($groupId) {
-        $this->db->where('id', $groupId)->update(db_prefix() . 'chatgroups', ['group_name' => CHAT_GROUP_PRESENCE_PREFIX . slugifyGroupName($newName)]);
+        if ($relatedType === 'project') {
+      $this->load->helper('prchat/prchat_project_documents');
+      if (!prchat_can_save_project_document($relatedId)) {
+        $this->jsonResponse(['success' => false, 'message' => 'Project access denied.'], 403); return;
+      }
+    }
+
+    $this->db->where('id', $groupId)->update(db_prefix() . 'chatgroups', ['group_name' => CHAT_GROUP_PRESENCE_PREFIX . slugifyGroupName($newName)]);
         $this->db->where('group_id', $groupId)->update(db_prefix() . 'chatgroupmembers', ['group_name' => CHAT_GROUP_PRESENCE_PREFIX . slugifyGroupName($newName)]);
       }
 
@@ -1872,15 +1892,12 @@ strpos($channel_name, 'private-') === 0
       }
 
       $staffId = (int) get_staff_user_id();
-      $groups = $this->db
-        ->select('g.*')
-        ->from(db_prefix() . 'chatgroups g')
-        ->join(db_prefix() . 'chatgroupmembers m', 'm.group_id = g.id', 'inner')
-        ->where('m.member_id', $staffId)
-        ->group_by('g.id')
-        ->order_by('g.id', 'ASC')
-        ->get()
-        ->result_array();
+      $this->db->select('g.*')->from(db_prefix() . 'chatgroups g');
+      if (!is_admin()) {
+        $this->db->join(db_prefix() . 'chatgroupmembers m', 'm.group_id = g.id', 'left')
+          ->group_start()->where('m.member_id', $staffId)->or_where('g.created_by_id', $staffId)->group_end();
+      }
+      $groups = $this->db->group_by('g.id')->order_by('g.id', 'ASC')->get()->result_array();
 
       foreach ($groups as &$group) {
         $group['members'] = $this->db
@@ -2644,44 +2661,17 @@ strpos($channel_name, 'private-') === 0
       return;
     }
 
-    $projectDir = FCPATH . 'uploads/projects/' . $projectId;
-    if (!is_dir($projectDir)) {
-      @mkdir($projectDir, 0755, true);
-      @(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($projectDir . '/index.html', '');
+    $this->load->helper('prchat/prchat_project_documents');
+    try {
+      if (!prchat_can_save_project_document($projectId)) { throw new RuntimeException('Project access denied.', 403); }
+      $item = prchat_resolve_project_source($messageId, $messageType, $groupId, (string) $this->input->post('file_name'));
+      if (isset($item['note']) && $item['note'] === '') { throw new RuntimeException('This message has no text to save.', 422); }
+      $result = prchat_store_project_document($projectId, $item['source'] ?? null, $item['name'] ?? ('Chat-message-' . $messageId . '.txt'), $item['note'] ?? null);
+      $this->jsonResponse(array_merge($result, ['success' => true, 'message' => 'Saved to project documents.']));
+    } catch (Throwable $error) {
+      $code = in_array($error->getCode(), [403, 404, 422], true) ? $error->getCode() : 500;
+      $this->jsonResponse(['success' => false, 'message' => $code === 500 ? 'Unable to save the project document. Please try again.' : $error->getMessage()], $code);
     }
-
-    $copiedFile = '';
-    if ($fileName !== '') {
-      $possible = [
-        PR_CHAT_MODULE_GROUPS_UPLOAD_FOLDER . '/' . $fileName,
-        PR_CHAT_MODULE_UPLOAD_FOLDER . '/' . $fileName,
-        PR_CHAT_MODULE_AUDIO_UPLOAD_FOLDER . '/groups/' . $fileName,
-      ];
-      foreach ($possible as $src) {
-        if (is_file($src)) {
-          $destName = time() . '_chat_' . $fileName;
-          if (@(\function_exists('sc_recovery_copy') ? '\sc_recovery_copy' : '\copy')($src, $projectDir . '/' . $destName)) {
-            $copiedFile = $destName;
-          }
-          break;
-        }
-      }
-    }
-
-    $messageText = $messageId > 0 ? $this->smartChoiceResolveMessageText($messageId, $messageType) : '';
-    if ($messageText !== '') {
-      $noteFile = $projectDir . '/chat_note_' . date('Ymd_His') . '.txt';
-      @(\function_exists('sc_recovery_file_put_contents') ? '\sc_recovery_file_put_contents' : '\file_put_contents')($noteFile, "Smart Choice Chat Note\nProject ID: {$projectId}\nGroup ID: {$groupId}\nMessage ID: {$messageId}\n\n" . strip_tags(html_entity_decode($messageText)));
-    }
-
-    log_activity('Smart Choice Chat item attached to project #' . $projectId . ' by staff #' . get_staff_user_id());
-
-    header('Content-Type: application/json');
-    echo json_encode([
-      'success' => true,
-      'file' => $copiedFile,
-      'message' => 'Chat item attached to project successfully.',
-    ]);
   }
 
   /**
@@ -2774,9 +2764,13 @@ strpos($channel_name, 'private-') === 0
     if ($this->input->method(true) !== 'POST') {
       return $this->output->set_status_header(405)->set_content_type('application/json')->set_output(json_encode(['success' => false, 'message' => 'POST required.']));
     }
-    $q = trim((string) $this->input->get('q'));
+    $q = trim((string) $this->input->post('q'));
+    $this->load->helper('prchat/prchat_project_documents');
     $this->db->select('id, name');
     $this->db->from(db_prefix() . 'projects');
+    if (!is_admin() && !staff_can('view', 'projects')) {
+      $this->db->where('id IN (SELECT project_id FROM ' . db_prefix() . 'project_members WHERE staff_id = ' . (int) get_staff_user_id() . ')', null, false);
+    }
     if ($q !== '') {
       $this->db->like('name', $q);
     }
@@ -2785,6 +2779,7 @@ strpos($channel_name, 'private-') === 0
     $rows = $this->db->get()->result_array();
     $out = [];
     foreach ($rows as $row) {
+      if (!prchat_can_save_project_document((int) $row['id'])) { continue; }
       $out[] = ['id' => (int) $row['id'], 'text' => '#' . $row['id'] . ' - ' . $row['name']];
     }
     header('Content-Type: application/json');

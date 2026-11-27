@@ -625,3 +625,23 @@ body.admin.smart-choice-normalized-module table.table.dataTable > tbody > tr > t
     outline: none !important;
     box-shadow: none !important;
 }
+
+/* A DataTable search is one control: the wrapper owns the neutral border;
+   the nested input must never draw another box on focus. */
+#wrapper .dataTables_filter .fb-search-single,
+#wrapper .dataTables_filter .fb-search-single:focus-within {
+    border: 1px solid #cbd5e1 !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+#wrapper .dataTables_filter .fb-search-single > input,
+#wrapper .dataTables_filter .fb-search-single > input:focus,
+#wrapper .dataTables_filter .fb-search-single > input:focus-visible {
+    border: 0 !important;
+    border-radius: 0 !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    --tw-ring-shadow: 0 0 #0000 !important;
+    --tw-ring-offset-shadow: 0 0 #0000 !important;
+}

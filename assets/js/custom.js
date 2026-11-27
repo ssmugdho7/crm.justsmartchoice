@@ -113,6 +113,9 @@
       $(filter).children('button, a, .btn').filter(function () {
         return $(this).find('.fa-search, .fa-magnifying-glass').length && $.trim($(this).text()) === '';
       }).remove();
+      $(filter).find('.input-group-addon, .input-group-prepend, .search-icon').filter(function () {
+        return $(this).find('.fa-search, .fa-magnifying-glass').length;
+      }).remove();
     });
   }
   $(function () {

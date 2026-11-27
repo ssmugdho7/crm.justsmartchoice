@@ -21,3 +21,9 @@ $lang['scaf_contract_workflow_failed'] = 'No se pudo guardar el estado del contr
 $lang['scaf_contract_workflow_saved'] = 'Estado del contrato actualizado.';
 $lang['scaf_contract_convert_project'] = 'Convertir en proyecto';
 $lang['scaf_contract_view_project'] = 'Ver proyecto';
+
+$lang['sc_sales_view_proposal_as_customer'] = 'Ver propuesta como cliente';
+$lang['sc_sales_copy_proposal'] = 'Copiar propuesta';
+$lang['sc_sales_delete_proposal'] = 'Eliminar propuesta';
+$lang['sc_sales_delete_credit_note'] = 'Eliminar nota de crédito';
+$lang['sc_sales_delete_payment'] = 'Eliminar pago';

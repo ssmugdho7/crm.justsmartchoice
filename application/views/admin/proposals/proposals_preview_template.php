@@ -168,7 +168,7 @@
                     <ul class="dropdown-menu dropdown-menu-right">
                         <li>
                             <a href="<?= site_url('proposal/' . $proposal->id . '/' . $proposal->hash); ?>"
-                                target="_blank"><i class="fa fa-user"></i> <?= _l('view_as_customer'); ?></a>
+                                target="_blank"><?= _l('sc_sales_view_proposal_as_customer'); ?></a>
                         </li>
                         <?php hooks()->do_action('after_proposal_view_as_client_link', $proposal); ?>
                         <?php if (! empty($proposal->open_till) && date('Y-m-d') < $proposal->open_till && ($proposal->status == 4 || $proposal->status == 1) && is_proposals_expiry_reminders_enabled()) { ?>
@@ -181,12 +181,6 @@
                             <a href="#" data-toggle="modal"
                                 data-target="#sales_attach_file"><?= _l('invoice_attach_file'); ?></a>
                         </li>
-                        <?php if (staff_can('create', 'proposals')) { ?>
-                        <li>
-                            <a
-                                href="<?= admin_url() . 'proposals/copy/' . $proposal->id; ?>"><?= _l('proposal_copy'); ?></a>
-                        </li>
-                        <?php } ?>
                         <?php foreach ($proposal_statuses as $status) {
                             if (staff_can('edit', 'proposals')) {
                                 if ($proposal->status != $status) { ?>
@@ -198,6 +192,12 @@
                                 }
                             }
                         } ?>
+                        <?php if (staff_can('create', 'proposals')) { ?>
+                        <li>
+                            <a
+                                href="<?= admin_url() . 'proposals/copy/' . $proposal->id; ?>"><?= _l('sc_sales_copy_proposal'); ?></a>
+                        </li>
+                        <?php } ?>
                         <?php if (! empty($proposal->signature) && staff_can('delete', 'proposals')) { ?>
                         <li>
                             <a href="<?= admin_url('proposals/clear_signature/' . $proposal->id); ?>"
@@ -209,7 +209,7 @@
                         <?php if (staff_can('delete', 'proposals')) { ?>
                         <li>
                             <a href="<?= admin_url() . 'proposals/delete/' . $proposal->id; ?>"
-                                class="text-danger delete-text _delete"><?= _l('proposal_delete'); ?></a>
+                                class="text-danger delete-text _delete"><?= _l('sc_sales_delete_proposal'); ?></a>
                         </li>
                         <?php } ?>
                     </ul>

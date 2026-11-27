@@ -21,3 +21,9 @@ $lang['scaf_contract_workflow_failed'] = 'The contract workflow could not be sav
 $lang['scaf_contract_workflow_saved'] = 'Contract workflow updated.';
 $lang['scaf_contract_convert_project'] = 'Convert to Project';
 $lang['scaf_contract_view_project'] = 'View Project';
+
+$lang['sc_sales_view_proposal_as_customer'] = 'View proposal as customer';
+$lang['sc_sales_copy_proposal'] = 'Copy Proposal';
+$lang['sc_sales_delete_proposal'] = 'Delete Proposal';
+$lang['sc_sales_delete_credit_note'] = 'Delete Credit Note';
+$lang['sc_sales_delete_payment'] = 'Delete Payment';

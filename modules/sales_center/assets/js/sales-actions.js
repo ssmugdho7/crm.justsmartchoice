@@ -17,20 +17,6 @@
         }
       }
     }
-    wrapper.querySelectorAll('a[href]').forEach(function (link) {
-      let url;
-      try { url = new URL(link.href); } catch (_) { return; }
-      if (!/^\/proposal\/\d+\/[^/]+\/?$/.test(url.pathname) || url.origin !== location.origin || link.nextElementSibling?.classList.contains('sc-copy-proposal')) return;
-      const copy = document.createElement('button'); copy.type = 'button'; copy.className = 'sc-copy-proposal sc-copy-transaction';
-      copy.textContent = 'Copy link'; copy.setAttribute('aria-label', 'Copy public proposal link');
-      copy.addEventListener('click', async function () {
-        try {
-          if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
-          await navigator.clipboard.writeText(link.href); toast('Proposal link copied.', 'success');
-        } catch (_) { toast('Unable to copy. Open the proposal link and copy its address manually.', 'error'); }
-      });
-      link.after(copy);
-    });
     wrapper.querySelectorAll('.sales-transaction-id').forEach(function (transaction) {
       if (!transaction.textContent.trim() || transaction.nextElementSibling?.classList.contains('sc-copy-transaction')) return;
       const copy = document.createElement('button');

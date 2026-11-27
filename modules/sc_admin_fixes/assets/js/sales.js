@@ -9,9 +9,6 @@
   d.querySelectorAll('#wrapper a[href]').forEach(link=>{
    if(link.dataset.scafSalesLink)return;let url;try{url=new URL(link.href);}catch(_){return;}
    if(url.origin!==location.origin)return;
-   if(/^\/proposal\/\d+\/[^/]+\/?$/.test(url.pathname)){
-    link.dataset.scafSalesLink='1';if(link.nextElementSibling?.classList.contains('sc-copy-proposal'))link.nextElementSibling.remove();const b=button(t('Copy link','Copiar enlace'),'btn btn-default btn-sm scaf-copy-link sc-copy-proposal',event=>copy(link.href,event.currentTarget));link.after(b);
-   }
    if(d.body.classList.contains('scaf-payments')&&/\/admin\/payments\/payment\/\d+\/?$/.test(url.pathname)&&!url.hash){
     link.dataset.scafSalesLink='1';link.addEventListener('click',event=>{if(event.ctrlKey||event.metaKey||event.shiftKey)return;event.preventDefault();receiptDialog(link.href);});
    }

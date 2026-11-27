@@ -191,7 +191,7 @@ if (staff_can('delete', 'credit_notes')) {
                                         href="<?= admin_url('credit_notes/delete/' . $credit_note->id); ?>"
                                         class="text-danger delete-text<?= $allow_delete ? ' _delete' : ''; ?>"
                                         <?= ! $allow_delete ? 'style="cursor:not-allowed;" onclick="return false;"' : ''; ?>>
-                                        <?= _l('delete'); ?>
+                                        <?= _l('sc_sales_delete_credit_note'); ?>
                                     </a>
                                 </li>
                                 <?php } ?>

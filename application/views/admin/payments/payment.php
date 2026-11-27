@@ -77,10 +77,16 @@
                                         </ul>
                                     </div>
                                     <?php if (staff_can('delete', 'payments')) { ?>
-                                    <a href="<?= admin_url('payments/delete/' . $payment->paymentid); ?>"
-                                        class="btn btn-danger _delete">
-                                        <i class="fa-regular fa-trash-can"></i>
-                                    </a>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            <?= _l('more'); ?> <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                                            <li><a href="<?= admin_url('payments/delete/' . $payment->paymentid); ?>"
+                                                class="text-danger delete-text _delete"><?= _l('sc_sales_delete_payment'); ?></a></li>
+                                        </ul>
+                                    </div>
                                     <?php } ?>
                                 </div>
                             </div>

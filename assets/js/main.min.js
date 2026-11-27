@@ -1177,39 +1177,47 @@ $(function () {
     }, 100);
   });
 
-  // Assign task to staff member
-  $("body").on("change", 'select[name="select-assignees"]', function () {
-    $("body").append('<div class="dt-loader"></div>');
-    var data = {};
-    data.assignee = $('select[name="select-assignees"]').val();
-    if (data.assignee !== "") {
-      data.taskid = $(this).attr("data-task-id");
-      $.post(admin_url + "tasks/add_task_assignees", data).done(function (
-        response
-      ) {
-        $("body").find(".dt-loader").remove();
-        response = JSON.parse(response);
-        reload_tasks_tables();
-        _task_append_html(response.taskHtml);
-      });
+  // Assign task to staff members / add followers. The pickers are multi-selects:
+  // the ticked staff are saved together once the dropdown closes.
+  function _task_save_multi_staff_select(select, url, field, reloadTables) {
+    var $select = $(select);
+    var ids = $select.val();
+    if (!ids || $select.data("sc-saving")) {
+      return;
     }
+    if (!$.isArray(ids)) {
+      ids = [ids];
+    }
+    ids = $.grep(ids, function (id) {
+      return id !== "" && id !== null;
+    });
+    if (ids.length === 0) {
+      return;
+    }
+    $select.data("sc-saving", true);
+    $("body").append('<div class="dt-loader"></div>');
+    var data = { taskid: $select.attr("data-task-id") };
+    data[field] = ids;
+    $.post(admin_url + url, data)
+      .done(function (response) {
+        response = JSON.parse(response);
+        if (reloadTables) {
+          reload_tasks_tables();
+        }
+        _task_append_html(response.taskHtml);
+      })
+      .always(function () {
+        $("body").find(".dt-loader").remove();
+        $select.data("sc-saving", false);
+      });
+  }
+
+  $("body").on("hidden.bs.select", 'select[name="select-assignees"]', function () {
+    _task_save_multi_staff_select(this, "tasks/add_task_assignees", "assignee", true);
   });
 
-  // Add follower to task
-  $("body").on("change", 'select[name="select-followers"]', function () {
-    var data = {};
-    data.follower = $('select[name="select-followers"]').val();
-    if (data.follower !== "") {
-      data.taskid = $(this).attr("data-task-id");
-      $("body").append('<div class="dt-loader"></div>');
-      $.post(admin_url + "tasks/add_task_followers", data).done(function (
-        response
-      ) {
-        response = JSON.parse(response);
-        $("body").find(".dt-loader").remove();
-        _task_append_html(response.taskHtml);
-      });
-    }
+  $("body").on("hidden.bs.select", 'select[name="select-followers"]', function () {
+    _task_save_multi_staff_select(this, "tasks/add_task_followers", "follower", false);
   });
 
   // Task single moda tracking stats close

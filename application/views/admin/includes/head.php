@@ -72,9 +72,6 @@
     <?php if ($scSalesWorkspace && (!function_exists('smartchoice_admin_theme_is_modern') || smartchoice_admin_theme_is_modern())) { ?>
     <link rel="stylesheet" href="<?= base_url('assets/css/sales-custom.css?v=2'); ?>">
     <?php } ?>
-    <?php if (is_staff_logged_in()) { ?>
-    <link rel="stylesheet" href="<?= e(base_url('assets/css/portal-wallpapers.css?v=1')); ?>">
-    <?php } ?>
 </head>
 
 <body <?= admin_body_class(trim(($bodyclass ?? '') . ($scSalesWorkspace ? ' sc-sales-workspace-page' : ''))); ?>>

@@ -109,49 +109,80 @@ function sc_google_map_field($entity, $record = null)
     if (is_object($record)) $value = (string)($record->google_map_link ?? '');
     if (is_array($record)) $value = (string)($record['google_map_link'] ?? '');
     $html = render_input('google_map_link', 'sc_google_map_link', $value, 'text', ['placeholder' => _l('sc_google_map_link_placeholder')]);
-    $html .= '<p class="text-muted small sc-address-format-hint">Paste like: 123 Main St, Tampa, FL 33601. Include city, state, and ZIP so the CRM can fill those fields.</p>';
-    $html .= '<label class="checkbox-inline sc-address-copy-option"><input type="checkbox" class="sc-copy-address-fields"> Use this address for the related address fields</label>';
+    $html .= '<p class="text-muted small">Paste a Google Maps URL, or create a link from the address.</p>';
+    $html .= '<button type="button" class="btn btn-default btn-sm sc-map-from-address">Create map link from address</button>';
     static $script_added = false;
     if (!$script_added) {
         $script_added = true;
         $html .= <<<'HTML'
 <script>
 (function () {
-  if (window.scAddressAutofillReady) return;
-  window.scAddressAutofillReady = true;
-  function parse(value) {
-    var text = String(value || '').trim();
-    try { text = new URL(text).searchParams.get('query') || text; } catch (e) {}
-    text = decodeURIComponent(text).replace(/\s+/g, ' ').trim();
-    var match = text.match(/^(.*?),\s*([^,]+),\s*([A-Za-z]{2})\s+(\d{5}(?:-\d{4})?)(?:,?\s*United States)?$/i);
-    if (!match) return null;
-    return { address: match[1].trim(), city: match[2].trim(), state: match[3].toUpperCase(), zip: match[4] };
-  }
-  function fields(scope) {
-    var root = scope.closest('form') || document;
+  function formFields(input) {
+    var root = input.closest('form') || document;
     return { root: root, address: root.querySelector('[name="address"]'), city: root.querySelector('[name="city"]'), state: root.querySelector('[name="state"]'), zip: root.querySelector('[name="zip"]') };
   }
-  function apply(input) {
-    var data = parse(input.value), f = fields(input);
-    if (!data || !f.city || !f.state || !f.zip) return;
-    if (f.address && !f.address.value.trim()) f.address.value = data.address;
-    if (!f.city.value.trim()) f.city.value = data.city;
-    if (!f.state.value.trim()) f.state.value = data.state;
-    if (!f.zip.value.trim()) f.zip.value = data.zip;
-    if (window.jQuery) window.jQuery(f.root).find('select.selectpicker').selectpicker('refresh');
+  function parse(value) {
+    var text = String(value || '').replace(/\s+/g, ' ').trim();
+    var match = text.match(/^(.*?),\s*([^,]+),\s*([A-Za-z]{2})\s+(\d{5}(?:-\d{4})?)(?:,?\s*(?:United States(?: of America)?|USA|US))?$/i);
+    if (!match) return null;
+    return { city: match[2].trim(), state: match[3].toUpperCase(), zip: match[4] };
   }
-  document.addEventListener('paste', function (event) {
-    var target = event.target;
-    if (target && target.matches('[name="google_map_link"], [name="address"]')) setTimeout(function () { apply(target); }, 0);
+  function notify(input) {
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+  function completeAddress(input) {
+    var data = parse(input.value), fields = formFields(input);
+    if (!data) return;
+    ['city', 'state', 'zip'].forEach(function (key) {
+      var field = fields[key];
+      if (!field || (field.value.trim() && field.value !== field.dataset.scAutofilled)) return;
+      field.value = data[key];
+      field.dataset.scAutofilled = data[key];
+      notify(field);
+    });
+  }
+  function setup() {
+    document.querySelectorAll('.sc-google-map-field').forEach(function (wrapper) {
+      var fields = formFields(wrapper), map = wrapper.querySelector('[name="google_map_link"]');
+      if (map) {
+        map.placeholder = 'https://maps.app.goo.gl/…';
+        map.setAttribute('inputmode', 'url');
+      }
+      if (!fields.address || fields.address.dataset.scAddressHint) return;
+      fields.address.dataset.scAddressHint = '1';
+      var hint = document.createElement('p');
+      hint.className = 'text-muted small sc-address-format-hint';
+      hint.textContent = 'Paste a full address, e.g. 123 Main St, Tampa, FL 33601. City, state and ZIP fill automatically. You can edit them.';
+      var group = fields.address.closest('.form-group') || fields.address.parentElement;
+      group.appendChild(hint);
+    });
+  }
+  setup();
+  if (window.scAddressAutofillReady) return;
+  window.scAddressAutofillReady = true;
+  document.addEventListener('input', function (event) {
+    if (event.target.matches('[name="address"]')) completeAddress(event.target);
+    if (event.target.matches('[name="city"], [name="state"], [name="zip"]')) delete event.target.dataset.scAutofilled;
   });
   document.addEventListener('change', function (event) {
-    if (!event.target.matches('.sc-copy-address-fields')) return;
-    var f = fields(event.target), source = f.root.querySelector('[name="address"]');
-    if (!event.target.checked || !source) return;
-    var data = parse(source.value), city = f.root.querySelector('[name="city"]'), state = f.root.querySelector('[name="state"]'), zip = f.root.querySelector('[name="zip"]');
-    if (!data || !city || !state || !zip) return;
-    city.value = data.city; state.value = data.state; zip.value = data.zip;
+    if (event.target.matches('[name="address"]')) completeAddress(event.target);
   });
+  document.addEventListener('click', function (event) {
+    var button = event.target.closest('.sc-map-from-address');
+    if (!button) return;
+    var fields = formFields(button), wrapper = button.closest('.sc-google-map-field');
+    var map = wrapper.querySelector('[name="google_map_link"]');
+    if (!fields.address || !fields.address.value.trim() || !map) {
+      if (fields.address) fields.address.focus();
+      return;
+    }
+    var address = fields.address.value.trim();
+    if (!parse(address)) address = [address, fields.city && fields.city.value, fields.state && fields.state.value, fields.zip && fields.zip.value].filter(Boolean).join(', ');
+    map.value = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(address);
+    notify(map);
+  });
+  if (window.jQuery) window.jQuery(document).on('shown.bs.modal', setup);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setup);
 })();
 </script>
 HTML;

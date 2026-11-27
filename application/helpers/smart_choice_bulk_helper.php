@@ -63,3 +63,7 @@ function sc_module_action_form($action, $systemName, $label)
 hooks()->add_action('app_admin_footer', function(){
     echo '<script src="'.base_url('assets/js/smart_choice_bulk.js?v=' . filemtime(FCPATH . 'assets/js/smart_choice_bulk.js')).'"></script>';
 });
+
+hooks()->add_action('app_admin_head', function () {
+    echo '<link rel="stylesheet" href="' . base_url('assets/css/smart_choice_bulk.css?v=' . filemtime(FCPATH . 'assets/css/smart_choice_bulk.css')) . '">';
+});

@@ -608,3 +608,20 @@ body.admin.smart-choice-normalized-module :is(
 body.admin.smart-choice-normalized-module table.table.dataTable > tbody > tr > td:first-child:has(.row-options) {
   min-width: 150px;
 }
+
+/* Global search keeps its neutral border in every interaction state. Admin
+   pages do not consistently carry body.admin; target the actual header IDs. */
+#header #top_search #search_input,
+#header #top_search #search_input:focus,
+#header #top_search #search_input:focus-visible,
+#header #top_search:focus-within #search_input {
+    border: 1px solid #dde6ec !important;
+    outline: none !important;
+    box-shadow: none !important;
+    --tw-ring-shadow: 0 0 #0000 !important;
+    --tw-ring-offset-shadow: 0 0 #0000 !important;
+}
+#header #top_search:focus-within {
+    outline: none !important;
+    box-shadow: none !important;
+}

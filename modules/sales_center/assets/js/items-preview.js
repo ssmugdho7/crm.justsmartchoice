@@ -33,5 +33,5 @@
     layout.classList.add('sc-item-selected');
     if (window.jQuery) window.jQuery('.table-invoice-items').DataTable().columns.adjust();
     panel.focus({preventScroll: true});
-  });
+  }, true);
 })();

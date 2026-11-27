@@ -257,6 +257,38 @@ class Settings extends AdminController
         return $uploaded;
     }
 
+    // Remove an uploaded Smart Choice login background (admin or client)
+    public function remove_login_background($type = '')
+    {
+        if (!is_admin()) {
+            access_denied('settings');
+        }
+
+        $redirect = admin_url('settings?group=sc_appearance_mobile');
+        if (strtoupper($this->input->method()) !== 'POST') {
+            redirect($redirect);
+        }
+
+        $map = ['admin' => 'sc_admin_login_background', 'client' => 'sc_client_login_background'];
+        if (!isset($map[$type])) {
+            show_404();
+        }
+
+        $path   = rtrim(get_upload_path_by_type('company'), '/\\') . DIRECTORY_SEPARATOR;
+        $unlink = \function_exists('sc_recovery_unlink') ? '\sc_recovery_unlink' : '\unlink';
+        foreach (glob($path . 'sc_' . $type . '_login_background.*') ?: [] as $old) {
+            if (is_file($old)) {
+                @$unlink($old);
+            }
+        }
+
+        update_option($map[$type], '');
+        log_activity('Login background removed [' . $type . ']');
+        set_alert('success', _l('sc_login_background_removed'));
+
+        redirect($redirect);
+    }
+
     public function remove_company_logo($type = '')
     {
         hooks()->do_action('before_remove_company_logo');

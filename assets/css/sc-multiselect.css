@@ -1,0 +1,48 @@
+/* Multiple-select options expose a visible checkbox beside every choice. */
+body.admin .bootstrap-select.sc-multiselect .dropdown-menu li a {
+  min-height: 34px;
+  padding-inline-end: 42px;
+}
+body.admin .bootstrap-select.sc-multiselect .dropdown-menu li a span.check-mark {
+  display: inline-block !important;
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  border: 1px solid #64748b;
+  border-radius: 4px;
+  background: #fff;
+}
+body.admin .bootstrap-select.sc-multiselect .dropdown-menu li a span.check-mark::before {
+  content: none;
+}
+body.admin .bootstrap-select.sc-multiselect .dropdown-menu li a span.check-mark::after {
+  content: none;
+}
+body.admin .bootstrap-select.sc-multiselect .dropdown-menu li.selected a span.check-mark {
+  background: #087f5b;
+  border-color: #087f5b;
+}
+body.admin .bootstrap-select.sc-multiselect .dropdown-menu li.selected a span.check-mark::after {
+  content: '';
+  display: block;
+  width: 5px;
+  height: 9px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  margin: 2px 0 0 5px;
+}
+body.admin .bootstrap-select.sc-multiselect .dropdown-menu li.disabled a span.check-mark {
+  opacity: .45;
+}
+body.admin .bootstrap-select.sc-multiselect .dropdown-menu li a:focus-visible {
+  outline: 2px solid #087f5b;
+  outline-offset: -2px;
+}
+body.admin[dir="rtl"] .bootstrap-select.sc-multiselect .dropdown-menu li a span.check-mark {
+  right: auto;
+  left: 14px;
+}

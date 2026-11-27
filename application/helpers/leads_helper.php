@@ -1,6 +1,7 @@
 <?php
 
 defined('BASEPATH') or exit('No direct script access allowed');
+require_once APPPATH . 'helpers/lead_assignments_helper.php';
 
 hooks()->add_action('app_admin_head', 'leads_app_admin_head_data');
 
@@ -94,7 +95,7 @@ function get_leads_summary()
     $totalStatuses         = count($statuses);
     $has_permission_view   = staff_can('view',  'leads');
     $sql                   = '';
-    $whereNoViewPermission = '(addedfrom = ' . get_staff_user_id() . ' OR assigned=' . get_staff_user_id() . ' OR is_public = 1)';
+    $whereNoViewPermission = '(addedfrom = ' . get_staff_user_id() . ' OR ' . sc_lead_assigned_sql(get_staff_user_id()) . ' OR is_public = 1)';
 
     $statuses[] = [
         'lost'  => true,

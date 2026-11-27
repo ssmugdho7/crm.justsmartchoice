@@ -132,7 +132,7 @@ class Leads extends AdminController
         $data['base_currency'] = get_base_currency();
 
         if (is_numeric($id)) {
-            $leadWhere = (staff_can('view',  'leads') ? [] : '(assigned = ' . get_staff_user_id() . ' OR addedfrom=' . get_staff_user_id() . ' OR is_public=1)');
+            $leadWhere = (staff_can('view',  'leads') ? [] : '(' . sc_lead_assigned_sql(get_staff_user_id()) . ' OR addedfrom=' . get_staff_user_id() . ' OR is_public=1)');
 
             $lead = $this->leads_model->get($id, $leadWhere);
 

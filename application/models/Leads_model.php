@@ -4,6 +4,7 @@ use app\services\AbstractKanban;
 use app\services\leads\LeadsKanban;
 
 defined('BASEPATH') or exit('No direct script access allowed');
+require_once APPPATH . 'helpers/lead_assignments_helper.php';
 
 class Leads_model extends App_Model
 {
@@ -67,6 +68,7 @@ class Leads_model extends App_Model
      */
     public function add($data)
     {
+        $data = sc_lead_prepare_assignees($data);
         if (isset($data['custom_contact_date']) || isset($data['custom_contact_date'])) {
             if (isset($data['contacted_today'])) {
                 $data['lastcontact'] = date('Y-m-d H:i:s');
@@ -123,7 +125,9 @@ class Leads_model extends App_Model
                 handle_custom_fields_post($insert_id, $custom_fields);
             }
 
-            $this->lead_assigned_member_notification($insert_id, $data['assigned']);
+            foreach (sc_lead_assignee_ids($data) as $staffId) {
+                $this->lead_assigned_member_notification($insert_id, $staffId);
+            }
             hooks()->do_action('lead_created', $insert_id);
 
             return $insert_id;
@@ -201,6 +205,7 @@ class Leads_model extends App_Model
     public function update($data, $id)
     {
         $current_lead_data = $this->get($id);
+        $data = sc_lead_prepare_assignees($data, $current_lead_data);
         $current_status    = $this->get_status($current_lead_data->status);
         if ($current_status) {
             $current_status_id = $current_status->id;
@@ -299,10 +304,8 @@ class Leads_model extends App_Model
                 ]);
             }
 
-            if (isset($data['assigned'])) {
-                if ($current_lead_data->assigned != $data['assigned'] && (!empty($data['assigned']) && $data['assigned'] != 0)) {
-                    $this->lead_assigned_member_notification($id, $data['assigned']);
-                }
+            foreach (array_diff(sc_lead_assignee_ids(array_merge((array) $current_lead_data, $data)), sc_lead_assignee_ids($current_lead_data)) as $staffId) {
+                $this->lead_assigned_member_notification($id, $staffId);
             }
             log_activity('Lead Updated [ID: ' . $id . ']');
 
@@ -558,9 +561,7 @@ class Leads_model extends App_Model
             if ($lead->addedfrom != get_staff_user_id()) {
                 array_push($not_user_ids, $lead->addedfrom);
             }
-            if ($lead->assigned != get_staff_user_id() && $lead->assigned != 0) {
-                array_push($not_user_ids, $lead->assigned);
-            }
+            $not_user_ids = array_values(array_unique(array_merge($not_user_ids, array_diff(sc_lead_assignee_ids($lead), [get_staff_user_id()]))));
             $notifiedUsers = [];
             foreach ($not_user_ids as $uid) {
                 $notified = add_notification([
@@ -889,7 +890,7 @@ class Leads_model extends App_Model
 
         $CI = &get_instance();
 
-        if (total_rows(db_prefix() . 'leads', 'id="' . $CI->db->escape_str($id) . '" AND (assigned=' . $CI->db->escape_str($staff_id) . ' OR is_public=1 OR addedfrom=' . $CI->db->escape_str($staff_id) . ')') > 0) {
+        if (total_rows(db_prefix() . 'leads', 'id="' . $CI->db->escape_str($id) . '" AND (' . sc_lead_assigned_sql($staff_id) . ' OR is_public=1 OR addedfrom=' . (int) $staff_id . ')') > 0) {
             return true;
         }
 

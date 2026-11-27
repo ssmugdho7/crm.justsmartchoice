@@ -6,15 +6,15 @@ if ($lead_is_client) {
 }
 if ($lead['status'] == $status['id']) { ?>
 <li data-lead-id="<?= e($lead['id']); ?>" <?= e($lead_already_client_tooltip); ?>
-    class="lead-kan-ban<?= $lead['assigned'] == get_staff_user_id() ? ' current-user-lead' : ''; ?><?= $lead_is_client && get_option('lead_lock_after_convert_to_customer') == 1 && ! is_admin() ? ' not-sortable' : ''; ?>">
+    class="lead-kan-ban<?= in_array((int) get_staff_user_id(), sc_lead_assignee_ids($lead), true) ? ' current-user-lead' : ''; ?><?= $lead_is_client && get_option('lead_lock_after_convert_to_customer') == 1 && ! is_admin() ? ' not-sortable' : ''; ?>">
     <div class="panel-body lead-body">
         <div class="tw-flex lead-name">
-            <?php if ($lead['assigned'] != 0) { ?>
-            <a href="<?= admin_url('profile/' . $lead['assigned']); ?>"
+            <?php foreach (sc_lead_assignee_ids($lead) as $assigneeId) { ?>
+            <a href="<?= admin_url('profile/' . $assigneeId); ?>"
                 data-placement="right" data-toggle="tooltip"
-                title="<?= e(get_staff_full_name($lead['assigned'])); ?>"
+                title="<?= e(get_staff_full_name($assigneeId)); ?>"
                 class="mtop8 tw-mr-1.5">
-                <?= staff_profile_image($lead['assigned'], [
+                <?= staff_profile_image($assigneeId, [
                     'staff-profile-image-xs',
                 ]); ?></a>
             <?php } ?>

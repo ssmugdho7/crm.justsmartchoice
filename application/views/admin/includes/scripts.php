@@ -44,6 +44,8 @@ if (get_option('pusher_realtime_notifications') == 1) { ?>
 </script>
 <?php } ?>
 <?php app_admin_footer(); ?>
+<link rel="stylesheet" href="<?= base_url('assets/css/sc-multiselect.css?v=1'); ?>">
+<script src="<?= base_url('assets/js/sc-multiselect.js?v=1'); ?>"></script>
 <script src="<?= base_url('assets/js/smart-choice-sales-inputs.js?v=403'); ?>"></script>
 <script src="<?= base_url('assets/js/sc-phone-format.js?v=4.2.8'); ?>"></script>
 

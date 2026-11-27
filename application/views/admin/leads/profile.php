@@ -258,7 +258,7 @@
                         <?= _l('lead_add_edit_assigned'); ?>
                     </dt>
                     <dd class="tw-text-neutral-900 tw-mt-1 mbot15">
-                        <?= isset($lead) && $lead->assigned != 0 ? e(get_staff_full_name($lead->assigned)) : '-' ?>
+                        <?= isset($lead) && $lead->assigned != 0 ? e(implode(', ', array_map('get_staff_full_name', sc_lead_assignee_ids($lead)))) : '-' ?>
                     </dd>
                     <dt class="lead-field-heading tw-font-normal tw-text-neutral-500">
                         <?= _l('tags'); ?>
@@ -362,7 +362,10 @@ echo render_leads_status_select($statuses, $selected, 'lead_add_edit_status');
             <div class="col-md-4">
                 <?php
                $assigned_attrs = [];
-$selected                      = (isset($lead) ? $lead->assigned : get_staff_user_id());
+$selected = isset($lead) ? sc_lead_assignee_ids($lead) : [get_staff_user_id()];
+$assigned_attrs['multiple'] = true;
+$assigned_attrs['data-actions-box'] = true;
+$assigned_attrs['data-live-search'] = true;
 if (isset($lead)
    && $lead->assigned == get_staff_user_id()
    && $lead->addedfrom != get_staff_user_id()
@@ -371,7 +374,8 @@ if (isset($lead)
 ) {
     $assigned_attrs['disabled'] = true;
 }
-echo render_select('assigned', $members, ['staffid', ['firstname', 'lastname']], 'lead_add_edit_assigned', $selected, $assigned_attrs); ?>
+if (!isset($assigned_attrs['disabled'])) echo form_hidden('assigned_staff_present', '1');
+echo render_select('assigned_staff[]', $members, ['staffid', ['firstname', 'lastname']], 'lead_add_edit_assigned', $selected, $assigned_attrs); ?>
             </div>
             <div class="clearfix"></div>
             <hr class="mtop5 mbot10" />

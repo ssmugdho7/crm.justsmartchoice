@@ -46,6 +46,11 @@ $rules = [
 ];
 
 $rules[] = App_table_filter::new('assigned', 'MultiSelectRule')->label(_l('leads_dt_assigned'))
+    ->raw(function ($value, $operator) {
+        $ids = array_filter(array_map('intval', (array) $value), fn ($id) => $id > 0);
+        $matches = $ids ? '(' . implode(' OR ', array_map('sc_lead_assigned_sql', $ids)) . ')' : '(assigned=0)';
+        return in_array($operator, ['not_in', 'is_not_empty'], true) ? 'NOT ' . $matches : $matches;
+    })
     ->withEmptyOperators()
     ->emptyOperatorValue(0)
     ->isVisible(fn () => staff_can('view', 'leads'))
@@ -126,7 +131,7 @@ return App_table::find('leads')
         }
 
         if (staff_cant('view', 'leads')) {
-            array_push($where, 'AND (assigned =' . get_staff_user_id() . ' OR addedfrom = ' . get_staff_user_id() . ' OR is_public = 1)');
+            array_push($where, 'AND (' . sc_lead_assigned_sql(get_staff_user_id()) . ' OR addedfrom = ' . get_staff_user_id() . ' OR is_public = 1)');
         }
 
         $join = hooks()->apply_filters('leads_table_sql_join', $join);
@@ -143,6 +148,7 @@ return App_table::find('leads')
             'color',
             'status',
             'assigned',
+            'additional_assigned_staff',
             'lastname as assigned_lastname',
             db_prefix() . 'leads.addedfrom as addedfrom',
             '(SELECT count(leadid) FROM ' . db_prefix() . 'clients WHERE ' . db_prefix() . 'clients.leadid=' . db_prefix() . 'leads.id) as is_converted',
@@ -216,6 +222,10 @@ return App_table::find('leads')
                 $assignedOutput .= '<span class="hide">' . $full_name . '</span>';
             }
 
+            foreach (array_diff(sc_lead_assignee_ids($aRow), [(int) $aRow['assigned']]) as $staffId) {
+                $fullName = e(get_staff_full_name($staffId));
+                $assignedOutput .= '<a data-toggle="tooltip" data-title="' . $fullName . '" href="' . admin_url('profile/' . $staffId) . '">' . staff_profile_image($staffId, ['staff-profile-image-small']) . '</a><span class="hide">' . $fullName . '</span>';
+            }
             $row[] = $assignedOutput;
 
             $outputStatus = '';

@@ -13,7 +13,7 @@ function sc_lead_assigned_sql($staffId): string
 {
     $staffId = (int) $staffId;
     $table = db_prefix() . 'leads';
-    return '(' . $table . '.assigned=' . $staffId . ' OR FIND_IN_SET(' . $staffId . ', ' . $table . '.additional_assigned_staff)>0)';
+    return '(' . $table . '.assigned=' . $staffId . ' OR FIND_IN_SET(' . $staffId . ", COALESCE(" . $table . ".additional_assigned_staff, ''))>0)";
 }
 
 function sc_lead_prepare_assignees(array $data, $previous = null): array

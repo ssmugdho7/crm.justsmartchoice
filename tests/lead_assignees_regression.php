@@ -27,5 +27,5 @@ verify(sc_lead_prepare_assignees(['assigned'=>3],$old)===['assigned'=>3,'additio
 $GLOBALS['restricted']=true;
 verify(sc_lead_prepare_assignees(['assigned_staff_present'=>1,'assigned_staff'=>[3]],['assigned'=>1,'addedfrom'=>2])===[], 'Respect assignment edit restriction');
 verify(strpos(sc_lead_assigned_sql('2 OR 1=1'),'2 OR 1=1')===false,'Numeric SQL identifiers');
-verify(strpos(sc_lead_assigned_sql(3),'FIND_IN_SET(3, tblleads.additional_assigned_staff)')!==false,'Secondary assignment visibility');
+verify(strpos(sc_lead_assigned_sql(3),"FIND_IN_SET(3, COALESCE(tblleads.additional_assigned_staff, ''))")!==false,'Secondary assignment visibility');
 echo "PASS: multi-assignee persistence, validation, legacy input, clearing, access and edit restriction\n";

@@ -1,0 +1,10 @@
+const {JSDOM}=require('jsdom'),fs=require('fs'),assert=require('assert');
+(async()=>{
+ const dom=new JSDOM('<div class="dataTables_wrapper"><table class="table-projects"><tbody><tr><td><input type="checkbox" class="sc-bulk-row scaf-project-select" data-feature="projects" value="7"></td><td><a>Project A</a></td><td></td><td></td><td>Today</td><td>Tomorrow</td></tr><tr><td><input type="checkbox" class="sc-bulk-row scaf-project-select" data-feature="projects" value="8"></td></tr></tbody></table></div><div class="scaf-project-batch" hidden><span data-scaf-selected></span><button data-scaf-batch-clear>Clear</button></div>',{runScripts:'outside-only',url:'https://crm.example/admin/projects'});
+ const w=dom.window,d=w.document,$=require('jquery')(w);w.$=w.jQuery=$;w.SCAF={};w.admin_url='/admin/';
+ w.eval(fs.readFileSync('assets/js/smart_choice_bulk.js','utf8'));w.eval(fs.readFileSync('modules/sc_admin_fixes/assets/js/projects.js','utf8'));await new Promise(r=>setTimeout(r,25));
+ const all=d.querySelector('.sc-bulk-select-all');all.checked=true;all.dispatchEvent(new w.Event('change',{bubbles:true}));assert.equal(d.querySelector('[data-scaf-selected]').textContent,'2');assert.equal(d.querySelectorAll('tbody input:checked').length,2);assert.equal(d.querySelector('.sc-bulk-count').textContent,'2 selected');
+ d.querySelector('[data-scaf-batch-clear]').click();assert.equal(d.querySelectorAll('tbody input:checked').length,0);assert.equal(all.checked,false);assert.equal(d.querySelector('.sc-bulk-count').textContent,'');
+ const row=d.querySelector('tbody input');row.checked=true;row.dispatchEvent(new w.Event('change',{bubbles:true}));assert.equal(all.indeterminate,true);$(d).trigger('draw.dt');await new Promise(r=>setTimeout(r,20));assert.equal(d.querySelectorAll('tbody input:checked').length,1);assert.equal(d.querySelectorAll('tbody input').length,2);
+ w.close();console.log('PASS shared project selection: select-all, export/status count, clear, partial selection and redraw remain synchronized without duplicates');
+})().catch(e=>{console.error(e);process.exitCode=1});

@@ -59,7 +59,7 @@
  $(document).on('change','.sc-bulk-select-all',function(){
   var table=this.closest('table')||tableFor(this);if(!table)return;
   var checked=this.checked,feature=featureFor(table);
-  table.querySelectorAll('.sc-bulk-row').forEach(function(cb){if(cb.dataset.feature===feature)cb.checked=checked;});update(table);
+  table.querySelectorAll('.sc-bulk-row').forEach(function(cb){if(cb.dataset.feature===feature){cb.checked=checked;cb.dispatchEvent(new Event('change',{bubbles:true}));}});update(table);
  });
  $(document).on('change','.sc-bulk-row',function(){update(this.closest('table'));});
  function scan(){$('table').each(function(){if(this.querySelector('.sc-bulk-row,.sc-bulk-select-all')){install(this);update(this);}});}

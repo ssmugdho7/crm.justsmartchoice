@@ -6,7 +6,8 @@ hooks()->add_action('before_render_project_view','scaf_projects_execution');
 hooks()->add_action('app_admin_footer','scaf_projects_footer');
 function scaf_projects_row($row,$project) {
     $id=(int)$project['id'];
-    $row[0]='<input type="checkbox" class="scaf-project-select" value="'.$id.'" aria-label="Select project '.$id.'"> '.$row[0];
+    $selector = function_exists('sc_bulk_reuse_row_checkbox') ? sc_bulk_reuse_row_checkbox($row[0], $id, ['scaf-project-select']) : null;
+    $row[0] = $selector ?? ('<input type="checkbox" class="scaf-project-select" value="'.$id.'" aria-label="Select project '.$id.'"> '.$row[0]);
     if(strpos($row[7]??'','[Status Not Found]')!==false || trim($row[7]??'')==='')$row[7]='<span class="label label-default">Unknown / Unassigned</span>';
     return $row;
 }

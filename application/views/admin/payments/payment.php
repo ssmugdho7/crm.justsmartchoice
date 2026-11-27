@@ -44,34 +44,32 @@
                                         <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
                                             aria-haspopup="true" aria-expanded="false">
                                             <i class="fa-regular fa-file-pdf"></i>
-                                            <?php if (is_mobile()) {
-                                                echo ' PDF';
-                                            } ?> <span class="caret"></span>
+                                             PDF <span class="caret"></span>
                                         </a>
 
                                         <ul class="dropdown-menu dropdown-menu-right">
                                             <li class="hidden-xs">
                                                 <a
                                                     href="<?= admin_url('payments/pdf/' . $payment->paymentid . '?output_type=I'); ?>">
-                                                    <?= _l('view_pdf'); ?>
+                                                    <?= _l('sc_sales_view_payment_pdf'); ?>
                                                 </a>
                                             </li>
                                             <li class="hidden-xs">
                                                 <a href="<?= admin_url('payments/pdf/' . $payment->paymentid . '?output_type=I'); ?>"
                                                     target="_blank">
-                                                    <?= _l('view_pdf_in_new_window'); ?>
+                                                    <?= _l('sc_sales_view_payment_pdf_new_window'); ?>
                                                 </a>
                                             </li>
                                             <li>
                                                 <a
                                                     href="<?= admin_url('payments/pdf/' . $payment->paymentid); ?>">
-                                                    <?= _l('download'); ?>
+                                                    <?= _l('sc_sales_download_payment_pdf'); ?>
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="<?= admin_url('payments/pdf/' . $payment->paymentid . '?print=true'); ?>"
                                                     target="_blank">
-                                                    <?= _l('print'); ?>
+                                                    <?= _l('sc_sales_print_payment_receipt'); ?>
                                                 </a>
                                             </li>
                                         </ul>

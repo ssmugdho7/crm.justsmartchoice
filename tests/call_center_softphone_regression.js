@@ -11,6 +11,7 @@ function fixture(configured) {
     if (Object.prototype.toString.call(selector) === '[object Function]') { startup = selector; return; }
     if (selector === document) return { on: (event, target, action) => handlers.set(target, action) };
     if (typeof selector === 'object') return selector;
+    if (selector.includes(',')) { const group = selector.split(',').map(s => $(s.trim())); return { prop(key, value) { group.forEach(e => e.prop(key, value)); return this; } }; }
     if (!elements.has(selector)) elements.set(selector, {
       value: '', props: {}, label: '',
       val(value) { if (value === undefined) return this.value; this.value = value; return this; },

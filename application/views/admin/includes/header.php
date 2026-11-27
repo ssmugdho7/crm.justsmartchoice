@@ -299,6 +299,17 @@ window.SmartChoiceTinyMceNormalize = function(cfg){
 #header .tw-text-neutral-500.tw-text-sm{font-size:10px!important;max-width:118px!important;width:118px!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
 #sc-header-datetime{display:flex;align-items:center;padding:0 10px;color:#fff;font-size:12px;white-space:nowrap}
 @media(max-width:991px){#sc-header-datetime{display:none}#header #top_search{max-width:44vw}.table-responsive{overflow-x:auto!important;-webkit-overflow-scrolling:touch}.panel-body{padding-left:10px!important;padding-right:10px!important}}
+/* Keep the global search discoverable on phones instead of collapsing it to an icon. */
+@media(max-width:767px){
+    #header nav>.tw-flex.tw-justify-between{min-width:0;align-items:center}
+    #header #logo{min-width:145px!important;width:145px!important;padding-left:4px!important;padding-right:4px!important}
+    #header #logo img{max-width:137px!important;height:44px!important;max-height:44px!important}
+    #header .sc-admin-search-actions{min-width:116px!important;flex:1 1 auto!important;align-items:center!important}
+    #header #top_search{width:116px!important;max-width:116px!important;min-width:116px!important;flex:1 1 auto!important;padding:0!important}
+    #header #search_input{display:block!important;width:100%!important;max-width:none!important;height:36px!important;margin:0!important;padding-left:34px!important;padding-right:7px!important;color:#1f2937!important;background:#f3f4f6!important;border:1px solid #dbe3ea!important;border-radius:7px!important;font-size:13px!important}
+    #header #search_input::placeholder{color:#64748b!important;opacity:1!important}
+    #header #top_search_button{top:50%!important;transform:translateY(-50%)!important}
+}
 </style>
 <script>document.addEventListener('DOMContentLoaded',function(){var nav=document.querySelector('#header nav .tw-flex.tw-justify-between');if(!nav||document.getElementById('sc-header-datetime'))return;var d=document.createElement('div');d.id='sc-header-datetime';var tick=function(){d.textContent=new Intl.DateTimeFormat(undefined,{weekday:'short',month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'}).format(new Date());};tick();setInterval(tick,30000);var right=nav.lastElementChild;nav.insertBefore(d,right);});</script>
 
